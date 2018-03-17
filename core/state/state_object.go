@@ -54,6 +54,7 @@ func (self Storage) Copy() Storage {
 	return cpy
 }
 
+// wyliu:
 // stateObject represents an Ethereum account which is being modified.
 //
 // The usage pattern is as follows:
@@ -61,10 +62,10 @@ func (self Storage) Copy() Storage {
 // Account values can be accessed and modified through the object.
 // Finally, call CommitTrie to write the modified storage trie into a database.
 type stateObject struct {
-	address  common.Address
+	address  common.Address	// wyliu: Address belonging to this account
 	addrHash common.Hash // hash of ethereum address of the account
 	data     Account
-	db       *StateDB
+	db       *StateDB	// wyliu: State database for storing state changes
 
 	// DB error.
 	// State objects are used by the consensus core and VM which are

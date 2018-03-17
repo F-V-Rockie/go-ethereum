@@ -37,6 +37,13 @@ The State Transitioning Model
 A state transition is a change made when a transaction is applied to the current world state
 The state transitioning model does all all the necessary work to work out a valid new state root.
 
+// wyliu:
+// wyliu: 1. 验证（执行）Transaction;
+// wyliu: 2. preCheck(): 检查Nonce是否一致，使用sender的balance购买消息中定义的gas(message.Gas()*self.gasPrice)
+// wyliu: 3. 扣除transaction.data.payload计算数据所需要消耗的gas;
+// wyliu: 4. 在vm中执行code（生成contract or 执行contract）; vm执行过程中，其gas会被自动消耗。如果gas不足，vm会自选退出;
+// wyliu: 5. 将多余的gas退回到sender.balance中;
+// wyliu: 6. 将消耗的gas换成balance加到当前env.Coinbase()中;
 1) Nonce handling
 2) Pre pay gas
 3) Create a new state object if the recipient is \0*32

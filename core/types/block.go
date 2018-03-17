@@ -67,22 +67,23 @@ func (n *BlockNonce) UnmarshalText(input []byte) error {
 
 //go:generate gencodec -type Header -field-override headerMarshaling -out gen_header_json.go
 
+// wyliu:
 // Header represents a block header in the Ethereum blockchain.
 type Header struct {
-	ParentHash  common.Hash    `json:"parentHash"       gencodec:"required"`
-	UncleHash   common.Hash    `json:"sha3Uncles"       gencodec:"required"`
-	Coinbase    common.Address `json:"miner"            gencodec:"required"`
-	Root        common.Hash    `json:"stateRoot"        gencodec:"required"`
-	TxHash      common.Hash    `json:"transactionsRoot" gencodec:"required"`
-	ReceiptHash common.Hash    `json:"receiptsRoot"     gencodec:"required"`
-	Bloom       Bloom          `json:"logsBloom"        gencodec:"required"`
-	Difficulty  *big.Int       `json:"difficulty"       gencodec:"required"`
-	Number      *big.Int       `json:"number"           gencodec:"required"`
-	GasLimit    uint64         `json:"gasLimit"         gencodec:"required"`
-	GasUsed     uint64         `json:"gasUsed"          gencodec:"required"`
-	Time        *big.Int       `json:"timestamp"        gencodec:"required"`
-	Extra       []byte         `json:"extraData"        gencodec:"required"`
-	MixDigest   common.Hash    `json:"mixHash"          gencodec:"required"`
+	ParentHash  common.Hash    `json:"parentHash"       gencodec:"required"`	// wyliu: Hash to the previous block
+	UncleHash   common.Hash    `json:"sha3Uncles"       gencodec:"required"`	// wyliu: Uncles of this block
+	Coinbase    common.Address `json:"miner"            gencodec:"required"`	// wyliu: The coin base address
+	Root        common.Hash    `json:"stateRoot"        gencodec:"required"`	// wyliu: Block Trie state
+	TxHash      common.Hash    `json:"transactionsRoot" gencodec:"required"`	// wyliu: Tx sha
+	ReceiptHash common.Hash    `json:"receiptsRoot"     gencodec:"required"`	// wyliu: Receipt sha
+	Bloom       Bloom          `json:"logsBloom"        gencodec:"required"`	// wyliu: Bloom
+	Difficulty  *big.Int       `json:"difficulty"       gencodec:"required"`	// wyliu: Difficulty for the current block
+	Number      *big.Int       `json:"number"           gencodec:"required"`	// wyliu: The block number
+	GasLimit    uint64         `json:"gasLimit"         gencodec:"required"`	// wyliu: Gas limit
+	GasUsed     uint64         `json:"gasUsed"          gencodec:"required"`	// wyliu: Gas used
+	Time        *big.Int       `json:"timestamp"        gencodec:"required"`	// wyliu: Creation time
+	Extra       []byte         `json:"extraData"        gencodec:"required"`	// wyliu: Extra data
+	MixDigest   common.Hash    `json:"mixHash"          gencodec:"required"`	// wyliu: for quick difficulty verification
 	Nonce       BlockNonce     `json:"nonce"            gencodec:"required"`
 }
 
@@ -142,6 +143,7 @@ type Body struct {
 	Uncles       []*Header
 }
 
+// wyliu: Structure - Block
 // Block represents an entire block in the Ethereum blockchain.
 type Block struct {
 	header       *Header

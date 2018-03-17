@@ -46,6 +46,10 @@ func deriveSigner(V *big.Int) Signer {
 	}
 }
 
+// wyliu: Structure - Transaction
+// wyliu: 1. ContractTransaction的区别在于：Recipient == nil;
+// wyliu: 2. Transaction能以RLP算法进行Encode和Decode;
+// wyliu: 3. hash/size/from字段是cache之用，避免多次hash/sign导致性能缺失;
 type Transaction struct {
 	data txdata
 	// caches
@@ -54,6 +58,7 @@ type Transaction struct {
 	from atomic.Value
 }
 
+// wyliu:
 type txdata struct {
 	AccountNonce uint64          `json:"nonce"    gencodec:"required"`
 	Price        *big.Int        `json:"gasPrice" gencodec:"required"`

@@ -43,6 +43,7 @@ type DatabaseDeleter interface {
 	Delete(key []byte) error
 }
 
+// wyliu:
 var (
 	headHeaderKey = []byte("LastHeader")
 	headBlockKey  = []byte("LastBlock")
@@ -157,6 +158,9 @@ func GetTrieSyncProgress(db DatabaseReader) uint64 {
 	return new(big.Int).SetBytes(data).Uint64()
 }
 
+// wyliu: Structure - Database
+// wyliu: 1. Blockchain无结构化查询需求，仅Hash查询，Key/Value数据库最方便;
+// wyliu: 2. 底层用LevelDB存储，性能好;
 // GetHeaderRLP retrieves a block header in its raw RLP database encoding, or nil
 // if the header's not found.
 func GetHeaderRLP(db DatabaseReader, hash common.Hash, number uint64) rlp.RawValue {

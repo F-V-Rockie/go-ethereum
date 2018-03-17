@@ -27,6 +27,9 @@ import (
 	"github.com/ethereum/go-ethereum/params"
 )
 
+// wyliu: Structure - Processor
+// wyliu: 1. 调用StateTransition，验证（执行）Transaction;
+// wyliu: 2. 计算Gas、Recipt、Uncle Reward;
 // StateProcessor is a basic Processor, which takes care of transitioning
 // state from one point to another.
 //

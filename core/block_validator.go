@@ -25,6 +25,11 @@ import (
 	"github.com/ethereum/go-ethereum/params"
 )
 
+// wyliu: Structure - Validator
+// wyliu: 1. 验证UsedGas
+// wyliu: 2. 验证Bloom
+// wyliu: 3. 验证receiptSha
+// wyliu: 4. 验证stateDB.IntermediateRoot
 // BlockValidator is responsible for validating block headers, uncles and
 // processed state.
 //

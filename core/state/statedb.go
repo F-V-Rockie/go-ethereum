@@ -44,6 +44,10 @@ var (
 	emptyCode = crypto.Keccak256Hash(nil)
 )
 
+// wyliu: Structure - StateDB
+// wyliu: StateDB完整记录Transaction的执行情况;
+// wyliu: StateDB的重点是StateObjects;
+// wyliu: StateDB中stateObjects，Account的Address为key，记录其Balance、nonce、code、codeHash，以及tire中的{string: Hash}等信息;
 // StateDBs within the ethereum protocol are used to store anything
 // within the merkle trie. StateDBs take care of caching and storing
 // nested states. It's the general query interface to retrieve:
