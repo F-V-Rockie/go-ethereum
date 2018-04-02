@@ -13,7 +13,7 @@ import (
 	"github.com/syndtr/goleveldb/leveldb/storage"
 )
 
-func shorten(str string) string {
+func shorten(str string) string { log.DebugLog()
 	if len(str) <= 8 {
 		return str
 	}
@@ -22,7 +22,7 @@ func shorten(str string) string {
 
 var bunits = [...]string{"", "Ki", "Mi", "Gi"}
 
-func shortenb(bytes int) string {
+func shortenb(bytes int) string { log.DebugLog()
 	i := 0
 	for ; bytes > 1024 && i < 4; i++ {
 		bytes /= 1024
@@ -30,7 +30,7 @@ func shortenb(bytes int) string {
 	return fmt.Sprintf("%d%sB", bytes, bunits[i])
 }
 
-func sshortenb(bytes int) string {
+func sshortenb(bytes int) string { log.DebugLog()
 	if bytes == 0 {
 		return "~"
 	}
@@ -46,7 +46,7 @@ func sshortenb(bytes int) string {
 	return fmt.Sprintf("%s%d%sB", sign, bytes, bunits[i])
 }
 
-func sint(x int) string {
+func sint(x int) string { log.DebugLog()
 	if x == 0 {
 		return "~"
 	}
@@ -58,14 +58,14 @@ func sint(x int) string {
 	return fmt.Sprintf("%s%d", sign, x)
 }
 
-func minInt(a, b int) int {
+func minInt(a, b int) int { log.DebugLog()
 	if a < b {
 		return a
 	}
 	return b
 }
 
-func maxInt(a, b int) int {
+func maxInt(a, b int) int { log.DebugLog()
 	if a > b {
 		return a
 	}
@@ -74,23 +74,23 @@ func maxInt(a, b int) int {
 
 type fdSorter []storage.FileDesc
 
-func (p fdSorter) Len() int {
+func (p fdSorter) Len() int { log.DebugLog()
 	return len(p)
 }
 
-func (p fdSorter) Less(i, j int) bool {
+func (p fdSorter) Less(i, j int) bool { log.DebugLog()
 	return p[i].Num < p[j].Num
 }
 
-func (p fdSorter) Swap(i, j int) {
+func (p fdSorter) Swap(i, j int) { log.DebugLog()
 	p[i], p[j] = p[j], p[i]
 }
 
-func sortFds(fds []storage.FileDesc) {
+func sortFds(fds []storage.FileDesc) { log.DebugLog()
 	sort.Sort(fdSorter(fds))
 }
 
-func ensureBuffer(b []byte, n int) []byte {
+func ensureBuffer(b []byte, n int) []byte { log.DebugLog()
 	if cap(b) < n {
 		return make([]byte, n)
 	}

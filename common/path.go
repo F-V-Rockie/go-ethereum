@@ -26,11 +26,11 @@ import (
 // MakeName creates a node name that follows the ethereum convention
 // for such names. It adds the operation system name and Go runtime version
 // the name.
-func MakeName(name, version string) string {
+func MakeName(name, version string) string { log.DebugLog()
 	return fmt.Sprintf("%s/v%s/%s/%s", name, version, runtime.GOOS, runtime.Version())
 }
 
-func FileExist(filePath string) bool {
+func FileExist(filePath string) bool { log.DebugLog()
 	_, err := os.Stat(filePath)
 	if err != nil && os.IsNotExist(err) {
 		return false
@@ -39,7 +39,7 @@ func FileExist(filePath string) bool {
 	return true
 }
 
-func AbsolutePath(Datadir string, filename string) string {
+func AbsolutePath(Datadir string, filename string) string { log.DebugLog()
 	if filepath.IsAbs(filename) {
 		return filename
 	}

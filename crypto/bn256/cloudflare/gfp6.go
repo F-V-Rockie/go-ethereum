@@ -10,47 +10,47 @@ type gfP6 struct {
 	x, y, z gfP2 // value is xτ² + yτ + z
 }
 
-func (e *gfP6) String() string {
+func (e *gfP6) String() string { log.DebugLog()
 	return "(" + e.x.String() + ", " + e.y.String() + ", " + e.z.String() + ")"
 }
 
-func (e *gfP6) Set(a *gfP6) *gfP6 {
+func (e *gfP6) Set(a *gfP6) *gfP6 { log.DebugLog()
 	e.x.Set(&a.x)
 	e.y.Set(&a.y)
 	e.z.Set(&a.z)
 	return e
 }
 
-func (e *gfP6) SetZero() *gfP6 {
+func (e *gfP6) SetZero() *gfP6 { log.DebugLog()
 	e.x.SetZero()
 	e.y.SetZero()
 	e.z.SetZero()
 	return e
 }
 
-func (e *gfP6) SetOne() *gfP6 {
+func (e *gfP6) SetOne() *gfP6 { log.DebugLog()
 	e.x.SetZero()
 	e.y.SetZero()
 	e.z.SetOne()
 	return e
 }
 
-func (e *gfP6) IsZero() bool {
+func (e *gfP6) IsZero() bool { log.DebugLog()
 	return e.x.IsZero() && e.y.IsZero() && e.z.IsZero()
 }
 
-func (e *gfP6) IsOne() bool {
+func (e *gfP6) IsOne() bool { log.DebugLog()
 	return e.x.IsZero() && e.y.IsZero() && e.z.IsOne()
 }
 
-func (e *gfP6) Neg(a *gfP6) *gfP6 {
+func (e *gfP6) Neg(a *gfP6) *gfP6 { log.DebugLog()
 	e.x.Neg(&a.x)
 	e.y.Neg(&a.y)
 	e.z.Neg(&a.z)
 	return e
 }
 
-func (e *gfP6) Frobenius(a *gfP6) *gfP6 {
+func (e *gfP6) Frobenius(a *gfP6) *gfP6 { log.DebugLog()
 	e.x.Conjugate(&a.x)
 	e.y.Conjugate(&a.y)
 	e.z.Conjugate(&a.z)
@@ -61,7 +61,7 @@ func (e *gfP6) Frobenius(a *gfP6) *gfP6 {
 }
 
 // FrobeniusP2 computes (xτ²+yτ+z)^(p²) = xτ^(2p²) + yτ^(p²) + z
-func (e *gfP6) FrobeniusP2(a *gfP6) *gfP6 {
+func (e *gfP6) FrobeniusP2(a *gfP6) *gfP6 { log.DebugLog()
 	// τ^(2p²) = τ²τ^(2p²-2) = τ²ξ^((2p²-2)/3)
 	e.x.MulScalar(&a.x, xiTo2PSquaredMinus2Over3)
 	// τ^(p²) = ττ^(p²-1) = τξ^((p²-1)/3)
@@ -70,28 +70,28 @@ func (e *gfP6) FrobeniusP2(a *gfP6) *gfP6 {
 	return e
 }
 
-func (e *gfP6) FrobeniusP4(a *gfP6) *gfP6 {
+func (e *gfP6) FrobeniusP4(a *gfP6) *gfP6 { log.DebugLog()
 	e.x.MulScalar(&a.x, xiToPSquaredMinus1Over3)
 	e.y.MulScalar(&a.y, xiTo2PSquaredMinus2Over3)
 	e.z.Set(&a.z)
 	return e
 }
 
-func (e *gfP6) Add(a, b *gfP6) *gfP6 {
+func (e *gfP6) Add(a, b *gfP6) *gfP6 { log.DebugLog()
 	e.x.Add(&a.x, &b.x)
 	e.y.Add(&a.y, &b.y)
 	e.z.Add(&a.z, &b.z)
 	return e
 }
 
-func (e *gfP6) Sub(a, b *gfP6) *gfP6 {
+func (e *gfP6) Sub(a, b *gfP6) *gfP6 { log.DebugLog()
 	e.x.Sub(&a.x, &b.x)
 	e.y.Sub(&a.y, &b.y)
 	e.z.Sub(&a.z, &b.z)
 	return e
 }
 
-func (e *gfP6) Mul(a, b *gfP6) *gfP6 {
+func (e *gfP6) Mul(a, b *gfP6) *gfP6 { log.DebugLog()
 	// "Multiplication and Squaring on Pairing-Friendly Fields"
 	// Section 4, Karatsuba method.
 	// http://eprint.iacr.org/2006/471.pdf
@@ -121,14 +121,14 @@ func (e *gfP6) Mul(a, b *gfP6) *gfP6 {
 	return e
 }
 
-func (e *gfP6) MulScalar(a *gfP6, b *gfP2) *gfP6 {
+func (e *gfP6) MulScalar(a *gfP6, b *gfP2) *gfP6 { log.DebugLog()
 	e.x.Mul(&a.x, b)
 	e.y.Mul(&a.y, b)
 	e.z.Mul(&a.z, b)
 	return e
 }
 
-func (e *gfP6) MulGFP(a *gfP6, b *gfP) *gfP6 {
+func (e *gfP6) MulGFP(a *gfP6, b *gfP) *gfP6 { log.DebugLog()
 	e.x.MulScalar(&a.x, b)
 	e.y.MulScalar(&a.y, b)
 	e.z.MulScalar(&a.z, b)
@@ -136,7 +136,7 @@ func (e *gfP6) MulGFP(a *gfP6, b *gfP) *gfP6 {
 }
 
 // MulTau computes τ·(aτ²+bτ+c) = bτ²+cτ+aξ
-func (e *gfP6) MulTau(a *gfP6) *gfP6 {
+func (e *gfP6) MulTau(a *gfP6) *gfP6 { log.DebugLog()
 	tz := (&gfP2{}).MulXi(&a.x)
 	ty := (&gfP2{}).Set(&a.y)
 
@@ -146,7 +146,7 @@ func (e *gfP6) MulTau(a *gfP6) *gfP6 {
 	return e
 }
 
-func (e *gfP6) Square(a *gfP6) *gfP6 {
+func (e *gfP6) Square(a *gfP6) *gfP6 { log.DebugLog()
 	v0 := (&gfP2{}).Square(&a.z)
 	v1 := (&gfP2{}).Square(&a.y)
 	v2 := (&gfP2{}).Square(&a.x)
@@ -168,7 +168,7 @@ func (e *gfP6) Square(a *gfP6) *gfP6 {
 	return e
 }
 
-func (e *gfP6) Invert(a *gfP6) *gfP6 {
+func (e *gfP6) Invert(a *gfP6) *gfP6 { log.DebugLog()
 	// See "Implementing cryptographic pairings", M. Scott, section 3.2.
 	// ftp://136.206.11.249/pub/crypto/pairings.pdf
 

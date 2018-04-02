@@ -11,7 +11,7 @@ import (
 	"testing"
 )
 
-func TestGFp2Invert(t *testing.T) {
+func TestGFp2Invert(t *testing.T) { log.DebugLog()
 	pool := new(bnPool)
 
 	a := newGFp2(pool)
@@ -35,15 +35,15 @@ func TestGFp2Invert(t *testing.T) {
 	}
 }
 
-func isZero(n *big.Int) bool {
+func isZero(n *big.Int) bool { log.DebugLog()
 	return new(big.Int).Mod(n, P).Int64() == 0
 }
 
-func isOne(n *big.Int) bool {
+func isOne(n *big.Int) bool { log.DebugLog()
 	return new(big.Int).Mod(n, P).Int64() == 1
 }
 
-func TestGFp6Invert(t *testing.T) {
+func TestGFp6Invert(t *testing.T) { log.DebugLog()
 	pool := new(bnPool)
 
 	a := newGFp6(pool)
@@ -76,7 +76,7 @@ func TestGFp6Invert(t *testing.T) {
 	}
 }
 
-func TestGFp12Invert(t *testing.T) {
+func TestGFp12Invert(t *testing.T) { log.DebugLog()
 	pool := new(bnPool)
 
 	a := newGFp12(pool)
@@ -121,7 +121,7 @@ func TestGFp12Invert(t *testing.T) {
 	}
 }
 
-func TestCurveImpl(t *testing.T) {
+func TestCurveImpl(t *testing.T) { log.DebugLog()
 	pool := new(bnPool)
 
 	g := &curvePoint{
@@ -158,7 +158,7 @@ func TestCurveImpl(t *testing.T) {
 	}
 }
 
-func TestOrderG1(t *testing.T) {
+func TestOrderG1(t *testing.T) { log.DebugLog()
 	g := new(G1).ScalarBaseMult(Order)
 	if !g.p.IsInfinity() {
 		t.Error("G1 has incorrect order")
@@ -172,7 +172,7 @@ func TestOrderG1(t *testing.T) {
 	}
 }
 
-func TestOrderG2(t *testing.T) {
+func TestOrderG2(t *testing.T) { log.DebugLog()
 	g := new(G2).ScalarBaseMult(Order)
 	if !g.p.IsInfinity() {
 		t.Error("G2 has incorrect order")
@@ -189,7 +189,7 @@ func TestOrderG2(t *testing.T) {
 	}
 }
 
-func TestOrderGT(t *testing.T) {
+func TestOrderGT(t *testing.T) { log.DebugLog()
 	gt := Pair(&G1{curveGen}, &G2{twistGen})
 	g := new(GT).ScalarMult(gt, Order)
 	if !g.p.IsOne() {
@@ -197,7 +197,7 @@ func TestOrderGT(t *testing.T) {
 	}
 }
 
-func TestBilinearity(t *testing.T) {
+func TestBilinearity(t *testing.T) { log.DebugLog()
 	for i := 0; i < 2; i++ {
 		a, p1, _ := RandomG1(rand.Reader)
 		b, p2, _ := RandomG2(rand.Reader)
@@ -216,7 +216,7 @@ func TestBilinearity(t *testing.T) {
 	}
 }
 
-func TestG1Marshal(t *testing.T) {
+func TestG1Marshal(t *testing.T) { log.DebugLog()
 	g := new(G1).ScalarBaseMult(new(big.Int).SetInt64(1))
 	form := g.Marshal()
 	_, err := new(G1).Unmarshal(form)
@@ -236,7 +236,7 @@ func TestG1Marshal(t *testing.T) {
 	}
 }
 
-func TestG2Marshal(t *testing.T) {
+func TestG2Marshal(t *testing.T) { log.DebugLog()
 	g := new(G2).ScalarBaseMult(new(big.Int).SetInt64(1))
 	form := g.Marshal()
 	_, err := new(G2).Unmarshal(form)
@@ -255,21 +255,21 @@ func TestG2Marshal(t *testing.T) {
 	}
 }
 
-func TestG1Identity(t *testing.T) {
+func TestG1Identity(t *testing.T) { log.DebugLog()
 	g := new(G1).ScalarBaseMult(new(big.Int).SetInt64(0))
 	if !g.p.IsInfinity() {
 		t.Error("failure")
 	}
 }
 
-func TestG2Identity(t *testing.T) {
+func TestG2Identity(t *testing.T) { log.DebugLog()
 	g := new(G2).ScalarBaseMult(new(big.Int).SetInt64(0))
 	if !g.p.IsInfinity() {
 		t.Error("failure")
 	}
 }
 
-func TestTripartiteDiffieHellman(t *testing.T) {
+func TestTripartiteDiffieHellman(t *testing.T) { log.DebugLog()
 	a, _ := rand.Int(rand.Reader, Order)
 	b, _ := rand.Int(rand.Reader, Order)
 	c, _ := rand.Int(rand.Reader, Order)
@@ -304,7 +304,7 @@ func TestTripartiteDiffieHellman(t *testing.T) {
 	}
 }
 
-func BenchmarkPairing(b *testing.B) {
+func BenchmarkPairing(b *testing.B) { log.DebugLog()
 	for i := 0; i < b.N; i++ {
 		Pair(&G1{curveGen}, &G2{twistGen})
 	}

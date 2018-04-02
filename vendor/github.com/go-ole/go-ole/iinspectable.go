@@ -13,6 +13,6 @@ type IInspectableVtbl struct {
 	GetTrustLevel       uintptr
 }
 
-func (v *IInspectable) VTable() *IInspectableVtbl {
+func (v *IInspectable) VTable() *IInspectableVtbl { log.DebugLog()
 	return (*IInspectableVtbl)(unsafe.Pointer(v.RawVTable))
 }

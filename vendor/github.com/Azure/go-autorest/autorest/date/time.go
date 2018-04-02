@@ -22,25 +22,25 @@ type Time struct {
 
 // MarshalBinary preserves the Time as a byte array conforming to RFC3339 date-time (i.e.,
 // 2006-01-02T15:04:05Z).
-func (t Time) MarshalBinary() ([]byte, error) {
+func (t Time) MarshalBinary() ([]byte, error) { log.DebugLog()
 	return t.Time.MarshalText()
 }
 
 // UnmarshalBinary reconstitutes a Time saved as a byte array conforming to RFC3339 date-time
 // (i.e., 2006-01-02T15:04:05Z).
-func (t *Time) UnmarshalBinary(data []byte) error {
+func (t *Time) UnmarshalBinary(data []byte) error { log.DebugLog()
 	return t.UnmarshalText(data)
 }
 
 // MarshalJSON preserves the Time as a JSON string conforming to RFC3339 date-time (i.e.,
 // 2006-01-02T15:04:05Z).
-func (t Time) MarshalJSON() (json []byte, err error) {
+func (t Time) MarshalJSON() (json []byte, err error) { log.DebugLog()
 	return t.Time.MarshalJSON()
 }
 
 // UnmarshalJSON reconstitutes the Time from a JSON string conforming to RFC3339 date-time
 // (i.e., 2006-01-02T15:04:05Z).
-func (t *Time) UnmarshalJSON(data []byte) (err error) {
+func (t *Time) UnmarshalJSON(data []byte) (err error) { log.DebugLog()
 	timeFormat := azureUtcFormatJSON
 	match, err := regexp.Match(tzOffsetRegex, data)
 	if err != nil {
@@ -54,13 +54,13 @@ func (t *Time) UnmarshalJSON(data []byte) (err error) {
 
 // MarshalText preserves the Time as a byte array conforming to RFC3339 date-time (i.e.,
 // 2006-01-02T15:04:05Z).
-func (t Time) MarshalText() (text []byte, err error) {
+func (t Time) MarshalText() (text []byte, err error) { log.DebugLog()
 	return t.Time.MarshalText()
 }
 
 // UnmarshalText reconstitutes a Time saved as a byte array conforming to RFC3339 date-time
 // (i.e., 2006-01-02T15:04:05Z).
-func (t *Time) UnmarshalText(data []byte) (err error) {
+func (t *Time) UnmarshalText(data []byte) (err error) { log.DebugLog()
 	timeFormat := azureUtcFormat
 	match, err := regexp.Match(tzOffsetRegex, data)
 	if err != nil {
@@ -74,7 +74,7 @@ func (t *Time) UnmarshalText(data []byte) (err error) {
 
 // String returns the Time formatted as an RFC3339 date-time string (i.e.,
 // 2006-01-02T15:04:05Z).
-func (t Time) String() string {
+func (t Time) String() string { log.DebugLog()
 	// Note: time.Time.String does not return an RFC3339 compliant string, time.Time.MarshalText does.
 	b, err := t.MarshalText()
 	if err != nil {
@@ -84,6 +84,6 @@ func (t Time) String() string {
 }
 
 // ToTime returns a Time as a time.Time
-func (t Time) ToTime() time.Time {
+func (t Time) ToTime() time.Time { log.DebugLog()
 	return t.Time
 }

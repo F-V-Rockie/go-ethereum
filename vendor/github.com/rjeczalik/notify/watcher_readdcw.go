@@ -69,7 +69,7 @@ type overlappedEx struct {
 // newGrip creates a new file handle that can be used in overlapped operations.
 // Then, the handle is associated with I/O completion port 'cph' and its value
 // is stored in newly created 'grip' object.
-func newGrip(cph syscall.Handle, parent *watched, filter uint32) (*grip, error) {
+func newGrip(cph syscall.Handle, parent *watched, filter uint32) (*grip, error) { log.DebugLog()
 	g := &grip{
 		handle:    syscall.InvalidHandle,
 		filter:    filter,
@@ -86,7 +86,7 @@ func newGrip(cph syscall.Handle, parent *watched, filter uint32) (*grip, error) 
 }
 
 // NOTE : Thread safe
-func (g *grip) register(cph syscall.Handle) (err error) {
+func (g *grip) register(cph syscall.Handle) (err error) { log.DebugLog()
 	if g.handle, err = syscall.CreateFile(
 		&g.pathw[0],
 		syscall.FILE_LIST_DIRECTORY,
@@ -108,7 +108,7 @@ func (g *grip) register(cph syscall.Handle) (err error) {
 // readDirChanges tells the system to store file change information in grip's
 // buffer. Directory changes that occur between calls to this function are added
 // to the buffer and then, returned with the next call.
-func (g *grip) readDirChanges() error {
+func (g *grip) readDirChanges() error { log.DebugLog()
 	return syscall.ReadDirectoryChanges(
 		g.handle,
 		&g.buffer[0],
@@ -124,7 +124,7 @@ func (g *grip) readDirChanges() error {
 // encode transforms a generic filter, which contains platform independent and
 // implementation specific bit fields, to value that can be used as NotifyFilter
 // parameter in ReadDirectoryChangesW function.
-func encode(filter uint32) uint32 {
+func encode(filter uint32) uint32 { log.DebugLog()
 	e := Event(filter & (onlyNGlobalEvents | onlyNotifyChanges))
 	if e&dirmarker != 0 {
 		return uint32(FileNotifyChangeDirName)
@@ -178,7 +178,7 @@ func newWatched(cph syscall.Handle, filter uint32, recursive bool,
 }
 
 // TODO : doc
-func (wd *watched) recreate(cph syscall.Handle) (err error) {
+func (wd *watched) recreate(cph syscall.Handle) (err error) { log.DebugLog()
 	filefilter := wd.filter &^ uint32(FileNotifyChangeDirName)
 	if err = wd.updateGrip(0, cph, filefilter == 0, filefilter); err != nil {
 		return
@@ -218,7 +218,7 @@ func (wd *watched) updateGrip(idx int, cph syscall.Handle, reset bool,
 // closeHandle closes handles that are stored in digrip array. Function always
 // tries to close all of the handlers before it exits, even when there are errors
 // returned from the operating system kernel.
-func (wd *watched) closeHandle() (err error) {
+func (wd *watched) closeHandle() (err error) { log.DebugLog()
 	for _, g := range wd.digrip {
 		if g != nil && g.handle != syscall.InvalidHandle {
 			switch suberr := syscall.CloseHandle(g.handle); {
@@ -245,7 +245,7 @@ type readdcw struct {
 }
 
 // NewWatcher creates new non-recursive watcher backed by ReadDirectoryChangesW.
-func newWatcher(c chan<- EventInfo) watcher {
+func newWatcher(c chan<- EventInfo) watcher { log.DebugLog()
 	r := &readdcw{
 		m:   make(map[string]*watched),
 		cph: syscall.InvalidHandle,
@@ -260,19 +260,19 @@ func newWatcher(c chan<- EventInfo) watcher {
 }
 
 // Watch implements notify.Watcher interface.
-func (r *readdcw) Watch(path string, event Event) error {
+func (r *readdcw) Watch(path string, event Event) error { log.DebugLog()
 	return r.watch(path, event, false)
 }
 
 // RecursiveWatch implements notify.RecursiveWatcher interface.
-func (r *readdcw) RecursiveWatch(path string, event Event) error {
+func (r *readdcw) RecursiveWatch(path string, event Event) error { log.DebugLog()
 	return r.watch(path, event, true)
 }
 
 // watch inserts a directory to the group of watched folders. If watched folder
 // already exists, function tries to rewatch it with new filters(NOT VALID). Moreover,
 // watch starts the main event loop goroutine when called for the first time.
-func (r *readdcw) watch(path string, event Event, recursive bool) (err error) {
+func (r *readdcw) watch(path string, event Event, recursive bool) (err error) { log.DebugLog()
 	if event&^(All|fileNotifyChangeAll) != 0 {
 		return errors.New("notify: unknown event")
 	}
@@ -302,7 +302,7 @@ func (r *readdcw) watch(path string, event Event, recursive bool) (err error) {
 
 // lazyinit creates an I/O completion port and starts the main event processing
 // loop. This method uses Double-Checked Locking optimization.
-func (r *readdcw) lazyinit() (err error) {
+func (r *readdcw) lazyinit() (err error) { log.DebugLog()
 	invalid := uintptr(syscall.InvalidHandle)
 	if atomic.LoadUintptr((*uintptr)(&r.cph)) == invalid {
 		r.Lock()
@@ -320,7 +320,7 @@ func (r *readdcw) lazyinit() (err error) {
 }
 
 // TODO(pknap) : doc
-func (r *readdcw) loop() {
+func (r *readdcw) loop() { log.DebugLog()
 	var n, key uint32
 	var overlapped *syscall.Overlapped
 	for {
@@ -350,7 +350,7 @@ func (r *readdcw) loop() {
 }
 
 // TODO(pknap) : doc
-func (r *readdcw) loopstate(overEx *overlappedEx) {
+func (r *readdcw) loopstate(overEx *overlappedEx) { log.DebugLog()
 	r.Lock()
 	defer r.Unlock()
 	filter := overEx.parent.parent.filter
@@ -373,7 +373,7 @@ func (r *readdcw) loopstate(overEx *overlappedEx) {
 }
 
 // TODO(pknap) : doc
-func (r *readdcw) loopevent(n uint32, overEx *overlappedEx) {
+func (r *readdcw) loopevent(n uint32, overEx *overlappedEx) { log.DebugLog()
 	events := []*event{}
 	var currOffset uint32
 	for {
@@ -396,7 +396,7 @@ func (r *readdcw) loopevent(n uint32, overEx *overlappedEx) {
 }
 
 // TODO(pknap) : doc
-func (r *readdcw) send(es []*event) {
+func (r *readdcw) send(es []*event) { log.DebugLog()
 	for _, e := range es {
 		var syse Event
 		if e.e, syse = decode(e.filter, e.action); e.e == 0 && syse == 0 {
@@ -428,7 +428,7 @@ func (r *readdcw) send(es []*event) {
 }
 
 // Rewatch implements notify.Rewatcher interface.
-func (r *readdcw) Rewatch(path string, oldevent, newevent Event) error {
+func (r *readdcw) Rewatch(path string, oldevent, newevent Event) error { log.DebugLog()
 	return r.rewatch(path, uint32(oldevent), uint32(newevent), false)
 }
 
@@ -445,7 +445,7 @@ func (r *readdcw) RecursiveRewatch(oldpath, newpath string, oldevent,
 }
 
 // TODO : (pknap) doc.
-func (r *readdcw) rewatch(path string, oldevent, newevent uint32, recursive bool) (err error) {
+func (r *readdcw) rewatch(path string, oldevent, newevent uint32, recursive bool) (err error) { log.DebugLog()
 	if Event(newevent)&^(All|fileNotifyChangeAll) != 0 {
 		return errors.New("notify: unknown event")
 	}
@@ -469,7 +469,7 @@ func (r *readdcw) rewatch(path string, oldevent, newevent uint32, recursive bool
 }
 
 // TODO : pknap
-func (r *readdcw) nonStateWatchedLocked(path string) (wd *watched, err error) {
+func (r *readdcw) nonStateWatchedLocked(path string) (wd *watched, err error) { log.DebugLog()
 	wd, ok := r.m[path]
 	if !ok || wd == nil {
 		err = errors.New(`notify: ` + path + ` path is unwatched`)
@@ -483,17 +483,17 @@ func (r *readdcw) nonStateWatchedLocked(path string) (wd *watched, err error) {
 }
 
 // Unwatch implements notify.Watcher interface.
-func (r *readdcw) Unwatch(path string) error {
+func (r *readdcw) Unwatch(path string) error { log.DebugLog()
 	return r.unwatch(path)
 }
 
 // RecursiveUnwatch implements notify.RecursiveWatcher interface.
-func (r *readdcw) RecursiveUnwatch(path string) error {
+func (r *readdcw) RecursiveUnwatch(path string) error { log.DebugLog()
 	return r.unwatch(path)
 }
 
 // TODO : pknap
-func (r *readdcw) unwatch(path string) (err error) {
+func (r *readdcw) unwatch(path string) (err error) { log.DebugLog()
 	var wd *watched
 	r.Lock()
 	defer r.Unlock()
@@ -521,7 +521,7 @@ func (r *readdcw) unwatch(path string) (err error) {
 
 // Close resets the whole watcher object, closes all existing file descriptors,
 // and sends stateCPClose state as completion key to the main watcher's loop.
-func (r *readdcw) Close() (err error) {
+func (r *readdcw) Close() (err error) { log.DebugLog()
 	r.Lock()
 	if !r.start {
 		r.Unlock()
@@ -548,7 +548,7 @@ func (r *readdcw) Close() (err error) {
 // returned from completion routine. Function may return Event(0) in case when
 // filter was replaced by a new value which does not contain fields that are
 // valid with passed action.
-func decode(filter, action uint32) (Event, Event) {
+func decode(filter, action uint32) (Event, Event) { log.DebugLog()
 	switch action {
 	case syscall.FILE_ACTION_ADDED:
 		return gensys(filter, Create, FileActionAdded)
@@ -568,7 +568,7 @@ func decode(filter, action uint32) (Event, Event) {
 // of them should be returned. Since the grip's filter may be atomically changed
 // during watcher lifetime, it is possible that neither Windows nor notify masks
 // are watched by the user when this function is called.
-func gensys(filter uint32, ge, se Event) (gene, syse Event) {
+func gensys(filter uint32, ge, se Event) (gene, syse Event) { log.DebugLog()
 	isdir := filter&uint32(dirmarker) != 0
 	if isdir && filter&uint32(FileNotifyChangeDirName) != 0 ||
 		!isdir && filter&uint32(FileNotifyChangeFileName) != 0 ||

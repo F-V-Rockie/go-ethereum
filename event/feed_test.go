@@ -24,7 +24,7 @@ import (
 	"time"
 )
 
-func TestFeedPanics(t *testing.T) {
+func TestFeedPanics(t *testing.T) { log.DebugLog()
 	{
 		var f Feed
 		f.Send(int(2))
@@ -64,7 +64,7 @@ func TestFeedPanics(t *testing.T) {
 	}
 }
 
-func checkPanic(want error, fn func()) (err error) {
+func checkPanic(want error, fn func()) (err error) { log.DebugLog()
 	defer func() {
 		panic := recover()
 		if panic == nil {
@@ -77,7 +77,7 @@ func checkPanic(want error, fn func()) (err error) {
 	return nil
 }
 
-func TestFeed(t *testing.T) {
+func TestFeed(t *testing.T) { log.DebugLog()
 	var feed Feed
 	var done, subscribed sync.WaitGroup
 	subscriber := func(i int) {
@@ -124,7 +124,7 @@ func TestFeed(t *testing.T) {
 	done.Wait()
 }
 
-func TestFeedSubscribeSameChannel(t *testing.T) {
+func TestFeedSubscribeSameChannel(t *testing.T) { log.DebugLog()
 	var (
 		feed Feed
 		done sync.WaitGroup
@@ -167,7 +167,7 @@ func TestFeedSubscribeSameChannel(t *testing.T) {
 	done.Wait()
 }
 
-func TestFeedSubscribeBlockedPost(t *testing.T) {
+func TestFeedSubscribeBlockedPost(t *testing.T) { log.DebugLog()
 	var (
 		feed   Feed
 		nsends = 2000
@@ -200,7 +200,7 @@ func TestFeedSubscribeBlockedPost(t *testing.T) {
 	}
 }
 
-func TestFeedUnsubscribeBlockedPost(t *testing.T) {
+func TestFeedUnsubscribeBlockedPost(t *testing.T) { log.DebugLog()
 	var (
 		feed   Feed
 		nsends = 200
@@ -235,7 +235,7 @@ func TestFeedUnsubscribeBlockedPost(t *testing.T) {
 	wg.Wait()
 }
 
-func TestFeedUnsubscribeFromInbox(t *testing.T) {
+func TestFeedUnsubscribeFromInbox(t *testing.T) { log.DebugLog()
 	var (
 		feed Feed
 		ch1  = make(chan int)
@@ -262,7 +262,7 @@ func TestFeedUnsubscribeFromInbox(t *testing.T) {
 	}
 }
 
-func BenchmarkFeedSend1000(b *testing.B) {
+func BenchmarkFeedSend1000(b *testing.B) { log.DebugLog()
 	var (
 		done  sync.WaitGroup
 		feed  Feed

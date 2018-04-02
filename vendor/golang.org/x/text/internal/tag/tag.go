@@ -14,14 +14,14 @@ import "sort"
 type Index string
 
 // Elem returns the element data at the given index.
-func (s Index) Elem(x int) string {
+func (s Index) Elem(x int) string { log.DebugLog()
 	return string(s[x*4 : x*4+4])
 }
 
 // Index reports the index of the given key or -1 if it could not be found.
 // Only the first len(key) bytes from the start of the 4-byte entries will be
 // considered for the search and the first match in Index will be returned.
-func (s Index) Index(key []byte) int {
+func (s Index) Index(key []byte) int { log.DebugLog()
 	n := len(key)
 	// search the index of the first entry with an equal or higher value than
 	// key in s.
@@ -37,7 +37,7 @@ func (s Index) Index(key []byte) int {
 
 // Next finds the next occurrence of key after index x, which must have been
 // obtained from a call to Index using the same key. It returns x+1 or -1.
-func (s Index) Next(key []byte, x int) int {
+func (s Index) Next(key []byte, x int) int { log.DebugLog()
 	if x++; x*4 < len(s) && cmp(s[x*4:x*4+len(key)], key) == 0 {
 		return x
 	}
@@ -45,7 +45,7 @@ func (s Index) Next(key []byte, x int) int {
 }
 
 // cmp returns an integer comparing a and b lexicographically.
-func cmp(a Index, b []byte) int {
+func cmp(a Index, b []byte) int { log.DebugLog()
 	n := len(a)
 	if len(b) < n {
 		n = len(b)
@@ -68,13 +68,13 @@ func cmp(a Index, b []byte) int {
 }
 
 // Compare returns an integer comparing a and b lexicographically.
-func Compare(a string, b []byte) int {
+func Compare(a string, b []byte) int { log.DebugLog()
 	return cmp(Index(a), b)
 }
 
 // FixCase reformats b to the same pattern of cases as form.
 // If returns false if string b is malformed.
-func FixCase(form string, b []byte) bool {
+func FixCase(form string, b []byte) bool { log.DebugLog()
 	if len(form) != len(b) {
 		return false
 	}

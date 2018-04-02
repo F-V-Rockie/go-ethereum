@@ -43,13 +43,13 @@ type testerAccountPool struct {
 	accounts map[string]*ecdsa.PrivateKey
 }
 
-func newTesterAccountPool() *testerAccountPool {
+func newTesterAccountPool() *testerAccountPool { log.DebugLog()
 	return &testerAccountPool{
 		accounts: make(map[string]*ecdsa.PrivateKey),
 	}
 }
 
-func (ap *testerAccountPool) sign(header *types.Header, signer string) {
+func (ap *testerAccountPool) sign(header *types.Header, signer string) { log.DebugLog()
 	// Ensure we have a persistent key for the signer
 	if ap.accounts[signer] == nil {
 		ap.accounts[signer], _ = crypto.GenerateKey()
@@ -59,7 +59,7 @@ func (ap *testerAccountPool) sign(header *types.Header, signer string) {
 	copy(header.Extra[len(header.Extra)-65:], sig)
 }
 
-func (ap *testerAccountPool) address(account string) common.Address {
+func (ap *testerAccountPool) address(account string) common.Address { log.DebugLog()
 	// Ensure we have a persistent key for the account
 	if ap.accounts[account] == nil {
 		ap.accounts[account], _ = crypto.GenerateKey()
@@ -74,12 +74,12 @@ type testerChainReader struct {
 	db ethdb.Database
 }
 
-func (r *testerChainReader) Config() *params.ChainConfig                 { return params.AllCliqueProtocolChanges }
-func (r *testerChainReader) CurrentHeader() *types.Header                { panic("not supported") }
-func (r *testerChainReader) GetHeader(common.Hash, uint64) *types.Header { panic("not supported") }
-func (r *testerChainReader) GetBlock(common.Hash, uint64) *types.Block   { panic("not supported") }
-func (r *testerChainReader) GetHeaderByHash(common.Hash) *types.Header   { panic("not supported") }
-func (r *testerChainReader) GetHeaderByNumber(number uint64) *types.Header {
+func (r *testerChainReader) Config() *params.ChainConfig                 { log.DebugLog() return params.AllCliqueProtocolChanges }
+func (r *testerChainReader) CurrentHeader() *types.Header                { log.DebugLog() panic("not supported") }
+func (r *testerChainReader) GetHeader(common.Hash, uint64) *types.Header { log.DebugLog() panic("not supported") }
+func (r *testerChainReader) GetBlock(common.Hash, uint64) *types.Block   { log.DebugLog() panic("not supported") }
+func (r *testerChainReader) GetHeaderByHash(common.Hash) *types.Header   { log.DebugLog() panic("not supported") }
+func (r *testerChainReader) GetHeaderByNumber(number uint64) *types.Header { log.DebugLog()
 	if number == 0 {
 		return core.GetHeader(r.db, core.GetCanonicalHash(r.db, 0), 0)
 	}
@@ -87,7 +87,7 @@ func (r *testerChainReader) GetHeaderByNumber(number uint64) *types.Header {
 }
 
 // Tests that voting is evaluated correctly for various simple and complex scenarios.
-func TestVoting(t *testing.T) {
+func TestVoting(t *testing.T) { log.DebugLog()
 	// Define the various voting scenarios to test
 	tests := []struct {
 		epoch   uint64

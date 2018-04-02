@@ -78,7 +78,7 @@ type peer struct {
 	fcCosts        requestCostTable
 }
 
-func newPeer(version int, network uint64, p *p2p.Peer, rw p2p.MsgReadWriter) *peer {
+func newPeer(version int, network uint64, p *p2p.Peer, rw p2p.MsgReadWriter) *peer { log.DebugLog()
 	id := p.ID()
 	pubKey, _ := id.Pubkey()
 
@@ -93,16 +93,16 @@ func newPeer(version int, network uint64, p *p2p.Peer, rw p2p.MsgReadWriter) *pe
 	}
 }
 
-func (p *peer) canQueue() bool {
+func (p *peer) canQueue() bool { log.DebugLog()
 	return p.sendQueue.canQueue()
 }
 
-func (p *peer) queueSend(f func()) {
+func (p *peer) queueSend(f func()) { log.DebugLog()
 	p.sendQueue.queue(f)
 }
 
 // Info gathers and returns a collection of metadata known about a peer.
-func (p *peer) Info() *eth.PeerInfo {
+func (p *peer) Info() *eth.PeerInfo { log.DebugLog()
 	return &eth.PeerInfo{
 		Version:    p.version,
 		Difficulty: p.Td(),
@@ -111,7 +111,7 @@ func (p *peer) Info() *eth.PeerInfo {
 }
 
 // Head retrieves a copy of the current head (most recent) hash of the peer.
-func (p *peer) Head() (hash common.Hash) {
+func (p *peer) Head() (hash common.Hash) { log.DebugLog()
 	p.lock.RLock()
 	defer p.lock.RUnlock()
 
@@ -119,7 +119,7 @@ func (p *peer) Head() (hash common.Hash) {
 	return hash
 }
 
-func (p *peer) HeadAndTd() (hash common.Hash, td *big.Int) {
+func (p *peer) HeadAndTd() (hash common.Hash, td *big.Int) { log.DebugLog()
 	p.lock.RLock()
 	defer p.lock.RUnlock()
 
@@ -127,7 +127,7 @@ func (p *peer) HeadAndTd() (hash common.Hash, td *big.Int) {
 	return hash, p.headInfo.Td
 }
 
-func (p *peer) headBlockInfo() blockInfo {
+func (p *peer) headBlockInfo() blockInfo { log.DebugLog()
 	p.lock.RLock()
 	defer p.lock.RUnlock()
 
@@ -135,7 +135,7 @@ func (p *peer) headBlockInfo() blockInfo {
 }
 
 // Td retrieves the current total difficulty of a peer.
-func (p *peer) Td() *big.Int {
+func (p *peer) Td() *big.Int { log.DebugLog()
 	p.lock.RLock()
 	defer p.lock.RUnlock()
 
@@ -143,11 +143,11 @@ func (p *peer) Td() *big.Int {
 }
 
 // waitBefore implements distPeer interface
-func (p *peer) waitBefore(maxCost uint64) (time.Duration, float64) {
+func (p *peer) waitBefore(maxCost uint64) (time.Duration, float64) { log.DebugLog()
 	return p.fcServer.CanSend(maxCost)
 }
 
-func sendRequest(w p2p.MsgWriter, msgcode, reqID, cost uint64, data interface{}) error {
+func sendRequest(w p2p.MsgWriter, msgcode, reqID, cost uint64, data interface{}) error { log.DebugLog()
 	type req struct {
 		ReqID uint64
 		Data  interface{}
@@ -155,7 +155,7 @@ func sendRequest(w p2p.MsgWriter, msgcode, reqID, cost uint64, data interface{})
 	return p2p.Send(w, msgcode, req{reqID, data})
 }
 
-func sendResponse(w p2p.MsgWriter, msgcode, reqID, bv uint64, data interface{}) error {
+func sendResponse(w p2p.MsgWriter, msgcode, reqID, bv uint64, data interface{}) error { log.DebugLog()
 	type resp struct {
 		ReqID, BV uint64
 		Data      interface{}
@@ -163,7 +163,7 @@ func sendResponse(w p2p.MsgWriter, msgcode, reqID, bv uint64, data interface{}) 
 	return p2p.Send(w, msgcode, resp{reqID, bv, data})
 }
 
-func (p *peer) GetRequestCost(msgcode uint64, amount int) uint64 {
+func (p *peer) GetRequestCost(msgcode uint64, amount int) uint64 { log.DebugLog()
 	p.lock.RLock()
 	defer p.lock.RUnlock()
 
@@ -175,7 +175,7 @@ func (p *peer) GetRequestCost(msgcode uint64, amount int) uint64 {
 }
 
 // HasBlock checks if the peer has a given block
-func (p *peer) HasBlock(hash common.Hash, number uint64) bool {
+func (p *peer) HasBlock(hash common.Hash, number uint64) bool { log.DebugLog()
 	p.lock.RLock()
 	hasBlock := p.hasBlock
 	p.lock.RUnlock()
@@ -184,94 +184,94 @@ func (p *peer) HasBlock(hash common.Hash, number uint64) bool {
 
 // SendAnnounce announces the availability of a number of blocks through
 // a hash notification.
-func (p *peer) SendAnnounce(request announceData) error {
+func (p *peer) SendAnnounce(request announceData) error { log.DebugLog()
 	return p2p.Send(p.rw, AnnounceMsg, request)
 }
 
 // SendBlockHeaders sends a batch of block headers to the remote peer.
-func (p *peer) SendBlockHeaders(reqID, bv uint64, headers []*types.Header) error {
+func (p *peer) SendBlockHeaders(reqID, bv uint64, headers []*types.Header) error { log.DebugLog()
 	return sendResponse(p.rw, BlockHeadersMsg, reqID, bv, headers)
 }
 
 // SendBlockBodiesRLP sends a batch of block contents to the remote peer from
 // an already RLP encoded format.
-func (p *peer) SendBlockBodiesRLP(reqID, bv uint64, bodies []rlp.RawValue) error {
+func (p *peer) SendBlockBodiesRLP(reqID, bv uint64, bodies []rlp.RawValue) error { log.DebugLog()
 	return sendResponse(p.rw, BlockBodiesMsg, reqID, bv, bodies)
 }
 
 // SendCodeRLP sends a batch of arbitrary internal data, corresponding to the
 // hashes requested.
-func (p *peer) SendCode(reqID, bv uint64, data [][]byte) error {
+func (p *peer) SendCode(reqID, bv uint64, data [][]byte) error { log.DebugLog()
 	return sendResponse(p.rw, CodeMsg, reqID, bv, data)
 }
 
 // SendReceiptsRLP sends a batch of transaction receipts, corresponding to the
 // ones requested from an already RLP encoded format.
-func (p *peer) SendReceiptsRLP(reqID, bv uint64, receipts []rlp.RawValue) error {
+func (p *peer) SendReceiptsRLP(reqID, bv uint64, receipts []rlp.RawValue) error { log.DebugLog()
 	return sendResponse(p.rw, ReceiptsMsg, reqID, bv, receipts)
 }
 
 // SendProofs sends a batch of legacy LES/1 merkle proofs, corresponding to the ones requested.
-func (p *peer) SendProofs(reqID, bv uint64, proofs proofsData) error {
+func (p *peer) SendProofs(reqID, bv uint64, proofs proofsData) error { log.DebugLog()
 	return sendResponse(p.rw, ProofsV1Msg, reqID, bv, proofs)
 }
 
 // SendProofsV2 sends a batch of merkle proofs, corresponding to the ones requested.
-func (p *peer) SendProofsV2(reqID, bv uint64, proofs light.NodeList) error {
+func (p *peer) SendProofsV2(reqID, bv uint64, proofs light.NodeList) error { log.DebugLog()
 	return sendResponse(p.rw, ProofsV2Msg, reqID, bv, proofs)
 }
 
 // SendHeaderProofs sends a batch of legacy LES/1 header proofs, corresponding to the ones requested.
-func (p *peer) SendHeaderProofs(reqID, bv uint64, proofs []ChtResp) error {
+func (p *peer) SendHeaderProofs(reqID, bv uint64, proofs []ChtResp) error { log.DebugLog()
 	return sendResponse(p.rw, HeaderProofsMsg, reqID, bv, proofs)
 }
 
 // SendHelperTrieProofs sends a batch of HelperTrie proofs, corresponding to the ones requested.
-func (p *peer) SendHelperTrieProofs(reqID, bv uint64, resp HelperTrieResps) error {
+func (p *peer) SendHelperTrieProofs(reqID, bv uint64, resp HelperTrieResps) error { log.DebugLog()
 	return sendResponse(p.rw, HelperTrieProofsMsg, reqID, bv, resp)
 }
 
 // SendTxStatus sends a batch of transaction status records, corresponding to the ones requested.
-func (p *peer) SendTxStatus(reqID, bv uint64, stats []txStatus) error {
+func (p *peer) SendTxStatus(reqID, bv uint64, stats []txStatus) error { log.DebugLog()
 	return sendResponse(p.rw, TxStatusMsg, reqID, bv, stats)
 }
 
 // RequestHeadersByHash fetches a batch of blocks' headers corresponding to the
 // specified header query, based on the hash of an origin block.
-func (p *peer) RequestHeadersByHash(reqID, cost uint64, origin common.Hash, amount int, skip int, reverse bool) error {
+func (p *peer) RequestHeadersByHash(reqID, cost uint64, origin common.Hash, amount int, skip int, reverse bool) error { log.DebugLog()
 	p.Log().Debug("Fetching batch of headers", "count", amount, "fromhash", origin, "skip", skip, "reverse", reverse)
 	return sendRequest(p.rw, GetBlockHeadersMsg, reqID, cost, &getBlockHeadersData{Origin: hashOrNumber{Hash: origin}, Amount: uint64(amount), Skip: uint64(skip), Reverse: reverse})
 }
 
 // RequestHeadersByNumber fetches a batch of blocks' headers corresponding to the
 // specified header query, based on the number of an origin block.
-func (p *peer) RequestHeadersByNumber(reqID, cost, origin uint64, amount int, skip int, reverse bool) error {
+func (p *peer) RequestHeadersByNumber(reqID, cost, origin uint64, amount int, skip int, reverse bool) error { log.DebugLog()
 	p.Log().Debug("Fetching batch of headers", "count", amount, "fromnum", origin, "skip", skip, "reverse", reverse)
 	return sendRequest(p.rw, GetBlockHeadersMsg, reqID, cost, &getBlockHeadersData{Origin: hashOrNumber{Number: origin}, Amount: uint64(amount), Skip: uint64(skip), Reverse: reverse})
 }
 
 // RequestBodies fetches a batch of blocks' bodies corresponding to the hashes
 // specified.
-func (p *peer) RequestBodies(reqID, cost uint64, hashes []common.Hash) error {
+func (p *peer) RequestBodies(reqID, cost uint64, hashes []common.Hash) error { log.DebugLog()
 	p.Log().Debug("Fetching batch of block bodies", "count", len(hashes))
 	return sendRequest(p.rw, GetBlockBodiesMsg, reqID, cost, hashes)
 }
 
 // RequestCode fetches a batch of arbitrary data from a node's known state
 // data, corresponding to the specified hashes.
-func (p *peer) RequestCode(reqID, cost uint64, reqs []CodeReq) error {
+func (p *peer) RequestCode(reqID, cost uint64, reqs []CodeReq) error { log.DebugLog()
 	p.Log().Debug("Fetching batch of codes", "count", len(reqs))
 	return sendRequest(p.rw, GetCodeMsg, reqID, cost, reqs)
 }
 
 // RequestReceipts fetches a batch of transaction receipts from a remote node.
-func (p *peer) RequestReceipts(reqID, cost uint64, hashes []common.Hash) error {
+func (p *peer) RequestReceipts(reqID, cost uint64, hashes []common.Hash) error { log.DebugLog()
 	p.Log().Debug("Fetching batch of receipts", "count", len(hashes))
 	return sendRequest(p.rw, GetReceiptsMsg, reqID, cost, hashes)
 }
 
 // RequestProofs fetches a batch of merkle proofs from a remote node.
-func (p *peer) RequestProofs(reqID, cost uint64, reqs []ProofReq) error {
+func (p *peer) RequestProofs(reqID, cost uint64, reqs []ProofReq) error { log.DebugLog()
 	p.Log().Debug("Fetching batch of proofs", "count", len(reqs))
 	switch p.version {
 	case lpv1:
@@ -284,7 +284,7 @@ func (p *peer) RequestProofs(reqID, cost uint64, reqs []ProofReq) error {
 }
 
 // RequestHelperTrieProofs fetches a batch of HelperTrie merkle proofs from a remote node.
-func (p *peer) RequestHelperTrieProofs(reqID, cost uint64, reqs []HelperTrieReq) error {
+func (p *peer) RequestHelperTrieProofs(reqID, cost uint64, reqs []HelperTrieReq) error { log.DebugLog()
 	p.Log().Debug("Fetching batch of HelperTrie proofs", "count", len(reqs))
 	switch p.version {
 	case lpv1:
@@ -306,13 +306,13 @@ func (p *peer) RequestHelperTrieProofs(reqID, cost uint64, reqs []HelperTrieReq)
 }
 
 // RequestTxStatus fetches a batch of transaction status records from a remote node.
-func (p *peer) RequestTxStatus(reqID, cost uint64, txHashes []common.Hash) error {
+func (p *peer) RequestTxStatus(reqID, cost uint64, txHashes []common.Hash) error { log.DebugLog()
 	p.Log().Debug("Requesting transaction status", "count", len(txHashes))
 	return sendRequest(p.rw, GetTxStatusMsg, reqID, cost, txHashes)
 }
 
 // SendTxStatus sends a batch of transactions to be added to the remote transaction pool.
-func (p *peer) SendTxs(reqID, cost uint64, txs types.Transactions) error {
+func (p *peer) SendTxs(reqID, cost uint64, txs types.Transactions) error { log.DebugLog()
 	p.Log().Debug("Fetching batch of transactions", "count", len(txs))
 	switch p.version {
 	case lpv1:
@@ -331,7 +331,7 @@ type keyValueEntry struct {
 type keyValueList []keyValueEntry
 type keyValueMap map[string]rlp.RawValue
 
-func (l keyValueList) add(key string, val interface{}) keyValueList {
+func (l keyValueList) add(key string, val interface{}) keyValueList { log.DebugLog()
 	var entry keyValueEntry
 	entry.Key = key
 	if val == nil {
@@ -344,7 +344,7 @@ func (l keyValueList) add(key string, val interface{}) keyValueList {
 	return append(l, entry)
 }
 
-func (l keyValueList) decode() keyValueMap {
+func (l keyValueList) decode() keyValueMap { log.DebugLog()
 	m := make(keyValueMap)
 	for _, entry := range l {
 		m[entry.Key] = entry.Value
@@ -352,7 +352,7 @@ func (l keyValueList) decode() keyValueMap {
 	return m
 }
 
-func (m keyValueMap) get(key string, val interface{}) error {
+func (m keyValueMap) get(key string, val interface{}) error { log.DebugLog()
 	enc, ok := m[key]
 	if !ok {
 		return errResp(ErrMissingKey, "%s", key)
@@ -363,7 +363,7 @@ func (m keyValueMap) get(key string, val interface{}) error {
 	return rlp.DecodeBytes(enc, val)
 }
 
-func (p *peer) sendReceiveHandshake(sendList keyValueList) (keyValueList, error) {
+func (p *peer) sendReceiveHandshake(sendList keyValueList) (keyValueList, error) { log.DebugLog()
 	// Send out own handshake in a new thread
 	errc := make(chan error, 1)
 	go func() {
@@ -393,7 +393,7 @@ func (p *peer) sendReceiveHandshake(sendList keyValueList) (keyValueList, error)
 
 // Handshake executes the les protocol handshake, negotiating version number,
 // network IDs, difficulties, head and genesis blocks.
-func (p *peer) Handshake(td *big.Int, head common.Hash, headNum uint64, genesis common.Hash, server *LesServer) error {
+func (p *peer) Handshake(td *big.Int, head common.Hash, headNum uint64, genesis common.Hash, server *LesServer) error { log.DebugLog()
 	p.lock.Lock()
 	defer p.lock.Unlock()
 
@@ -496,7 +496,7 @@ func (p *peer) Handshake(td *big.Int, head common.Hash, headNum uint64, genesis 
 }
 
 // String implements fmt.Stringer.
-func (p *peer) String() string {
+func (p *peer) String() string { log.DebugLog()
 	return fmt.Sprintf("Peer %s [%s]", p.id,
 		fmt.Sprintf("les/%d", p.version),
 	)
@@ -519,14 +519,14 @@ type peerSet struct {
 }
 
 // newPeerSet creates a new peer set to track the active participants.
-func newPeerSet() *peerSet {
+func newPeerSet() *peerSet { log.DebugLog()
 	return &peerSet{
 		peers: make(map[string]*peer),
 	}
 }
 
 // notify adds a service to be notified about added or removed peers
-func (ps *peerSet) notify(n peerSetNotify) {
+func (ps *peerSet) notify(n peerSetNotify) { log.DebugLog()
 	ps.lock.Lock()
 	ps.notifyList = append(ps.notifyList, n)
 	peers := make([]*peer, 0, len(ps.peers))
@@ -542,7 +542,7 @@ func (ps *peerSet) notify(n peerSetNotify) {
 
 // Register injects a new peer into the working set, or returns an error if the
 // peer is already known.
-func (ps *peerSet) Register(p *peer) error {
+func (ps *peerSet) Register(p *peer) error { log.DebugLog()
 	ps.lock.Lock()
 	if ps.closed {
 		return errClosed
@@ -564,7 +564,7 @@ func (ps *peerSet) Register(p *peer) error {
 
 // Unregister removes a remote peer from the active set, disabling any further
 // actions to/from that particular entity. It also initiates disconnection at the networking layer.
-func (ps *peerSet) Unregister(id string) error {
+func (ps *peerSet) Unregister(id string) error { log.DebugLog()
 	ps.lock.Lock()
 	if p, ok := ps.peers[id]; !ok {
 		ps.lock.Unlock()
@@ -585,7 +585,7 @@ func (ps *peerSet) Unregister(id string) error {
 }
 
 // AllPeerIDs returns a list of all registered peer IDs
-func (ps *peerSet) AllPeerIDs() []string {
+func (ps *peerSet) AllPeerIDs() []string { log.DebugLog()
 	ps.lock.RLock()
 	defer ps.lock.RUnlock()
 
@@ -599,7 +599,7 @@ func (ps *peerSet) AllPeerIDs() []string {
 }
 
 // Peer retrieves the registered peer with the given id.
-func (ps *peerSet) Peer(id string) *peer {
+func (ps *peerSet) Peer(id string) *peer { log.DebugLog()
 	ps.lock.RLock()
 	defer ps.lock.RUnlock()
 
@@ -607,7 +607,7 @@ func (ps *peerSet) Peer(id string) *peer {
 }
 
 // Len returns if the current number of peers in the set.
-func (ps *peerSet) Len() int {
+func (ps *peerSet) Len() int { log.DebugLog()
 	ps.lock.RLock()
 	defer ps.lock.RUnlock()
 
@@ -615,7 +615,7 @@ func (ps *peerSet) Len() int {
 }
 
 // BestPeer retrieves the known peer with the currently highest total difficulty.
-func (ps *peerSet) BestPeer() *peer {
+func (ps *peerSet) BestPeer() *peer { log.DebugLog()
 	ps.lock.RLock()
 	defer ps.lock.RUnlock()
 
@@ -632,7 +632,7 @@ func (ps *peerSet) BestPeer() *peer {
 }
 
 // AllPeers returns all peers in a list
-func (ps *peerSet) AllPeers() []*peer {
+func (ps *peerSet) AllPeers() []*peer { log.DebugLog()
 	ps.lock.RLock()
 	defer ps.lock.RUnlock()
 
@@ -647,7 +647,7 @@ func (ps *peerSet) AllPeers() []*peer {
 
 // Close disconnects all peers.
 // No new peers can be registered after Close has returned.
-func (ps *peerSet) Close() {
+func (ps *peerSet) Close() { log.DebugLog()
 	ps.lock.Lock()
 	defer ps.lock.Unlock()
 

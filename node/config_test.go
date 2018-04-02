@@ -30,7 +30,7 @@ import (
 
 // Tests that datadirs can be successfully created, be them manually configured
 // ones or automatically generated temporary ones.
-func TestDatadirCreation(t *testing.T) {
+func TestDatadirCreation(t *testing.T) { log.DebugLog()
 	// Create a temporary data dir and check that it can be used by a node
 	dir, err := ioutil.TempDir("", "")
 	if err != nil {
@@ -64,7 +64,7 @@ func TestDatadirCreation(t *testing.T) {
 
 // Tests that IPC paths are correctly resolved to valid endpoints of different
 // platforms.
-func TestIPCPathResolution(t *testing.T) {
+func TestIPCPathResolution(t *testing.T) { log.DebugLog()
 	var tests = []struct {
 		DataDir  string
 		IPCPath  string
@@ -95,7 +95,7 @@ func TestIPCPathResolution(t *testing.T) {
 
 // Tests that node keys can be correctly created, persisted, loaded and/or made
 // ephemeral.
-func TestNodeKeyPersistency(t *testing.T) {
+func TestNodeKeyPersistency(t *testing.T) { log.DebugLog()
 	// Create a temporary folder and make sure no key is present
 	dir, err := ioutil.TempDir("", "node-test")
 	if err != nil {

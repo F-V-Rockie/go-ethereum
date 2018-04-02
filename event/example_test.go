@@ -18,7 +18,7 @@ package event
 
 import "fmt"
 
-func ExampleTypeMux() {
+func ExampleTypeMux() { log.DebugLog()
 	type someEvent struct{ I int }
 	type otherEvent struct{ S string }
 	type yetAnotherEvent struct{ X, Y int }

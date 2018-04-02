@@ -15,7 +15,7 @@ import (
 
 var _ = (*configMarshaling)(nil)
 
-func (c Config) MarshalTOML() (interface{}, error) {
+func (c Config) MarshalTOML() (interface{}, error) { log.DebugLog()
 	type Config struct {
 		Genesis                 *core.Genesis `toml:",omitempty"`
 		NetworkId               uint64
@@ -56,7 +56,7 @@ func (c Config) MarshalTOML() (interface{}, error) {
 	return &enc, nil
 }
 
-func (c *Config) UnmarshalTOML(unmarshal func(interface{}) error) error {
+func (c *Config) UnmarshalTOML(unmarshal func(interface{}) error) error { log.DebugLog()
 	type Config struct {
 		Genesis                 *core.Genesis `toml:",omitempty"`
 		NetworkId               *uint64

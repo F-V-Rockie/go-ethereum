@@ -97,21 +97,21 @@ type info struct {
 	Year int64
 }
 
-func (i info) License() string {
+func (i info) License() string { log.DebugLog()
 	if i.gpl() {
 		return "General Public License"
 	}
 	return "Lesser General Public License"
 }
 
-func (i info) ShortLicense() string {
+func (i info) ShortLicense() string { log.DebugLog()
 	if i.gpl() {
 		return "GPL"
 	}
 	return "LGPL"
 }
 
-func (i info) Whole(startOfSentence bool) string {
+func (i info) Whole(startOfSentence bool) string { log.DebugLog()
 	if i.gpl() {
 		return "go-ethereum"
 	}
@@ -121,7 +121,7 @@ func (i info) Whole(startOfSentence bool) string {
 	return "the go-ethereum library"
 }
 
-func (i info) gpl() bool {
+func (i info) gpl() bool { log.DebugLog()
 	for _, p := range gplPrefixes {
 		if strings.HasPrefix(i.file, p) {
 			return true
@@ -130,7 +130,7 @@ func (i info) gpl() bool {
 	return false
 }
 
-func main() {
+func main() { log.DebugLog()
 	var (
 		files = getFiles()
 		filec = make(chan string)
@@ -159,7 +159,7 @@ func main() {
 	writeLicenses(infoc)
 }
 
-func skipFile(path string) bool {
+func skipFile(path string) bool { log.DebugLog()
 	if strings.Contains(path, "/testdata/") {
 		return true
 	}
@@ -171,7 +171,7 @@ func skipFile(path string) bool {
 	return false
 }
 
-func getFiles() []string {
+func getFiles() []string { log.DebugLog()
 	cmd := exec.Command("git", "ls-tree", "-r", "--name-only", "HEAD")
 	var files []string
 	err := doLines(cmd, func(line string) {
@@ -196,7 +196,7 @@ func getFiles() []string {
 
 var authorRegexp = regexp.MustCompile(`\s*[0-9]+\s*(.*)`)
 
-func gitAuthors(files []string) []string {
+func gitAuthors(files []string) []string { log.DebugLog()
 	cmds := []string{"shortlog", "-s", "-n", "-e", "HEAD", "--"}
 	cmds = append(cmds, files...)
 	cmd := exec.Command("git", cmds...)
@@ -213,7 +213,7 @@ func gitAuthors(files []string) []string {
 	return authors
 }
 
-func readAuthors() []string {
+func readAuthors() []string { log.DebugLog()
 	content, err := ioutil.ReadFile("AUTHORS")
 	if err != nil && !os.IsNotExist(err) {
 		log.Fatalln("error reading AUTHORS:", err)
@@ -230,7 +230,7 @@ func readAuthors() []string {
 	return authors
 }
 
-func mailmapLookup(authors []string) []string {
+func mailmapLookup(authors []string) []string { log.DebugLog()
 	if len(authors) == 0 {
 		return nil
 	}
@@ -247,7 +247,7 @@ func mailmapLookup(authors []string) []string {
 	return translated
 }
 
-func writeAuthors(files []string) {
+func writeAuthors(files []string) { log.DebugLog()
 	merge := make(map[string]bool)
 	// Add authors that Git reports as contributorxs.
 	// This is the primary source of author information.
@@ -278,7 +278,7 @@ func writeAuthors(files []string) {
 	}
 }
 
-func getInfo(files <-chan string, out chan<- *info, wg *sync.WaitGroup) {
+func getInfo(files <-chan string, out chan<- *info, wg *sync.WaitGroup) { log.DebugLog()
 	for file := range files {
 		stat, err := os.Lstat(file)
 		if err != nil {
@@ -301,7 +301,7 @@ func getInfo(files <-chan string, out chan<- *info, wg *sync.WaitGroup) {
 	wg.Done()
 }
 
-func isGenerated(file string) bool {
+func isGenerated(file string) bool { log.DebugLog()
 	fd, err := os.Open(file)
 	if err != nil {
 		return false
@@ -319,7 +319,7 @@ func isGenerated(file string) bool {
 }
 
 // fileInfo finds the lowest year in which the given file was committed.
-func fileInfo(file string) (*info, error) {
+func fileInfo(file string) (*info, error) { log.DebugLog()
 	info := &info{file: file, Year: int64(time.Now().Year())}
 	cmd := exec.Command("git", "log", "--follow", "--find-renames=80", "--find-copies=80", "--pretty=format:%ai", "--", file)
 	err := doLines(cmd, func(line string) {
@@ -334,13 +334,13 @@ func fileInfo(file string) (*info, error) {
 	return info, err
 }
 
-func writeLicenses(infos <-chan *info) {
+func writeLicenses(infos <-chan *info) { log.DebugLog()
 	for i := range infos {
 		writeLicense(i)
 	}
 }
 
-func writeLicense(info *info) {
+func writeLicense(info *info) { log.DebugLog()
 	fi, err := os.Stat(info.file)
 	if os.IsNotExist(err) {
 		fmt.Println("skipping (does not exist)", info.file)
@@ -373,7 +373,7 @@ func writeLicense(info *info) {
 	}
 }
 
-func doLines(cmd *exec.Cmd, f func(string)) error {
+func doLines(cmd *exec.Cmd, f func(string)) error { log.DebugLog()
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
 		return err

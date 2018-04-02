@@ -18,6 +18,6 @@ package dashboard
 
 // getProcessCPUTime returns 0 on Windows as there is no system call to resolve
 // the actual process' CPU time.
-func getProcessCPUTime() float64 {
+func getProcessCPUTime() float64 { log.DebugLog()
 	return 0
 }

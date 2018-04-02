@@ -51,7 +51,7 @@ var (
 	}
 )
 
-func TestWatchNewFile(t *testing.T) {
+func TestWatchNewFile(t *testing.T) { log.DebugLog()
 	t.Parallel()
 
 	dir, ks := tmpKeyStore(t, false)
@@ -91,7 +91,7 @@ func TestWatchNewFile(t *testing.T) {
 	t.Errorf("got %s, want %s", spew.Sdump(list), spew.Sdump(wantAccounts))
 }
 
-func TestWatchNoDir(t *testing.T) {
+func TestWatchNoDir(t *testing.T) { log.DebugLog()
 	t.Parallel()
 
 	// Create ks but not the directory that it watches.
@@ -132,7 +132,7 @@ func TestWatchNoDir(t *testing.T) {
 	t.Errorf("\ngot  %v\nwant %v", list, wantAccounts)
 }
 
-func TestCacheInitialReload(t *testing.T) {
+func TestCacheInitialReload(t *testing.T) { log.DebugLog()
 	cache, _ := newAccountCache(cachetestDir)
 	accounts := cache.accounts()
 	if !reflect.DeepEqual(accounts, cachetestAccounts) {
@@ -140,7 +140,7 @@ func TestCacheInitialReload(t *testing.T) {
 	}
 }
 
-func TestCacheAddDeleteOrder(t *testing.T) {
+func TestCacheAddDeleteOrder(t *testing.T) { log.DebugLog()
 	cache, _ := newAccountCache("testdata/no-such-dir")
 	cache.watcher.running = true // prevent unexpected reloads
 
@@ -224,7 +224,7 @@ func TestCacheAddDeleteOrder(t *testing.T) {
 	}
 }
 
-func TestCacheFind(t *testing.T) {
+func TestCacheFind(t *testing.T) { log.DebugLog()
 	dir := filepath.Join("testdata", "dir")
 	cache, _ := newAccountCache(dir)
 	cache.watcher.running = true // prevent unexpected reloads
@@ -297,7 +297,7 @@ func TestCacheFind(t *testing.T) {
 	}
 }
 
-func waitForAccounts(wantAccounts []accounts.Account, ks *KeyStore) error {
+func waitForAccounts(wantAccounts []accounts.Account, ks *KeyStore) error { log.DebugLog()
 	var list []accounts.Account
 	for d := 200 * time.Millisecond; d < 8*time.Second; d *= 2 {
 		list = ks.Accounts()
@@ -317,7 +317,7 @@ func waitForAccounts(wantAccounts []accounts.Account, ks *KeyStore) error {
 
 // TestUpdatedKeyfileContents tests that updating the contents of a keystore file
 // is noticed by the watcher, and the account cache is updated accordingly
-func TestUpdatedKeyfileContents(t *testing.T) {
+func TestUpdatedKeyfileContents(t *testing.T) { log.DebugLog()
 	t.Parallel()
 
 	// Create a temporary kesytore to test with
@@ -397,7 +397,7 @@ func TestUpdatedKeyfileContents(t *testing.T) {
 }
 
 // forceCopyFile is like cp.CopyFile, but doesn't complain if the destination exists.
-func forceCopyFile(dst, src string) error {
+func forceCopyFile(dst, src string) error { log.DebugLog()
 	data, err := ioutil.ReadFile(src)
 	if err != nil {
 		return err

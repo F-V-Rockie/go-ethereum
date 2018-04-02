@@ -127,7 +127,7 @@ type worker struct {
 	atWork int32
 }
 
-func newWorker(config *params.ChainConfig, engine consensus.Engine, coinbase common.Address, eth Backend, mux *event.TypeMux) *worker {
+func newWorker(config *params.ChainConfig, engine consensus.Engine, coinbase common.Address, eth Backend, mux *event.TypeMux) *worker { log.DebugLog()
 	worker := &worker{
 		config:         config,
 		engine:         engine,
@@ -158,19 +158,19 @@ func newWorker(config *params.ChainConfig, engine consensus.Engine, coinbase com
 	return worker
 }
 
-func (self *worker) setEtherbase(addr common.Address) {
+func (self *worker) setEtherbase(addr common.Address) { log.DebugLog()
 	self.mu.Lock()
 	defer self.mu.Unlock()
 	self.coinbase = addr
 }
 
-func (self *worker) setExtra(extra []byte) {
+func (self *worker) setExtra(extra []byte) { log.DebugLog()
 	self.mu.Lock()
 	defer self.mu.Unlock()
 	self.extra = extra
 }
 
-func (self *worker) pending() (*types.Block, *state.StateDB) {
+func (self *worker) pending() (*types.Block, *state.StateDB) { log.DebugLog()
 	self.currentMu.Lock()
 	defer self.currentMu.Unlock()
 
@@ -185,7 +185,7 @@ func (self *worker) pending() (*types.Block, *state.StateDB) {
 	return self.current.Block, self.current.state.Copy()
 }
 
-func (self *worker) pendingBlock() *types.Block {
+func (self *worker) pendingBlock() *types.Block { log.DebugLog()
 	self.currentMu.Lock()
 	defer self.currentMu.Unlock()
 
@@ -200,7 +200,7 @@ func (self *worker) pendingBlock() *types.Block {
 	return self.current.Block
 }
 
-func (self *worker) start() {
+func (self *worker) start() { log.DebugLog()
 	self.mu.Lock()
 	defer self.mu.Unlock()
 
@@ -212,7 +212,7 @@ func (self *worker) start() {
 	}
 }
 
-func (self *worker) stop() {
+func (self *worker) stop() { log.DebugLog()
 	self.wg.Wait()
 
 	self.mu.Lock()
@@ -226,21 +226,21 @@ func (self *worker) stop() {
 	atomic.StoreInt32(&self.atWork, 0)
 }
 
-func (self *worker) register(agent Agent) {
+func (self *worker) register(agent Agent) { log.DebugLog()
 	self.mu.Lock()
 	defer self.mu.Unlock()
 	self.agents[agent] = struct{}{}
 	agent.SetReturnCh(self.recv)
 }
 
-func (self *worker) unregister(agent Agent) {
+func (self *worker) unregister(agent Agent) { log.DebugLog()
 	self.mu.Lock()
 	defer self.mu.Unlock()
 	delete(self.agents, agent)
 	agent.Stop()
 }
 
-func (self *worker) update() {
+func (self *worker) update() { log.DebugLog()
 	defer self.txSub.Unsubscribe()
 	defer self.chainHeadSub.Unsubscribe()
 	defer self.chainSideSub.Unsubscribe()
@@ -287,7 +287,7 @@ func (self *worker) update() {
 	}
 }
 
-func (self *worker) wait() {
+func (self *worker) wait() { log.DebugLog()
 	for {
 		mustCommitNewWork := true
 		for result := range self.recv {
@@ -342,7 +342,7 @@ func (self *worker) wait() {
 }
 
 // push sends a new work task to currently live miner agents.
-func (self *worker) push(work *Work) {
+func (self *worker) push(work *Work) { log.DebugLog()
 	if atomic.LoadInt32(&self.mining) != 1 {
 		return
 	}
@@ -355,7 +355,7 @@ func (self *worker) push(work *Work) {
 }
 
 // makeCurrent creates a new environment for the current cycle.
-func (self *worker) makeCurrent(parent *types.Block, header *types.Header) error {
+func (self *worker) makeCurrent(parent *types.Block, header *types.Header) error { log.DebugLog()
 	state, err := self.chain.StateAt(parent.Root())
 	if err != nil {
 		return err
@@ -386,7 +386,7 @@ func (self *worker) makeCurrent(parent *types.Block, header *types.Header) error
 	return nil
 }
 
-func (self *worker) commitNewWork() {
+func (self *worker) commitNewWork() { log.DebugLog()
 	self.mu.Lock()
 	defer self.mu.Unlock()
 	self.uncleMu.Lock()
@@ -491,7 +491,7 @@ func (self *worker) commitNewWork() {
 	self.push(work)
 }
 
-func (self *worker) commitUncle(work *Work, uncle *types.Header) error {
+func (self *worker) commitUncle(work *Work, uncle *types.Header) error { log.DebugLog()
 	hash := uncle.Hash()
 	if work.uncles.Has(hash) {
 		return fmt.Errorf("uncle not unique")
@@ -506,7 +506,7 @@ func (self *worker) commitUncle(work *Work, uncle *types.Header) error {
 	return nil
 }
 
-func (env *Work) commitTransactions(mux *event.TypeMux, txs *types.TransactionsByPriceAndNonce, bc *core.BlockChain, coinbase common.Address) {
+func (env *Work) commitTransactions(mux *event.TypeMux, txs *types.TransactionsByPriceAndNonce, bc *core.BlockChain, coinbase common.Address) { log.DebugLog()
 	gp := new(core.GasPool).AddGas(env.header.GasLimit)
 
 	var coalescedLogs []*types.Log
@@ -589,7 +589,7 @@ func (env *Work) commitTransactions(mux *event.TypeMux, txs *types.TransactionsB
 	}
 }
 
-func (env *Work) commitTransaction(tx *types.Transaction, bc *core.BlockChain, coinbase common.Address, gp *core.GasPool) (error, []*types.Log) {
+func (env *Work) commitTransaction(tx *types.Transaction, bc *core.BlockChain, coinbase common.Address, gp *core.GasPool) (error, []*types.Log) { log.DebugLog()
 	snap := env.state.Snapshot()
 
 	receipt, _, err := core.ApplyTransaction(env.config, bc, &coinbase, gp, env.state, env.header, tx, &env.header.GasUsed, vm.Config{})

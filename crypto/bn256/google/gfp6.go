@@ -18,63 +18,63 @@ type gfP6 struct {
 	x, y, z *gfP2 // value is xτ² + yτ + z
 }
 
-func newGFp6(pool *bnPool) *gfP6 {
+func newGFp6(pool *bnPool) *gfP6 { log.DebugLog()
 	return &gfP6{newGFp2(pool), newGFp2(pool), newGFp2(pool)}
 }
 
-func (e *gfP6) String() string {
+func (e *gfP6) String() string { log.DebugLog()
 	return "(" + e.x.String() + "," + e.y.String() + "," + e.z.String() + ")"
 }
 
-func (e *gfP6) Put(pool *bnPool) {
+func (e *gfP6) Put(pool *bnPool) { log.DebugLog()
 	e.x.Put(pool)
 	e.y.Put(pool)
 	e.z.Put(pool)
 }
 
-func (e *gfP6) Set(a *gfP6) *gfP6 {
+func (e *gfP6) Set(a *gfP6) *gfP6 { log.DebugLog()
 	e.x.Set(a.x)
 	e.y.Set(a.y)
 	e.z.Set(a.z)
 	return e
 }
 
-func (e *gfP6) SetZero() *gfP6 {
+func (e *gfP6) SetZero() *gfP6 { log.DebugLog()
 	e.x.SetZero()
 	e.y.SetZero()
 	e.z.SetZero()
 	return e
 }
 
-func (e *gfP6) SetOne() *gfP6 {
+func (e *gfP6) SetOne() *gfP6 { log.DebugLog()
 	e.x.SetZero()
 	e.y.SetZero()
 	e.z.SetOne()
 	return e
 }
 
-func (e *gfP6) Minimal() {
+func (e *gfP6) Minimal() { log.DebugLog()
 	e.x.Minimal()
 	e.y.Minimal()
 	e.z.Minimal()
 }
 
-func (e *gfP6) IsZero() bool {
+func (e *gfP6) IsZero() bool { log.DebugLog()
 	return e.x.IsZero() && e.y.IsZero() && e.z.IsZero()
 }
 
-func (e *gfP6) IsOne() bool {
+func (e *gfP6) IsOne() bool { log.DebugLog()
 	return e.x.IsZero() && e.y.IsZero() && e.z.IsOne()
 }
 
-func (e *gfP6) Negative(a *gfP6) *gfP6 {
+func (e *gfP6) Negative(a *gfP6) *gfP6 { log.DebugLog()
 	e.x.Negative(a.x)
 	e.y.Negative(a.y)
 	e.z.Negative(a.z)
 	return e
 }
 
-func (e *gfP6) Frobenius(a *gfP6, pool *bnPool) *gfP6 {
+func (e *gfP6) Frobenius(a *gfP6, pool *bnPool) *gfP6 { log.DebugLog()
 	e.x.Conjugate(a.x)
 	e.y.Conjugate(a.y)
 	e.z.Conjugate(a.z)
@@ -85,7 +85,7 @@ func (e *gfP6) Frobenius(a *gfP6, pool *bnPool) *gfP6 {
 }
 
 // FrobeniusP2 computes (xτ²+yτ+z)^(p²) = xτ^(2p²) + yτ^(p²) + z
-func (e *gfP6) FrobeniusP2(a *gfP6) *gfP6 {
+func (e *gfP6) FrobeniusP2(a *gfP6) *gfP6 { log.DebugLog()
 	// τ^(2p²) = τ²τ^(2p²-2) = τ²ξ^((2p²-2)/3)
 	e.x.MulScalar(a.x, xiTo2PSquaredMinus2Over3)
 	// τ^(p²) = ττ^(p²-1) = τξ^((p²-1)/3)
@@ -94,28 +94,28 @@ func (e *gfP6) FrobeniusP2(a *gfP6) *gfP6 {
 	return e
 }
 
-func (e *gfP6) Add(a, b *gfP6) *gfP6 {
+func (e *gfP6) Add(a, b *gfP6) *gfP6 { log.DebugLog()
 	e.x.Add(a.x, b.x)
 	e.y.Add(a.y, b.y)
 	e.z.Add(a.z, b.z)
 	return e
 }
 
-func (e *gfP6) Sub(a, b *gfP6) *gfP6 {
+func (e *gfP6) Sub(a, b *gfP6) *gfP6 { log.DebugLog()
 	e.x.Sub(a.x, b.x)
 	e.y.Sub(a.y, b.y)
 	e.z.Sub(a.z, b.z)
 	return e
 }
 
-func (e *gfP6) Double(a *gfP6) *gfP6 {
+func (e *gfP6) Double(a *gfP6) *gfP6 { log.DebugLog()
 	e.x.Double(a.x)
 	e.y.Double(a.y)
 	e.z.Double(a.z)
 	return e
 }
 
-func (e *gfP6) Mul(a, b *gfP6, pool *bnPool) *gfP6 {
+func (e *gfP6) Mul(a, b *gfP6, pool *bnPool) *gfP6 { log.DebugLog()
 	// "Multiplication and Squaring on Pairing-Friendly Fields"
 	// Section 4, Karatsuba method.
 	// http://eprint.iacr.org/2006/471.pdf
@@ -171,14 +171,14 @@ func (e *gfP6) Mul(a, b *gfP6, pool *bnPool) *gfP6 {
 	return e
 }
 
-func (e *gfP6) MulScalar(a *gfP6, b *gfP2, pool *bnPool) *gfP6 {
+func (e *gfP6) MulScalar(a *gfP6, b *gfP2, pool *bnPool) *gfP6 { log.DebugLog()
 	e.x.Mul(a.x, b, pool)
 	e.y.Mul(a.y, b, pool)
 	e.z.Mul(a.z, b, pool)
 	return e
 }
 
-func (e *gfP6) MulGFP(a *gfP6, b *big.Int) *gfP6 {
+func (e *gfP6) MulGFP(a *gfP6, b *big.Int) *gfP6 { log.DebugLog()
 	e.x.MulScalar(a.x, b)
 	e.y.MulScalar(a.y, b)
 	e.z.MulScalar(a.z, b)
@@ -186,7 +186,7 @@ func (e *gfP6) MulGFP(a *gfP6, b *big.Int) *gfP6 {
 }
 
 // MulTau computes τ·(aτ²+bτ+c) = bτ²+cτ+aξ
-func (e *gfP6) MulTau(a *gfP6, pool *bnPool) {
+func (e *gfP6) MulTau(a *gfP6, pool *bnPool) { log.DebugLog()
 	tz := newGFp2(pool)
 	tz.MulXi(a.x, pool)
 	ty := newGFp2(pool)
@@ -198,7 +198,7 @@ func (e *gfP6) MulTau(a *gfP6, pool *bnPool) {
 	ty.Put(pool)
 }
 
-func (e *gfP6) Square(a *gfP6, pool *bnPool) *gfP6 {
+func (e *gfP6) Square(a *gfP6, pool *bnPool) *gfP6 { log.DebugLog()
 	v0 := newGFp2(pool).Square(a.z, pool)
 	v1 := newGFp2(pool).Square(a.y, pool)
 	v2 := newGFp2(pool).Square(a.x, pool)
@@ -238,7 +238,7 @@ func (e *gfP6) Square(a *gfP6, pool *bnPool) *gfP6 {
 	return e
 }
 
-func (e *gfP6) Invert(a *gfP6, pool *bnPool) *gfP6 {
+func (e *gfP6) Invert(a *gfP6, pool *bnPool) *gfP6 { log.DebugLog()
 	// See "Implementing cryptographic pairings", M. Scott, section 3.2.
 	// ftp://136.206.11.249/pub/crypto/pairings.pdf
 

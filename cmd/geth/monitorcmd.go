@@ -68,7 +68,7 @@ to display multiple metrics simultaneously.
 )
 
 // monitor starts a terminal UI based monitoring tool for the requested metrics.
-func monitor(ctx *cli.Context) error {
+func monitor(ctx *cli.Context) error { log.DebugLog()
 	var (
 		client *rpc.Client
 		err    error
@@ -160,7 +160,7 @@ func monitor(ctx *cli.Context) error {
 
 // retrieveMetrics contacts the attached geth node and retrieves the entire set
 // of collected system metrics.
-func retrieveMetrics(client *rpc.Client) (map[string]interface{}, error) {
+func retrieveMetrics(client *rpc.Client) (map[string]interface{}, error) { log.DebugLog()
 	var metrics map[string]interface{}
 	err := client.Call(&metrics, "debug_metrics", true)
 	return metrics, err
@@ -168,7 +168,7 @@ func retrieveMetrics(client *rpc.Client) (map[string]interface{}, error) {
 
 // resolveMetrics takes a list of input metric patterns, and resolves each to one
 // or more canonical metric names.
-func resolveMetrics(metrics map[string]interface{}, patterns []string) []string {
+func resolveMetrics(metrics map[string]interface{}, patterns []string) []string { log.DebugLog()
 	res := []string{}
 	for _, pattern := range patterns {
 		res = append(res, resolveMetric(metrics, pattern, "")...)
@@ -178,7 +178,7 @@ func resolveMetrics(metrics map[string]interface{}, patterns []string) []string 
 
 // resolveMetrics takes a single of input metric pattern, and resolves it to one
 // or more canonical metric names.
-func resolveMetric(metrics map[string]interface{}, pattern string, path string) []string {
+func resolveMetric(metrics map[string]interface{}, pattern string, path string) []string { log.DebugLog()
 	results := []string{}
 
 	// If a nested metric was requested, recurse optionally branching (via comma)
@@ -213,7 +213,7 @@ func resolveMetric(metrics map[string]interface{}, pattern string, path string) 
 }
 
 // expandMetrics expands the entire tree of metrics into a flat list of paths.
-func expandMetrics(metrics map[string]interface{}, path string) []string {
+func expandMetrics(metrics map[string]interface{}, path string) []string { log.DebugLog()
 	// Iterate over all fields and expand individually
 	list := []string{}
 	for name, metric := range metrics {
@@ -235,7 +235,7 @@ func expandMetrics(metrics map[string]interface{}, path string) []string {
 }
 
 // fetchMetric iterates over the metrics map and retrieves a specific one.
-func fetchMetric(metrics map[string]interface{}, metric string) float64 {
+func fetchMetric(metrics map[string]interface{}, metric string) float64 { log.DebugLog()
 	parts := strings.Split(metric, "/")
 	for _, part := range parts[:len(parts)-1] {
 		var found bool
@@ -252,7 +252,7 @@ func fetchMetric(metrics map[string]interface{}, metric string) float64 {
 
 // refreshCharts retrieves a next batch of metrics, and inserts all the new
 // values into the active datasets and charts
-func refreshCharts(client *rpc.Client, metrics []string, data [][]float64, units []int, charts []*termui.LineChart, ctx *cli.Context, footer *termui.Par) (realign bool) {
+func refreshCharts(client *rpc.Client, metrics []string, data [][]float64, units []int, charts []*termui.LineChart, ctx *cli.Context, footer *termui.Par) (realign bool) { log.DebugLog()
 	values, err := retrieveMetrics(client)
 	for i, metric := range metrics {
 		if len(data) < 512 {
@@ -270,7 +270,7 @@ func refreshCharts(client *rpc.Client, metrics []string, data [][]float64, units
 
 // updateChart inserts a dataset into a line chart, scaling appropriately as to
 // not display weird labels, also updating the chart label accordingly.
-func updateChart(metric string, data []float64, base *int, chart *termui.LineChart, err error) (realign bool) {
+func updateChart(metric string, data []float64, base *int, chart *termui.LineChart, err error) (realign bool) { log.DebugLog()
 	dataUnits := []string{"", "K", "M", "G", "T", "E"}
 	timeUnits := []string{"ns", "µs", "ms", "s", "ks", "ms"}
 	colors := []termui.Attribute{termui.ColorBlue, termui.ColorCyan, termui.ColorGreen, termui.ColorYellow, termui.ColorRed, termui.ColorRed}
@@ -320,7 +320,7 @@ func updateChart(metric string, data []float64, base *int, chart *termui.LineCha
 }
 
 // createChart creates an empty line chart with the default configs.
-func createChart(height int) *termui.LineChart {
+func createChart(height int) *termui.LineChart { log.DebugLog()
 	chart := termui.NewLineChart()
 	if runtime.GOOS == "windows" {
 		chart.Mode = "dot"
@@ -337,7 +337,7 @@ func createChart(height int) *termui.LineChart {
 }
 
 // updateFooter updates the footer contents based on any encountered errors.
-func updateFooter(ctx *cli.Context, err error, footer *termui.Par) {
+func updateFooter(ctx *cli.Context, err error, footer *termui.Par) { log.DebugLog()
 	// Generate the basic footer
 	refresh := time.Duration(ctx.Int(monitorCommandRefreshFlag.Name)) * time.Second
 	footer.Text = fmt.Sprintf("Press Ctrl+C to quit. Refresh interval: %v.", refresh)

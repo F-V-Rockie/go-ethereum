@@ -25,6 +25,6 @@ import (
 
 type AbsTime time.Duration // absolute monotonic time
 
-func Now() AbsTime {
+func Now() AbsTime { log.DebugLog()
 	return AbsTime(monotime.Now())
 }

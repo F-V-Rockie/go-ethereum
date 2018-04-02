@@ -27,7 +27,7 @@ import (
 	"gopkg.in/urfave/cli.v1"
 )
 
-func list(ctx *cli.Context) {
+func list(ctx *cli.Context) { log.DebugLog()
 	args := ctx.Args()
 
 	if len(args) < 1 {

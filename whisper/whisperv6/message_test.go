@@ -28,7 +28,7 @@ import (
 	"github.com/ethereum/go-ethereum/rlp"
 )
 
-func generateMessageParams() (*MessageParams, error) {
+func generateMessageParams() (*MessageParams, error) { log.DebugLog()
 	// set all the parameters except p.Dst and p.Padding
 
 	buf := make([]byte, 4)
@@ -54,7 +54,7 @@ func generateMessageParams() (*MessageParams, error) {
 	return &p, nil
 }
 
-func singleMessageTest(t *testing.T, symmetric bool) {
+func singleMessageTest(t *testing.T, symmetric bool) { log.DebugLog()
 	params, err := generateMessageParams()
 	if err != nil {
 		t.Fatalf("failed generateMessageParams with seed %d: %s.", seed, err)
@@ -111,7 +111,7 @@ func singleMessageTest(t *testing.T, symmetric bool) {
 	}
 }
 
-func TestMessageEncryption(t *testing.T) {
+func TestMessageEncryption(t *testing.T) { log.DebugLog()
 	InitSingleTest()
 
 	var symmetric bool
@@ -121,7 +121,7 @@ func TestMessageEncryption(t *testing.T) {
 	}
 }
 
-func TestMessageWrap(t *testing.T) {
+func TestMessageWrap(t *testing.T) { log.DebugLog()
 	seed = int64(1777444222)
 	mrand.Seed(seed)
 	target := 128.0
@@ -162,7 +162,7 @@ func TestMessageWrap(t *testing.T) {
 	}
 }
 
-func TestMessageSeal(t *testing.T) {
+func TestMessageSeal(t *testing.T) { log.DebugLog()
 	// this test depends on deterministic choice of seed (1976726903)
 	seed = int64(1976726903)
 	mrand.Seed(seed)
@@ -205,7 +205,7 @@ func TestMessageSeal(t *testing.T) {
 	}
 }
 
-func TestEnvelopeOpen(t *testing.T) {
+func TestEnvelopeOpen(t *testing.T) { log.DebugLog()
 	InitSingleTest()
 
 	var symmetric bool
@@ -215,7 +215,7 @@ func TestEnvelopeOpen(t *testing.T) {
 	}
 }
 
-func singleEnvelopeOpenTest(t *testing.T, symmetric bool) {
+func singleEnvelopeOpenTest(t *testing.T, symmetric bool) { log.DebugLog()
 	params, err := generateMessageParams()
 	if err != nil {
 		t.Fatalf("failed generateMessageParams with seed %d: %s.", seed, err)
@@ -282,7 +282,7 @@ func singleEnvelopeOpenTest(t *testing.T, symmetric bool) {
 	}
 }
 
-func TestEncryptWithZeroKey(t *testing.T) {
+func TestEncryptWithZeroKey(t *testing.T) { log.DebugLog()
 	InitSingleTest()
 
 	params, err := generateMessageParams()
@@ -328,7 +328,7 @@ func TestEncryptWithZeroKey(t *testing.T) {
 	}
 }
 
-func TestRlpEncode(t *testing.T) {
+func TestRlpEncode(t *testing.T) { log.DebugLog()
 	InitSingleTest()
 
 	params, err := generateMessageParams()
@@ -363,7 +363,7 @@ func TestRlpEncode(t *testing.T) {
 	}
 }
 
-func singlePaddingTest(t *testing.T, padSize int) {
+func singlePaddingTest(t *testing.T, padSize int) { log.DebugLog()
 	params, err := generateMessageParams()
 	if err != nil {
 		t.Fatalf("failed generateMessageParams with seed %d and sz=%d: %s.", seed, padSize, err)
@@ -397,7 +397,7 @@ func singlePaddingTest(t *testing.T, padSize int) {
 	}
 }
 
-func TestPadding(t *testing.T) {
+func TestPadding(t *testing.T) { log.DebugLog()
 	InitSingleTest()
 
 	for i := 1; i < 260; i++ {
@@ -420,7 +420,7 @@ func TestPadding(t *testing.T) {
 	}
 }
 
-func TestPaddingAppendedToSymMessagesWithSignature(t *testing.T) {
+func TestPaddingAppendedToSymMessagesWithSignature(t *testing.T) { log.DebugLog()
 	params := &MessageParams{
 		Payload: make([]byte, 246),
 		KeySym:  make([]byte, aesKeyLength),
@@ -453,7 +453,7 @@ func TestPaddingAppendedToSymMessagesWithSignature(t *testing.T) {
 	}
 }
 
-func TestAesNonce(t *testing.T) {
+func TestAesNonce(t *testing.T) { log.DebugLog()
 	key := hexutil.MustDecode("0x03ca634cae0d49acb401d8a4c6b6fe8c55b70d115bf400769cc1400f3258cd31")
 	block, err := aes.NewCipher(key)
 	if err != nil {

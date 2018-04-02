@@ -56,13 +56,13 @@ type AuthNeededError struct {
 
 // NewAuthNeededError creates a new authentication error with the extra details
 // about the needed fields set.
-func NewAuthNeededError(needed string) error {
+func NewAuthNeededError(needed string) error { log.DebugLog()
 	return &AuthNeededError{
 		Needed: needed,
 	}
 }
 
 // Error implements the standard error interface.
-func (err *AuthNeededError) Error() string {
+func (err *AuthNeededError) Error() string { log.DebugLog()
 	return fmt.Sprintf("authentication needed: %s", err.Needed)
 }

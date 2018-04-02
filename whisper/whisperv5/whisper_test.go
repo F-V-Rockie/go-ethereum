@@ -26,7 +26,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 )
 
-func TestWhisperBasic(t *testing.T) {
+func TestWhisperBasic(t *testing.T) { log.DebugLog()
 	w := New(&DefaultConfig)
 	p := w.Protocols()
 	shh := p[0]
@@ -120,7 +120,7 @@ func TestWhisperBasic(t *testing.T) {
 	}
 }
 
-func TestWhisperAsymmetricKeyImport(t *testing.T) {
+func TestWhisperAsymmetricKeyImport(t *testing.T) { log.DebugLog()
 	var (
 		w           = New(&DefaultConfig)
 		privateKeys []*ecdsa.PrivateKey
@@ -151,7 +151,7 @@ func TestWhisperAsymmetricKeyImport(t *testing.T) {
 	}
 }
 
-func TestWhisperIdentityManagement(t *testing.T) {
+func TestWhisperIdentityManagement(t *testing.T) { log.DebugLog()
 	w := New(&DefaultConfig)
 	id1, err := w.NewKeyPair()
 	if err != nil {
@@ -269,7 +269,7 @@ func TestWhisperIdentityManagement(t *testing.T) {
 	}
 }
 
-func TestWhisperSymKeyManagement(t *testing.T) {
+func TestWhisperSymKeyManagement(t *testing.T) { log.DebugLog()
 	InitSingleTest()
 
 	var err error
@@ -474,7 +474,7 @@ func TestWhisperSymKeyManagement(t *testing.T) {
 	}
 }
 
-func TestExpiry(t *testing.T) {
+func TestExpiry(t *testing.T) { log.DebugLog()
 	InitSingleTest()
 
 	w := New(&DefaultConfig)
@@ -531,7 +531,7 @@ func TestExpiry(t *testing.T) {
 	}
 }
 
-func TestCustomization(t *testing.T) {
+func TestCustomization(t *testing.T) { log.DebugLog()
 	InitSingleTest()
 
 	w := New(&DefaultConfig)
@@ -627,7 +627,7 @@ func TestCustomization(t *testing.T) {
 	}
 }
 
-func TestSymmetricSendCycle(t *testing.T) {
+func TestSymmetricSendCycle(t *testing.T) { log.DebugLog()
 	InitSingleTest()
 
 	w := New(&DefaultConfig)
@@ -716,7 +716,7 @@ func TestSymmetricSendCycle(t *testing.T) {
 
 }
 
-func TestSymmetricSendWithoutAKey(t *testing.T) {
+func TestSymmetricSendWithoutAKey(t *testing.T) { log.DebugLog()
 	InitSingleTest()
 
 	w := New(&DefaultConfig)
@@ -784,7 +784,7 @@ func TestSymmetricSendWithoutAKey(t *testing.T) {
 	}
 }
 
-func TestSymmetricSendKeyMismatch(t *testing.T) {
+func TestSymmetricSendKeyMismatch(t *testing.T) { log.DebugLog()
 	InitSingleTest()
 
 	w := New(&DefaultConfig)

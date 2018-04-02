@@ -23,7 +23,7 @@ import (
 	"github.com/ethereum/go-ethereum/params"
 )
 
-func TestTransaction(t *testing.T) {
+func TestTransaction(t *testing.T) { log.DebugLog()
 	t.Parallel()
 
 	txt := new(testMatcher)

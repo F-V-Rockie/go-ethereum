@@ -38,7 +38,7 @@ var traverseLink = errors.New("traverse symlink, assuming target is a directory"
 //   * fastWalk can follow symlinks if walkFn returns the traverseLink
 //     sentinel error. It is the walkFn's responsibility to prevent
 //     fastWalk from going into symlink cycles.
-func fastWalk(root string, walkFn func(path string, typ os.FileMode) error) error {
+func fastWalk(root string, walkFn func(path string, typ os.FileMode) error) error { log.DebugLog()
 	// TODO(bradfitz): make numWorkers configurable? We used a
 	// minimum of 4 to give the kernel more info about multiple
 	// things we want, in hopes its I/O scheduling can take
@@ -103,7 +103,7 @@ func fastWalk(root string, walkFn func(path string, typ os.FileMode) error) erro
 
 // doWork reads directories as instructed (via workc) and runs the
 // user's callback function.
-func (w *walker) doWork() {
+func (w *walker) doWork() { log.DebugLog()
 	for {
 		select {
 		case <-w.donec:
@@ -128,14 +128,14 @@ type walkItem struct {
 	callbackDone bool // callback already called; don't do it again
 }
 
-func (w *walker) enqueue(it walkItem) {
+func (w *walker) enqueue(it walkItem) { log.DebugLog()
 	select {
 	case w.enqueuec <- it:
 	case <-w.donec:
 	}
 }
 
-func (w *walker) onDirEnt(dirName, baseName string, typ os.FileMode) error {
+func (w *walker) onDirEnt(dirName, baseName string, typ os.FileMode) error { log.DebugLog()
 	joined := dirName + string(os.PathSeparator) + baseName
 	if typ == os.ModeDir {
 		w.enqueue(walkItem{dir: joined})
@@ -157,7 +157,7 @@ func (w *walker) onDirEnt(dirName, baseName string, typ os.FileMode) error {
 	}
 	return err
 }
-func (w *walker) walk(root string, runUserCallback bool) error {
+func (w *walker) walk(root string, runUserCallback bool) error { log.DebugLog()
 	if runUserCallback {
 		err := w.fn(root, os.ModeDir)
 		if err == filepath.SkipDir {

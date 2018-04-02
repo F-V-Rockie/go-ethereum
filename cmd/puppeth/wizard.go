@@ -48,7 +48,7 @@ type config struct {
 }
 
 // servers retrieves an alphabetically sorted list of servers.
-func (c config) servers() []string {
+func (c config) servers() []string { log.DebugLog()
 	servers := make([]string, 0, len(c.Servers))
 	for server := range c.Servers {
 		servers = append(servers, server)
@@ -59,7 +59,7 @@ func (c config) servers() []string {
 }
 
 // flush dumps the contents of config to disk.
-func (c config) flush() {
+func (c config) flush() { log.DebugLog()
 	os.MkdirAll(filepath.Dir(c.path), 0755)
 
 	out, _ := json.MarshalIndent(c, "", "  ")
@@ -80,7 +80,7 @@ type wizard struct {
 }
 
 // read reads a single line from stdin, trimming if from spaces.
-func (w *wizard) read() string {
+func (w *wizard) read() string { log.DebugLog()
 	fmt.Printf("> ")
 	text, err := w.in.ReadString('\n')
 	if err != nil {
@@ -91,7 +91,7 @@ func (w *wizard) read() string {
 
 // readString reads a single line from stdin, trimming if from spaces, enforcing
 // non-emptyness.
-func (w *wizard) readString() string {
+func (w *wizard) readString() string { log.DebugLog()
 	for {
 		fmt.Printf("> ")
 		text, err := w.in.ReadString('\n')
@@ -106,7 +106,7 @@ func (w *wizard) readString() string {
 
 // readDefaultString reads a single line from stdin, trimming if from spaces. If
 // an empty line is entered, the default value is returned.
-func (w *wizard) readDefaultString(def string) string {
+func (w *wizard) readDefaultString(def string) string { log.DebugLog()
 	fmt.Printf("> ")
 	text, err := w.in.ReadString('\n')
 	if err != nil {
@@ -120,7 +120,7 @@ func (w *wizard) readDefaultString(def string) string {
 
 // readInt reads a single line from stdin, trimming if from spaces, enforcing it
 // to parse into an integer.
-func (w *wizard) readInt() int {
+func (w *wizard) readInt() int { log.DebugLog()
 	for {
 		fmt.Printf("> ")
 		text, err := w.in.ReadString('\n')
@@ -142,7 +142,7 @@ func (w *wizard) readInt() int {
 // readDefaultInt reads a single line from stdin, trimming if from spaces, enforcing
 // it to parse into an integer. If an empty line is entered, the default value is
 // returned.
-func (w *wizard) readDefaultInt(def int) int {
+func (w *wizard) readDefaultInt(def int) int { log.DebugLog()
 	for {
 		fmt.Printf("> ")
 		text, err := w.in.ReadString('\n')
@@ -164,7 +164,7 @@ func (w *wizard) readDefaultInt(def int) int {
 // readDefaultBigInt reads a single line from stdin, trimming if from spaces,
 // enforcing it to parse into a big integer. If an empty line is entered, the
 // default value is returned.
-func (w *wizard) readDefaultBigInt(def *big.Int) *big.Int {
+func (w *wizard) readDefaultBigInt(def *big.Int) *big.Int { log.DebugLog()
 	for {
 		fmt.Printf("> ")
 		text, err := w.in.ReadString('\n')
@@ -186,7 +186,7 @@ func (w *wizard) readDefaultBigInt(def *big.Int) *big.Int {
 /*
 // readFloat reads a single line from stdin, trimming if from spaces, enforcing it
 // to parse into a float.
-func (w *wizard) readFloat() float64 {
+func (w *wizard) readFloat() float64 { log.DebugLog()
 	for {
 		fmt.Printf("> ")
 		text, err := w.in.ReadString('\n')
@@ -208,7 +208,7 @@ func (w *wizard) readFloat() float64 {
 
 // readDefaultFloat reads a single line from stdin, trimming if from spaces, enforcing
 // it to parse into a float. If an empty line is entered, the default value is returned.
-func (w *wizard) readDefaultFloat(def float64) float64 {
+func (w *wizard) readDefaultFloat(def float64) float64 { log.DebugLog()
 	for {
 		fmt.Printf("> ")
 		text, err := w.in.ReadString('\n')
@@ -229,7 +229,7 @@ func (w *wizard) readDefaultFloat(def float64) float64 {
 
 // readPassword reads a single line from stdin, trimming it from the trailing new
 // line and returns it. The input will not be echoed.
-func (w *wizard) readPassword() string {
+func (w *wizard) readPassword() string { log.DebugLog()
 	fmt.Printf("> ")
 	text, err := terminal.ReadPassword(int(os.Stdin.Fd()))
 	if err != nil {
@@ -241,7 +241,7 @@ func (w *wizard) readPassword() string {
 
 // readAddress reads a single line from stdin, trimming if from spaces and converts
 // it to an Ethereum address.
-func (w *wizard) readAddress() *common.Address {
+func (w *wizard) readAddress() *common.Address { log.DebugLog()
 	for {
 		// Read the address from the user
 		fmt.Printf("> 0x")
@@ -266,7 +266,7 @@ func (w *wizard) readAddress() *common.Address {
 // readDefaultAddress reads a single line from stdin, trimming if from spaces and
 // converts it to an Ethereum address. If an empty line is entered, the default
 // value is returned.
-func (w *wizard) readDefaultAddress(def common.Address) common.Address {
+func (w *wizard) readDefaultAddress(def common.Address) common.Address { log.DebugLog()
 	for {
 		// Read the address from the user
 		fmt.Printf("> 0x")
@@ -288,7 +288,7 @@ func (w *wizard) readDefaultAddress(def common.Address) common.Address {
 }
 
 // readJSON reads a raw JSON message and returns it.
-func (w *wizard) readJSON() string {
+func (w *wizard) readJSON() string { log.DebugLog()
 	var blob json.RawMessage
 
 	for {
@@ -305,7 +305,7 @@ func (w *wizard) readJSON() string {
 // returning it if it's convertible to an IP address. The reason for keeping
 // the user input format instead of returning a Go net.IP is to match with
 // weird formats used by ethstats, which compares IPs textually, not by value.
-func (w *wizard) readIPAddress() string {
+func (w *wizard) readIPAddress() string { log.DebugLog()
 	for {
 		// Read the IP address from the user
 		fmt.Printf("> ")

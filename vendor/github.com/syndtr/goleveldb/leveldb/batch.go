@@ -22,11 +22,11 @@ type ErrBatchCorrupted struct {
 	Reason string
 }
 
-func (e *ErrBatchCorrupted) Error() string {
+func (e *ErrBatchCorrupted) Error() string { log.DebugLog()
 	return fmt.Sprintf("leveldb: batch corrupted: %s", e.Reason)
 }
 
-func newErrBatchCorrupted(reason string) error {
+func newErrBatchCorrupted(reason string) error { log.DebugLog()
 	return errors.NewErrCorrupted(storage.FileDesc{}, &ErrBatchCorrupted{reason})
 }
 
@@ -48,18 +48,18 @@ type batchIndex struct {
 	valuePos, valueLen int
 }
 
-func (index batchIndex) k(data []byte) []byte {
+func (index batchIndex) k(data []byte) []byte { log.DebugLog()
 	return data[index.keyPos : index.keyPos+index.keyLen]
 }
 
-func (index batchIndex) v(data []byte) []byte {
+func (index batchIndex) v(data []byte) []byte { log.DebugLog()
 	if index.valueLen != 0 {
 		return data[index.valuePos : index.valuePos+index.valueLen]
 	}
 	return nil
 }
 
-func (index batchIndex) kv(data []byte) (key, value []byte) {
+func (index batchIndex) kv(data []byte) (key, value []byte) { log.DebugLog()
 	return index.k(data), index.v(data)
 }
 
@@ -72,7 +72,7 @@ type Batch struct {
 	internalLen int
 }
 
-func (b *Batch) grow(n int) {
+func (b *Batch) grow(n int) { log.DebugLog()
 	o := len(b.data)
 	if cap(b.data)-o < n {
 		div := 1
@@ -85,7 +85,7 @@ func (b *Batch) grow(n int) {
 	}
 }
 
-func (b *Batch) appendRec(kt keyType, key, value []byte) {
+func (b *Batch) appendRec(kt keyType, key, value []byte) { log.DebugLog()
 	n := 1 + binary.MaxVarintLen32 + len(key)
 	if kt == keyTypeVal {
 		n += binary.MaxVarintLen32 + len(value)
@@ -114,14 +114,14 @@ func (b *Batch) appendRec(kt keyType, key, value []byte) {
 // Put appends 'put operation' of the given key/value pair to the batch.
 // It is safe to modify the contents of the argument after Put returns but not
 // before.
-func (b *Batch) Put(key, value []byte) {
+func (b *Batch) Put(key, value []byte) { log.DebugLog()
 	b.appendRec(keyTypeVal, key, value)
 }
 
 // Delete appends 'delete operation' of the given key to the batch.
 // It is safe to modify the contents of the argument after Delete returns but
 // not before.
-func (b *Batch) Delete(key []byte) {
+func (b *Batch) Delete(key []byte) { log.DebugLog()
 	b.appendRec(keyTypeDel, key, nil)
 }
 
@@ -129,7 +129,7 @@ func (b *Batch) Delete(key []byte) {
 // batch using Load method.
 // The returned slice is not its own copy, so the contents should not be
 // modified.
-func (b *Batch) Dump() []byte {
+func (b *Batch) Dump() []byte { log.DebugLog()
 	return b.data
 }
 
@@ -137,12 +137,12 @@ func (b *Batch) Dump() []byte {
 // will be discarded.
 // The given slice will not be copied and will be used as batch buffer, so
 // it is not safe to modify the contents of the slice.
-func (b *Batch) Load(data []byte) error {
+func (b *Batch) Load(data []byte) error { log.DebugLog()
 	return b.decode(data, -1)
 }
 
 // Replay replays batch contents.
-func (b *Batch) Replay(r BatchReplay) error {
+func (b *Batch) Replay(r BatchReplay) error { log.DebugLog()
 	for _, index := range b.index {
 		switch index.keyType {
 		case keyTypeVal:
@@ -155,18 +155,18 @@ func (b *Batch) Replay(r BatchReplay) error {
 }
 
 // Len returns number of records in the batch.
-func (b *Batch) Len() int {
+func (b *Batch) Len() int { log.DebugLog()
 	return len(b.index)
 }
 
 // Reset resets the batch.
-func (b *Batch) Reset() {
+func (b *Batch) Reset() { log.DebugLog()
 	b.data = b.data[:0]
 	b.index = b.index[:0]
 	b.internalLen = 0
 }
 
-func (b *Batch) replayInternal(fn func(i int, kt keyType, k, v []byte) error) error {
+func (b *Batch) replayInternal(fn func(i int, kt keyType, k, v []byte) error) error { log.DebugLog()
 	for i, index := range b.index {
 		if err := fn(i, index.keyType, index.k(b.data), index.v(b.data)); err != nil {
 			return err
@@ -175,7 +175,7 @@ func (b *Batch) replayInternal(fn func(i int, kt keyType, k, v []byte) error) er
 	return nil
 }
 
-func (b *Batch) append(p *Batch) {
+func (b *Batch) append(p *Batch) { log.DebugLog()
 	ob := len(b.data)
 	oi := len(b.index)
 	b.data = append(b.data, p.data...)
@@ -194,7 +194,7 @@ func (b *Batch) append(p *Batch) {
 	}
 }
 
-func (b *Batch) decode(data []byte, expectedLen int) error {
+func (b *Batch) decode(data []byte, expectedLen int) error { log.DebugLog()
 	b.data = data
 	b.index = b.index[:0]
 	b.internalLen = 0
@@ -212,7 +212,7 @@ func (b *Batch) decode(data []byte, expectedLen int) error {
 	return nil
 }
 
-func (b *Batch) putMem(seq uint64, mdb *memdb.DB) error {
+func (b *Batch) putMem(seq uint64, mdb *memdb.DB) error { log.DebugLog()
 	var ik []byte
 	for i, index := range b.index {
 		ik = makeInternalKey(ik, index.k(b.data), seq+uint64(i), index.keyType)
@@ -223,7 +223,7 @@ func (b *Batch) putMem(seq uint64, mdb *memdb.DB) error {
 	return nil
 }
 
-func (b *Batch) revertMem(seq uint64, mdb *memdb.DB) error {
+func (b *Batch) revertMem(seq uint64, mdb *memdb.DB) error { log.DebugLog()
 	var ik []byte
 	for i, index := range b.index {
 		ik = makeInternalKey(ik, index.k(b.data), seq+uint64(i), index.keyType)
@@ -234,11 +234,11 @@ func (b *Batch) revertMem(seq uint64, mdb *memdb.DB) error {
 	return nil
 }
 
-func newBatch() interface{} {
+func newBatch() interface{} { log.DebugLog()
 	return &Batch{}
 }
 
-func decodeBatch(data []byte, fn func(i int, index batchIndex) error) error {
+func decodeBatch(data []byte, fn func(i int, index batchIndex) error) error { log.DebugLog()
 	var index batchIndex
 	for i, o := 0, 0; o < len(data); i++ {
 		// Key type.
@@ -280,7 +280,7 @@ func decodeBatch(data []byte, fn func(i int, index batchIndex) error) error {
 	return nil
 }
 
-func decodeBatchToMem(data []byte, expectSeq uint64, mdb *memdb.DB) (seq uint64, batchLen int, err error) {
+func decodeBatchToMem(data []byte, expectSeq uint64, mdb *memdb.DB) (seq uint64, batchLen int, err error) { log.DebugLog()
 	seq, batchLen, err = decodeBatchHeader(data)
 	if err != nil {
 		return 0, 0, err
@@ -308,14 +308,14 @@ func decodeBatchToMem(data []byte, expectSeq uint64, mdb *memdb.DB) (seq uint64,
 	return
 }
 
-func encodeBatchHeader(dst []byte, seq uint64, batchLen int) []byte {
+func encodeBatchHeader(dst []byte, seq uint64, batchLen int) []byte { log.DebugLog()
 	dst = ensureBuffer(dst, batchHeaderLen)
 	binary.LittleEndian.PutUint64(dst, seq)
 	binary.LittleEndian.PutUint32(dst[8:], uint32(batchLen))
 	return dst
 }
 
-func decodeBatchHeader(data []byte) (seq uint64, batchLen int, err error) {
+func decodeBatchHeader(data []byte) (seq uint64, batchLen int, err error) { log.DebugLog()
 	if len(data) < batchHeaderLen {
 		return 0, 0, newErrBatchCorrupted("too short")
 	}
@@ -328,7 +328,7 @@ func decodeBatchHeader(data []byte) (seq uint64, batchLen int, err error) {
 	return
 }
 
-func batchesLen(batches []*Batch) int {
+func batchesLen(batches []*Batch) int { log.DebugLog()
 	batchLen := 0
 	for _, batch := range batches {
 		batchLen += batch.Len()
@@ -336,7 +336,7 @@ func batchesLen(batches []*Batch) int {
 	return batchLen
 }
 
-func writeBatchesWithHeader(wr io.Writer, batches []*Batch, seq uint64) error {
+func writeBatchesWithHeader(wr io.Writer, batches []*Batch, seq uint64) error { log.DebugLog()
 	if _, err := wr.Write(encodeBatchHeader(nil, seq, batchesLen(batches))); err != nil {
 		return err
 	}

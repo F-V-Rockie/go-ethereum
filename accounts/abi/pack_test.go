@@ -27,7 +27,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 )
 
-func TestPack(t *testing.T) {
+func TestPack(t *testing.T) { log.DebugLog()
 	for i, test := range []struct {
 		typ string
 
@@ -341,7 +341,7 @@ func TestPack(t *testing.T) {
 	}
 }
 
-func TestMethodPack(t *testing.T) {
+func TestMethodPack(t *testing.T) { log.DebugLog()
 	abi, err := JSON(strings.NewReader(jsondata2))
 	if err != nil {
 		t.Fatal(err)
@@ -408,7 +408,7 @@ func TestMethodPack(t *testing.T) {
 	}
 }
 
-func TestPackNumber(t *testing.T) {
+func TestPackNumber(t *testing.T) { log.DebugLog()
 	tests := []struct {
 		value  reflect.Value
 		packed []byte

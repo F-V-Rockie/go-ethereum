@@ -57,7 +57,7 @@ var (
 
 // ToUpperCamelCase returns a copy of the string s with all Unicode letters mapped to their camel case.
 // It will convert to upper case previous letter of '_' and first letter, and remove letter of '_'.
-func ToUpperCamelCase(s string) string {
+func ToUpperCamelCase(s string) string { log.DebugLog()
 	if s == "" {
 		return ""
 	}
@@ -122,7 +122,7 @@ func ToUpperCamelCase(s string) string {
 // only the ASCII characters.
 // ToUpperCamelCaseASCII is faster than ToUpperCamelCase, but doesn't work if
 // contains non-ASCII characters.
-func ToUpperCamelCaseASCII(s string) string {
+func ToUpperCamelCaseASCII(s string) string { log.DebugLog()
 	if s == "" {
 		return ""
 	}
@@ -167,7 +167,7 @@ func ToUpperCamelCaseASCII(s string) string {
 // It will insert letter of '_' at position of previous letter of uppercase and all
 // letters convert to lower case.
 // ToSnakeCase does not insert '_' letter into a common initialism word like ID, URL and so on.
-func ToSnakeCase(s string) string {
+func ToSnakeCase(s string) string { log.DebugLog()
 	if s == "" {
 		return ""
 	}
@@ -212,7 +212,7 @@ func ToSnakeCase(s string) string {
 // characters.
 // ToSnakeCaseASCII is faster than ToSnakeCase, but doesn't work correctly if
 // contains non-ASCII characters.
-func ToSnakeCaseASCII(s string) string {
+func ToSnakeCaseASCII(s string) string { log.DebugLog()
 	if s == "" {
 		return ""
 	}
@@ -239,7 +239,7 @@ func ToSnakeCaseASCII(s string) string {
 }
 
 // AddCommonInitialism adds ss to list of common initialisms.
-func AddCommonInitialism(ss ...string) {
+func AddCommonInitialism(ss ...string) { log.DebugLog()
 	mu.Lock()
 	defer mu.Unlock()
 	for _, s := range ss {
@@ -252,7 +252,7 @@ func AddCommonInitialism(ss ...string) {
 }
 
 // DelCommonInitialism deletes ss from list of common initialisms.
-func DelCommonInitialism(ss ...string) {
+func DelCommonInitialism(ss ...string) { log.DebugLog()
 	mu.Lock()
 	defer mu.Unlock()
 	for _, s := range ss {
@@ -264,36 +264,36 @@ func DelCommonInitialism(ss ...string) {
 	shortestLen = shortestLength(commonInitialisms, longestLen)
 }
 
-func isUpperASCII(c byte) bool {
+func isUpperASCII(c byte) bool { log.DebugLog()
 	return 'A' <= c && c <= 'Z'
 }
 
-func isLowerASCII(c byte) bool {
+func isLowerASCII(c byte) bool { log.DebugLog()
 	return 'a' <= c && c <= 'z'
 }
 
-func toUpperASCII(c byte) byte {
+func toUpperASCII(c byte) byte { log.DebugLog()
 	if isLowerASCII(c) {
 		return c - ('a' - 'A')
 	}
 	return c
 }
 
-func toLowerASCII(c byte) byte {
+func toLowerASCII(c byte) byte { log.DebugLog()
 	if isUpperASCII(c) {
 		return c + 'a' - 'A'
 	}
 	return c
 }
 
-func nextIndex(i, maxlen int) int {
+func nextIndex(i, maxlen int) int { log.DebugLog()
 	if n := i + longestLen; n < maxlen {
 		return n
 	}
 	return maxlen
 }
 
-func keys(m map[string]struct{}) []string {
+func keys(m map[string]struct{}) []string { log.DebugLog()
 	result := make([]string, 0, len(m))
 	for k := range m {
 		result = append(result, k)
@@ -301,7 +301,7 @@ func keys(m map[string]struct{}) []string {
 	return result
 }
 
-func shortestLength(strs []string, shortest int) int {
+func shortestLength(strs []string, shortest int) int { log.DebugLog()
 	for _, s := range strs {
 		if candidate := utf8.RuneCountInString(s); candidate < shortest {
 			shortest = candidate
@@ -310,7 +310,7 @@ func shortestLength(strs []string, shortest int) int {
 	return shortest
 }
 
-func longestLength(strs []string) (longest int) {
+func longestLength(strs []string) (longest int) { log.DebugLog()
 	for _, s := range strs {
 		if candidate := utf8.RuneCountInString(s); candidate > longest {
 			longest = candidate

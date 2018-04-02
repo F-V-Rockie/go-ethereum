@@ -195,7 +195,7 @@ type token32 struct {
 	begin, end uint32
 }
 
-func (t *token32) String() string {
+func (t *token32) String() string { log.DebugLog()
 	return fmt.Sprintf("\x1B[34m%v\x1B[m %v %v", rul3s[t.pegRule], t.begin, t.end)
 }
 
@@ -204,7 +204,7 @@ type node32 struct {
 	up, next *node32
 }
 
-func (node *node32) print(pretty bool, buffer string) {
+func (node *node32) print(pretty bool, buffer string) { log.DebugLog()
 	var print func(node *node32, depth int)
 	print = func(node *node32, depth int) {
 		for node != nil {
@@ -227,11 +227,11 @@ func (node *node32) print(pretty bool, buffer string) {
 	print(node, 0)
 }
 
-func (node *node32) Print(buffer string) {
+func (node *node32) Print(buffer string) { log.DebugLog()
 	node.print(false, buffer)
 }
 
-func (node *node32) PrettyPrint(buffer string) {
+func (node *node32) PrettyPrint(buffer string) { log.DebugLog()
 	node.print(true, buffer)
 }
 
@@ -239,17 +239,17 @@ type tokens32 struct {
 	tree []token32
 }
 
-func (t *tokens32) Trim(length uint32) {
+func (t *tokens32) Trim(length uint32) { log.DebugLog()
 	t.tree = t.tree[:length]
 }
 
-func (t *tokens32) Print() {
+func (t *tokens32) Print() { log.DebugLog()
 	for _, token := range t.tree {
 		fmt.Println(token.String())
 	}
 }
 
-func (t *tokens32) AST() *node32 {
+func (t *tokens32) AST() *node32 { log.DebugLog()
 	type element struct {
 		node *node32
 		down *element
@@ -274,15 +274,15 @@ func (t *tokens32) AST() *node32 {
 	return nil
 }
 
-func (t *tokens32) PrintSyntaxTree(buffer string) {
+func (t *tokens32) PrintSyntaxTree(buffer string) { log.DebugLog()
 	t.AST().Print(buffer)
 }
 
-func (t *tokens32) PrettyPrintSyntaxTree(buffer string) {
+func (t *tokens32) PrettyPrintSyntaxTree(buffer string) { log.DebugLog()
 	t.AST().PrettyPrint(buffer)
 }
 
-func (t *tokens32) Add(rule pegRule, begin, end, index uint32) {
+func (t *tokens32) Add(rule pegRule, begin, end, index uint32) { log.DebugLog()
 	if tree := t.tree; int(index) >= len(tree) {
 		expanded := make([]token32, 2*len(tree))
 		copy(expanded, tree)
@@ -295,7 +295,7 @@ func (t *tokens32) Add(rule pegRule, begin, end, index uint32) {
 	}
 }
 
-func (t *tokens32) Tokens() []token32 {
+func (t *tokens32) Tokens() []token32 { log.DebugLog()
 	return t.tree
 }
 
@@ -311,11 +311,11 @@ type tomlParser struct {
 	tokens32
 }
 
-func (p *tomlParser) Parse(rule ...int) error {
+func (p *tomlParser) Parse(rule ...int) error { log.DebugLog()
 	return p.parse(rule...)
 }
 
-func (p *tomlParser) Reset() {
+func (p *tomlParser) Reset() { log.DebugLog()
 	p.reset()
 }
 
@@ -325,7 +325,7 @@ type textPosition struct {
 
 type textPositionMap map[int]textPosition
 
-func translatePositions(buffer []rune, positions []int) textPositionMap {
+func translatePositions(buffer []rune, positions []int) textPositionMap { log.DebugLog()
 	length, translations, j, line, symbol := len(positions), make(textPositionMap, len(positions)), 0, 1, 0
 	sort.Ints(positions)
 
@@ -355,7 +355,7 @@ type parseError struct {
 	max token32
 }
 
-func (e *parseError) Error() string {
+func (e *parseError) Error() string { log.DebugLog()
 	tokens, error := []token32{e.max}, "\n"
 	positions, p := make([]int, 2*len(tokens)), 0
 	for _, token := range tokens {
@@ -379,7 +379,7 @@ func (e *parseError) Error() string {
 	return error
 }
 
-func (p *tomlParser) PrintSyntaxTree() {
+func (p *tomlParser) PrintSyntaxTree() { log.DebugLog()
 	if p.Pretty {
 		p.tokens32.PrettyPrintSyntaxTree(p.Buffer)
 	} else {
@@ -387,7 +387,7 @@ func (p *tomlParser) PrintSyntaxTree() {
 	}
 }
 
-func (p *tomlParser) Execute() {
+func (p *tomlParser) Execute() { log.DebugLog()
 	buffer, _buffer, text, begin, end := p.Buffer, p.buffer, "", 0, 0
 	for _, token := range p.Tokens() {
 		switch token.pegRule {
@@ -452,7 +452,7 @@ func (p *tomlParser) Execute() {
 	_, _, _, _, _ = buffer, _buffer, text, begin, end
 }
 
-func (p *tomlParser) Init() {
+func (p *tomlParser) Init() { log.DebugLog()
 	var (
 		max                  token32
 		position, tokenIndex uint32

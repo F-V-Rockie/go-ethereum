@@ -8,7 +8,7 @@ import (
 	"math/big"
 )
 
-func bigFromBase10(s string) *big.Int {
+func bigFromBase10(s string) *big.Int { log.DebugLog()
 	n, _ := new(big.Int).SetString(s, 10)
 	return n
 }

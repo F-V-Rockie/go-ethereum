@@ -32,7 +32,7 @@ type SignatureV3 struct {
 	DSASigR, DSASigS parsedMPI
 }
 
-func (sig *SignatureV3) parse(r io.Reader) (err error) {
+func (sig *SignatureV3) parse(r io.Reader) (err error) { log.DebugLog()
 	// RFC 4880, section 5.2.2
 	var buf [8]byte
 	if _, err = readFull(r, buf[:1]); err != nil {
@@ -102,7 +102,7 @@ func (sig *SignatureV3) parse(r io.Reader) (err error) {
 
 // Serialize marshals sig to w. Sign, SignUserId or SignKey must have been
 // called first.
-func (sig *SignatureV3) Serialize(w io.Writer) (err error) {
+func (sig *SignatureV3) Serialize(w io.Writer) (err error) { log.DebugLog()
 	buf := make([]byte, 8)
 
 	// Write the sig type and creation time

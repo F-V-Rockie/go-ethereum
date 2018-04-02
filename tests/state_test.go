@@ -25,7 +25,7 @@ import (
 	"github.com/ethereum/go-ethereum/core/vm"
 )
 
-func TestState(t *testing.T) {
+func TestState(t *testing.T) { log.DebugLog()
 	t.Parallel()
 
 	st := new(testMatcher)
@@ -66,7 +66,7 @@ func TestState(t *testing.T) {
 // Transactions with gasLimit above this value will not get a VM trace on failure.
 const traceErrorLimit = 400000
 
-func withTrace(t *testing.T, gasLimit uint64, test func(vm.Config) error) {
+func withTrace(t *testing.T, gasLimit uint64, test func(vm.Config) error) { log.DebugLog()
 	err := test(vm.Config{})
 	if err == nil {
 		return

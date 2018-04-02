@@ -91,7 +91,7 @@ var (
 	ether = new(big.Int).Exp(big.NewInt(10), big.NewInt(18), nil)
 )
 
-func main() {
+func main() { log.DebugLog()
 	// Parse the flags and set up the logger to print everything requested
 	flag.Parse()
 	log.Root().SetHandler(log.LvlFilterHandler(log.Lvl(*logFlag), log.StreamHandler(os.Stderr, log.TerminalFormat(true))))
@@ -212,7 +212,7 @@ type faucet struct {
 	lock sync.RWMutex // Lock protecting the faucet's internals
 }
 
-func newFaucet(genesis *core.Genesis, port int, enodes []*discv5.Node, network uint64, stats string, ks *keystore.KeyStore, index []byte) (*faucet, error) {
+func newFaucet(genesis *core.Genesis, port int, enodes []*discv5.Node, network uint64, stats string, ks *keystore.KeyStore, index []byte) (*faucet, error) { log.DebugLog()
 	// Assemble the raw devp2p protocol stack
 	stack, err := node.New(&node.Config{
 		Name:    "geth",
@@ -279,13 +279,13 @@ func newFaucet(genesis *core.Genesis, port int, enodes []*discv5.Node, network u
 }
 
 // close terminates the Ethereum connection and tears down the faucet.
-func (f *faucet) close() error {
+func (f *faucet) close() error { log.DebugLog()
 	return f.stack.Stop()
 }
 
 // listenAndServe registers the HTTP handlers for the faucet and boots it up
 // for service user funding requests.
-func (f *faucet) listenAndServe(port int) error {
+func (f *faucet) listenAndServe(port int) error { log.DebugLog()
 	go f.loop()
 
 	http.HandleFunc("/", f.webHandler)
@@ -296,12 +296,12 @@ func (f *faucet) listenAndServe(port int) error {
 
 // webHandler handles all non-api requests, simply flattening and returning the
 // faucet website.
-func (f *faucet) webHandler(w http.ResponseWriter, r *http.Request) {
+func (f *faucet) webHandler(w http.ResponseWriter, r *http.Request) { log.DebugLog()
 	w.Write(f.index)
 }
 
 // apiHandler handles requests for Ether grants and transaction statuses.
-func (f *faucet) apiHandler(conn *websocket.Conn) {
+func (f *faucet) apiHandler(conn *websocket.Conn) { log.DebugLog()
 	// Start tracking the connection and drop at the end
 	defer conn.Close()
 
@@ -524,7 +524,7 @@ func (f *faucet) apiHandler(conn *websocket.Conn) {
 
 // loop keeps waiting for interesting events and pushes them out to connected
 // websockets.
-func (f *faucet) loop() {
+func (f *faucet) loop() { log.DebugLog()
 	// Wait for chain events and push them to clients
 	heads := make(chan *types.Header, 16)
 	sub, err := f.client.SubscribeNewHead(context.Background(), heads)
@@ -618,7 +618,7 @@ func (f *faucet) loop() {
 
 // sends transmits a data packet to the remote end of the websocket, but also
 // setting a write deadline to prevent waiting forever on the node.
-func send(conn *websocket.Conn, value interface{}, timeout time.Duration) error {
+func send(conn *websocket.Conn, value interface{}, timeout time.Duration) error { log.DebugLog()
 	if timeout == 0 {
 		timeout = 60 * time.Second
 	}
@@ -628,19 +628,19 @@ func send(conn *websocket.Conn, value interface{}, timeout time.Duration) error 
 
 // sendError transmits an error to the remote end of the websocket, also setting
 // the write deadline to 1 second to prevent waiting forever.
-func sendError(conn *websocket.Conn, err error) error {
+func sendError(conn *websocket.Conn, err error) error { log.DebugLog()
 	return send(conn, map[string]string{"error": err.Error()}, time.Second)
 }
 
 // sendSuccess transmits a success message to the remote end of the websocket, also
 // setting the write deadline to 1 second to prevent waiting forever.
-func sendSuccess(conn *websocket.Conn, msg string) error {
+func sendSuccess(conn *websocket.Conn, msg string) error { log.DebugLog()
 	return send(conn, map[string]string{"success": msg}, time.Second)
 }
 
 // authGitHub tries to authenticate a faucet request using GitHub gists, returning
 // the username, avatar URL and Ethereum address to fund on success.
-func authGitHub(url string) (string, string, common.Address, error) {
+func authGitHub(url string) (string, string, common.Address, error) { log.DebugLog()
 	// Retrieve the gist from the GitHub Gist APIs
 	parts := strings.Split(url, "/")
 	req, _ := http.NewRequest("GET", "https://api.github.com/gists/"+parts[len(parts)-1], nil)
@@ -693,7 +693,7 @@ func authGitHub(url string) (string, string, common.Address, error) {
 
 // authTwitter tries to authenticate a faucet request using Twitter posts, returning
 // the username, avatar URL and Ethereum address to fund on success.
-func authTwitter(url string) (string, string, common.Address, error) {
+func authTwitter(url string) (string, string, common.Address, error) { log.DebugLog()
 	// Ensure the user specified a meaningful URL, no fancy nonsense
 	parts := strings.Split(url, "/")
 	if len(parts) < 4 || parts[len(parts)-2] != "status" {
@@ -732,7 +732,7 @@ func authTwitter(url string) (string, string, common.Address, error) {
 
 // authGooglePlus tries to authenticate a faucet request using GooglePlus posts,
 // returning the username, avatar URL and Ethereum address to fund on success.
-func authGooglePlus(url string) (string, string, common.Address, error) {
+func authGooglePlus(url string) (string, string, common.Address, error) { log.DebugLog()
 	// Ensure the user specified a meaningful URL, no fancy nonsense
 	parts := strings.Split(url, "/")
 	if len(parts) < 4 || parts[len(parts)-2] != "posts" {
@@ -766,7 +766,7 @@ func authGooglePlus(url string) (string, string, common.Address, error) {
 
 // authFacebook tries to authenticate a faucet request using Facebook posts,
 // returning the username, avatar URL and Ethereum address to fund on success.
-func authFacebook(url string) (string, string, common.Address, error) {
+func authFacebook(url string) (string, string, common.Address, error) { log.DebugLog()
 	// Ensure the user specified a meaningful URL, no fancy nonsense
 	parts := strings.Split(url, "/")
 	if len(parts) < 4 || parts[len(parts)-2] != "posts" {
@@ -801,7 +801,7 @@ func authFacebook(url string) (string, string, common.Address, error) {
 // authNoAuth tries to interpret a faucet request as a plain Ethereum address,
 // without actually performing any remote authentication. This mode is prone to
 // Byzantine attack, so only ever use for truly private networks.
-func authNoAuth(url string) (string, string, common.Address, error) {
+func authNoAuth(url string) (string, string, common.Address, error) { log.DebugLog()
 	address := common.HexToAddress(regexp.MustCompile("0x[0-9a-fA-F]{40}").FindString(url))
 	if address == (common.Address{}) {
 		return "", "", common.Address{}, errors.New("No Ethereum address found to fund")

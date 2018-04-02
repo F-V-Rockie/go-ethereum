@@ -25,7 +25,7 @@ type SymmetricallyEncrypted struct {
 
 const symmetricallyEncryptedVersion = 1
 
-func (se *SymmetricallyEncrypted) parse(r io.Reader) error {
+func (se *SymmetricallyEncrypted) parse(r io.Reader) error { log.DebugLog()
 	if se.MDC {
 		// See RFC 4880, section 5.13.
 		var buf [1]byte
@@ -44,7 +44,7 @@ func (se *SymmetricallyEncrypted) parse(r io.Reader) error {
 // Decrypt returns a ReadCloser, from which the decrypted contents of the
 // packet can be read. An incorrect key can, with high probability, be detected
 // immediately and this will result in a KeyIncorrect error being returned.
-func (se *SymmetricallyEncrypted) Decrypt(c CipherFunction, key []byte) (io.ReadCloser, error) {
+func (se *SymmetricallyEncrypted) Decrypt(c CipherFunction, key []byte) (io.ReadCloser, error) { log.DebugLog()
 	keySize := c.KeySize()
 	if keySize == 0 {
 		return nil, errors.UnsupportedError("unknown cipher: " + strconv.Itoa(int(c)))
@@ -92,11 +92,11 @@ type seReader struct {
 	in io.Reader
 }
 
-func (ser seReader) Read(buf []byte) (int, error) {
+func (ser seReader) Read(buf []byte) (int, error) { log.DebugLog()
 	return ser.in.Read(buf)
 }
 
-func (ser seReader) Close() error {
+func (ser seReader) Close() error { log.DebugLog()
 	return nil
 }
 
@@ -116,7 +116,7 @@ type seMDCReader struct {
 	eof         bool
 }
 
-func (ser *seMDCReader) Read(buf []byte) (n int, err error) {
+func (ser *seMDCReader) Read(buf []byte) (n int, err error) { log.DebugLog()
 	if ser.error {
 		err = io.ErrUnexpectedEOF
 		return
@@ -178,7 +178,7 @@ func (ser *seMDCReader) Read(buf []byte) (n int, err error) {
 // This is a new-format packet tag byte for a type 19 (MDC) packet.
 const mdcPacketTagByte = byte(0x80) | 0x40 | 19
 
-func (ser *seMDCReader) Close() error {
+func (ser *seMDCReader) Close() error { log.DebugLog()
 	if ser.error {
 		return errors.SignatureError("error during reading")
 	}
@@ -215,12 +215,12 @@ type seMDCWriter struct {
 	h hash.Hash
 }
 
-func (w *seMDCWriter) Write(buf []byte) (n int, err error) {
+func (w *seMDCWriter) Write(buf []byte) (n int, err error) { log.DebugLog()
 	w.h.Write(buf)
 	return w.w.Write(buf)
 }
 
-func (w *seMDCWriter) Close() (err error) {
+func (w *seMDCWriter) Close() (err error) { log.DebugLog()
 	var buf [mdcTrailerSize]byte
 
 	buf[0] = mdcPacketTagByte
@@ -241,11 +241,11 @@ type noOpCloser struct {
 	w io.Writer
 }
 
-func (c noOpCloser) Write(data []byte) (n int, err error) {
+func (c noOpCloser) Write(data []byte) (n int, err error) { log.DebugLog()
 	return c.w.Write(data)
 }
 
-func (c noOpCloser) Close() error {
+func (c noOpCloser) Close() error { log.DebugLog()
 	return nil
 }
 
@@ -253,7 +253,7 @@ func (c noOpCloser) Close() error {
 // to w and returns a WriteCloser to which the to-be-encrypted packets can be
 // written.
 // If config is nil, sensible defaults will be used.
-func SerializeSymmetricallyEncrypted(w io.Writer, c CipherFunction, key []byte, config *Config) (contents io.WriteCloser, err error) {
+func SerializeSymmetricallyEncrypted(w io.Writer, c CipherFunction, key []byte, config *Config) (contents io.WriteCloser, err error) { log.DebugLog()
 	if c.KeySize() != len(key) {
 		return nil, errors.InvalidArgumentError("SymmetricallyEncrypted.Serialize: bad key length")
 	}

@@ -28,7 +28,7 @@ type ARCCache struct {
 }
 
 // NewARC creates an ARC of the given size
-func NewARC(size int) (*ARCCache, error) {
+func NewARC(size int) (*ARCCache, error) { log.DebugLog()
 	// Create the sub LRUs
 	b1, err := simplelru.NewLRU(size, nil)
 	if err != nil {
@@ -60,7 +60,7 @@ func NewARC(size int) (*ARCCache, error) {
 }
 
 // Get looks up a key's value from the cache.
-func (c *ARCCache) Get(key interface{}) (interface{}, bool) {
+func (c *ARCCache) Get(key interface{}) (interface{}, bool) { log.DebugLog()
 	c.lock.Lock()
 	defer c.lock.Unlock()
 
@@ -82,7 +82,7 @@ func (c *ARCCache) Get(key interface{}) (interface{}, bool) {
 }
 
 // Add adds a value to the cache.
-func (c *ARCCache) Add(key, value interface{}) {
+func (c *ARCCache) Add(key, value interface{}) { log.DebugLog()
 	c.lock.Lock()
 	defer c.lock.Unlock()
 
@@ -178,7 +178,7 @@ func (c *ARCCache) Add(key, value interface{}) {
 
 // replace is used to adaptively evict from either T1 or T2
 // based on the current learned value of P
-func (c *ARCCache) replace(b2ContainsKey bool) {
+func (c *ARCCache) replace(b2ContainsKey bool) { log.DebugLog()
 	t1Len := c.t1.Len()
 	if t1Len > 0 && (t1Len > c.p || (t1Len == c.p && b2ContainsKey)) {
 		k, _, ok := c.t1.RemoveOldest()
@@ -194,14 +194,14 @@ func (c *ARCCache) replace(b2ContainsKey bool) {
 }
 
 // Len returns the number of cached entries
-func (c *ARCCache) Len() int {
+func (c *ARCCache) Len() int { log.DebugLog()
 	c.lock.RLock()
 	defer c.lock.RUnlock()
 	return c.t1.Len() + c.t2.Len()
 }
 
 // Keys returns all the cached keys
-func (c *ARCCache) Keys() []interface{} {
+func (c *ARCCache) Keys() []interface{} { log.DebugLog()
 	c.lock.RLock()
 	defer c.lock.RUnlock()
 	k1 := c.t1.Keys()
@@ -210,7 +210,7 @@ func (c *ARCCache) Keys() []interface{} {
 }
 
 // Remove is used to purge a key from the cache
-func (c *ARCCache) Remove(key interface{}) {
+func (c *ARCCache) Remove(key interface{}) { log.DebugLog()
 	c.lock.Lock()
 	defer c.lock.Unlock()
 	if c.t1.Remove(key) {
@@ -228,7 +228,7 @@ func (c *ARCCache) Remove(key interface{}) {
 }
 
 // Purge is used to clear the cache
-func (c *ARCCache) Purge() {
+func (c *ARCCache) Purge() { log.DebugLog()
 	c.lock.Lock()
 	defer c.lock.Unlock()
 	c.t1.Purge()
@@ -239,7 +239,7 @@ func (c *ARCCache) Purge() {
 
 // Contains is used to check if the cache contains a key
 // without updating recency or frequency.
-func (c *ARCCache) Contains(key interface{}) bool {
+func (c *ARCCache) Contains(key interface{}) bool { log.DebugLog()
 	c.lock.RLock()
 	defer c.lock.RUnlock()
 	return c.t1.Contains(key) || c.t2.Contains(key)
@@ -247,7 +247,7 @@ func (c *ARCCache) Contains(key interface{}) bool {
 
 // Peek is used to inspect the cache value of a key
 // without updating recency or frequency.
-func (c *ARCCache) Peek(key interface{}) (interface{}, bool) {
+func (c *ARCCache) Peek(key interface{}) (interface{}, bool) { log.DebugLog()
 	c.lock.RLock()
 	defer c.lock.RUnlock()
 	if val, ok := c.t1.Peek(key); ok {

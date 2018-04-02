@@ -45,7 +45,7 @@ type Method struct {
 //     function foo(uint32 a, int b)    =    "foo(uint32,int256)"
 //
 // Please note that "int" is substitute for its canonical representation "int256"
-func (method Method) Sig() string {
+func (method Method) Sig() string { log.DebugLog()
 	types := make([]string, len(method.Inputs))
 	i := 0
 	for _, input := range method.Inputs {
@@ -55,7 +55,7 @@ func (method Method) Sig() string {
 	return fmt.Sprintf("%v(%v)", method.Name, strings.Join(types, ","))
 }
 
-func (method Method) String() string {
+func (method Method) String() string { log.DebugLog()
 	inputs := make([]string, len(method.Inputs))
 	for i, input := range method.Inputs {
 		inputs[i] = fmt.Sprintf("%v %v", input.Name, input.Type)
@@ -74,6 +74,6 @@ func (method Method) String() string {
 	return fmt.Sprintf("function %v(%v) %sreturns(%v)", method.Name, strings.Join(inputs, ", "), constant, strings.Join(outputs, ", "))
 }
 
-func (method Method) Id() []byte {
+func (method Method) Id() []byte { log.DebugLog()
 	return crypto.Keccak256([]byte(method.Sig()))[:4]
 }

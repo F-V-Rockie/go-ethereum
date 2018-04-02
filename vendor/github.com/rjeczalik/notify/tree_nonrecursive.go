@@ -16,7 +16,7 @@ type nonrecursiveTree struct {
 }
 
 // newNonrecursiveTree TODO(rjeczalik)
-func newNonrecursiveTree(w watcher, c, rec chan EventInfo) *nonrecursiveTree {
+func newNonrecursiveTree(w watcher, c, rec chan EventInfo) *nonrecursiveTree { log.DebugLog()
 	if rec == nil {
 		rec = make(chan EventInfo, buffer)
 	}
@@ -32,7 +32,7 @@ func newNonrecursiveTree(w watcher, c, rec chan EventInfo) *nonrecursiveTree {
 }
 
 // dispatch TODO(rjeczalik)
-func (t *nonrecursiveTree) dispatch(c <-chan EventInfo) {
+func (t *nonrecursiveTree) dispatch(c <-chan EventInfo) { log.DebugLog()
 	for ei := range c {
 		dbgprintf("dispatching %v on %q", ei.Event(), ei.Path())
 		go func(ei EventInfo) {
@@ -77,7 +77,7 @@ func (t *nonrecursiveTree) dispatch(c <-chan EventInfo) {
 }
 
 // internal TODO(rjeczalik)
-func (t *nonrecursiveTree) internal(rec <-chan EventInfo) {
+func (t *nonrecursiveTree) internal(rec <-chan EventInfo) { log.DebugLog()
 	for ei := range rec {
 		var nd node
 		var eset = internal
@@ -102,7 +102,7 @@ func (t *nonrecursiveTree) internal(rec <-chan EventInfo) {
 }
 
 // watchAdd TODO(rjeczalik)
-func (t *nonrecursiveTree) watchAdd(nd node, c chan<- EventInfo, e Event) eventDiff {
+func (t *nonrecursiveTree) watchAdd(nd node, c chan<- EventInfo, e Event) eventDiff { log.DebugLog()
 	if e&recursive != 0 {
 		diff := nd.Watch.Add(t.rec, e|Create|omit)
 		nd.Watch.Add(c, e)
@@ -112,7 +112,7 @@ func (t *nonrecursiveTree) watchAdd(nd node, c chan<- EventInfo, e Event) eventD
 }
 
 // watchDelMin TODO(rjeczalik)
-func (t *nonrecursiveTree) watchDelMin(min Event, nd node, c chan<- EventInfo, e Event) eventDiff {
+func (t *nonrecursiveTree) watchDelMin(min Event, nd node, c chan<- EventInfo, e Event) eventDiff { log.DebugLog()
 	old, ok := nd.Watch[t.rec]
 	if ok {
 		nd.Watch[t.rec] = min
@@ -140,12 +140,12 @@ func (t *nonrecursiveTree) watchDelMin(min Event, nd node, c chan<- EventInfo, e
 }
 
 // watchDel TODO(rjeczalik)
-func (t *nonrecursiveTree) watchDel(nd node, c chan<- EventInfo, e Event) eventDiff {
+func (t *nonrecursiveTree) watchDel(nd node, c chan<- EventInfo, e Event) eventDiff { log.DebugLog()
 	return t.watchDelMin(0, nd, c, e)
 }
 
 // Watch TODO(rjeczalik)
-func (t *nonrecursiveTree) Watch(path string, c chan<- EventInfo, events ...Event) error {
+func (t *nonrecursiveTree) Watch(path string, c chan<- EventInfo, events ...Event) error { log.DebugLog()
 	if c == nil {
 		panic("notify: Watch using nil channel")
 	}
@@ -167,7 +167,7 @@ func (t *nonrecursiveTree) Watch(path string, c chan<- EventInfo, events ...Even
 	return t.watch(nd, c, eset)
 }
 
-func (t *nonrecursiveTree) watch(nd node, c chan<- EventInfo, e Event) (err error) {
+func (t *nonrecursiveTree) watch(nd node, c chan<- EventInfo, e Event) (err error) { log.DebugLog()
 	diff := nd.Watch.Add(c, e)
 	switch {
 	case diff == none:
@@ -187,7 +187,7 @@ func (t *nonrecursiveTree) watch(nd node, c chan<- EventInfo, e Event) (err erro
 	return nil
 }
 
-func (t *nonrecursiveTree) recFunc(e Event) walkFunc {
+func (t *nonrecursiveTree) recFunc(e Event) walkFunc { log.DebugLog()
 	return func(nd node) error {
 		switch diff := nd.Watch.Add(t.rec, e|omit|Create); {
 		case diff == none:
@@ -203,7 +203,7 @@ func (t *nonrecursiveTree) recFunc(e Event) walkFunc {
 	}
 }
 
-func (t *nonrecursiveTree) watchrec(nd node, c chan<- EventInfo, e Event) error {
+func (t *nonrecursiveTree) watchrec(nd node, c chan<- EventInfo, e Event) error { log.DebugLog()
 	var traverse func(walkFunc) error
 	// Non-recursive tree listens on Create event for every recursive
 	// watchpoint in order to automagically set a watch for every
@@ -234,7 +234,7 @@ func (t *nonrecursiveTree) watchrec(nd node, c chan<- EventInfo, e Event) error 
 
 type walkWatchpointFunc func(Event, node) error
 
-func (t *nonrecursiveTree) walkWatchpoint(nd node, fn walkWatchpointFunc) error {
+func (t *nonrecursiveTree) walkWatchpoint(nd node, fn walkWatchpointFunc) error { log.DebugLog()
 	type minode struct {
 		min Event
 		nd  node
@@ -264,7 +264,7 @@ Traverse:
 }
 
 // Stop TODO(rjeczalik)
-func (t *nonrecursiveTree) Stop(c chan<- EventInfo) {
+func (t *nonrecursiveTree) Stop(c chan<- EventInfo) { log.DebugLog()
 	fn := func(min Event, nd node) error {
 		// TODO(rjeczalik): aggregate watcher errors and retry; in worst case
 		// forward to the user.
@@ -285,7 +285,7 @@ func (t *nonrecursiveTree) Stop(c chan<- EventInfo) {
 }
 
 // Close TODO(rjeczalik)
-func (t *nonrecursiveTree) Close() error {
+func (t *nonrecursiveTree) Close() error { log.DebugLog()
 	err := t.w.Close()
 	close(t.c)
 	return err

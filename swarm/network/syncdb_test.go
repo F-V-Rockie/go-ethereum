@@ -30,7 +30,7 @@ import (
 	"github.com/ethereum/go-ethereum/swarm/storage"
 )
 
-func init() {
+func init() { log.DebugLog()
 	log.Root().SetHandler(log.LvlFilterHandler(log.LvlCrit, log.StreamHandler(os.Stderr, log.TerminalFormat(false))))
 }
 
@@ -45,7 +45,7 @@ type testSyncDb struct {
 	at        int
 }
 
-func newTestSyncDb(priority, bufferSize, batchSize int, dbdir string, t *testing.T) *testSyncDb {
+func newTestSyncDb(priority, bufferSize, batchSize int, dbdir string, t *testing.T) *testSyncDb { log.DebugLog()
 	if len(dbdir) == 0 {
 		tmp, err := ioutil.TempDir(os.TempDir(), "syncdb-test")
 		if err != nil {
@@ -71,12 +71,12 @@ func newTestSyncDb(priority, bufferSize, batchSize int, dbdir string, t *testing
 
 }
 
-func (self *testSyncDb) close() {
+func (self *testSyncDb) close() { log.DebugLog()
 	self.db.Close()
 	os.RemoveAll(self.dbdir)
 }
 
-func (self *testSyncDb) push(n int) {
+func (self *testSyncDb) push(n int) { log.DebugLog()
 	for i := 0; i < n; i++ {
 		self.buffer <- storage.Key(crypto.Keccak256([]byte{byte(self.c)}))
 		self.sent = append(self.sent, self.c)
@@ -85,7 +85,7 @@ func (self *testSyncDb) push(n int) {
 	log.Debug(fmt.Sprintf("pushed %v requests", n))
 }
 
-func (self *testSyncDb) draindb() {
+func (self *testSyncDb) draindb() { log.DebugLog()
 	it := self.db.NewIterator()
 	defer it.Release()
 	for {
@@ -102,7 +102,7 @@ func (self *testSyncDb) draindb() {
 	}
 }
 
-func (self *testSyncDb) deliver(req interface{}, quit chan bool) bool {
+func (self *testSyncDb) deliver(req interface{}, quit chan bool) bool { log.DebugLog()
 	_, db := req.(*syncDbEntry)
 	key, _, _, _, err := parseRequest(req)
 	if err != nil {
@@ -117,7 +117,7 @@ func (self *testSyncDb) deliver(req interface{}, quit chan bool) bool {
 	}
 }
 
-func (self *testSyncDb) expect(n int, db bool) {
+func (self *testSyncDb) expect(n int, db bool) { log.DebugLog()
 	var ok bool
 	// for n items
 	for i := 0; i < n; i++ {
@@ -139,7 +139,7 @@ func (self *testSyncDb) expect(n int, db bool) {
 	}
 }
 
-func TestSyncDb(t *testing.T) {
+func TestSyncDb(t *testing.T) { log.DebugLog()
 	t.Skip("fails randomly on all platforms")
 
 	priority := High
@@ -179,7 +179,7 @@ func TestSyncDb(t *testing.T) {
 	s.expect(1, false)
 }
 
-func TestSaveSyncDb(t *testing.T) {
+func TestSaveSyncDb(t *testing.T) { log.DebugLog()
 	amount := 30
 	priority := High
 	bufferSize := amount

@@ -11,7 +11,7 @@ package unix
 import "unsafe"
 
 // Round the length of a raw sockaddr up to align it properly.
-func cmsgAlignOf(salen int) int {
+func cmsgAlignOf(salen int) int { log.DebugLog()
 	salign := sizeofPtr
 	// NOTE: It seems like 64-bit Darwin, DragonFly BSD and
 	// Solaris kernels still require 32-bit aligned access to
@@ -24,17 +24,17 @@ func cmsgAlignOf(salen int) int {
 
 // CmsgLen returns the value to store in the Len field of the Cmsghdr
 // structure, taking into account any necessary alignment.
-func CmsgLen(datalen int) int {
+func CmsgLen(datalen int) int { log.DebugLog()
 	return cmsgAlignOf(SizeofCmsghdr) + datalen
 }
 
 // CmsgSpace returns the number of bytes an ancillary element with
 // payload of the passed data length occupies.
-func CmsgSpace(datalen int) int {
+func CmsgSpace(datalen int) int { log.DebugLog()
 	return cmsgAlignOf(SizeofCmsghdr) + cmsgAlignOf(datalen)
 }
 
-func cmsgData(h *Cmsghdr) unsafe.Pointer {
+func cmsgData(h *Cmsghdr) unsafe.Pointer { log.DebugLog()
 	return unsafe.Pointer(uintptr(unsafe.Pointer(h)) + uintptr(cmsgAlignOf(SizeofCmsghdr)))
 }
 
@@ -46,7 +46,7 @@ type SocketControlMessage struct {
 
 // ParseSocketControlMessage parses b as an array of socket control
 // messages.
-func ParseSocketControlMessage(b []byte) ([]SocketControlMessage, error) {
+func ParseSocketControlMessage(b []byte) ([]SocketControlMessage, error) { log.DebugLog()
 	var msgs []SocketControlMessage
 	i := 0
 	for i+CmsgLen(0) <= len(b) {
@@ -61,7 +61,7 @@ func ParseSocketControlMessage(b []byte) ([]SocketControlMessage, error) {
 	return msgs, nil
 }
 
-func socketControlMessageHeaderAndData(b []byte) (*Cmsghdr, []byte, error) {
+func socketControlMessageHeaderAndData(b []byte) (*Cmsghdr, []byte, error) { log.DebugLog()
 	h := (*Cmsghdr)(unsafe.Pointer(&b[0]))
 	if h.Len < SizeofCmsghdr || uint64(h.Len) > uint64(len(b)) {
 		return nil, nil, EINVAL
@@ -71,7 +71,7 @@ func socketControlMessageHeaderAndData(b []byte) (*Cmsghdr, []byte, error) {
 
 // UnixRights encodes a set of open file descriptors into a socket
 // control message for sending to another process.
-func UnixRights(fds ...int) []byte {
+func UnixRights(fds ...int) []byte { log.DebugLog()
 	datalen := len(fds) * 4
 	b := make([]byte, CmsgSpace(datalen))
 	h := (*Cmsghdr)(unsafe.Pointer(&b[0]))
@@ -88,7 +88,7 @@ func UnixRights(fds ...int) []byte {
 
 // ParseUnixRights decodes a socket control message that contains an
 // integer array of open file descriptors from another process.
-func ParseUnixRights(m *SocketControlMessage) ([]int, error) {
+func ParseUnixRights(m *SocketControlMessage) ([]int, error) { log.DebugLog()
 	if m.Header.Level != SOL_SOCKET {
 		return nil, EINVAL
 	}

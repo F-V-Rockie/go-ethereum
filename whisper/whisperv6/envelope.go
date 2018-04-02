@@ -50,19 +50,19 @@ type Envelope struct {
 }
 
 // size returns the size of envelope as it is sent (i.e. public fields only)
-func (e *Envelope) size() int {
+func (e *Envelope) size() int { log.DebugLog()
 	return EnvelopeHeaderLength + len(e.Data)
 }
 
 // rlpWithoutNonce returns the RLP encoded envelope contents, except the nonce.
-func (e *Envelope) rlpWithoutNonce() []byte {
+func (e *Envelope) rlpWithoutNonce() []byte { log.DebugLog()
 	res, _ := rlp.EncodeToBytes([]interface{}{e.Expiry, e.TTL, e.Topic, e.Data})
 	return res
 }
 
 // NewEnvelope wraps a Whisper message with expiration and destination data
 // included into an envelope for network forwarding.
-func NewEnvelope(ttl uint32, topic TopicType, msg *sentMessage) *Envelope {
+func NewEnvelope(ttl uint32, topic TopicType, msg *sentMessage) *Envelope { log.DebugLog()
 	env := Envelope{
 		Expiry: uint32(time.Now().Add(time.Second * time.Duration(ttl)).Unix()),
 		TTL:    ttl,
@@ -76,7 +76,7 @@ func NewEnvelope(ttl uint32, topic TopicType, msg *sentMessage) *Envelope {
 
 // Seal closes the envelope by spending the requested amount of time as a proof
 // of work on hashing the data.
-func (e *Envelope) Seal(options *MessageParams) error {
+func (e *Envelope) Seal(options *MessageParams) error { log.DebugLog()
 	if options.PoW == 0 {
 		// PoW is not required
 		return nil
@@ -121,14 +121,14 @@ func (e *Envelope) Seal(options *MessageParams) error {
 
 // PoW computes (if necessary) and returns the proof of work target
 // of the envelope.
-func (e *Envelope) PoW() float64 {
+func (e *Envelope) PoW() float64 { log.DebugLog()
 	if e.pow == 0 {
 		e.calculatePoW(0)
 	}
 	return e.pow
 }
 
-func (e *Envelope) calculatePoW(diff uint32) {
+func (e *Envelope) calculatePoW(diff uint32) { log.DebugLog()
 	buf := make([]byte, 64)
 	h := crypto.Keccak256(e.rlpWithoutNonce())
 	copy(buf[:32], h)
@@ -141,7 +141,7 @@ func (e *Envelope) calculatePoW(diff uint32) {
 	e.pow = x
 }
 
-func (e *Envelope) powToFirstBit(pow float64) int {
+func (e *Envelope) powToFirstBit(pow float64) int { log.DebugLog()
 	x := pow
 	x *= float64(e.size())
 	x *= float64(e.TTL)
@@ -155,7 +155,7 @@ func (e *Envelope) powToFirstBit(pow float64) int {
 }
 
 // Hash returns the SHA3 hash of the envelope, calculating it if not yet done.
-func (e *Envelope) Hash() common.Hash {
+func (e *Envelope) Hash() common.Hash { log.DebugLog()
 	if (e.hash == common.Hash{}) {
 		encoded, _ := rlp.EncodeToBytes(e)
 		e.hash = crypto.Keccak256Hash(encoded)
@@ -164,7 +164,7 @@ func (e *Envelope) Hash() common.Hash {
 }
 
 // DecodeRLP decodes an Envelope from an RLP data stream.
-func (e *Envelope) DecodeRLP(s *rlp.Stream) error {
+func (e *Envelope) DecodeRLP(s *rlp.Stream) error { log.DebugLog()
 	raw, err := s.Raw()
 	if err != nil {
 		return err
@@ -183,7 +183,7 @@ func (e *Envelope) DecodeRLP(s *rlp.Stream) error {
 }
 
 // OpenAsymmetric tries to decrypt an envelope, potentially encrypted with a particular key.
-func (e *Envelope) OpenAsymmetric(key *ecdsa.PrivateKey) (*ReceivedMessage, error) {
+func (e *Envelope) OpenAsymmetric(key *ecdsa.PrivateKey) (*ReceivedMessage, error) { log.DebugLog()
 	message := &ReceivedMessage{Raw: e.Data}
 	err := message.decryptAsymmetric(key)
 	switch err {
@@ -197,7 +197,7 @@ func (e *Envelope) OpenAsymmetric(key *ecdsa.PrivateKey) (*ReceivedMessage, erro
 }
 
 // OpenSymmetric tries to decrypt an envelope, potentially encrypted with a particular key.
-func (e *Envelope) OpenSymmetric(key []byte) (msg *ReceivedMessage, err error) {
+func (e *Envelope) OpenSymmetric(key []byte) (msg *ReceivedMessage, err error) { log.DebugLog()
 	msg = &ReceivedMessage{Raw: e.Data}
 	err = msg.decryptSymmetric(key)
 	if err != nil {
@@ -207,7 +207,7 @@ func (e *Envelope) OpenSymmetric(key []byte) (msg *ReceivedMessage, err error) {
 }
 
 // Open tries to decrypt an envelope, and populates the message fields in case of success.
-func (e *Envelope) Open(watcher *Filter) (msg *ReceivedMessage) {
+func (e *Envelope) Open(watcher *Filter) (msg *ReceivedMessage) { log.DebugLog()
 	if watcher == nil {
 		return nil
 	}
@@ -244,7 +244,7 @@ func (e *Envelope) Open(watcher *Filter) (msg *ReceivedMessage) {
 }
 
 // Bloom maps 4-bytes Topic into 64-byte bloom filter with 3 bits set (at most).
-func (e *Envelope) Bloom() []byte {
+func (e *Envelope) Bloom() []byte { log.DebugLog()
 	if e.bloom == nil {
 		e.bloom = TopicToBloom(e.Topic)
 	}
@@ -252,7 +252,7 @@ func (e *Envelope) Bloom() []byte {
 }
 
 // TopicToBloom converts the topic (4 bytes) to the bloom filter (64 bytes)
-func TopicToBloom(topic TopicType) []byte {
+func TopicToBloom(topic TopicType) []byte { log.DebugLog()
 	b := make([]byte, BloomFilterSize)
 	var index [3]int
 	for j := 0; j < 3; j++ {
@@ -272,7 +272,7 @@ func TopicToBloom(topic TopicType) []byte {
 
 // GetEnvelope retrieves an envelope from the message queue by its hash.
 // It returns nil if the envelope can not be found.
-func (w *Whisper) GetEnvelope(hash common.Hash) *Envelope {
+func (w *Whisper) GetEnvelope(hash common.Hash) *Envelope { log.DebugLog()
 	w.poolMu.RLock()
 	defer w.poolMu.RUnlock()
 	return w.envelopes[hash]

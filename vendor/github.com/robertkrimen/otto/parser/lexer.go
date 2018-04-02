@@ -22,11 +22,11 @@ type _chr struct {
 
 var matchIdentifier = regexp.MustCompile(`^[$_\p{L}][$_\p{L}\d}]*$`)
 
-func isDecimalDigit(chr rune) bool {
+func isDecimalDigit(chr rune) bool { log.DebugLog()
 	return '0' <= chr && chr <= '9'
 }
 
-func digitValue(chr rune) int {
+func digitValue(chr rune) int { log.DebugLog()
 	switch {
 	case '0' <= chr && chr <= '9':
 		return int(chr - '0')
@@ -38,24 +38,24 @@ func digitValue(chr rune) int {
 	return 16 // Larger than any legal digit value
 }
 
-func isDigit(chr rune, base int) bool {
+func isDigit(chr rune, base int) bool { log.DebugLog()
 	return digitValue(chr) < base
 }
 
-func isIdentifierStart(chr rune) bool {
+func isIdentifierStart(chr rune) bool { log.DebugLog()
 	return chr == '$' || chr == '_' || chr == '\\' ||
 		'a' <= chr && chr <= 'z' || 'A' <= chr && chr <= 'Z' ||
 		chr >= utf8.RuneSelf && unicode.IsLetter(chr)
 }
 
-func isIdentifierPart(chr rune) bool {
+func isIdentifierPart(chr rune) bool { log.DebugLog()
 	return chr == '$' || chr == '_' || chr == '\\' ||
 		'a' <= chr && chr <= 'z' || 'A' <= chr && chr <= 'Z' ||
 		'0' <= chr && chr <= '9' ||
 		chr >= utf8.RuneSelf && (unicode.IsLetter(chr) || unicode.IsDigit(chr))
 }
 
-func (self *_parser) scanIdentifier() (string, error) {
+func (self *_parser) scanIdentifier() (string, error) { log.DebugLog()
 	offset := self.chrOffset
 	parse := false
 	for isIdentifierPart(self.chr) {
@@ -97,7 +97,7 @@ func (self *_parser) scanIdentifier() (string, error) {
 }
 
 // 7.2
-func isLineWhiteSpace(chr rune) bool {
+func isLineWhiteSpace(chr rune) bool { log.DebugLog()
 	switch chr {
 	case '\u0009', '\u000b', '\u000c', '\u0020', '\u00a0', '\ufeff':
 		return true
@@ -110,7 +110,7 @@ func isLineWhiteSpace(chr rune) bool {
 }
 
 // 7.3
-func isLineTerminator(chr rune) bool {
+func isLineTerminator(chr rune) bool { log.DebugLog()
 	switch chr {
 	case '\u000a', '\u000d', '\u2028', '\u2029':
 		return true
@@ -118,7 +118,7 @@ func isLineTerminator(chr rune) bool {
 	return false
 }
 
-func (self *_parser) scan() (tkn token.Token, literal string, idx file.Idx) {
+func (self *_parser) scan() (tkn token.Token, literal string, idx file.Idx) { log.DebugLog()
 
 	self.implicitSemicolon = false
 
@@ -311,7 +311,7 @@ func (self *_parser) scan() (tkn token.Token, literal string, idx file.Idx) {
 	}
 }
 
-func (self *_parser) switch2(tkn0, tkn1 token.Token) token.Token {
+func (self *_parser) switch2(tkn0, tkn1 token.Token) token.Token { log.DebugLog()
 	if self.chr == '=' {
 		self.read()
 		return tkn1
@@ -319,7 +319,7 @@ func (self *_parser) switch2(tkn0, tkn1 token.Token) token.Token {
 	return tkn0
 }
 
-func (self *_parser) switch3(tkn0, tkn1 token.Token, chr2 rune, tkn2 token.Token) token.Token {
+func (self *_parser) switch3(tkn0, tkn1 token.Token, chr2 rune, tkn2 token.Token) token.Token { log.DebugLog()
 	if self.chr == '=' {
 		self.read()
 		return tkn1
@@ -331,7 +331,7 @@ func (self *_parser) switch3(tkn0, tkn1 token.Token, chr2 rune, tkn2 token.Token
 	return tkn0
 }
 
-func (self *_parser) switch4(tkn0, tkn1 token.Token, chr2 rune, tkn2, tkn3 token.Token) token.Token {
+func (self *_parser) switch4(tkn0, tkn1 token.Token, chr2 rune, tkn2, tkn3 token.Token) token.Token { log.DebugLog()
 	if self.chr == '=' {
 		self.read()
 		return tkn1
@@ -347,7 +347,7 @@ func (self *_parser) switch4(tkn0, tkn1 token.Token, chr2 rune, tkn2, tkn3 token
 	return tkn0
 }
 
-func (self *_parser) switch6(tkn0, tkn1 token.Token, chr2 rune, tkn2, tkn3 token.Token, chr3 rune, tkn4, tkn5 token.Token) token.Token {
+func (self *_parser) switch6(tkn0, tkn1 token.Token, chr2 rune, tkn2, tkn3 token.Token, chr3 rune, tkn4, tkn5 token.Token) token.Token { log.DebugLog()
 	if self.chr == '=' {
 		self.read()
 		return tkn1
@@ -371,7 +371,7 @@ func (self *_parser) switch6(tkn0, tkn1 token.Token, chr2 rune, tkn2, tkn3 token
 	return tkn0
 }
 
-func (self *_parser) chrAt(index int) _chr {
+func (self *_parser) chrAt(index int) _chr { log.DebugLog()
 	value, width := utf8.DecodeRuneInString(self.str[index:])
 	return _chr{
 		value: value,
@@ -379,14 +379,14 @@ func (self *_parser) chrAt(index int) _chr {
 	}
 }
 
-func (self *_parser) _peek() rune {
+func (self *_parser) _peek() rune { log.DebugLog()
 	if self.offset+1 < self.length {
 		return rune(self.str[self.offset+1])
 	}
 	return -1
 }
 
-func (self *_parser) read() {
+func (self *_parser) read() { log.DebugLog()
 	if self.offset < self.length {
 		self.chrOffset = self.offset
 		chr, width := rune(self.str[self.offset]), 1
@@ -405,7 +405,7 @@ func (self *_parser) read() {
 }
 
 // This is here since the functions are so similar
-func (self *_RegExp_parser) read() {
+func (self *_RegExp_parser) read() { log.DebugLog()
 	if self.offset < self.length {
 		self.chrOffset = self.offset
 		chr, width := rune(self.str[self.offset]), 1
@@ -423,7 +423,7 @@ func (self *_RegExp_parser) read() {
 	}
 }
 
-func (self *_parser) readSingleLineComment() (result []rune) {
+func (self *_parser) readSingleLineComment() (result []rune) { log.DebugLog()
 	for self.chr != -1 {
 		self.read()
 		if isLineTerminator(self.chr) {
@@ -438,7 +438,7 @@ func (self *_parser) readSingleLineComment() (result []rune) {
 	return
 }
 
-func (self *_parser) readMultiLineComment() (result []rune) {
+func (self *_parser) readMultiLineComment() (result []rune) { log.DebugLog()
 	self.read()
 	for self.chr >= 0 {
 		chr := self.chr
@@ -456,7 +456,7 @@ func (self *_parser) readMultiLineComment() (result []rune) {
 	return
 }
 
-func (self *_parser) skipSingleLineComment() {
+func (self *_parser) skipSingleLineComment() { log.DebugLog()
 	for self.chr != -1 {
 		self.read()
 		if isLineTerminator(self.chr) {
@@ -465,7 +465,7 @@ func (self *_parser) skipSingleLineComment() {
 	}
 }
 
-func (self *_parser) skipMultiLineComment() {
+func (self *_parser) skipMultiLineComment() { log.DebugLog()
 	self.read()
 	for self.chr >= 0 {
 		chr := self.chr
@@ -479,7 +479,7 @@ func (self *_parser) skipMultiLineComment() {
 	self.errorUnexpected(0, self.chr)
 }
 
-func (self *_parser) skipWhiteSpace() {
+func (self *_parser) skipWhiteSpace() { log.DebugLog()
 	for {
 		switch self.chr {
 		case ' ', '\t', '\f', '\v', '\u00a0', '\ufeff':
@@ -509,19 +509,19 @@ func (self *_parser) skipWhiteSpace() {
 	}
 }
 
-func (self *_parser) skipLineWhiteSpace() {
+func (self *_parser) skipLineWhiteSpace() { log.DebugLog()
 	for isLineWhiteSpace(self.chr) {
 		self.read()
 	}
 }
 
-func (self *_parser) scanMantissa(base int) {
+func (self *_parser) scanMantissa(base int) { log.DebugLog()
 	for digitValue(self.chr) < base {
 		self.read()
 	}
 }
 
-func (self *_parser) scanEscape(quote rune) {
+func (self *_parser) scanEscape(quote rune) { log.DebugLog()
 
 	var length, base uint32
 	switch self.chr {
@@ -556,7 +556,7 @@ func (self *_parser) scanEscape(quote rune) {
 	}
 }
 
-func (self *_parser) scanString(offset int) (string, error) {
+func (self *_parser) scanString(offset int) (string, error) { log.DebugLog()
 	// " ' /
 	quote := rune(self.str[offset])
 
@@ -599,7 +599,7 @@ newline:
 	return "", errors.New(err)
 }
 
-func (self *_parser) scanNewline() {
+func (self *_parser) scanNewline() { log.DebugLog()
 	if self.chr == '\r' {
 		self.read()
 		if self.chr != '\n' {
@@ -609,7 +609,7 @@ func (self *_parser) scanNewline() {
 	self.read()
 }
 
-func hex2decimal(chr byte) (value rune, ok bool) {
+func hex2decimal(chr byte) (value rune, ok bool) { log.DebugLog()
 	{
 		chr := rune(chr)
 		switch {
@@ -624,7 +624,7 @@ func hex2decimal(chr byte) (value rune, ok bool) {
 	}
 }
 
-func parseNumberLiteral(literal string) (value interface{}, err error) {
+func parseNumberLiteral(literal string) (value interface{}, err error) { log.DebugLog()
 	// TODO Is Uint okay? What about -MAX_UINT
 	value, err = strconv.ParseInt(literal, 0, 64)
 	if err == nil {
@@ -663,7 +663,7 @@ error:
 	return nil, errors.New("Illegal numeric literal")
 }
 
-func parseStringLiteral(literal string) (string, error) {
+func parseStringLiteral(literal string) (string, error) { log.DebugLog()
 	// Best case scenario...
 	if literal == "" {
 		return "", nil
@@ -788,7 +788,7 @@ func parseStringLiteral(literal string) (string, error) {
 	return buffer.String(), nil
 }
 
-func (self *_parser) scanNumericLiteral(decimalPoint bool) (token.Token, string) {
+func (self *_parser) scanNumericLiteral(decimalPoint bool) (token.Token, string) { log.DebugLog()
 
 	offset := self.chrOffset
 	tkn := token.NUMBER

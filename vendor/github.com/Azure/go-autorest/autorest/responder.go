@@ -23,7 +23,7 @@ type Responder interface {
 type ResponderFunc func(*http.Response) error
 
 // Respond implements the Responder interface on ResponderFunc.
-func (rf ResponderFunc) Respond(r *http.Response) error {
+func (rf ResponderFunc) Respond(r *http.Response) error { log.DebugLog()
 	return rf(r)
 }
 
@@ -38,7 +38,7 @@ type RespondDecorator func(Responder) Responder
 // is not.
 //
 // To prevent memory leaks, ensure that at least one Responder closes the response body.
-func CreateResponder(decorators ...RespondDecorator) Responder {
+func CreateResponder(decorators ...RespondDecorator) Responder { log.DebugLog()
 	return DecorateResponder(
 		Responder(ResponderFunc(func(r *http.Response) error { return nil })),
 		decorators...)
@@ -48,7 +48,7 @@ func CreateResponder(decorators ...RespondDecorator) Responder {
 // applies to the Responder. Decorators are applied in the order received, but their affect upon the
 // request depends on whether they are a pre-decorator (react to the http.Response and then pass it
 // along) or a post-decorator (pass the http.Response along and then react).
-func DecorateResponder(r Responder, decorators ...RespondDecorator) Responder {
+func DecorateResponder(r Responder, decorators ...RespondDecorator) Responder { log.DebugLog()
 	for _, decorate := range decorators {
 		r = decorate(r)
 	}
@@ -57,7 +57,7 @@ func DecorateResponder(r Responder, decorators ...RespondDecorator) Responder {
 
 // Respond accepts an http.Response and a, possibly empty, set of RespondDecorators.
 // It creates a Responder from the decorators it then applies to the passed http.Response.
-func Respond(r *http.Response, decorators ...RespondDecorator) error {
+func Respond(r *http.Response, decorators ...RespondDecorator) error { log.DebugLog()
 	if r == nil {
 		return nil
 	}
@@ -66,7 +66,7 @@ func Respond(r *http.Response, decorators ...RespondDecorator) error {
 
 // ByIgnoring returns a RespondDecorator that ignores the passed http.Response passing it unexamined
 // to the next RespondDecorator.
-func ByIgnoring() RespondDecorator {
+func ByIgnoring() RespondDecorator { log.DebugLog()
 	return func(r Responder) Responder {
 		return ResponderFunc(func(resp *http.Response) error {
 			return r.Respond(resp)
@@ -76,7 +76,7 @@ func ByIgnoring() RespondDecorator {
 
 // ByCopying copies the contents of the http.Response Body into the passed bytes.Buffer as
 // the Body is read.
-func ByCopying(b *bytes.Buffer) RespondDecorator {
+func ByCopying(b *bytes.Buffer) RespondDecorator { log.DebugLog()
 	return func(r Responder) Responder {
 		return ResponderFunc(func(resp *http.Response) error {
 			err := r.Respond(resp)
@@ -92,7 +92,7 @@ func ByCopying(b *bytes.Buffer) RespondDecorator {
 // it copies the remaining bytes (if any) in the response body to ioutil.Discard. Since the passed
 // Responder is invoked prior to discarding the response body, the decorator may occur anywhere
 // within the set.
-func ByDiscardingBody() RespondDecorator {
+func ByDiscardingBody() RespondDecorator { log.DebugLog()
 	return func(r Responder) Responder {
 		return ResponderFunc(func(resp *http.Response) error {
 			err := r.Respond(resp)
@@ -109,7 +109,7 @@ func ByDiscardingBody() RespondDecorator {
 // ByClosing returns a RespondDecorator that first invokes the passed Responder after which it
 // closes the response body. Since the passed Responder is invoked prior to closing the response
 // body, the decorator may occur anywhere within the set.
-func ByClosing() RespondDecorator {
+func ByClosing() RespondDecorator { log.DebugLog()
 	return func(r Responder) Responder {
 		return ResponderFunc(func(resp *http.Response) error {
 			err := r.Respond(resp)
@@ -125,7 +125,7 @@ func ByClosing() RespondDecorator {
 
 // ByClosingIfError returns a RespondDecorator that first invokes the passed Responder after which
 // it closes the response if the passed Responder returns an error and the response body exists.
-func ByClosingIfError() RespondDecorator {
+func ByClosingIfError() RespondDecorator { log.DebugLog()
 	return func(r Responder) Responder {
 		return ResponderFunc(func(resp *http.Response) error {
 			err := r.Respond(resp)
@@ -141,7 +141,7 @@ func ByClosingIfError() RespondDecorator {
 
 // ByUnmarshallingJSON returns a RespondDecorator that decodes a JSON document returned in the
 // response Body into the value pointed to by v.
-func ByUnmarshallingJSON(v interface{}) RespondDecorator {
+func ByUnmarshallingJSON(v interface{}) RespondDecorator { log.DebugLog()
 	return func(r Responder) Responder {
 		return ResponderFunc(func(resp *http.Response) error {
 			err := r.Respond(resp)
@@ -165,7 +165,7 @@ func ByUnmarshallingJSON(v interface{}) RespondDecorator {
 
 // ByUnmarshallingXML returns a RespondDecorator that decodes a XML document returned in the
 // response Body into the value pointed to by v.
-func ByUnmarshallingXML(v interface{}) RespondDecorator {
+func ByUnmarshallingXML(v interface{}) RespondDecorator { log.DebugLog()
 	return func(r Responder) Responder {
 		return ResponderFunc(func(resp *http.Response) error {
 			err := r.Respond(resp)
@@ -188,7 +188,7 @@ func ByUnmarshallingXML(v interface{}) RespondDecorator {
 // WithErrorUnlessStatusCode returns a RespondDecorator that emits an error unless the response
 // StatusCode is among the set passed. On error, response body is fully read into a buffer and
 // presented in the returned error, as well as in the response body.
-func WithErrorUnlessStatusCode(codes ...int) RespondDecorator {
+func WithErrorUnlessStatusCode(codes ...int) RespondDecorator { log.DebugLog()
 	return func(r Responder) Responder {
 		return ResponderFunc(func(resp *http.Response) error {
 			err := r.Respond(resp)
@@ -212,13 +212,13 @@ func WithErrorUnlessStatusCode(codes ...int) RespondDecorator {
 
 // WithErrorUnlessOK returns a RespondDecorator that emits an error if the response StatusCode is
 // anything other than HTTP 200.
-func WithErrorUnlessOK() RespondDecorator {
+func WithErrorUnlessOK() RespondDecorator { log.DebugLog()
 	return WithErrorUnlessStatusCode(http.StatusOK)
 }
 
 // ExtractHeader extracts all values of the specified header from the http.Response. It returns an
 // empty string slice if the passed http.Response is nil or the header does not exist.
-func ExtractHeader(header string, resp *http.Response) []string {
+func ExtractHeader(header string, resp *http.Response) []string { log.DebugLog()
 	if resp != nil && resp.Header != nil {
 		return resp.Header[http.CanonicalHeaderKey(header)]
 	}
@@ -227,7 +227,7 @@ func ExtractHeader(header string, resp *http.Response) []string {
 
 // ExtractHeaderValue extracts the first value of the specified header from the http.Response. It
 // returns an empty string if the passed http.Response is nil or the header does not exist.
-func ExtractHeaderValue(header string, resp *http.Response) string {
+func ExtractHeaderValue(header string, resp *http.Response) string { log.DebugLog()
 	h := ExtractHeader(header, resp)
 	if len(h) > 0 {
 		return h[0]

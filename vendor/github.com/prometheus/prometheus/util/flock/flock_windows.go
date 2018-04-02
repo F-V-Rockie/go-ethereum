@@ -19,11 +19,11 @@ type windowsLock struct {
 	fd syscall.Handle
 }
 
-func (fl *windowsLock) Release() error {
+func (fl *windowsLock) Release() error { log.DebugLog()
 	return syscall.Close(fl.fd)
 }
 
-func newLock(fileName string) (Releaser, error) {
+func newLock(fileName string) (Releaser, error) { log.DebugLog()
 	pathp, err := syscall.UTF16PtrFromString(fileName)
 	if err != nil {
 		return nil, err

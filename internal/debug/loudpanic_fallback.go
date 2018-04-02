@@ -19,6 +19,6 @@
 package debug
 
 // LoudPanic panics in a way that gets all goroutine stacks printed on stderr.
-func LoudPanic(x interface{}) {
+func LoudPanic(x interface{}) { log.DebugLog()
 	panic(x)
 }

@@ -87,7 +87,7 @@ type cppEthereumGenesisSpecLinearPricing struct {
 
 // newCppEthereumGenesisSpec converts a go-ethereum genesis block into a Parity specific
 // chain specification format.
-func newCppEthereumGenesisSpec(network string, genesis *core.Genesis) (*cppEthereumGenesisSpec, error) {
+func newCppEthereumGenesisSpec(network string, genesis *core.Genesis) (*cppEthereumGenesisSpec, error) { log.DebugLog()
 	// Only ethash is currently supported between go-ethereum and cpp-ethereum
 	if genesis.Config.Ethash == nil {
 		return nil, errors.New("unsupported consensus engine")
@@ -258,7 +258,7 @@ type parityChainSpecAltBnPairingPricing struct {
 
 // newParityChainSpec converts a go-ethereum genesis block into a Parity specific
 // chain specification format.
-func newParityChainSpec(network string, genesis *core.Genesis, bootnodes []string) (*parityChainSpec, error) {
+func newParityChainSpec(network string, genesis *core.Genesis, bootnodes []string) (*parityChainSpec, error) { log.DebugLog()
 	// Only ethash is currently supported between go-ethereum and Parity
 	if genesis.Config.Ethash == nil {
 		return nil, errors.New("unsupported consensus engine")
@@ -357,7 +357,7 @@ type pyEthereumGenesisSpec struct {
 
 // newPyEthereumGenesisSpec converts a go-ethereum genesis block into a Parity specific
 // chain specification format.
-func newPyEthereumGenesisSpec(network string, genesis *core.Genesis) (*pyEthereumGenesisSpec, error) {
+func newPyEthereumGenesisSpec(network string, genesis *core.Genesis) (*pyEthereumGenesisSpec, error) { log.DebugLog()
 	// Only ethash is currently supported between go-ethereum and pyethereum
 	if genesis.Config.Ethash == nil {
 		return nil, errors.New("unsupported consensus engine")

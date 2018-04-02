@@ -23,7 +23,7 @@ import (
 	"testing"
 )
 
-func TestBytesConversion(t *testing.T) {
+func TestBytesConversion(t *testing.T) { log.DebugLog()
 	bytes := []byte{5}
 	hash := BytesToHash(bytes)
 
@@ -35,7 +35,7 @@ func TestBytesConversion(t *testing.T) {
 	}
 }
 
-func TestIsHexAddress(t *testing.T) {
+func TestIsHexAddress(t *testing.T) { log.DebugLog()
 	tests := []struct {
 		str string
 		exp bool
@@ -59,7 +59,7 @@ func TestIsHexAddress(t *testing.T) {
 	}
 }
 
-func TestHashJsonValidation(t *testing.T) {
+func TestHashJsonValidation(t *testing.T) { log.DebugLog()
 	var tests = []struct {
 		Prefix string
 		Size   int
@@ -88,7 +88,7 @@ func TestHashJsonValidation(t *testing.T) {
 	}
 }
 
-func TestAddressUnmarshalJSON(t *testing.T) {
+func TestAddressUnmarshalJSON(t *testing.T) { log.DebugLog()
 	var tests = []struct {
 		Input     string
 		ShouldErr bool
@@ -119,7 +119,7 @@ func TestAddressUnmarshalJSON(t *testing.T) {
 	}
 }
 
-func TestAddressHexChecksum(t *testing.T) {
+func TestAddressHexChecksum(t *testing.T) { log.DebugLog()
 	var tests = []struct {
 		Input  string
 		Output string
@@ -143,7 +143,7 @@ func TestAddressHexChecksum(t *testing.T) {
 	}
 }
 
-func BenchmarkAddressHex(b *testing.B) {
+func BenchmarkAddressHex(b *testing.B) { log.DebugLog()
 	testAddr := HexToAddress("0x5aaeb6053f3e94c9b9a09f33669435e7ef1beaed")
 	for n := 0; n < b.N; n++ {
 		testAddr.Hex()

@@ -30,13 +30,13 @@ var twistGen = &twistPoint{
 	gfP2{*newGFp(0), *newGFp(1)},
 }
 
-func (c *twistPoint) String() string {
+func (c *twistPoint) String() string { log.DebugLog()
 	c.MakeAffine()
 	x, y := gfP2Decode(&c.x), gfP2Decode(&c.y)
 	return "(" + x.String() + ", " + y.String() + ")"
 }
 
-func (c *twistPoint) Set(a *twistPoint) {
+func (c *twistPoint) Set(a *twistPoint) { log.DebugLog()
 	c.x.Set(&a.x)
 	c.y.Set(&a.y)
 	c.z.Set(&a.z)
@@ -44,7 +44,7 @@ func (c *twistPoint) Set(a *twistPoint) {
 }
 
 // IsOnCurve returns true iff c is on the curve.
-func (c *twistPoint) IsOnCurve() bool {
+func (c *twistPoint) IsOnCurve() bool { log.DebugLog()
 	c.MakeAffine()
 	if c.IsInfinity() {
 		return true
@@ -62,18 +62,18 @@ func (c *twistPoint) IsOnCurve() bool {
 	return cneg.z.IsZero()
 }
 
-func (c *twistPoint) SetInfinity() {
+func (c *twistPoint) SetInfinity() { log.DebugLog()
 	c.x.SetZero()
 	c.y.SetOne()
 	c.z.SetZero()
 	c.t.SetZero()
 }
 
-func (c *twistPoint) IsInfinity() bool {
+func (c *twistPoint) IsInfinity() bool { log.DebugLog()
 	return c.z.IsZero()
 }
 
-func (c *twistPoint) Add(a, b *twistPoint) {
+func (c *twistPoint) Add(a, b *twistPoint) { log.DebugLog()
 	// For additional comments, see the same function in curve.go.
 
 	if a.IsInfinity() {
@@ -132,7 +132,7 @@ func (c *twistPoint) Add(a, b *twistPoint) {
 	c.z.Mul(t4, h)
 }
 
-func (c *twistPoint) Double(a *twistPoint) {
+func (c *twistPoint) Double(a *twistPoint) { log.DebugLog()
 	// See http://hyperelliptic.org/EFD/g1p/auto-code/shortw/jacobian-0/doubling/dbl-2009-l.op3
 	A := (&gfP2{}).Square(&a.x)
 	B := (&gfP2{}).Square(&a.y)
@@ -161,7 +161,7 @@ func (c *twistPoint) Double(a *twistPoint) {
 	c.z.Add(t, t)
 }
 
-func (c *twistPoint) Mul(a *twistPoint, scalar *big.Int) {
+func (c *twistPoint) Mul(a *twistPoint, scalar *big.Int) { log.DebugLog()
 	sum, t := &twistPoint{}, &twistPoint{}
 
 	for i := scalar.BitLen(); i >= 0; i-- {
@@ -176,7 +176,7 @@ func (c *twistPoint) Mul(a *twistPoint, scalar *big.Int) {
 	c.Set(sum)
 }
 
-func (c *twistPoint) MakeAffine() {
+func (c *twistPoint) MakeAffine() { log.DebugLog()
 	if c.z.IsOne() {
 		return
 	} else if c.z.IsZero() {
@@ -196,7 +196,7 @@ func (c *twistPoint) MakeAffine() {
 	c.t.SetOne()
 }
 
-func (c *twistPoint) Neg(a *twistPoint) {
+func (c *twistPoint) Neg(a *twistPoint) { log.DebugLog()
 	c.x.Set(&a.x)
 	c.y.Neg(&a.y)
 	c.z.Set(&a.z)

@@ -73,7 +73,7 @@ type Console struct {
 	printer  io.Writer    // Output writer to serialize any display strings to
 }
 
-func New(config Config) (*Console, error) {
+func New(config Config) (*Console, error) { log.DebugLog()
 	// Handle unset config values gracefully
 	if config.Prompter == nil {
 		config.Prompter = Stdin
@@ -104,7 +104,7 @@ func New(config Config) (*Console, error) {
 
 // init retrieves the available APIs from the remote RPC provider and initializes
 // the console's JavaScript namespaces based on the exposed modules.
-func (c *Console) init(preload []string) error {
+func (c *Console) init(preload []string) error { log.DebugLog()
 	// Initialize the JavaScript <-> Go RPC bridge
 	bridge := newBridge(c.client, c.prompter, c.printer)
 	c.jsre.Set("jeth", struct{}{})
@@ -221,7 +221,7 @@ func (c *Console) init(preload []string) error {
 	return nil
 }
 
-func (c *Console) clearHistory() {
+func (c *Console) clearHistory() { log.DebugLog()
 	c.history = nil
 	c.prompter.ClearHistory()
 	if err := os.Remove(c.histPath); err != nil {
@@ -233,7 +233,7 @@ func (c *Console) clearHistory() {
 
 // consoleOutput is an override for the console.log and console.error methods to
 // stream the output into the configured output stream instead of stdout.
-func (c *Console) consoleOutput(call otto.FunctionCall) otto.Value {
+func (c *Console) consoleOutput(call otto.FunctionCall) otto.Value { log.DebugLog()
 	output := []string{}
 	for _, argument := range call.ArgumentList {
 		output = append(output, fmt.Sprintf("%v", argument))
@@ -244,7 +244,7 @@ func (c *Console) consoleOutput(call otto.FunctionCall) otto.Value {
 
 // AutoCompleteInput is a pre-assembled word completer to be used by the user
 // input prompter to provide hints to the user about the methods available.
-func (c *Console) AutoCompleteInput(line string, pos int) (string, []string, string) {
+func (c *Console) AutoCompleteInput(line string, pos int) (string, []string, string) { log.DebugLog()
 	// No completions can be provided for empty inputs
 	if len(line) == 0 || pos == 0 {
 		return "", nil, ""
@@ -271,7 +271,7 @@ func (c *Console) AutoCompleteInput(line string, pos int) (string, []string, str
 
 // Welcome show summary of current Geth instance and some metadata about the
 // console's available modules.
-func (c *Console) Welcome() {
+func (c *Console) Welcome() { log.DebugLog()
 	// Print some generic Geth metadata
 	fmt.Fprintf(c.printer, "Welcome to the Geth JavaScript console!\n\n")
 	c.jsre.Run(`
@@ -294,7 +294,7 @@ func (c *Console) Welcome() {
 
 // Evaluate executes code and pretty prints the result to the specified output
 // stream.
-func (c *Console) Evaluate(statement string) error {
+func (c *Console) Evaluate(statement string) error { log.DebugLog()
 	defer func() {
 		if r := recover(); r != nil {
 			fmt.Fprintf(c.printer, "[native] error: %v\n", r)
@@ -305,7 +305,7 @@ func (c *Console) Evaluate(statement string) error {
 
 // Interactive starts an interactive user session, where input is propted from
 // the configured user prompter.
-func (c *Console) Interactive() {
+func (c *Console) Interactive() { log.DebugLog()
 	var (
 		prompt    = c.prompt          // Current prompt line (used for multi-line inputs)
 		indents   = 0                 // Current number of input indents (used for multi-line inputs)
@@ -381,7 +381,7 @@ func (c *Console) Interactive() {
 
 // countIndents returns the number of identations for the given input.
 // In case of invalid input such as var a = } the result can be negative.
-func countIndents(input string) int {
+func countIndents(input string) int { log.DebugLog()
 	var (
 		indents     = 0
 		inString    = false
@@ -423,12 +423,12 @@ func countIndents(input string) int {
 }
 
 // Execute runs the JavaScript file specified as the argument.
-func (c *Console) Execute(path string) error {
+func (c *Console) Execute(path string) error { log.DebugLog()
 	return c.jsre.Exec(path)
 }
 
 // Stop cleans up the console and terminates the runtime environment.
-func (c *Console) Stop(graceful bool) error {
+func (c *Console) Stop(graceful bool) error { log.DebugLog()
 	if err := ioutil.WriteFile(c.histPath, []byte(strings.Join(c.history, "\n")), 0600); err != nil {
 		return err
 	}

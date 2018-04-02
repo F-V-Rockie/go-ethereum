@@ -29,7 +29,7 @@ import (
 )
 
 // Tests block header storage and retrieval operations.
-func TestHeaderStorage(t *testing.T) {
+func TestHeaderStorage(t *testing.T) { log.DebugLog()
 	db, _ := ethdb.NewMemDatabase()
 
 	// Create a test header to move around the database and make sure it's really new
@@ -64,7 +64,7 @@ func TestHeaderStorage(t *testing.T) {
 }
 
 // Tests block body storage and retrieval operations.
-func TestBodyStorage(t *testing.T) {
+func TestBodyStorage(t *testing.T) { log.DebugLog()
 	db, _ := ethdb.NewMemDatabase()
 
 	// Create a test body to move around the database and make sure it's really new
@@ -104,7 +104,7 @@ func TestBodyStorage(t *testing.T) {
 }
 
 // Tests block storage and retrieval operations.
-func TestBlockStorage(t *testing.T) {
+func TestBlockStorage(t *testing.T) { log.DebugLog()
 	db, _ := ethdb.NewMemDatabase()
 
 	// Create a test block to move around the database and make sure it's really new
@@ -156,7 +156,7 @@ func TestBlockStorage(t *testing.T) {
 }
 
 // Tests that partial block contents don't get reassembled into full blocks.
-func TestPartialBlockStorage(t *testing.T) {
+func TestPartialBlockStorage(t *testing.T) { log.DebugLog()
 	db, _ := ethdb.NewMemDatabase()
 	block := types.NewBlockWithHeader(&types.Header{
 		Extra:       []byte("test block"),
@@ -197,7 +197,7 @@ func TestPartialBlockStorage(t *testing.T) {
 }
 
 // Tests block total difficulty storage and retrieval operations.
-func TestTdStorage(t *testing.T) {
+func TestTdStorage(t *testing.T) { log.DebugLog()
 	db, _ := ethdb.NewMemDatabase()
 
 	// Create a test TD to move around the database and make sure it's really new
@@ -222,7 +222,7 @@ func TestTdStorage(t *testing.T) {
 }
 
 // Tests that canonical numbers can be mapped to hashes and retrieved.
-func TestCanonicalMappingStorage(t *testing.T) {
+func TestCanonicalMappingStorage(t *testing.T) { log.DebugLog()
 	db, _ := ethdb.NewMemDatabase()
 
 	// Create a test canonical number and assinged hash to move around
@@ -247,7 +247,7 @@ func TestCanonicalMappingStorage(t *testing.T) {
 }
 
 // Tests that head headers and head blocks can be assigned, individually.
-func TestHeadStorage(t *testing.T) {
+func TestHeadStorage(t *testing.T) { log.DebugLog()
 	db, _ := ethdb.NewMemDatabase()
 
 	blockHead := types.NewBlockWithHeader(&types.Header{Extra: []byte("test block header")})
@@ -287,7 +287,7 @@ func TestHeadStorage(t *testing.T) {
 }
 
 // Tests that positional lookup metadata can be stored and retrieved.
-func TestLookupStorage(t *testing.T) {
+func TestLookupStorage(t *testing.T) { log.DebugLog()
 	db, _ := ethdb.NewMemDatabase()
 
 	tx1 := types.NewTransaction(1, common.BytesToAddress([]byte{0x11}), big.NewInt(111), 1111, big.NewInt(11111), []byte{0x11, 0x11, 0x11})
@@ -332,7 +332,7 @@ func TestLookupStorage(t *testing.T) {
 }
 
 // Tests that receipts associated with a single block can be stored and retrieved.
-func TestBlockReceiptStorage(t *testing.T) {
+func TestBlockReceiptStorage(t *testing.T) { log.DebugLog()
 	db, _ := ethdb.NewMemDatabase()
 
 	receipt1 := &types.Receipt{

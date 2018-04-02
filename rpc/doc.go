@@ -54,11 +54,11 @@ can be sent back to the client out of order.
 An example server which uses the JSON codec:
  type CalculatorService struct {}
 
- func (s *CalculatorService) Add(a, b int) int {
+ func (s *CalculatorService) Add(a, b int) int { log.DebugLog()
 	return a + b
  }
 
- func (s *CalculatorService Div(a, b int) (int, error) {
+ func (s *CalculatorService Div(a, b int) (int, error) { log.DebugLog()
 	if b == 0 {
 		return 0, errors.New("divide by zero")
 	}
@@ -85,7 +85,7 @@ A method that is considered eligible for notifications must satisfy the followin
  - method must return the tuple Subscription, error
 
 An example method:
- func (s *BlockChainService) NewBlocks(ctx context.Context) (Subscription, error) {
+ func (s *BlockChainService) NewBlocks(ctx context.Context) (Subscription, error) { log.DebugLog()
  	...
  }
 

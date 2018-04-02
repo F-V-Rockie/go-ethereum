@@ -22,7 +22,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 )
 
-func TestParseEnsAPIAddress(t *testing.T) {
+func TestParseEnsAPIAddress(t *testing.T) { log.DebugLog()
 	for _, x := range []struct {
 		description string
 		value       string

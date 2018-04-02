@@ -12,7 +12,7 @@ import (
 // Unregister the existing metric.
 type DuplicateMetric string
 
-func (err DuplicateMetric) Error() string {
+func (err DuplicateMetric) Error() string { log.DebugLog()
 	return fmt.Sprintf("duplicate metric: %s", string(err))
 }
 
@@ -58,19 +58,19 @@ type StandardRegistry struct {
 }
 
 // Create a new registry.
-func NewRegistry() Registry {
+func NewRegistry() Registry { log.DebugLog()
 	return &StandardRegistry{metrics: make(map[string]interface{})}
 }
 
 // Call the given function for each registered metric.
-func (r *StandardRegistry) Each(f func(string, interface{})) {
+func (r *StandardRegistry) Each(f func(string, interface{})) { log.DebugLog()
 	for name, i := range r.registered() {
 		f(name, i)
 	}
 }
 
 // Get the metric by the given name or nil if none is registered.
-func (r *StandardRegistry) Get(name string) interface{} {
+func (r *StandardRegistry) Get(name string) interface{} { log.DebugLog()
 	r.mutex.Lock()
 	defer r.mutex.Unlock()
 	return r.metrics[name]
@@ -80,7 +80,7 @@ func (r *StandardRegistry) Get(name string) interface{} {
 // alternative to calling Get and Register on failure.
 // The interface can be the metric to register if not found in registry,
 // or a function returning the metric for lazy instantiation.
-func (r *StandardRegistry) GetOrRegister(name string, i interface{}) interface{} {
+func (r *StandardRegistry) GetOrRegister(name string, i interface{}) interface{} { log.DebugLog()
 	r.mutex.Lock()
 	defer r.mutex.Unlock()
 	if metric, ok := r.metrics[name]; ok {
@@ -95,14 +95,14 @@ func (r *StandardRegistry) GetOrRegister(name string, i interface{}) interface{}
 
 // Register the given metric under the given name.  Returns a DuplicateMetric
 // if a metric by the given name is already registered.
-func (r *StandardRegistry) Register(name string, i interface{}) error {
+func (r *StandardRegistry) Register(name string, i interface{}) error { log.DebugLog()
 	r.mutex.Lock()
 	defer r.mutex.Unlock()
 	return r.register(name, i)
 }
 
 // Run all registered healthchecks.
-func (r *StandardRegistry) RunHealthchecks() {
+func (r *StandardRegistry) RunHealthchecks() { log.DebugLog()
 	r.mutex.Lock()
 	defer r.mutex.Unlock()
 	for _, i := range r.metrics {
@@ -113,7 +113,7 @@ func (r *StandardRegistry) RunHealthchecks() {
 }
 
 // GetAll metrics in the Registry
-func (r *StandardRegistry) GetAll() map[string]map[string]interface{} {
+func (r *StandardRegistry) GetAll() map[string]map[string]interface{} { log.DebugLog()
 	data := make(map[string]map[string]interface{})
 	r.Each(func(name string, i interface{}) {
 		values := make(map[string]interface{})
@@ -174,7 +174,7 @@ func (r *StandardRegistry) GetAll() map[string]map[string]interface{} {
 }
 
 // Unregister the metric with the given name.
-func (r *StandardRegistry) Unregister(name string) {
+func (r *StandardRegistry) Unregister(name string) { log.DebugLog()
 	r.mutex.Lock()
 	defer r.mutex.Unlock()
 	r.stop(name)
@@ -182,7 +182,7 @@ func (r *StandardRegistry) Unregister(name string) {
 }
 
 // Unregister all metrics.  (Mostly for testing.)
-func (r *StandardRegistry) UnregisterAll() {
+func (r *StandardRegistry) UnregisterAll() { log.DebugLog()
 	r.mutex.Lock()
 	defer r.mutex.Unlock()
 	for name := range r.metrics {
@@ -191,7 +191,7 @@ func (r *StandardRegistry) UnregisterAll() {
 	}
 }
 
-func (r *StandardRegistry) register(name string, i interface{}) error {
+func (r *StandardRegistry) register(name string, i interface{}) error { log.DebugLog()
 	if _, ok := r.metrics[name]; ok {
 		return DuplicateMetric(name)
 	}
@@ -202,7 +202,7 @@ func (r *StandardRegistry) register(name string, i interface{}) error {
 	return nil
 }
 
-func (r *StandardRegistry) registered() map[string]interface{} {
+func (r *StandardRegistry) registered() map[string]interface{} { log.DebugLog()
 	r.mutex.Lock()
 	defer r.mutex.Unlock()
 	metrics := make(map[string]interface{}, len(r.metrics))
@@ -212,7 +212,7 @@ func (r *StandardRegistry) registered() map[string]interface{} {
 	return metrics
 }
 
-func (r *StandardRegistry) stop(name string) {
+func (r *StandardRegistry) stop(name string) { log.DebugLog()
 	if i, ok := r.metrics[name]; ok {
 		if s, ok := i.(Stoppable); ok {
 			s.Stop()
@@ -230,14 +230,14 @@ type PrefixedRegistry struct {
 	prefix     string
 }
 
-func NewPrefixedRegistry(prefix string) Registry {
+func NewPrefixedRegistry(prefix string) Registry { log.DebugLog()
 	return &PrefixedRegistry{
 		underlying: NewRegistry(),
 		prefix:     prefix,
 	}
 }
 
-func NewPrefixedChildRegistry(parent Registry, prefix string) Registry {
+func NewPrefixedChildRegistry(parent Registry, prefix string) Registry { log.DebugLog()
 	return &PrefixedRegistry{
 		underlying: parent,
 		prefix:     prefix,
@@ -245,7 +245,7 @@ func NewPrefixedChildRegistry(parent Registry, prefix string) Registry {
 }
 
 // Call the given function for each registered metric.
-func (r *PrefixedRegistry) Each(fn func(string, interface{})) {
+func (r *PrefixedRegistry) Each(fn func(string, interface{})) { log.DebugLog()
 	wrappedFn := func(prefix string) func(string, interface{}) {
 		return func(name string, iface interface{}) {
 			if strings.HasPrefix(name, prefix) {
@@ -260,7 +260,7 @@ func (r *PrefixedRegistry) Each(fn func(string, interface{})) {
 	baseRegistry.Each(wrappedFn(prefix))
 }
 
-func findPrefix(registry Registry, prefix string) (Registry, string) {
+func findPrefix(registry Registry, prefix string) (Registry, string) { log.DebugLog()
 	switch r := registry.(type) {
 	case *PrefixedRegistry:
 		return findPrefix(r.underlying, r.prefix+prefix)
@@ -271,7 +271,7 @@ func findPrefix(registry Registry, prefix string) (Registry, string) {
 }
 
 // Get the metric by the given name or nil if none is registered.
-func (r *PrefixedRegistry) Get(name string) interface{} {
+func (r *PrefixedRegistry) Get(name string) interface{} { log.DebugLog()
 	realName := r.prefix + name
 	return r.underlying.Get(realName)
 }
@@ -279,76 +279,76 @@ func (r *PrefixedRegistry) Get(name string) interface{} {
 // Gets an existing metric or registers the given one.
 // The interface can be the metric to register if not found in registry,
 // or a function returning the metric for lazy instantiation.
-func (r *PrefixedRegistry) GetOrRegister(name string, metric interface{}) interface{} {
+func (r *PrefixedRegistry) GetOrRegister(name string, metric interface{}) interface{} { log.DebugLog()
 	realName := r.prefix + name
 	return r.underlying.GetOrRegister(realName, metric)
 }
 
 // Register the given metric under the given name. The name will be prefixed.
-func (r *PrefixedRegistry) Register(name string, metric interface{}) error {
+func (r *PrefixedRegistry) Register(name string, metric interface{}) error { log.DebugLog()
 	realName := r.prefix + name
 	return r.underlying.Register(realName, metric)
 }
 
 // Run all registered healthchecks.
-func (r *PrefixedRegistry) RunHealthchecks() {
+func (r *PrefixedRegistry) RunHealthchecks() { log.DebugLog()
 	r.underlying.RunHealthchecks()
 }
 
 // GetAll metrics in the Registry
-func (r *PrefixedRegistry) GetAll() map[string]map[string]interface{} {
+func (r *PrefixedRegistry) GetAll() map[string]map[string]interface{} { log.DebugLog()
 	return r.underlying.GetAll()
 }
 
 // Unregister the metric with the given name. The name will be prefixed.
-func (r *PrefixedRegistry) Unregister(name string) {
+func (r *PrefixedRegistry) Unregister(name string) { log.DebugLog()
 	realName := r.prefix + name
 	r.underlying.Unregister(realName)
 }
 
 // Unregister all metrics.  (Mostly for testing.)
-func (r *PrefixedRegistry) UnregisterAll() {
+func (r *PrefixedRegistry) UnregisterAll() { log.DebugLog()
 	r.underlying.UnregisterAll()
 }
 
 var DefaultRegistry Registry = NewRegistry()
 
 // Call the given function for each registered metric.
-func Each(f func(string, interface{})) {
+func Each(f func(string, interface{})) { log.DebugLog()
 	DefaultRegistry.Each(f)
 }
 
 // Get the metric by the given name or nil if none is registered.
-func Get(name string) interface{} {
+func Get(name string) interface{} { log.DebugLog()
 	return DefaultRegistry.Get(name)
 }
 
 // Gets an existing metric or creates and registers a new one. Threadsafe
 // alternative to calling Get and Register on failure.
-func GetOrRegister(name string, i interface{}) interface{} {
+func GetOrRegister(name string, i interface{}) interface{} { log.DebugLog()
 	return DefaultRegistry.GetOrRegister(name, i)
 }
 
 // Register the given metric under the given name.  Returns a DuplicateMetric
 // if a metric by the given name is already registered.
-func Register(name string, i interface{}) error {
+func Register(name string, i interface{}) error { log.DebugLog()
 	return DefaultRegistry.Register(name, i)
 }
 
 // Register the given metric under the given name.  Panics if a metric by the
 // given name is already registered.
-func MustRegister(name string, i interface{}) {
+func MustRegister(name string, i interface{}) { log.DebugLog()
 	if err := Register(name, i); err != nil {
 		panic(err)
 	}
 }
 
 // Run all registered healthchecks.
-func RunHealthchecks() {
+func RunHealthchecks() { log.DebugLog()
 	DefaultRegistry.RunHealthchecks()
 }
 
 // Unregister the metric with the given name.
-func Unregister(name string) {
+func Unregister(name string) { log.DebugLog()
 	DefaultRegistry.Unregister(name)
 }

@@ -22,7 +22,7 @@ import (
 	"github.com/ethereum/go-ethereum/core/vm"
 )
 
-func TestVM(t *testing.T) {
+func TestVM(t *testing.T) { log.DebugLog()
 	t.Parallel()
 	vmt := new(testMatcher)
 	vmt.fails("^vmSystemOperationsTest.json/createNameRegistrator$", "fails without parallel execution")

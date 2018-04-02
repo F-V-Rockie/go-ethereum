@@ -43,7 +43,7 @@ var discard = Protocol{
 	},
 }
 
-func testPeer(protos []Protocol) (func(), *conn, *Peer, <-chan error) {
+func testPeer(protos []Protocol) (func(), *conn, *Peer, <-chan error) { log.DebugLog()
 	fd1, fd2 := net.Pipe()
 	c1 := &conn{fd: fd1, transport: newTestTransport(randomID(), fd1)}
 	c2 := &conn{fd: fd2, transport: newTestTransport(randomID(), fd2)}
@@ -63,7 +63,7 @@ func testPeer(protos []Protocol) (func(), *conn, *Peer, <-chan error) {
 	return closer, c2, peer, errc
 }
 
-func TestPeerProtoReadMsg(t *testing.T) {
+func TestPeerProtoReadMsg(t *testing.T) { log.DebugLog()
 	proto := Protocol{
 		Name:   "a",
 		Length: 5,
@@ -98,7 +98,7 @@ func TestPeerProtoReadMsg(t *testing.T) {
 	}
 }
 
-func TestPeerProtoEncodeMsg(t *testing.T) {
+func TestPeerProtoEncodeMsg(t *testing.T) { log.DebugLog()
 	proto := Protocol{
 		Name:   "a",
 		Length: 2,
@@ -120,7 +120,7 @@ func TestPeerProtoEncodeMsg(t *testing.T) {
 	}
 }
 
-func TestPeerPing(t *testing.T) {
+func TestPeerPing(t *testing.T) { log.DebugLog()
 	closer, rw, _, _ := testPeer(nil)
 	defer closer()
 	if err := SendItems(rw, pingMsg); err != nil {
@@ -131,7 +131,7 @@ func TestPeerPing(t *testing.T) {
 	}
 }
 
-func TestPeerDisconnect(t *testing.T) {
+func TestPeerDisconnect(t *testing.T) { log.DebugLog()
 	closer, rw, _, disc := testPeer(nil)
 	defer closer()
 	if err := SendItems(rw, discMsg, DiscQuitting); err != nil {
@@ -149,7 +149,7 @@ func TestPeerDisconnect(t *testing.T) {
 
 // This test is supposed to verify that Peer can reliably handle
 // multiple causes of disconnection occurring at the same time.
-func TestPeerDisconnectRace(t *testing.T) {
+func TestPeerDisconnectRace(t *testing.T) { log.DebugLog()
 	maybe := func() bool { return rand.Intn(1) == 1 }
 
 	for i := 0; i < 1000; i++ {
@@ -197,7 +197,7 @@ func TestPeerDisconnectRace(t *testing.T) {
 	}
 }
 
-func TestNewPeer(t *testing.T) {
+func TestNewPeer(t *testing.T) { log.DebugLog()
 	name := "nodename"
 	caps := []Cap{{"foo", 2}, {"bar", 3}}
 	id := randomID()
@@ -215,7 +215,7 @@ func TestNewPeer(t *testing.T) {
 	p.Disconnect(DiscAlreadyConnected) // Should not hang
 }
 
-func TestMatchProtocols(t *testing.T) {
+func TestMatchProtocols(t *testing.T) { log.DebugLog()
 	tests := []struct {
 		Remote []Cap
 		Local  []Protocol

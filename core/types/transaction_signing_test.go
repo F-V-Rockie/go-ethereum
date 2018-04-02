@@ -25,7 +25,7 @@ import (
 	"github.com/ethereum/go-ethereum/rlp"
 )
 
-func TestEIP155Signing(t *testing.T) {
+func TestEIP155Signing(t *testing.T) { log.DebugLog()
 	key, _ := crypto.GenerateKey()
 	addr := crypto.PubkeyToAddress(key.PublicKey)
 
@@ -44,7 +44,7 @@ func TestEIP155Signing(t *testing.T) {
 	}
 }
 
-func TestEIP155ChainId(t *testing.T) {
+func TestEIP155ChainId(t *testing.T) { log.DebugLog()
 	key, _ := crypto.GenerateKey()
 	addr := crypto.PubkeyToAddress(key.PublicKey)
 
@@ -76,7 +76,7 @@ func TestEIP155ChainId(t *testing.T) {
 	}
 }
 
-func TestEIP155SigningVitalik(t *testing.T) {
+func TestEIP155SigningVitalik(t *testing.T) { log.DebugLog()
 	// Test vectors come from http://vitalik.ca/files/eip155_testvec.txt
 	for i, test := range []struct {
 		txRlp, addr string
@@ -115,7 +115,7 @@ func TestEIP155SigningVitalik(t *testing.T) {
 	}
 }
 
-func TestChainId(t *testing.T) {
+func TestChainId(t *testing.T) { log.DebugLog()
 	key, _ := defaultTestKey()
 
 	tx := NewTransaction(0, common.Address{}, new(big.Int), 0, new(big.Int), nil)

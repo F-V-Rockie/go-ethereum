@@ -36,18 +36,18 @@ type testTxRelay struct {
 	send, discard, mined chan int
 }
 
-func (self *testTxRelay) Send(txs types.Transactions) {
+func (self *testTxRelay) Send(txs types.Transactions) { log.DebugLog()
 	self.send <- len(txs)
 }
 
-func (self *testTxRelay) NewHead(head common.Hash, mined []common.Hash, rollback []common.Hash) {
+func (self *testTxRelay) NewHead(head common.Hash, mined []common.Hash, rollback []common.Hash) { log.DebugLog()
 	m := len(mined)
 	if m != 0 {
 		self.mined <- m
 	}
 }
 
-func (self *testTxRelay) Discard(hashes []common.Hash) {
+func (self *testTxRelay) Discard(hashes []common.Hash) { log.DebugLog()
 	self.discard <- len(hashes)
 }
 
@@ -58,16 +58,16 @@ const poolTestBlocks = 100
 var testTx [poolTestTxs]*types.Transaction
 
 // txs sent before block i
-func sentTx(i int) int {
+func sentTx(i int) int { log.DebugLog()
 	return int(math.Pow(float64(i)/float64(poolTestBlocks), 0.9) * poolTestTxs)
 }
 
 // txs included in block i or before that (minedTx(i) <= sentTx(i))
-func minedTx(i int) int {
+func minedTx(i int) int { log.DebugLog()
 	return int(math.Pow(float64(i)/float64(poolTestBlocks), 1.1) * poolTestTxs)
 }
 
-func txPoolTestChainGen(i int, block *core.BlockGen) {
+func txPoolTestChainGen(i int, block *core.BlockGen) { log.DebugLog()
 	s := minedTx(i)
 	e := minedTx(i + 1)
 	for i := s; i < e; i++ {
@@ -75,7 +75,7 @@ func txPoolTestChainGen(i int, block *core.BlockGen) {
 	}
 }
 
-func TestTxPool(t *testing.T) {
+func TestTxPool(t *testing.T) { log.DebugLog()
 	for i := range testTx {
 		testTx[i], _ = types.SignTx(types.NewTransaction(uint64(i), acc1Addr, big.NewInt(10000), params.TxGas, nil, nil), types.HomesteadSigner{}, testBankKey)
 	}

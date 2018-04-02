@@ -28,7 +28,7 @@ type EvtKbd struct {
 	KeyStr string
 }
 
-func evtKbd(e termbox.Event) EvtKbd {
+func evtKbd(e termbox.Event) EvtKbd { log.DebugLog()
 	ek := EvtKbd{}
 
 	k := string(e.Ch)
@@ -71,7 +71,7 @@ func evtKbd(e termbox.Event) EvtKbd {
 	return ek
 }
 
-func crtTermboxEvt(e termbox.Event) Event {
+func crtTermboxEvt(e termbox.Event) Event { log.DebugLog()
 	systypemap := map[termbox.EventType]string{
 		termbox.EventKey:       "keyboard",
 		termbox.EventResize:    "window",
@@ -121,7 +121,7 @@ type EvtMouse struct {
 
 type EvtErr error
 
-func hookTermboxEvt() {
+func hookTermboxEvt() { log.DebugLog()
 	for {
 		e := termbox.PollEvent()
 
@@ -133,7 +133,7 @@ func hookTermboxEvt() {
 	}
 }
 
-func NewSysEvtCh() chan Event {
+func NewSysEvtCh() chan Event { log.DebugLog()
 	ec := make(chan Event)
 	sysEvtChs = append(sysEvtChs, ec)
 	return ec
@@ -151,7 +151,7 @@ type EvtStream struct {
 	hook        func(Event)
 }
 
-func NewEvtStream() *EvtStream {
+func NewEvtStream() *EvtStream { log.DebugLog()
 	return &EvtStream{
 		srcMap:      make(map[string]chan Event),
 		stream:      make(chan Event),
@@ -160,7 +160,7 @@ func NewEvtStream() *EvtStream {
 	}
 }
 
-func (es *EvtStream) Init() {
+func (es *EvtStream) Init() { log.DebugLog()
 	es.Merge("internal", es.sigStopLoop)
 	go func() {
 		es.wg.Wait()
@@ -168,7 +168,7 @@ func (es *EvtStream) Init() {
 	}()
 }
 
-func cleanPath(p string) string {
+func cleanPath(p string) string { log.DebugLog()
 	if p == "" {
 		return "/"
 	}
@@ -178,7 +178,7 @@ func cleanPath(p string) string {
 	return path.Clean(p)
 }
 
-func isPathMatch(pattern, path string) bool {
+func isPathMatch(pattern, path string) bool { log.DebugLog()
 	if len(pattern) == 0 {
 		return false
 	}
@@ -186,7 +186,7 @@ func isPathMatch(pattern, path string) bool {
 	return len(path) >= n && path[0:n] == pattern
 }
 
-func (es *EvtStream) Merge(name string, ec chan Event) {
+func (es *EvtStream) Merge(name string, ec chan Event) { log.DebugLog()
 	es.Lock()
 	defer es.Unlock()
 
@@ -202,11 +202,11 @@ func (es *EvtStream) Merge(name string, ec chan Event) {
 	}(ec)
 }
 
-func (es *EvtStream) Handle(path string, handler func(Event)) {
+func (es *EvtStream) Handle(path string, handler func(Event)) { log.DebugLog()
 	es.Handlers[cleanPath(path)] = handler
 }
 
-func findMatch(mux map[string]func(Event), path string) string {
+func findMatch(mux map[string]func(Event), path string) string { log.DebugLog()
 	n := -1
 	pattern := ""
 	for m := range mux {
@@ -223,22 +223,22 @@ func findMatch(mux map[string]func(Event), path string) string {
 }
 
 // Remove all existing defined Handlers from the map
-func (es *EvtStream) ResetHandlers() {
+func (es *EvtStream) ResetHandlers() { log.DebugLog()
 	for Path, _ := range es.Handlers {
 		delete(es.Handlers, Path)
 	}
 	return
 }
 
-func (es *EvtStream) match(path string) string {
+func (es *EvtStream) match(path string) string { log.DebugLog()
 	return findMatch(es.Handlers, path)
 }
 
-func (es *EvtStream) Hook(f func(Event)) {
+func (es *EvtStream) Hook(f func(Event)) { log.DebugLog()
 	es.hook = f
 }
 
-func (es *EvtStream) Loop() {
+func (es *EvtStream) Loop() { log.DebugLog()
 	for e := range es.stream {
 		switch e.Path {
 		case "/sig/stoploop":
@@ -257,7 +257,7 @@ func (es *EvtStream) Loop() {
 	}
 }
 
-func (es *EvtStream) StopLoop() {
+func (es *EvtStream) StopLoop() { log.DebugLog()
 	go func() {
 		e := Event{
 			Path: "/sig/stoploop",
@@ -266,19 +266,19 @@ func (es *EvtStream) StopLoop() {
 	}()
 }
 
-func Merge(name string, ec chan Event) {
+func Merge(name string, ec chan Event) { log.DebugLog()
 	DefaultEvtStream.Merge(name, ec)
 }
 
-func Handle(path string, handler func(Event)) {
+func Handle(path string, handler func(Event)) { log.DebugLog()
 	DefaultEvtStream.Handle(path, handler)
 }
 
-func Loop() {
+func Loop() { log.DebugLog()
 	DefaultEvtStream.Loop()
 }
 
-func StopLoop() {
+func StopLoop() { log.DebugLog()
 	DefaultEvtStream.StopLoop()
 }
 
@@ -287,7 +287,7 @@ type EvtTimer struct {
 	Count    uint64
 }
 
-func NewTimerCh(du time.Duration) chan Event {
+func NewTimerCh(du time.Duration) chan Event { log.DebugLog()
 	t := make(chan Event)
 
 	go func(a chan Event) {
@@ -315,7 +315,7 @@ var DefaultHandler = func(e Event) {
 
 var usrEvtCh = make(chan Event)
 
-func SendCustomEvt(path string, data interface{}) {
+func SendCustomEvt(path string, data interface{}) { log.DebugLog()
 	e := Event{}
 	e.Path = path
 	e.Data = data

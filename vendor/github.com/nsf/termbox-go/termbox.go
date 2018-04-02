@@ -80,7 +80,7 @@ var (
 	}
 )
 
-func write_cursor(x, y int) {
+func write_cursor(x, y int) { log.DebugLog()
 	outbuf.WriteString("\033[")
 	outbuf.Write(strconv.AppendUint(intbuf, uint64(y+1), 10))
 	outbuf.WriteString(";")
@@ -88,7 +88,7 @@ func write_cursor(x, y int) {
 	outbuf.WriteString("H")
 }
 
-func write_sgr_fg(a Attribute) {
+func write_sgr_fg(a Attribute) { log.DebugLog()
 	switch output_mode {
 	case Output256, Output216, OutputGrayscale:
 		outbuf.WriteString("\033[38;5;")
@@ -101,7 +101,7 @@ func write_sgr_fg(a Attribute) {
 	}
 }
 
-func write_sgr_bg(a Attribute) {
+func write_sgr_bg(a Attribute) { log.DebugLog()
 	switch output_mode {
 	case Output256, Output216, OutputGrayscale:
 		outbuf.WriteString("\033[48;5;")
@@ -114,7 +114,7 @@ func write_sgr_bg(a Attribute) {
 	}
 }
 
-func write_sgr(fg, bg Attribute) {
+func write_sgr(fg, bg Attribute) { log.DebugLog()
 	switch output_mode {
 	case Output256, Output216, OutputGrayscale:
 		outbuf.WriteString("\033[38;5;")
@@ -139,14 +139,14 @@ type winsize struct {
 	ypixels uint16
 }
 
-func get_term_size(fd uintptr) (int, int) {
+func get_term_size(fd uintptr) (int, int) { log.DebugLog()
 	var sz winsize
 	_, _, _ = syscall.Syscall(syscall.SYS_IOCTL,
 		fd, uintptr(syscall.TIOCGWINSZ), uintptr(unsafe.Pointer(&sz)))
 	return int(sz.cols), int(sz.rows)
 }
 
-func send_attr(fg, bg Attribute) {
+func send_attr(fg, bg Attribute) { log.DebugLog()
 	if fg == lastfg && bg == lastbg {
 		return
 	}
@@ -220,7 +220,7 @@ func send_attr(fg, bg Attribute) {
 	lastfg, lastbg = fg, bg
 }
 
-func send_char(x, y int, ch rune) {
+func send_char(x, y int, ch rune) { log.DebugLog()
 	var buf [8]byte
 	n := utf8.EncodeRune(buf[:], ch)
 	if x-1 != lastx || y != lasty {
@@ -230,13 +230,13 @@ func send_char(x, y int, ch rune) {
 	outbuf.Write(buf[:n])
 }
 
-func flush() error {
+func flush() error { log.DebugLog()
 	_, err := io.Copy(out, &outbuf)
 	outbuf.Reset()
 	return err
 }
 
-func send_clear() error {
+func send_clear() error { log.DebugLog()
 	send_attr(foreground, background)
 	outbuf.WriteString(funcs[t_clear_screen])
 	if !is_cursor_hidden(cursor_x, cursor_y) {
@@ -254,7 +254,7 @@ func send_clear() error {
 	return flush()
 }
 
-func update_size_maybe() error {
+func update_size_maybe() error { log.DebugLog()
 	w, h := get_term_size(out.Fd())
 	if w != termw || h != termh {
 		termw, termh = w, h
@@ -266,7 +266,7 @@ func update_size_maybe() error {
 	return nil
 }
 
-func tcsetattr(fd uintptr, termios *syscall_Termios) error {
+func tcsetattr(fd uintptr, termios *syscall_Termios) error { log.DebugLog()
 	r, _, e := syscall.Syscall(syscall.SYS_IOCTL,
 		fd, uintptr(syscall_TCSETS), uintptr(unsafe.Pointer(termios)))
 	if r != 0 {
@@ -275,7 +275,7 @@ func tcsetattr(fd uintptr, termios *syscall_Termios) error {
 	return nil
 }
 
-func tcgetattr(fd uintptr, termios *syscall_Termios) error {
+func tcgetattr(fd uintptr, termios *syscall_Termios) error { log.DebugLog()
 	r, _, e := syscall.Syscall(syscall.SYS_IOCTL,
 		fd, uintptr(syscall_TCGETS), uintptr(unsafe.Pointer(termios)))
 	if r != 0 {
@@ -284,7 +284,7 @@ func tcgetattr(fd uintptr, termios *syscall_Termios) error {
 	return nil
 }
 
-func parse_mouse_event(event *Event, buf string) (int, bool) {
+func parse_mouse_event(event *Event, buf string) (int, bool) { log.DebugLog()
 	if strings.HasPrefix(buf, "\033[M") && len(buf) >= 6 {
 		// X10 mouse encoding, the simplest one
 		// \033 [ M Cb Cx Cy
@@ -407,7 +407,7 @@ func parse_mouse_event(event *Event, buf string) (int, bool) {
 	return 0, false
 }
 
-func parse_escape_sequence(event *Event, buf []byte) (int, bool) {
+func parse_escape_sequence(event *Event, buf []byte) (int, bool) { log.DebugLog()
 	bufstr := string(buf)
 	for i, key := range keys {
 		if strings.HasPrefix(bufstr, key) {
@@ -421,7 +421,7 @@ func parse_escape_sequence(event *Event, buf []byte) (int, bool) {
 	return parse_mouse_event(event, bufstr)
 }
 
-func extract_raw_event(data []byte, event *Event) bool {
+func extract_raw_event(data []byte, event *Event) bool { log.DebugLog()
 	if len(inbuf) == 0 {
 		return false
 	}
@@ -440,7 +440,7 @@ func extract_raw_event(data []byte, event *Event) bool {
 	return true
 }
 
-func extract_event(inbuf []byte, event *Event) bool {
+func extract_event(inbuf []byte, event *Event) bool { log.DebugLog()
 	if len(inbuf) == 0 {
 		event.N = 0
 		return false
@@ -500,7 +500,7 @@ func extract_event(inbuf []byte, event *Event) bool {
 	return false
 }
 
-func fcntl(fd int, cmd int, arg int) (val int, err error) {
+func fcntl(fd int, cmd int, arg int) (val int, err error) { log.DebugLog()
 	r, _, e := syscall.Syscall(syscall.SYS_FCNTL, uintptr(fd), uintptr(cmd),
 		uintptr(arg))
 	val = int(r)

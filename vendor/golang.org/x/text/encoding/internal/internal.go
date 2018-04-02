@@ -22,11 +22,11 @@ type Encoding struct {
 // _ verifies that Encoding implements identifier.Interface.
 var _ identifier.Interface = (*Encoding)(nil)
 
-func (e *Encoding) String() string {
+func (e *Encoding) String() string { log.DebugLog()
 	return e.Name
 }
 
-func (e *Encoding) ID() (mib identifier.MIB, other string) {
+func (e *Encoding) ID() (mib identifier.MIB, other string) { log.DebugLog()
 	return e.MIB, ""
 }
 
@@ -36,11 +36,11 @@ type SimpleEncoding struct {
 	Encoder transform.Transformer
 }
 
-func (e *SimpleEncoding) NewDecoder() *encoding.Decoder {
+func (e *SimpleEncoding) NewDecoder() *encoding.Decoder { log.DebugLog()
 	return &encoding.Decoder{Transformer: e.Decoder}
 }
 
-func (e *SimpleEncoding) NewEncoder() *encoding.Encoder {
+func (e *SimpleEncoding) NewEncoder() *encoding.Encoder { log.DebugLog()
 	return &encoding.Encoder{Transformer: e.Encoder}
 }
 
@@ -51,11 +51,11 @@ type FuncEncoding struct {
 	Encoder func() transform.Transformer
 }
 
-func (e FuncEncoding) NewDecoder() *encoding.Decoder {
+func (e FuncEncoding) NewDecoder() *encoding.Decoder { log.DebugLog()
 	return &encoding.Decoder{Transformer: e.Decoder()}
 }
 
-func (e FuncEncoding) NewEncoder() *encoding.Encoder {
+func (e FuncEncoding) NewEncoder() *encoding.Encoder { log.DebugLog()
 	return &encoding.Encoder{Transformer: e.Encoder()}
 }
 
@@ -65,11 +65,11 @@ func (e FuncEncoding) NewEncoder() *encoding.Encoder {
 type RepertoireError byte
 
 // Error implements the error interrface.
-func (r RepertoireError) Error() string {
+func (r RepertoireError) Error() string { log.DebugLog()
 	return "encoding: rune not supported by encoding."
 }
 
 // Replacement returns the replacement string associated with this error.
-func (r RepertoireError) Replacement() byte { return byte(r) }
+func (r RepertoireError) Replacement() byte { log.DebugLog() return byte(r) }
 
 var ErrASCIIReplacement = RepertoireError(encoding.ASCIISub)

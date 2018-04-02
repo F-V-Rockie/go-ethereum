@@ -41,7 +41,7 @@ type BlockValidator struct {
 }
 
 // NewBlockValidator returns a new block validator which is safe for re-use
-func NewBlockValidator(config *params.ChainConfig, blockchain *BlockChain, engine consensus.Engine) *BlockValidator {
+func NewBlockValidator(config *params.ChainConfig, blockchain *BlockChain, engine consensus.Engine) *BlockValidator { log.DebugLog()
 	validator := &BlockValidator{
 		config: config,
 		engine: engine,
@@ -53,7 +53,7 @@ func NewBlockValidator(config *params.ChainConfig, blockchain *BlockChain, engin
 // ValidateBody validates the given block's uncles and verifies the the block
 // header's transaction and uncle roots. The headers are assumed to be already
 // validated at this point.
-func (v *BlockValidator) ValidateBody(block *types.Block) error {
+func (v *BlockValidator) ValidateBody(block *types.Block) error { log.DebugLog()
 	// Check whether the block's known, and if not, that it's linkable
 	if v.bc.HasBlockAndState(block.Hash(), block.NumberU64()) {
 		return ErrKnownBlock
@@ -82,7 +82,7 @@ func (v *BlockValidator) ValidateBody(block *types.Block) error {
 // transition, such as amount of used gas, the receipt roots and the state root
 // itself. ValidateState returns a database batch if the validation was a success
 // otherwise nil and an error is returned.
-func (v *BlockValidator) ValidateState(block, parent *types.Block, statedb *state.StateDB, receipts types.Receipts, usedGas uint64) error {
+func (v *BlockValidator) ValidateState(block, parent *types.Block, statedb *state.StateDB, receipts types.Receipts, usedGas uint64) error { log.DebugLog()
 	header := block.Header()
 	if block.GasUsed() != usedGas {
 		return fmt.Errorf("invalid gas used (remote: %d local: %d)", block.GasUsed(), usedGas)
@@ -108,7 +108,7 @@ func (v *BlockValidator) ValidateState(block, parent *types.Block, statedb *stat
 
 // CalcGasLimit computes the gas limit of the next block after parent.
 // This is miner strategy, not consensus protocol.
-func CalcGasLimit(parent *types.Block) uint64 {
+func CalcGasLimit(parent *types.Block) uint64 { log.DebugLog()
 	// contrib = (parentGasUsed * 3 / 2) / 1024
 	contrib := (parent.GasUsed() + parent.GasUsed()/2) / params.GasLimitBoundDivisor
 

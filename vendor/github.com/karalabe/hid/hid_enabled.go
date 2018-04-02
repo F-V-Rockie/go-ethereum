@@ -57,7 +57,7 @@ import (
 //   > "subsequent calls will cause the hid manager to release previously enumerated devices"
 var enumerateLock sync.Mutex
 
-func init() {
+func init() { log.DebugLog()
 	// Initialize the HIDAPI library
 	C.hid_init()
 }
@@ -65,7 +65,7 @@ func init() {
 // Supported returns whether this platform is supported by the HID library or not.
 // The goal of this method is to allow programatically handling platforms that do
 // not support USB HID and not having to fall back to build constraints.
-func Supported() bool {
+func Supported() bool { log.DebugLog()
 	return true
 }
 
@@ -74,7 +74,7 @@ func Supported() bool {
 //  - If the vendor id is set to 0 then any vendor matches.
 //  - If the product id is set to 0 then any product matches.
 //  - If the vendor and product id are both 0, all HID devices are returned.
-func Enumerate(vendorID uint16, productID uint16) []DeviceInfo {
+func Enumerate(vendorID uint16, productID uint16) []DeviceInfo { log.DebugLog()
 	enumerateLock.Lock()
 	defer enumerateLock.Unlock()
 
@@ -112,7 +112,7 @@ func Enumerate(vendorID uint16, productID uint16) []DeviceInfo {
 }
 
 // Open connects to an HID device by its path name.
-func (info DeviceInfo) Open() (*Device, error) {
+func (info DeviceInfo) Open() (*Device, error) { log.DebugLog()
 	path := C.CString(info.Path)
 	defer C.free(unsafe.Pointer(path))
 
@@ -135,7 +135,7 @@ type Device struct {
 }
 
 // Close releases the HID USB device handle.
-func (dev *Device) Close() {
+func (dev *Device) Close() { log.DebugLog()
 	dev.lock.Lock()
 	defer dev.lock.Unlock()
 
@@ -149,7 +149,7 @@ func (dev *Device) Close() {
 //
 // Write will send the data on the first OUT endpoint, if one exists. If it does
 // not, it will send the data through the Control Endpoint (Endpoint 0).
-func (dev *Device) Write(b []byte) (int, error) {
+func (dev *Device) Write(b []byte) (int, error) { log.DebugLog()
 	// Abort if nothing to write
 	if len(b) == 0 {
 		return 0, nil
@@ -192,7 +192,7 @@ func (dev *Device) Write(b []byte) (int, error) {
 }
 
 // Read retrieves an input report from a HID device.
-func (dev *Device) Read(b []byte) (int, error) {
+func (dev *Device) Read(b []byte) (int, error) { log.DebugLog()
 	// Aborth if nothing to read
 	if len(b) == 0 {
 		return 0, nil

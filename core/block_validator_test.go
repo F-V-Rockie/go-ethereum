@@ -29,7 +29,7 @@ import (
 )
 
 // Tests that simple header verification works, for both good and bad blocks.
-func TestHeaderVerification(t *testing.T) {
+func TestHeaderVerification(t *testing.T) { log.DebugLog()
 	// Create a simple chain to verify
 	var (
 		testdb, _ = ethdb.NewMemDatabase()
@@ -77,11 +77,11 @@ func TestHeaderVerification(t *testing.T) {
 }
 
 // Tests that concurrent header verification works, for both good and bad blocks.
-func TestHeaderConcurrentVerification2(t *testing.T)  { testHeaderConcurrentVerification(t, 2) }
-func TestHeaderConcurrentVerification8(t *testing.T)  { testHeaderConcurrentVerification(t, 8) }
-func TestHeaderConcurrentVerification32(t *testing.T) { testHeaderConcurrentVerification(t, 32) }
+func TestHeaderConcurrentVerification2(t *testing.T)  { log.DebugLog() testHeaderConcurrentVerification(t, 2) }
+func TestHeaderConcurrentVerification8(t *testing.T)  { log.DebugLog() testHeaderConcurrentVerification(t, 8) }
+func TestHeaderConcurrentVerification32(t *testing.T) { log.DebugLog() testHeaderConcurrentVerification(t, 32) }
 
-func testHeaderConcurrentVerification(t *testing.T, threads int) {
+func testHeaderConcurrentVerification(t *testing.T, threads int) { log.DebugLog()
 	// Create a simple chain to verify
 	var (
 		testdb, _ = ethdb.NewMemDatabase()
@@ -149,11 +149,11 @@ func testHeaderConcurrentVerification(t *testing.T, threads int) {
 
 // Tests that aborting a header validation indeed prevents further checks from being
 // run, as well as checks that no left-over goroutines are leaked.
-func TestHeaderConcurrentAbortion2(t *testing.T)  { testHeaderConcurrentAbortion(t, 2) }
-func TestHeaderConcurrentAbortion8(t *testing.T)  { testHeaderConcurrentAbortion(t, 8) }
-func TestHeaderConcurrentAbortion32(t *testing.T) { testHeaderConcurrentAbortion(t, 32) }
+func TestHeaderConcurrentAbortion2(t *testing.T)  { log.DebugLog() testHeaderConcurrentAbortion(t, 2) }
+func TestHeaderConcurrentAbortion8(t *testing.T)  { log.DebugLog() testHeaderConcurrentAbortion(t, 8) }
+func TestHeaderConcurrentAbortion32(t *testing.T) { log.DebugLog() testHeaderConcurrentAbortion(t, 32) }
 
-func testHeaderConcurrentAbortion(t *testing.T, threads int) {
+func testHeaderConcurrentAbortion(t *testing.T, threads int) { log.DebugLog()
 	// Create a simple chain to verify
 	var (
 		testdb, _ = ethdb.NewMemDatabase()

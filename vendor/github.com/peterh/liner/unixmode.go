@@ -7,7 +7,7 @@ import (
 	"unsafe"
 )
 
-func (mode *termios) ApplyMode() error {
+func (mode *termios) ApplyMode() error { log.DebugLog()
 	_, _, errno := syscall.Syscall(syscall.SYS_IOCTL, uintptr(syscall.Stdin), setTermios, uintptr(unsafe.Pointer(mode)))
 
 	if errno != 0 {
@@ -20,7 +20,7 @@ func (mode *termios) ApplyMode() error {
 //
 // This function is provided for convenience, and should
 // not be necessary for most users of liner.
-func TerminalMode() (ModeApplier, error) {
+func TerminalMode() (ModeApplier, error) { log.DebugLog()
 	mode, errno := getMode(syscall.Stdin)
 
 	if errno != 0 {
@@ -29,7 +29,7 @@ func TerminalMode() (ModeApplier, error) {
 	return mode, nil
 }
 
-func getMode(handle int) (*termios, syscall.Errno) {
+func getMode(handle int) (*termios, syscall.Errno) { log.DebugLog()
 	var mode termios
 	_, _, errno := syscall.Syscall(syscall.SYS_IOCTL, uintptr(handle), getTermios, uintptr(unsafe.Pointer(&mode)))
 

@@ -26,21 +26,21 @@ import (
 
 type Address common.Hash
 
-func (a Address) String() string {
+func (a Address) String() string { log.DebugLog()
 	return fmt.Sprintf("%x", a[:])
 }
 
-func (a *Address) MarshalJSON() (out []byte, err error) {
+func (a *Address) MarshalJSON() (out []byte, err error) { log.DebugLog()
 	return []byte(`"` + a.String() + `"`), nil
 }
 
-func (a *Address) UnmarshalJSON(value []byte) error {
+func (a *Address) UnmarshalJSON(value []byte) error { log.DebugLog()
 	*a = Address(common.HexToHash(string(value[1 : len(value)-1])))
 	return nil
 }
 
 // the string form of the binary representation of an address (only first 8 bits)
-func (a Address) Bin() string {
+func (a Address) Bin() string { log.DebugLog()
 	var bs []string
 	for _, b := range a[:] {
 		bs = append(bs, fmt.Sprintf("%08b", b))
@@ -63,7 +63,7 @@ binary representation of the x^y.
 
 (0 farthest, 255 closest, 256 self)
 */
-func proximity(one, other Address) (ret int) {
+func proximity(one, other Address) (ret int) { log.DebugLog()
 	for i := 0; i < len(one); i++ {
 		oxo := one[i] ^ other[i]
 		for j := 0; j < 8; j++ {
@@ -78,7 +78,7 @@ func proximity(one, other Address) (ret int) {
 // Address.ProxCmp compares the distances a->target and b->target.
 // Returns -1 if a is closer to target, 1 if b is closer to target
 // and 0 if they are equal.
-func (target Address) ProxCmp(a, b Address) int {
+func (target Address) ProxCmp(a, b Address) int { log.DebugLog()
 	for i := range target {
 		da := a[i] ^ target[i]
 		db := b[i] ^ target[i]
@@ -94,7 +94,7 @@ func (target Address) ProxCmp(a, b Address) int {
 // randomAddressAt(address, prox) generates a random address
 // at proximity order prox relative to address
 // if prox is negative a random address is generated
-func RandomAddressAt(self Address, prox int) (addr Address) {
+func RandomAddressAt(self Address, prox int) (addr Address) { log.DebugLog()
 	addr = self
 	var pos int
 	if prox >= 0 {
@@ -118,7 +118,7 @@ func RandomAddressAt(self Address, prox int) (addr Address) {
 
 // KeyRange(a0, a1, proxLimit) returns the address inclusive address
 // range that contain addresses closer to one than other
-func KeyRange(one, other Address, proxLimit int) (start, stop Address) {
+func KeyRange(one, other Address, proxLimit int) (start, stop Address) { log.DebugLog()
 	prox := proximity(one, other)
 	if prox >= proxLimit {
 		prox = proxLimit
@@ -128,7 +128,7 @@ func KeyRange(one, other Address, proxLimit int) (start, stop Address) {
 	return
 }
 
-func CommonBitsAddrF(self, other Address, f func() byte, p int) (addr Address) {
+func CommonBitsAddrF(self, other Address, f func() byte, p int) (addr Address) { log.DebugLog()
 	prox := proximity(self, other)
 	var pos int
 	if p <= prox {
@@ -159,15 +159,15 @@ func CommonBitsAddrF(self, other Address, f func() byte, p int) (addr Address) {
 	return
 }
 
-func CommonBitsAddr(self, other Address, prox int) (addr Address) {
+func CommonBitsAddr(self, other Address, prox int) (addr Address) { log.DebugLog()
 	return CommonBitsAddrF(self, other, func() byte { return byte(rand.Intn(255)) }, prox)
 }
 
-func CommonBitsAddrByte(self, other Address, b byte, prox int) (addr Address) {
+func CommonBitsAddrByte(self, other Address, b byte, prox int) (addr Address) { log.DebugLog()
 	return CommonBitsAddrF(self, other, func() byte { return b }, prox)
 }
 
 // randomAddressAt() generates a random address
-func RandomAddress() Address {
+func RandomAddress() Address { log.DebugLog()
 	return RandomAddressAt(Address{}, -1)
 }

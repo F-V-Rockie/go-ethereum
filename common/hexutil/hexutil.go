@@ -53,10 +53,10 @@ var (
 
 type decError struct{ msg string }
 
-func (err decError) Error() string { return err.msg }
+func (err decError) Error() string { log.DebugLog() return err.msg }
 
 // Decode decodes a hex string with 0x prefix.
-func Decode(input string) ([]byte, error) {
+func Decode(input string) ([]byte, error) { log.DebugLog()
 	if len(input) == 0 {
 		return nil, ErrEmptyString
 	}
@@ -71,7 +71,7 @@ func Decode(input string) ([]byte, error) {
 }
 
 // MustDecode decodes a hex string with 0x prefix. It panics for invalid input.
-func MustDecode(input string) []byte {
+func MustDecode(input string) []byte { log.DebugLog()
 	dec, err := Decode(input)
 	if err != nil {
 		panic(err)
@@ -80,7 +80,7 @@ func MustDecode(input string) []byte {
 }
 
 // Encode encodes b as a hex string with 0x prefix.
-func Encode(b []byte) string {
+func Encode(b []byte) string { log.DebugLog()
 	enc := make([]byte, len(b)*2+2)
 	copy(enc, "0x")
 	hex.Encode(enc[2:], b)
@@ -88,7 +88,7 @@ func Encode(b []byte) string {
 }
 
 // DecodeUint64 decodes a hex string with 0x prefix as a quantity.
-func DecodeUint64(input string) (uint64, error) {
+func DecodeUint64(input string) (uint64, error) { log.DebugLog()
 	raw, err := checkNumber(input)
 	if err != nil {
 		return 0, err
@@ -102,7 +102,7 @@ func DecodeUint64(input string) (uint64, error) {
 
 // MustDecodeUint64 decodes a hex string with 0x prefix as a quantity.
 // It panics for invalid input.
-func MustDecodeUint64(input string) uint64 {
+func MustDecodeUint64(input string) uint64 { log.DebugLog()
 	dec, err := DecodeUint64(input)
 	if err != nil {
 		panic(err)
@@ -111,7 +111,7 @@ func MustDecodeUint64(input string) uint64 {
 }
 
 // EncodeUint64 encodes i as a hex string with 0x prefix.
-func EncodeUint64(i uint64) string {
+func EncodeUint64(i uint64) string { log.DebugLog()
 	enc := make([]byte, 2, 10)
 	copy(enc, "0x")
 	return string(strconv.AppendUint(enc, i, 16))
@@ -119,7 +119,7 @@ func EncodeUint64(i uint64) string {
 
 var bigWordNibbles int
 
-func init() {
+func init() { log.DebugLog()
 	// This is a weird way to compute the number of nibbles required for big.Word.
 	// The usual way would be to use constant arithmetic but go vet can't handle that.
 	b, _ := new(big.Int).SetString("FFFFFFFFFF", 16)
@@ -135,7 +135,7 @@ func init() {
 
 // DecodeBig decodes a hex string with 0x prefix as a quantity.
 // Numbers larger than 256 bits are not accepted.
-func DecodeBig(input string) (*big.Int, error) {
+func DecodeBig(input string) (*big.Int, error) { log.DebugLog()
 	raw, err := checkNumber(input)
 	if err != nil {
 		return nil, err
@@ -166,7 +166,7 @@ func DecodeBig(input string) (*big.Int, error) {
 
 // MustDecodeBig decodes a hex string with 0x prefix as a quantity.
 // It panics for invalid input.
-func MustDecodeBig(input string) *big.Int {
+func MustDecodeBig(input string) *big.Int { log.DebugLog()
 	dec, err := DecodeBig(input)
 	if err != nil {
 		panic(err)
@@ -176,7 +176,7 @@ func MustDecodeBig(input string) *big.Int {
 
 // EncodeBig encodes bigint as a hex string with 0x prefix.
 // The sign of the integer is ignored.
-func EncodeBig(bigint *big.Int) string {
+func EncodeBig(bigint *big.Int) string { log.DebugLog()
 	nbits := bigint.BitLen()
 	if nbits == 0 {
 		return "0x0"
@@ -184,11 +184,11 @@ func EncodeBig(bigint *big.Int) string {
 	return fmt.Sprintf("%#x", bigint)
 }
 
-func has0xPrefix(input string) bool {
+func has0xPrefix(input string) bool { log.DebugLog()
 	return len(input) >= 2 && input[0] == '0' && (input[1] == 'x' || input[1] == 'X')
 }
 
-func checkNumber(input string) (raw string, err error) {
+func checkNumber(input string) (raw string, err error) { log.DebugLog()
 	if len(input) == 0 {
 		return "", ErrEmptyString
 	}
@@ -207,7 +207,7 @@ func checkNumber(input string) (raw string, err error) {
 
 const badNibble = ^uint64(0)
 
-func decodeNibble(in byte) uint64 {
+func decodeNibble(in byte) uint64 { log.DebugLog()
 	switch {
 	case in >= '0' && in <= '9':
 		return uint64(in - '0')
@@ -220,7 +220,7 @@ func decodeNibble(in byte) uint64 {
 	}
 }
 
-func mapError(err error) error {
+func mapError(err error) error { log.DebugLog()
 	if err, ok := err.(*strconv.NumError); ok {
 		switch err.Err {
 		case strconv.ErrRange:

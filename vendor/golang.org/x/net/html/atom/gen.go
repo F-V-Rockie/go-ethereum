@@ -23,7 +23,7 @@ import (
 
 // identifier converts s to a Go exported identifier.
 // It converts "div" to "Div" and "accept-charset" to "AcceptCharset".
-func identifier(s string) string {
+func identifier(s string) string { log.DebugLog()
 	b := make([]byte, 0, len(s))
 	cap := true
 	for _, c := range s {
@@ -42,7 +42,7 @@ func identifier(s string) string {
 
 var test = flag.Bool("test", false, "generate table_test.go")
 
-func main() {
+func main() { log.DebugLog()
 	flag.Parse()
 
 	var all []string
@@ -197,12 +197,12 @@ func main() {
 
 type byLen []string
 
-func (x byLen) Less(i, j int) bool { return len(x[i]) > len(x[j]) }
-func (x byLen) Swap(i, j int)      { x[i], x[j] = x[j], x[i] }
-func (x byLen) Len() int           { return len(x) }
+func (x byLen) Less(i, j int) bool { log.DebugLog() return len(x[i]) > len(x[j]) }
+func (x byLen) Swap(i, j int)      { log.DebugLog() x[i], x[j] = x[j], x[i] }
+func (x byLen) Len() int           { log.DebugLog() return len(x) }
 
 // fnv computes the FNV hash with an arbitrary starting value h.
-func fnv(h uint32, s string) uint32 {
+func fnv(h uint32, s string) uint32 { log.DebugLog()
 	for i := 0; i < len(s); i++ {
 		h ^= uint32(s[i])
 		h *= 16777619
@@ -221,7 +221,7 @@ type table struct {
 }
 
 // hash returns the two hashes for s.
-func (t *table) hash(s string) (h1, h2 uint32) {
+func (t *table) hash(s string) (h1, h2 uint32) { log.DebugLog()
 	h := fnv(t.h0, s)
 	h1 = h & t.mask
 	h2 = (h >> 16) & t.mask
@@ -233,7 +233,7 @@ func (t *table) hash(s string) (h1, h2 uint32) {
 // k is the number of bits of hash value to use, and
 // x is the list of strings to store in the table.
 // init returns false if the table cannot be constructed.
-func (t *table) init(h0 uint32, k uint, x []string) bool {
+func (t *table) init(h0 uint32, k uint, x []string) bool { log.DebugLog()
 	t.h0 = h0
 	t.k = k
 	t.tab = make([]string, 1<<k)
@@ -247,7 +247,7 @@ func (t *table) init(h0 uint32, k uint, x []string) bool {
 }
 
 // insert inserts s in the table.
-func (t *table) insert(s string) bool {
+func (t *table) insert(s string) bool { log.DebugLog()
 	h1, h2 := t.hash(s)
 	if t.tab[h1] == "" {
 		t.tab[h1] = s
@@ -269,7 +269,7 @@ func (t *table) insert(s string) bool {
 }
 
 // push attempts to push aside the entry in slot i.
-func (t *table) push(i uint32, depth int) bool {
+func (t *table) push(i uint32, depth int) bool { log.DebugLog()
 	if depth > len(t.tab) {
 		return false
 	}

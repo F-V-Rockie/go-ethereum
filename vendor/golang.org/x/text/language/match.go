@@ -17,7 +17,7 @@ type Matcher interface {
 
 // Comprehends reports the confidence score for a speaker of a given language
 // to being able to comprehend the written form of an alternative language.
-func Comprehends(speaker, alternative Tag) Confidence {
+func Comprehends(speaker, alternative Tag) Confidence { log.DebugLog()
 	_, _, c := NewMatcher([]Tag{alternative}).Match(speaker)
 	return c
 }
@@ -36,11 +36,11 @@ func Comprehends(speaker, alternative Tag) Confidence {
 // matched tag in t, but is augmented with the Unicode extension ('u')of the
 // corresponding preferred tag. This allows user locale options to be passed
 // transparently.
-func NewMatcher(t []Tag) Matcher {
+func NewMatcher(t []Tag) Matcher { log.DebugLog()
 	return newMatcher(t)
 }
 
-func (m *matcher) Match(want ...Tag) (t Tag, index int, c Confidence) {
+func (m *matcher) Match(want ...Tag) (t Tag, index int, c Confidence) { log.DebugLog()
 	match, w, c := m.getBest(want...)
 	if match == nil {
 		t = m.default_.tag
@@ -67,19 +67,19 @@ const (
 	regionInFrom
 )
 
-func (t *Tag) setUndefinedLang(id langID) {
+func (t *Tag) setUndefinedLang(id langID) { log.DebugLog()
 	if t.lang == 0 {
 		t.lang = id
 	}
 }
 
-func (t *Tag) setUndefinedScript(id scriptID) {
+func (t *Tag) setUndefinedScript(id scriptID) { log.DebugLog()
 	if t.script == 0 {
 		t.script = id
 	}
 }
 
-func (t *Tag) setUndefinedRegion(id regionID) {
+func (t *Tag) setUndefinedRegion(id regionID) { log.DebugLog()
 	if t.region == 0 || t.region.contains(id) {
 		t.region = id
 	}
@@ -93,7 +93,7 @@ var ErrMissingLikelyTagsData = errors.New("missing likely tags data")
 // In most cases this means setting fields for unknown values, but in some
 // cases it may alter a value.  It returns a ErrMissingLikelyTagsData error
 // if the given locale cannot be expanded.
-func (t Tag) addLikelySubtags() (Tag, error) {
+func (t Tag) addLikelySubtags() (Tag, error) { log.DebugLog()
 	id, err := addTags(t)
 	if err != nil {
 		return t, err
@@ -105,7 +105,7 @@ func (t Tag) addLikelySubtags() (Tag, error) {
 }
 
 // specializeRegion attempts to specialize a group region.
-func specializeRegion(t *Tag) bool {
+func specializeRegion(t *Tag) bool { log.DebugLog()
 	if i := regionInclusion[t.region]; i < nRegionGroups {
 		x := likelyRegionGroup[i]
 		if langID(x.lang) == t.lang && scriptID(x.script) == t.script {
@@ -116,7 +116,7 @@ func specializeRegion(t *Tag) bool {
 	return false
 }
 
-func addTags(t Tag) (Tag, error) {
+func addTags(t Tag) (Tag, error) { log.DebugLog()
 	// We leave private use identifiers alone.
 	if t.private() {
 		return t, nil
@@ -234,7 +234,7 @@ func addTags(t Tag) (Tag, error) {
 	return t, ErrMissingLikelyTagsData
 }
 
-func (t *Tag) setTagsFrom(id Tag) {
+func (t *Tag) setTagsFrom(id Tag) { log.DebugLog()
 	t.lang = id.lang
 	t.script = id.script
 	t.region = id.region
@@ -242,7 +242,7 @@ func (t *Tag) setTagsFrom(id Tag) {
 
 // minimize removes the region or script subtags from t such that
 // t.addLikelySubtags() == t.minimize().addLikelySubtags().
-func (t Tag) minimize() (Tag, error) {
+func (t Tag) minimize() (Tag, error) { log.DebugLog()
 	t, err := minimizeTags(t)
 	if err != nil {
 		return t, err
@@ -252,7 +252,7 @@ func (t Tag) minimize() (Tag, error) {
 }
 
 // minimizeTags mimics the behavior of the ICU 51 C implementation.
-func minimizeTags(t Tag) (Tag, error) {
+func minimizeTags(t Tag) (Tag, error) { log.DebugLog()
 	if t.equalTags(und) {
 		return t, nil
 	}
@@ -425,7 +425,7 @@ type haveTag struct {
 	nextMax uint16
 }
 
-func makeHaveTag(tag Tag, index int) (haveTag, langID) {
+func makeHaveTag(tag Tag, index int) (haveTag, langID) { log.DebugLog()
 	max := tag
 	if tag.lang != 0 {
 		max, _ = max.canonicalize(All)
@@ -438,7 +438,7 @@ func makeHaveTag(tag Tag, index int) (haveTag, langID) {
 // altScript returns an alternative script that may match the given script with
 // a low confidence.  At the moment, the langMatch data allows for at most one
 // script to map to another and we rely on this to keep the code simple.
-func altScript(l langID, s scriptID) scriptID {
+func altScript(l langID, s scriptID) scriptID { log.DebugLog()
 	for _, alt := range matchScript {
 		if (alt.lang == 0 || langID(alt.lang) == l) && scriptID(alt.have) == s {
 			return scriptID(alt.want)
@@ -449,7 +449,7 @@ func altScript(l langID, s scriptID) scriptID {
 
 // addIfNew adds a haveTag to the list of tags only if it is a unique tag.
 // Tags that have the same maximized values are linked by index.
-func (h *matchHeader) addIfNew(n haveTag, exact bool) {
+func (h *matchHeader) addIfNew(n haveTag, exact bool) { log.DebugLog()
 	// Don't add new exact matches.
 	for _, v := range h.exact {
 		if v.tag.equalsRest(n.tag) {
@@ -477,7 +477,7 @@ func (h *matchHeader) addIfNew(n haveTag, exact bool) {
 
 // header returns the matchHeader for the given language. It creates one if
 // it doesn't already exist.
-func (m *matcher) header(l langID) *matchHeader {
+func (m *matcher) header(l langID) *matchHeader { log.DebugLog()
 	if h := m.index[l]; h != nil {
 		return h
 	}
@@ -489,7 +489,7 @@ func (m *matcher) header(l langID) *matchHeader {
 // newMatcher builds an index for the given supported tags and returns it as
 // a matcher. It also expands the index by considering various equivalence classes
 // for a given tag.
-func newMatcher(supported []Tag) *matcher {
+func newMatcher(supported []Tag) *matcher { log.DebugLog()
 	m := &matcher{
 		index: make(map[langID]*matchHeader),
 	}
@@ -569,7 +569,7 @@ func newMatcher(supported []Tag) *matcher {
 
 // getBest gets the best matching tag in m for any of the given tags, taking into
 // account the order of preference of the given tags.
-func (m *matcher) getBest(want ...Tag) (got *haveTag, orig Tag, c Confidence) {
+func (m *matcher) getBest(want ...Tag) (got *haveTag, orig Tag, c Confidence) { log.DebugLog()
 	best := bestMatch{}
 	for _, w := range want {
 		var max Tag
@@ -650,7 +650,7 @@ type bestMatch struct {
 // update the tie-breaker rule cache. If there is a tie, it proceeds with applying
 // a series of tie-breaker rules. If there is no conclusive winner after applying
 // the tie-breaker rules, it leaves the current match as the preferred match.
-func (m *bestMatch) update(have *haveTag, tag Tag, maxScript scriptID, maxRegion regionID) {
+func (m *bestMatch) update(have *haveTag, tag Tag, maxScript scriptID, maxRegion regionID) { log.DebugLog()
 	// Bail if the maximum attainable confidence is below that of the current best match.
 	c := have.conf
 	if c < m.conf {
@@ -747,7 +747,7 @@ func (m *bestMatch) update(have *haveTag, tag Tag, maxScript scriptID, maxRegion
 // regions match. It is assumed that it has already been checked that lang and
 // script are identical. If haveRegion does not occur in the ancestor chain of
 // tag, it returns 255.
-func parentDistance(haveRegion regionID, tag Tag) uint8 {
+func parentDistance(haveRegion regionID, tag Tag) uint8 { log.DebugLog()
 	p := tag.Parent()
 	d := uint8(1)
 	for haveRegion != p.region {
@@ -761,7 +761,7 @@ func parentDistance(haveRegion regionID, tag Tag) uint8 {
 }
 
 // regionDist wraps regionDistance with some exceptions to the algorithmic distance.
-func regionDist(a, b regionID, lang langID) uint8 {
+func regionDist(a, b regionID, lang langID) uint8 { log.DebugLog()
 	if lang == _en {
 		// Two variants of non-US English are close to each other, regardless of distance.
 		if a != _US && b != _US {
@@ -775,7 +775,7 @@ func regionDist(a, b regionID, lang langID) uint8 {
 // distance in the graph of region containments as defined in CLDR. It iterates
 // over increasingly inclusive sets of groups, represented as bit vectors, until
 // the source bit vector has bits in common with the destination vector.
-func regionDistance(a, b regionID) int {
+func regionDistance(a, b regionID) int { log.DebugLog()
 	if a == b {
 		return 0
 	}
@@ -794,7 +794,7 @@ func regionDistance(a, b regionID) int {
 	return d
 }
 
-func (t Tag) variants() string {
+func (t Tag) variants() string { log.DebugLog()
 	if t.pVariant == 0 {
 		return ""
 	}
@@ -802,7 +802,7 @@ func (t Tag) variants() string {
 }
 
 // variantOrPrivateTagStr returns variants or private use tags.
-func (t Tag) variantOrPrivateTagStr() string {
+func (t Tag) variantOrPrivateTagStr() string { log.DebugLog()
 	if t.pExt > 0 {
 		return t.str[t.pVariant:t.pExt]
 	}
@@ -810,7 +810,7 @@ func (t Tag) variantOrPrivateTagStr() string {
 }
 
 // equalsRest compares everything except the language.
-func (a Tag) equalsRest(b Tag) bool {
+func (a Tag) equalsRest(b Tag) bool { log.DebugLog()
 	// TODO: don't include extensions in this comparison. To do this efficiently,
 	// though, we should handle private tags separately.
 	return a.script == b.script && a.region == b.region && a.variantOrPrivateTagStr() == b.variantOrPrivateTagStr()
@@ -818,7 +818,7 @@ func (a Tag) equalsRest(b Tag) bool {
 
 // isExactEquivalent returns true if canonicalizing the language will not alter
 // the script or region of a tag.
-func isExactEquivalent(l langID) bool {
+func isExactEquivalent(l langID) bool { log.DebugLog()
 	for _, o := range notEquivalent {
 		if o == l {
 			return false
@@ -829,7 +829,7 @@ func isExactEquivalent(l langID) bool {
 
 var notEquivalent []langID
 
-func init() {
+func init() { log.DebugLog()
 	// Create a list of all languages for which canonicalization may alter the
 	// script or region.
 	for _, lm := range langAliasMap {

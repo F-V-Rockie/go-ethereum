@@ -22,7 +22,7 @@ package runtime
 //
 // This returns 1 for valid parsable/runable code, 0
 // for invalid opcode.
-func Fuzz(input []byte) int {
+func Fuzz(input []byte) int { log.DebugLog()
 	_, _, err := Execute(input, input, &Config{
 		GasLimit: 3000000,
 	})

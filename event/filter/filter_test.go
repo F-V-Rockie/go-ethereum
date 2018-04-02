@@ -22,7 +22,7 @@ import (
 )
 
 // Simple test to check if baseline matching/mismatching filtering works.
-func TestFilters(t *testing.T) {
+func TestFilters(t *testing.T) { log.DebugLog()
 	fm := New()
 	fm.Start()
 

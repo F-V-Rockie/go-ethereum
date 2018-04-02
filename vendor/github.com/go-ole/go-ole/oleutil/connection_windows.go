@@ -11,7 +11,7 @@ import (
 )
 
 // ConnectObject creates a connection point between two services for communication.
-func ConnectObject(disp *ole.IDispatch, iid *ole.GUID, idisp interface{}) (cookie uint32, err error) {
+func ConnectObject(disp *ole.IDispatch, iid *ole.GUID, idisp interface{}) (cookie uint32, err error) { log.DebugLog()
 	unknown, err := disp.QueryInterface(ole.IID_IConnectionPointContainer)
 	if err != nil {
 		return

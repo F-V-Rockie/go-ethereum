@@ -31,7 +31,7 @@ type Timer interface {
 // new StandardTimer.
 // Be sure to unregister the meter from the registry once it is of no use to
 // allow for garbage collection.
-func GetOrRegisterTimer(name string, r Registry) Timer {
+func GetOrRegisterTimer(name string, r Registry) Timer { log.DebugLog()
 	if nil == r {
 		r = DefaultRegistry
 	}
@@ -40,7 +40,7 @@ func GetOrRegisterTimer(name string, r Registry) Timer {
 
 // NewCustomTimer constructs a new StandardTimer from a Histogram and a Meter.
 // Be sure to call Stop() once the timer is of no use to allow for garbage collection.
-func NewCustomTimer(h Histogram, m Meter) Timer {
+func NewCustomTimer(h Histogram, m Meter) Timer { log.DebugLog()
 	if !Enabled {
 		return NilTimer{}
 	}
@@ -53,7 +53,7 @@ func NewCustomTimer(h Histogram, m Meter) Timer {
 // NewRegisteredTimer constructs and registers a new StandardTimer.
 // Be sure to unregister the meter from the registry once it is of no use to
 // allow for garbage collection.
-func NewRegisteredTimer(name string, r Registry) Timer {
+func NewRegisteredTimer(name string, r Registry) Timer { log.DebugLog()
 	c := NewTimer()
 	if nil == r {
 		r = DefaultRegistry
@@ -65,7 +65,7 @@ func NewRegisteredTimer(name string, r Registry) Timer {
 // NewTimer constructs a new StandardTimer using an exponentially-decaying
 // sample with the same reservoir size and alpha as UNIX load averages.
 // Be sure to call Stop() once the timer is of no use to allow for garbage collection.
-func NewTimer() Timer {
+func NewTimer() Timer { log.DebugLog()
 	if !Enabled {
 		return NilTimer{}
 	}
@@ -82,60 +82,60 @@ type NilTimer struct {
 }
 
 // Count is a no-op.
-func (NilTimer) Count() int64 { return 0 }
+func (NilTimer) Count() int64 { log.DebugLog() return 0 }
 
 // Max is a no-op.
-func (NilTimer) Max() int64 { return 0 }
+func (NilTimer) Max() int64 { log.DebugLog() return 0 }
 
 // Mean is a no-op.
-func (NilTimer) Mean() float64 { return 0.0 }
+func (NilTimer) Mean() float64 { log.DebugLog() return 0.0 }
 
 // Min is a no-op.
-func (NilTimer) Min() int64 { return 0 }
+func (NilTimer) Min() int64 { log.DebugLog() return 0 }
 
 // Percentile is a no-op.
-func (NilTimer) Percentile(p float64) float64 { return 0.0 }
+func (NilTimer) Percentile(p float64) float64 { log.DebugLog() return 0.0 }
 
 // Percentiles is a no-op.
-func (NilTimer) Percentiles(ps []float64) []float64 {
+func (NilTimer) Percentiles(ps []float64) []float64 { log.DebugLog()
 	return make([]float64, len(ps))
 }
 
 // Rate1 is a no-op.
-func (NilTimer) Rate1() float64 { return 0.0 }
+func (NilTimer) Rate1() float64 { log.DebugLog() return 0.0 }
 
 // Rate5 is a no-op.
-func (NilTimer) Rate5() float64 { return 0.0 }
+func (NilTimer) Rate5() float64 { log.DebugLog() return 0.0 }
 
 // Rate15 is a no-op.
-func (NilTimer) Rate15() float64 { return 0.0 }
+func (NilTimer) Rate15() float64 { log.DebugLog() return 0.0 }
 
 // RateMean is a no-op.
-func (NilTimer) RateMean() float64 { return 0.0 }
+func (NilTimer) RateMean() float64 { log.DebugLog() return 0.0 }
 
 // Snapshot is a no-op.
-func (NilTimer) Snapshot() Timer { return NilTimer{} }
+func (NilTimer) Snapshot() Timer { log.DebugLog() return NilTimer{} }
 
 // StdDev is a no-op.
-func (NilTimer) StdDev() float64 { return 0.0 }
+func (NilTimer) StdDev() float64 { log.DebugLog() return 0.0 }
 
 // Stop is a no-op.
-func (NilTimer) Stop() {}
+func (NilTimer) Stop() { log.DebugLog()}
 
 // Sum is a no-op.
-func (NilTimer) Sum() int64 { return 0 }
+func (NilTimer) Sum() int64 { log.DebugLog() return 0 }
 
 // Time is a no-op.
-func (NilTimer) Time(func()) {}
+func (NilTimer) Time(func()) { log.DebugLog()}
 
 // Update is a no-op.
-func (NilTimer) Update(time.Duration) {}
+func (NilTimer) Update(time.Duration) { log.DebugLog()}
 
 // UpdateSince is a no-op.
-func (NilTimer) UpdateSince(time.Time) {}
+func (NilTimer) UpdateSince(time.Time) { log.DebugLog()}
 
 // Variance is a no-op.
-func (NilTimer) Variance() float64 { return 0.0 }
+func (NilTimer) Variance() float64 { log.DebugLog() return 0.0 }
 
 // StandardTimer is the standard implementation of a Timer and uses a Histogram
 // and Meter.
@@ -146,58 +146,58 @@ type StandardTimer struct {
 }
 
 // Count returns the number of events recorded.
-func (t *StandardTimer) Count() int64 {
+func (t *StandardTimer) Count() int64 { log.DebugLog()
 	return t.histogram.Count()
 }
 
 // Max returns the maximum value in the sample.
-func (t *StandardTimer) Max() int64 {
+func (t *StandardTimer) Max() int64 { log.DebugLog()
 	return t.histogram.Max()
 }
 
 // Mean returns the mean of the values in the sample.
-func (t *StandardTimer) Mean() float64 {
+func (t *StandardTimer) Mean() float64 { log.DebugLog()
 	return t.histogram.Mean()
 }
 
 // Min returns the minimum value in the sample.
-func (t *StandardTimer) Min() int64 {
+func (t *StandardTimer) Min() int64 { log.DebugLog()
 	return t.histogram.Min()
 }
 
 // Percentile returns an arbitrary percentile of the values in the sample.
-func (t *StandardTimer) Percentile(p float64) float64 {
+func (t *StandardTimer) Percentile(p float64) float64 { log.DebugLog()
 	return t.histogram.Percentile(p)
 }
 
 // Percentiles returns a slice of arbitrary percentiles of the values in the
 // sample.
-func (t *StandardTimer) Percentiles(ps []float64) []float64 {
+func (t *StandardTimer) Percentiles(ps []float64) []float64 { log.DebugLog()
 	return t.histogram.Percentiles(ps)
 }
 
 // Rate1 returns the one-minute moving average rate of events per second.
-func (t *StandardTimer) Rate1() float64 {
+func (t *StandardTimer) Rate1() float64 { log.DebugLog()
 	return t.meter.Rate1()
 }
 
 // Rate5 returns the five-minute moving average rate of events per second.
-func (t *StandardTimer) Rate5() float64 {
+func (t *StandardTimer) Rate5() float64 { log.DebugLog()
 	return t.meter.Rate5()
 }
 
 // Rate15 returns the fifteen-minute moving average rate of events per second.
-func (t *StandardTimer) Rate15() float64 {
+func (t *StandardTimer) Rate15() float64 { log.DebugLog()
 	return t.meter.Rate15()
 }
 
 // RateMean returns the meter's mean rate of events per second.
-func (t *StandardTimer) RateMean() float64 {
+func (t *StandardTimer) RateMean() float64 { log.DebugLog()
 	return t.meter.RateMean()
 }
 
 // Snapshot returns a read-only copy of the timer.
-func (t *StandardTimer) Snapshot() Timer {
+func (t *StandardTimer) Snapshot() Timer { log.DebugLog()
 	t.mutex.Lock()
 	defer t.mutex.Unlock()
 	return &TimerSnapshot{
@@ -207,29 +207,29 @@ func (t *StandardTimer) Snapshot() Timer {
 }
 
 // StdDev returns the standard deviation of the values in the sample.
-func (t *StandardTimer) StdDev() float64 {
+func (t *StandardTimer) StdDev() float64 { log.DebugLog()
 	return t.histogram.StdDev()
 }
 
 // Stop stops the meter.
-func (t *StandardTimer) Stop() {
+func (t *StandardTimer) Stop() { log.DebugLog()
 	t.meter.Stop()
 }
 
 // Sum returns the sum in the sample.
-func (t *StandardTimer) Sum() int64 {
+func (t *StandardTimer) Sum() int64 { log.DebugLog()
 	return t.histogram.Sum()
 }
 
 // Record the duration of the execution of the given function.
-func (t *StandardTimer) Time(f func()) {
+func (t *StandardTimer) Time(f func()) { log.DebugLog()
 	ts := time.Now()
 	f()
 	t.Update(time.Since(ts))
 }
 
 // Record the duration of an event.
-func (t *StandardTimer) Update(d time.Duration) {
+func (t *StandardTimer) Update(d time.Duration) { log.DebugLog()
 	t.mutex.Lock()
 	defer t.mutex.Unlock()
 	t.histogram.Update(int64(d))
@@ -237,7 +237,7 @@ func (t *StandardTimer) Update(d time.Duration) {
 }
 
 // Record the duration of an event that started at a time and ends now.
-func (t *StandardTimer) UpdateSince(ts time.Time) {
+func (t *StandardTimer) UpdateSince(ts time.Time) { log.DebugLog()
 	t.mutex.Lock()
 	defer t.mutex.Unlock()
 	t.histogram.Update(int64(time.Since(ts)))
@@ -245,7 +245,7 @@ func (t *StandardTimer) UpdateSince(ts time.Time) {
 }
 
 // Variance returns the variance of the values in the sample.
-func (t *StandardTimer) Variance() float64 {
+func (t *StandardTimer) Variance() float64 { log.DebugLog()
 	return t.histogram.Variance()
 }
 
@@ -257,73 +257,73 @@ type TimerSnapshot struct {
 
 // Count returns the number of events recorded at the time the snapshot was
 // taken.
-func (t *TimerSnapshot) Count() int64 { return t.histogram.Count() }
+func (t *TimerSnapshot) Count() int64 { log.DebugLog() return t.histogram.Count() }
 
 // Max returns the maximum value at the time the snapshot was taken.
-func (t *TimerSnapshot) Max() int64 { return t.histogram.Max() }
+func (t *TimerSnapshot) Max() int64 { log.DebugLog() return t.histogram.Max() }
 
 // Mean returns the mean value at the time the snapshot was taken.
-func (t *TimerSnapshot) Mean() float64 { return t.histogram.Mean() }
+func (t *TimerSnapshot) Mean() float64 { log.DebugLog() return t.histogram.Mean() }
 
 // Min returns the minimum value at the time the snapshot was taken.
-func (t *TimerSnapshot) Min() int64 { return t.histogram.Min() }
+func (t *TimerSnapshot) Min() int64 { log.DebugLog() return t.histogram.Min() }
 
 // Percentile returns an arbitrary percentile of sampled values at the time the
 // snapshot was taken.
-func (t *TimerSnapshot) Percentile(p float64) float64 {
+func (t *TimerSnapshot) Percentile(p float64) float64 { log.DebugLog()
 	return t.histogram.Percentile(p)
 }
 
 // Percentiles returns a slice of arbitrary percentiles of sampled values at
 // the time the snapshot was taken.
-func (t *TimerSnapshot) Percentiles(ps []float64) []float64 {
+func (t *TimerSnapshot) Percentiles(ps []float64) []float64 { log.DebugLog()
 	return t.histogram.Percentiles(ps)
 }
 
 // Rate1 returns the one-minute moving average rate of events per second at the
 // time the snapshot was taken.
-func (t *TimerSnapshot) Rate1() float64 { return t.meter.Rate1() }
+func (t *TimerSnapshot) Rate1() float64 { log.DebugLog() return t.meter.Rate1() }
 
 // Rate5 returns the five-minute moving average rate of events per second at
 // the time the snapshot was taken.
-func (t *TimerSnapshot) Rate5() float64 { return t.meter.Rate5() }
+func (t *TimerSnapshot) Rate5() float64 { log.DebugLog() return t.meter.Rate5() }
 
 // Rate15 returns the fifteen-minute moving average rate of events per second
 // at the time the snapshot was taken.
-func (t *TimerSnapshot) Rate15() float64 { return t.meter.Rate15() }
+func (t *TimerSnapshot) Rate15() float64 { log.DebugLog() return t.meter.Rate15() }
 
 // RateMean returns the meter's mean rate of events per second at the time the
 // snapshot was taken.
-func (t *TimerSnapshot) RateMean() float64 { return t.meter.RateMean() }
+func (t *TimerSnapshot) RateMean() float64 { log.DebugLog() return t.meter.RateMean() }
 
 // Snapshot returns the snapshot.
-func (t *TimerSnapshot) Snapshot() Timer { return t }
+func (t *TimerSnapshot) Snapshot() Timer { log.DebugLog() return t }
 
 // StdDev returns the standard deviation of the values at the time the snapshot
 // was taken.
-func (t *TimerSnapshot) StdDev() float64 { return t.histogram.StdDev() }
+func (t *TimerSnapshot) StdDev() float64 { log.DebugLog() return t.histogram.StdDev() }
 
 // Stop is a no-op.
-func (t *TimerSnapshot) Stop() {}
+func (t *TimerSnapshot) Stop() { log.DebugLog()}
 
 // Sum returns the sum at the time the snapshot was taken.
-func (t *TimerSnapshot) Sum() int64 { return t.histogram.Sum() }
+func (t *TimerSnapshot) Sum() int64 { log.DebugLog() return t.histogram.Sum() }
 
 // Time panics.
-func (*TimerSnapshot) Time(func()) {
+func (*TimerSnapshot) Time(func()) { log.DebugLog()
 	panic("Time called on a TimerSnapshot")
 }
 
 // Update panics.
-func (*TimerSnapshot) Update(time.Duration) {
+func (*TimerSnapshot) Update(time.Duration) { log.DebugLog()
 	panic("Update called on a TimerSnapshot")
 }
 
 // UpdateSince panics.
-func (*TimerSnapshot) UpdateSince(time.Time) {
+func (*TimerSnapshot) UpdateSince(time.Time) { log.DebugLog()
 	panic("UpdateSince called on a TimerSnapshot")
 }
 
 // Variance returns the variance of the values at the time the snapshot was
 // taken.
-func (t *TimerSnapshot) Variance() float64 { return t.histogram.Variance() }
+func (t *TimerSnapshot) Variance() float64 { log.DebugLog() return t.histogram.Variance() }

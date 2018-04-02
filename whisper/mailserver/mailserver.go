@@ -43,7 +43,7 @@ type DBKey struct {
 	raw       []byte
 }
 
-func NewDbKey(t uint32, h common.Hash) *DBKey {
+func NewDbKey(t uint32, h common.Hash) *DBKey { log.DebugLog()
 	const sz = common.HashLength + 4
 	var k DBKey
 	k.timestamp = t
@@ -54,7 +54,7 @@ func NewDbKey(t uint32, h common.Hash) *DBKey {
 	return &k
 }
 
-func (s *WMailServer) Init(shh *whisper.Whisper, path string, password string, pow float64) {
+func (s *WMailServer) Init(shh *whisper.Whisper, path string, password string, pow float64) { log.DebugLog()
 	var err error
 	if len(path) == 0 {
 		utils.Fatalf("DB file is not specified")
@@ -82,13 +82,13 @@ func (s *WMailServer) Init(shh *whisper.Whisper, path string, password string, p
 	}
 }
 
-func (s *WMailServer) Close() {
+func (s *WMailServer) Close() { log.DebugLog()
 	if s.db != nil {
 		s.db.Close()
 	}
 }
 
-func (s *WMailServer) Archive(env *whisper.Envelope) {
+func (s *WMailServer) Archive(env *whisper.Envelope) { log.DebugLog()
 	key := NewDbKey(env.Expiry-env.TTL, env.Hash())
 	rawEnvelope, err := rlp.EncodeToBytes(env)
 	if err != nil {
@@ -101,7 +101,7 @@ func (s *WMailServer) Archive(env *whisper.Envelope) {
 	}
 }
 
-func (s *WMailServer) DeliverMail(peer *whisper.Peer, request *whisper.Envelope) {
+func (s *WMailServer) DeliverMail(peer *whisper.Peer, request *whisper.Envelope) { log.DebugLog()
 	if peer == nil {
 		log.Error("Whisper peer is nil")
 		return
@@ -113,7 +113,7 @@ func (s *WMailServer) DeliverMail(peer *whisper.Peer, request *whisper.Envelope)
 	}
 }
 
-func (s *WMailServer) processRequest(peer *whisper.Peer, lower, upper uint32, bloom []byte) []*whisper.Envelope {
+func (s *WMailServer) processRequest(peer *whisper.Peer, lower, upper uint32, bloom []byte) []*whisper.Envelope { log.DebugLog()
 	ret := make([]*whisper.Envelope, 0)
 	var err error
 	var zero common.Hash
@@ -151,7 +151,7 @@ func (s *WMailServer) processRequest(peer *whisper.Peer, lower, upper uint32, bl
 	return ret
 }
 
-func (s *WMailServer) validateRequest(peerID []byte, request *whisper.Envelope) (bool, uint32, uint32, []byte) {
+func (s *WMailServer) validateRequest(peerID []byte, request *whisper.Envelope) (bool, uint32, uint32, []byte) { log.DebugLog()
 	if s.pow > 0.0 && request.PoW() < s.pow {
 		return false, 0, 0, nil
 	}

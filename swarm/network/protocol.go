@@ -110,7 +110,7 @@ on each peer connection
 The Run function of the Bzz protocol class creates a bzz instance
 which will represent the peer for the swarm hive and all peer-aware components
 */
-func Bzz(cloud StorageHandler, backend chequebook.Backend, hive *Hive, dbaccess *DbAccess, sp *bzzswap.SwapParams, sy *SyncParams, networkId uint64) (p2p.Protocol, error) {
+func Bzz(cloud StorageHandler, backend chequebook.Backend, hive *Hive, dbaccess *DbAccess, sp *bzzswap.SwapParams, sy *SyncParams, networkId uint64) (p2p.Protocol, error) { log.DebugLog()
 
 	// a single global request db is created for all peer connections
 	// this is to persist delivery backlog and aid syncronisation
@@ -143,7 +143,7 @@ the main protocol loop that
  * whenever the loop terminates, the peer will disconnect with Subprotocol error
  * whenever handlers return an error the loop terminates
 */
-func run(requestDb *storage.LDBDatabase, depo StorageHandler, backend chequebook.Backend, hive *Hive, dbaccess *DbAccess, sp *bzzswap.SwapParams, sy *SyncParams, networkId uint64, p *p2p.Peer, rw p2p.MsgReadWriter) (err error) {
+func run(requestDb *storage.LDBDatabase, depo StorageHandler, backend chequebook.Backend, hive *Hive, dbaccess *DbAccess, sp *bzzswap.SwapParams, sy *SyncParams, networkId uint64, p *p2p.Peer, rw p2p.MsgReadWriter) (err error) { log.DebugLog()
 
 	self := &bzz{
 		storage:     depo,
@@ -193,12 +193,12 @@ func run(requestDb *storage.LDBDatabase, depo StorageHandler, backend chequebook
 
 // TODO: may need to implement protocol drop only? don't want to kick off the peer
 // if they are useful for other protocols
-func (self *bzz) Drop() {
+func (self *bzz) Drop() { log.DebugLog()
 	self.peer.Disconnect(p2p.DiscSubprotocolError)
 }
 
 // one cycle of the main forever loop that handles and dispatches incoming messages
-func (self *bzz) handle() error {
+func (self *bzz) handle() error { log.DebugLog()
 	msg, err := self.rw.ReadMsg()
 	log.Debug(fmt.Sprintf("<- %v", msg))
 	if err != nil {
@@ -325,7 +325,7 @@ func (self *bzz) handle() error {
 	return nil
 }
 
-func (self *bzz) handleStatus() (err error) {
+func (self *bzz) handleStatus() (err error) { log.DebugLog()
 
 	handshake := &statusMsgData{
 		Version:   uint64(Version),
@@ -397,7 +397,7 @@ func (self *bzz) handleStatus() (err error) {
 	return nil
 }
 
-func (self *bzz) sync(state *syncState) error {
+func (self *bzz) sync(state *syncState) error { log.DebugLog()
 	// syncer setup
 	if self.syncer != nil {
 		return errors.New("sync request can only be sent once")
@@ -436,12 +436,12 @@ func (self *bzz) sync(state *syncState) error {
 	return nil
 }
 
-func (self *bzz) String() string {
+func (self *bzz) String() string { log.DebugLog()
 	return self.remoteAddr.String()
 }
 
 // repair reported address if IP missing
-func (self *bzz) peerAddr(base *peerAddr) *peerAddr {
+func (self *bzz) peerAddr(base *peerAddr) *peerAddr { log.DebugLog()
 	if base.IP.IsUnspecified() {
 		host, _, _ := net.SplitHostPort(self.peer.RemoteAddr().String())
 		base.IP = net.ParseIP(host)
@@ -452,7 +452,7 @@ func (self *bzz) peerAddr(base *peerAddr) *peerAddr {
 // returns self advertised node connection info (listening address w enodes)
 // IP will get repaired on the other end if missing
 // or resolved via ID by discovery at dialout
-func (self *bzz) selfAddr() *peerAddr {
+func (self *bzz) selfAddr() *peerAddr { log.DebugLog()
 	id := self.hive.id
 	host, port, _ := net.SplitHostPort(self.hive.listenAddr())
 	intport, _ := strconv.Atoi(port)
@@ -467,16 +467,16 @@ func (self *bzz) selfAddr() *peerAddr {
 
 // outgoing messages
 // send retrieveRequestMsg
-func (self *bzz) retrieve(req *retrieveRequestMsgData) error {
+func (self *bzz) retrieve(req *retrieveRequestMsgData) error { log.DebugLog()
 	return self.send(retrieveRequestMsg, req)
 }
 
 // send storeRequestMsg
-func (self *bzz) store(req *storeRequestMsgData) error {
+func (self *bzz) store(req *storeRequestMsgData) error { log.DebugLog()
 	return self.send(storeRequestMsg, req)
 }
 
-func (self *bzz) syncRequest() error {
+func (self *bzz) syncRequest() error { log.DebugLog()
 	req := &syncRequestMsgData{}
 	if self.hive.syncEnabled {
 		log.Debug(fmt.Sprintf("syncronisation request to peer %v at state %v", self, self.syncState))
@@ -489,7 +489,7 @@ func (self *bzz) syncRequest() error {
 }
 
 // queue storeRequestMsg in request db
-func (self *bzz) deliveryRequest(reqs []*syncRequest) error {
+func (self *bzz) deliveryRequest(reqs []*syncRequest) error { log.DebugLog()
 	req := &deliveryRequestMsgData{
 		Deliver: reqs,
 	}
@@ -497,7 +497,7 @@ func (self *bzz) deliveryRequest(reqs []*syncRequest) error {
 }
 
 // batch of syncRequests to send off
-func (self *bzz) unsyncedKeys(reqs []*syncRequest, state *syncState) error {
+func (self *bzz) unsyncedKeys(reqs []*syncRequest, state *syncState) error { log.DebugLog()
 	req := &unsyncedKeysMsgData{
 		Unsynced: reqs,
 		State:    state,
@@ -506,22 +506,22 @@ func (self *bzz) unsyncedKeys(reqs []*syncRequest, state *syncState) error {
 }
 
 // send paymentMsg
-func (self *bzz) Pay(units int, promise swap.Promise) {
+func (self *bzz) Pay(units int, promise swap.Promise) { log.DebugLog()
 	req := &paymentMsgData{uint(units), promise.(*chequebook.Cheque)}
 	self.payment(req)
 }
 
 // send paymentMsg
-func (self *bzz) payment(req *paymentMsgData) error {
+func (self *bzz) payment(req *paymentMsgData) error { log.DebugLog()
 	return self.send(paymentMsg, req)
 }
 
 // sends peersMsg
-func (self *bzz) peers(req *peersMsgData) error {
+func (self *bzz) peers(req *peersMsgData) error { log.DebugLog()
 	return self.send(peersMsg, req)
 }
 
-func (self *bzz) send(msg uint64, data interface{}) error {
+func (self *bzz) send(msg uint64, data interface{}) error { log.DebugLog()
 	if self.hive.blockWrite {
 		return fmt.Errorf("network write blocked")
 	}

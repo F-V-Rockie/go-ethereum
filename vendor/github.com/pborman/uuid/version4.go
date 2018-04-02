@@ -16,7 +16,7 @@ package uuid
 //  means the probability is about 0.00000000006 (6 × 10−11),
 //  equivalent to the odds of creating a few tens of trillions of UUIDs in a
 //  year and having one duplicate.
-func NewRandom() UUID {
+func NewRandom() UUID { log.DebugLog()
 	uuid := make([]byte, 16)
 	randomBits([]byte(uuid))
 	uuid[6] = (uuid[6] & 0x0f) | 0x40 // Version 4

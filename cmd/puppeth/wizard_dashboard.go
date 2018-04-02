@@ -24,7 +24,7 @@ import (
 
 // deployDashboard queries the user for various input on deploying a web-service
 // dashboard, after which is pushes the container.
-func (w *wizard) deployDashboard() {
+func (w *wizard) deployDashboard() { log.DebugLog()
 	// Select the server to interact with
 	server := w.selectServer()
 	if server == "" {

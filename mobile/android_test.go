@@ -154,7 +154,7 @@ public class AndroidTest extends InstrumentationTestCase {
 // device must also be available with debugging enabled.
 //
 // This method has been adapted from golang.org/x/mobile/bind/java/seq_test.go/runTest
-func TestAndroid(t *testing.T) {
+func TestAndroid(t *testing.T) { log.DebugLog()
 	// Skip tests on Windows altogether
 	if runtime.GOOS == "windows" {
 		t.Skip("cannot test Android bindings on Windows, skipping")

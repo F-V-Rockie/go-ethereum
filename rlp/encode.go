@@ -77,7 +77,7 @@ type Encoder interface {
 //
 // Boolean values are not supported, nor are signed integers, floating
 // point numbers, maps, channels and functions.
-func Encode(w io.Writer, val interface{}) error {
+func Encode(w io.Writer, val interface{}) error { log.DebugLog()
 	if outer, ok := w.(*encbuf); ok {
 		// Encode was called by some type's EncodeRLP.
 		// Avoid copying by writing to the outer encbuf directly.
@@ -94,7 +94,7 @@ func Encode(w io.Writer, val interface{}) error {
 
 // EncodeBytes returns the RLP encoding of val.
 // Please see the documentation of Encode for the encoding rules.
-func EncodeToBytes(val interface{}) ([]byte, error) {
+func EncodeToBytes(val interface{}) ([]byte, error) { log.DebugLog()
 	eb := encbufPool.Get().(*encbuf)
 	defer encbufPool.Put(eb)
 	eb.reset()
@@ -109,7 +109,7 @@ func EncodeToBytes(val interface{}) ([]byte, error) {
 // data.
 //
 // Please see the documentation of Encode for the encoding rules.
-func EncodeToReader(val interface{}) (size int, r io.Reader, err error) {
+func EncodeToReader(val interface{}) (size int, r io.Reader, err error) { log.DebugLog()
 	eb := encbufPool.Get().(*encbuf)
 	eb.reset()
 	if err := eb.encode(val); err != nil {
@@ -132,13 +132,13 @@ type listhead struct {
 
 // encode writes head to the given buffer, which must be at least
 // 9 bytes long. It returns the encoded bytes.
-func (head *listhead) encode(buf []byte) []byte {
+func (head *listhead) encode(buf []byte) []byte { log.DebugLog()
 	return buf[:puthead(buf, 0xC0, 0xF7, uint64(head.size))]
 }
 
 // headsize returns the size of a list or string header
 // for a value of the given size.
-func headsize(size uint64) int {
+func headsize(size uint64) int { log.DebugLog()
 	if size < 56 {
 		return 1
 	}
@@ -147,7 +147,7 @@ func headsize(size uint64) int {
 
 // puthead writes a list or string header to buf.
 // buf must be at least 9 bytes long.
-func puthead(buf []byte, smalltag, largetag byte, size uint64) int {
+func puthead(buf []byte, smalltag, largetag byte, size uint64) int { log.DebugLog()
 	if size < 56 {
 		buf[0] = smalltag + byte(size)
 		return 1
@@ -163,7 +163,7 @@ var encbufPool = sync.Pool{
 	New: func() interface{} { return &encbuf{sizebuf: make([]byte, 9)} },
 }
 
-func (w *encbuf) reset() {
+func (w *encbuf) reset() { log.DebugLog()
 	w.lhsize = 0
 	if w.str != nil {
 		w.str = w.str[:0]
@@ -174,12 +174,12 @@ func (w *encbuf) reset() {
 }
 
 // encbuf implements io.Writer so it can be passed it into EncodeRLP.
-func (w *encbuf) Write(b []byte) (int, error) {
+func (w *encbuf) Write(b []byte) (int, error) { log.DebugLog()
 	w.str = append(w.str, b...)
 	return len(b), nil
 }
 
-func (w *encbuf) encode(val interface{}) error {
+func (w *encbuf) encode(val interface{}) error { log.DebugLog()
 	rval := reflect.ValueOf(val)
 	ti, err := cachedTypeInfo(rval.Type(), tags{})
 	if err != nil {
@@ -188,7 +188,7 @@ func (w *encbuf) encode(val interface{}) error {
 	return ti.writer(rval, w)
 }
 
-func (w *encbuf) encodeStringHeader(size int) {
+func (w *encbuf) encodeStringHeader(size int) { log.DebugLog()
 	if size < 56 {
 		w.str = append(w.str, 0x80+byte(size))
 	} else {
@@ -199,7 +199,7 @@ func (w *encbuf) encodeStringHeader(size int) {
 	}
 }
 
-func (w *encbuf) encodeString(b []byte) {
+func (w *encbuf) encodeString(b []byte) { log.DebugLog()
 	if len(b) == 1 && b[0] <= 0x7F {
 		// fits single byte, no string header
 		w.str = append(w.str, b[0])
@@ -209,13 +209,13 @@ func (w *encbuf) encodeString(b []byte) {
 	}
 }
 
-func (w *encbuf) list() *listhead {
+func (w *encbuf) list() *listhead { log.DebugLog()
 	lh := &listhead{offset: len(w.str), size: w.lhsize}
 	w.lheads = append(w.lheads, lh)
 	return lh
 }
 
-func (w *encbuf) listEnd(lh *listhead) {
+func (w *encbuf) listEnd(lh *listhead) { log.DebugLog()
 	lh.size = w.size() - lh.offset - lh.size
 	if lh.size < 56 {
 		w.lhsize += 1 // length encoded into kind tag
@@ -224,11 +224,11 @@ func (w *encbuf) listEnd(lh *listhead) {
 	}
 }
 
-func (w *encbuf) size() int {
+func (w *encbuf) size() int { log.DebugLog()
 	return len(w.str) + w.lhsize
 }
 
-func (w *encbuf) toBytes() []byte {
+func (w *encbuf) toBytes() []byte { log.DebugLog()
 	out := make([]byte, w.size())
 	strpos := 0
 	pos := 0
@@ -246,7 +246,7 @@ func (w *encbuf) toBytes() []byte {
 	return out
 }
 
-func (w *encbuf) toWriter(out io.Writer) (err error) {
+func (w *encbuf) toWriter(out io.Writer) (err error) { log.DebugLog()
 	strpos := 0
 	for _, head := range w.lheads {
 		// write string data before header
@@ -279,7 +279,7 @@ type encReader struct {
 	piece  []byte  // next piece to be read
 }
 
-func (r *encReader) Read(b []byte) (n int, err error) {
+func (r *encReader) Read(b []byte) (n int, err error) { log.DebugLog()
 	for {
 		if r.piece = r.next(); r.piece == nil {
 			// Put the encode buffer back into the pool at EOF when it
@@ -304,7 +304,7 @@ func (r *encReader) Read(b []byte) (n int, err error) {
 
 // next returns the next piece of data to be read.
 // it returns nil at EOF.
-func (r *encReader) next() []byte {
+func (r *encReader) next() []byte { log.DebugLog()
 	switch {
 	case r.buf == nil:
 		return nil
@@ -344,7 +344,7 @@ var (
 )
 
 // makeWriter creates a writer function for the given type.
-func makeWriter(typ reflect.Type, ts tags) (writer, error) {
+func makeWriter(typ reflect.Type, ts tags) (writer, error) { log.DebugLog()
 	kind := typ.Kind()
 	switch {
 	case typ == rawValueType:
@@ -380,16 +380,16 @@ func makeWriter(typ reflect.Type, ts tags) (writer, error) {
 	}
 }
 
-func isByte(typ reflect.Type) bool {
+func isByte(typ reflect.Type) bool { log.DebugLog()
 	return typ.Kind() == reflect.Uint8 && !typ.Implements(encoderInterface)
 }
 
-func writeRawValue(val reflect.Value, w *encbuf) error {
+func writeRawValue(val reflect.Value, w *encbuf) error { log.DebugLog()
 	w.str = append(w.str, val.Bytes()...)
 	return nil
 }
 
-func writeUint(val reflect.Value, w *encbuf) error {
+func writeUint(val reflect.Value, w *encbuf) error { log.DebugLog()
 	i := val.Uint()
 	if i == 0 {
 		w.str = append(w.str, 0x80)
@@ -405,7 +405,7 @@ func writeUint(val reflect.Value, w *encbuf) error {
 	return nil
 }
 
-func writeBool(val reflect.Value, w *encbuf) error {
+func writeBool(val reflect.Value, w *encbuf) error { log.DebugLog()
 	if val.Bool() {
 		w.str = append(w.str, 0x01)
 	} else {
@@ -414,7 +414,7 @@ func writeBool(val reflect.Value, w *encbuf) error {
 	return nil
 }
 
-func writeBigIntPtr(val reflect.Value, w *encbuf) error {
+func writeBigIntPtr(val reflect.Value, w *encbuf) error { log.DebugLog()
 	ptr := val.Interface().(*big.Int)
 	if ptr == nil {
 		w.str = append(w.str, 0x80)
@@ -423,12 +423,12 @@ func writeBigIntPtr(val reflect.Value, w *encbuf) error {
 	return writeBigInt(ptr, w)
 }
 
-func writeBigIntNoPtr(val reflect.Value, w *encbuf) error {
+func writeBigIntNoPtr(val reflect.Value, w *encbuf) error { log.DebugLog()
 	i := val.Interface().(big.Int)
 	return writeBigInt(&i, w)
 }
 
-func writeBigInt(i *big.Int, w *encbuf) error {
+func writeBigInt(i *big.Int, w *encbuf) error { log.DebugLog()
 	if cmp := i.Cmp(big0); cmp == -1 {
 		return fmt.Errorf("rlp: cannot encode negative *big.Int")
 	} else if cmp == 0 {
@@ -439,12 +439,12 @@ func writeBigInt(i *big.Int, w *encbuf) error {
 	return nil
 }
 
-func writeBytes(val reflect.Value, w *encbuf) error {
+func writeBytes(val reflect.Value, w *encbuf) error { log.DebugLog()
 	w.encodeString(val.Bytes())
 	return nil
 }
 
-func writeByteArray(val reflect.Value, w *encbuf) error {
+func writeByteArray(val reflect.Value, w *encbuf) error { log.DebugLog()
 	if !val.CanAddr() {
 		// Slice requires the value to be addressable.
 		// Make it addressable by copying.
@@ -458,7 +458,7 @@ func writeByteArray(val reflect.Value, w *encbuf) error {
 	return nil
 }
 
-func writeString(val reflect.Value, w *encbuf) error {
+func writeString(val reflect.Value, w *encbuf) error { log.DebugLog()
 	s := val.String()
 	if len(s) == 1 && s[0] <= 0x7f {
 		// fits single byte, no string header
@@ -470,13 +470,13 @@ func writeString(val reflect.Value, w *encbuf) error {
 	return nil
 }
 
-func writeEncoder(val reflect.Value, w *encbuf) error {
+func writeEncoder(val reflect.Value, w *encbuf) error { log.DebugLog()
 	return val.Interface().(Encoder).EncodeRLP(w)
 }
 
 // writeEncoderNoPtr handles non-pointer values that implement Encoder
 // with a pointer receiver.
-func writeEncoderNoPtr(val reflect.Value, w *encbuf) error {
+func writeEncoderNoPtr(val reflect.Value, w *encbuf) error { log.DebugLog()
 	if !val.CanAddr() {
 		// We can't get the address. It would be possible to make the
 		// value addressable by creating a shallow copy, but this
@@ -490,7 +490,7 @@ func writeEncoderNoPtr(val reflect.Value, w *encbuf) error {
 	return val.Addr().Interface().(Encoder).EncodeRLP(w)
 }
 
-func writeInterface(val reflect.Value, w *encbuf) error {
+func writeInterface(val reflect.Value, w *encbuf) error { log.DebugLog()
 	if val.IsNil() {
 		// Write empty list. This is consistent with the previous RLP
 		// encoder that we had and should therefore avoid any
@@ -506,7 +506,7 @@ func writeInterface(val reflect.Value, w *encbuf) error {
 	return ti.writer(eval, w)
 }
 
-func makeSliceWriter(typ reflect.Type, ts tags) (writer, error) {
+func makeSliceWriter(typ reflect.Type, ts tags) (writer, error) { log.DebugLog()
 	etypeinfo, err := cachedTypeInfo1(typ.Elem(), tags{})
 	if err != nil {
 		return nil, err
@@ -526,7 +526,7 @@ func makeSliceWriter(typ reflect.Type, ts tags) (writer, error) {
 	return writer, nil
 }
 
-func makeStructWriter(typ reflect.Type) (writer, error) {
+func makeStructWriter(typ reflect.Type) (writer, error) { log.DebugLog()
 	fields, err := structFields(typ)
 	if err != nil {
 		return nil, err
@@ -544,7 +544,7 @@ func makeStructWriter(typ reflect.Type) (writer, error) {
 	return writer, nil
 }
 
-func makePtrWriter(typ reflect.Type) (writer, error) {
+func makePtrWriter(typ reflect.Type) (writer, error) { log.DebugLog()
 	etypeinfo, err := cachedTypeInfo1(typ.Elem(), tags{})
 	if err != nil {
 		return nil, err
@@ -555,12 +555,12 @@ func makePtrWriter(typ reflect.Type) (writer, error) {
 	kind := typ.Elem().Kind()
 	switch {
 	case kind == reflect.Array && isByte(typ.Elem().Elem()):
-		nilfunc = func(w *encbuf) error {
+		nilfunc = func(w *encbuf) error { log.DebugLog()
 			w.str = append(w.str, 0x80)
 			return nil
 		}
 	case kind == reflect.Struct || kind == reflect.Array:
-		nilfunc = func(w *encbuf) error {
+		nilfunc = func(w *encbuf) error { log.DebugLog()
 			// encoding the zero value of a struct/array could trigger
 			// infinite recursion, avoid that.
 			w.listEnd(w.list())
@@ -568,7 +568,7 @@ func makePtrWriter(typ reflect.Type) (writer, error) {
 		}
 	default:
 		zero := reflect.Zero(typ.Elem())
-		nilfunc = func(w *encbuf) error {
+		nilfunc = func(w *encbuf) error { log.DebugLog()
 			return etypeinfo.writer(zero, w)
 		}
 	}
@@ -585,7 +585,7 @@ func makePtrWriter(typ reflect.Type) (writer, error) {
 
 // putint writes i to the beginning of b in big endian byte
 // order, using the least number of bytes needed to represent i.
-func putint(b []byte, i uint64) (size int) {
+func putint(b []byte, i uint64) (size int) { log.DebugLog()
 	switch {
 	case i < (1 << 8):
 		b[0] = byte(i)
@@ -643,7 +643,7 @@ func putint(b []byte, i uint64) (size int) {
 }
 
 // intsize computes the minimum number of bytes required to store i.
-func intsize(i uint64) (size int) {
+func intsize(i uint64) (size int) { log.DebugLog()
 	for size = 1; ; size++ {
 		if i >>= 8; i == 0 {
 			return size

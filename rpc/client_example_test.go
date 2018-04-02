@@ -38,7 +38,7 @@ type Block struct {
 	Number *big.Int
 }
 
-func ExampleClientSubscription() {
+func ExampleClientSubscription() { log.DebugLog()
 	// Connect the client.
 	client, _ := rpc.Dial("ws://127.0.0.1:8485")
 	subch := make(chan Block)
@@ -61,7 +61,7 @@ func ExampleClientSubscription() {
 
 // subscribeBlocks runs in its own goroutine and maintains
 // a subscription for new blocks.
-func subscribeBlocks(client *rpc.Client, subch chan Block) {
+func subscribeBlocks(client *rpc.Client, subch chan Block) { log.DebugLog()
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 

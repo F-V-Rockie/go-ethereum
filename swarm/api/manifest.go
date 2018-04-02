@@ -59,7 +59,7 @@ type ManifestList struct {
 }
 
 // NewManifest creates and stores a new, empty manifest
-func (a *Api) NewManifest() (storage.Key, error) {
+func (a *Api) NewManifest() (storage.Key, error) { log.DebugLog()
 	var manifest Manifest
 	data, err := json.Marshal(&manifest)
 	if err != nil {
@@ -75,7 +75,7 @@ type ManifestWriter struct {
 	quitC chan bool
 }
 
-func (a *Api) NewManifestWriter(key storage.Key, quitC chan bool) (*ManifestWriter, error) {
+func (a *Api) NewManifestWriter(key storage.Key, quitC chan bool) (*ManifestWriter, error) { log.DebugLog()
 	trie, err := loadManifest(a.dpa, key, quitC)
 	if err != nil {
 		return nil, fmt.Errorf("error loading manifest %s: %s", key, err)
@@ -84,7 +84,7 @@ func (a *Api) NewManifestWriter(key storage.Key, quitC chan bool) (*ManifestWrit
 }
 
 // AddEntry stores the given data and adds the resulting key to the manifest
-func (m *ManifestWriter) AddEntry(data io.Reader, e *ManifestEntry) (storage.Key, error) {
+func (m *ManifestWriter) AddEntry(data io.Reader, e *ManifestEntry) (storage.Key, error) { log.DebugLog()
 	key, err := m.api.Store(data, e.Size, nil)
 	if err != nil {
 		return nil, err
@@ -96,13 +96,13 @@ func (m *ManifestWriter) AddEntry(data io.Reader, e *ManifestEntry) (storage.Key
 }
 
 // RemoveEntry removes the given path from the manifest
-func (m *ManifestWriter) RemoveEntry(path string) error {
+func (m *ManifestWriter) RemoveEntry(path string) error { log.DebugLog()
 	m.trie.deleteEntry(path, m.quitC)
 	return nil
 }
 
 // Store stores the manifest, returning the resulting storage key
-func (m *ManifestWriter) Store() (storage.Key, error) {
+func (m *ManifestWriter) Store() (storage.Key, error) { log.DebugLog()
 	return m.trie.hash, m.trie.recalcAndStore()
 }
 
@@ -114,7 +114,7 @@ type ManifestWalker struct {
 	quitC chan bool
 }
 
-func (a *Api) NewManifestWalker(key storage.Key, quitC chan bool) (*ManifestWalker, error) {
+func (a *Api) NewManifestWalker(key storage.Key, quitC chan bool) (*ManifestWalker, error) { log.DebugLog()
 	trie, err := loadManifest(a.dpa, key, quitC)
 	if err != nil {
 		return nil, fmt.Errorf("error loading manifest %s: %s", key, err)
@@ -132,11 +132,11 @@ type WalkFn func(entry *ManifestEntry) error
 
 // Walk recursively walks the manifest calling walkFn for each entry in the
 // manifest, including submanifests
-func (m *ManifestWalker) Walk(walkFn WalkFn) error {
+func (m *ManifestWalker) Walk(walkFn WalkFn) error { log.DebugLog()
 	return m.walk(m.trie, "", walkFn)
 }
 
-func (m *ManifestWalker) walk(trie *manifestTrie, prefix string, walkFn WalkFn) error {
+func (m *ManifestWalker) walk(trie *manifestTrie, prefix string, walkFn WalkFn) error { log.DebugLog()
 	for _, entry := range trie.entries {
 		if entry == nil {
 			continue
@@ -168,7 +168,7 @@ type manifestTrie struct {
 	hash    storage.Key             // if hash != nil, it is stored
 }
 
-func newManifestTrieEntry(entry *ManifestEntry, subtrie *manifestTrie) *manifestTrieEntry {
+func newManifestTrieEntry(entry *ManifestEntry, subtrie *manifestTrie) *manifestTrieEntry { log.DebugLog()
 	return &manifestTrieEntry{
 		ManifestEntry: *entry,
 		subtrie:       subtrie,
@@ -181,7 +181,7 @@ type manifestTrieEntry struct {
 	subtrie *manifestTrie
 }
 
-func loadManifest(dpa *storage.DPA, hash storage.Key, quitC chan bool) (trie *manifestTrie, err error) { // non-recursive, subtrees are downloaded on-demand
+func loadManifest(dpa *storage.DPA, hash storage.Key, quitC chan bool) (trie *manifestTrie, err error) { log.DebugLog() // non-recursive, subtrees are downloaded on-demand
 
 	log.Trace(fmt.Sprintf("manifest lookup key: '%v'.", hash.Log()))
 	// retrieve manifest via DPA
@@ -189,7 +189,7 @@ func loadManifest(dpa *storage.DPA, hash storage.Key, quitC chan bool) (trie *ma
 	return readManifest(manifestReader, hash, dpa, quitC)
 }
 
-func readManifest(manifestReader storage.LazySectionReader, hash storage.Key, dpa *storage.DPA, quitC chan bool) (trie *manifestTrie, err error) { // non-recursive, subtrees are downloaded on-demand
+func readManifest(manifestReader storage.LazySectionReader, hash storage.Key, dpa *storage.DPA, quitC chan bool) (trie *manifestTrie, err error) { log.DebugLog() // non-recursive, subtrees are downloaded on-demand
 
 	// TODO check size for oversized manifests
 	size, err := manifestReader.Size(quitC)
@@ -230,7 +230,7 @@ func readManifest(manifestReader storage.LazySectionReader, hash storage.Key, dp
 	return
 }
 
-func (self *manifestTrie) addEntry(entry *manifestTrieEntry, quitC chan bool) {
+func (self *manifestTrie) addEntry(entry *manifestTrieEntry, quitC chan bool) { log.DebugLog()
 	self.hash = nil // trie modified, hash needs to be re-calculated on demand
 
 	if len(entry.Path) == 0 {
@@ -276,7 +276,7 @@ func (self *manifestTrie) addEntry(entry *manifestTrieEntry, quitC chan bool) {
 	}, subtrie)
 }
 
-func (self *manifestTrie) getCountLast() (cnt int, entry *manifestTrieEntry) {
+func (self *manifestTrie) getCountLast() (cnt int, entry *manifestTrieEntry) { log.DebugLog()
 	for _, e := range self.entries {
 		if e != nil {
 			cnt++
@@ -286,7 +286,7 @@ func (self *manifestTrie) getCountLast() (cnt int, entry *manifestTrieEntry) {
 	return
 }
 
-func (self *manifestTrie) deleteEntry(path string, quitC chan bool) {
+func (self *manifestTrie) deleteEntry(path string, quitC chan bool) { log.DebugLog()
 	self.hash = nil // trie modified, hash needs to be re-calculated on demand
 
 	if len(path) == 0 {
@@ -322,7 +322,7 @@ func (self *manifestTrie) deleteEntry(path string, quitC chan bool) {
 	}
 }
 
-func (self *manifestTrie) recalcAndStore() error {
+func (self *manifestTrie) recalcAndStore() error { log.DebugLog()
 	if self.hash != nil {
 		return nil
 	}
@@ -358,7 +358,7 @@ func (self *manifestTrie) recalcAndStore() error {
 	return err2
 }
 
-func (self *manifestTrie) loadSubTrie(entry *manifestTrieEntry, quitC chan bool) (err error) {
+func (self *manifestTrie) loadSubTrie(entry *manifestTrieEntry, quitC chan bool) (err error) { log.DebugLog()
 	if entry.subtrie == nil {
 		hash := common.Hex2Bytes(entry.Hash)
 		entry.subtrie, err = loadManifest(self.dpa, hash, quitC)
@@ -367,7 +367,7 @@ func (self *manifestTrie) loadSubTrie(entry *manifestTrieEntry, quitC chan bool)
 	return
 }
 
-func (self *manifestTrie) listWithPrefixInt(prefix, rp string, quitC chan bool, cb func(entry *manifestTrieEntry, suffix string)) error {
+func (self *manifestTrie) listWithPrefixInt(prefix, rp string, quitC chan bool, cb func(entry *manifestTrieEntry, suffix string)) error { log.DebugLog()
 	plen := len(prefix)
 	var start, stop int
 	if plen == 0 {
@@ -412,11 +412,11 @@ func (self *manifestTrie) listWithPrefixInt(prefix, rp string, quitC chan bool, 
 	return nil
 }
 
-func (self *manifestTrie) listWithPrefix(prefix string, quitC chan bool, cb func(entry *manifestTrieEntry, suffix string)) (err error) {
+func (self *manifestTrie) listWithPrefix(prefix string, quitC chan bool, cb func(entry *manifestTrieEntry, suffix string)) (err error) { log.DebugLog()
 	return self.listWithPrefixInt(prefix, "", quitC, cb)
 }
 
-func (self *manifestTrie) findPrefixOf(path string, quitC chan bool) (entry *manifestTrieEntry, pos int) {
+func (self *manifestTrie) findPrefixOf(path string, quitC chan bool) (entry *manifestTrieEntry, pos int) { log.DebugLog()
 
 	log.Trace(fmt.Sprintf("findPrefixOf(%s)", path))
 
@@ -483,7 +483,7 @@ func (self *manifestTrie) findPrefixOf(path string, quitC chan bool) (entry *man
 
 // file system manifest always contains regularized paths
 // no leading or trailing slashes, only single slashes inside
-func RegularSlashes(path string) (res string) {
+func RegularSlashes(path string) (res string) { log.DebugLog()
 	for i := 0; i < len(path); i++ {
 		if (path[i] != '/') || ((i > 0) && (path[i-1] != '/')) {
 			res = res + path[i:i+1]
@@ -495,7 +495,7 @@ func RegularSlashes(path string) (res string) {
 	return
 }
 
-func (self *manifestTrie) getEntry(spath string) (entry *manifestTrieEntry, fullpath string) {
+func (self *manifestTrie) getEntry(spath string) (entry *manifestTrieEntry, fullpath string) { log.DebugLog()
 	path := RegularSlashes(spath)
 	var pos int
 	quitC := make(chan bool)

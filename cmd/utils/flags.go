@@ -72,7 +72,7 @@ SUBCOMMANDS:
 {{end}}{{end}}`
 )
 
-func init() {
+func init() { log.DebugLog()
 	cli.AppHelpTemplate = `{{.Name}} {{if .Flags}}[global options] {{end}}command{{if .Flags}} [command options]{{end}} [arguments...]
 
 VERSION:
@@ -90,7 +90,7 @@ GLOBAL OPTIONS:
 }
 
 // NewApp creates an app with sane defaults.
-func NewApp(gitCommit, usage string) *cli.App {
+func NewApp(gitCommit, usage string) *cli.App { log.DebugLog()
 	app := cli.NewApp()
 	app.Name = filepath.Base(os.Args[0])
 	app.Author = ""
@@ -537,7 +537,7 @@ var (
 // MakeDataDir retrieves the currently requested data directory, terminating
 // if none (or the empty string) is specified. If the node is starting a testnet,
 // the a subdirectory of the specified datadir will be used.
-func MakeDataDir(ctx *cli.Context) string {
+func MakeDataDir(ctx *cli.Context) string { log.DebugLog()
 	if path := ctx.GlobalString(DataDirFlag.Name); path != "" {
 		if ctx.GlobalBool(TestnetFlag.Name) {
 			return filepath.Join(path, "testnet")
@@ -554,7 +554,7 @@ func MakeDataDir(ctx *cli.Context) string {
 // setNodeKey creates a node key from set command line flags, either loading it
 // from a file or as a specified hex value. If neither flags were provided, this
 // method returns nil and an emphemeral key is to be generated.
-func setNodeKey(ctx *cli.Context, cfg *p2p.Config) {
+func setNodeKey(ctx *cli.Context, cfg *p2p.Config) { log.DebugLog()
 	var (
 		hex  = ctx.GlobalString(NodeKeyHexFlag.Name)
 		file = ctx.GlobalString(NodeKeyFileFlag.Name)
@@ -578,7 +578,7 @@ func setNodeKey(ctx *cli.Context, cfg *p2p.Config) {
 }
 
 // setNodeUserIdent creates the user identifier from CLI flags.
-func setNodeUserIdent(ctx *cli.Context, cfg *node.Config) {
+func setNodeUserIdent(ctx *cli.Context, cfg *node.Config) { log.DebugLog()
 	if identity := ctx.GlobalString(IdentityFlag.Name); len(identity) > 0 {
 		cfg.UserIdent = identity
 	}
@@ -586,7 +586,7 @@ func setNodeUserIdent(ctx *cli.Context, cfg *node.Config) {
 
 // setBootstrapNodes creates a list of bootstrap nodes from the command line
 // flags, reverting to pre-configured ones if none have been specified.
-func setBootstrapNodes(ctx *cli.Context, cfg *p2p.Config) {
+func setBootstrapNodes(ctx *cli.Context, cfg *p2p.Config) { log.DebugLog()
 	urls := params.MainnetBootnodes
 	switch {
 	case ctx.GlobalIsSet(BootnodesFlag.Name) || ctx.GlobalIsSet(BootnodesV4Flag.Name):
@@ -616,7 +616,7 @@ func setBootstrapNodes(ctx *cli.Context, cfg *p2p.Config) {
 
 // setBootstrapNodesV5 creates a list of bootstrap nodes from the command line
 // flags, reverting to pre-configured ones if none have been specified.
-func setBootstrapNodesV5(ctx *cli.Context, cfg *p2p.Config) {
+func setBootstrapNodesV5(ctx *cli.Context, cfg *p2p.Config) { log.DebugLog()
 	urls := params.DiscoveryV5Bootnodes
 	switch {
 	case ctx.GlobalIsSet(BootnodesFlag.Name) || ctx.GlobalIsSet(BootnodesV5Flag.Name):
@@ -644,14 +644,14 @@ func setBootstrapNodesV5(ctx *cli.Context, cfg *p2p.Config) {
 
 // setListenAddress creates a TCP listening address string from set command
 // line flags.
-func setListenAddress(ctx *cli.Context, cfg *p2p.Config) {
+func setListenAddress(ctx *cli.Context, cfg *p2p.Config) { log.DebugLog()
 	if ctx.GlobalIsSet(ListenPortFlag.Name) {
 		cfg.ListenAddr = fmt.Sprintf(":%d", ctx.GlobalInt(ListenPortFlag.Name))
 	}
 }
 
 // setNAT creates a port mapper from command line flags.
-func setNAT(ctx *cli.Context, cfg *p2p.Config) {
+func setNAT(ctx *cli.Context, cfg *p2p.Config) { log.DebugLog()
 	if ctx.GlobalIsSet(NATFlag.Name) {
 		natif, err := nat.Parse(ctx.GlobalString(NATFlag.Name))
 		if err != nil {
@@ -663,7 +663,7 @@ func setNAT(ctx *cli.Context, cfg *p2p.Config) {
 
 // splitAndTrim splits input separated by a comma
 // and trims excessive white space from the substrings.
-func splitAndTrim(input string) []string {
+func splitAndTrim(input string) []string { log.DebugLog()
 	result := strings.Split(input, ",")
 	for i, r := range result {
 		result[i] = strings.TrimSpace(r)
@@ -673,7 +673,7 @@ func splitAndTrim(input string) []string {
 
 // setHTTP creates the HTTP RPC listener interface string from the set
 // command line flags, returning empty if the HTTP endpoint is disabled.
-func setHTTP(ctx *cli.Context, cfg *node.Config) {
+func setHTTP(ctx *cli.Context, cfg *node.Config) { log.DebugLog()
 	if ctx.GlobalBool(RPCEnabledFlag.Name) && cfg.HTTPHost == "" {
 		cfg.HTTPHost = "127.0.0.1"
 		if ctx.GlobalIsSet(RPCListenAddrFlag.Name) {
@@ -697,7 +697,7 @@ func setHTTP(ctx *cli.Context, cfg *node.Config) {
 
 // setWS creates the WebSocket RPC listener interface string from the set
 // command line flags, returning empty if the HTTP endpoint is disabled.
-func setWS(ctx *cli.Context, cfg *node.Config) {
+func setWS(ctx *cli.Context, cfg *node.Config) { log.DebugLog()
 	if ctx.GlobalBool(WSEnabledFlag.Name) && cfg.WSHost == "" {
 		cfg.WSHost = "127.0.0.1"
 		if ctx.GlobalIsSet(WSListenAddrFlag.Name) {
@@ -718,7 +718,7 @@ func setWS(ctx *cli.Context, cfg *node.Config) {
 
 // setIPC creates an IPC path configuration from the set command line flags,
 // returning an empty string if IPC was explicitly disabled, or the set path.
-func setIPC(ctx *cli.Context, cfg *node.Config) {
+func setIPC(ctx *cli.Context, cfg *node.Config) { log.DebugLog()
 	checkExclusive(ctx, IPCDisabledFlag, IPCPathFlag)
 	switch {
 	case ctx.GlobalBool(IPCDisabledFlag.Name):
@@ -730,7 +730,7 @@ func setIPC(ctx *cli.Context, cfg *node.Config) {
 
 // makeDatabaseHandles raises out the number of allowed file handles per process
 // for Geth and returns half of the allowance to assign to the database.
-func makeDatabaseHandles() int {
+func makeDatabaseHandles() int { log.DebugLog()
 	limit, err := fdlimit.Current()
 	if err != nil {
 		Fatalf("Failed to retrieve file descriptor allowance: %v", err)
@@ -748,7 +748,7 @@ func makeDatabaseHandles() int {
 
 // MakeAddress converts an account specified directly as a hex encoded string or
 // a key index in the key store to an internal account representation.
-func MakeAddress(ks *keystore.KeyStore, account string) (accounts.Account, error) {
+func MakeAddress(ks *keystore.KeyStore, account string) (accounts.Account, error) { log.DebugLog()
 	// If the specified account is a valid address, return it
 	if common.IsHexAddress(account) {
 		return accounts.Account{Address: common.HexToAddress(account)}, nil
@@ -773,7 +773,7 @@ func MakeAddress(ks *keystore.KeyStore, account string) (accounts.Account, error
 
 // setEtherbase retrieves the etherbase either from the directly specified
 // command line flags or from the keystore if CLI indexed.
-func setEtherbase(ctx *cli.Context, ks *keystore.KeyStore, cfg *eth.Config) {
+func setEtherbase(ctx *cli.Context, ks *keystore.KeyStore, cfg *eth.Config) { log.DebugLog()
 	if ctx.GlobalIsSet(EtherbaseFlag.Name) {
 		account, err := MakeAddress(ks, ctx.GlobalString(EtherbaseFlag.Name))
 		if err != nil {
@@ -784,7 +784,7 @@ func setEtherbase(ctx *cli.Context, ks *keystore.KeyStore, cfg *eth.Config) {
 }
 
 // MakePasswordList reads password lines from the file specified by the global --password flag.
-func MakePasswordList(ctx *cli.Context) []string {
+func MakePasswordList(ctx *cli.Context) []string { log.DebugLog()
 	path := ctx.GlobalString(PasswordFileFlag.Name)
 	if path == "" {
 		return nil
@@ -801,7 +801,7 @@ func MakePasswordList(ctx *cli.Context) []string {
 	return lines
 }
 
-func SetP2PConfig(ctx *cli.Context, cfg *p2p.Config) {
+func SetP2PConfig(ctx *cli.Context, cfg *p2p.Config) { log.DebugLog()
 	setNodeKey(ctx, cfg)
 	setNAT(ctx, cfg)
 	setListenAddress(ctx, cfg)
@@ -869,7 +869,7 @@ func SetP2PConfig(ctx *cli.Context, cfg *p2p.Config) {
 }
 
 // SetNodeConfig applies node-related command line flags to the config.
-func SetNodeConfig(ctx *cli.Context, cfg *node.Config) {
+func SetNodeConfig(ctx *cli.Context, cfg *node.Config) { log.DebugLog()
 	SetP2PConfig(ctx, &cfg.P2P)
 	setIPC(ctx, cfg)
 	setHTTP(ctx, cfg)
@@ -898,7 +898,7 @@ func SetNodeConfig(ctx *cli.Context, cfg *node.Config) {
 	}
 }
 
-func setGPO(ctx *cli.Context, cfg *gasprice.Config) {
+func setGPO(ctx *cli.Context, cfg *gasprice.Config) { log.DebugLog()
 	if ctx.GlobalIsSet(GpoBlocksFlag.Name) {
 		cfg.Blocks = ctx.GlobalInt(GpoBlocksFlag.Name)
 	}
@@ -907,7 +907,7 @@ func setGPO(ctx *cli.Context, cfg *gasprice.Config) {
 	}
 }
 
-func setTxPool(ctx *cli.Context, cfg *core.TxPoolConfig) {
+func setTxPool(ctx *cli.Context, cfg *core.TxPoolConfig) { log.DebugLog()
 	if ctx.GlobalIsSet(TxPoolNoLocalsFlag.Name) {
 		cfg.NoLocals = ctx.GlobalBool(TxPoolNoLocalsFlag.Name)
 	}
@@ -940,7 +940,7 @@ func setTxPool(ctx *cli.Context, cfg *core.TxPoolConfig) {
 	}
 }
 
-func setEthash(ctx *cli.Context, cfg *eth.Config) {
+func setEthash(ctx *cli.Context, cfg *eth.Config) { log.DebugLog()
 	if ctx.GlobalIsSet(EthashCacheDirFlag.Name) {
 		cfg.Ethash.CacheDir = ctx.GlobalString(EthashCacheDirFlag.Name)
 	}
@@ -964,7 +964,7 @@ func setEthash(ctx *cli.Context, cfg *eth.Config) {
 // checkExclusive verifies that only a single isntance of the provided flags was
 // set by the user. Each flag might optionally be followed by a string type to
 // specialize it further.
-func checkExclusive(ctx *cli.Context, args ...interface{}) {
+func checkExclusive(ctx *cli.Context, args ...interface{}) { log.DebugLog()
 	set := make([]string, 0, 1)
 	for i := 0; i < len(args); i++ {
 		// Make sure the next argument is a flag and skip if not set
@@ -1000,7 +1000,7 @@ func checkExclusive(ctx *cli.Context, args ...interface{}) {
 }
 
 // SetShhConfig applies shh-related command line flags to the config.
-func SetShhConfig(ctx *cli.Context, stack *node.Node, cfg *whisper.Config) {
+func SetShhConfig(ctx *cli.Context, stack *node.Node, cfg *whisper.Config) { log.DebugLog()
 	if ctx.GlobalIsSet(WhisperMaxMessageSizeFlag.Name) {
 		cfg.MaxMessageSize = uint32(ctx.GlobalUint(WhisperMaxMessageSizeFlag.Name))
 	}
@@ -1010,7 +1010,7 @@ func SetShhConfig(ctx *cli.Context, stack *node.Node, cfg *whisper.Config) {
 }
 
 // SetEthConfig applies eth-related command line flags to the config.
-func SetEthConfig(ctx *cli.Context, stack *node.Node, cfg *eth.Config) {
+func SetEthConfig(ctx *cli.Context, stack *node.Node, cfg *eth.Config) { log.DebugLog()
 	// Avoid conflicting network flags
 	checkExclusive(ctx, DeveloperFlag, TestnetFlag, RinkebyFlag)
 	checkExclusive(ctx, FastSyncFlag, LightModeFlag, SyncModeFlag)
@@ -1114,14 +1114,14 @@ func SetEthConfig(ctx *cli.Context, stack *node.Node, cfg *eth.Config) {
 }
 
 // SetDashboardConfig applies dashboard related command line flags to the config.
-func SetDashboardConfig(ctx *cli.Context, cfg *dashboard.Config) {
+func SetDashboardConfig(ctx *cli.Context, cfg *dashboard.Config) { log.DebugLog()
 	cfg.Host = ctx.GlobalString(DashboardAddrFlag.Name)
 	cfg.Port = ctx.GlobalInt(DashboardPortFlag.Name)
 	cfg.Refresh = ctx.GlobalDuration(DashboardRefreshFlag.Name)
 }
 
 // RegisterEthService adds an Ethereum client to the stack.
-func RegisterEthService(stack *node.Node, cfg *eth.Config) {
+func RegisterEthService(stack *node.Node, cfg *eth.Config) { log.DebugLog()
 	var err error
 	if cfg.SyncMode == downloader.LightSync {
 		err = stack.Register(func(ctx *node.ServiceContext) (node.Service, error) {
@@ -1143,14 +1143,14 @@ func RegisterEthService(stack *node.Node, cfg *eth.Config) {
 }
 
 // RegisterDashboardService adds a dashboard to the stack.
-func RegisterDashboardService(stack *node.Node, cfg *dashboard.Config, commit string) {
+func RegisterDashboardService(stack *node.Node, cfg *dashboard.Config, commit string) { log.DebugLog()
 	stack.Register(func(ctx *node.ServiceContext) (node.Service, error) {
 		return dashboard.New(cfg, commit)
 	})
 }
 
 // RegisterShhService configures Whisper and adds it to the given node.
-func RegisterShhService(stack *node.Node, cfg *whisper.Config) {
+func RegisterShhService(stack *node.Node, cfg *whisper.Config) { log.DebugLog()
 	if err := stack.Register(func(n *node.ServiceContext) (node.Service, error) {
 		return whisper.New(cfg), nil
 	}); err != nil {
@@ -1160,7 +1160,7 @@ func RegisterShhService(stack *node.Node, cfg *whisper.Config) {
 
 // RegisterEthStatsService configures the Ethereum Stats daemon and adds it to
 // th egiven node.
-func RegisterEthStatsService(stack *node.Node, url string) {
+func RegisterEthStatsService(stack *node.Node, url string) { log.DebugLog()
 	if err := stack.Register(func(ctx *node.ServiceContext) (node.Service, error) {
 		// Retrieve both eth and les services
 		var ethServ *eth.Ethereum
@@ -1176,13 +1176,13 @@ func RegisterEthStatsService(stack *node.Node, url string) {
 }
 
 // SetupNetwork configures the system for either the main net or some test network.
-func SetupNetwork(ctx *cli.Context) {
+func SetupNetwork(ctx *cli.Context) { log.DebugLog()
 	// TODO(fjl): move target gas limit into config
 	params.TargetGasLimit = ctx.GlobalUint64(TargetGasLimitFlag.Name)
 }
 
 // MakeChainDatabase open an LevelDB using the flags passed to the client and will hard crash if it fails.
-func MakeChainDatabase(ctx *cli.Context, stack *node.Node) ethdb.Database {
+func MakeChainDatabase(ctx *cli.Context, stack *node.Node) ethdb.Database { log.DebugLog()
 	var (
 		cache   = ctx.GlobalInt(CacheFlag.Name) * ctx.GlobalInt(CacheDatabaseFlag.Name) / 100
 		handles = makeDatabaseHandles()
@@ -1198,7 +1198,7 @@ func MakeChainDatabase(ctx *cli.Context, stack *node.Node) ethdb.Database {
 	return chainDb
 }
 
-func MakeGenesis(ctx *cli.Context) *core.Genesis {
+func MakeGenesis(ctx *cli.Context) *core.Genesis { log.DebugLog()
 	var genesis *core.Genesis
 	switch {
 	case ctx.GlobalBool(TestnetFlag.Name):
@@ -1212,7 +1212,7 @@ func MakeGenesis(ctx *cli.Context) *core.Genesis {
 }
 
 // MakeChain creates a chain manager from set command line flags.
-func MakeChain(ctx *cli.Context, stack *node.Node) (chain *core.BlockChain, chainDb ethdb.Database) {
+func MakeChain(ctx *cli.Context, stack *node.Node) (chain *core.BlockChain, chainDb ethdb.Database) { log.DebugLog()
 	var err error
 	chainDb = MakeChainDatabase(ctx, stack)
 
@@ -1257,7 +1257,7 @@ func MakeChain(ctx *cli.Context, stack *node.Node) (chain *core.BlockChain, chai
 
 // MakeConsolePreloads retrieves the absolute paths for the console JavaScript
 // scripts to preload before starting.
-func MakeConsolePreloads(ctx *cli.Context) []string {
+func MakeConsolePreloads(ctx *cli.Context) []string { log.DebugLog()
 	// Skip preloading if there's nothing to preload
 	if ctx.GlobalString(PreloadJSFlag.Name) == "" {
 		return nil
@@ -1285,7 +1285,7 @@ func MakeConsolePreloads(ctx *cli.Context) []string {
 // This allows the use of the existing configuration functionality.
 // When all flags are migrated this function can be removed and the existing
 // configuration functionality must be changed that is uses local flags
-func MigrateFlags(action func(ctx *cli.Context) error) func(*cli.Context) error {
+func MigrateFlags(action func(ctx *cli.Context) error) func(*cli.Context) error { log.DebugLog()
 	return func(ctx *cli.Context) error {
 		for _, name := range ctx.FlagNames() {
 			if ctx.IsSet(name) {

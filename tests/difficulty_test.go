@@ -39,7 +39,7 @@ var (
 	}
 )
 
-func TestDifficulty(t *testing.T) {
+func TestDifficulty(t *testing.T) { log.DebugLog()
 	t.Parallel()
 
 	dt := new(testMatcher)

@@ -32,7 +32,7 @@ const (
 
 // syncer is responsible for periodically synchronising with the network, both
 // downloading hashes and blocks as well as handling the announcement handler.
-func (pm *ProtocolManager) syncer() {
+func (pm *ProtocolManager) syncer() { log.DebugLog()
 	// Start and ensure cleanup of sync mechanisms
 	//pm.fetcher.Start()
 	//defer pm.fetcher.Stop()
@@ -59,14 +59,14 @@ func (pm *ProtocolManager) syncer() {
 	}
 }
 
-func (pm *ProtocolManager) needToSync(peerHead blockInfo) bool {
+func (pm *ProtocolManager) needToSync(peerHead blockInfo) bool { log.DebugLog()
 	head := pm.blockchain.CurrentHeader()
 	currentTd := core.GetTd(pm.chainDb, head.Hash(), head.Number.Uint64())
 	return currentTd != nil && peerHead.Td.Cmp(currentTd) > 0
 }
 
 // synchronise tries to sync up our local block chain with a remote peer.
-func (pm *ProtocolManager) synchronise(peer *peer) {
+func (pm *ProtocolManager) synchronise(peer *peer) { log.DebugLog()
 	// Short circuit if no peers are available
 	if peer == nil {
 		return

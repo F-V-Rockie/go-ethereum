@@ -28,7 +28,7 @@ import (
 
 var lan4, lan6, special4, special6 Netlist
 
-func init() {
+func init() { log.DebugLog()
 	// Lists from RFC 5735, RFC 5156,
 	// https://www.iana.org/assignments/iana-ipv4-special-registry/
 	lan4.Add("0.0.0.0/8")              // "This" network
@@ -70,7 +70,7 @@ type Netlist []net.IPNet
 
 // ParseNetlist parses a comma-separated list of CIDR masks.
 // Whitespace and extra commas are ignored.
-func ParseNetlist(s string) (*Netlist, error) {
+func ParseNetlist(s string) (*Netlist, error) { log.DebugLog()
 	ws := strings.NewReplacer(" ", "", "\n", "", "\t", "")
 	masks := strings.Split(ws.Replace(s), ",")
 	l := make(Netlist, 0)
@@ -88,7 +88,7 @@ func ParseNetlist(s string) (*Netlist, error) {
 }
 
 // MarshalTOML implements toml.MarshalerRec.
-func (l Netlist) MarshalTOML() interface{} {
+func (l Netlist) MarshalTOML() interface{} { log.DebugLog()
 	list := make([]string, 0, len(l))
 	for _, net := range l {
 		list = append(list, net.String())
@@ -97,7 +97,7 @@ func (l Netlist) MarshalTOML() interface{} {
 }
 
 // UnmarshalTOML implements toml.UnmarshalerRec.
-func (l *Netlist) UnmarshalTOML(fn func(interface{}) error) error {
+func (l *Netlist) UnmarshalTOML(fn func(interface{}) error) error { log.DebugLog()
 	var masks []string
 	if err := fn(&masks); err != nil {
 		return err
@@ -114,7 +114,7 @@ func (l *Netlist) UnmarshalTOML(fn func(interface{}) error) error {
 
 // Add parses a CIDR mask and appends it to the list. It panics for invalid masks and is
 // intended to be used for setting up static lists.
-func (l *Netlist) Add(cidr string) {
+func (l *Netlist) Add(cidr string) { log.DebugLog()
 	_, n, err := net.ParseCIDR(cidr)
 	if err != nil {
 		panic(err)
@@ -123,7 +123,7 @@ func (l *Netlist) Add(cidr string) {
 }
 
 // Contains reports whether the given IP is contained in the list.
-func (l *Netlist) Contains(ip net.IP) bool {
+func (l *Netlist) Contains(ip net.IP) bool { log.DebugLog()
 	if l == nil {
 		return false
 	}
@@ -136,7 +136,7 @@ func (l *Netlist) Contains(ip net.IP) bool {
 }
 
 // IsLAN reports whether an IP is a local network address.
-func IsLAN(ip net.IP) bool {
+func IsLAN(ip net.IP) bool { log.DebugLog()
 	if ip.IsLoopback() {
 		return true
 	}
@@ -148,7 +148,7 @@ func IsLAN(ip net.IP) bool {
 
 // IsSpecialNetwork reports whether an IP is located in a special-use network range
 // This includes broadcast, multicast and documentation addresses.
-func IsSpecialNetwork(ip net.IP) bool {
+func IsSpecialNetwork(ip net.IP) bool { log.DebugLog()
 	if ip.IsMulticast() {
 		return true
 	}
@@ -174,7 +174,7 @@ var (
 //   - Loopback addresses are OK if relayed by a loopback host.
 //   - LAN addresses are OK if relayed by a LAN host.
 //   - All other addresses are always acceptable.
-func CheckRelayIP(sender, addr net.IP) error {
+func CheckRelayIP(sender, addr net.IP) error { log.DebugLog()
 	if len(addr) != net.IPv4len && len(addr) != net.IPv6len {
 		return errInvalid
 	}
@@ -194,7 +194,7 @@ func CheckRelayIP(sender, addr net.IP) error {
 }
 
 // SameNet reports whether two IP addresses have an equal prefix of the given bit length.
-func SameNet(bits uint, ip, other net.IP) bool {
+func SameNet(bits uint, ip, other net.IP) bool { log.DebugLog()
 	ip4, other4 := ip.To4(), other.To4()
 	switch {
 	case (ip4 == nil) != (other4 == nil):
@@ -206,7 +206,7 @@ func SameNet(bits uint, ip, other net.IP) bool {
 	}
 }
 
-func sameNet(bits uint, ip, other net.IP) bool {
+func sameNet(bits uint, ip, other net.IP) bool { log.DebugLog()
 	nb := int(bits / 8)
 	mask := ^byte(0xFF >> (bits % 8))
 	if mask != 0 && nb < len(ip) && ip[nb]&mask != other[nb]&mask {
@@ -227,7 +227,7 @@ type DistinctNetSet struct {
 
 // Add adds an IP address to the set. It returns false (and doesn't add the IP) if the
 // number of existing IPs in the defined range exceeds the limit.
-func (s *DistinctNetSet) Add(ip net.IP) bool {
+func (s *DistinctNetSet) Add(ip net.IP) bool { log.DebugLog()
 	key := s.key(ip)
 	n := s.members[string(key)]
 	if n < s.Limit {
@@ -238,7 +238,7 @@ func (s *DistinctNetSet) Add(ip net.IP) bool {
 }
 
 // Remove removes an IP from the set.
-func (s *DistinctNetSet) Remove(ip net.IP) {
+func (s *DistinctNetSet) Remove(ip net.IP) { log.DebugLog()
 	key := s.key(ip)
 	if n, ok := s.members[string(key)]; ok {
 		if n == 1 {
@@ -250,14 +250,14 @@ func (s *DistinctNetSet) Remove(ip net.IP) {
 }
 
 // Contains whether the given IP is contained in the set.
-func (s DistinctNetSet) Contains(ip net.IP) bool {
+func (s DistinctNetSet) Contains(ip net.IP) bool { log.DebugLog()
 	key := s.key(ip)
 	_, ok := s.members[string(key)]
 	return ok
 }
 
 // Len returns the number of tracked IPs.
-func (s DistinctNetSet) Len() int {
+func (s DistinctNetSet) Len() int { log.DebugLog()
 	n := uint(0)
 	for _, i := range s.members {
 		n += i
@@ -269,7 +269,7 @@ func (s DistinctNetSet) Len() int {
 //
 // The first byte of key is '4' or '6' to distinguish IPv4/IPv6 address types.
 // The remainder of the key is the IP, truncated to the number of bits.
-func (s *DistinctNetSet) key(ip net.IP) net.IP {
+func (s *DistinctNetSet) key(ip net.IP) net.IP { log.DebugLog()
 	// Lazily initialize storage.
 	if s.members == nil {
 		s.members = make(map[string]uint)
@@ -296,7 +296,7 @@ func (s *DistinctNetSet) key(ip net.IP) net.IP {
 }
 
 // String implements fmt.Stringer
-func (s DistinctNetSet) String() string {
+func (s DistinctNetSet) String() string { log.DebugLog()
 	var buf bytes.Buffer
 	buf.WriteString("{")
 	keys := make([]string, 0, len(s.members))

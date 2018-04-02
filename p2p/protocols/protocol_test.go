@@ -51,7 +51,7 @@ type protoHandshake struct {
 }
 
 // checkProtoHandshake verifies local and remote protoHandshakes match
-func checkProtoHandshake(testVersion uint, testNetworkID string) func(interface{}) error {
+func checkProtoHandshake(testVersion uint, testNetworkID string) func(interface{}) error { log.DebugLog()
 	return func(rhs interface{}) error {
 		remote := rhs.(*protoHandshake)
 		if remote.NetworkID != testNetworkID {
@@ -68,7 +68,7 @@ func checkProtoHandshake(testVersion uint, testNetworkID string) func(interface{
 // newProtocol sets up a protocol
 // the run function here demonstrates a typical protocol using peerPool, handshake
 // and messages registered to handlers
-func newProtocol(pp *p2ptest.TestPeerPool) func(*p2p.Peer, p2p.MsgReadWriter) error {
+func newProtocol(pp *p2ptest.TestPeerPool) func(*p2p.Peer, p2p.MsgReadWriter) error { log.DebugLog()
 	spec := &Spec{
 		Name:       "test",
 		Version:    42,
@@ -139,12 +139,12 @@ func newProtocol(pp *p2ptest.TestPeerPool) func(*p2p.Peer, p2p.MsgReadWriter) er
 	}
 }
 
-func protocolTester(t *testing.T, pp *p2ptest.TestPeerPool) *p2ptest.ProtocolTester {
+func protocolTester(t *testing.T, pp *p2ptest.TestPeerPool) *p2ptest.ProtocolTester { log.DebugLog()
 	conf := adapters.RandomNodeConfig()
 	return p2ptest.NewProtocolTester(t, conf.ID, 2, newProtocol(pp))
 }
 
-func protoHandshakeExchange(id discover.NodeID, proto *protoHandshake) []p2ptest.Exchange {
+func protoHandshakeExchange(id discover.NodeID, proto *protoHandshake) []p2ptest.Exchange { log.DebugLog()
 
 	return []p2ptest.Exchange{
 		{
@@ -168,7 +168,7 @@ func protoHandshakeExchange(id discover.NodeID, proto *protoHandshake) []p2ptest
 	}
 }
 
-func runProtoHandshake(t *testing.T, proto *protoHandshake, errs ...error) {
+func runProtoHandshake(t *testing.T, proto *protoHandshake, errs ...error) { log.DebugLog()
 	pp := p2ptest.NewTestPeerPool()
 	s := protocolTester(t, pp)
 	// TODO: make this more than one handshake
@@ -185,19 +185,19 @@ func runProtoHandshake(t *testing.T, proto *protoHandshake, errs ...error) {
 	}
 }
 
-func TestProtoHandshakeVersionMismatch(t *testing.T) {
+func TestProtoHandshakeVersionMismatch(t *testing.T) { log.DebugLog()
 	runProtoHandshake(t, &protoHandshake{41, "420"}, errorf(ErrHandshake, errorf(ErrHandler, "(msg code 0): 41 (!= 42)").Error()))
 }
 
-func TestProtoHandshakeNetworkIDMismatch(t *testing.T) {
+func TestProtoHandshakeNetworkIDMismatch(t *testing.T) { log.DebugLog()
 	runProtoHandshake(t, &protoHandshake{42, "421"}, errorf(ErrHandshake, errorf(ErrHandler, "(msg code 0): 421 (!= 420)").Error()))
 }
 
-func TestProtoHandshakeSuccess(t *testing.T) {
+func TestProtoHandshakeSuccess(t *testing.T) { log.DebugLog()
 	runProtoHandshake(t, &protoHandshake{42, "420"})
 }
 
-func moduleHandshakeExchange(id discover.NodeID, resp uint) []p2ptest.Exchange {
+func moduleHandshakeExchange(id discover.NodeID, resp uint) []p2ptest.Exchange { log.DebugLog()
 
 	return []p2ptest.Exchange{
 		{
@@ -221,7 +221,7 @@ func moduleHandshakeExchange(id discover.NodeID, resp uint) []p2ptest.Exchange {
 	}
 }
 
-func runModuleHandshake(t *testing.T, resp uint, errs ...error) {
+func runModuleHandshake(t *testing.T, resp uint, errs ...error) { log.DebugLog()
 	pp := p2ptest.NewTestPeerPool()
 	s := protocolTester(t, pp)
 	id := s.IDs[0]
@@ -240,16 +240,16 @@ func runModuleHandshake(t *testing.T, resp uint, errs ...error) {
 	}
 }
 
-func TestModuleHandshakeError(t *testing.T) {
+func TestModuleHandshakeError(t *testing.T) { log.DebugLog()
 	runModuleHandshake(t, 43, fmt.Errorf("handshake mismatch remote 43 > local 42"))
 }
 
-func TestModuleHandshakeSuccess(t *testing.T) {
+func TestModuleHandshakeSuccess(t *testing.T) { log.DebugLog()
 	runModuleHandshake(t, 42)
 }
 
 // testing complex interactions over multiple peers, relaying, dropping
-func testMultiPeerSetup(a, b discover.NodeID) []p2ptest.Exchange {
+func testMultiPeerSetup(a, b discover.NodeID) []p2ptest.Exchange { log.DebugLog()
 
 	return []p2ptest.Exchange{
 		{
@@ -301,7 +301,7 @@ func testMultiPeerSetup(a, b discover.NodeID) []p2ptest.Exchange {
 		{Label: "receiving repeated module handshake", Expects: []p2ptest.Expect{{Code: 1, Msg: &hs0{43}, Peer: a}}}}
 }
 
-func runMultiplePeers(t *testing.T, peer int, errs ...error) {
+func runMultiplePeers(t *testing.T, peer int, errs ...error) { log.DebugLog()
 	pp := p2ptest.NewTestPeerPool()
 	s := protocolTester(t, pp)
 
@@ -374,14 +374,14 @@ WAIT:
 
 }
 
-func TestMultiplePeersDropSelf(t *testing.T) {
+func TestMultiplePeersDropSelf(t *testing.T) { log.DebugLog()
 	runMultiplePeers(t, 0,
 		fmt.Errorf("subprotocol error"),
 		fmt.Errorf("Message handler error: (msg code 3): dropped"),
 	)
 }
 
-func TestMultiplePeersDropOther(t *testing.T) {
+func TestMultiplePeersDropOther(t *testing.T) { log.DebugLog()
 	runMultiplePeers(t, 1,
 		fmt.Errorf("Message handler error: (msg code 3): dropped"),
 		fmt.Errorf("subprotocol error"),

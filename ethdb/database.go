@@ -51,7 +51,7 @@ type LDBDatabase struct {
 }
 
 // NewLDBDatabase returns a LevelDB wrapped object.
-func NewLDBDatabase(file string, cache int, handles int) (*LDBDatabase, error) {
+func NewLDBDatabase(file string, cache int, handles int) (*LDBDatabase, error) { log.DebugLog()
 	logger := log.New("database", file)
 
 	// Ensure we have some minimal caching and file guarantees
@@ -85,24 +85,24 @@ func NewLDBDatabase(file string, cache int, handles int) (*LDBDatabase, error) {
 }
 
 // Path returns the path to the database directory.
-func (db *LDBDatabase) Path() string {
+func (db *LDBDatabase) Path() string { log.DebugLog()
 	return db.fn
 }
 
 // Put puts the given key / value to the queue
-func (db *LDBDatabase) Put(key []byte, value []byte) error {
+func (db *LDBDatabase) Put(key []byte, value []byte) error { log.DebugLog()
 	// Generate the data to write to disk, update the meter and write
 	//value = rle.Compress(value)
 
 	return db.db.Put(key, value, nil)
 }
 
-func (db *LDBDatabase) Has(key []byte) (bool, error) {
+func (db *LDBDatabase) Has(key []byte) (bool, error) { log.DebugLog()
 	return db.db.Has(key, nil)
 }
 
 // Get returns the given key if it's present.
-func (db *LDBDatabase) Get(key []byte) ([]byte, error) {
+func (db *LDBDatabase) Get(key []byte) ([]byte, error) { log.DebugLog()
 	// Retrieve the key and increment the miss counter if not found
 	dat, err := db.db.Get(key, nil)
 	if err != nil {
@@ -113,21 +113,21 @@ func (db *LDBDatabase) Get(key []byte) ([]byte, error) {
 }
 
 // Delete deletes the key from the queue and database
-func (db *LDBDatabase) Delete(key []byte) error {
+func (db *LDBDatabase) Delete(key []byte) error { log.DebugLog()
 	// Execute the actual operation
 	return db.db.Delete(key, nil)
 }
 
-func (db *LDBDatabase) NewIterator() iterator.Iterator {
+func (db *LDBDatabase) NewIterator() iterator.Iterator { log.DebugLog()
 	return db.db.NewIterator(nil, nil)
 }
 
 // NewIteratorWithPrefix returns a iterator to iterate over subset of database content with a particular prefix.
-func (db *LDBDatabase) NewIteratorWithPrefix(prefix []byte) iterator.Iterator {
+func (db *LDBDatabase) NewIteratorWithPrefix(prefix []byte) iterator.Iterator { log.DebugLog()
 	return db.db.NewIterator(util.BytesPrefix(prefix), nil)
 }
 
-func (db *LDBDatabase) Close() {
+func (db *LDBDatabase) Close() { log.DebugLog()
 	// Stop the metrics collection to avoid internal database races
 	db.quitLock.Lock()
 	defer db.quitLock.Unlock()
@@ -147,12 +147,12 @@ func (db *LDBDatabase) Close() {
 	}
 }
 
-func (db *LDBDatabase) LDB() *leveldb.DB {
+func (db *LDBDatabase) LDB() *leveldb.DB { log.DebugLog()
 	return db.db
 }
 
 // Meter configures the database metrics collectors and
-func (db *LDBDatabase) Meter(prefix string) {
+func (db *LDBDatabase) Meter(prefix string) { log.DebugLog()
 	// Short circuit metering if the metrics system is disabled
 	if !metrics.Enabled {
 		return
@@ -186,7 +186,7 @@ func (db *LDBDatabase) Meter(prefix string) {
 //
 // This is how the iostats look like (currently):
 // Read(MB):3895.04860 Write(MB):3654.64712
-func (db *LDBDatabase) meter(refresh time.Duration) {
+func (db *LDBDatabase) meter(refresh time.Duration) { log.DebugLog()
 	// Create the counters to store current and previous compaction values
 	compactions := make([][]float64, 2)
 	for i := 0; i < 2; i++ {
@@ -295,7 +295,7 @@ func (db *LDBDatabase) meter(refresh time.Duration) {
 	}
 }
 
-func (db *LDBDatabase) NewBatch() Batch {
+func (db *LDBDatabase) NewBatch() Batch { log.DebugLog()
 	return &ldbBatch{db: db.db, b: new(leveldb.Batch)}
 }
 
@@ -305,21 +305,21 @@ type ldbBatch struct {
 	size int
 }
 
-func (b *ldbBatch) Put(key, value []byte) error {
+func (b *ldbBatch) Put(key, value []byte) error { log.DebugLog()
 	b.b.Put(key, value)
 	b.size += len(value)
 	return nil
 }
 
-func (b *ldbBatch) Write() error {
+func (b *ldbBatch) Write() error { log.DebugLog()
 	return b.db.Write(b.b, nil)
 }
 
-func (b *ldbBatch) ValueSize() int {
+func (b *ldbBatch) ValueSize() int { log.DebugLog()
 	return b.size
 }
 
-func (b *ldbBatch) Reset() {
+func (b *ldbBatch) Reset() { log.DebugLog()
 	b.b.Reset()
 	b.size = 0
 }
@@ -331,30 +331,30 @@ type table struct {
 
 // NewTable returns a Database object that prefixes all keys with a given
 // string.
-func NewTable(db Database, prefix string) Database {
+func NewTable(db Database, prefix string) Database { log.DebugLog()
 	return &table{
 		db:     db,
 		prefix: prefix,
 	}
 }
 
-func (dt *table) Put(key []byte, value []byte) error {
+func (dt *table) Put(key []byte, value []byte) error { log.DebugLog()
 	return dt.db.Put(append([]byte(dt.prefix), key...), value)
 }
 
-func (dt *table) Has(key []byte) (bool, error) {
+func (dt *table) Has(key []byte) (bool, error) { log.DebugLog()
 	return dt.db.Has(append([]byte(dt.prefix), key...))
 }
 
-func (dt *table) Get(key []byte) ([]byte, error) {
+func (dt *table) Get(key []byte) ([]byte, error) { log.DebugLog()
 	return dt.db.Get(append([]byte(dt.prefix), key...))
 }
 
-func (dt *table) Delete(key []byte) error {
+func (dt *table) Delete(key []byte) error { log.DebugLog()
 	return dt.db.Delete(append([]byte(dt.prefix), key...))
 }
 
-func (dt *table) Close() {
+func (dt *table) Close() { log.DebugLog()
 	// Do nothing; don't close the underlying DB.
 }
 
@@ -364,26 +364,26 @@ type tableBatch struct {
 }
 
 // NewTableBatch returns a Batch object which prefixes all keys with a given string.
-func NewTableBatch(db Database, prefix string) Batch {
+func NewTableBatch(db Database, prefix string) Batch { log.DebugLog()
 	return &tableBatch{db.NewBatch(), prefix}
 }
 
-func (dt *table) NewBatch() Batch {
+func (dt *table) NewBatch() Batch { log.DebugLog()
 	return &tableBatch{dt.db.NewBatch(), dt.prefix}
 }
 
-func (tb *tableBatch) Put(key, value []byte) error {
+func (tb *tableBatch) Put(key, value []byte) error { log.DebugLog()
 	return tb.batch.Put(append([]byte(tb.prefix), key...), value)
 }
 
-func (tb *tableBatch) Write() error {
+func (tb *tableBatch) Write() error { log.DebugLog()
 	return tb.batch.Write()
 }
 
-func (tb *tableBatch) ValueSize() int {
+func (tb *tableBatch) ValueSize() int { log.DebugLog()
 	return tb.batch.ValueSize()
 }
 
-func (tb *tableBatch) Reset() {
+func (tb *tableBatch) Reset() { log.DebugLog()
 	tb.batch.Reset()
 }

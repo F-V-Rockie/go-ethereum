@@ -37,7 +37,7 @@ var (
 type Bytes []byte
 
 // MarshalText implements encoding.TextMarshaler
-func (b Bytes) MarshalText() ([]byte, error) {
+func (b Bytes) MarshalText() ([]byte, error) { log.DebugLog()
 	result := make([]byte, len(b)*2+2)
 	copy(result, `0x`)
 	hex.Encode(result[2:], b)
@@ -45,7 +45,7 @@ func (b Bytes) MarshalText() ([]byte, error) {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (b *Bytes) UnmarshalJSON(input []byte) error {
+func (b *Bytes) UnmarshalJSON(input []byte) error { log.DebugLog()
 	if !isString(input) {
 		return errNonString(bytesT)
 	}
@@ -53,7 +53,7 @@ func (b *Bytes) UnmarshalJSON(input []byte) error {
 }
 
 // UnmarshalText implements encoding.TextUnmarshaler.
-func (b *Bytes) UnmarshalText(input []byte) error {
+func (b *Bytes) UnmarshalText(input []byte) error { log.DebugLog()
 	raw, err := checkText(input, true)
 	if err != nil {
 		return err
@@ -68,14 +68,14 @@ func (b *Bytes) UnmarshalText(input []byte) error {
 }
 
 // String returns the hex encoding of b.
-func (b Bytes) String() string {
+func (b Bytes) String() string { log.DebugLog()
 	return Encode(b)
 }
 
 // UnmarshalFixedJSON decodes the input as a string with 0x prefix. The length of out
 // determines the required input length. This function is commonly used to implement the
 // UnmarshalJSON method for fixed-size types.
-func UnmarshalFixedJSON(typ reflect.Type, input, out []byte) error {
+func UnmarshalFixedJSON(typ reflect.Type, input, out []byte) error { log.DebugLog()
 	if !isString(input) {
 		return errNonString(typ)
 	}
@@ -85,7 +85,7 @@ func UnmarshalFixedJSON(typ reflect.Type, input, out []byte) error {
 // UnmarshalFixedText decodes the input as a string with 0x prefix. The length of out
 // determines the required input length. This function is commonly used to implement the
 // UnmarshalText method for fixed-size types.
-func UnmarshalFixedText(typname string, input, out []byte) error {
+func UnmarshalFixedText(typname string, input, out []byte) error { log.DebugLog()
 	raw, err := checkText(input, true)
 	if err != nil {
 		return err
@@ -106,7 +106,7 @@ func UnmarshalFixedText(typname string, input, out []byte) error {
 // UnmarshalFixedUnprefixedText decodes the input as a string with optional 0x prefix. The
 // length of out determines the required input length. This function is commonly used to
 // implement the UnmarshalText method for fixed-size types.
-func UnmarshalFixedUnprefixedText(typname string, input, out []byte) error {
+func UnmarshalFixedUnprefixedText(typname string, input, out []byte) error { log.DebugLog()
 	raw, err := checkText(input, false)
 	if err != nil {
 		return err
@@ -133,12 +133,12 @@ func UnmarshalFixedUnprefixedText(typname string, input, out []byte) error {
 type Big big.Int
 
 // MarshalText implements encoding.TextMarshaler
-func (b Big) MarshalText() ([]byte, error) {
+func (b Big) MarshalText() ([]byte, error) { log.DebugLog()
 	return []byte(EncodeBig((*big.Int)(&b))), nil
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (b *Big) UnmarshalJSON(input []byte) error {
+func (b *Big) UnmarshalJSON(input []byte) error { log.DebugLog()
 	if !isString(input) {
 		return errNonString(bigT)
 	}
@@ -146,7 +146,7 @@ func (b *Big) UnmarshalJSON(input []byte) error {
 }
 
 // UnmarshalText implements encoding.TextUnmarshaler
-func (b *Big) UnmarshalText(input []byte) error {
+func (b *Big) UnmarshalText(input []byte) error { log.DebugLog()
 	raw, err := checkNumberText(input)
 	if err != nil {
 		return err
@@ -178,12 +178,12 @@ func (b *Big) UnmarshalText(input []byte) error {
 }
 
 // ToInt converts b to a big.Int.
-func (b *Big) ToInt() *big.Int {
+func (b *Big) ToInt() *big.Int { log.DebugLog()
 	return (*big.Int)(b)
 }
 
 // String returns the hex encoding of b.
-func (b *Big) String() string {
+func (b *Big) String() string { log.DebugLog()
 	return EncodeBig(b.ToInt())
 }
 
@@ -192,7 +192,7 @@ func (b *Big) String() string {
 type Uint64 uint64
 
 // MarshalText implements encoding.TextMarshaler.
-func (b Uint64) MarshalText() ([]byte, error) {
+func (b Uint64) MarshalText() ([]byte, error) { log.DebugLog()
 	buf := make([]byte, 2, 10)
 	copy(buf, `0x`)
 	buf = strconv.AppendUint(buf, uint64(b), 16)
@@ -200,7 +200,7 @@ func (b Uint64) MarshalText() ([]byte, error) {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (b *Uint64) UnmarshalJSON(input []byte) error {
+func (b *Uint64) UnmarshalJSON(input []byte) error { log.DebugLog()
 	if !isString(input) {
 		return errNonString(uint64T)
 	}
@@ -208,7 +208,7 @@ func (b *Uint64) UnmarshalJSON(input []byte) error {
 }
 
 // UnmarshalText implements encoding.TextUnmarshaler
-func (b *Uint64) UnmarshalText(input []byte) error {
+func (b *Uint64) UnmarshalText(input []byte) error { log.DebugLog()
 	raw, err := checkNumberText(input)
 	if err != nil {
 		return err
@@ -230,7 +230,7 @@ func (b *Uint64) UnmarshalText(input []byte) error {
 }
 
 // String returns the hex encoding of b.
-func (b Uint64) String() string {
+func (b Uint64) String() string { log.DebugLog()
 	return EncodeUint64(uint64(b))
 }
 
@@ -239,12 +239,12 @@ func (b Uint64) String() string {
 type Uint uint
 
 // MarshalText implements encoding.TextMarshaler.
-func (b Uint) MarshalText() ([]byte, error) {
+func (b Uint) MarshalText() ([]byte, error) { log.DebugLog()
 	return Uint64(b).MarshalText()
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (b *Uint) UnmarshalJSON(input []byte) error {
+func (b *Uint) UnmarshalJSON(input []byte) error { log.DebugLog()
 	if !isString(input) {
 		return errNonString(uintT)
 	}
@@ -252,7 +252,7 @@ func (b *Uint) UnmarshalJSON(input []byte) error {
 }
 
 // UnmarshalText implements encoding.TextUnmarshaler.
-func (b *Uint) UnmarshalText(input []byte) error {
+func (b *Uint) UnmarshalText(input []byte) error { log.DebugLog()
 	var u64 Uint64
 	err := u64.UnmarshalText(input)
 	if u64 > Uint64(^uint(0)) || err == ErrUint64Range {
@@ -265,19 +265,19 @@ func (b *Uint) UnmarshalText(input []byte) error {
 }
 
 // String returns the hex encoding of b.
-func (b Uint) String() string {
+func (b Uint) String() string { log.DebugLog()
 	return EncodeUint64(uint64(b))
 }
 
-func isString(input []byte) bool {
+func isString(input []byte) bool { log.DebugLog()
 	return len(input) >= 2 && input[0] == '"' && input[len(input)-1] == '"'
 }
 
-func bytesHave0xPrefix(input []byte) bool {
+func bytesHave0xPrefix(input []byte) bool { log.DebugLog()
 	return len(input) >= 2 && input[0] == '0' && (input[1] == 'x' || input[1] == 'X')
 }
 
-func checkText(input []byte, wantPrefix bool) ([]byte, error) {
+func checkText(input []byte, wantPrefix bool) ([]byte, error) { log.DebugLog()
 	if len(input) == 0 {
 		return nil, nil // empty strings are allowed
 	}
@@ -292,7 +292,7 @@ func checkText(input []byte, wantPrefix bool) ([]byte, error) {
 	return input, nil
 }
 
-func checkNumberText(input []byte) (raw []byte, err error) {
+func checkNumberText(input []byte) (raw []byte, err error) { log.DebugLog()
 	if len(input) == 0 {
 		return nil, nil // empty strings are allowed
 	}
@@ -309,13 +309,13 @@ func checkNumberText(input []byte) (raw []byte, err error) {
 	return input, nil
 }
 
-func wrapTypeError(err error, typ reflect.Type) error {
+func wrapTypeError(err error, typ reflect.Type) error { log.DebugLog()
 	if _, ok := err.(*decError); ok {
 		return &json.UnmarshalTypeError{Value: err.Error(), Type: typ}
 	}
 	return err
 }
 
-func errNonString(typ reflect.Type) error {
+func errNonString(typ reflect.Type) error { log.DebugLog()
 	return &json.UnmarshalTypeError{Value: "non-string", Type: typ}
 }

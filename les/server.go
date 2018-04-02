@@ -49,7 +49,7 @@ type LesServer struct {
 	chtIndexer, bloomTrieIndexer *core.ChainIndexer
 }
 
-func NewLesServer(eth *eth.Ethereum, config *eth.Config) (*LesServer, error) {
+func NewLesServer(eth *eth.Ethereum, config *eth.Config) (*LesServer, error) { log.DebugLog()
 	quitSync := make(chan struct{})
 	pm, err := NewProtocolManager(eth.BlockChain().Config(), false, ServerProtocolVersions, config.NetworkId, eth.EventMux(), eth.Engine(), newPeerSet(), eth.BlockChain(), eth.TxPool(), eth.ChainDb(), nil, nil, quitSync, new(sync.WaitGroup))
 	if err != nil {
@@ -102,12 +102,12 @@ func NewLesServer(eth *eth.Ethereum, config *eth.Config) (*LesServer, error) {
 	return srv, nil
 }
 
-func (s *LesServer) Protocols() []p2p.Protocol {
+func (s *LesServer) Protocols() []p2p.Protocol { log.DebugLog()
 	return s.protocolManager.SubProtocols
 }
 
 // Start starts the LES server
-func (s *LesServer) Start(srvr *p2p.Server) {
+func (s *LesServer) Start(srvr *p2p.Server) { log.DebugLog()
 	s.protocolManager.Start(s.config.LightPeers)
 	if srvr.DiscV5 != nil {
 		for _, topic := range s.lesTopics {
@@ -125,12 +125,12 @@ func (s *LesServer) Start(srvr *p2p.Server) {
 	s.protocolManager.blockLoop()
 }
 
-func (s *LesServer) SetBloomBitsIndexer(bloomIndexer *core.ChainIndexer) {
+func (s *LesServer) SetBloomBitsIndexer(bloomIndexer *core.ChainIndexer) { log.DebugLog()
 	bloomIndexer.AddChildIndexer(s.bloomTrieIndexer)
 }
 
 // Stop stops the LES service
-func (s *LesServer) Stop() {
+func (s *LesServer) Stop() { log.DebugLog()
 	s.chtIndexer.Close()
 	// bloom trie indexer is closed by parent bloombits indexer
 	s.fcCostStats.store()
@@ -151,7 +151,7 @@ type RequestCostList []struct {
 	MsgCode, BaseCost, ReqCost uint64
 }
 
-func (list RequestCostList) decode() requestCostTable {
+func (list RequestCostList) decode() requestCostTable { log.DebugLog()
 	table := make(requestCostTable)
 	for _, e := range list {
 		table[e.MsgCode] = &requestCosts{
@@ -169,7 +169,7 @@ type linReg struct {
 
 const linRegMaxCnt = 100000
 
-func (l *linReg) add(x, y float64) {
+func (l *linReg) add(x, y float64) { log.DebugLog()
 	if l.cnt >= linRegMaxCnt {
 		sub := float64(l.cnt+1-linRegMaxCnt) / linRegMaxCnt
 		l.sumX -= l.sumX * sub
@@ -185,7 +185,7 @@ func (l *linReg) add(x, y float64) {
 	l.sumXY += x * y
 }
 
-func (l *linReg) calc() (b, m float64) {
+func (l *linReg) calc() (b, m float64) { log.DebugLog()
 	if l.cnt == 0 {
 		return 0, 0
 	}
@@ -199,7 +199,7 @@ func (l *linReg) calc() (b, m float64) {
 	return b, m
 }
 
-func (l *linReg) toBytes() []byte {
+func (l *linReg) toBytes() []byte { log.DebugLog()
 	var arr [40]byte
 	binary.BigEndian.PutUint64(arr[0:8], math.Float64bits(l.sumX))
 	binary.BigEndian.PutUint64(arr[8:16], math.Float64bits(l.sumY))
@@ -209,7 +209,7 @@ func (l *linReg) toBytes() []byte {
 	return arr[:]
 }
 
-func linRegFromBytes(data []byte) *linReg {
+func linRegFromBytes(data []byte) *linReg { log.DebugLog()
 	if len(data) != 40 {
 		return nil
 	}
@@ -235,7 +235,7 @@ type requestCostStatsRlp []struct {
 
 var rcStatsKey = []byte("_requestCostStats")
 
-func newCostStats(db ethdb.Database) *requestCostStats {
+func newCostStats(db ethdb.Database) *requestCostStats { log.DebugLog()
 	stats := make(map[uint64]*linReg)
 	for _, code := range reqList {
 		stats[code] = &linReg{cnt: 100}
@@ -264,7 +264,7 @@ func newCostStats(db ethdb.Database) *requestCostStats {
 	}
 }
 
-func (s *requestCostStats) store() {
+func (s *requestCostStats) store() { log.DebugLog()
 	s.lock.Lock()
 	defer s.lock.Unlock()
 
@@ -279,7 +279,7 @@ func (s *requestCostStats) store() {
 	}
 }
 
-func (s *requestCostStats) getCurrentList() RequestCostList {
+func (s *requestCostStats) getCurrentList() RequestCostList { log.DebugLog()
 	s.lock.Lock()
 	defer s.lock.Unlock()
 
@@ -303,7 +303,7 @@ func (s *requestCostStats) getCurrentList() RequestCostList {
 	return list
 }
 
-func (s *requestCostStats) update(msgCode, reqCnt, cost uint64) {
+func (s *requestCostStats) update(msgCode, reqCnt, cost uint64) { log.DebugLog()
 	s.lock.Lock()
 	defer s.lock.Unlock()
 
@@ -314,7 +314,7 @@ func (s *requestCostStats) update(msgCode, reqCnt, cost uint64) {
 	c.add(float64(reqCnt), float64(cost))
 }
 
-func (pm *ProtocolManager) blockLoop() {
+func (pm *ProtocolManager) blockLoop() { log.DebugLog()
 	pm.wg.Add(1)
 	headCh := make(chan core.ChainHeadEvent, 10)
 	headSub := pm.blockchain.SubscribeChainHeadEvent(headCh)

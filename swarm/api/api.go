@@ -67,11 +67,11 @@ type NoResolverError struct {
 	TLD string
 }
 
-func NewNoResolverError(tld string) *NoResolverError {
+func NewNoResolverError(tld string) *NoResolverError { log.DebugLog()
 	return &NoResolverError{TLD: tld}
 }
 
-func (e *NoResolverError) Error() string {
+func (e *NoResolverError) Error() string { log.DebugLog()
 	if e.TLD == "" {
 		return "no ENS resolver"
 	}
@@ -93,14 +93,14 @@ type MultiResolverOption func(*MultiResolver)
 // for a specific TLD. If TLD is an empty string, the resolver will be added
 // to the list of default resolver, the ones that will be used for resolution
 // of addresses which do not have their TLD resolver specified.
-func MultiResolverOptionWithResolver(r Resolver, tld string) MultiResolverOption {
+func MultiResolverOptionWithResolver(r Resolver, tld string) MultiResolverOption { log.DebugLog()
 	return func(m *MultiResolver) {
 		m.resolvers[tld] = append(m.resolvers[tld], r)
 	}
 }
 
 // NewMultiResolver creates a new instance of MultiResolver.
-func NewMultiResolver(opts ...MultiResolverOption) (m *MultiResolver) {
+func NewMultiResolver(opts ...MultiResolverOption) (m *MultiResolver) { log.DebugLog()
 	m = &MultiResolver{
 		resolvers: make(map[string][]Resolver),
 	}
@@ -114,7 +114,7 @@ func NewMultiResolver(opts ...MultiResolverOption) (m *MultiResolver) {
 // If there are more default Resolvers, or for a specific TLD,
 // the Hash from the the first one which does not return error
 // will be returned.
-func (m MultiResolver) Resolve(addr string) (h common.Hash, err error) {
+func (m MultiResolver) Resolve(addr string) (h common.Hash, err error) { log.DebugLog()
 	rs := m.resolvers[""]
 	tld := path.Ext(addr)
 	if tld != "" {
@@ -147,7 +147,7 @@ type Api struct {
 }
 
 //the api constructor initialises
-func NewApi(dpa *storage.DPA, dns Resolver) (self *Api) {
+func NewApi(dpa *storage.DPA, dns Resolver) (self *Api) { log.DebugLog()
 	self = &Api{
 		dpa: dpa,
 		dns: dns,
@@ -156,25 +156,25 @@ func NewApi(dpa *storage.DPA, dns Resolver) (self *Api) {
 }
 
 // to be used only in TEST
-func (self *Api) Upload(uploadDir, index string) (hash string, err error) {
+func (self *Api) Upload(uploadDir, index string) (hash string, err error) { log.DebugLog()
 	fs := NewFileSystem(self)
 	hash, err = fs.Upload(uploadDir, index)
 	return hash, err
 }
 
 // DPA reader API
-func (self *Api) Retrieve(key storage.Key) storage.LazySectionReader {
+func (self *Api) Retrieve(key storage.Key) storage.LazySectionReader { log.DebugLog()
 	return self.dpa.Retrieve(key)
 }
 
-func (self *Api) Store(data io.Reader, size int64, wg *sync.WaitGroup) (key storage.Key, err error) {
+func (self *Api) Store(data io.Reader, size int64, wg *sync.WaitGroup) (key storage.Key, err error) { log.DebugLog()
 	return self.dpa.Store(data, size, wg, nil)
 }
 
 type ErrResolve error
 
 // DNS Resolver
-func (self *Api) Resolve(uri *URI) (storage.Key, error) {
+func (self *Api) Resolve(uri *URI) (storage.Key, error) { log.DebugLog()
 	apiResolveCount.Inc(1)
 	log.Trace(fmt.Sprintf("Resolving : %v", uri.Addr))
 
@@ -208,7 +208,7 @@ func (self *Api) Resolve(uri *URI) (storage.Key, error) {
 }
 
 // Put provides singleton manifest creation on top of dpa store
-func (self *Api) Put(content, contentType string) (storage.Key, error) {
+func (self *Api) Put(content, contentType string) (storage.Key, error) { log.DebugLog()
 	apiPutCount.Inc(1)
 	r := strings.NewReader(content)
 	wg := &sync.WaitGroup{}
@@ -231,7 +231,7 @@ func (self *Api) Put(content, contentType string) (storage.Key, error) {
 // Get uses iterative manifest retrieval and prefix matching
 // to resolve basePath to content using dpa retrieve
 // it returns a section reader, mimeType, status and an error
-func (self *Api) Get(key storage.Key, path string) (reader storage.LazySectionReader, mimeType string, status int, err error) {
+func (self *Api) Get(key storage.Key, path string) (reader storage.LazySectionReader, mimeType string, status int, err error) { log.DebugLog()
 	apiGetCount.Inc(1)
 	trie, err := loadManifest(self.dpa, key, nil)
 	if err != nil {
@@ -265,7 +265,7 @@ func (self *Api) Get(key storage.Key, path string) (reader storage.LazySectionRe
 	return
 }
 
-func (self *Api) Modify(key storage.Key, path, contentHash, contentType string) (storage.Key, error) {
+func (self *Api) Modify(key storage.Key, path, contentHash, contentType string) (storage.Key, error) { log.DebugLog()
 	apiModifyCount.Inc(1)
 	quitC := make(chan bool)
 	trie, err := loadManifest(self.dpa, key, quitC)
@@ -291,7 +291,7 @@ func (self *Api) Modify(key storage.Key, path, contentHash, contentType string) 
 	return trie.hash, nil
 }
 
-func (self *Api) AddFile(mhash, path, fname string, content []byte, nameresolver bool) (storage.Key, string, error) {
+func (self *Api) AddFile(mhash, path, fname string, content []byte, nameresolver bool) (storage.Key, string, error) { log.DebugLog()
 	apiAddFileCount.Inc(1)
 
 	uri, err := Parse("bzz:/" + mhash)
@@ -341,7 +341,7 @@ func (self *Api) AddFile(mhash, path, fname string, content []byte, nameresolver
 
 }
 
-func (self *Api) RemoveFile(mhash, path, fname string, nameresolver bool) (string, error) {
+func (self *Api) RemoveFile(mhash, path, fname string, nameresolver bool) (string, error) { log.DebugLog()
 	apiRmFileCount.Inc(1)
 
 	uri, err := Parse("bzz:/" + mhash)
@@ -382,7 +382,7 @@ func (self *Api) RemoveFile(mhash, path, fname string, nameresolver bool) (strin
 	return newMkey.String(), nil
 }
 
-func (self *Api) AppendFile(mhash, path, fname string, existingSize int64, content []byte, oldKey storage.Key, offset int64, addSize int64, nameresolver bool) (storage.Key, string, error) {
+func (self *Api) AppendFile(mhash, path, fname string, existingSize int64, content []byte, oldKey storage.Key, offset int64, addSize int64, nameresolver bool) (storage.Key, string, error) { log.DebugLog()
 	apiAppendFileCount.Inc(1)
 
 	buffSize := offset + addSize
@@ -463,7 +463,7 @@ func (self *Api) AppendFile(mhash, path, fname string, existingSize int64, conte
 
 }
 
-func (self *Api) BuildDirectoryTree(mhash string, nameresolver bool) (key storage.Key, manifestEntryMap map[string]*manifestTrieEntry, err error) {
+func (self *Api) BuildDirectoryTree(mhash string, nameresolver bool) (key storage.Key, manifestEntryMap map[string]*manifestTrieEntry, err error) { log.DebugLog()
 
 	uri, err := Parse("bzz:/" + mhash)
 	if err != nil {

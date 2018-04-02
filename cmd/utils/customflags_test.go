@@ -22,7 +22,7 @@ import (
 	"testing"
 )
 
-func TestPathExpansion(t *testing.T) {
+func TestPathExpansion(t *testing.T) { log.DebugLog()
 	user, _ := user.Current()
 	tests := map[string]string{
 		"/home/someuser/tmp": "/home/someuser/tmp",

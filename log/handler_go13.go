@@ -13,14 +13,14 @@ type swapHandler struct {
 	handler unsafe.Pointer
 }
 
-func (h *swapHandler) Log(r *Record) error {
+func (h *swapHandler) Log(r *Record) error { log.DebugLog()
 	return h.Get().Log(r)
 }
 
-func (h *swapHandler) Get() Handler {
+func (h *swapHandler) Get() Handler { log.DebugLog()
 	return *(*Handler)(atomic.LoadPointer(&h.handler))
 }
 
-func (h *swapHandler) Swap(newHandler Handler) {
+func (h *swapHandler) Swap(newHandler Handler) { log.DebugLog()
 	atomic.StorePointer(&h.handler, unsafe.Pointer(&newHandler))
 }

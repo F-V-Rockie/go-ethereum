@@ -19,7 +19,7 @@ package common
 
 import "encoding/hex"
 
-func ToHex(b []byte) string {
+func ToHex(b []byte) string { log.DebugLog()
 	hex := Bytes2Hex(b)
 	// Prefer output of "0x0" instead of "0x"
 	if len(hex) == 0 {
@@ -28,7 +28,7 @@ func ToHex(b []byte) string {
 	return "0x" + hex
 }
 
-func FromHex(s string) []byte {
+func FromHex(s string) []byte { log.DebugLog()
 	if len(s) > 1 {
 		if s[0:2] == "0x" || s[0:2] == "0X" {
 			s = s[2:]
@@ -43,7 +43,7 @@ func FromHex(s string) []byte {
 // Copy bytes
 //
 // Returns an exact copy of the provided bytes
-func CopyBytes(b []byte) (copiedBytes []byte) {
+func CopyBytes(b []byte) (copiedBytes []byte) { log.DebugLog()
 	if b == nil {
 		return nil
 	}
@@ -53,15 +53,15 @@ func CopyBytes(b []byte) (copiedBytes []byte) {
 	return
 }
 
-func hasHexPrefix(str string) bool {
+func hasHexPrefix(str string) bool { log.DebugLog()
 	return len(str) >= 2 && str[0] == '0' && (str[1] == 'x' || str[1] == 'X')
 }
 
-func isHexCharacter(c byte) bool {
+func isHexCharacter(c byte) bool { log.DebugLog()
 	return ('0' <= c && c <= '9') || ('a' <= c && c <= 'f') || ('A' <= c && c <= 'F')
 }
 
-func isHex(str string) bool {
+func isHex(str string) bool { log.DebugLog()
 	if len(str)%2 != 0 {
 		return false
 	}
@@ -73,17 +73,17 @@ func isHex(str string) bool {
 	return true
 }
 
-func Bytes2Hex(d []byte) string {
+func Bytes2Hex(d []byte) string { log.DebugLog()
 	return hex.EncodeToString(d)
 }
 
-func Hex2Bytes(str string) []byte {
+func Hex2Bytes(str string) []byte { log.DebugLog()
 	h, _ := hex.DecodeString(str)
 
 	return h
 }
 
-func Hex2BytesFixed(str string, flen int) []byte {
+func Hex2BytesFixed(str string, flen int) []byte { log.DebugLog()
 	h, _ := hex.DecodeString(str)
 	if len(h) == flen {
 		return h
@@ -98,7 +98,7 @@ func Hex2BytesFixed(str string, flen int) []byte {
 	}
 }
 
-func RightPadBytes(slice []byte, l int) []byte {
+func RightPadBytes(slice []byte, l int) []byte { log.DebugLog()
 	if l <= len(slice) {
 		return slice
 	}
@@ -109,7 +109,7 @@ func RightPadBytes(slice []byte, l int) []byte {
 	return padded
 }
 
-func LeftPadBytes(slice []byte, l int) []byte {
+func LeftPadBytes(slice []byte, l int) []byte { log.DebugLog()
 	if l <= len(slice) {
 		return slice
 	}

@@ -69,7 +69,7 @@ type event struct {
 	event Event
 }
 
-func (e *event) Event() Event         { return e.event }
-func (e *event) Path() string         { return e.path }
-func (e *event) Sys() interface{}     { return &e.sys }
-func (e *event) isDir() (bool, error) { return e.sys.Mask&unix.IN_ISDIR != 0, nil }
+func (e *event) Event() Event         { log.DebugLog() return e.event }
+func (e *event) Path() string         { log.DebugLog() return e.path }
+func (e *event) Sys() interface{}     { log.DebugLog() return &e.sys }
+func (e *event) isDir() (bool, error) { log.DebugLog() return e.sys.Mask&unix.IN_ISDIR != 0, nil }

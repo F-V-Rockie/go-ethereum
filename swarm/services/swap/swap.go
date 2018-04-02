@@ -81,7 +81,7 @@ type PayProfile struct {
 }
 
 //create params with default values
-func NewDefaultSwapParams() *SwapParams {
+func NewDefaultSwapParams() *SwapParams { log.DebugLog()
 	return &SwapParams{
 		PayProfile: &PayProfile{},
 		Params: &swap.Params{
@@ -104,7 +104,7 @@ func NewDefaultSwapParams() *SwapParams {
 
 //this can only finally be set after all config options (file, cmd line, env vars)
 //have been evaluated
-func (self *SwapParams) Init(contract common.Address, prvkey *ecdsa.PrivateKey) {
+func (self *SwapParams) Init(contract common.Address, prvkey *ecdsa.PrivateKey) { log.DebugLog()
 	pubkey := &prvkey.PublicKey
 
 	self.PayProfile = &PayProfile{
@@ -126,7 +126,7 @@ func (self *SwapParams) Init(contract common.Address, prvkey *ecdsa.PrivateKey) 
 // n < 0  called when receiving chunks = receiving delivery responses
 //                 OR receiving cheques.
 
-func NewSwap(local *SwapParams, remote *SwapProfile, backend chequebook.Backend, proto swap.Protocol) (self *swap.Swap, err error) {
+func NewSwap(local *SwapParams, remote *SwapProfile, backend chequebook.Backend, proto swap.Protocol) (self *swap.Swap, err error) { log.DebugLog()
 	var (
 		ctx = context.TODO()
 		ok  bool
@@ -184,28 +184,28 @@ func NewSwap(local *SwapParams, remote *SwapProfile, backend chequebook.Backend,
 	return
 }
 
-func (self *SwapParams) Chequebook() *chequebook.Chequebook {
+func (self *SwapParams) Chequebook() *chequebook.Chequebook { log.DebugLog()
 	defer self.lock.Unlock()
 	self.lock.Lock()
 	return self.chbook
 }
 
-func (self *SwapParams) PrivateKey() *ecdsa.PrivateKey {
+func (self *SwapParams) PrivateKey() *ecdsa.PrivateKey { log.DebugLog()
 	return self.privateKey
 }
 
-// func (self *SwapParams) PublicKey() *ecdsa.PublicKey {
+// func (self *SwapParams) PublicKey() *ecdsa.PublicKey { log.DebugLog()
 // 	return self.publicKey
 // }
 
-func (self *SwapParams) SetKey(prvkey *ecdsa.PrivateKey) {
+func (self *SwapParams) SetKey(prvkey *ecdsa.PrivateKey) { log.DebugLog()
 	self.privateKey = prvkey
 	self.publicKey = &prvkey.PublicKey
 }
 
 // setChequebook(path, backend) wraps the
 // chequebook initialiser and sets up autoDeposit to cover spending.
-func (self *SwapParams) SetChequebook(ctx context.Context, backend chequebook.Backend, path string) error {
+func (self *SwapParams) SetChequebook(ctx context.Context, backend chequebook.Backend, path string) error { log.DebugLog()
 	self.lock.Lock()
 	contract := self.Contract
 	self.lock.Unlock()
@@ -219,7 +219,7 @@ func (self *SwapParams) SetChequebook(ctx context.Context, backend chequebook.Ba
 	return self.deployChequebook(ctx, backend, path)
 }
 
-func (self *SwapParams) deployChequebook(ctx context.Context, backend chequebook.Backend, path string) error {
+func (self *SwapParams) deployChequebook(ctx context.Context, backend chequebook.Backend, path string) error { log.DebugLog()
 	opts := bind.NewKeyedTransactor(self.privateKey)
 	opts.Value = self.AutoDepositBuffer
 	opts.Context = ctx
@@ -244,7 +244,7 @@ func (self *SwapParams) deployChequebook(ctx context.Context, backend chequebook
 }
 
 // repeatedly tries to deploy a chequebook.
-func deployChequebookLoop(opts *bind.TransactOpts, backend chequebook.Backend) (addr common.Address, err error) {
+func deployChequebookLoop(opts *bind.TransactOpts, backend chequebook.Backend) (addr common.Address, err error) { log.DebugLog()
 	var tx *types.Transaction
 	for try := 0; try < chequebookDeployRetries; try++ {
 		if try > 0 {
@@ -265,7 +265,7 @@ func deployChequebookLoop(opts *bind.TransactOpts, backend chequebook.Backend) (
 
 // initialise the chequebook from a persisted json file or create a new one
 // caller holds the lock
-func (self *SwapParams) newChequebookFromContract(path string, backend chequebook.Backend) error {
+func (self *SwapParams) newChequebookFromContract(path string, backend chequebook.Backend) error { log.DebugLog()
 	hexkey := common.Bytes2Hex(self.Contract.Bytes())
 	err := os.MkdirAll(filepath.Join(path, "chequebooks"), os.ModePerm)
 	if err != nil {

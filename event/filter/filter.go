@@ -37,7 +37,7 @@ type Filters struct {
 	quit chan struct{}
 }
 
-func New() *Filters {
+func New() *Filters { log.DebugLog()
 	return &Filters{
 		ch:       make(chan FilterEvent),
 		watchers: make(map[int]Filter),
@@ -45,30 +45,30 @@ func New() *Filters {
 	}
 }
 
-func (self *Filters) Start() {
+func (self *Filters) Start() { log.DebugLog()
 	go self.loop()
 }
 
-func (self *Filters) Stop() {
+func (self *Filters) Stop() { log.DebugLog()
 	close(self.quit)
 }
 
-func (self *Filters) Notify(filter Filter, data interface{}) {
+func (self *Filters) Notify(filter Filter, data interface{}) { log.DebugLog()
 	self.ch <- FilterEvent{filter, data}
 }
 
-func (self *Filters) Install(watcher Filter) int {
+func (self *Filters) Install(watcher Filter) int { log.DebugLog()
 	self.watchers[self.id] = watcher
 	self.id++
 
 	return self.id - 1
 }
 
-func (self *Filters) Uninstall(id int) {
+func (self *Filters) Uninstall(id int) { log.DebugLog()
 	delete(self.watchers, id)
 }
 
-func (self *Filters) loop() {
+func (self *Filters) loop() { log.DebugLog()
 out:
 	for {
 		select {
@@ -86,10 +86,10 @@ out:
 	}
 }
 
-func (self *Filters) Match(a, b Filter) bool {
+func (self *Filters) Match(a, b Filter) bool { log.DebugLog()
 	return reflect.TypeOf(a) == reflect.TypeOf(b) && a.Compare(b)
 }
 
-func (self *Filters) Get(i int) Filter {
+func (self *Filters) Get(i int) Filter { log.DebugLog()
 	return self.watchers[i]
 }

@@ -50,19 +50,19 @@ type Envelope struct {
 }
 
 // size returns the size of envelope as it is sent (i.e. public fields only)
-func (e *Envelope) size() int {
+func (e *Envelope) size() int { log.DebugLog()
 	return 20 + len(e.Version) + len(e.AESNonce) + len(e.Data)
 }
 
 // rlpWithoutNonce returns the RLP encoded envelope contents, except the nonce.
-func (e *Envelope) rlpWithoutNonce() []byte {
+func (e *Envelope) rlpWithoutNonce() []byte { log.DebugLog()
 	res, _ := rlp.EncodeToBytes([]interface{}{e.Version, e.Expiry, e.TTL, e.Topic, e.AESNonce, e.Data})
 	return res
 }
 
 // NewEnvelope wraps a Whisper message with expiration and destination data
 // included into an envelope for network forwarding.
-func NewEnvelope(ttl uint32, topic TopicType, aesNonce []byte, msg *sentMessage) *Envelope {
+func NewEnvelope(ttl uint32, topic TopicType, aesNonce []byte, msg *sentMessage) *Envelope { log.DebugLog()
 	env := Envelope{
 		Version:  make([]byte, 1),
 		Expiry:   uint32(time.Now().Add(time.Second * time.Duration(ttl)).Unix()),
@@ -82,21 +82,21 @@ func NewEnvelope(ttl uint32, topic TopicType, aesNonce []byte, msg *sentMessage)
 	return &env
 }
 
-func (e *Envelope) IsSymmetric() bool {
+func (e *Envelope) IsSymmetric() bool { log.DebugLog()
 	return len(e.AESNonce) > 0
 }
 
-func (e *Envelope) isAsymmetric() bool {
+func (e *Envelope) isAsymmetric() bool { log.DebugLog()
 	return !e.IsSymmetric()
 }
 
-func (e *Envelope) Ver() uint64 {
+func (e *Envelope) Ver() uint64 { log.DebugLog()
 	return bytesToUintLittleEndian(e.Version)
 }
 
 // Seal closes the envelope by spending the requested amount of time as a proof
 // of work on hashing the data.
-func (e *Envelope) Seal(options *MessageParams) error {
+func (e *Envelope) Seal(options *MessageParams) error { log.DebugLog()
 	var target, bestBit int
 	if options.PoW == 0 {
 		// adjust for the duration of Seal() execution only if execution time is predefined unconditionally
@@ -135,14 +135,14 @@ func (e *Envelope) Seal(options *MessageParams) error {
 	return nil
 }
 
-func (e *Envelope) PoW() float64 {
+func (e *Envelope) PoW() float64 { log.DebugLog()
 	if e.pow == 0 {
 		e.calculatePoW(0)
 	}
 	return e.pow
 }
 
-func (e *Envelope) calculatePoW(diff uint32) {
+func (e *Envelope) calculatePoW(diff uint32) { log.DebugLog()
 	buf := make([]byte, 64)
 	h := crypto.Keccak256(e.rlpWithoutNonce())
 	copy(buf[:32], h)
@@ -155,7 +155,7 @@ func (e *Envelope) calculatePoW(diff uint32) {
 	e.pow = x
 }
 
-func (e *Envelope) powToFirstBit(pow float64) int {
+func (e *Envelope) powToFirstBit(pow float64) int { log.DebugLog()
 	x := pow
 	x *= float64(e.size())
 	x *= float64(e.TTL)
@@ -165,7 +165,7 @@ func (e *Envelope) powToFirstBit(pow float64) int {
 }
 
 // Hash returns the SHA3 hash of the envelope, calculating it if not yet done.
-func (e *Envelope) Hash() common.Hash {
+func (e *Envelope) Hash() common.Hash { log.DebugLog()
 	if (e.hash == common.Hash{}) {
 		encoded, _ := rlp.EncodeToBytes(e)
 		e.hash = crypto.Keccak256Hash(encoded)
@@ -174,7 +174,7 @@ func (e *Envelope) Hash() common.Hash {
 }
 
 // DecodeRLP decodes an Envelope from an RLP data stream.
-func (e *Envelope) DecodeRLP(s *rlp.Stream) error {
+func (e *Envelope) DecodeRLP(s *rlp.Stream) error { log.DebugLog()
 	raw, err := s.Raw()
 	if err != nil {
 		return err
@@ -193,7 +193,7 @@ func (e *Envelope) DecodeRLP(s *rlp.Stream) error {
 }
 
 // OpenAsymmetric tries to decrypt an envelope, potentially encrypted with a particular key.
-func (e *Envelope) OpenAsymmetric(key *ecdsa.PrivateKey) (*ReceivedMessage, error) {
+func (e *Envelope) OpenAsymmetric(key *ecdsa.PrivateKey) (*ReceivedMessage, error) { log.DebugLog()
 	message := &ReceivedMessage{Raw: e.Data}
 	err := message.decryptAsymmetric(key)
 	switch err {
@@ -207,7 +207,7 @@ func (e *Envelope) OpenAsymmetric(key *ecdsa.PrivateKey) (*ReceivedMessage, erro
 }
 
 // OpenSymmetric tries to decrypt an envelope, potentially encrypted with a particular key.
-func (e *Envelope) OpenSymmetric(key []byte) (msg *ReceivedMessage, err error) {
+func (e *Envelope) OpenSymmetric(key []byte) (msg *ReceivedMessage, err error) { log.DebugLog()
 	msg = &ReceivedMessage{Raw: e.Data}
 	err = msg.decryptSymmetric(key, e.AESNonce)
 	if err != nil {
@@ -217,7 +217,7 @@ func (e *Envelope) OpenSymmetric(key []byte) (msg *ReceivedMessage, err error) {
 }
 
 // Open tries to decrypt an envelope, and populates the message fields in case of success.
-func (e *Envelope) Open(watcher *Filter) (msg *ReceivedMessage) {
+func (e *Envelope) Open(watcher *Filter) (msg *ReceivedMessage) { log.DebugLog()
 	if e.isAsymmetric() {
 		msg, _ = e.OpenAsymmetric(watcher.KeyAsym)
 		if msg != nil {

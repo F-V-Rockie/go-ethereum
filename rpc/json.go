@@ -85,20 +85,20 @@ type jsonCodec struct {
 	rw     io.ReadWriteCloser        // connection
 }
 
-func (err *jsonError) Error() string {
+func (err *jsonError) Error() string { log.DebugLog()
 	if err.Message == "" {
 		return fmt.Sprintf("json-rpc error %d", err.Code)
 	}
 	return err.Message
 }
 
-func (err *jsonError) ErrorCode() int {
+func (err *jsonError) ErrorCode() int { log.DebugLog()
 	return err.Code
 }
 
 // NewCodec creates a new RPC server codec with support for JSON-RPC 2.0 based
 // on explicitly given encoding and decoding methods.
-func NewCodec(rwc io.ReadWriteCloser, encode, decode func(v interface{}) error) ServerCodec {
+func NewCodec(rwc io.ReadWriteCloser, encode, decode func(v interface{}) error) ServerCodec { log.DebugLog()
 	return &jsonCodec{
 		closed: make(chan interface{}),
 		encode: encode,
@@ -108,7 +108,7 @@ func NewCodec(rwc io.ReadWriteCloser, encode, decode func(v interface{}) error) 
 }
 
 // NewJSONCodec creates a new RPC server codec with support for JSON-RPC 2.0.
-func NewJSONCodec(rwc io.ReadWriteCloser) ServerCodec {
+func NewJSONCodec(rwc io.ReadWriteCloser) ServerCodec { log.DebugLog()
 	enc := json.NewEncoder(rwc)
 	dec := json.NewDecoder(rwc)
 	dec.UseNumber()
@@ -122,7 +122,7 @@ func NewJSONCodec(rwc io.ReadWriteCloser) ServerCodec {
 }
 
 // isBatch returns true when the first non-whitespace characters is '['
-func isBatch(msg json.RawMessage) bool {
+func isBatch(msg json.RawMessage) bool { log.DebugLog()
 	for _, c := range msg {
 		// skip insignificant whitespace (http://www.ietf.org/rfc/rfc4627.txt)
 		if c == 0x20 || c == 0x09 || c == 0x0a || c == 0x0d {
@@ -136,7 +136,7 @@ func isBatch(msg json.RawMessage) bool {
 // ReadRequestHeaders will read new requests without parsing the arguments. It will
 // return a collection of requests, an indication if these requests are in batch
 // form or an error when the incoming message could not be read/parsed.
-func (c *jsonCodec) ReadRequestHeaders() ([]rpcRequest, bool, Error) {
+func (c *jsonCodec) ReadRequestHeaders() ([]rpcRequest, bool, Error) { log.DebugLog()
 	c.decMu.Lock()
 	defer c.decMu.Unlock()
 
@@ -152,7 +152,7 @@ func (c *jsonCodec) ReadRequestHeaders() ([]rpcRequest, bool, Error) {
 
 // checkReqId returns an error when the given reqId isn't valid for RPC method calls.
 // valid id's are strings, numbers or null
-func checkReqId(reqId json.RawMessage) error {
+func checkReqId(reqId json.RawMessage) error { log.DebugLog()
 	if len(reqId) == 0 {
 		return fmt.Errorf("missing request id")
 	}
@@ -169,7 +169,7 @@ func checkReqId(reqId json.RawMessage) error {
 // parseRequest will parse a single request from the given RawMessage. It will return
 // the parsed request, an indication if the request was a batch or an error when
 // the request could not be parsed.
-func parseRequest(incomingMsg json.RawMessage) ([]rpcRequest, bool, Error) {
+func parseRequest(incomingMsg json.RawMessage) ([]rpcRequest, bool, Error) { log.DebugLog()
 	var in jsonRequest
 	if err := json.Unmarshal(incomingMsg, &in); err != nil {
 		return nil, false, &invalidMessageError{err.Error()}
@@ -217,7 +217,7 @@ func parseRequest(incomingMsg json.RawMessage) ([]rpcRequest, bool, Error) {
 
 // parseBatchRequest will parse a batch request into a collection of requests from the given RawMessage, an indication
 // if the request was a batch or an error when the request could not be read.
-func parseBatchRequest(incomingMsg json.RawMessage) ([]rpcRequest, bool, Error) {
+func parseBatchRequest(incomingMsg json.RawMessage) ([]rpcRequest, bool, Error) { log.DebugLog()
 	var in []jsonRequest
 	if err := json.Unmarshal(incomingMsg, &in); err != nil {
 		return nil, false, &invalidMessageError{err.Error()}
@@ -272,7 +272,7 @@ func parseBatchRequest(incomingMsg json.RawMessage) ([]rpcRequest, bool, Error) 
 
 // ParseRequestArguments tries to parse the given params (json.RawMessage) with the given
 // types. It returns the parsed values or an error when the parsing failed.
-func (c *jsonCodec) ParseRequestArguments(argTypes []reflect.Type, params interface{}) ([]reflect.Value, Error) {
+func (c *jsonCodec) ParseRequestArguments(argTypes []reflect.Type, params interface{}) ([]reflect.Value, Error) { log.DebugLog()
 	if args, ok := params.(json.RawMessage); !ok {
 		return nil, &invalidParamsError{"Invalid params supplied"}
 	} else {
@@ -283,7 +283,7 @@ func (c *jsonCodec) ParseRequestArguments(argTypes []reflect.Type, params interf
 // parsePositionalArguments tries to parse the given args to an array of values with the
 // given types. It returns the parsed values or an error when the args could not be
 // parsed. Missing optional arguments are returned as reflect.Zero values.
-func parsePositionalArguments(rawArgs json.RawMessage, types []reflect.Type) ([]reflect.Value, Error) {
+func parsePositionalArguments(rawArgs json.RawMessage, types []reflect.Type) ([]reflect.Value, Error) { log.DebugLog()
 	// Read beginning of the args array.
 	dec := json.NewDecoder(bytes.NewReader(rawArgs))
 	if tok, _ := dec.Token(); tok != json.Delim('[') {
@@ -319,7 +319,7 @@ func parsePositionalArguments(rawArgs json.RawMessage, types []reflect.Type) ([]
 }
 
 // CreateResponse will create a JSON-RPC success response with the given id and reply as result.
-func (c *jsonCodec) CreateResponse(id interface{}, reply interface{}) interface{} {
+func (c *jsonCodec) CreateResponse(id interface{}, reply interface{}) interface{} { log.DebugLog()
 	if isHexNum(reflect.TypeOf(reply)) {
 		return &jsonSuccessResponse{Version: jsonrpcVersion, Id: id, Result: fmt.Sprintf(`%#x`, reply)}
 	}
@@ -327,19 +327,19 @@ func (c *jsonCodec) CreateResponse(id interface{}, reply interface{}) interface{
 }
 
 // CreateErrorResponse will create a JSON-RPC error response with the given id and error.
-func (c *jsonCodec) CreateErrorResponse(id interface{}, err Error) interface{} {
+func (c *jsonCodec) CreateErrorResponse(id interface{}, err Error) interface{} { log.DebugLog()
 	return &jsonErrResponse{Version: jsonrpcVersion, Id: id, Error: jsonError{Code: err.ErrorCode(), Message: err.Error()}}
 }
 
 // CreateErrorResponseWithInfo will create a JSON-RPC error response with the given id and error.
 // info is optional and contains additional information about the error. When an empty string is passed it is ignored.
-func (c *jsonCodec) CreateErrorResponseWithInfo(id interface{}, err Error, info interface{}) interface{} {
+func (c *jsonCodec) CreateErrorResponseWithInfo(id interface{}, err Error, info interface{}) interface{} { log.DebugLog()
 	return &jsonErrResponse{Version: jsonrpcVersion, Id: id,
 		Error: jsonError{Code: err.ErrorCode(), Message: err.Error(), Data: info}}
 }
 
 // CreateNotification will create a JSON-RPC notification with the given subscription id and event as params.
-func (c *jsonCodec) CreateNotification(subid, namespace string, event interface{}) interface{} {
+func (c *jsonCodec) CreateNotification(subid, namespace string, event interface{}) interface{} { log.DebugLog()
 	if isHexNum(reflect.TypeOf(event)) {
 		return &jsonNotification{Version: jsonrpcVersion, Method: namespace + notificationMethodSuffix,
 			Params: jsonSubscription{Subscription: subid, Result: fmt.Sprintf(`%#x`, event)}}
@@ -350,7 +350,7 @@ func (c *jsonCodec) CreateNotification(subid, namespace string, event interface{
 }
 
 // Write message to client
-func (c *jsonCodec) Write(res interface{}) error {
+func (c *jsonCodec) Write(res interface{}) error { log.DebugLog()
 	c.encMu.Lock()
 	defer c.encMu.Unlock()
 
@@ -358,7 +358,7 @@ func (c *jsonCodec) Write(res interface{}) error {
 }
 
 // Close the underlying connection
-func (c *jsonCodec) Close() {
+func (c *jsonCodec) Close() { log.DebugLog()
 	c.closer.Do(func() {
 		close(c.closed)
 		c.rw.Close()
@@ -366,6 +366,6 @@ func (c *jsonCodec) Close() {
 }
 
 // Closed returns a channel which will be closed when Close is called
-func (c *jsonCodec) Closed() <-chan interface{} {
+func (c *jsonCodec) Closed() <-chan interface{} { log.DebugLog()
 	return c.closed
 }

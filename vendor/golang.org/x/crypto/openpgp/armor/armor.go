@@ -42,7 +42,7 @@ const crc24Poly = 0x1864cfb
 const crc24Mask = 0xffffff
 
 // crc24 calculates the OpenPGP checksum as specified in RFC 4880, section 6.1
-func crc24(crc uint32, d []byte) uint32 {
+func crc24(crc uint32, d []byte) uint32 { log.DebugLog()
 	for _, b := range d {
 		crc ^= uint32(b) << 16
 		for i := 0; i < 8; i++ {
@@ -68,7 +68,7 @@ type lineReader struct {
 	crc uint32
 }
 
-func (l *lineReader) Read(p []byte) (n int, err error) {
+func (l *lineReader) Read(p []byte) (n int, err error) { log.DebugLog()
 	if l.eof {
 		return 0, io.EOF
 	}
@@ -137,7 +137,7 @@ type openpgpReader struct {
 	currentCRC uint32
 }
 
-func (r *openpgpReader) Read(p []byte) (n int, err error) {
+func (r *openpgpReader) Read(p []byte) (n int, err error) { log.DebugLog()
 	n, err = r.b64Reader.Read(p)
 	r.currentCRC = crc24(r.currentCRC, p[:n])
 
@@ -154,7 +154,7 @@ func (r *openpgpReader) Read(p []byte) (n int, err error) {
 // leading garbage. If it doesn't find a block, it will return nil, io.EOF. The
 // given Reader is not usable after calling this function: an arbitrary amount
 // of data may have been read past the end of the block.
-func Decode(in io.Reader) (p *Block, err error) {
+func Decode(in io.Reader) (p *Block, err error) { log.DebugLog()
 	r := bufio.NewReaderSize(in, 100)
 	var line []byte
 	ignoreNext := false

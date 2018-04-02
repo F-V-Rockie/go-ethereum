@@ -32,11 +32,11 @@ type pmp struct {
 	c  *natpmp.Client
 }
 
-func (n *pmp) String() string {
+func (n *pmp) String() string { log.DebugLog()
 	return fmt.Sprintf("NAT-PMP(%v)", n.gw)
 }
 
-func (n *pmp) ExternalIP() (net.IP, error) {
+func (n *pmp) ExternalIP() (net.IP, error) { log.DebugLog()
 	response, err := n.c.GetExternalAddress()
 	if err != nil {
 		return nil, err
@@ -44,7 +44,7 @@ func (n *pmp) ExternalIP() (net.IP, error) {
 	return response.ExternalIPAddress[:], nil
 }
 
-func (n *pmp) AddMapping(protocol string, extport, intport int, name string, lifetime time.Duration) error {
+func (n *pmp) AddMapping(protocol string, extport, intport int, name string, lifetime time.Duration) error { log.DebugLog()
 	if lifetime <= 0 {
 		return fmt.Errorf("lifetime must not be <= 0")
 	}
@@ -54,7 +54,7 @@ func (n *pmp) AddMapping(protocol string, extport, intport int, name string, lif
 	return err
 }
 
-func (n *pmp) DeleteMapping(protocol string, extport, intport int) (err error) {
+func (n *pmp) DeleteMapping(protocol string, extport, intport int) (err error) { log.DebugLog()
 	// To destroy a mapping, send an add-port with an internalPort of
 	// the internal port to destroy, an external port of zero and a
 	// time of zero.
@@ -62,7 +62,7 @@ func (n *pmp) DeleteMapping(protocol string, extport, intport int) (err error) {
 	return err
 }
 
-func discoverPMP() Interface {
+func discoverPMP() Interface { log.DebugLog()
 	// run external address lookups on all potential gateways
 	gws := potentialGateways()
 	found := make(chan *pmp, len(gws))
@@ -104,7 +104,7 @@ var (
 
 // TODO: improve this. We currently assume that (on most networks)
 // the router is X.X.X.1 in a local LAN range.
-func potentialGateways() (gws []net.IP) {
+func potentialGateways() (gws []net.IP) { log.DebugLog()
 	ifaces, err := net.Interfaces()
 	if err != nil {
 		return nil

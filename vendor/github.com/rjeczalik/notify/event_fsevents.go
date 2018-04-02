@@ -65,7 +65,7 @@ type event struct {
 	event Event
 }
 
-func (ei *event) Event() Event         { return ei.event }
-func (ei *event) Path() string         { return ei.fse.Path }
-func (ei *event) Sys() interface{}     { return &ei.fse }
-func (ei *event) isDir() (bool, error) { return ei.fse.Flags&FSEventsIsDir != 0, nil }
+func (ei *event) Event() Event         { log.DebugLog() return ei.event }
+func (ei *event) Path() string         { log.DebugLog() return ei.fse.Path }
+func (ei *event) Sys() interface{}     { log.DebugLog() return &ei.fse }
+func (ei *event) isDir() (bool, error) { log.DebugLog() return ei.fse.Flags&FSEventsIsDir != 0, nil }

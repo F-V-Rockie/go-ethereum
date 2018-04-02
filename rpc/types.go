@@ -130,7 +130,7 @@ const (
 // Returned errors:
 // - an invalid block number error when the given argument isn't a known strings
 // - an out of range error when the given block number is either too little or too large
-func (bn *BlockNumber) UnmarshalJSON(data []byte) error {
+func (bn *BlockNumber) UnmarshalJSON(data []byte) error { log.DebugLog()
 	input := strings.TrimSpace(string(data))
 	if len(input) >= 2 && input[0] == '"' && input[len(input)-1] == '"' {
 		input = input[1 : len(input)-1]
@@ -160,6 +160,6 @@ func (bn *BlockNumber) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (bn BlockNumber) Int64() int64 {
+func (bn BlockNumber) Int64() int64 { log.DebugLog()
 	return (int64)(bn)
 }

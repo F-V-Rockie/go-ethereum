@@ -25,7 +25,7 @@ import (
 )
 
 // makeTestTrie create a sample test trie to test node-wise reconstruction.
-func makeTestTrie() (*Database, *Trie, map[string][]byte) {
+func makeTestTrie() (*Database, *Trie, map[string][]byte) { log.DebugLog()
 	// Create an empty trie
 	diskdb, _ := ethdb.NewMemDatabase()
 	triedb := NewDatabase(diskdb)
@@ -58,7 +58,7 @@ func makeTestTrie() (*Database, *Trie, map[string][]byte) {
 
 // checkTrieContents cross references a reconstructed trie with an expected data
 // content map.
-func checkTrieContents(t *testing.T, db *Database, root []byte, content map[string][]byte) {
+func checkTrieContents(t *testing.T, db *Database, root []byte, content map[string][]byte) { log.DebugLog()
 	// Check root availability and trie contents
 	trie, err := New(common.BytesToHash(root), db)
 	if err != nil {
@@ -75,7 +75,7 @@ func checkTrieContents(t *testing.T, db *Database, root []byte, content map[stri
 }
 
 // checkTrieConsistency checks that all nodes in a trie are indeed present.
-func checkTrieConsistency(db *Database, root common.Hash) error {
+func checkTrieConsistency(db *Database, root common.Hash) error { log.DebugLog()
 	// Create and iterate a trie rooted in a subnode
 	trie, err := New(root, db)
 	if err != nil {
@@ -88,7 +88,7 @@ func checkTrieConsistency(db *Database, root common.Hash) error {
 }
 
 // Tests that an empty trie is not scheduled for syncing.
-func TestEmptyTrieSync(t *testing.T) {
+func TestEmptyTrieSync(t *testing.T) { log.DebugLog()
 	diskdbA, _ := ethdb.NewMemDatabase()
 	triedbA := NewDatabase(diskdbA)
 
@@ -108,10 +108,10 @@ func TestEmptyTrieSync(t *testing.T) {
 
 // Tests that given a root hash, a trie can sync iteratively on a single thread,
 // requesting retrieval tasks and returning all of them in one go.
-func TestIterativeTrieSyncIndividual(t *testing.T) { testIterativeTrieSync(t, 1) }
-func TestIterativeTrieSyncBatched(t *testing.T)    { testIterativeTrieSync(t, 100) }
+func TestIterativeTrieSyncIndividual(t *testing.T) { log.DebugLog() testIterativeTrieSync(t, 1) }
+func TestIterativeTrieSyncBatched(t *testing.T)    { log.DebugLog() testIterativeTrieSync(t, 100) }
 
-func testIterativeTrieSync(t *testing.T, batch int) {
+func testIterativeTrieSync(t *testing.T, batch int) { log.DebugLog()
 	// Create a random trie to copy
 	srcDb, srcTrie, srcData := makeTestTrie()
 
@@ -144,7 +144,7 @@ func testIterativeTrieSync(t *testing.T, batch int) {
 
 // Tests that the trie scheduler can correctly reconstruct the state even if only
 // partial results are returned, and the others sent only later.
-func TestIterativeDelayedTrieSync(t *testing.T) {
+func TestIterativeDelayedTrieSync(t *testing.T) { log.DebugLog()
 	// Create a random trie to copy
 	srcDb, srcTrie, srcData := makeTestTrie()
 
@@ -179,10 +179,10 @@ func TestIterativeDelayedTrieSync(t *testing.T) {
 // Tests that given a root hash, a trie can sync iteratively on a single thread,
 // requesting retrieval tasks and returning all of them in one go, however in a
 // random order.
-func TestIterativeRandomTrieSyncIndividual(t *testing.T) { testIterativeRandomTrieSync(t, 1) }
-func TestIterativeRandomTrieSyncBatched(t *testing.T)    { testIterativeRandomTrieSync(t, 100) }
+func TestIterativeRandomTrieSyncIndividual(t *testing.T) { log.DebugLog() testIterativeRandomTrieSync(t, 1) }
+func TestIterativeRandomTrieSyncBatched(t *testing.T)    { log.DebugLog() testIterativeRandomTrieSync(t, 100) }
 
-func testIterativeRandomTrieSync(t *testing.T, batch int) {
+func testIterativeRandomTrieSync(t *testing.T, batch int) { log.DebugLog()
 	// Create a random trie to copy
 	srcDb, srcTrie, srcData := makeTestTrie()
 
@@ -223,7 +223,7 @@ func testIterativeRandomTrieSync(t *testing.T, batch int) {
 
 // Tests that the trie scheduler can correctly reconstruct the state even if only
 // partial results are returned (Even those randomly), others sent only later.
-func TestIterativeRandomDelayedTrieSync(t *testing.T) {
+func TestIterativeRandomDelayedTrieSync(t *testing.T) { log.DebugLog()
 	// Create a random trie to copy
 	srcDb, srcTrie, srcData := makeTestTrie()
 
@@ -270,7 +270,7 @@ func TestIterativeRandomDelayedTrieSync(t *testing.T) {
 
 // Tests that a trie sync will not request nodes multiple times, even if they
 // have such references.
-func TestDuplicateAvoidanceTrieSync(t *testing.T) {
+func TestDuplicateAvoidanceTrieSync(t *testing.T) { log.DebugLog()
 	// Create a random trie to copy
 	srcDb, srcTrie, srcData := makeTestTrie()
 
@@ -310,7 +310,7 @@ func TestDuplicateAvoidanceTrieSync(t *testing.T) {
 
 // Tests that at any point in time during a sync, only complete sub-tries are in
 // the database.
-func TestIncompleteTrieSync(t *testing.T) {
+func TestIncompleteTrieSync(t *testing.T) { log.DebugLog()
 	// Create a random trie to copy
 	srcDb, srcTrie, _ := makeTestTrie()
 

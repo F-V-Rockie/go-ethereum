@@ -77,7 +77,7 @@ The output of this command is supposed to be machine-readable.
 )
 
 // makecache generates an ethash verification cache into the provided folder.
-func makecache(ctx *cli.Context) error {
+func makecache(ctx *cli.Context) error { log.DebugLog()
 	args := ctx.Args()
 	if len(args) != 2 {
 		utils.Fatalf(`Usage: geth makecache <block number> <outputdir>`)
@@ -92,7 +92,7 @@ func makecache(ctx *cli.Context) error {
 }
 
 // makedag generates an ethash mining DAG into the provided folder.
-func makedag(ctx *cli.Context) error {
+func makedag(ctx *cli.Context) error { log.DebugLog()
 	args := ctx.Args()
 	if len(args) != 2 {
 		utils.Fatalf(`Usage: geth makedag <block number> <outputdir>`)
@@ -106,7 +106,7 @@ func makedag(ctx *cli.Context) error {
 	return nil
 }
 
-func version(ctx *cli.Context) error {
+func version(ctx *cli.Context) error { log.DebugLog()
 	fmt.Println(strings.Title(clientIdentifier))
 	fmt.Println("Version:", params.Version)
 	if gitCommit != "" {
@@ -122,7 +122,7 @@ func version(ctx *cli.Context) error {
 	return nil
 }
 
-func license(_ *cli.Context) error {
+func license(_ *cli.Context) error { log.DebugLog()
 	fmt.Println(`Geth is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or

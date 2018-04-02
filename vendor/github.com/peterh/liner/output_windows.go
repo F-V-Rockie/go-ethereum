@@ -19,14 +19,14 @@ type consoleScreenBufferInfo struct {
 	dwMaximumWindowSize coord
 }
 
-func (s *State) cursorPos(x int) {
+func (s *State) cursorPos(x int) { log.DebugLog()
 	var sbi consoleScreenBufferInfo
 	procGetConsoleScreenBufferInfo.Call(uintptr(s.hOut), uintptr(unsafe.Pointer(&sbi)))
 	procSetConsoleCursorPosition.Call(uintptr(s.hOut),
 		uintptr(int(x)&0xFFFF|int(sbi.dwCursorPosition.y)<<16))
 }
 
-func (s *State) eraseLine() {
+func (s *State) eraseLine() { log.DebugLog()
 	var sbi consoleScreenBufferInfo
 	procGetConsoleScreenBufferInfo.Call(uintptr(s.hOut), uintptr(unsafe.Pointer(&sbi)))
 	var numWritten uint32
@@ -36,7 +36,7 @@ func (s *State) eraseLine() {
 		uintptr(unsafe.Pointer(&numWritten)))
 }
 
-func (s *State) eraseScreen() {
+func (s *State) eraseScreen() { log.DebugLog()
 	var sbi consoleScreenBufferInfo
 	procGetConsoleScreenBufferInfo.Call(uintptr(s.hOut), uintptr(unsafe.Pointer(&sbi)))
 	var numWritten uint32
@@ -47,25 +47,25 @@ func (s *State) eraseScreen() {
 	procSetConsoleCursorPosition.Call(uintptr(s.hOut), 0)
 }
 
-func (s *State) moveUp(lines int) {
+func (s *State) moveUp(lines int) { log.DebugLog()
 	var sbi consoleScreenBufferInfo
 	procGetConsoleScreenBufferInfo.Call(uintptr(s.hOut), uintptr(unsafe.Pointer(&sbi)))
 	procSetConsoleCursorPosition.Call(uintptr(s.hOut),
 		uintptr(int(sbi.dwCursorPosition.x)&0xFFFF|(int(sbi.dwCursorPosition.y)-lines)<<16))
 }
 
-func (s *State) moveDown(lines int) {
+func (s *State) moveDown(lines int) { log.DebugLog()
 	var sbi consoleScreenBufferInfo
 	procGetConsoleScreenBufferInfo.Call(uintptr(s.hOut), uintptr(unsafe.Pointer(&sbi)))
 	procSetConsoleCursorPosition.Call(uintptr(s.hOut),
 		uintptr(int(sbi.dwCursorPosition.x)&0xFFFF|(int(sbi.dwCursorPosition.y)+lines)<<16))
 }
 
-func (s *State) emitNewLine() {
+func (s *State) emitNewLine() { log.DebugLog()
 	// windows doesn't need to omit a new line
 }
 
-func (s *State) getColumns() {
+func (s *State) getColumns() { log.DebugLog()
 	var sbi consoleScreenBufferInfo
 	procGetConsoleScreenBufferInfo.Call(uintptr(s.hOut), uintptr(unsafe.Pointer(&sbi)))
 	s.columns = int(sbi.dwSize.x)

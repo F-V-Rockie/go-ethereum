@@ -14,7 +14,7 @@ import (
 
 var _ = (*btHeaderMarshaling)(nil)
 
-func (b btHeader) MarshalJSON() ([]byte, error) {
+func (b btHeader) MarshalJSON() ([]byte, error) { log.DebugLog()
 	type btHeader struct {
 		Bloom            types.Bloom
 		Coinbase         common.Address
@@ -53,7 +53,7 @@ func (b btHeader) MarshalJSON() ([]byte, error) {
 	return json.Marshal(&enc)
 }
 
-func (b *btHeader) UnmarshalJSON(input []byte) error {
+func (b *btHeader) UnmarshalJSON(input []byte) error { log.DebugLog()
 	type btHeader struct {
 		Bloom            *types.Bloom
 		Coinbase         *common.Address

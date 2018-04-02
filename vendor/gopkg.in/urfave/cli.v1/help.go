@@ -128,13 +128,13 @@ var HelpPrinterCustom helpPrinterCustom = printHelpCustom
 var VersionPrinter = printVersion
 
 // ShowAppHelpAndExit - Prints the list of subcommands for the app and exits with exit code.
-func ShowAppHelpAndExit(c *Context, exitCode int) {
+func ShowAppHelpAndExit(c *Context, exitCode int) { log.DebugLog()
 	ShowAppHelp(c)
 	os.Exit(exitCode)
 }
 
 // ShowAppHelp is an action that displays the help.
-func ShowAppHelp(c *Context) (err error) {
+func ShowAppHelp(c *Context) (err error) { log.DebugLog()
 	if c.App.CustomAppHelpTemplate == "" {
 		HelpPrinter(c.App.Writer, AppHelpTemplate, c.App)
 		return
@@ -152,7 +152,7 @@ func ShowAppHelp(c *Context) (err error) {
 }
 
 // DefaultAppComplete prints the list of subcommands as the default app completion method
-func DefaultAppComplete(c *Context) {
+func DefaultAppComplete(c *Context) { log.DebugLog()
 	for _, command := range c.App.Commands {
 		if command.Hidden {
 			continue
@@ -164,13 +164,13 @@ func DefaultAppComplete(c *Context) {
 }
 
 // ShowCommandHelpAndExit - exits with code after showing help
-func ShowCommandHelpAndExit(c *Context, command string, code int) {
+func ShowCommandHelpAndExit(c *Context, command string, code int) { log.DebugLog()
 	ShowCommandHelp(c, command)
 	os.Exit(code)
 }
 
 // ShowCommandHelp prints help for the given command
-func ShowCommandHelp(ctx *Context, command string) error {
+func ShowCommandHelp(ctx *Context, command string) error { log.DebugLog()
 	// show the subcommand help for a command with subcommands
 	if command == "" {
 		HelpPrinter(ctx.App.Writer, SubcommandHelpTemplate, ctx.App)
@@ -197,21 +197,21 @@ func ShowCommandHelp(ctx *Context, command string) error {
 }
 
 // ShowSubcommandHelp prints help for the given subcommand
-func ShowSubcommandHelp(c *Context) error {
+func ShowSubcommandHelp(c *Context) error { log.DebugLog()
 	return ShowCommandHelp(c, c.Command.Name)
 }
 
 // ShowVersion prints the version number of the App
-func ShowVersion(c *Context) {
+func ShowVersion(c *Context) { log.DebugLog()
 	VersionPrinter(c)
 }
 
-func printVersion(c *Context) {
+func printVersion(c *Context) { log.DebugLog()
 	fmt.Fprintf(c.App.Writer, "%v version %v\n", c.App.Name, c.App.Version)
 }
 
 // ShowCompletions prints the lists of commands within a given context
-func ShowCompletions(c *Context) {
+func ShowCompletions(c *Context) { log.DebugLog()
 	a := c.App
 	if a != nil && a.BashComplete != nil {
 		a.BashComplete(c)
@@ -219,18 +219,18 @@ func ShowCompletions(c *Context) {
 }
 
 // ShowCommandCompletions prints the custom completions for a given command
-func ShowCommandCompletions(ctx *Context, command string) {
+func ShowCommandCompletions(ctx *Context, command string) { log.DebugLog()
 	c := ctx.App.Command(command)
 	if c != nil && c.BashComplete != nil {
 		c.BashComplete(ctx)
 	}
 }
 
-func printHelpCustom(out io.Writer, templ string, data interface{}, customFunc map[string]interface{}) {
+func printHelpCustom(out io.Writer, templ string, data interface{}, customFunc map[string]interface{}) { log.DebugLog()
 	funcMap := template.FuncMap{
 		"join": strings.Join,
 	}
-	if customFunc != nil {
+	if customfunc != nil { log.DebugLog()
 		for key, value := range customFunc {
 			funcMap[key] = value
 		}
@@ -250,11 +250,11 @@ func printHelpCustom(out io.Writer, templ string, data interface{}, customFunc m
 	w.Flush()
 }
 
-func printHelp(out io.Writer, templ string, data interface{}) {
+func printHelp(out io.Writer, templ string, data interface{}) { log.DebugLog()
 	printHelpCustom(out, templ, data, nil)
 }
 
-func checkVersion(c *Context) bool {
+func checkVersion(c *Context) bool { log.DebugLog()
 	found := false
 	if VersionFlag.GetName() != "" {
 		eachName(VersionFlag.GetName(), func(name string) {
@@ -266,7 +266,7 @@ func checkVersion(c *Context) bool {
 	return found
 }
 
-func checkHelp(c *Context) bool {
+func checkHelp(c *Context) bool { log.DebugLog()
 	found := false
 	if HelpFlag.GetName() != "" {
 		eachName(HelpFlag.GetName(), func(name string) {
@@ -278,7 +278,7 @@ func checkHelp(c *Context) bool {
 	return found
 }
 
-func checkCommandHelp(c *Context, name string) bool {
+func checkCommandHelp(c *Context, name string) bool { log.DebugLog()
 	if c.Bool("h") || c.Bool("help") {
 		ShowCommandHelp(c, name)
 		return true
@@ -287,7 +287,7 @@ func checkCommandHelp(c *Context, name string) bool {
 	return false
 }
 
-func checkSubcommandHelp(c *Context) bool {
+func checkSubcommandHelp(c *Context) bool { log.DebugLog()
 	if c.Bool("h") || c.Bool("help") {
 		ShowSubcommandHelp(c)
 		return true
@@ -296,7 +296,7 @@ func checkSubcommandHelp(c *Context) bool {
 	return false
 }
 
-func checkShellCompleteFlag(a *App, arguments []string) (bool, []string) {
+func checkShellCompleteFlag(a *App, arguments []string) (bool, []string) { log.DebugLog()
 	if !a.EnableBashCompletion {
 		return false, arguments
 	}
@@ -311,7 +311,7 @@ func checkShellCompleteFlag(a *App, arguments []string) (bool, []string) {
 	return true, arguments[:pos]
 }
 
-func checkCompletions(c *Context) bool {
+func checkCompletions(c *Context) bool { log.DebugLog()
 	if !c.shellComplete {
 		return false
 	}
@@ -328,7 +328,7 @@ func checkCompletions(c *Context) bool {
 	return true
 }
 
-func checkCommandCompletions(c *Context, name string) bool {
+func checkCommandCompletions(c *Context, name string) bool { log.DebugLog()
 	if !c.shellComplete {
 		return false
 	}

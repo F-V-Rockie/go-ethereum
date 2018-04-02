@@ -50,7 +50,7 @@ var DefaultConfig = Config{
 
 // DefaultDataDir is the default data directory to use for the databases and other
 // persistence requirements.
-func DefaultDataDir() string {
+func DefaultDataDir() string { log.DebugLog()
 	// Try to place the data folder in the user's home dir
 	home := homeDir()
 	if home != "" {
@@ -66,7 +66,7 @@ func DefaultDataDir() string {
 	return ""
 }
 
-func homeDir() string {
+func homeDir() string { log.DebugLog()
 	if home := os.Getenv("HOME"); home != "" {
 		return home
 	}

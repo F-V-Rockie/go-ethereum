@@ -33,7 +33,7 @@ type LesOdr struct {
 	stop                                       chan struct{}
 }
 
-func NewLesOdr(db ethdb.Database, chtIndexer, bloomTrieIndexer, bloomIndexer *core.ChainIndexer, retriever *retrieveManager) *LesOdr {
+func NewLesOdr(db ethdb.Database, chtIndexer, bloomTrieIndexer, bloomIndexer *core.ChainIndexer, retriever *retrieveManager) *LesOdr { log.DebugLog()
 	return &LesOdr{
 		db:               db,
 		chtIndexer:       chtIndexer,
@@ -45,27 +45,27 @@ func NewLesOdr(db ethdb.Database, chtIndexer, bloomTrieIndexer, bloomIndexer *co
 }
 
 // Stop cancels all pending retrievals
-func (odr *LesOdr) Stop() {
+func (odr *LesOdr) Stop() { log.DebugLog()
 	close(odr.stop)
 }
 
 // Database returns the backing database
-func (odr *LesOdr) Database() ethdb.Database {
+func (odr *LesOdr) Database() ethdb.Database { log.DebugLog()
 	return odr.db
 }
 
 // ChtIndexer returns the CHT chain indexer
-func (odr *LesOdr) ChtIndexer() *core.ChainIndexer {
+func (odr *LesOdr) ChtIndexer() *core.ChainIndexer { log.DebugLog()
 	return odr.chtIndexer
 }
 
 // BloomTrieIndexer returns the bloom trie chain indexer
-func (odr *LesOdr) BloomTrieIndexer() *core.ChainIndexer {
+func (odr *LesOdr) BloomTrieIndexer() *core.ChainIndexer { log.DebugLog()
 	return odr.bloomTrieIndexer
 }
 
 // BloomIndexer returns the bloombits chain indexer
-func (odr *LesOdr) BloomIndexer() *core.ChainIndexer {
+func (odr *LesOdr) BloomIndexer() *core.ChainIndexer { log.DebugLog()
 	return odr.bloomIndexer
 }
 
@@ -88,7 +88,7 @@ type Msg struct {
 
 // Retrieve tries to fetch an object from the LES network.
 // If the network retrieval was successful, it stores the object in local db.
-func (odr *LesOdr) Retrieve(ctx context.Context, req light.OdrRequest) (err error) {
+func (odr *LesOdr) Retrieve(ctx context.Context, req light.OdrRequest) (err error) { log.DebugLog()
 	lreq := LesRequest(req)
 
 	reqID := genReqID()

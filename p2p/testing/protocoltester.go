@@ -52,7 +52,7 @@ type ProtocolTester struct {
 // NewProtocolTester constructs a new ProtocolTester
 // it takes as argument the pivot node id, the number of dummy peers and the
 // protocol run function called on a peer connection by the p2p server
-func NewProtocolTester(t *testing.T, id discover.NodeID, n int, run func(*p2p.Peer, p2p.MsgReadWriter) error) *ProtocolTester {
+func NewProtocolTester(t *testing.T, id discover.NodeID, n int, run func(*p2p.Peer, p2p.MsgReadWriter) error) *ProtocolTester { log.DebugLog()
 	services := adapters.Services{
 		"test": func(ctx *adapters.ServiceContext) (node.Service, error) {
 			return &testNode{run}, nil
@@ -101,14 +101,14 @@ func NewProtocolTester(t *testing.T, id discover.NodeID, n int, run func(*p2p.Pe
 }
 
 // Stop stops the p2p server
-func (self *ProtocolTester) Stop() error {
+func (self *ProtocolTester) Stop() error { log.DebugLog()
 	self.Server.Stop()
 	return nil
 }
 
 // Connect brings up the remote peer node and connects it using the
 // p2p/simulations network connection with the in memory network adapter
-func (self *ProtocolTester) Connect(selfID discover.NodeID, peers ...*adapters.NodeConfig) {
+func (self *ProtocolTester) Connect(selfID discover.NodeID, peers ...*adapters.NodeConfig) { log.DebugLog()
 	for _, peer := range peers {
 		log.Trace(fmt.Sprintf("start node %v", peer.ID))
 		if _, err := self.network.NewNodeWithConfig(peer); err != nil {
@@ -131,22 +131,22 @@ type testNode struct {
 	run func(*p2p.Peer, p2p.MsgReadWriter) error
 }
 
-func (t *testNode) Protocols() []p2p.Protocol {
+func (t *testNode) Protocols() []p2p.Protocol { log.DebugLog()
 	return []p2p.Protocol{{
 		Length: 100,
 		Run:    t.run,
 	}}
 }
 
-func (t *testNode) APIs() []rpc.API {
+func (t *testNode) APIs() []rpc.API { log.DebugLog()
 	return nil
 }
 
-func (t *testNode) Start(server *p2p.Server) error {
+func (t *testNode) Start(server *p2p.Server) error { log.DebugLog()
 	return nil
 }
 
-func (t *testNode) Stop() error {
+func (t *testNode) Stop() error { log.DebugLog()
 	return nil
 }
 
@@ -163,7 +163,7 @@ type mockNode struct {
 	stopOnce sync.Once
 }
 
-func newMockNode() *mockNode {
+func newMockNode() *mockNode { log.DebugLog()
 	mock := &mockNode{
 		trigger: make(chan *Trigger),
 		expect:  make(chan []Expect),
@@ -176,7 +176,7 @@ func newMockNode() *mockNode {
 
 // Run is a protocol run function which just loops waiting for tests to
 // instruct it to either trigger or expect a message from the peer
-func (m *mockNode) Run(peer *p2p.Peer, rw p2p.MsgReadWriter) error {
+func (m *mockNode) Run(peer *p2p.Peer, rw p2p.MsgReadWriter) error { log.DebugLog()
 	for {
 		select {
 		case trig := <-m.trigger:
@@ -189,22 +189,22 @@ func (m *mockNode) Run(peer *p2p.Peer, rw p2p.MsgReadWriter) error {
 	}
 }
 
-func (m *mockNode) Trigger(trig *Trigger) error {
+func (m *mockNode) Trigger(trig *Trigger) error { log.DebugLog()
 	m.trigger <- trig
 	return <-m.err
 }
 
-func (m *mockNode) Expect(exp ...Expect) error {
+func (m *mockNode) Expect(exp ...Expect) error { log.DebugLog()
 	m.expect <- exp
 	return <-m.err
 }
 
-func (m *mockNode) Stop() error {
+func (m *mockNode) Stop() error { log.DebugLog()
 	m.stopOnce.Do(func() { close(m.stop) })
 	return nil
 }
 
-func expectMsgs(rw p2p.MsgReadWriter, exps []Expect) error {
+func expectMsgs(rw p2p.MsgReadWriter, exps []Expect) error { log.DebugLog()
 	matched := make([]bool, len(exps))
 	for {
 		msg, err := rw.ReadMsg()
@@ -260,7 +260,7 @@ func expectMsgs(rw p2p.MsgReadWriter, exps []Expect) error {
 
 // mustEncodeMsg uses rlp to encode a message.
 // In case of error it panics.
-func mustEncodeMsg(msg interface{}) []byte {
+func mustEncodeMsg(msg interface{}) []byte { log.DebugLog()
 	contentEnc, err := rlp.EncodeToBytes(msg)
 	if err != nil {
 		panic("content encode error: " + err.Error())

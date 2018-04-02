@@ -29,7 +29,7 @@ const (
 
 type EventType int8
 
-func (et EventType) String() string {
+func (et EventType) String() string { log.DebugLog()
 	switch et {
 	case EventAlive:
 		return "EventAlive"
@@ -82,7 +82,7 @@ type Entry struct {
 	CacheExpiry time.Time
 }
 
-func newEntryFromRequest(r *http.Request) (*Entry, error) {
+func newEntryFromRequest(r *http.Request) (*Entry, error) { log.DebugLog()
 	now := time.Now()
 	expiryDuration, err := parseCacheControlMaxAge(r.Header.Get("CACHE-CONTROL"))
 	if err != nil {
@@ -126,7 +126,7 @@ func newEntryFromRequest(r *http.Request) (*Entry, error) {
 	}, nil
 }
 
-func parseCacheControlMaxAge(cc string) (time.Duration, error) {
+func parseCacheControlMaxAge(cc string) (time.Duration, error) { log.DebugLog()
 	matches := maxAgeRx.FindStringSubmatch(cc)
 	if len(matches) != 2 {
 		return 0, fmt.Errorf("did not find exactly one max-age in cache control header: %q", cc)
@@ -144,7 +144,7 @@ func parseCacheControlMaxAge(cc string) (time.Duration, error) {
 // parseUpnpIntHeader is intended to parse the
 // {BOOT,CONFIGID,SEARCHPORT}.UPNP.ORG header fields. It returns the def if
 // the head is empty or missing.
-func parseUpnpIntHeader(headers http.Header, headerName string, def int32) (int32, error) {
+func parseUpnpIntHeader(headers http.Header, headerName string, def int32) (int32, error) { log.DebugLog()
 	s := headers.Get(headerName)
 	if s == "" {
 		return def, nil
@@ -170,7 +170,7 @@ type Registry struct {
 	listeners     map[chan<- Update]struct{}
 }
 
-func NewRegistry() *Registry {
+func NewRegistry() *Registry { log.DebugLog()
 	return &Registry{
 		byUSN:     make(map[string]*Entry),
 		listeners: make(map[chan<- Update]struct{}),
@@ -180,7 +180,7 @@ func NewRegistry() *Registry {
 // NewServerAndRegistry is a convenience function to create a registry, and an
 // httpu server to pass it messages. Call ListenAndServe on the server for
 // messages to be processed.
-func NewServerAndRegistry() (*httpu.Server, *Registry) {
+func NewServerAndRegistry() (*httpu.Server, *Registry) { log.DebugLog()
 	reg := NewRegistry()
 	srv := &httpu.Server{
 		Addr:      ssdpUDP4Addr,
@@ -190,19 +190,19 @@ func NewServerAndRegistry() (*httpu.Server, *Registry) {
 	return srv, reg
 }
 
-func (reg *Registry) AddListener(c chan<- Update) {
+func (reg *Registry) AddListener(c chan<- Update) { log.DebugLog()
 	reg.listenersLock.Lock()
 	defer reg.listenersLock.Unlock()
 	reg.listeners[c] = struct{}{}
 }
 
-func (reg *Registry) RemoveListener(c chan<- Update) {
+func (reg *Registry) RemoveListener(c chan<- Update) { log.DebugLog()
 	reg.listenersLock.Lock()
 	defer reg.listenersLock.Unlock()
 	delete(reg.listeners, c)
 }
 
-func (reg *Registry) sendUpdate(u Update) {
+func (reg *Registry) sendUpdate(u Update) { log.DebugLog()
 	reg.listenersLock.RLock()
 	defer reg.listenersLock.RUnlock()
 	for c := range reg.listeners {
@@ -212,7 +212,7 @@ func (reg *Registry) sendUpdate(u Update) {
 
 // GetService returns known service (or device) entries for the given service
 // URN.
-func (reg *Registry) GetService(serviceURN string) []*Entry {
+func (reg *Registry) GetService(serviceURN string) []*Entry { log.DebugLog()
 	// Currently assumes that the map is small, so we do a linear search rather
 	// than indexed to avoid maintaining two maps.
 	var results []*Entry
@@ -228,7 +228,7 @@ func (reg *Registry) GetService(serviceURN string) []*Entry {
 
 // ServeMessage implements httpu.Handler, and uses SSDP NOTIFY requests to
 // maintain the registry of devices and services.
-func (reg *Registry) ServeMessage(r *http.Request) {
+func (reg *Registry) ServeMessage(r *http.Request) { log.DebugLog()
 	if r.Method != methodNotify {
 		return
 	}
@@ -251,7 +251,7 @@ func (reg *Registry) ServeMessage(r *http.Request) {
 	}
 }
 
-func (reg *Registry) handleNTSAlive(r *http.Request) error {
+func (reg *Registry) handleNTSAlive(r *http.Request) error { log.DebugLog()
 	entry, err := newEntryFromRequest(r)
 	if err != nil {
 		return err
@@ -270,7 +270,7 @@ func (reg *Registry) handleNTSAlive(r *http.Request) error {
 	return nil
 }
 
-func (reg *Registry) handleNTSUpdate(r *http.Request) error {
+func (reg *Registry) handleNTSUpdate(r *http.Request) error { log.DebugLog()
 	entry, err := newEntryFromRequest(r)
 	if err != nil {
 		return err
@@ -294,7 +294,7 @@ func (reg *Registry) handleNTSUpdate(r *http.Request) error {
 	return nil
 }
 
-func (reg *Registry) handleNTSByebye(r *http.Request) error {
+func (reg *Registry) handleNTSByebye(r *http.Request) error { log.DebugLog()
 	usn := r.Header.Get("USN")
 
 	reg.lock.Lock()

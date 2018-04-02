@@ -28,7 +28,7 @@ import (
 
 var dumper = spew.ConfigState{Indent: "    "}
 
-func TestStorageRangeAt(t *testing.T) {
+func TestStorageRangeAt(t *testing.T) { log.DebugLog()
 	// Create a state where account 0x010000... has a few storage entries.
 	var (
 		db, _    = ethdb.NewMemDatabase()

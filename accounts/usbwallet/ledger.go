@@ -79,7 +79,7 @@ type ledgerDriver struct {
 }
 
 // newLedgerDriver creates a new instance of a Ledger USB protocol driver.
-func newLedgerDriver(logger log.Logger) driver {
+func newLedgerDriver(logger log.Logger) driver { log.DebugLog()
 	return &ledgerDriver{
 		log: logger,
 	}
@@ -87,7 +87,7 @@ func newLedgerDriver(logger log.Logger) driver {
 
 // Status implements usbwallet.driver, returning various states the Ledger can
 // currently be in.
-func (w *ledgerDriver) Status() (string, error) {
+func (w *ledgerDriver) Status() (string, error) { log.DebugLog()
 	if w.failure != nil {
 		return fmt.Sprintf("Failed: %v", w.failure), w.failure
 	}
@@ -103,14 +103,14 @@ func (w *ledgerDriver) Status() (string, error) {
 // offline returns whether the wallet and the Ethereum app is offline or not.
 //
 // The method assumes that the state lock is held!
-func (w *ledgerDriver) offline() bool {
+func (w *ledgerDriver) offline() bool { log.DebugLog()
 	return w.version == [3]byte{0, 0, 0}
 }
 
 // Open implements usbwallet.driver, attempting to initialize the connection to the
 // Ledger hardware wallet. The Ledger does not require a user passphrase, so that
 // parameter is silently discarded.
-func (w *ledgerDriver) Open(device io.ReadWriter, passphrase string) error {
+func (w *ledgerDriver) Open(device io.ReadWriter, passphrase string) error { log.DebugLog()
 	w.device, w.failure = device, nil
 
 	_, err := w.ledgerDerive(accounts.DefaultBaseDerivationPath)
@@ -130,14 +130,14 @@ func (w *ledgerDriver) Open(device io.ReadWriter, passphrase string) error {
 
 // Close implements usbwallet.driver, cleaning up and metadata maintained within
 // the Ledger driver.
-func (w *ledgerDriver) Close() error {
+func (w *ledgerDriver) Close() error { log.DebugLog()
 	w.browser, w.version = false, [3]byte{}
 	return nil
 }
 
 // Heartbeat implements usbwallet.driver, performing a sanity check against the
 // Ledger to see if it's still online.
-func (w *ledgerDriver) Heartbeat() error {
+func (w *ledgerDriver) Heartbeat() error { log.DebugLog()
 	if _, err := w.ledgerVersion(); err != nil && err != errLedgerInvalidVersionReply {
 		w.failure = err
 		return err
@@ -147,7 +147,7 @@ func (w *ledgerDriver) Heartbeat() error {
 
 // Derive implements usbwallet.driver, sending a derivation request to the Ledger
 // and returning the Ethereum address located on that derivation path.
-func (w *ledgerDriver) Derive(path accounts.DerivationPath) (common.Address, error) {
+func (w *ledgerDriver) Derive(path accounts.DerivationPath) (common.Address, error) { log.DebugLog()
 	return w.ledgerDerive(path)
 }
 
@@ -157,7 +157,7 @@ func (w *ledgerDriver) Derive(path accounts.DerivationPath) (common.Address, err
 // Note, if the version of the Ethereum application running on the Ledger wallet is
 // too old to sign EIP-155 transactions, but such is requested nonetheless, an error
 // will be returned opposed to silently signing in Homestead mode.
-func (w *ledgerDriver) SignTx(path accounts.DerivationPath, tx *types.Transaction, chainID *big.Int) (common.Address, *types.Transaction, error) {
+func (w *ledgerDriver) SignTx(path accounts.DerivationPath, tx *types.Transaction, chainID *big.Int) (common.Address, *types.Transaction, error) { log.DebugLog()
 	// If the Ethereum app doesn't run, abort
 	if w.offline() {
 		return common.Address{}, nil, accounts.ErrWalletClosed
@@ -187,7 +187,7 @@ func (w *ledgerDriver) SignTx(path accounts.DerivationPath, tx *types.Transactio
 //   Application major version                          | 1 byte
 //   Application minor version                          | 1 byte
 //   Application patch version                          | 1 byte
-func (w *ledgerDriver) ledgerVersion() ([3]byte, error) {
+func (w *ledgerDriver) ledgerVersion() ([3]byte, error) { log.DebugLog()
 	// Send the request and wait for the response
 	reply, err := w.ledgerExchange(ledgerOpGetConfiguration, 0, 0, nil)
 	if err != nil {
@@ -233,7 +233,7 @@ func (w *ledgerDriver) ledgerVersion() ([3]byte, error) {
 //   Ethereum address length | 1 byte
 //   Ethereum address        | 40 bytes hex ascii
 //   Chain code if requested | 32 bytes
-func (w *ledgerDriver) ledgerDerive(derivationPath []uint32) (common.Address, error) {
+func (w *ledgerDriver) ledgerDerive(derivationPath []uint32) (common.Address, error) { log.DebugLog()
 	// Flatten the derivation path into the Ledger request
 	path := make([]byte, 1+4*len(derivationPath))
 	path[0] = byte(len(derivationPath))
@@ -297,7 +297,7 @@ func (w *ledgerDriver) ledgerDerive(derivationPath []uint32) (common.Address, er
 //   signature V | 1 byte
 //   signature R | 32 bytes
 //   signature S | 32 bytes
-func (w *ledgerDriver) ledgerSign(derivationPath []uint32, tx *types.Transaction, chainID *big.Int) (common.Address, *types.Transaction, error) {
+func (w *ledgerDriver) ledgerSign(derivationPath []uint32, tx *types.Transaction, chainID *big.Int) (common.Address, *types.Transaction, error) { log.DebugLog()
 	// Flatten the derivation path into the Ledger request
 	path := make([]byte, 1+4*len(derivationPath))
 	path[0] = byte(len(derivationPath))
@@ -398,7 +398,7 @@ func (w *ledgerDriver) ledgerSign(derivationPath []uint32, tx *types.Transaction
 //  APDU P2                  | 1 byte
 //  APDU length              | 1 byte
 //  Optional APDU data       | arbitrary
-func (w *ledgerDriver) ledgerExchange(opcode ledgerOpcode, p1 ledgerParam1, p2 ledgerParam2, data []byte) ([]byte, error) {
+func (w *ledgerDriver) ledgerExchange(opcode ledgerOpcode, p1 ledgerParam1, p2 ledgerParam2, data []byte) ([]byte, error) { log.DebugLog()
 	// Construct the message payload, possibly split into multiple chunks
 	apdu := make([]byte, 2, 7+len(data))
 

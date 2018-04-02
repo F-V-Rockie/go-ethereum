@@ -76,7 +76,7 @@ type client struct {
 }
 
 // New creates a new dashboard instance with the given configuration.
-func New(config *Config, commit string) (*Dashboard, error) {
+func New(config *Config, commit string) (*Dashboard, error) { log.DebugLog()
 	now := time.Now()
 	db := &Dashboard{
 		conns:  make(map[uint32]*client),
@@ -98,7 +98,7 @@ func New(config *Config, commit string) (*Dashboard, error) {
 }
 
 // emptyChartEntries returns a ChartEntry array containing limit number of empty samples.
-func emptyChartEntries(t time.Time, limit int, refresh time.Duration) ChartEntries {
+func emptyChartEntries(t time.Time, limit int, refresh time.Duration) ChartEntries { log.DebugLog()
 	ce := make(ChartEntries, limit)
 	for i := 0; i < limit; i++ {
 		ce[i] = &ChartEntry{
@@ -109,13 +109,13 @@ func emptyChartEntries(t time.Time, limit int, refresh time.Duration) ChartEntri
 }
 
 // Protocols is a meaningless implementation of node.Service.
-func (db *Dashboard) Protocols() []p2p.Protocol { return nil }
+func (db *Dashboard) Protocols() []p2p.Protocol { log.DebugLog() return nil }
 
 // APIs is a meaningless implementation of node.Service.
-func (db *Dashboard) APIs() []rpc.API { return nil }
+func (db *Dashboard) APIs() []rpc.API { log.DebugLog() return nil }
 
 // Start implements node.Service, starting the data collection thread and the listening server of the dashboard.
-func (db *Dashboard) Start(server *p2p.Server) error {
+func (db *Dashboard) Start(server *p2p.Server) error { log.DebugLog()
 	log.Info("Starting dashboard")
 
 	db.wg.Add(2)
@@ -137,7 +137,7 @@ func (db *Dashboard) Start(server *p2p.Server) error {
 }
 
 // Stop implements node.Service, stopping the data collection thread and the connection listener of the dashboard.
-func (db *Dashboard) Stop() error {
+func (db *Dashboard) Stop() error { log.DebugLog()
 	// Close the connection listener.
 	var errs []error
 	if err := db.listener.Close(); err != nil {
@@ -173,7 +173,7 @@ func (db *Dashboard) Stop() error {
 }
 
 // webHandler handles all non-api requests, simply flattening and returning the dashboard website.
-func (db *Dashboard) webHandler(w http.ResponseWriter, r *http.Request) {
+func (db *Dashboard) webHandler(w http.ResponseWriter, r *http.Request) { log.DebugLog()
 	log.Debug("Request", "URL", r.URL)
 
 	path := r.URL.String()
@@ -190,7 +190,7 @@ func (db *Dashboard) webHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // apiHandler handles requests for the dashboard.
-func (db *Dashboard) apiHandler(conn *websocket.Conn) {
+func (db *Dashboard) apiHandler(conn *websocket.Conn) { log.DebugLog()
 	id := atomic.AddUint32(&nextID, 1)
 	client := &client{
 		conn:   conn,
@@ -259,7 +259,7 @@ func (db *Dashboard) apiHandler(conn *websocket.Conn) {
 }
 
 // collectData collects the required data to plot on the dashboard.
-func (db *Dashboard) collectData() {
+func (db *Dashboard) collectData() { log.DebugLog()
 	defer db.wg.Done()
 	systemCPUUsage := gosigar.Cpu{}
 	systemCPUUsage.Get()
@@ -367,7 +367,7 @@ func (db *Dashboard) collectData() {
 }
 
 // collectLogs collects and sends the logs to the active dashboards.
-func (db *Dashboard) collectLogs() {
+func (db *Dashboard) collectLogs() { log.DebugLog()
 	defer db.wg.Done()
 
 	id := 1
@@ -389,7 +389,7 @@ func (db *Dashboard) collectLogs() {
 }
 
 // sendToAll sends the given message to the active dashboards.
-func (db *Dashboard) sendToAll(msg *Message) {
+func (db *Dashboard) sendToAll(msg *Message) { log.DebugLog()
 	db.lock.Lock()
 	for _, c := range db.conns {
 		select {

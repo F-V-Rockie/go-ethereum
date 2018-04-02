@@ -9,7 +9,7 @@ import (
 )
 
 // LoadToken restores a Token object from a file located at 'path'.
-func LoadToken(path string) (*Token, error) {
+func LoadToken(path string) (*Token, error) { log.DebugLog()
 	file, err := os.Open(path)
 	if err != nil {
 		return nil, fmt.Errorf("failed to open file (%s) while loading token: %v", path, err)
@@ -28,7 +28,7 @@ func LoadToken(path string) (*Token, error) {
 // SaveToken persists an oauth token at the given location on disk.
 // It moves the new file into place so it can safely be used to replace an existing file
 // that maybe accessed by multiple processes.
-func SaveToken(path string, mode os.FileMode, token Token) error {
+func SaveToken(path string, mode os.FileMode, token Token) error { log.DebugLog()
 	dir := filepath.Dir(path)
 	err := os.MkdirAll(dir, os.ModePerm)
 	if err != nil {

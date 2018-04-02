@@ -30,7 +30,7 @@ import (
 	"testing"
 )
 
-func getnacl() (string, error) {
+func getnacl() (string, error) { log.DebugLog()
 	switch runtime.GOARCH {
 	case "amd64":
 		_, err := exec.LookPath("sel_ldr_x86_64")
@@ -48,7 +48,7 @@ func getnacl() (string, error) {
 //
 // This function must be called from a Test* function
 // and the caller must skip the actual test when isHost is true.
-func runWithPlaygroundTime(t *testing.T) (isHost bool) {
+func runWithPlaygroundTime(t *testing.T) (isHost bool) { log.DebugLog()
 	if runtime.GOOS == "nacl" {
 		return false
 	}
@@ -59,7 +59,7 @@ func runWithPlaygroundTime(t *testing.T) (isHost bool) {
 		panic("can't get caller")
 	}
 	callerFunc := runtime.FuncForPC(callerPC)
-	if callerFunc == nil {
+	if callerfunc == nil { log.DebugLog()
 		panic("can't get caller")
 	}
 	callerName := callerFunc.Name()[strings.LastIndexByte(callerFunc.Name(), '.')+1:]
@@ -91,7 +91,7 @@ func runWithPlaygroundTime(t *testing.T) (isHost bool) {
 	return true
 }
 
-func skipPlaygroundOutputHeaders(out io.Writer, in io.Reader) {
+func skipPlaygroundOutputHeaders(out io.Writer, in io.Reader) { log.DebugLog()
 	// Additional output can be printed without the headers
 	// before the NaCl binary starts running (e.g. compiler error messages).
 	bufin := bufio.NewReader(in)

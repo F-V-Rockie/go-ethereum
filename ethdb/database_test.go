@@ -28,7 +28,7 @@ import (
 	"github.com/ethereum/go-ethereum/ethdb"
 )
 
-func newTestLDB() (*ethdb.LDBDatabase, func()) {
+func newTestLDB() (*ethdb.LDBDatabase, func()) { log.DebugLog()
 	dirname, err := ioutil.TempDir(os.TempDir(), "ethdb_test_")
 	if err != nil {
 		panic("failed to create test file: " + err.Error())
@@ -46,18 +46,18 @@ func newTestLDB() (*ethdb.LDBDatabase, func()) {
 
 var test_values = []string{"", "a", "1251", "\x00123\x00"}
 
-func TestLDB_PutGet(t *testing.T) {
+func TestLDB_PutGet(t *testing.T) { log.DebugLog()
 	db, remove := newTestLDB()
 	defer remove()
 	testPutGet(db, t)
 }
 
-func TestMemoryDB_PutGet(t *testing.T) {
+func TestMemoryDB_PutGet(t *testing.T) { log.DebugLog()
 	db, _ := ethdb.NewMemDatabase()
 	testPutGet(db, t)
 }
 
-func testPutGet(db ethdb.Database, t *testing.T) {
+func testPutGet(db ethdb.Database, t *testing.T) { log.DebugLog()
 	t.Parallel()
 
 	for _, v := range test_values {
@@ -124,18 +124,18 @@ func testPutGet(db ethdb.Database, t *testing.T) {
 	}
 }
 
-func TestLDB_ParallelPutGet(t *testing.T) {
+func TestLDB_ParallelPutGet(t *testing.T) { log.DebugLog()
 	db, remove := newTestLDB()
 	defer remove()
 	testParallelPutGet(db, t)
 }
 
-func TestMemoryDB_ParallelPutGet(t *testing.T) {
+func TestMemoryDB_ParallelPutGet(t *testing.T) { log.DebugLog()
 	db, _ := ethdb.NewMemDatabase()
 	testParallelPutGet(db, t)
 }
 
-func testParallelPutGet(db ethdb.Database, t *testing.T) {
+func testParallelPutGet(db ethdb.Database, t *testing.T) { log.DebugLog()
 	const n = 8
 	var pending sync.WaitGroup
 

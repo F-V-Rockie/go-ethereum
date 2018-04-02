@@ -29,7 +29,7 @@ import (
 // TestNetworkSimulation creates a multi-node simulation network with each node
 // connected in a ring topology, checks that all nodes successfully handshake
 // with each other and that a snapshot fully represents the desired topology
-func TestNetworkSimulation(t *testing.T) {
+func TestNetworkSimulation(t *testing.T) { log.DebugLog()
 	// create simulation network with 20 testService nodes
 	adapter := adapters.NewSimAdapter(adapters.Services{
 		"test": newTestService,
@@ -139,7 +139,7 @@ func TestNetworkSimulation(t *testing.T) {
 	}
 }
 
-func triggerChecks(ctx context.Context, ids []discover.NodeID, trigger chan discover.NodeID, interval time.Duration) {
+func triggerChecks(ctx context.Context, ids []discover.NodeID, trigger chan discover.NodeID, interval time.Duration) { log.DebugLog()
 	tick := time.NewTicker(interval)
 	defer tick.Stop()
 	for {

@@ -2,7 +2,7 @@ package metrics
 
 import "testing"
 
-func BenchmarkHistogram(b *testing.B) {
+func BenchmarkHistogram(b *testing.B) { log.DebugLog()
 	h := NewHistogram(NewUniformSample(100))
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -10,7 +10,7 @@ func BenchmarkHistogram(b *testing.B) {
 	}
 }
 
-func TestGetOrRegisterHistogram(t *testing.T) {
+func TestGetOrRegisterHistogram(t *testing.T) { log.DebugLog()
 	r := NewRegistry()
 	s := NewUniformSample(100)
 	NewRegisteredHistogram("foo", r, s).Update(47)
@@ -19,7 +19,7 @@ func TestGetOrRegisterHistogram(t *testing.T) {
 	}
 }
 
-func TestHistogram10000(t *testing.T) {
+func TestHistogram10000(t *testing.T) { log.DebugLog()
 	h := NewHistogram(NewUniformSample(100000))
 	for i := 1; i <= 10000; i++ {
 		h.Update(int64(i))
@@ -27,7 +27,7 @@ func TestHistogram10000(t *testing.T) {
 	testHistogram10000(t, h)
 }
 
-func TestHistogramEmpty(t *testing.T) {
+func TestHistogramEmpty(t *testing.T) { log.DebugLog()
 	h := NewHistogram(NewUniformSample(100))
 	if count := h.Count(); 0 != count {
 		t.Errorf("h.Count(): 0 != %v\n", count)
@@ -56,7 +56,7 @@ func TestHistogramEmpty(t *testing.T) {
 	}
 }
 
-func TestHistogramSnapshot(t *testing.T) {
+func TestHistogramSnapshot(t *testing.T) { log.DebugLog()
 	h := NewHistogram(NewUniformSample(100000))
 	for i := 1; i <= 10000; i++ {
 		h.Update(int64(i))
@@ -66,7 +66,7 @@ func TestHistogramSnapshot(t *testing.T) {
 	testHistogram10000(t, snapshot)
 }
 
-func testHistogram10000(t *testing.T, h Histogram) {
+func testHistogram10000(t *testing.T, h Histogram) { log.DebugLog()
 	if count := h.Count(); 10000 != count {
 		t.Errorf("h.Count(): 10000 != %v\n", count)
 	}

@@ -71,7 +71,7 @@ type Backend interface {
 	CurrentBlock() *types.Block
 }
 
-func GetAPIs(apiBackend Backend) []rpc.API {
+func GetAPIs(apiBackend Backend) []rpc.API { log.DebugLog()
 	nonceLock := new(AddrLocker)
 	return []rpc.API{
 		{

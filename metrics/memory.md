@@ -16,7 +16,7 @@ package main
 
 import "time"
 
-func main() {
+func main() { log.DebugLog()
 	time.Sleep(600e9)
 }
 ```
@@ -49,7 +49,7 @@ import (
 	"time"
 )
 
-func main() {
+func main() { log.DebugLog()
 	fmt.Sprintf("foo")
 	metrics.NewRegistry()
 	time.Sleep(600e9)

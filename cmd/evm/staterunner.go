@@ -46,7 +46,7 @@ type StatetestResult struct {
 	State *state.Dump `json:"state,omitempty"`
 }
 
-func stateTestCmd(ctx *cli.Context) error {
+func stateTestCmd(ctx *cli.Context) error { log.DebugLog()
 	if len(ctx.Args().First()) == 0 {
 		return errors.New("path-to-test argument required")
 	}

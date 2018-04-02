@@ -60,11 +60,11 @@ type CaseError struct {
 }
 
 //we init the error handling right on boot time, so lookup and http response is fast
-func init() {
+func init() { log.DebugLog()
 	initErrHandling()
 }
 
-func initErrHandling() {
+func initErrHandling() { log.DebugLog()
 	//pages are saved as strings - get these strings
 	genErrPage := GetGenericErrorPage()
 	notFoundPage := GetNotFoundErrorPage()
@@ -97,7 +97,7 @@ func initErrHandling() {
 
 //ValidateCaseErrors is a method that process the request object through certain validators
 //that assert if certain conditions are met for further information to log as an error
-func ValidateCaseErrors(r *Request) string {
+func ValidateCaseErrors(r *Request) string { log.DebugLog()
 	for _, err := range caseErrors {
 		if err.Validator(r) {
 			return err.Msg(r)
@@ -113,7 +113,7 @@ func ValidateCaseErrors(r *Request) string {
 //For example, if the user requests bzz:/<hash>/read and that manifest contains entries
 //"readme.md" and "readinglist.txt", a HTML page is returned with this two links.
 //This only applies if the manifest has no default entry
-func ShowMultipleChoices(w http.ResponseWriter, r *Request, list api.ManifestList) {
+func ShowMultipleChoices(w http.ResponseWriter, r *Request, list api.ManifestList) { log.DebugLog()
 	msg := ""
 	if list.Entries == nil {
 		ShowError(w, r, "Could not resolve", http.StatusInternalServerError)
@@ -146,7 +146,7 @@ func ShowMultipleChoices(w http.ResponseWriter, r *Request, list api.ManifestLis
 //The function just takes a string message which will be displayed in the error page.
 //The code is used to evaluate which template will be displayed
 //(and return the correct HTTP status code)
-func ShowError(w http.ResponseWriter, r *Request, msg string, code int) {
+func ShowError(w http.ResponseWriter, r *Request, msg string, code int) { log.DebugLog()
 	additionalMessage := ValidateCaseErrors(r)
 	if code == http.StatusInternalServerError {
 		log.Error(msg)
@@ -161,7 +161,7 @@ func ShowError(w http.ResponseWriter, r *Request, msg string, code int) {
 }
 
 //evaluate if client accepts html or json response
-func respond(w http.ResponseWriter, r *http.Request, params *ErrorParams) {
+func respond(w http.ResponseWriter, r *http.Request, params *ErrorParams) { log.DebugLog()
 	w.WriteHeader(params.Code)
 	if r.Header.Get("Accept") == "application/json" {
 		respondJson(w, params)
@@ -171,7 +171,7 @@ func respond(w http.ResponseWriter, r *http.Request, params *ErrorParams) {
 }
 
 //return a HTML page
-func respondHtml(w http.ResponseWriter, params *ErrorParams) {
+func respondHtml(w http.ResponseWriter, params *ErrorParams) { log.DebugLog()
 	htmlCounter.Inc(1)
 	err := params.template.Execute(w, params)
 	if err != nil {
@@ -180,14 +180,14 @@ func respondHtml(w http.ResponseWriter, params *ErrorParams) {
 }
 
 //return JSON
-func respondJson(w http.ResponseWriter, params *ErrorParams) {
+func respondJson(w http.ResponseWriter, params *ErrorParams) { log.DebugLog()
 	jsonCounter.Inc(1)
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(params)
 }
 
 //get the HTML template for a given code
-func getTemplate(code int) *template.Template {
+func getTemplate(code int) *template.Template { log.DebugLog()
 	if val, tmpl := templateMap[code]; tmpl {
 		return val
 	} else {

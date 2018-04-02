@@ -59,7 +59,7 @@ type Filter struct {
 
 // New creates a new filter which uses a bloom filter on blocks to figure out whether
 // a particular block is interesting or not.
-func New(backend Backend, begin, end int64, addresses []common.Address, topics [][]common.Hash) *Filter {
+func New(backend Backend, begin, end int64, addresses []common.Address, topics [][]common.Hash) *Filter { log.DebugLog()
 	// Flatten the address and topic filter clauses into a single bloombits filter
 	// system. Since the bloombits are not positional, nil topics are permitted,
 	// which get flattened into a nil byte slice.
@@ -94,7 +94,7 @@ func New(backend Backend, begin, end int64, addresses []common.Address, topics [
 
 // Logs searches the blockchain for matching log entries, returning all from the
 // first block that contains matches, updating the start of the filter accordingly.
-func (f *Filter) Logs(ctx context.Context) ([]*types.Log, error) {
+func (f *Filter) Logs(ctx context.Context) ([]*types.Log, error) { log.DebugLog()
 	// Figure out the limits of the filter range
 	header, _ := f.backend.HeaderByNumber(ctx, rpc.LatestBlockNumber)
 	if header == nil {
@@ -132,7 +132,7 @@ func (f *Filter) Logs(ctx context.Context) ([]*types.Log, error) {
 
 // indexedLogs returns the logs matching the filter criteria based on the bloom
 // bits indexed available locally or via the network.
-func (f *Filter) indexedLogs(ctx context.Context, end uint64) ([]*types.Log, error) {
+func (f *Filter) indexedLogs(ctx context.Context, end uint64) ([]*types.Log, error) { log.DebugLog()
 	// Create a matcher session and request servicing from the backend
 	matches := make(chan uint64, 64)
 
@@ -179,7 +179,7 @@ func (f *Filter) indexedLogs(ctx context.Context, end uint64) ([]*types.Log, err
 
 // indexedLogs returns the logs matching the filter criteria based on raw block
 // iteration and bloom matching.
-func (f *Filter) unindexedLogs(ctx context.Context, end uint64) ([]*types.Log, error) {
+func (f *Filter) unindexedLogs(ctx context.Context, end uint64) ([]*types.Log, error) { log.DebugLog()
 	var logs []*types.Log
 
 	for ; f.begin <= int64(end); f.begin++ {
@@ -200,7 +200,7 @@ func (f *Filter) unindexedLogs(ctx context.Context, end uint64) ([]*types.Log, e
 
 // checkMatches checks if the receipts belonging to the given header contain any log events that
 // match the filter criteria. This function is called when the bloom filter signals a potential match.
-func (f *Filter) checkMatches(ctx context.Context, header *types.Header) (logs []*types.Log, err error) {
+func (f *Filter) checkMatches(ctx context.Context, header *types.Header) (logs []*types.Log, err error) { log.DebugLog()
 	// Get the logs of the block
 	logsList, err := f.backend.GetLogs(ctx, header.Hash())
 	if err != nil {
@@ -229,7 +229,7 @@ func (f *Filter) checkMatches(ctx context.Context, header *types.Header) (logs [
 	return nil, nil
 }
 
-func includes(addresses []common.Address, a common.Address) bool {
+func includes(addresses []common.Address, a common.Address) bool { log.DebugLog()
 	for _, addr := range addresses {
 		if addr == a {
 			return true
@@ -240,7 +240,7 @@ func includes(addresses []common.Address, a common.Address) bool {
 }
 
 // filterLogs creates a slice of logs matching the given criteria.
-func filterLogs(logs []*types.Log, fromBlock, toBlock *big.Int, addresses []common.Address, topics [][]common.Hash) []*types.Log {
+func filterLogs(logs []*types.Log, fromBlock, toBlock *big.Int, addresses []common.Address, topics [][]common.Hash) []*types.Log { log.DebugLog()
 	var ret []*types.Log
 Logs:
 	for _, log := range logs {
@@ -275,7 +275,7 @@ Logs:
 	return ret
 }
 
-func bloomFilter(bloom types.Bloom, addresses []common.Address, topics [][]common.Hash) bool {
+func bloomFilter(bloom types.Bloom, addresses []common.Address, topics [][]common.Hash) bool { log.DebugLog()
 	if len(addresses) > 0 {
 		var included bool
 		for _, addr := range addresses {

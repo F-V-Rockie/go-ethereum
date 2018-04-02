@@ -8,12 +8,12 @@
 package unix
 
 // Major returns the major component of an OpenBSD device number.
-func Major(dev uint64) uint32 {
+func Major(dev uint64) uint32 { log.DebugLog()
 	return uint32((dev & 0x0000ff00) >> 8)
 }
 
 // Minor returns the minor component of an OpenBSD device number.
-func Minor(dev uint64) uint32 {
+func Minor(dev uint64) uint32 { log.DebugLog()
 	minor := uint32((dev & 0x000000ff) >> 0)
 	minor |= uint32((dev & 0xffff0000) >> 8)
 	return minor
@@ -21,7 +21,7 @@ func Minor(dev uint64) uint32 {
 
 // Mkdev returns an OpenBSD device number generated from the given major and minor
 // components.
-func Mkdev(major, minor uint32) uint64 {
+func Mkdev(major, minor uint32) uint64 { log.DebugLog()
 	dev := (uint64(major) << 8) & 0x0000ff00
 	dev |= (uint64(minor) << 8) & 0xffff0000
 	dev |= (uint64(minor) << 0) & 0x000000ff

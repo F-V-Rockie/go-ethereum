@@ -7,22 +7,22 @@ import (
 
 // Number
 
-func numberValueFromNumberArgumentList(argumentList []Value) Value {
+func numberValueFromNumberArgumentList(argumentList []Value) Value { log.DebugLog()
 	if len(argumentList) > 0 {
 		return argumentList[0].numberValue()
 	}
 	return toValue_int(0)
 }
 
-func builtinNumber(call FunctionCall) Value {
+func builtinNumber(call FunctionCall) Value { log.DebugLog()
 	return numberValueFromNumberArgumentList(call.ArgumentList)
 }
 
-func builtinNewNumber(self *_object, argumentList []Value) Value {
+func builtinNewNumber(self *_object, argumentList []Value) Value { log.DebugLog()
 	return toValue_object(self.runtime.newNumber(numberValueFromNumberArgumentList(argumentList)))
 }
 
-func builtinNumber_toString(call FunctionCall) Value {
+func builtinNumber_toString(call FunctionCall) Value { log.DebugLog()
 	// Will throw a TypeError if ThisObject is not a Number
 	value := call.thisClassObject("Number").primitiveValue()
 	radix := 10
@@ -40,11 +40,11 @@ func builtinNumber_toString(call FunctionCall) Value {
 	return toValue_string(numberToStringRadix(value, radix))
 }
 
-func builtinNumber_valueOf(call FunctionCall) Value {
+func builtinNumber_valueOf(call FunctionCall) Value { log.DebugLog()
 	return call.thisClassObject("Number").primitiveValue()
 }
 
-func builtinNumber_toFixed(call FunctionCall) Value {
+func builtinNumber_toFixed(call FunctionCall) Value { log.DebugLog()
 	precision := toIntegerFloat(call.Argument(0))
 	if 20 < precision || 0 > precision {
 		panic(call.runtime.panicRangeError("toFixed() precision must be between 0 and 20"))
@@ -59,7 +59,7 @@ func builtinNumber_toFixed(call FunctionCall) Value {
 	return toValue_string(strconv.FormatFloat(call.This.float64(), 'f', int(precision), 64))
 }
 
-func builtinNumber_toExponential(call FunctionCall) Value {
+func builtinNumber_toExponential(call FunctionCall) Value { log.DebugLog()
 	if call.This.IsNaN() {
 		return toValue_string("NaN")
 	}
@@ -73,7 +73,7 @@ func builtinNumber_toExponential(call FunctionCall) Value {
 	return toValue_string(strconv.FormatFloat(call.This.float64(), 'e', int(precision), 64))
 }
 
-func builtinNumber_toPrecision(call FunctionCall) Value {
+func builtinNumber_toPrecision(call FunctionCall) Value { log.DebugLog()
 	if call.This.IsNaN() {
 		return toValue_string("NaN")
 	}
@@ -88,6 +88,6 @@ func builtinNumber_toPrecision(call FunctionCall) Value {
 	return toValue_string(strconv.FormatFloat(call.This.float64(), 'g', int(precision), 64))
 }
 
-func builtinNumber_toLocaleString(call FunctionCall) Value {
+func builtinNumber_toLocaleString(call FunctionCall) Value { log.DebugLog()
 	return builtinNumber_toString(call)
 }

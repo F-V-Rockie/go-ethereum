@@ -27,10 +27,10 @@ const (
 )
 
 // Internal-use instances of SHAKE used to test against KATs.
-func newHashShake128() hash.Hash {
+func newHashShake128() hash.Hash { log.DebugLog()
 	return &state{rate: 168, dsbyte: 0x1f, outputLen: 512}
 }
-func newHashShake256() hash.Hash {
+func newHashShake256() hash.Hash { log.DebugLog()
 	return &state{rate: 136, dsbyte: 0x1f, outputLen: 512}
 }
 
@@ -62,7 +62,7 @@ type KeccakKats struct {
 	}
 }
 
-func testUnalignedAndGeneric(t *testing.T, testf func(impl string)) {
+func testUnalignedAndGeneric(t *testing.T, testf func(impl string)) { log.DebugLog()
 	xorInOrig, copyOutOrig := xorIn, copyOut
 	xorIn, copyOut = xorInGeneric, copyOutGeneric
 	testf("generic")
@@ -76,7 +76,7 @@ func testUnalignedAndGeneric(t *testing.T, testf func(impl string)) {
 // TestKeccakKats tests the SHA-3 and Shake implementations against all the
 // ShortMsgKATs from https://github.com/gvanas/KeccakCodePackage
 // (The testvectors are stored in keccakKats.json.deflate due to their length.)
-func TestKeccakKats(t *testing.T) {
+func TestKeccakKats(t *testing.T) { log.DebugLog()
 	testUnalignedAndGeneric(t, func(impl string) {
 		// Read the KATs.
 		deflated, err := os.Open(katFilename)
@@ -116,7 +116,7 @@ func TestKeccakKats(t *testing.T) {
 
 // TestUnalignedWrite tests that writing data in an arbitrary pattern with
 // small input buffers.
-func TestUnalignedWrite(t *testing.T) {
+func TestUnalignedWrite(t *testing.T) { log.DebugLog()
 	testUnalignedAndGeneric(t, func(impl string) {
 		buf := sequentialBytes(0x10000)
 		for alg, df := range testDigests {
@@ -146,7 +146,7 @@ func TestUnalignedWrite(t *testing.T) {
 }
 
 // TestAppend checks that appending works when reallocation is necessary.
-func TestAppend(t *testing.T) {
+func TestAppend(t *testing.T) { log.DebugLog()
 	testUnalignedAndGeneric(t, func(impl string) {
 		d := New224()
 
@@ -166,7 +166,7 @@ func TestAppend(t *testing.T) {
 }
 
 // TestAppendNoRealloc tests that appending works when no reallocation is necessary.
-func TestAppendNoRealloc(t *testing.T) {
+func TestAppendNoRealloc(t *testing.T) { log.DebugLog()
 	testUnalignedAndGeneric(t, func(impl string) {
 		buf := make([]byte, 1, 200)
 		d := New224()
@@ -181,7 +181,7 @@ func TestAppendNoRealloc(t *testing.T) {
 
 // TestSqueezing checks that squeezing the full output a single time produces
 // the same output as repeatedly squeezing the instance.
-func TestSqueezing(t *testing.T) {
+func TestSqueezing(t *testing.T) { log.DebugLog()
 	testUnalignedAndGeneric(t, func(impl string) {
 		for functionName, newShakeHash := range testShakes {
 			d0 := newShakeHash()
@@ -205,7 +205,7 @@ func TestSqueezing(t *testing.T) {
 }
 
 // sequentialBytes produces a buffer of size consecutive bytes 0x00, 0x01, ..., used for testing.
-func sequentialBytes(size int) []byte {
+func sequentialBytes(size int) []byte { log.DebugLog()
 	result := make([]byte, size)
 	for i := range result {
 		result[i] = byte(i)
@@ -215,7 +215,7 @@ func sequentialBytes(size int) []byte {
 
 // BenchmarkPermutationFunction measures the speed of the permutation function
 // with no input data.
-func BenchmarkPermutationFunction(b *testing.B) {
+func BenchmarkPermutationFunction(b *testing.B) { log.DebugLog()
 	b.SetBytes(int64(200))
 	var lanes [25]uint64
 	for i := 0; i < b.N; i++ {
@@ -224,7 +224,7 @@ func BenchmarkPermutationFunction(b *testing.B) {
 }
 
 // benchmarkHash tests the speed to hash num buffers of buflen each.
-func benchmarkHash(b *testing.B, h hash.Hash, size, num int) {
+func benchmarkHash(b *testing.B, h hash.Hash, size, num int) { log.DebugLog()
 	b.StopTimer()
 	h.Reset()
 	data := sequentialBytes(size)
@@ -244,7 +244,7 @@ func benchmarkHash(b *testing.B, h hash.Hash, size, num int) {
 
 // benchmarkShake is specialized to the Shake instances, which don't
 // require a copy on reading output.
-func benchmarkShake(b *testing.B, h ShakeHash, size, num int) {
+func benchmarkShake(b *testing.B, h ShakeHash, size, num int) { log.DebugLog()
 	b.StopTimer()
 	h.Reset()
 	data := sequentialBytes(size)
@@ -262,19 +262,19 @@ func benchmarkShake(b *testing.B, h ShakeHash, size, num int) {
 	}
 }
 
-func BenchmarkSha3_512_MTU(b *testing.B) { benchmarkHash(b, New512(), 1350, 1) }
-func BenchmarkSha3_384_MTU(b *testing.B) { benchmarkHash(b, New384(), 1350, 1) }
-func BenchmarkSha3_256_MTU(b *testing.B) { benchmarkHash(b, New256(), 1350, 1) }
-func BenchmarkSha3_224_MTU(b *testing.B) { benchmarkHash(b, New224(), 1350, 1) }
+func BenchmarkSha3_512_MTU(b *testing.B) { log.DebugLog() benchmarkHash(b, New512(), 1350, 1) }
+func BenchmarkSha3_384_MTU(b *testing.B) { log.DebugLog() benchmarkHash(b, New384(), 1350, 1) }
+func BenchmarkSha3_256_MTU(b *testing.B) { log.DebugLog() benchmarkHash(b, New256(), 1350, 1) }
+func BenchmarkSha3_224_MTU(b *testing.B) { log.DebugLog() benchmarkHash(b, New224(), 1350, 1) }
 
-func BenchmarkShake128_MTU(b *testing.B)  { benchmarkShake(b, NewShake128(), 1350, 1) }
-func BenchmarkShake256_MTU(b *testing.B)  { benchmarkShake(b, NewShake256(), 1350, 1) }
-func BenchmarkShake256_16x(b *testing.B)  { benchmarkShake(b, NewShake256(), 16, 1024) }
-func BenchmarkShake256_1MiB(b *testing.B) { benchmarkShake(b, NewShake256(), 1024, 1024) }
+func BenchmarkShake128_MTU(b *testing.B)  { log.DebugLog() benchmarkShake(b, NewShake128(), 1350, 1) }
+func BenchmarkShake256_MTU(b *testing.B)  { log.DebugLog() benchmarkShake(b, NewShake256(), 1350, 1) }
+func BenchmarkShake256_16x(b *testing.B)  { log.DebugLog() benchmarkShake(b, NewShake256(), 16, 1024) }
+func BenchmarkShake256_1MiB(b *testing.B) { log.DebugLog() benchmarkShake(b, NewShake256(), 1024, 1024) }
 
-func BenchmarkSha3_512_1MiB(b *testing.B) { benchmarkHash(b, New512(), 1024, 1024) }
+func BenchmarkSha3_512_1MiB(b *testing.B) { log.DebugLog() benchmarkHash(b, New512(), 1024, 1024) }
 
-func Example_sum() {
+func Example_sum() { log.DebugLog()
 	buf := []byte("some data to hash")
 	// A hash needs to be 64 bytes long to have 256-bit collision resistance.
 	h := make([]byte, 64)
@@ -282,7 +282,7 @@ func Example_sum() {
 	ShakeSum256(h, buf)
 }
 
-func Example_mac() {
+func Example_mac() { log.DebugLog()
 	k := []byte("this is a secret key; you should generate a strong random key that's at least 32 bytes long")
 	buf := []byte("and this is some data to authenticate")
 	// A MAC with 32 bytes of output has 256-bit security strength -- if you use at least a 32-byte-long key.

@@ -24,7 +24,7 @@ flexible way to declaratively configure formatting when used with logging or
 error tracking packages.
 
 ```go
-func DoTheThing() {
+func DoTheThing() { log.DebugLog()
     c := stack.Caller(0)
     log.Print(c)          // "source.go:10"
     log.Printf("%+v", c)  // "pkg/path/source.go:10"

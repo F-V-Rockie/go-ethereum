@@ -22,7 +22,7 @@ import (
 	"github.com/ethereum/go-ethereum/event"
 )
 
-func ExampleNewSubscription() {
+func ExampleNewSubscription() { log.DebugLog()
 	// Create a subscription that sends 10 integers on ch.
 	ch := make(chan int)
 	sub := event.NewSubscription(func(quit <-chan struct{}) error {

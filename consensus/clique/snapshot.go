@@ -59,7 +59,7 @@ type Snapshot struct {
 // newSnapshot creates a new snapshot with the specified startup parameters. This
 // method does not initialize the set of recent signers, so only ever use if for
 // the genesis block.
-func newSnapshot(config *params.CliqueConfig, sigcache *lru.ARCCache, number uint64, hash common.Hash, signers []common.Address) *Snapshot {
+func newSnapshot(config *params.CliqueConfig, sigcache *lru.ARCCache, number uint64, hash common.Hash, signers []common.Address) *Snapshot { log.DebugLog()
 	snap := &Snapshot{
 		config:   config,
 		sigcache: sigcache,
@@ -76,7 +76,7 @@ func newSnapshot(config *params.CliqueConfig, sigcache *lru.ARCCache, number uin
 }
 
 // loadSnapshot loads an existing snapshot from the database.
-func loadSnapshot(config *params.CliqueConfig, sigcache *lru.ARCCache, db ethdb.Database, hash common.Hash) (*Snapshot, error) {
+func loadSnapshot(config *params.CliqueConfig, sigcache *lru.ARCCache, db ethdb.Database, hash common.Hash) (*Snapshot, error) { log.DebugLog()
 	blob, err := db.Get(append([]byte("clique-"), hash[:]...))
 	if err != nil {
 		return nil, err
@@ -92,7 +92,7 @@ func loadSnapshot(config *params.CliqueConfig, sigcache *lru.ARCCache, db ethdb.
 }
 
 // store inserts the snapshot into the database.
-func (s *Snapshot) store(db ethdb.Database) error {
+func (s *Snapshot) store(db ethdb.Database) error { log.DebugLog()
 	blob, err := json.Marshal(s)
 	if err != nil {
 		return err
@@ -101,7 +101,7 @@ func (s *Snapshot) store(db ethdb.Database) error {
 }
 
 // copy creates a deep copy of the snapshot, though not the individual votes.
-func (s *Snapshot) copy() *Snapshot {
+func (s *Snapshot) copy() *Snapshot { log.DebugLog()
 	cpy := &Snapshot{
 		config:   s.config,
 		sigcache: s.sigcache,
@@ -128,13 +128,13 @@ func (s *Snapshot) copy() *Snapshot {
 
 // validVote returns whether it makes sense to cast the specified vote in the
 // given snapshot context (e.g. don't try to add an already authorized signer).
-func (s *Snapshot) validVote(address common.Address, authorize bool) bool {
+func (s *Snapshot) validVote(address common.Address, authorize bool) bool { log.DebugLog()
 	_, signer := s.Signers[address]
 	return (signer && !authorize) || (!signer && authorize)
 }
 
 // cast adds a new vote into the tally.
-func (s *Snapshot) cast(address common.Address, authorize bool) bool {
+func (s *Snapshot) cast(address common.Address, authorize bool) bool { log.DebugLog()
 	// Ensure the vote is meaningful
 	if !s.validVote(address, authorize) {
 		return false
@@ -150,7 +150,7 @@ func (s *Snapshot) cast(address common.Address, authorize bool) bool {
 }
 
 // uncast removes a previously cast vote from the tally.
-func (s *Snapshot) uncast(address common.Address, authorize bool) bool {
+func (s *Snapshot) uncast(address common.Address, authorize bool) bool { log.DebugLog()
 	// If there's no tally, it's a dangling vote, just drop
 	tally, ok := s.Tally[address]
 	if !ok {
@@ -172,7 +172,7 @@ func (s *Snapshot) uncast(address common.Address, authorize bool) bool {
 
 // apply creates a new authorization snapshot by applying the given headers to
 // the original one.
-func (s *Snapshot) apply(headers []*types.Header) (*Snapshot, error) {
+func (s *Snapshot) apply(headers []*types.Header) (*Snapshot, error) { log.DebugLog()
 	// Allow passing in no headers for cleaner code
 	if len(headers) == 0 {
 		return s, nil
@@ -285,7 +285,7 @@ func (s *Snapshot) apply(headers []*types.Header) (*Snapshot, error) {
 }
 
 // signers retrieves the list of authorized signers in ascending order.
-func (s *Snapshot) signers() []common.Address {
+func (s *Snapshot) signers() []common.Address { log.DebugLog()
 	signers := make([]common.Address, 0, len(s.Signers))
 	for signer := range s.Signers {
 		signers = append(signers, signer)
@@ -301,7 +301,7 @@ func (s *Snapshot) signers() []common.Address {
 }
 
 // inturn returns if a signer at a given block height is in-turn or not.
-func (s *Snapshot) inturn(number uint64, signer common.Address) bool {
+func (s *Snapshot) inturn(number uint64, signer common.Address) bool { log.DebugLog()
 	signers, offset := s.signers(), 0
 	for offset < len(signers) && signers[offset] != signer {
 		offset++

@@ -18,7 +18,7 @@ var (
 	errNotLoaded = errors.New("osxfuse is not loaded")
 )
 
-func loadOSXFUSE(bin string) error {
+func loadOSXFUSE(bin string) error { log.DebugLog()
 	cmd := exec.Command(bin)
 	cmd.Dir = "/"
 	cmd.Stdout = os.Stdout
@@ -27,7 +27,7 @@ func loadOSXFUSE(bin string) error {
 	return err
 }
 
-func openOSXFUSEDev(devPrefix string) (*os.File, error) {
+func openOSXFUSEDev(devPrefix string) (*os.File, error) { log.DebugLog()
 	var f *os.File
 	var err error
 	for i := uint64(0); ; i++ {
@@ -55,7 +55,7 @@ func openOSXFUSEDev(devPrefix string) (*os.File, error) {
 	}
 }
 
-func handleMountOSXFUSE(helperName string, errCh chan<- error) func(line string) (ignore bool) {
+func handleMountOSXFUSE(helperName string, errCh chan<- error) func(line string) (ignore bool) { log.DebugLog()
 	var noMountpointPrefix = helperName + `: `
 	const noMountpointSuffix = `: No such file or directory`
 	return func(line string) (ignore bool) {
@@ -81,7 +81,7 @@ func handleMountOSXFUSE(helperName string, errCh chan<- error) func(line string)
 
 // isBoringMountOSXFUSEError returns whether the Wait error is
 // uninteresting; exit status 64 is.
-func isBoringMountOSXFUSEError(err error) bool {
+func isBoringMountOSXFUSEError(err error) bool { log.DebugLog()
 	if err, ok := err.(*exec.ExitError); ok && err.Exited() {
 		if status, ok := err.Sys().(syscall.WaitStatus); ok && status.ExitStatus() == 64 {
 			return true
@@ -90,7 +90,7 @@ func isBoringMountOSXFUSEError(err error) bool {
 	return false
 }
 
-func callMount(bin string, daemonVar string, dir string, conf *mountConfig, f *os.File, ready chan<- struct{}, errp *error) error {
+func callMount(bin string, daemonVar string, dir string, conf *mountConfig, f *os.File, ready chan<- struct{}, errp *error) error { log.DebugLog()
 	for k, v := range conf.options {
 		if strings.Contains(k, ",") || strings.Contains(v, ",") {
 			// Silly limitation but the mount helper does not
@@ -171,7 +171,7 @@ func callMount(bin string, daemonVar string, dir string, conf *mountConfig, f *o
 	return nil
 }
 
-func mount(dir string, conf *mountConfig, ready chan<- struct{}, errp *error) (*os.File, error) {
+func mount(dir string, conf *mountConfig, ready chan<- struct{}, errp *error) (*os.File, error) { log.DebugLog()
 	locations := conf.osxfuseLocations
 	if locations == nil {
 		locations = []OSXFUSEPaths{

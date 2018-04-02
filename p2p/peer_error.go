@@ -36,7 +36,7 @@ type peerError struct {
 	message string
 }
 
-func newPeerError(code int, format string, v ...interface{}) *peerError {
+func newPeerError(code int, format string, v ...interface{}) *peerError { log.DebugLog()
 	desc, ok := errorToString[code]
 	if !ok {
 		panic("invalid error code")
@@ -48,7 +48,7 @@ func newPeerError(code int, format string, v ...interface{}) *peerError {
 	return err
 }
 
-func (self *peerError) Error() string {
+func (self *peerError) Error() string { log.DebugLog()
 	return self.message
 }
 
@@ -88,18 +88,18 @@ var discReasonToString = [...]string{
 	DiscSubprotocolError:    "subprotocol error",
 }
 
-func (d DiscReason) String() string {
+func (d DiscReason) String() string { log.DebugLog()
 	if len(discReasonToString) < int(d) {
 		return fmt.Sprintf("unknown disconnect reason %d", d)
 	}
 	return discReasonToString[d]
 }
 
-func (d DiscReason) Error() string {
+func (d DiscReason) Error() string { log.DebugLog()
 	return d.String()
 }
 
-func discReasonForError(err error) DiscReason {
+func discReasonForError(err error) DiscReason { log.DebugLog()
 	if reason, ok := err.(DiscReason); ok {
 		return reason
 	}

@@ -29,12 +29,12 @@ type PtraceRegs386 struct {
 }
 
 // PtraceGetRegs386 fetches the registers used by 386 binaries.
-func PtraceGetRegs386(pid int, regsout *PtraceRegs386) error {
+func PtraceGetRegs386(pid int, regsout *PtraceRegs386) error { log.DebugLog()
 	return ptrace(PTRACE_GETREGS, pid, 0, uintptr(unsafe.Pointer(regsout)))
 }
 
 // PtraceSetRegs386 sets the registers used by 386 binaries.
-func PtraceSetRegs386(pid int, regs *PtraceRegs386) error {
+func PtraceSetRegs386(pid int, regs *PtraceRegs386) error { log.DebugLog()
 	return ptrace(PTRACE_SETREGS, pid, 0, uintptr(unsafe.Pointer(regs)))
 }
 
@@ -70,11 +70,11 @@ type PtraceRegsAmd64 struct {
 }
 
 // PtraceGetRegsAmd64 fetches the registers used by amd64 binaries.
-func PtraceGetRegsAmd64(pid int, regsout *PtraceRegsAmd64) error {
+func PtraceGetRegsAmd64(pid int, regsout *PtraceRegsAmd64) error { log.DebugLog()
 	return ptrace(PTRACE_GETREGS, pid, 0, uintptr(unsafe.Pointer(regsout)))
 }
 
 // PtraceSetRegsAmd64 sets the registers used by amd64 binaries.
-func PtraceSetRegsAmd64(pid int, regs *PtraceRegsAmd64) error {
+func PtraceSetRegsAmd64(pid int, regs *PtraceRegsAmd64) error { log.DebugLog()
 	return ptrace(PTRACE_SETREGS, pid, 0, uintptr(unsafe.Pointer(regs)))
 }

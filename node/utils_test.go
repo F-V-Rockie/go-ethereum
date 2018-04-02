@@ -29,12 +29,12 @@ import (
 // NoopService is a trivial implementation of the Service interface.
 type NoopService struct{}
 
-func (s *NoopService) Protocols() []p2p.Protocol { return nil }
-func (s *NoopService) APIs() []rpc.API           { return nil }
-func (s *NoopService) Start(*p2p.Server) error   { return nil }
-func (s *NoopService) Stop() error               { return nil }
+func (s *NoopService) Protocols() []p2p.Protocol { log.DebugLog() return nil }
+func (s *NoopService) APIs() []rpc.API           { log.DebugLog() return nil }
+func (s *NoopService) Start(*p2p.Server) error   { log.DebugLog() return nil }
+func (s *NoopService) Stop() error               { log.DebugLog() return nil }
 
-func NewNoopService(*ServiceContext) (Service, error) { return new(NoopService), nil }
+func NewNoopService(*ServiceContext) (Service, error) { log.DebugLog() return new(NoopService), nil }
 
 // Set of services all wrapping the base NoopService resulting in the same method
 // signatures but different outer types.
@@ -42,9 +42,9 @@ type NoopServiceA struct{ NoopService }
 type NoopServiceB struct{ NoopService }
 type NoopServiceC struct{ NoopService }
 
-func NewNoopServiceA(*ServiceContext) (Service, error) { return new(NoopServiceA), nil }
-func NewNoopServiceB(*ServiceContext) (Service, error) { return new(NoopServiceB), nil }
-func NewNoopServiceC(*ServiceContext) (Service, error) { return new(NoopServiceC), nil }
+func NewNoopServiceA(*ServiceContext) (Service, error) { log.DebugLog() return new(NoopServiceA), nil }
+func NewNoopServiceB(*ServiceContext) (Service, error) { log.DebugLog() return new(NoopServiceB), nil }
+func NewNoopServiceC(*ServiceContext) (Service, error) { log.DebugLog() return new(NoopServiceC), nil }
 
 // InstrumentedService is an implementation of Service for which all interface
 // methods can be instrumented both return value as well as event hook wise.
@@ -59,27 +59,27 @@ type InstrumentedService struct {
 	stopHook      func()
 }
 
-func NewInstrumentedService(*ServiceContext) (Service, error) { return new(InstrumentedService), nil }
+func NewInstrumentedService(*ServiceContext) (Service, error) { log.DebugLog() return new(InstrumentedService), nil }
 
-func (s *InstrumentedService) Protocols() []p2p.Protocol {
+func (s *InstrumentedService) Protocols() []p2p.Protocol { log.DebugLog()
 	if s.protocolsHook != nil {
 		s.protocolsHook()
 	}
 	return s.protocols
 }
 
-func (s *InstrumentedService) APIs() []rpc.API {
+func (s *InstrumentedService) APIs() []rpc.API { log.DebugLog()
 	return s.apis
 }
 
-func (s *InstrumentedService) Start(server *p2p.Server) error {
+func (s *InstrumentedService) Start(server *p2p.Server) error { log.DebugLog()
 	if s.startHook != nil {
 		s.startHook(server)
 	}
 	return s.start
 }
 
-func (s *InstrumentedService) Stop() error {
+func (s *InstrumentedService) Stop() error { log.DebugLog()
 	if s.stopHook != nil {
 		s.stopHook()
 	}
@@ -90,7 +90,7 @@ func (s *InstrumentedService) Stop() error {
 // a generic InstrumentedService into one returning a wrapping specific one.
 type InstrumentingWrapper func(base ServiceConstructor) ServiceConstructor
 
-func InstrumentingWrapperMaker(base ServiceConstructor, kind reflect.Type) ServiceConstructor {
+func InstrumentingWrapperMaker(base ServiceConstructor, kind reflect.Type) ServiceConstructor { log.DebugLog()
 	return func(ctx *ServiceContext) (Service, error) {
 		obj, err := base(ctx)
 		if err != nil {
@@ -109,15 +109,15 @@ type InstrumentedServiceA struct{ InstrumentedService }
 type InstrumentedServiceB struct{ InstrumentedService }
 type InstrumentedServiceC struct{ InstrumentedService }
 
-func InstrumentedServiceMakerA(base ServiceConstructor) ServiceConstructor {
+func InstrumentedServiceMakerA(base ServiceConstructor) ServiceConstructor { log.DebugLog()
 	return InstrumentingWrapperMaker(base, reflect.TypeOf(InstrumentedServiceA{}))
 }
 
-func InstrumentedServiceMakerB(base ServiceConstructor) ServiceConstructor {
+func InstrumentedServiceMakerB(base ServiceConstructor) ServiceConstructor { log.DebugLog()
 	return InstrumentingWrapperMaker(base, reflect.TypeOf(InstrumentedServiceB{}))
 }
 
-func InstrumentedServiceMakerC(base ServiceConstructor) ServiceConstructor {
+func InstrumentedServiceMakerC(base ServiceConstructor) ServiceConstructor { log.DebugLog()
 	return InstrumentingWrapperMaker(base, reflect.TypeOf(InstrumentedServiceC{}))
 }
 
@@ -126,7 +126,7 @@ type OneMethodApi struct {
 	fun func()
 }
 
-func (api *OneMethodApi) TheOneMethod() {
+func (api *OneMethodApi) TheOneMethod() { log.DebugLog()
 	if api.fun != nil {
 		api.fun()
 	}

@@ -33,7 +33,7 @@ type watcher struct {
 	quit     chan struct{}
 }
 
-func newWatcher(ac *accountCache) *watcher {
+func newWatcher(ac *accountCache) *watcher { log.DebugLog()
 	return &watcher{
 		ac:   ac,
 		ev:   make(chan notify.EventInfo, 10),
@@ -44,7 +44,7 @@ func newWatcher(ac *accountCache) *watcher {
 // starts the watcher loop in the background.
 // Start a watcher in the background if that's not already in progress.
 // The caller must hold w.ac.mu.
-func (w *watcher) start() {
+func (w *watcher) start() { log.DebugLog()
 	if w.starting || w.running {
 		return
 	}
@@ -52,11 +52,11 @@ func (w *watcher) start() {
 	go w.loop()
 }
 
-func (w *watcher) close() {
+func (w *watcher) close() { log.DebugLog()
 	close(w.quit)
 }
 
-func (w *watcher) loop() {
+func (w *watcher) loop() { log.DebugLog()
 	defer func() {
 		w.ac.mu.Lock()
 		w.running = false

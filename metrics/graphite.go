@@ -24,7 +24,7 @@ type GraphiteConfig struct {
 // Graphite is a blocking exporter function which reports metrics in r
 // to a graphite server located at addr, flushing them every d duration
 // and prepending metric names with prefix.
-func Graphite(r Registry, d time.Duration, prefix string, addr *net.TCPAddr) {
+func Graphite(r Registry, d time.Duration, prefix string, addr *net.TCPAddr) { log.DebugLog()
 	GraphiteWithConfig(GraphiteConfig{
 		Addr:          addr,
 		Registry:      r,
@@ -37,7 +37,7 @@ func Graphite(r Registry, d time.Duration, prefix string, addr *net.TCPAddr) {
 
 // GraphiteWithConfig is a blocking exporter function just like Graphite,
 // but it takes a GraphiteConfig instead.
-func GraphiteWithConfig(c GraphiteConfig) {
+func GraphiteWithConfig(c GraphiteConfig) { log.DebugLog()
 	log.Printf("WARNING: This go-metrics client has been DEPRECATED! It has been moved to https://github.com/cyberdelia/go-metrics-graphite and will be removed from rcrowley/go-metrics on August 12th 2015")
 	for range time.Tick(c.FlushInterval) {
 		if err := graphite(&c); nil != err {
@@ -49,12 +49,12 @@ func GraphiteWithConfig(c GraphiteConfig) {
 // GraphiteOnce performs a single submission to Graphite, returning a
 // non-nil error on failed connections. This can be used in a loop
 // similar to GraphiteWithConfig for custom error handling.
-func GraphiteOnce(c GraphiteConfig) error {
+func GraphiteOnce(c GraphiteConfig) error { log.DebugLog()
 	log.Printf("WARNING: This go-metrics client has been DEPRECATED! It has been moved to https://github.com/cyberdelia/go-metrics-graphite and will be removed from rcrowley/go-metrics on August 12th 2015")
 	return graphite(&c)
 }
 
-func graphite(c *GraphiteConfig) error {
+func graphite(c *GraphiteConfig) error { log.DebugLog()
 	now := time.Now().Unix()
 	du := float64(c.DurationUnit)
 	conn, err := net.DialTCP("tcp", nil, c.Addr)

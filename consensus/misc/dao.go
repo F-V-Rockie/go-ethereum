@@ -44,7 +44,7 @@ var (
 //      with the fork specific extra-data set
 //   b) if the node is pro-fork, require blocks in the specific range to have the
 //      unique extra-data set.
-func VerifyDAOHeaderExtraData(config *params.ChainConfig, header *types.Header) error {
+func VerifyDAOHeaderExtraData(config *params.ChainConfig, header *types.Header) error { log.DebugLog()
 	// Short circuit validation if the node doesn't care about the DAO fork
 	if config.DAOForkBlock == nil {
 		return nil
@@ -71,7 +71,7 @@ func VerifyDAOHeaderExtraData(config *params.ChainConfig, header *types.Header) 
 // ApplyDAOHardFork modifies the state database according to the DAO hard-fork
 // rules, transferring all balances of a set of DAO accounts to a single refund
 // contract.
-func ApplyDAOHardFork(statedb *state.StateDB) {
+func ApplyDAOHardFork(statedb *state.StateDB) { log.DebugLog()
 	// Retrieve the contract to refund balances into
 	if !statedb.Exist(params.DAORefundContract) {
 		statedb.CreateAccount(params.DAORefundContract)

@@ -36,7 +36,7 @@ var DAORefundContract = common.HexToAddress("0xbf4ed7b27f1d666546e30d74d50d173d2
 
 // DAODrainList is the list of accounts whose full balances will be moved into a
 // refund contract at the beginning of the dao-fork block.
-func DAODrainList() []common.Address {
+func DAODrainList() []common.Address { log.DebugLog()
 	return []common.Address{
 		common.HexToAddress("0xd4fe7bc31cedb7bfb8a345f31e668033056b2728"),
 		common.HexToAddress("0xb3fb0e5aba0e20e5c49d252dfd30e102b171a425"),

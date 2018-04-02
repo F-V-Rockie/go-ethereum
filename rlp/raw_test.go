@@ -23,7 +23,7 @@ import (
 	"testing"
 )
 
-func TestCountValues(t *testing.T) {
+func TestCountValues(t *testing.T) { log.DebugLog()
 	tests := []struct {
 		input string // note: spaces in input are stripped by unhex
 		count int
@@ -59,7 +59,7 @@ func TestCountValues(t *testing.T) {
 	}
 }
 
-func TestSplitTypes(t *testing.T) {
+func TestSplitTypes(t *testing.T) { log.DebugLog()
 	if _, _, err := SplitString(unhex("C100")); err != ErrExpectedString {
 		t.Errorf("SplitString returned %q, want %q", err, ErrExpectedString)
 	}
@@ -71,7 +71,7 @@ func TestSplitTypes(t *testing.T) {
 	}
 }
 
-func TestSplit(t *testing.T) {
+func TestSplit(t *testing.T) { log.DebugLog()
 	tests := []struct {
 		input     string
 		kind      Kind
@@ -153,7 +153,7 @@ func TestSplit(t *testing.T) {
 	}
 }
 
-func TestReadSize(t *testing.T) {
+func TestReadSize(t *testing.T) { log.DebugLog()
 	tests := []struct {
 		input string
 		slen  byte

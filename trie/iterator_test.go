@@ -26,7 +26,7 @@ import (
 	"github.com/ethereum/go-ethereum/ethdb"
 )
 
-func TestIterator(t *testing.T) {
+func TestIterator(t *testing.T) { log.DebugLog()
 	trie := newEmpty()
 	vals := []struct{ k, v string }{
 		{"do", "verb"},
@@ -62,7 +62,7 @@ type kv struct {
 	t    bool
 }
 
-func TestIteratorLargeData(t *testing.T) {
+func TestIteratorLargeData(t *testing.T) { log.DebugLog()
 	trie := newEmpty()
 	vals := make(map[string]*kv)
 
@@ -96,7 +96,7 @@ func TestIteratorLargeData(t *testing.T) {
 }
 
 // Tests that the node iterator indeed walks over the entire database contents.
-func TestNodeIteratorCoverage(t *testing.T) {
+func TestNodeIteratorCoverage(t *testing.T) { log.DebugLog()
 	// Create some arbitrary test trie to iterate
 	db, trie, _ := makeTestTrie()
 
@@ -152,7 +152,7 @@ var testdata2 = []kvs{
 	{"jars", "d"},
 }
 
-func TestIteratorSeek(t *testing.T) {
+func TestIteratorSeek(t *testing.T) { log.DebugLog()
 	trie := newEmpty()
 	for _, val := range testdata1 {
 		trie.Update([]byte(val.k), []byte(val.v))
@@ -177,7 +177,7 @@ func TestIteratorSeek(t *testing.T) {
 	}
 }
 
-func checkIteratorOrder(want []kvs, it *Iterator) error {
+func checkIteratorOrder(want []kvs, it *Iterator) error { log.DebugLog()
 	for it.Next() {
 		if len(want) == 0 {
 			return fmt.Errorf("didn't expect any more values, got key %q", it.Key)
@@ -193,7 +193,7 @@ func checkIteratorOrder(want []kvs, it *Iterator) error {
 	return nil
 }
 
-func TestDifferenceIterator(t *testing.T) {
+func TestDifferenceIterator(t *testing.T) { log.DebugLog()
 	triea := newEmpty()
 	for _, val := range testdata1 {
 		triea.Update([]byte(val.k), []byte(val.v))
@@ -229,7 +229,7 @@ func TestDifferenceIterator(t *testing.T) {
 	}
 }
 
-func TestUnionIterator(t *testing.T) {
+func TestUnionIterator(t *testing.T) { log.DebugLog()
 	triea := newEmpty()
 	for _, val := range testdata1 {
 		triea.Update([]byte(val.k), []byte(val.v))
@@ -276,7 +276,7 @@ func TestUnionIterator(t *testing.T) {
 	}
 }
 
-func TestIteratorNoDups(t *testing.T) {
+func TestIteratorNoDups(t *testing.T) { log.DebugLog()
 	var tr Trie
 	for _, val := range testdata1 {
 		tr.Update([]byte(val.k), []byte(val.v))
@@ -285,10 +285,10 @@ func TestIteratorNoDups(t *testing.T) {
 }
 
 // This test checks that nodeIterator.Next can be retried after inserting missing trie nodes.
-func TestIteratorContinueAfterErrorDisk(t *testing.T)    { testIteratorContinueAfterError(t, false) }
-func TestIteratorContinueAfterErrorMemonly(t *testing.T) { testIteratorContinueAfterError(t, true) }
+func TestIteratorContinueAfterErrorDisk(t *testing.T)    { log.DebugLog() testIteratorContinueAfterError(t, false) }
+func TestIteratorContinueAfterErrorMemonly(t *testing.T) { log.DebugLog() testIteratorContinueAfterError(t, true) }
 
-func testIteratorContinueAfterError(t *testing.T, memonly bool) {
+func testIteratorContinueAfterError(t *testing.T, memonly bool) { log.DebugLog()
 	diskdb, _ := ethdb.NewMemDatabase()
 	triedb := NewDatabase(diskdb)
 
@@ -367,14 +367,14 @@ func testIteratorContinueAfterError(t *testing.T, memonly bool) {
 // Similar to the test above, this one checks that failure to create nodeIterator at a
 // certain key prefix behaves correctly when Next is called. The expectation is that Next
 // should retry seeking before returning true for the first time.
-func TestIteratorContinueAfterSeekErrorDisk(t *testing.T) {
+func TestIteratorContinueAfterSeekErrorDisk(t *testing.T) { log.DebugLog()
 	testIteratorContinueAfterSeekError(t, false)
 }
-func TestIteratorContinueAfterSeekErrorMemonly(t *testing.T) {
+func TestIteratorContinueAfterSeekErrorMemonly(t *testing.T) { log.DebugLog()
 	testIteratorContinueAfterSeekError(t, true)
 }
 
-func testIteratorContinueAfterSeekError(t *testing.T, memonly bool) {
+func testIteratorContinueAfterSeekError(t *testing.T, memonly bool) { log.DebugLog()
 	// Commit test trie to db, then remove the node containing "bars".
 	diskdb, _ := ethdb.NewMemDatabase()
 	triedb := NewDatabase(diskdb)
@@ -421,7 +421,7 @@ func testIteratorContinueAfterSeekError(t *testing.T, memonly bool) {
 	}
 }
 
-func checkIteratorNoDups(t *testing.T, it NodeIterator, seen map[string]bool) int {
+func checkIteratorNoDups(t *testing.T, it NodeIterator, seen map[string]bool) int { log.DebugLog()
 	if seen == nil {
 		seen = make(map[string]bool)
 	}

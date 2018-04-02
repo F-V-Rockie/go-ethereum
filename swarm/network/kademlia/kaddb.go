@@ -43,13 +43,13 @@ type NodeRecord struct {
 	node Node
 }
 
-func (self *NodeRecord) setSeen() {
+func (self *NodeRecord) setSeen() { log.DebugLog()
 	t := time.Now()
 	self.Seen = t
 	self.After = t
 }
 
-func (self *NodeRecord) String() string {
+func (self *NodeRecord) String() string { log.DebugLog()
 	return fmt.Sprintf("<%v>", self.Addr)
 }
 
@@ -65,7 +65,7 @@ type KadDb struct {
 	connRetryExp         int
 }
 
-func newKadDb(addr Address, params *KadParams) *KadDb {
+func newKadDb(addr Address, params *KadParams) *KadDb { log.DebugLog()
 	return &KadDb{
 		Address:              addr,
 		Nodes:                make([][]*NodeRecord, params.MaxProx+1), // overwritten by load
@@ -77,7 +77,7 @@ func newKadDb(addr Address, params *KadParams) *KadDb {
 	}
 }
 
-func (self *KadDb) findOrCreate(index int, a Address, url string) *NodeRecord {
+func (self *KadDb) findOrCreate(index int, a Address, url string) *NodeRecord { log.DebugLog()
 	defer self.lock.Unlock()
 	self.lock.Lock()
 
@@ -102,7 +102,7 @@ func (self *KadDb) findOrCreate(index int, a Address, url string) *NodeRecord {
 }
 
 // add adds node records to kaddb (persisted node record db)
-func (self *KadDb) add(nrs []*NodeRecord, proximityBin func(Address) int) {
+func (self *KadDb) add(nrs []*NodeRecord, proximityBin func(Address) int) { log.DebugLog()
 	defer self.lock.Unlock()
 	self.lock.Lock()
 	var n int
@@ -168,7 +168,7 @@ offline past peer)
 
 The second argument returned names the first missing slot found
 */
-func (self *KadDb) findBest(maxBinSize int, binSize func(int) int) (node *NodeRecord, need bool, proxLimit int) {
+func (self *KadDb) findBest(maxBinSize int, binSize func(int) int) (node *NodeRecord, need bool, proxLimit int) { log.DebugLog()
 	// return nil, proxLimit indicates that all buckets are filled
 	defer self.lock.Unlock()
 	self.lock.Lock()
@@ -251,7 +251,7 @@ func (self *KadDb) findBest(maxBinSize int, binSize func(int) int) (node *NodeRe
 // deletes the noderecords of a kaddb row corresponding to the indexes
 // caller must hold the dblock
 // the call is unsafe, no index checks
-func (self *KadDb) delete(row int, purge []bool) {
+func (self *KadDb) delete(row int, purge []bool) { log.DebugLog()
 	var nodes []*NodeRecord
 	dbrow := self.Nodes[row]
 	for i, del := range purge {
@@ -271,7 +271,7 @@ func (self *KadDb) delete(row int, purge []bool) {
 }
 
 // save persists kaddb on disk (written to file on path in json format.
-func (self *KadDb) save(path string, cb func(*NodeRecord, Node)) error {
+func (self *KadDb) save(path string, cb func(*NodeRecord, Node)) error { log.DebugLog()
 	defer self.lock.Unlock()
 	self.lock.Lock()
 
@@ -302,7 +302,7 @@ func (self *KadDb) save(path string, cb func(*NodeRecord, Node)) error {
 }
 
 // Load(path) loads the node record database (kaddb) from file on path.
-func (self *KadDb) load(path string, cb func(*NodeRecord, Node) error) (err error) {
+func (self *KadDb) load(path string, cb func(*NodeRecord, Node) error) (err error) { log.DebugLog()
 	defer self.lock.Unlock()
 	self.lock.Lock()
 
@@ -343,7 +343,7 @@ func (self *KadDb) load(path string, cb func(*NodeRecord, Node) error) (err erro
 }
 
 // accessor for KAD offline db count
-func (self *KadDb) count() int {
+func (self *KadDb) count() int { log.DebugLog()
 	defer self.lock.Unlock()
 	self.lock.Lock()
 	return len(self.index)

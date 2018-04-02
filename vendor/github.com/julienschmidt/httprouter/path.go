@@ -18,7 +18,7 @@ package httprouter
 //	   that is, replace "/.." by "/" at the beginning of a path.
 //
 // If the result of this process is an empty string, "/" is returned
-func CleanPath(p string) string {
+func CleanPath(p string) string { log.DebugLog()
 	// Turn empty string into "/"
 	if p == "" {
 		return "/"
@@ -110,7 +110,7 @@ func CleanPath(p string) string {
 }
 
 // internal helper to lazily create a buffer if necessary
-func bufApp(buf *[]byte, s string, w int, c byte) {
+func bufApp(buf *[]byte, s string, w int, c byte) { log.DebugLog()
 	if *buf == nil {
 		if s[w] == c {
 			return

@@ -44,7 +44,7 @@ var (
 // encoding/asn1 is broken so we hand roll this output:
 //
 // 0x30 <length> 0x02 <length r> r 0x02 <length s> s
-func (sig *Signature) Serialize() []byte {
+func (sig *Signature) Serialize() []byte { log.DebugLog()
 	// low 'S' malleability breaker
 	sigS := sig.S
 	if sigS.Cmp(S256().halfOrder) == 1 {
@@ -73,19 +73,19 @@ func (sig *Signature) Serialize() []byte {
 
 // Verify calls ecdsa.Verify to verify the signature of hash using the public
 // key.  It returns true if the signature is valid, false otherwise.
-func (sig *Signature) Verify(hash []byte, pubKey *PublicKey) bool {
+func (sig *Signature) Verify(hash []byte, pubKey *PublicKey) bool { log.DebugLog()
 	return ecdsa.Verify(pubKey.ToECDSA(), hash, sig.R, sig.S)
 }
 
 // IsEqual compares this Signature instance to the one passed, returning true
 // if both Signatures are equivalent. A signature is equivalent to another, if
 // they both have the same scalar value for R and S.
-func (sig *Signature) IsEqual(otherSig *Signature) bool {
+func (sig *Signature) IsEqual(otherSig *Signature) bool { log.DebugLog()
 	return sig.R.Cmp(otherSig.R) == 0 &&
 		sig.S.Cmp(otherSig.S) == 0
 }
 
-func parseSig(sigStr []byte, curve elliptic.Curve, der bool) (*Signature, error) {
+func parseSig(sigStr []byte, curve elliptic.Curve, der bool) (*Signature, error) { log.DebugLog()
 	// Originally this code used encoding/asn1 in order to parse the
 	// signature, but a number of problems were found with this approach.
 	// Despite the fact that signatures are stored as DER, the difference
@@ -202,14 +202,14 @@ func parseSig(sigStr []byte, curve elliptic.Curve, der bool) (*Signature, error)
 // ParseSignature parses a signature in BER format for the curve type `curve'
 // into a Signature type, perfoming some basic sanity checks.  If parsing
 // according to the more strict DER format is needed, use ParseDERSignature.
-func ParseSignature(sigStr []byte, curve elliptic.Curve) (*Signature, error) {
+func ParseSignature(sigStr []byte, curve elliptic.Curve) (*Signature, error) { log.DebugLog()
 	return parseSig(sigStr, curve, false)
 }
 
 // ParseDERSignature parses a signature in DER format for the curve type
 // `curve` into a Signature type.  If parsing according to the less strict
 // BER format is needed, use ParseSignature.
-func ParseDERSignature(sigStr []byte, curve elliptic.Curve) (*Signature, error) {
+func ParseDERSignature(sigStr []byte, curve elliptic.Curve) (*Signature, error) { log.DebugLog()
 	return parseSig(sigStr, curve, true)
 }
 
@@ -219,7 +219,7 @@ func ParseDERSignature(sigStr []byte, curve elliptic.Curve) (*Signature, error) 
 // significant bit is set, so it is padded by a leading zero byte in this case.
 // Also, the returned bytes will have at least a single byte when the passed
 // value is 0.  This is required for DER encoding.
-func canonicalizeInt(val *big.Int) []byte {
+func canonicalizeInt(val *big.Int) []byte { log.DebugLog()
 	b := val.Bytes()
 	if len(b) == 0 {
 		b = []byte{0x00}
@@ -236,7 +236,7 @@ func canonicalizeInt(val *big.Int) []byte {
 // possibly be misinterpreted as a negative number (even though OpenSSL
 // treats all numbers as unsigned), or if there is any unnecessary
 // leading zero padding.
-func canonicalPadding(b []byte) error {
+func canonicalPadding(b []byte) error { log.DebugLog()
 	switch {
 	case b[0]&0x80 == 0x80:
 		return errNegativeValue
@@ -254,7 +254,7 @@ func canonicalPadding(b []byte) error {
 // OpenSSL right shifts excess bits from the number if the hash is too large
 // and we mirror that too.
 // This is borrowed from crypto/ecdsa.
-func hashToInt(hash []byte, c elliptic.Curve) *big.Int {
+func hashToInt(hash []byte, c elliptic.Curve) *big.Int { log.DebugLog()
 	orderBits := c.Params().N.BitLen()
 	orderBytes := (orderBits + 7) / 8
 	if len(hash) > orderBytes {
@@ -413,7 +413,7 @@ func RecoverCompact(curve *KoblitzCurve, signature,
 }
 
 // signRFC6979 generates a deterministic ECDSA signature according to RFC 6979 and BIP 62.
-func signRFC6979(privateKey *PrivateKey, hash []byte) (*Signature, error) {
+func signRFC6979(privateKey *PrivateKey, hash []byte) (*Signature, error) { log.DebugLog()
 
 	privkey := privateKey.ToECDSA()
 	N := S256().N
@@ -446,7 +446,7 @@ func signRFC6979(privateKey *PrivateKey, hash []byte) (*Signature, error) {
 
 // nonceRFC6979 generates an ECDSA nonce (`k`) deterministically according to RFC 6979.
 // It takes a 32-byte hash as an input and returns 32-byte nonce to be used in ECDSA algorithm.
-func nonceRFC6979(privkey *big.Int, hash []byte) *big.Int {
+func nonceRFC6979(privkey *big.Int, hash []byte) *big.Int { log.DebugLog()
 
 	curve := S256()
 	q := curve.Params().N
@@ -498,14 +498,14 @@ func nonceRFC6979(privkey *big.Int, hash []byte) *big.Int {
 }
 
 // mac returns an HMAC of the given key and message.
-func mac(alg func() hash.Hash, k, m []byte) []byte {
+func mac(alg func() hash.Hash, k, m []byte) []byte { log.DebugLog()
 	h := hmac.New(alg, k)
 	h.Write(m)
 	return h.Sum(nil)
 }
 
 // https://tools.ietf.org/html/rfc6979#section-2.3.3
-func int2octets(v *big.Int, rolen int) []byte {
+func int2octets(v *big.Int, rolen int) []byte { log.DebugLog()
 	out := v.Bytes()
 
 	// left pad with zeros if it's too short
@@ -526,7 +526,7 @@ func int2octets(v *big.Int, rolen int) []byte {
 }
 
 // https://tools.ietf.org/html/rfc6979#section-2.3.4
-func bits2octets(in []byte, curve elliptic.Curve, rolen int) []byte {
+func bits2octets(in []byte, curve elliptic.Curve, rolen int) []byte { log.DebugLog()
 	z1 := hashToInt(in, curve)
 	z2 := new(big.Int).Sub(z1, curve.Params().N)
 	if z2.Sign() < 0 {

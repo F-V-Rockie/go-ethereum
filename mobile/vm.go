@@ -30,25 +30,25 @@ type Log struct {
 	log *types.Log
 }
 
-func (l *Log) GetAddress() *Address  { return &Address{l.log.Address} }
-func (l *Log) GetTopics() *Hashes    { return &Hashes{l.log.Topics} }
-func (l *Log) GetData() []byte       { return l.log.Data }
-func (l *Log) GetBlockNumber() int64 { return int64(l.log.BlockNumber) }
-func (l *Log) GetTxHash() *Hash      { return &Hash{l.log.TxHash} }
-func (l *Log) GetTxIndex() int       { return int(l.log.TxIndex) }
-func (l *Log) GetBlockHash() *Hash   { return &Hash{l.log.BlockHash} }
-func (l *Log) GetIndex() int         { return int(l.log.Index) }
+func (l *Log) GetAddress() *Address  { log.DebugLog() return &Address{l.log.Address} }
+func (l *Log) GetTopics() *Hashes    { log.DebugLog() return &Hashes{l.log.Topics} }
+func (l *Log) GetData() []byte       { log.DebugLog() return l.log.Data }
+func (l *Log) GetBlockNumber() int64 { log.DebugLog() return int64(l.log.BlockNumber) }
+func (l *Log) GetTxHash() *Hash      { log.DebugLog() return &Hash{l.log.TxHash} }
+func (l *Log) GetTxIndex() int       { log.DebugLog() return int(l.log.TxIndex) }
+func (l *Log) GetBlockHash() *Hash   { log.DebugLog() return &Hash{l.log.BlockHash} }
+func (l *Log) GetIndex() int         { log.DebugLog() return int(l.log.Index) }
 
 // Logs represents a slice of VM logs.
 type Logs struct{ logs []*types.Log }
 
 // Size returns the number of logs in the slice.
-func (l *Logs) Size() int {
+func (l *Logs) Size() int { log.DebugLog()
 	return len(l.logs)
 }
 
 // Get returns the log at the given index from the slice.
-func (l *Logs) Get(index int) (log *Log, _ error) {
+func (l *Logs) Get(index int) (log *Log, _ error) { log.DebugLog()
 	if index < 0 || index >= len(l.logs) {
 		return nil, errors.New("index out of bounds")
 	}

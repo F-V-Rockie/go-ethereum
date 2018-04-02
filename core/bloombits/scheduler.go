@@ -46,7 +46,7 @@ type scheduler struct {
 
 // newScheduler creates a new bloom-filter retrieval scheduler for a specific
 // bit index.
-func newScheduler(idx uint) *scheduler {
+func newScheduler(idx uint) *scheduler { log.DebugLog()
 	return &scheduler{
 		bit:       idx,
 		responses: make(map[uint64]*response),
@@ -56,7 +56,7 @@ func newScheduler(idx uint) *scheduler {
 // run creates a retrieval pipeline, receiving section indexes from sections and
 // returning the results in the same order through the done channel. Concurrent
 // runs of the same scheduler are allowed, leading to retrieval task deduplication.
-func (s *scheduler) run(sections chan uint64, dist chan *request, done chan []byte, quit chan struct{}, wg *sync.WaitGroup) {
+func (s *scheduler) run(sections chan uint64, dist chan *request, done chan []byte, quit chan struct{}, wg *sync.WaitGroup) { log.DebugLog()
 	// Create a forwarder channel between requests and responses of the same size as
 	// the distribution channel (since that will block the pipeline anyway).
 	pend := make(chan uint64, cap(dist))
@@ -70,7 +70,7 @@ func (s *scheduler) run(sections chan uint64, dist chan *request, done chan []by
 // reset cleans up any leftovers from previous runs. This is required before a
 // restart to ensure the no previously requested but never delivered state will
 // cause a lockup.
-func (s *scheduler) reset() {
+func (s *scheduler) reset() { log.DebugLog()
 	s.lock.Lock()
 	defer s.lock.Unlock()
 
@@ -84,7 +84,7 @@ func (s *scheduler) reset() {
 // scheduleRequests reads section retrieval requests from the input channel,
 // deduplicates the stream and pushes unique retrieval tasks into the distribution
 // channel for a database or network layer to honour.
-func (s *scheduler) scheduleRequests(reqs chan uint64, dist chan *request, pend chan uint64, quit chan struct{}, wg *sync.WaitGroup) {
+func (s *scheduler) scheduleRequests(reqs chan uint64, dist chan *request, pend chan uint64, quit chan struct{}, wg *sync.WaitGroup) { log.DebugLog()
 	// Clean up the goroutine and pipeline when done
 	defer wg.Done()
 	defer close(pend)
@@ -131,7 +131,7 @@ func (s *scheduler) scheduleRequests(reqs chan uint64, dist chan *request, pend 
 
 // scheduleDeliveries reads section acceptance notifications and waits for them
 // to be delivered, pushing them into the output data buffer.
-func (s *scheduler) scheduleDeliveries(pend chan uint64, done chan []byte, quit chan struct{}, wg *sync.WaitGroup) {
+func (s *scheduler) scheduleDeliveries(pend chan uint64, done chan []byte, quit chan struct{}, wg *sync.WaitGroup) { log.DebugLog()
 	// Clean up the goroutine and pipeline when done
 	defer wg.Done()
 	defer close(done)
@@ -168,7 +168,7 @@ func (s *scheduler) scheduleDeliveries(pend chan uint64, done chan []byte, quit 
 }
 
 // deliver is called by the request distributor when a reply to a request arrives.
-func (s *scheduler) deliver(sections []uint64, data [][]byte) {
+func (s *scheduler) deliver(sections []uint64, data [][]byte) { log.DebugLog()
 	s.lock.Lock()
 	defer s.lock.Unlock()
 

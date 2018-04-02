@@ -29,7 +29,7 @@ import (
 )
 
 // Ecrecover returns the uncompressed public key that created the given signature.
-func Ecrecover(hash, sig []byte) ([]byte, error) {
+func Ecrecover(hash, sig []byte) ([]byte, error) { log.DebugLog()
 	pub, err := SigToPub(hash, sig)
 	if err != nil {
 		return nil, err
@@ -39,7 +39,7 @@ func Ecrecover(hash, sig []byte) ([]byte, error) {
 }
 
 // SigToPub returns the public key that created the given signature.
-func SigToPub(hash, sig []byte) (*ecdsa.PublicKey, error) {
+func SigToPub(hash, sig []byte) (*ecdsa.PublicKey, error) { log.DebugLog()
 	// Convert to btcec input format with 'recovery id' v at the beginning.
 	btcsig := make([]byte, 65)
 	btcsig[0] = sig[64] + 27
@@ -57,7 +57,7 @@ func SigToPub(hash, sig []byte) (*ecdsa.PublicKey, error) {
 // solution is to hash any input before calculating the signature.
 //
 // The produced signature is in the [R || S || V] format where V is 0 or 1.
-func Sign(hash []byte, prv *ecdsa.PrivateKey) ([]byte, error) {
+func Sign(hash []byte, prv *ecdsa.PrivateKey) ([]byte, error) { log.DebugLog()
 	if len(hash) != 32 {
 		return nil, fmt.Errorf("hash is required to be exactly 32 bytes (%d)", len(hash))
 	}
@@ -78,7 +78,7 @@ func Sign(hash []byte, prv *ecdsa.PrivateKey) ([]byte, error) {
 // VerifySignature checks that the given public key created signature over hash.
 // The public key should be in compressed (33 bytes) or uncompressed (65 bytes) format.
 // The signature should have the 64 byte [R || S] format.
-func VerifySignature(pubkey, hash, signature []byte) bool {
+func VerifySignature(pubkey, hash, signature []byte) bool { log.DebugLog()
 	if len(signature) != 64 {
 		return false
 	}
@@ -95,7 +95,7 @@ func VerifySignature(pubkey, hash, signature []byte) bool {
 }
 
 // DecompressPubkey parses a public key in the 33-byte compressed format.
-func DecompressPubkey(pubkey []byte) (*ecdsa.PublicKey, error) {
+func DecompressPubkey(pubkey []byte) (*ecdsa.PublicKey, error) { log.DebugLog()
 	if len(pubkey) != 33 {
 		return nil, errors.New("invalid compressed public key length")
 	}
@@ -107,11 +107,11 @@ func DecompressPubkey(pubkey []byte) (*ecdsa.PublicKey, error) {
 }
 
 // CompressPubkey encodes a public key to the 33-byte compressed format.
-func CompressPubkey(pubkey *ecdsa.PublicKey) []byte {
+func CompressPubkey(pubkey *ecdsa.PublicKey) []byte { log.DebugLog()
 	return (*btcec.PublicKey)(pubkey).SerializeCompressed()
 }
 
 // S256 returns an instance of the secp256k1 curve.
-func S256() elliptic.Curve {
+func S256() elliptic.Curve { log.DebugLog()
 	return btcec.S256()
 }

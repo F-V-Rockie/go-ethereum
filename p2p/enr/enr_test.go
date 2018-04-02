@@ -37,14 +37,14 @@ var (
 
 var rnd = rand.New(rand.NewSource(time.Now().UnixNano()))
 
-func randomString(strlen int) string {
+func randomString(strlen int) string { log.DebugLog()
 	b := make([]byte, strlen)
 	rnd.Read(b)
 	return string(b)
 }
 
 // TestGetSetID tests encoding/decoding and setting/getting of the ID key.
-func TestGetSetID(t *testing.T) {
+func TestGetSetID(t *testing.T) { log.DebugLog()
 	id := ID("someid")
 	var r Record
 	r.Set(id)
@@ -55,7 +55,7 @@ func TestGetSetID(t *testing.T) {
 }
 
 // TestGetSetIP4 tests encoding/decoding and setting/getting of the IP4 key.
-func TestGetSetIP4(t *testing.T) {
+func TestGetSetIP4(t *testing.T) { log.DebugLog()
 	ip := IP4{192, 168, 0, 3}
 	var r Record
 	r.Set(ip)
@@ -66,7 +66,7 @@ func TestGetSetIP4(t *testing.T) {
 }
 
 // TestGetSetIP6 tests encoding/decoding and setting/getting of the IP6 key.
-func TestGetSetIP6(t *testing.T) {
+func TestGetSetIP6(t *testing.T) { log.DebugLog()
 	ip := IP6{0x20, 0x01, 0x48, 0x60, 0, 0, 0x20, 0x01, 0, 0, 0, 0, 0, 0, 0x00, 0x68}
 	var r Record
 	r.Set(ip)
@@ -77,7 +77,7 @@ func TestGetSetIP6(t *testing.T) {
 }
 
 // TestGetSetDiscPort tests encoding/decoding and setting/getting of the DiscPort key.
-func TestGetSetDiscPort(t *testing.T) {
+func TestGetSetDiscPort(t *testing.T) { log.DebugLog()
 	port := DiscPort(30309)
 	var r Record
 	r.Set(port)
@@ -88,7 +88,7 @@ func TestGetSetDiscPort(t *testing.T) {
 }
 
 // TestGetSetSecp256k1 tests encoding/decoding and setting/getting of the Secp256k1 key.
-func TestGetSetSecp256k1(t *testing.T) {
+func TestGetSetSecp256k1(t *testing.T) { log.DebugLog()
 	var r Record
 	if err := r.Sign(privkey); err != nil {
 		t.Fatal(err)
@@ -99,7 +99,7 @@ func TestGetSetSecp256k1(t *testing.T) {
 	assert.EqualValues(t, pubkey, &pk)
 }
 
-func TestLoadErrors(t *testing.T) {
+func TestLoadErrors(t *testing.T) { log.DebugLog()
 	var r Record
 	ip4 := IP4{127, 0, 0, 1}
 	r.Set(ip4)
@@ -127,7 +127,7 @@ func TestLoadErrors(t *testing.T) {
 }
 
 // TestSortedGetAndSet tests that Set produced a sorted pairs slice.
-func TestSortedGetAndSet(t *testing.T) {
+func TestSortedGetAndSet(t *testing.T) { log.DebugLog()
 	type pair struct {
 		k string
 		v uint32
@@ -164,7 +164,7 @@ func TestSortedGetAndSet(t *testing.T) {
 }
 
 // TestDirty tests record signature removal on setting of new key/value pair in record.
-func TestDirty(t *testing.T) {
+func TestDirty(t *testing.T) { log.DebugLog()
 	var r Record
 
 	if r.Signed() {
@@ -191,7 +191,7 @@ func TestDirty(t *testing.T) {
 }
 
 // TestGetSetOverwrite tests value overwrite when setting a new value with an existing key in record.
-func TestGetSetOverwrite(t *testing.T) {
+func TestGetSetOverwrite(t *testing.T) { log.DebugLog()
 	var r Record
 
 	ip := IP4{192, 168, 0, 3}
@@ -206,7 +206,7 @@ func TestGetSetOverwrite(t *testing.T) {
 }
 
 // TestSignEncodeAndDecode tests signing, RLP encoding and RLP decoding of a record.
-func TestSignEncodeAndDecode(t *testing.T) {
+func TestSignEncodeAndDecode(t *testing.T) { log.DebugLog()
 	var r Record
 	r.Set(DiscPort(30303))
 	r.Set(IP4{127, 0, 0, 1})
@@ -224,7 +224,7 @@ func TestSignEncodeAndDecode(t *testing.T) {
 	assert.Equal(t, blob, blob2)
 }
 
-func TestNodeAddr(t *testing.T) {
+func TestNodeAddr(t *testing.T) { log.DebugLog()
 	var r Record
 	if addr := r.NodeAddr(); addr != nil {
 		t.Errorf("wrong address on empty record: got %v, want %v", addr, nil)
@@ -239,7 +239,7 @@ var pyRecord, _ = hex.DecodeString("f896b840954dc36583c1f4b69ab59b1375f362f06ee9
 
 // TestPythonInterop checks that we can decode and verify a record produced by the Python
 // implementation.
-func TestPythonInterop(t *testing.T) {
+func TestPythonInterop(t *testing.T) { log.DebugLog()
 	var r Record
 	if err := rlp.DecodeBytes(pyRecord, &r); err != nil {
 		t.Fatalf("can't decode: %v", err)
@@ -267,7 +267,7 @@ func TestPythonInterop(t *testing.T) {
 }
 
 // TestRecordTooBig tests that records bigger than SizeLimit bytes cannot be signed.
-func TestRecordTooBig(t *testing.T) {
+func TestRecordTooBig(t *testing.T) { log.DebugLog()
 	var r Record
 	key := randomString(10)
 
@@ -283,7 +283,7 @@ func TestRecordTooBig(t *testing.T) {
 }
 
 // TestSignEncodeAndDecodeRandom tests encoding/decoding of records containing random key/value pairs.
-func TestSignEncodeAndDecodeRandom(t *testing.T) {
+func TestSignEncodeAndDecodeRandom(t *testing.T) { log.DebugLog()
 	var r Record
 
 	// random key/value pairs for testing
@@ -308,7 +308,7 @@ func TestSignEncodeAndDecodeRandom(t *testing.T) {
 	}
 }
 
-func BenchmarkDecode(b *testing.B) {
+func BenchmarkDecode(b *testing.B) { log.DebugLog()
 	var r Record
 	for i := 0; i < b.N; i++ {
 		rlp.DecodeBytes(pyRecord, &r)

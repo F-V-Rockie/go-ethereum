@@ -125,7 +125,7 @@ while(<>) {
 	if($text ne "") {
 		$text .= "\n"
 	}
-	$text .= sprintf "func %s(%s)%s {\n", $func, join(', ', @in), $out;
+	$text .= sprintf "func %s(%s)%s { log.DebugLog()\n", $func, join(', ', @in), $out;
 
 	# Check if err return available
 	my $errvar = "";

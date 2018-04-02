@@ -30,13 +30,13 @@ import (
 
 var testDownloadDir, _ = ioutil.TempDir(os.TempDir(), "bzz-test")
 
-func testFileSystem(t *testing.T, f func(*FileSystem)) {
+func testFileSystem(t *testing.T, f func(*FileSystem)) { log.DebugLog()
 	testApi(t, func(api *Api) {
 		f(NewFileSystem(api))
 	})
 }
 
-func readPath(t *testing.T, parts ...string) string {
+func readPath(t *testing.T, parts ...string) string { log.DebugLog()
 	file := filepath.Join(parts...)
 	content, err := ioutil.ReadFile(file)
 
@@ -46,7 +46,7 @@ func readPath(t *testing.T, parts ...string) string {
 	return string(content)
 }
 
-func TestApiDirUpload0(t *testing.T) {
+func TestApiDirUpload0(t *testing.T) { log.DebugLog()
 	testFileSystem(t, func(fs *FileSystem) {
 		api := fs.api
 		bzzhash, err := fs.Upload(filepath.Join("testdata", "test0"), "")
@@ -85,7 +85,7 @@ func TestApiDirUpload0(t *testing.T) {
 	})
 }
 
-func TestApiDirUploadModify(t *testing.T) {
+func TestApiDirUploadModify(t *testing.T) { log.DebugLog()
 	testFileSystem(t, func(fs *FileSystem) {
 		api := fs.api
 		bzzhash, err := fs.Upload(filepath.Join("testdata", "test0"), "")
@@ -145,7 +145,7 @@ func TestApiDirUploadModify(t *testing.T) {
 	})
 }
 
-func TestApiDirUploadWithRootFile(t *testing.T) {
+func TestApiDirUploadWithRootFile(t *testing.T) { log.DebugLog()
 	testFileSystem(t, func(fs *FileSystem) {
 		api := fs.api
 		bzzhash, err := fs.Upload(filepath.Join("testdata", "test0"), "index.html")
@@ -161,7 +161,7 @@ func TestApiDirUploadWithRootFile(t *testing.T) {
 	})
 }
 
-func TestApiFileUpload(t *testing.T) {
+func TestApiFileUpload(t *testing.T) { log.DebugLog()
 	testFileSystem(t, func(fs *FileSystem) {
 		api := fs.api
 		bzzhash, err := fs.Upload(filepath.Join("testdata", "test0", "index.html"), "")
@@ -177,7 +177,7 @@ func TestApiFileUpload(t *testing.T) {
 	})
 }
 
-func TestApiFileUploadWithRootFile(t *testing.T) {
+func TestApiFileUploadWithRootFile(t *testing.T) { log.DebugLog()
 	testFileSystem(t, func(fs *FileSystem) {
 		api := fs.api
 		bzzhash, err := fs.Upload(filepath.Join("testdata", "test0", "index.html"), "index.html")

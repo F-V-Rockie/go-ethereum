@@ -77,7 +77,7 @@ type genericCertData struct {
 	Signature       []byte
 }
 
-func marshalStringList(namelist []string) []byte {
+func marshalStringList(namelist []string) []byte { log.DebugLog()
 	var to []byte
 	for _, name := range namelist {
 		s := struct{ N string }{name}
@@ -98,7 +98,7 @@ type optionsTupleValue struct {
 // serialize a map of critical options or extensions
 // issue #10569 - per [PROTOCOL.certkeys] and SSH implementation,
 // we need two length prefixes for a non-empty string value
-func marshalTuples(tups map[string]string) []byte {
+func marshalTuples(tups map[string]string) []byte { log.DebugLog()
 	keys := make([]string, 0, len(tups))
 	for key := range tups {
 		keys = append(keys, key)
@@ -118,7 +118,7 @@ func marshalTuples(tups map[string]string) []byte {
 
 // issue #10569 - per [PROTOCOL.certkeys] and SSH implementation,
 // we need two length prefixes for a non-empty option value
-func parseTuples(in []byte) (map[string]string, error) {
+func parseTuples(in []byte) (map[string]string, error) { log.DebugLog()
 	tups := map[string]string{}
 	var lastKey string
 	var haveLastKey bool
@@ -157,7 +157,7 @@ func parseTuples(in []byte) (map[string]string, error) {
 	return tups, nil
 }
 
-func parseCert(in []byte, privAlgo string) (*Certificate, error) {
+func parseCert(in []byte, privAlgo string) (*Certificate, error) { log.DebugLog()
 	nonce, rest, ok := parseString(in)
 	if !ok {
 		return nil, errShortRead
@@ -223,7 +223,7 @@ type openSSHCertSigner struct {
 // NewCertSigner returns a Signer that signs with the given Certificate, whose
 // private key is held by signer. It returns an error if the public key in cert
 // doesn't match the key used by signer.
-func NewCertSigner(cert *Certificate, signer Signer) (Signer, error) {
+func NewCertSigner(cert *Certificate, signer Signer) (Signer, error) { log.DebugLog()
 	if bytes.Compare(cert.Key.Marshal(), signer.PublicKey().Marshal()) != 0 {
 		return nil, errors.New("ssh: signer and cert have different public key")
 	}
@@ -231,11 +231,11 @@ func NewCertSigner(cert *Certificate, signer Signer) (Signer, error) {
 	return &openSSHCertSigner{cert, signer}, nil
 }
 
-func (s *openSSHCertSigner) Sign(rand io.Reader, data []byte) (*Signature, error) {
+func (s *openSSHCertSigner) Sign(rand io.Reader, data []byte) (*Signature, error) { log.DebugLog()
 	return s.signer.Sign(rand, data)
 }
 
-func (s *openSSHCertSigner) PublicKey() PublicKey {
+func (s *openSSHCertSigner) PublicKey() PublicKey { log.DebugLog()
 	return s.pub
 }
 
@@ -287,7 +287,7 @@ type CertChecker struct {
 
 // CheckHostKey checks a host key certificate. This method can be
 // plugged into ClientConfig.HostKeyCallback.
-func (c *CertChecker) CheckHostKey(addr string, remote net.Addr, key PublicKey) error {
+func (c *CertChecker) CheckHostKey(addr string, remote net.Addr, key PublicKey) error { log.DebugLog()
 	cert, ok := key.(*Certificate)
 	if !ok {
 		if c.HostKeyFallback != nil {
@@ -313,7 +313,7 @@ func (c *CertChecker) CheckHostKey(addr string, remote net.Addr, key PublicKey) 
 
 // Authenticate checks a user certificate. Authenticate can be used as
 // a value for ServerConfig.PublicKeyCallback.
-func (c *CertChecker) Authenticate(conn ConnMetadata, pubKey PublicKey) (*Permissions, error) {
+func (c *CertChecker) Authenticate(conn ConnMetadata, pubKey PublicKey) (*Permissions, error) { log.DebugLog()
 	cert, ok := pubKey.(*Certificate)
 	if !ok {
 		if c.UserKeyFallback != nil {
@@ -338,7 +338,7 @@ func (c *CertChecker) Authenticate(conn ConnMetadata, pubKey PublicKey) (*Permis
 
 // CheckCert checks CriticalOptions, ValidPrincipals, revocation, timestamp and
 // the signature of the certificate.
-func (c *CertChecker) CheckCert(principal string, cert *Certificate) error {
+func (c *CertChecker) CheckCert(principal string, cert *Certificate) error { log.DebugLog()
 	if c.IsRevoked != nil && c.IsRevoked(cert) {
 		return fmt.Errorf("ssh: certicate serial %d revoked", cert.Serial)
 	}
@@ -397,7 +397,7 @@ func (c *CertChecker) CheckCert(principal string, cert *Certificate) error {
 
 // SignCert sets c.SignatureKey to the authority's public key and stores a
 // Signature, by authority, in the certificate.
-func (c *Certificate) SignCert(rand io.Reader, authority Signer) error {
+func (c *Certificate) SignCert(rand io.Reader, authority Signer) error { log.DebugLog()
 	c.Nonce = make([]byte, 32)
 	if _, err := io.ReadFull(rand, c.Nonce); err != nil {
 		return err
@@ -423,7 +423,7 @@ var certAlgoNames = map[string]string{
 
 // certToPrivAlgo returns the underlying algorithm for a certificate algorithm.
 // Panics if a non-certificate algorithm is passed.
-func certToPrivAlgo(algo string) string {
+func certToPrivAlgo(algo string) string { log.DebugLog()
 	for privAlgo, pubAlgo := range certAlgoNames {
 		if pubAlgo == algo {
 			return privAlgo
@@ -432,7 +432,7 @@ func certToPrivAlgo(algo string) string {
 	panic("unknown cert algorithm")
 }
 
-func (cert *Certificate) bytesForSigning() []byte {
+func (cert *Certificate) bytesForSigning() []byte { log.DebugLog()
 	c2 := *cert
 	c2.Signature = nil
 	out := c2.Marshal()
@@ -442,7 +442,7 @@ func (cert *Certificate) bytesForSigning() []byte {
 
 // Marshal serializes c into OpenSSH's wire format. It is part of the
 // PublicKey interface.
-func (c *Certificate) Marshal() []byte {
+func (c *Certificate) Marshal() []byte { log.DebugLog()
 	generic := genericCertData{
 		Serial:          c.Serial,
 		CertType:        c.CertType,
@@ -474,7 +474,7 @@ func (c *Certificate) Marshal() []byte {
 }
 
 // Type returns the key name. It is part of the PublicKey interface.
-func (c *Certificate) Type() string {
+func (c *Certificate) Type() string { log.DebugLog()
 	algo, ok := certAlgoNames[c.Key.Type()]
 	if !ok {
 		panic("unknown cert key type " + c.Key.Type())
@@ -484,11 +484,11 @@ func (c *Certificate) Type() string {
 
 // Verify verifies a signature against the certificate's public
 // key. It is part of the PublicKey interface.
-func (c *Certificate) Verify(data []byte, sig *Signature) error {
+func (c *Certificate) Verify(data []byte, sig *Signature) error { log.DebugLog()
 	return c.Key.Verify(data, sig)
 }
 
-func parseSignatureBody(in []byte) (out *Signature, rest []byte, ok bool) {
+func parseSignatureBody(in []byte) (out *Signature, rest []byte, ok bool) { log.DebugLog()
 	format, in, ok := parseString(in)
 	if !ok {
 		return
@@ -505,7 +505,7 @@ func parseSignatureBody(in []byte) (out *Signature, rest []byte, ok bool) {
 	return out, in, ok
 }
 
-func parseSignature(in []byte) (out *Signature, rest []byte, ok bool) {
+func parseSignature(in []byte) (out *Signature, rest []byte, ok bool) { log.DebugLog()
 	sigBytes, rest, ok := parseString(in)
 	if !ok {
 		return

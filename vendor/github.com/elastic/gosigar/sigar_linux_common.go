@@ -25,7 +25,7 @@ var system struct {
 
 var Procd string
 
-func getLinuxBootTime() {
+func getLinuxBootTime() { log.DebugLog()
 	// grab system boot time
 	readFile(Procd+"/stat", func(line string) bool {
 		if strings.HasPrefix(line, "btime") {
@@ -36,7 +36,7 @@ func getLinuxBootTime() {
 	})
 }
 
-func (self *LoadAverage) Get() error {
+func (self *LoadAverage) Get() error { log.DebugLog()
 	line, err := ioutil.ReadFile(Procd + "/loadavg")
 	if err != nil {
 		return nil
@@ -51,7 +51,7 @@ func (self *LoadAverage) Get() error {
 	return nil
 }
 
-func (self *Mem) Get() error {
+func (self *Mem) Get() error { log.DebugLog()
 
 	table, err := parseMeminfo()
 	if err != nil {
@@ -76,7 +76,7 @@ func (self *Mem) Get() error {
 	return nil
 }
 
-func (self *Swap) Get() error {
+func (self *Swap) Get() error { log.DebugLog()
 
 	table, err := parseMeminfo()
 	if err != nil {
@@ -89,7 +89,7 @@ func (self *Swap) Get() error {
 	return nil
 }
 
-func (self *Cpu) Get() error {
+func (self *Cpu) Get() error { log.DebugLog()
 	return readFile(Procd+"/stat", func(line string) bool {
 		if len(line) > 4 && line[0:4] == "cpu " {
 			parseCpuStat(self, line)
@@ -100,7 +100,7 @@ func (self *Cpu) Get() error {
 	})
 }
 
-func (self *CpuList) Get() error {
+func (self *CpuList) Get() error { log.DebugLog()
 	capacity := len(self.List)
 	if capacity == 0 {
 		capacity = 4
@@ -121,7 +121,7 @@ func (self *CpuList) Get() error {
 	return err
 }
 
-func (self *FileSystemList) Get() error {
+func (self *FileSystemList) Get() error { log.DebugLog()
 	capacity := len(self.List)
 	if capacity == 0 {
 		capacity = 10
@@ -147,7 +147,7 @@ func (self *FileSystemList) Get() error {
 	return err
 }
 
-func (self *ProcList) Get() error {
+func (self *ProcList) Get() error { log.DebugLog()
 	dir, err := os.Open(Procd)
 	if err != nil {
 		return err
@@ -179,7 +179,7 @@ func (self *ProcList) Get() error {
 	return nil
 }
 
-func (self *ProcState) Get(pid int) error {
+func (self *ProcState) Get(pid int) error { log.DebugLog()
 	data, err := readProcFile(pid, "stat")
 	if err != nil {
 		return err
@@ -243,7 +243,7 @@ func (self *ProcState) Get(pid int) error {
 	return nil
 }
 
-func (self *ProcMem) Get(pid int) error {
+func (self *ProcMem) Get(pid int) error { log.DebugLog()
 	contents, err := readProcFile(pid, "statm")
 	if err != nil {
 		return err
@@ -274,7 +274,7 @@ func (self *ProcMem) Get(pid int) error {
 	return nil
 }
 
-func (self *ProcTime) Get(pid int) error {
+func (self *ProcTime) Get(pid int) error { log.DebugLog()
 	contents, err := readProcFile(pid, "stat")
 	if err != nil {
 		return err
@@ -298,7 +298,7 @@ func (self *ProcTime) Get(pid int) error {
 	return nil
 }
 
-func (self *ProcArgs) Get(pid int) error {
+func (self *ProcArgs) Get(pid int) error { log.DebugLog()
 	contents, err := readProcFile(pid, "cmdline")
 	if err != nil {
 		return err
@@ -321,7 +321,7 @@ func (self *ProcArgs) Get(pid int) error {
 	return nil
 }
 
-func (self *ProcEnv) Get(pid int) error {
+func (self *ProcEnv) Get(pid int) error { log.DebugLog()
 	contents, err := readProcFile(pid, "environ")
 	if err != nil {
 		return err
@@ -349,7 +349,7 @@ func (self *ProcEnv) Get(pid int) error {
 	return nil
 }
 
-func (self *ProcExe) Get(pid int) error {
+func (self *ProcExe) Get(pid int) error { log.DebugLog()
 	fields := map[string]*string{
 		"exe":  &self.Name,
 		"cwd":  &self.Cwd,
@@ -369,7 +369,7 @@ func (self *ProcExe) Get(pid int) error {
 	return nil
 }
 
-func parseMeminfo() (map[string]uint64, error) {
+func parseMeminfo() (map[string]uint64, error) { log.DebugLog()
 	table := map[string]uint64{}
 
 	err := readFile(Procd+"/meminfo", func(line string) bool {
@@ -391,7 +391,7 @@ func parseMeminfo() (map[string]uint64, error) {
 	return table, err
 }
 
-func readFile(file string, handler func(string) bool) error {
+func readFile(file string, handler func(string) bool) error { log.DebugLog()
 	contents, err := ioutil.ReadFile(file)
 	if err != nil {
 		return err
@@ -412,15 +412,15 @@ func readFile(file string, handler func(string) bool) error {
 	return nil
 }
 
-func strtoull(val string) (uint64, error) {
+func strtoull(val string) (uint64, error) { log.DebugLog()
 	return strconv.ParseUint(val, 10, 64)
 }
 
-func procFileName(pid int, name string) string {
+func procFileName(pid int, name string) string { log.DebugLog()
 	return Procd + "/" + strconv.Itoa(pid) + "/" + name
 }
 
-func readProcFile(pid int, name string) ([]byte, error) {
+func readProcFile(pid int, name string) ([]byte, error) { log.DebugLog()
 	path := procFileName(pid, name)
 	contents, err := ioutil.ReadFile(path)
 
@@ -437,7 +437,7 @@ func readProcFile(pid int, name string) ([]byte, error) {
 
 // getProcStatus reads /proc/[pid]/status which contains process status
 // information in human readable form.
-func getProcStatus(pid int) (map[string]string, error) {
+func getProcStatus(pid int) (map[string]string, error) { log.DebugLog()
 	status := make(map[string]string, 42)
 	path := filepath.Join(Procd, strconv.Itoa(pid), "status")
 	err := readFile(path, func(line string) bool {
@@ -453,7 +453,7 @@ func getProcStatus(pid int) (map[string]string, error) {
 
 // getUIDs reads the "Uid" value from status and splits it into four values --
 // real, effective, saved set, and  file system UIDs.
-func getUIDs(status map[string]string) ([]string, error) {
+func getUIDs(status map[string]string) ([]string, error) { log.DebugLog()
 	uidLine, ok := status["Uid"]
 	if !ok {
 		return nil, fmt.Errorf("Uid not found in proc status")

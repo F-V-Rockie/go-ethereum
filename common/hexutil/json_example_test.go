@@ -25,15 +25,15 @@ import (
 
 type MyType [5]byte
 
-func (v *MyType) UnmarshalText(input []byte) error {
+func (v *MyType) UnmarshalText(input []byte) error { log.DebugLog()
 	return hexutil.UnmarshalFixedText("MyType", input, v[:])
 }
 
-func (v MyType) String() string {
+func (v MyType) String() string { log.DebugLog()
 	return hexutil.Bytes(v[:]).String()
 }
 
-func ExampleUnmarshalFixedText() {
+func ExampleUnmarshalFixedText() { log.DebugLog()
 	var v1, v2 MyType
 	fmt.Println("v1 error:", json.Unmarshal([]byte(`"0x01"`), &v1))
 	fmt.Println("v2 error:", json.Unmarshal([]byte(`"0x0101010101"`), &v2))

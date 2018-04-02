@@ -49,7 +49,7 @@ type parser struct {
 	context *Node
 }
 
-func (p *parser) top() *Node {
+func (p *parser) top() *Node { log.DebugLog()
 	if n := p.oe.top(); n != nil {
 		return n
 	}
@@ -94,7 +94,7 @@ const (
 // no higher element in the stack that was also in the stop tags). For example,
 // popUntil(tableScope, "table") returns true and leaves:
 // ["html", "body", "font"]
-func (p *parser) popUntil(s scope, matchTags ...a.Atom) bool {
+func (p *parser) popUntil(s scope, matchTags ...a.Atom) bool { log.DebugLog()
 	if i := p.indexOfElementInScope(s, matchTags...); i != -1 {
 		p.oe = p.oe[:i]
 		return true
@@ -105,7 +105,7 @@ func (p *parser) popUntil(s scope, matchTags ...a.Atom) bool {
 // indexOfElementInScope returns the index in p.oe of the highest element whose
 // tag is in matchTags that is in scope. If no matching element is in scope, it
 // returns -1.
-func (p *parser) indexOfElementInScope(s scope, matchTags ...a.Atom) int {
+func (p *parser) indexOfElementInScope(s scope, matchTags ...a.Atom) int { log.DebugLog()
 	for i := len(p.oe) - 1; i >= 0; i-- {
 		tagAtom := p.oe[i].DataAtom
 		if p.oe[i].Namespace == "" {
@@ -151,13 +151,13 @@ func (p *parser) indexOfElementInScope(s scope, matchTags ...a.Atom) int {
 
 // elementInScope is like popUntil, except that it doesn't modify the stack of
 // open elements.
-func (p *parser) elementInScope(s scope, matchTags ...a.Atom) bool {
+func (p *parser) elementInScope(s scope, matchTags ...a.Atom) bool { log.DebugLog()
 	return p.indexOfElementInScope(s, matchTags...) != -1
 }
 
 // clearStackToContext pops elements off the stack of open elements until a
 // scope-defined element is found.
-func (p *parser) clearStackToContext(s scope) {
+func (p *parser) clearStackToContext(s scope) { log.DebugLog()
 	for i := len(p.oe) - 1; i >= 0; i-- {
 		tagAtom := p.oe[i].DataAtom
 		switch s {
@@ -185,7 +185,7 @@ func (p *parser) clearStackToContext(s scope) {
 // generateImpliedEndTags pops nodes off the stack of open elements as long as
 // the top node has a tag name of dd, dt, li, option, optgroup, p, rp, or rt.
 // If exceptions are specified, nodes with that name will not be popped off.
-func (p *parser) generateImpliedEndTags(exceptions ...string) {
+func (p *parser) generateImpliedEndTags(exceptions ...string) { log.DebugLog()
 	var i int
 loop:
 	for i = len(p.oe) - 1; i >= 0; i-- {
@@ -209,7 +209,7 @@ loop:
 
 // addChild adds a child node n to the top element, and pushes n onto the stack
 // of open elements if it is an element node.
-func (p *parser) addChild(n *Node) {
+func (p *parser) addChild(n *Node) { log.DebugLog()
 	if p.shouldFosterParent() {
 		p.fosterParent(n)
 	} else {
@@ -223,7 +223,7 @@ func (p *parser) addChild(n *Node) {
 
 // shouldFosterParent returns whether the next node to be added should be
 // foster parented.
-func (p *parser) shouldFosterParent() bool {
+func (p *parser) shouldFosterParent() bool { log.DebugLog()
 	if p.fosterParenting {
 		switch p.top().DataAtom {
 		case a.Table, a.Tbody, a.Tfoot, a.Thead, a.Tr:
@@ -235,7 +235,7 @@ func (p *parser) shouldFosterParent() bool {
 
 // fosterParent adds a child node according to the foster parenting rules.
 // Section 12.2.5.3, "foster parenting".
-func (p *parser) fosterParent(n *Node) {
+func (p *parser) fosterParent(n *Node) { log.DebugLog()
 	var table, parent, prev *Node
 	var i int
 	for i = len(p.oe) - 1; i >= 0; i-- {
@@ -270,7 +270,7 @@ func (p *parser) fosterParent(n *Node) {
 
 // addText adds text to the preceding node if it is a text node, or else it
 // calls addChild with a new text node.
-func (p *parser) addText(text string) {
+func (p *parser) addText(text string) { log.DebugLog()
 	if text == "" {
 		return
 	}
@@ -295,7 +295,7 @@ func (p *parser) addText(text string) {
 }
 
 // addElement adds a child element based on the current token.
-func (p *parser) addElement() {
+func (p *parser) addElement() { log.DebugLog()
 	p.addChild(&Node{
 		Type:     ElementNode,
 		DataAtom: p.tok.DataAtom,
@@ -305,7 +305,7 @@ func (p *parser) addElement() {
 }
 
 // Section 12.2.3.3.
-func (p *parser) addFormattingElement() {
+func (p *parser) addFormattingElement() { log.DebugLog()
 	tagAtom, attr := p.tok.DataAtom, p.tok.Attr
 	p.addElement()
 
@@ -352,7 +352,7 @@ findIdenticalElements:
 }
 
 // Section 12.2.3.3.
-func (p *parser) clearActiveFormattingElements() {
+func (p *parser) clearActiveFormattingElements() { log.DebugLog()
 	for {
 		n := p.afe.pop()
 		if len(p.afe) == 0 || n.Type == scopeMarkerNode {
@@ -362,7 +362,7 @@ func (p *parser) clearActiveFormattingElements() {
 }
 
 // Section 12.2.3.3.
-func (p *parser) reconstructActiveFormattingElements() {
+func (p *parser) reconstructActiveFormattingElements() { log.DebugLog()
 	n := p.afe.top()
 	if n == nil {
 		return
@@ -391,7 +391,7 @@ func (p *parser) reconstructActiveFormattingElements() {
 }
 
 // Section 12.2.4.
-func (p *parser) acknowledgeSelfClosingTag() {
+func (p *parser) acknowledgeSelfClosingTag() { log.DebugLog()
 	p.hasSelfClosingToken = false
 }
 
@@ -404,7 +404,7 @@ type insertionMode func(*parser) bool
 // setOriginalIM sets the insertion mode to return to after completing a text or
 // inTableText insertion mode.
 // Section 12.2.3.1, "using the rules for".
-func (p *parser) setOriginalIM() {
+func (p *parser) setOriginalIM() { log.DebugLog()
 	if p.originalIM != nil {
 		panic("html: bad parser state: originalIM was set twice")
 	}
@@ -412,7 +412,7 @@ func (p *parser) setOriginalIM() {
 }
 
 // Section 12.2.3.1, "reset the insertion mode".
-func (p *parser) resetInsertionMode() {
+func (p *parser) resetInsertionMode() { log.DebugLog()
 	for i := len(p.oe) - 1; i >= 0; i-- {
 		n := p.oe[i]
 		if i == 0 && p.context != nil {
@@ -453,7 +453,7 @@ func (p *parser) resetInsertionMode() {
 const whitespace = " \t\r\n\f"
 
 // Section 12.2.5.4.1.
-func initialIM(p *parser) bool {
+func initialIM(p *parser) bool { log.DebugLog()
 	switch p.tok.Type {
 	case TextToken:
 		p.tok.Data = strings.TrimLeft(p.tok.Data, whitespace)
@@ -480,7 +480,7 @@ func initialIM(p *parser) bool {
 }
 
 // Section 12.2.5.4.2.
-func beforeHTMLIM(p *parser) bool {
+func beforeHTMLIM(p *parser) bool { log.DebugLog()
 	switch p.tok.Type {
 	case DoctypeToken:
 		// Ignore the token.
@@ -518,7 +518,7 @@ func beforeHTMLIM(p *parser) bool {
 }
 
 // Section 12.2.5.4.3.
-func beforeHeadIM(p *parser) bool {
+func beforeHeadIM(p *parser) bool { log.DebugLog()
 	switch p.tok.Type {
 	case TextToken:
 		p.tok.Data = strings.TrimLeft(p.tok.Data, whitespace)
@@ -561,7 +561,7 @@ func beforeHeadIM(p *parser) bool {
 }
 
 // Section 12.2.5.4.4.
-func inHeadIM(p *parser) bool {
+func inHeadIM(p *parser) bool { log.DebugLog()
 	switch p.tok.Type {
 	case TextToken:
 		s := strings.TrimLeft(p.tok.Data, whitespace)
@@ -623,7 +623,7 @@ func inHeadIM(p *parser) bool {
 }
 
 // Section 12.2.5.4.6.
-func afterHeadIM(p *parser) bool {
+func afterHeadIM(p *parser) bool { log.DebugLog()
 	switch p.tok.Type {
 	case TextToken:
 		s := strings.TrimLeft(p.tok.Data, whitespace)
@@ -681,7 +681,7 @@ func afterHeadIM(p *parser) bool {
 }
 
 // copyAttributes copies attributes of src not found on dst to dst.
-func copyAttributes(dst *Node, src Token) {
+func copyAttributes(dst *Node, src Token) { log.DebugLog()
 	if len(src.Attr) == 0 {
 		return
 	}
@@ -698,7 +698,7 @@ func copyAttributes(dst *Node, src Token) {
 }
 
 // Section 12.2.5.4.7.
-func inBodyIM(p *parser) bool {
+func inBodyIM(p *parser) bool { log.DebugLog()
 	switch p.tok.Type {
 	case TextToken:
 		d := p.tok.Data
@@ -1035,7 +1035,7 @@ func inBodyIM(p *parser) bool {
 	return true
 }
 
-func (p *parser) inBodyEndTagFormatting(tagAtom a.Atom) {
+func (p *parser) inBodyEndTagFormatting(tagAtom a.Atom) { log.DebugLog()
 	// This is the "adoption agency" algorithm, described at
 	// https://html.spec.whatwg.org/multipage/syntax.html#adoptionAgency
 
@@ -1162,7 +1162,7 @@ func (p *parser) inBodyEndTagFormatting(tagAtom a.Atom) {
 // inBodyEndTagOther performs the "any other end tag" algorithm for inBodyIM.
 // "Any other end tag" handling from 12.2.5.5 The rules for parsing tokens in foreign content
 // https://html.spec.whatwg.org/multipage/syntax.html#parsing-main-inforeign
-func (p *parser) inBodyEndTagOther(tagAtom a.Atom) {
+func (p *parser) inBodyEndTagOther(tagAtom a.Atom) { log.DebugLog()
 	for i := len(p.oe) - 1; i >= 0; i-- {
 		if p.oe[i].DataAtom == tagAtom {
 			p.oe = p.oe[:i]
@@ -1175,7 +1175,7 @@ func (p *parser) inBodyEndTagOther(tagAtom a.Atom) {
 }
 
 // Section 12.2.5.4.8.
-func textIM(p *parser) bool {
+func textIM(p *parser) bool { log.DebugLog()
 	switch p.tok.Type {
 	case ErrorToken:
 		p.oe.pop()
@@ -1204,7 +1204,7 @@ func textIM(p *parser) bool {
 }
 
 // Section 12.2.5.4.9.
-func inTableIM(p *parser) bool {
+func inTableIM(p *parser) bool { log.DebugLog()
 	switch p.tok.Type {
 	case ErrorToken:
 		// Stop parsing.
@@ -1310,7 +1310,7 @@ func inTableIM(p *parser) bool {
 }
 
 // Section 12.2.5.4.11.
-func inCaptionIM(p *parser) bool {
+func inCaptionIM(p *parser) bool { log.DebugLog()
 	switch p.tok.Type {
 	case StartTagToken:
 		switch p.tok.DataAtom {
@@ -1356,7 +1356,7 @@ func inCaptionIM(p *parser) bool {
 }
 
 // Section 12.2.5.4.12.
-func inColumnGroupIM(p *parser) bool {
+func inColumnGroupIM(p *parser) bool { log.DebugLog()
 	switch p.tok.Type {
 	case TextToken:
 		s := strings.TrimLeft(p.tok.Data, whitespace)
@@ -1409,7 +1409,7 @@ func inColumnGroupIM(p *parser) bool {
 }
 
 // Section 12.2.5.4.13.
-func inTableBodyIM(p *parser) bool {
+func inTableBodyIM(p *parser) bool { log.DebugLog()
 	switch p.tok.Type {
 	case StartTagToken:
 		switch p.tok.DataAtom {
@@ -1461,7 +1461,7 @@ func inTableBodyIM(p *parser) bool {
 }
 
 // Section 12.2.5.4.14.
-func inRowIM(p *parser) bool {
+func inRowIM(p *parser) bool { log.DebugLog()
 	switch p.tok.Type {
 	case StartTagToken:
 		switch p.tok.DataAtom {
@@ -1512,7 +1512,7 @@ func inRowIM(p *parser) bool {
 }
 
 // Section 12.2.5.4.15.
-func inCellIM(p *parser) bool {
+func inCellIM(p *parser) bool { log.DebugLog()
 	switch p.tok.Type {
 	case StartTagToken:
 		switch p.tok.DataAtom {
@@ -1561,7 +1561,7 @@ func inCellIM(p *parser) bool {
 }
 
 // Section 12.2.5.4.16.
-func inSelectIM(p *parser) bool {
+func inSelectIM(p *parser) bool { log.DebugLog()
 	switch p.tok.Type {
 	case ErrorToken:
 		// Stop parsing.
@@ -1633,7 +1633,7 @@ func inSelectIM(p *parser) bool {
 }
 
 // Section 12.2.5.4.17.
-func inSelectInTableIM(p *parser) bool {
+func inSelectInTableIM(p *parser) bool { log.DebugLog()
 	switch p.tok.Type {
 	case StartTagToken, EndTagToken:
 		switch p.tok.DataAtom {
@@ -1651,7 +1651,7 @@ func inSelectInTableIM(p *parser) bool {
 }
 
 // Section 12.2.5.4.18.
-func afterBodyIM(p *parser) bool {
+func afterBodyIM(p *parser) bool { log.DebugLog()
 	switch p.tok.Type {
 	case ErrorToken:
 		// Stop parsing.
@@ -1689,7 +1689,7 @@ func afterBodyIM(p *parser) bool {
 }
 
 // Section 12.2.5.4.19.
-func inFramesetIM(p *parser) bool {
+func inFramesetIM(p *parser) bool { log.DebugLog()
 	switch p.tok.Type {
 	case CommentToken:
 		p.addChild(&Node{
@@ -1739,7 +1739,7 @@ func inFramesetIM(p *parser) bool {
 }
 
 // Section 12.2.5.4.20.
-func afterFramesetIM(p *parser) bool {
+func afterFramesetIM(p *parser) bool { log.DebugLog()
 	switch p.tok.Type {
 	case CommentToken:
 		p.addChild(&Node{
@@ -1778,7 +1778,7 @@ func afterFramesetIM(p *parser) bool {
 }
 
 // Section 12.2.5.4.21.
-func afterAfterBodyIM(p *parser) bool {
+func afterAfterBodyIM(p *parser) bool { log.DebugLog()
 	switch p.tok.Type {
 	case ErrorToken:
 		// Stop parsing.
@@ -1807,7 +1807,7 @@ func afterAfterBodyIM(p *parser) bool {
 }
 
 // Section 12.2.5.4.22.
-func afterAfterFramesetIM(p *parser) bool {
+func afterAfterFramesetIM(p *parser) bool { log.DebugLog()
 	switch p.tok.Type {
 	case CommentToken:
 		p.doc.AppendChild(&Node{
@@ -1845,7 +1845,7 @@ func afterAfterFramesetIM(p *parser) bool {
 const whitespaceOrNUL = whitespace + "\x00"
 
 // Section 12.2.5.5.
-func parseForeignContent(p *parser) bool {
+func parseForeignContent(p *parser) bool { log.DebugLog()
 	switch p.tok.Type {
 	case TextToken:
 		if p.framesetOK {
@@ -1925,7 +1925,7 @@ func parseForeignContent(p *parser) bool {
 }
 
 // Section 12.2.5.
-func (p *parser) inForeignContent() bool {
+func (p *parser) inForeignContent() bool { log.DebugLog()
 	if len(p.oe) == 0 {
 		return false
 	}
@@ -1955,7 +1955,7 @@ func (p *parser) inForeignContent() bool {
 
 // parseImpliedToken parses a token as though it had appeared in the parser's
 // input.
-func (p *parser) parseImpliedToken(t TokenType, dataAtom a.Atom, data string) {
+func (p *parser) parseImpliedToken(t TokenType, dataAtom a.Atom, data string) { log.DebugLog()
 	realToken, selfClosing := p.tok, p.hasSelfClosingToken
 	p.tok = Token{
 		Type:     t,
@@ -1969,7 +1969,7 @@ func (p *parser) parseImpliedToken(t TokenType, dataAtom a.Atom, data string) {
 
 // parseCurrentToken runs the current token through the parsing routines
 // until it is consumed.
-func (p *parser) parseCurrentToken() {
+func (p *parser) parseCurrentToken() { log.DebugLog()
 	if p.tok.Type == SelfClosingTagToken {
 		p.hasSelfClosingToken = true
 		p.tok.Type = StartTagToken
@@ -1990,7 +1990,7 @@ func (p *parser) parseCurrentToken() {
 	}
 }
 
-func (p *parser) parse() error {
+func (p *parser) parse() error { log.DebugLog()
 	// Iterate until EOF. Any other error will cause an early return.
 	var err error
 	for err != io.EOF {
@@ -2013,7 +2013,7 @@ func (p *parser) parse() error {
 
 // Parse returns the parse tree for the HTML from the given Reader.
 // The input is assumed to be UTF-8 encoded.
-func Parse(r io.Reader) (*Node, error) {
+func Parse(r io.Reader) (*Node, error) { log.DebugLog()
 	p := &parser{
 		tokenizer: NewTokenizer(r),
 		doc: &Node{
@@ -2033,7 +2033,7 @@ func Parse(r io.Reader) (*Node, error) {
 // ParseFragment parses a fragment of HTML and returns the nodes that were
 // found. If the fragment is the InnerHTML for an existing element, pass that
 // element in context.
-func ParseFragment(r io.Reader, context *Node) ([]*Node, error) {
+func ParseFragment(r io.Reader, context *Node) ([]*Node, error) { log.DebugLog()
 	contextTag := ""
 	if context != nil {
 		if context.Type != ElementNode {

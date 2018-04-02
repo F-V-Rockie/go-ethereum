@@ -5,12 +5,12 @@ import (
 	"time"
 )
 
-func ExampleGraphite() {
+func ExampleGraphite() { log.DebugLog()
 	addr, _ := net.ResolveTCPAddr("net", ":2003")
 	go Graphite(DefaultRegistry, 1*time.Second, "some.prefix", addr)
 }
 
-func ExampleGraphiteWithConfig() {
+func ExampleGraphiteWithConfig() { log.DebugLog()
 	addr, _ := net.ResolveTCPAddr("net", ":2003")
 	go GraphiteWithConfig(GraphiteConfig{
 		Addr:          addr,

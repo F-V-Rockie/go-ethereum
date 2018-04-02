@@ -1,4 +1,4 @@
 {{.CommentFormat}}
-func {{.DocInfo.Name}}f(t TestingT, {{.ParamsFormat}}) bool {
+func {{.DocInfo.Name}}f(t TestingT, { log.DebugLog(){.ParamsFormat}}) bool {
 	return {{.DocInfo.Name}}(t, {{.ForwardedParamsFormat}})
 }

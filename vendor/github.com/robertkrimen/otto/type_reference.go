@@ -17,7 +17,7 @@ type _propertyReference struct {
 	at      _at
 }
 
-func newPropertyReference(rt *_runtime, base *_object, name string, strict bool, at _at) *_propertyReference {
+func newPropertyReference(rt *_runtime, base *_object, name string, strict bool, at _at) *_propertyReference { log.DebugLog()
 	return &_propertyReference{
 		runtime: rt,
 		name:    name,
@@ -27,18 +27,18 @@ func newPropertyReference(rt *_runtime, base *_object, name string, strict bool,
 	}
 }
 
-func (self *_propertyReference) invalid() bool {
+func (self *_propertyReference) invalid() bool { log.DebugLog()
 	return self.base == nil
 }
 
-func (self *_propertyReference) getValue() Value {
+func (self *_propertyReference) getValue() Value { log.DebugLog()
 	if self.base == nil {
 		panic(self.runtime.panicReferenceError("'%s' is not defined", self.name, self.at))
 	}
 	return self.base.get(self.name)
 }
 
-func (self *_propertyReference) putValue(value Value) string {
+func (self *_propertyReference) putValue(value Value) string { log.DebugLog()
 	if self.base == nil {
 		return self.name
 	}
@@ -46,7 +46,7 @@ func (self *_propertyReference) putValue(value Value) string {
 	return ""
 }
 
-func (self *_propertyReference) delete() bool {
+func (self *_propertyReference) delete() bool { log.DebugLog()
 	if self.base == nil {
 		// TODO Throw an error if strict
 		return true
@@ -56,7 +56,7 @@ func (self *_propertyReference) delete() bool {
 
 // ArgumentReference
 
-func newArgumentReference(runtime *_runtime, base *_object, name string, strict bool, at _at) *_propertyReference {
+func newArgumentReference(runtime *_runtime, base *_object, name string, strict bool, at _at) *_propertyReference { log.DebugLog()
 	if base == nil {
 		panic(hereBeDragons())
 	}
@@ -69,20 +69,20 @@ type _stashReference struct {
 	base   _stash
 }
 
-func (self *_stashReference) invalid() bool {
+func (self *_stashReference) invalid() bool { log.DebugLog()
 	return false // The base (an environment) will never be nil
 }
 
-func (self *_stashReference) getValue() Value {
+func (self *_stashReference) getValue() Value { log.DebugLog()
 	return self.base.getBinding(self.name, self.strict)
 }
 
-func (self *_stashReference) putValue(value Value) string {
+func (self *_stashReference) putValue(value Value) string { log.DebugLog()
 	self.base.setValue(self.name, value, self.strict)
 	return ""
 }
 
-func (self *_stashReference) delete() bool {
+func (self *_stashReference) delete() bool { log.DebugLog()
 	if self.base == nil {
 		// This should never be reached, but just in case
 		return false
@@ -92,7 +92,7 @@ func (self *_stashReference) delete() bool {
 
 // getIdentifierReference
 
-func getIdentifierReference(runtime *_runtime, stash _stash, name string, strict bool, at _at) _reference {
+func getIdentifierReference(runtime *_runtime, stash _stash, name string, strict bool, at _at) _reference { log.DebugLog()
 	if stash == nil {
 		return newPropertyReference(runtime, nil, name, strict, at)
 	}

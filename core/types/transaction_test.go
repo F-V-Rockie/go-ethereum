@@ -51,7 +51,7 @@ var (
 	)
 )
 
-func TestTransactionSigHash(t *testing.T) {
+func TestTransactionSigHash(t *testing.T) { log.DebugLog()
 	var homestead HomesteadSigner
 	if homestead.Hash(emptyTx) != common.HexToHash("c775b99e7ad12f50d819fcd602390467e28141316969f4b57f0626f74fe3b386") {
 		t.Errorf("empty transaction hash mismatch, got %x", emptyTx.Hash())
@@ -61,7 +61,7 @@ func TestTransactionSigHash(t *testing.T) {
 	}
 }
 
-func TestTransactionEncode(t *testing.T) {
+func TestTransactionEncode(t *testing.T) { log.DebugLog()
 	txb, err := rlp.EncodeToBytes(rightvrsTx)
 	if err != nil {
 		t.Fatalf("encode error: %v", err)
@@ -72,20 +72,20 @@ func TestTransactionEncode(t *testing.T) {
 	}
 }
 
-func decodeTx(data []byte) (*Transaction, error) {
+func decodeTx(data []byte) (*Transaction, error) { log.DebugLog()
 	var tx Transaction
 	t, err := &tx, rlp.Decode(bytes.NewReader(data), &tx)
 
 	return t, err
 }
 
-func defaultTestKey() (*ecdsa.PrivateKey, common.Address) {
+func defaultTestKey() (*ecdsa.PrivateKey, common.Address) { log.DebugLog()
 	key, _ := crypto.HexToECDSA("45a915e4d060149eb4365960e6a7a45f334393093061116b197e3240065ff2d8")
 	addr := crypto.PubkeyToAddress(key.PublicKey)
 	return key, addr
 }
 
-func TestRecipientEmpty(t *testing.T) {
+func TestRecipientEmpty(t *testing.T) { log.DebugLog()
 	_, addr := defaultTestKey()
 	tx, err := decodeTx(common.Hex2Bytes("f8498080808080011ca09b16de9d5bdee2cf56c28d16275a4da68cd30273e2525f3959f5d62557489921a0372ebd8fb3345f7db7b5a86d42e24d36e983e259b0664ceb8c227ec9af572f3d"))
 	if err != nil {
@@ -103,7 +103,7 @@ func TestRecipientEmpty(t *testing.T) {
 	}
 }
 
-func TestRecipientNormal(t *testing.T) {
+func TestRecipientNormal(t *testing.T) { log.DebugLog()
 	_, addr := defaultTestKey()
 
 	tx, err := decodeTx(common.Hex2Bytes("f85d80808094000000000000000000000000000000000000000080011ca0527c0d8f5c63f7b9f41324a7c8a563ee1190bcbf0dac8ab446291bdbf32f5c79a0552c4ef0a09a04395074dab9ed34d3fbfb843c2f2546cc30fe89ec143ca94ca6"))
@@ -126,7 +126,7 @@ func TestRecipientNormal(t *testing.T) {
 // Tests that transactions can be correctly sorted according to their price in
 // decreasing order, but at the same time with increasing nonces when issued by
 // the same account.
-func TestTransactionPriceNonceSort(t *testing.T) {
+func TestTransactionPriceNonceSort(t *testing.T) { log.DebugLog()
 	// Generate a batch of accounts to start with
 	keys := make([]*ecdsa.PrivateKey, 25)
 	for i := 0; i < len(keys); i++ {
@@ -193,7 +193,7 @@ func TestTransactionPriceNonceSort(t *testing.T) {
 }
 
 // TestTransactionJSON tests serializing/de-serializing to/from JSON.
-func TestTransactionJSON(t *testing.T) {
+func TestTransactionJSON(t *testing.T) { log.DebugLog()
 	key, err := crypto.GenerateKey()
 	if err != nil {
 		t.Fatalf("could not generate key: %v", err)

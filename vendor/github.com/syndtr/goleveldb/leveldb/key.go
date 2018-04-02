@@ -20,17 +20,17 @@ type ErrInternalKeyCorrupted struct {
 	Reason string
 }
 
-func (e *ErrInternalKeyCorrupted) Error() string {
+func (e *ErrInternalKeyCorrupted) Error() string { log.DebugLog()
 	return fmt.Sprintf("leveldb: internal key %q corrupted: %s", e.Ikey, e.Reason)
 }
 
-func newErrInternalKeyCorrupted(ikey []byte, reason string) error {
+func newErrInternalKeyCorrupted(ikey []byte, reason string) error { log.DebugLog()
 	return errors.NewErrCorrupted(storage.FileDesc{}, &ErrInternalKeyCorrupted{append([]byte{}, ikey...), reason})
 }
 
 type keyType uint
 
-func (kt keyType) String() string {
+func (kt keyType) String() string { log.DebugLog()
 	switch kt {
 	case keyTypeDel:
 		return "d"
@@ -66,13 +66,13 @@ const (
 // Maximum number encoded in bytes.
 var keyMaxNumBytes = make([]byte, 8)
 
-func init() {
+func init() { log.DebugLog()
 	binary.LittleEndian.PutUint64(keyMaxNumBytes, keyMaxNum)
 }
 
 type internalKey []byte
 
-func makeInternalKey(dst, ukey []byte, seq uint64, kt keyType) internalKey {
+func makeInternalKey(dst, ukey []byte, seq uint64, kt keyType) internalKey { log.DebugLog()
 	if seq > keyMaxSeq {
 		panic("leveldb: invalid sequence number")
 	} else if kt > keyTypeVal {
@@ -85,7 +85,7 @@ func makeInternalKey(dst, ukey []byte, seq uint64, kt keyType) internalKey {
 	return internalKey(dst)
 }
 
-func parseInternalKey(ik []byte) (ukey []byte, seq uint64, kt keyType, err error) {
+func parseInternalKey(ik []byte) (ukey []byte, seq uint64, kt keyType, err error) { log.DebugLog()
 	if len(ik) < 8 {
 		return nil, 0, 0, newErrInternalKeyCorrupted(ik, "invalid length")
 	}
@@ -98,12 +98,12 @@ func parseInternalKey(ik []byte) (ukey []byte, seq uint64, kt keyType, err error
 	return
 }
 
-func validInternalKey(ik []byte) bool {
+func validInternalKey(ik []byte) bool { log.DebugLog()
 	_, _, _, err := parseInternalKey(ik)
 	return err == nil
 }
 
-func (ik internalKey) assert() {
+func (ik internalKey) assert() { log.DebugLog()
 	if ik == nil {
 		panic("leveldb: nil internalKey")
 	}
@@ -112,17 +112,17 @@ func (ik internalKey) assert() {
 	}
 }
 
-func (ik internalKey) ukey() []byte {
+func (ik internalKey) ukey() []byte { log.DebugLog()
 	ik.assert()
 	return ik[:len(ik)-8]
 }
 
-func (ik internalKey) num() uint64 {
+func (ik internalKey) num() uint64 { log.DebugLog()
 	ik.assert()
 	return binary.LittleEndian.Uint64(ik[len(ik)-8:])
 }
 
-func (ik internalKey) parseNum() (seq uint64, kt keyType) {
+func (ik internalKey) parseNum() (seq uint64, kt keyType) { log.DebugLog()
 	num := ik.num()
 	seq, kt = uint64(num>>8), keyType(num&0xff)
 	if kt > keyTypeVal {
@@ -131,7 +131,7 @@ func (ik internalKey) parseNum() (seq uint64, kt keyType) {
 	return
 }
 
-func (ik internalKey) String() string {
+func (ik internalKey) String() string { log.DebugLog()
 	if ik == nil {
 		return "<nil>"
 	}

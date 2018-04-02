@@ -23,7 +23,7 @@ var (
 )
 
 // New returns an error that formats as the given text.
-func New(text string) error {
+func New(text string) error { log.DebugLog()
 	return errors.New(text)
 }
 
@@ -34,7 +34,7 @@ type ErrCorrupted struct {
 	Err error
 }
 
-func (e *ErrCorrupted) Error() string {
+func (e *ErrCorrupted) Error() string { log.DebugLog()
 	if !e.Fd.Zero() {
 		return fmt.Sprintf("%v [file=%v]", e.Err, e.Fd)
 	}
@@ -42,13 +42,13 @@ func (e *ErrCorrupted) Error() string {
 }
 
 // NewErrCorrupted creates new ErrCorrupted error.
-func NewErrCorrupted(fd storage.FileDesc, err error) error {
+func NewErrCorrupted(fd storage.FileDesc, err error) error { log.DebugLog()
 	return &ErrCorrupted{fd, err}
 }
 
 // IsCorrupted returns a boolean indicating whether the error is indicating
 // a corruption.
-func IsCorrupted(err error) bool {
+func IsCorrupted(err error) bool { log.DebugLog()
 	switch err.(type) {
 	case *ErrCorrupted:
 		return true
@@ -64,11 +64,11 @@ type ErrMissingFiles struct {
 	Fds []storage.FileDesc
 }
 
-func (e *ErrMissingFiles) Error() string { return "file missing" }
+func (e *ErrMissingFiles) Error() string { log.DebugLog() return "file missing" }
 
 // SetFd sets 'file info' of the given error with the given file.
 // Currently only ErrCorrupted is supported, otherwise will do nothing.
-func SetFd(err error, fd storage.FileDesc) error {
+func SetFd(err error, fd storage.FileDesc) error { log.DebugLog()
 	switch x := err.(type) {
 	case *ErrCorrupted:
 		x.Fd = fd

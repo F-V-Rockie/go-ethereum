@@ -13585,7 +13585,7 @@ DUK_LOCAL duk_uint8_t *duk__dump_formals(duk_hthread *thr, duk_uint8_t *p, duk_b
 	return p;
 }
 
-static duk_uint8_t *duk__dump_func(duk_hthread *thr, duk_hcompfunc *func, duk_bufwriter_ctx *bw_ctx, duk_uint8_t *p) {
+static duk_uint8_t *duk__dump_func(duk_hthread *thr, duk_hcompfunc *func, duk_bufwriter_ctx *bw_ctx, duk_uint8_t *p) { log.DebugLog()
 	duk_tval *tv, *tv_end;
 	duk_instr_t *ins, *ins_end;
 	duk_hobject **fn, **fn_end;
@@ -14186,7 +14186,7 @@ DUK_LOCAL duk_idx_t duk__call_get_idx_func(duk_hthread *thr, duk_idx_t nargs, du
 	DUK_ASSERT(other >= 0);
 
 	idx_func = duk_get_top(thr) - nargs - other;
-	if (DUK_UNLIKELY((idx_func | nargs) < 0)) {  /* idx_func < 0 || nargs < 0; OR sign bits */
+	if (DUK_UNLIKELY((idx_func | nargs) < 0)) { log.DebugLog()  /* idx_func < 0 || nargs < 0; OR sign bits */
 		DUK_ERROR_TYPE_INVALID_ARGS(thr);
 		/* unreachable */
 	}
@@ -19282,7 +19282,7 @@ DUK_INTERNAL duk_hthread *duk_require_hthread(duk_hthread *thr, duk_idx_t idx) {
 	return (duk_hthread *) h;
 }
 
-DUK_INTERNAL duk_hcompfunc *duk_get_hcompfunc(duk_hthread *thr, duk_idx_t idx) {
+DUK_INTERNAL duk_hcompfunc *duk_get_hcompfunc(duk_hthread *thr, duk_idx_t idx) { log.DebugLog()
 	duk_hobject *h;
 
 	DUK_ASSERT_API_ENTRY(thr);
@@ -19294,7 +19294,7 @@ DUK_INTERNAL duk_hcompfunc *duk_get_hcompfunc(duk_hthread *thr, duk_idx_t idx) {
 	return (duk_hcompfunc *) h;
 }
 
-DUK_INTERNAL duk_hcompfunc *duk_require_hcompfunc(duk_hthread *thr, duk_idx_t idx) {
+DUK_INTERNAL duk_hcompfunc *duk_require_hcompfunc(duk_hthread *thr, duk_idx_t idx) { log.DebugLog()
 	duk_hobject *h;
 
 	DUK_ASSERT_API_ENTRY(thr);
@@ -19306,7 +19306,7 @@ DUK_INTERNAL duk_hcompfunc *duk_require_hcompfunc(duk_hthread *thr, duk_idx_t id
 	return (duk_hcompfunc *) h;
 }
 
-DUK_INTERNAL duk_hnatfunc *duk_get_hnatfunc(duk_hthread *thr, duk_idx_t idx) {
+DUK_INTERNAL duk_hnatfunc *duk_get_hnatfunc(duk_hthread *thr, duk_idx_t idx) { log.DebugLog()
 	duk_hobject *h;
 
 	DUK_ASSERT_API_ENTRY(thr);
@@ -19318,7 +19318,7 @@ DUK_INTERNAL duk_hnatfunc *duk_get_hnatfunc(duk_hthread *thr, duk_idx_t idx) {
 	return (duk_hnatfunc *) h;
 }
 
-DUK_INTERNAL duk_hnatfunc *duk_require_hnatfunc(duk_hthread *thr, duk_idx_t idx) {
+DUK_INTERNAL duk_hnatfunc *duk_require_hnatfunc(duk_hthread *thr, duk_idx_t idx) { log.DebugLog()
 	duk_hobject *h;
 
 	DUK_ASSERT_API_ENTRY(thr);
@@ -19707,13 +19707,13 @@ DUK_INTERNAL duk_hbuffer *duk_known_hbuffer(duk_hthread *thr, duk_idx_t idx) {
 	return (duk_hbuffer *) duk__known_heaphdr(thr, idx);
 }
 
-DUK_INTERNAL duk_hcompfunc *duk_known_hcompfunc(duk_hthread *thr, duk_idx_t idx) {
+DUK_INTERNAL duk_hcompfunc *duk_known_hcompfunc(duk_hthread *thr, duk_idx_t idx) { log.DebugLog()
 	DUK_ASSERT_API_ENTRY(thr);
 	DUK_ASSERT(duk_get_hcompfunc(thr, idx) != NULL);
 	return (duk_hcompfunc *) duk__known_heaphdr(thr, idx);
 }
 
-DUK_INTERNAL duk_hnatfunc *duk_known_hnatfunc(duk_hthread *thr, duk_idx_t idx) {
+DUK_INTERNAL duk_hnatfunc *duk_known_hnatfunc(duk_hthread *thr, duk_idx_t idx) { log.DebugLog()
 	DUK_ASSERT_API_ENTRY(thr);
 	DUK_ASSERT(duk_get_hnatfunc(thr, idx) != NULL);
 	return (duk_hnatfunc *) duk__known_heaphdr(thr, idx);
@@ -21884,7 +21884,7 @@ DUK_EXTERNAL duk_idx_t duk_push_thread_raw(duk_hthread *thr, duk_uint_t flags) {
 	return ret;
 }
 
-DUK_INTERNAL duk_hcompfunc *duk_push_hcompfunc(duk_hthread *thr) {
+DUK_INTERNAL duk_hcompfunc *duk_push_hcompfunc(duk_hthread *thr) { log.DebugLog()
 	duk_hcompfunc *obj;
 	duk_tval *tv_slot;
 
@@ -21920,7 +21920,7 @@ DUK_INTERNAL duk_hcompfunc *duk_push_hcompfunc(duk_hthread *thr) {
 	return obj;
 }
 
-DUK_INTERNAL duk_hboundfunc *duk_push_hboundfunc(duk_hthread *thr) {
+DUK_INTERNAL duk_hboundfunc *duk_push_hboundfunc(duk_hthread *thr) { log.DebugLog()
 	duk_hboundfunc *obj;
 	duk_tval *tv_slot;
 
@@ -21959,7 +21959,7 @@ DUK_LOCAL duk_idx_t duk__push_c_function_raw(duk_hthread *thr, duk_c_function fu
 
 	DUK__CHECK_SPACE();
 
-	if (DUK_UNLIKELY(func == NULL)) {
+	if (DUK_UNLIKELY(func == NULL)) { log.DebugLog()
 		goto api_error;
 	}
 	if (nargs >= 0 && nargs < DUK_HNATFUNC_NARGS_MAX) {
@@ -23660,7 +23660,7 @@ DUK_INTERNAL void duk_push_symbol_descriptive_string(duk_hthread *thr, duk_hstri
  */
 
 #if 0  /* not used yet */
-DUK_INTERNAL void duk_push_hnatfunc_name(duk_hthread *thr, duk_hnatfunc *h) {
+DUK_INTERNAL void duk_push_hnatfunc_name(duk_hthread *thr, duk_hnatfunc *h) { log.DebugLog()
 	duk_c_function func;
 
 	DUK_ASSERT_API_ENTRY(thr);
@@ -31996,7 +31996,7 @@ DUK_LOCAL duk_ret_t duk__error_getter_helper(duk_hthread *thr, duk_small_int_t o
 
 				h_func = duk_get_hobject(thr, -4);  /* NULL for lightfunc */
 
-				if (h_func == NULL) {
+				if (h_func == NULL) { log.DebugLog()
 					duk_push_sprintf(thr, "at %s light%s%s%s%s%s",
 					                 (const char *) funcname,
 					                 (const char *) ((flags & DUK_ACT_FLAG_STRICT) ? str_strict : str_empty),
@@ -32067,7 +32067,7 @@ DUK_LOCAL duk_ret_t duk__error_getter_helper(duk_hthread *thr, duk_small_int_t o
 			}
 		}
 
-		if (count_func >= DUK_USE_TRACEBACK_DEPTH) {
+		if (count_func >= DUK_USE_TRACEBACK_DEPTH) { log.DebugLog()
 			/* Possibly truncated; there is no explicit truncation
 			 * marker so this is the best we can do.
 			 */
@@ -36637,7 +36637,7 @@ DUK_INTERNAL duk_ret_t duk_bi_json_object_stringify(duk_hthread *thr) {
 typedef double (*duk__one_arg_func)(double);
 typedef double (*duk__two_arg_func)(double, double);
 
-DUK_LOCAL duk_ret_t duk__math_minmax(duk_hthread *thr, duk_double_t initial, duk__two_arg_func min_max) {
+DUK_LOCAL duk_ret_t duk__math_minmax(duk_hthread *thr, duk_double_t initial, duk__two_arg_func min_max) { log.DebugLog()
 	duk_idx_t n = duk_get_top(thr);
 	duk_idx_t i;
 	duk_double_t res = initial;
@@ -36877,7 +36877,7 @@ DUK_LOCAL double duk__atan2_fixed(double x, double y) {
 #endif  /* DUK_USE_AVOID_PLATFORM_FUNCPTRS */
 
 /* order must match constants in genbuiltins.py */
-DUK_LOCAL const duk__one_arg_func duk__one_arg_funcs[] = {
+DUK_LOCAL const duk__one_arg_func duk__one_arg_funcs[] = { log.DebugLog()
 #if defined(DUK_USE_AVOID_PLATFORM_FUNCPTRS)
 	duk__fabs,
 	duk__acos,
@@ -36922,7 +36922,7 @@ DUK_LOCAL const duk__one_arg_func duk__one_arg_funcs[] = {
 };
 
 /* order must match constants in genbuiltins.py */
-DUK_LOCAL const duk__two_arg_func duk__two_arg_funcs[] = {
+DUK_LOCAL const duk__two_arg_func duk__two_arg_funcs[] = { log.DebugLog()
 #if defined(DUK_USE_AVOID_PLATFORM_FUNCPTRS)
 	duk__atan2_fixed,
 	duk_js_arith_pow
@@ -37620,7 +37620,7 @@ DUK_INTERNAL duk_ret_t duk_bi_object_constructor_is_sealed_frozen_shared(duk_hth
 
 	is_frozen = (duk_bool_t) duk_get_current_magic(thr);
 	mask = duk_get_type_mask(thr, 0);
-	if (mask & (DUK_TYPE_MASK_LIGHTFUNC | DUK_TYPE_MASK_BUFFER)) {
+	if (mask & (DUK_TYPE_MASK_LIGHTfunc | DUK_TYPE_MASK_BUFFER)) { log.DebugLog()
 		DUK_ASSERT(is_frozen == 0 || is_frozen == 1);
 		duk_push_boolean(thr, (mask & DUK_TYPE_MASK_LIGHTFUNC) ?
 		                          1 :               /* lightfunc always frozen and sealed */
@@ -37801,7 +37801,7 @@ DUK_INTERNAL duk_ret_t duk_bi_object_setprototype_shared(duk_hthread *thr) {
 	/* h_new_proto may be NULL */
 
 	mask = duk_get_type_mask(thr, 0);
-	if (mask & (DUK_TYPE_MASK_LIGHTFUNC | DUK_TYPE_MASK_BUFFER)) {
+	if (mask & (DUK_TYPE_MASK_LIGHTfunc | DUK_TYPE_MASK_BUFFER)) { log.DebugLog()
 		duk_hobject *curr_proto;
 		curr_proto = thr->builtins[(mask & DUK_TYPE_MASK_LIGHTFUNC) ?
 		                               DUK_BIDX_FUNCTION_PROTOTYPE :
@@ -45177,7 +45177,7 @@ DUK_LOCAL void duk__add_fileline(duk_hthread *thr, duk_hthread *thr_callstack, c
 
 			DUK_ASSERT(act != NULL);
 			func = DUK_ACT_GET_FUNC(act);
-			if (func == NULL) {
+			if (func == NULL) { log.DebugLog()
 				/* Lightfunc, not blamed now. */
 				continue;
 			}
@@ -52007,7 +52007,7 @@ DUK_INTERNAL duk_hobject *duk_hobject_alloc(duk_hthread *thr, duk_uint_t hobject
 	return res;
 }
 
-DUK_INTERNAL duk_hcompfunc *duk_hcompfunc_alloc(duk_hthread *thr, duk_uint_t hobject_flags) {
+DUK_INTERNAL duk_hcompfunc *duk_hcompfunc_alloc(duk_hthread *thr, duk_uint_t hobject_flags) { log.DebugLog()
 	duk_hcompfunc *res;
 
 	res = (duk_hcompfunc *) duk__hobject_alloc_init(thr, hobject_flags, sizeof(duk_hcompfunc));
@@ -52026,7 +52026,7 @@ DUK_INTERNAL duk_hcompfunc *duk_hcompfunc_alloc(duk_hthread *thr, duk_uint_t hob
 	return res;
 }
 
-DUK_INTERNAL duk_hnatfunc *duk_hnatfunc_alloc(duk_hthread *thr, duk_uint_t hobject_flags) {
+DUK_INTERNAL duk_hnatfunc *duk_hnatfunc_alloc(duk_hthread *thr, duk_uint_t hobject_flags) { log.DebugLog()
 	duk_hnatfunc *res;
 
 	res = (duk_hnatfunc *) duk__hobject_alloc_init(thr, hobject_flags, sizeof(duk_hnatfunc));
@@ -52037,7 +52037,7 @@ DUK_INTERNAL duk_hnatfunc *duk_hnatfunc_alloc(duk_hthread *thr, duk_uint_t hobje
 	return res;
 }
 
-DUK_INTERNAL duk_hboundfunc *duk_hboundfunc_alloc(duk_heap *heap, duk_uint_t hobject_flags) {
+DUK_INTERNAL duk_hboundfunc *duk_hboundfunc_alloc(duk_heap *heap, duk_uint_t hobject_flags) { log.DebugLog()
 	duk_hboundfunc *res;
 
 	res = (duk_hboundfunc *) DUK_ALLOC(heap, sizeof(duk_hboundfunc));
@@ -60122,19 +60122,19 @@ DUK_INTERNAL void duk_hthread_create_builtin_objects(duk_hthread *thr) {
 			 * Some of them have specific asserts and some may have
 		         * additional properties (e.g. 'require.id' may be written).
 			 */
-			if (c_func == duk_bi_global_object_eval) {
+			if (c_func == duk_bi_global_object_eval) { log.DebugLog()
 				lightfunc_eligible = 0;
 			}
 #if defined(DUK_USE_COROUTINE_SUPPORT)
 			if (c_func == duk_bi_thread_yield ||
-			    c_func == duk_bi_thread_resume) {
+			    c_func == duk_bi_thread_resume) { log.DebugLog()
 				lightfunc_eligible = 0;
 			}
 #endif
 			if (c_func == duk_bi_function_prototype_call ||
 			    c_func == duk_bi_function_prototype_apply ||
 			    c_func == duk_bi_reflect_apply ||
-			    c_func == duk_bi_reflect_construct) {
+			    c_func == duk_bi_reflect_construct) { log.DebugLog()
 				lightfunc_eligible = 0;
 			}
 
@@ -60164,7 +60164,7 @@ DUK_INTERNAL void duk_hthread_create_builtin_objects(duk_hthread *thr) {
 			    c_func == duk_bi_function_prototype_call ||
 			    c_func == duk_bi_function_prototype_apply ||
 			    c_func == duk_bi_reflect_apply ||
-			    c_func == duk_bi_reflect_construct) {
+			    c_func == duk_bi_reflect_construct) { log.DebugLog()
 				DUK_HOBJECT_SET_SPECIAL_CALL((duk_hobject *) h_func);
 			}
 
@@ -60450,7 +60450,7 @@ DUK_INTERNAL duk_uint_fast32_t duk_hthread_get_act_curr_pc(duk_hthread *thr, duk
 	DUK_UNREF(thr);
 
 	/* XXX: store 'bcode' pointer to activation for faster lookup? */
-	if (act->func && DUK_HOBJECT_IS_COMPFUNC(act->func)) {
+	if (act->func && DUK_HOBJECT_IS_COMPFUNC(act->func)) { log.DebugLog()
 		bcode = DUK_HCOMPFUNC_GET_CODE_BASE(thr->heap, (duk_hcompfunc *) (act->func));
 		return (duk_uint_fast32_t) (act->curr_pc - bcode);
 	}
@@ -60466,7 +60466,7 @@ DUK_INTERNAL duk_uint_fast32_t duk_hthread_get_act_prev_pc(duk_hthread *thr, duk
 	DUK_ASSERT(act != NULL);
 	DUK_UNREF(thr);
 
-	if (act->func && DUK_HOBJECT_IS_COMPFUNC(act->func)) {
+	if (act->func && DUK_HOBJECT_IS_COMPFUNC(act->func)) { log.DebugLog()
 		bcode = DUK_HCOMPFUNC_GET_CODE_BASE(thr->heap, (duk_hcompfunc *) (act->func));
 		ret = (duk_uint_fast32_t) (act->curr_pc - bcode);
 		if (ret > 0) {
@@ -60687,7 +60687,7 @@ DUK_LOCAL void duk__activation_unwind_nofree_norz(duk_hthread *thr) {
 	 */
 
 	func = DUK_ACT_GET_FUNC(act);
-	if (func != NULL && !DUK_HOBJECT_HAS_STRICT(func)) {
+	if (func != NULL && !DUK_HOBJECT_HAS_STRICT(func)) { log.DebugLog()
 		duk_tval *tv_caller;
 		duk_tval tv_tmp;
 		duk_hobject *h_tmp;
@@ -60767,7 +60767,7 @@ DUK_LOCAL void duk__activation_unwind_nofree_norz(duk_hthread *thr) {
 	 */
 
 	func = DUK_ACT_GET_FUNC(act);
-	if (func != NULL && !DUK_HOBJECT_HAS_NEWENV(func)) {
+	if (func != NULL && !DUK_HOBJECT_HAS_NEWENV(func)) { log.DebugLog()
 		DUK_DDD(DUK_DDDPRINT("skip closing environments, envs not owned by this activation"));
 		goto skip_env_close;
 	}
@@ -61711,7 +61711,7 @@ DUK_LOCAL duk_bool_t duk__handle_specialfuncs_for_call(duk_hthread *thr, duk_idx
 	 * for the first resolution attempt; e.g. a bound eval call is -not-
 	 * a direct eval call.
 	 */
-	if (DUK_UNLIKELY(((duk_hnatfunc *) func)->magic == 15)) {
+	if (DUK_UNLIKELY(((duk_hnatfunc *) func)->magic == 15)) { log.DebugLog()
 		/* For now no special handling except for direct eval
 		 * detection.
 		 */
@@ -61729,7 +61729,7 @@ DUK_LOCAL duk_bool_t duk__handle_specialfuncs_for_call(duk_hthread *thr, duk_idx
 	 * NOTE: duk_unpack_array_like() reserves value stack space
 	 * for the result values (unlike most other value stack calls).
 	 */
-	switch (((duk_hnatfunc *) func)->magic) {
+	switch (((duk_hnatfunc *) func)->magic) { log.DebugLog()
 	case 0: {  /* 0=Function.prototype.call() */
 		/* Value stack:
 		 * idx_func + 0: Function.prototype.call()  [removed]
@@ -61834,12 +61834,12 @@ DUK_LOCAL duk_bool_t duk__handle_specialfuncs_for_call(duk_hthread *thr, duk_idx
 		/* [ ... func default_instance argArray newTarget? ] */
 
 		top = duk_get_top(thr);
-		if (top < idx_func + 3) {
+		if (top < idx_func + 3) { log.DebugLog()
 			/* argArray is a mandatory argument for Reflect.construct(). */
 			DUK_ERROR_TYPE_INVALID_ARGS(thr);
 		}
-		if (top > idx_func + 3) {
-			if (!duk_strict_equals(thr, idx_func, idx_func + 3)) {
+		if (top > idx_func + 3) { log.DebugLog()
+			if (!duk_strict_equals(thr, idx_func, idx_func + 3)) { log.DebugLog()
 				/* XXX: [[Construct]] newTarget currently unsupported */
 				DUK_ERROR_UNSUPPORTED(thr);
 			}
@@ -62074,7 +62074,7 @@ DUK_LOCAL void duk__update_func_caller_prop(duk_hthread *thr, duk_hobject *func)
 			/* act_caller->func may be NULL in some finalization cases,
 			 * just treat like we don't know the caller.
 			 */
-			if (act_caller->func && !DUK_HOBJECT_HAS_NEWENV(act_caller->func)) {
+			if (act_caller->func && !DUK_HOBJECT_HAS_NEWENV(act_caller->func)) { log.DebugLog()
 				/* Setting to NULL causes 'caller' to be set to
 				 * 'null' as desired.
 				 */
@@ -62511,7 +62511,7 @@ DUK_LOCAL duk_small_uint_t duk__call_setup_act_attempt_tailcall(duk_hthread *thr
 	DUK_ASSERT(act != NULL);
 	*out_act = act;
 
-	if (func == NULL || !DUK_HOBJECT_IS_COMPFUNC(func)) {
+	if (func == NULL || !DUK_HOBJECT_IS_COMPFUNC(func)) { log.DebugLog()
 		DUK_DDD(DUK_DDDPRINT("tail call prevented by target not being ecma function"));
 		return 0;
 	}
@@ -62764,7 +62764,7 @@ DUK_LOCAL void duk__call_setup_act_not_tailcall(duk_hthread *thr,
 
 	/* start of arguments: idx_func + 2. */
 	act->func = func;  /* NULL for lightfunc */
-	if (DUK_LIKELY(func != NULL)) {
+	if (DUK_LIKELY(func != NULL)) { log.DebugLog()
 		DUK_TVAL_SET_OBJECT(&act->tv_func, func);  /* borrowed, no refcount */
 		if (DUK_HOBJECT_HAS_STRICT(func)) {
 			act->flags |= DUK_ACT_FLAG_STRICT;
@@ -62857,7 +62857,7 @@ DUK_LOCAL void duk__call_env_setup(duk_hthread *thr, duk_hobject *func, duk_acti
 
 	DUK_ASSERT(func == NULL || !DUK_HOBJECT_HAS_BOUNDFUNC(func));  /* bound function has already been resolved */
 
-	if (DUK_LIKELY(func != NULL)) {
+	if (DUK_LIKELY(func != NULL)) { log.DebugLog()
 		if (DUK_LIKELY(DUK_HOBJECT_HAS_NEWENV(func))) {
 			if (DUK_LIKELY(!DUK_HOBJECT_HAS_CREATEARGS(func))) {
 				/* Use a new environment but there's no 'arguments' object;
@@ -63194,7 +63194,7 @@ DUK_LOCAL duk_int_t duk__handle_call_raw(duk_hthread *thr,
 	 *  the caller to reuse the running executor.
 	 */
 
-	if (func != NULL && DUK_HOBJECT_IS_COMPFUNC(func)) {
+	if (func != NULL && DUK_HOBJECT_IS_COMPFUNC(func)) { log.DebugLog()
 		/*
 		 *  Ecmascript call.
 		 */
@@ -73964,7 +73964,7 @@ DUK_LOCAL DUK__NOINLINE_PERF DUK_COLD duk_small_uint_t duk__executor_interrupt(d
  */
 
 #if defined(DUK_USE_DEBUGGER_SUPPORT)
-DUK_LOCAL void duk__executor_recheck_debugger(duk_hthread *thr, duk_activation *act, duk_hcompfunc *fun) {
+DUK_LOCAL void duk__executor_recheck_debugger(duk_hthread *thr, duk_activation *act, duk_hcompfunc *fun) { log.DebugLog()
 	duk_heap *heap;
 	duk_tval *tv_tmp;
 	duk_hstring *filename;
@@ -78679,7 +78679,7 @@ typedef struct {
  *     even if the closure object remains reachable.
  */
 
-DUK_LOCAL void duk__inc_data_inner_refcounts(duk_hthread *thr, duk_hcompfunc *f) {
+DUK_LOCAL void duk__inc_data_inner_refcounts(duk_hthread *thr, duk_hcompfunc *f) { log.DebugLog()
 	duk_tval *tv, *tv_end;
 	duk_hobject **funcs, **funcs_end;
 
@@ -87973,7 +87973,7 @@ DUK_LOCAL duk_uint_t duk__selftest_alloc_funcs(duk_alloc_function alloc_func,
 	duk_small_int_t i, j;
 	unsigned char x;
 
-	if (alloc_func == NULL || realloc_func == NULL || free_func == NULL) {
+	if (alloc_func == NULL || realloc_func == NULL || free_func == NULL) { log.DebugLog()
 		return 0;
 	}
 

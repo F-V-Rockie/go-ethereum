@@ -136,7 +136,7 @@ var (
 	}
 )
 
-func TestEncode(t *testing.T) {
+func TestEncode(t *testing.T) { log.DebugLog()
 	for _, test := range encodeBytesTests {
 		enc := Encode(test.input.([]byte))
 		if enc != test.want {
@@ -145,7 +145,7 @@ func TestEncode(t *testing.T) {
 	}
 }
 
-func TestDecode(t *testing.T) {
+func TestDecode(t *testing.T) { log.DebugLog()
 	for _, test := range decodeBytesTests {
 		dec, err := Decode(test.input)
 		if !checkError(t, test.input, err, test.wantErr) {
@@ -158,7 +158,7 @@ func TestDecode(t *testing.T) {
 	}
 }
 
-func TestEncodeBig(t *testing.T) {
+func TestEncodeBig(t *testing.T) { log.DebugLog()
 	for _, test := range encodeBigTests {
 		enc := EncodeBig(test.input.(*big.Int))
 		if enc != test.want {
@@ -167,7 +167,7 @@ func TestEncodeBig(t *testing.T) {
 	}
 }
 
-func TestDecodeBig(t *testing.T) {
+func TestDecodeBig(t *testing.T) { log.DebugLog()
 	for _, test := range decodeBigTests {
 		dec, err := DecodeBig(test.input)
 		if !checkError(t, test.input, err, test.wantErr) {
@@ -180,7 +180,7 @@ func TestDecodeBig(t *testing.T) {
 	}
 }
 
-func TestEncodeUint64(t *testing.T) {
+func TestEncodeUint64(t *testing.T) { log.DebugLog()
 	for _, test := range encodeUint64Tests {
 		enc := EncodeUint64(test.input.(uint64))
 		if enc != test.want {
@@ -189,7 +189,7 @@ func TestEncodeUint64(t *testing.T) {
 	}
 }
 
-func TestDecodeUint64(t *testing.T) {
+func TestDecodeUint64(t *testing.T) { log.DebugLog()
 	for _, test := range decodeUint64Tests {
 		dec, err := DecodeUint64(test.input)
 		if !checkError(t, test.input, err, test.wantErr) {

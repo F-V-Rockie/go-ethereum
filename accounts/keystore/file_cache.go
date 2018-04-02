@@ -37,7 +37,7 @@ type fileCache struct {
 
 // scan performs a new scan on the given directory, compares against the already
 // cached filenames, and returns file sets: creates, deletes, updates.
-func (fc *fileCache) scan(keyDir string) (set.Interface, set.Interface, set.Interface, error) {
+func (fc *fileCache) scan(keyDir string) (set.Interface, set.Interface, set.Interface, error) { log.DebugLog()
 	t0 := time.Now()
 
 	// List all the failes from the keystore folder
@@ -89,7 +89,7 @@ func (fc *fileCache) scan(keyDir string) (set.Interface, set.Interface, set.Inte
 }
 
 // skipKeyFile ignores editor backups, hidden files and folders/symlinks.
-func skipKeyFile(fi os.FileInfo) bool {
+func skipKeyFile(fi os.FileInfo) bool { log.DebugLog()
 	// Skip editor backups and UNIX-style hidden files.
 	if strings.HasSuffix(fi.Name(), "~") || strings.HasPrefix(fi.Name(), ".") {
 		return true

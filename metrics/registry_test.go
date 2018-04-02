@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func BenchmarkRegistry(b *testing.B) {
+func BenchmarkRegistry(b *testing.B) { log.DebugLog()
 	r := NewRegistry()
 	r.Register("foo", NewCounter())
 	b.ResetTimer()
@@ -13,7 +13,7 @@ func BenchmarkRegistry(b *testing.B) {
 	}
 }
 
-func TestRegistry(t *testing.T) {
+func TestRegistry(t *testing.T) { log.DebugLog()
 	r := NewRegistry()
 	r.Register("foo", NewCounter())
 	i := 0
@@ -37,7 +37,7 @@ func TestRegistry(t *testing.T) {
 	}
 }
 
-func TestRegistryDuplicate(t *testing.T) {
+func TestRegistryDuplicate(t *testing.T) { log.DebugLog()
 	r := NewRegistry()
 	if err := r.Register("foo", NewCounter()); nil != err {
 		t.Fatal(err)
@@ -57,7 +57,7 @@ func TestRegistryDuplicate(t *testing.T) {
 	}
 }
 
-func TestRegistryGet(t *testing.T) {
+func TestRegistryGet(t *testing.T) { log.DebugLog()
 	r := NewRegistry()
 	r.Register("foo", NewCounter())
 	if count := r.Get("foo").(Counter).Count(); 0 != count {
@@ -69,7 +69,7 @@ func TestRegistryGet(t *testing.T) {
 	}
 }
 
-func TestRegistryGetOrRegister(t *testing.T) {
+func TestRegistryGetOrRegister(t *testing.T) { log.DebugLog()
 	r := NewRegistry()
 
 	// First metric wins with GetOrRegister
@@ -94,7 +94,7 @@ func TestRegistryGetOrRegister(t *testing.T) {
 	}
 }
 
-func TestRegistryGetOrRegisterWithLazyInstantiation(t *testing.T) {
+func TestRegistryGetOrRegisterWithLazyInstantiation(t *testing.T) { log.DebugLog()
 	r := NewRegistry()
 
 	// First metric wins with GetOrRegister
@@ -119,7 +119,7 @@ func TestRegistryGetOrRegisterWithLazyInstantiation(t *testing.T) {
 	}
 }
 
-func TestRegistryUnregister(t *testing.T) {
+func TestRegistryUnregister(t *testing.T) { log.DebugLog()
 	l := len(arbiter.meters)
 	r := NewRegistry()
 	r.Register("foo", NewCounter())
@@ -136,7 +136,7 @@ func TestRegistryUnregister(t *testing.T) {
 	}
 }
 
-func TestPrefixedChildRegistryGetOrRegister(t *testing.T) {
+func TestPrefixedChildRegistryGetOrRegister(t *testing.T) { log.DebugLog()
 	r := NewRegistry()
 	pr := NewPrefixedChildRegistry(r, "prefix.")
 
@@ -154,7 +154,7 @@ func TestPrefixedChildRegistryGetOrRegister(t *testing.T) {
 	}
 }
 
-func TestPrefixedRegistryGetOrRegister(t *testing.T) {
+func TestPrefixedRegistryGetOrRegister(t *testing.T) { log.DebugLog()
 	r := NewPrefixedRegistry("prefix.")
 
 	_ = r.GetOrRegister("foo", NewCounter())
@@ -171,7 +171,7 @@ func TestPrefixedRegistryGetOrRegister(t *testing.T) {
 	}
 }
 
-func TestPrefixedRegistryRegister(t *testing.T) {
+func TestPrefixedRegistryRegister(t *testing.T) { log.DebugLog()
 	r := NewPrefixedRegistry("prefix.")
 	err := r.Register("foo", NewCounter())
 	c := NewCounter()
@@ -192,7 +192,7 @@ func TestPrefixedRegistryRegister(t *testing.T) {
 	}
 }
 
-func TestPrefixedRegistryUnregister(t *testing.T) {
+func TestPrefixedRegistryUnregister(t *testing.T) { log.DebugLog()
 	r := NewPrefixedRegistry("prefix.")
 
 	_ = r.Register("foo", NewCounter())
@@ -220,7 +220,7 @@ func TestPrefixedRegistryUnregister(t *testing.T) {
 	}
 }
 
-func TestPrefixedRegistryGet(t *testing.T) {
+func TestPrefixedRegistryGet(t *testing.T) { log.DebugLog()
 	pr := NewPrefixedRegistry("prefix.")
 	name := "foo"
 	pr.Register(name, NewCounter())
@@ -231,7 +231,7 @@ func TestPrefixedRegistryGet(t *testing.T) {
 	}
 }
 
-func TestPrefixedChildRegistryGet(t *testing.T) {
+func TestPrefixedChildRegistryGet(t *testing.T) { log.DebugLog()
 	r := NewRegistry()
 	pr := NewPrefixedChildRegistry(r, "prefix.")
 	name := "foo"
@@ -242,7 +242,7 @@ func TestPrefixedChildRegistryGet(t *testing.T) {
 	}
 }
 
-func TestChildPrefixedRegistryRegister(t *testing.T) {
+func TestChildPrefixedRegistryRegister(t *testing.T) { log.DebugLog()
 	r := NewPrefixedChildRegistry(DefaultRegistry, "prefix.")
 	err := r.Register("foo", NewCounter())
 	c := NewCounter()
@@ -263,7 +263,7 @@ func TestChildPrefixedRegistryRegister(t *testing.T) {
 	}
 }
 
-func TestChildPrefixedRegistryOfChildRegister(t *testing.T) {
+func TestChildPrefixedRegistryOfChildRegister(t *testing.T) { log.DebugLog()
 	r := NewPrefixedChildRegistry(NewRegistry(), "prefix.")
 	r2 := NewPrefixedChildRegistry(r, "prefix2.")
 	err := r.Register("foo2", NewCounter())
@@ -286,7 +286,7 @@ func TestChildPrefixedRegistryOfChildRegister(t *testing.T) {
 	}
 }
 
-func TestWalkRegistries(t *testing.T) {
+func TestWalkRegistries(t *testing.T) { log.DebugLog()
 	r := NewPrefixedChildRegistry(NewRegistry(), "prefix.")
 	r2 := NewPrefixedChildRegistry(r, "prefix2.")
 	err := r.Register("foo2", NewCounter())

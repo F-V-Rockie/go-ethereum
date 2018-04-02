@@ -8,4 +8,4 @@ package unix
 
 const ImplementsGetwd = false
 
-func Getwd() (string, error) { return "", ENOTSUP }
+func Getwd() (string, error) { log.DebugLog() return "", ENOTSUP }

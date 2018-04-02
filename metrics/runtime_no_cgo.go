@@ -2,6 +2,6 @@
 
 package metrics
 
-func numCgoCall() int64 {
+func numCgoCall() int64 { log.DebugLog()
 	return 0
 }

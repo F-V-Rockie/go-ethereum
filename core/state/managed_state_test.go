@@ -25,7 +25,7 @@ import (
 
 var addr = common.BytesToAddress([]byte("test"))
 
-func create() (*ManagedState, *account) {
+func create() (*ManagedState, *account) { log.DebugLog()
 	db, _ := ethdb.NewMemDatabase()
 	statedb, _ := New(common.Hash{}, NewDatabase(db))
 	ms := ManageState(statedb)
@@ -34,7 +34,7 @@ func create() (*ManagedState, *account) {
 	return ms, ms.accounts[addr]
 }
 
-func TestNewNonce(t *testing.T) {
+func TestNewNonce(t *testing.T) { log.DebugLog()
 	ms, _ := create()
 
 	nonce := ms.NewNonce(addr)
@@ -48,7 +48,7 @@ func TestNewNonce(t *testing.T) {
 	}
 }
 
-func TestRemove(t *testing.T) {
+func TestRemove(t *testing.T) { log.DebugLog()
 	ms, account := create()
 
 	nn := make([]bool, 10)
@@ -64,7 +64,7 @@ func TestRemove(t *testing.T) {
 	}
 }
 
-func TestReuse(t *testing.T) {
+func TestReuse(t *testing.T) { log.DebugLog()
 	ms, account := create()
 
 	nn := make([]bool, 10)
@@ -81,7 +81,7 @@ func TestReuse(t *testing.T) {
 	}
 }
 
-func TestRemoteNonceChange(t *testing.T) {
+func TestRemoteNonceChange(t *testing.T) { log.DebugLog()
 	ms, account := create()
 	nn := make([]bool, 10)
 	for i := range nn {
@@ -105,7 +105,7 @@ func TestRemoteNonceChange(t *testing.T) {
 	}
 }
 
-func TestSetNonce(t *testing.T) {
+func TestSetNonce(t *testing.T) { log.DebugLog()
 	ms, _ := create()
 
 	var addr common.Address

@@ -32,13 +32,13 @@ type Client struct {
 
 // Create a NAT-PMP client for the NAT-PMP server at the gateway.
 // Uses default timeout which is around 128 seconds.
-func NewClient(gateway net.IP) (nat *Client) {
+func NewClient(gateway net.IP) (nat *Client) { log.DebugLog()
 	return &Client{&network{gateway}, 0}
 }
 
 // Create a NAT-PMP client for the NAT-PMP server at the gateway, with a timeout.
 // Timeout defines the total amount of time we will keep retrying before giving up.
-func NewClientWithTimeout(gateway net.IP, timeout time.Duration) (nat *Client) {
+func NewClientWithTimeout(gateway net.IP, timeout time.Duration) (nat *Client) { log.DebugLog()
 	return &Client{&network{gateway}, timeout}
 }
 
@@ -49,7 +49,7 @@ type GetExternalAddressResult struct {
 }
 
 // Get the external address of the router.
-func (n *Client) GetExternalAddress() (result *GetExternalAddressResult, err error) {
+func (n *Client) GetExternalAddress() (result *GetExternalAddressResult, err error) { log.DebugLog()
 	msg := make([]byte, 2)
 	msg[0] = 0 // Version 0
 	msg[1] = 0 // OP Code 0
@@ -72,7 +72,7 @@ type AddPortMappingResult struct {
 }
 
 // Add (or delete) a port mapping. To delete a mapping, set the requestedExternalPort and lifetime to 0
-func (n *Client) AddPortMapping(protocol string, internalPort, requestedExternalPort int, lifetime int) (result *AddPortMappingResult, err error) {
+func (n *Client) AddPortMapping(protocol string, internalPort, requestedExternalPort int, lifetime int) (result *AddPortMappingResult, err error) { log.DebugLog()
 	var opcode byte
 	if protocol == "udp" {
 		opcode = 1
@@ -100,7 +100,7 @@ func (n *Client) AddPortMapping(protocol string, internalPort, requestedExternal
 	return
 }
 
-func (n *Client) rpc(msg []byte, resultSize int) (result []byte, err error) {
+func (n *Client) rpc(msg []byte, resultSize int) (result []byte, err error) { log.DebugLog()
 	result, err = n.caller.call(msg, n.timeout)
 	if err != nil {
 		return
@@ -109,7 +109,7 @@ func (n *Client) rpc(msg []byte, resultSize int) (result []byte, err error) {
 	return
 }
 
-func protocolChecks(msg []byte, resultSize int, result []byte) (err error) {
+func protocolChecks(msg []byte, resultSize int, result []byte) (err error) { log.DebugLog()
 	if len(result) != resultSize {
 		err = fmt.Errorf("unexpected result size %d, expected %d", len(result), resultSize)
 		return
@@ -132,22 +132,22 @@ func protocolChecks(msg []byte, resultSize int, result []byte) (err error) {
 	return
 }
 
-func writeNetworkOrderUint16(buf []byte, d uint16) {
+func writeNetworkOrderUint16(buf []byte, d uint16) { log.DebugLog()
 	buf[0] = byte(d >> 8)
 	buf[1] = byte(d)
 }
 
-func writeNetworkOrderUint32(buf []byte, d uint32) {
+func writeNetworkOrderUint32(buf []byte, d uint32) { log.DebugLog()
 	buf[0] = byte(d >> 24)
 	buf[1] = byte(d >> 16)
 	buf[2] = byte(d >> 8)
 	buf[3] = byte(d)
 }
 
-func readNetworkOrderUint16(buf []byte) uint16 {
+func readNetworkOrderUint16(buf []byte) uint16 { log.DebugLog()
 	return (uint16(buf[0]) << 8) | uint16(buf[1])
 }
 
-func readNetworkOrderUint32(buf []byte) uint32 {
+func readNetworkOrderUint32(buf []byte) uint32 { log.DebugLog()
 	return (uint32(buf[0]) << 24) | (uint32(buf[1]) << 16) | (uint32(buf[2]) << 8) | uint32(buf[3])
 }

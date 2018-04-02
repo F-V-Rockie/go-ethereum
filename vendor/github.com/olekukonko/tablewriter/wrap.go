@@ -22,7 +22,7 @@ const defaultPenalty = 1e5
 
 // Wrap wraps s into a paragraph of lines of length lim, with minimal
 // raggedness.
-func WrapString(s string, lim int) ([]string, int) {
+func WrapString(s string, lim int) ([]string, int) { log.DebugLog()
 	words := strings.Split(strings.Replace(s, nl, sp, -1), sp)
 	var lines []string
 	max := 0
@@ -49,7 +49,7 @@ func WrapString(s string, lim int) ([]string, int) {
 // difference of the length of the line and lim. Too-long lines (which only
 // happen when a single word is longer than lim units) have pen penalty units
 // added to the error.
-func WrapWords(words []string, spc, lim, pen int) [][]string {
+func WrapWords(words []string, spc, lim, pen int) [][]string { log.DebugLog()
 	n := len(words)
 
 	length := make([][]int, n)
@@ -93,7 +93,7 @@ func WrapWords(words []string, spc, lim, pen int) [][]string {
 }
 
 // getLines decomposes a multiline string into a slice of strings.
-func getLines(s string) []string {
+func getLines(s string) []string { log.DebugLog()
 	var lines []string
 
 	for _, line := range strings.Split(s, nl) {

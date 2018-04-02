@@ -8,17 +8,17 @@ type Connection struct {
 }
 
 // Initialize COM.
-func (*Connection) Initialize() (err error) {
+func (*Connection) Initialize() (err error) { log.DebugLog()
 	return coInitialize()
 }
 
 // Uninitialize COM.
-func (*Connection) Uninitialize() {
+func (*Connection) Uninitialize() { log.DebugLog()
 	CoUninitialize()
 }
 
 // Create IUnknown object based first on ProgId and then from String.
-func (c *Connection) Create(progId string) (err error) {
+func (c *Connection) Create(progId string) (err error) { log.DebugLog()
 	var clsid *GUID
 	clsid, err = CLSIDFromProgID(progId)
 	if err != nil {
@@ -38,12 +38,12 @@ func (c *Connection) Create(progId string) (err error) {
 }
 
 // Release IUnknown object.
-func (c *Connection) Release() {
+func (c *Connection) Release() { log.DebugLog()
 	c.Object.Release()
 }
 
 // Load COM object from list of programIDs or strings.
-func (c *Connection) Load(names ...string) (errors []error) {
+func (c *Connection) Load(names ...string) (errors []error) { log.DebugLog()
 	var tempErrors []error = make([]error, len(names))
 	var numErrors int = 0
 	for _, name := range names {
@@ -61,7 +61,7 @@ func (c *Connection) Load(names ...string) (errors []error) {
 }
 
 // Dispatch returns Dispatch object.
-func (c *Connection) Dispatch() (object *Dispatch, err error) {
+func (c *Connection) Dispatch() (object *Dispatch, err error) { log.DebugLog()
 	dispatch, err := c.Object.QueryInterface(IID_IDispatch)
 	if err != nil {
 		return
@@ -76,7 +76,7 @@ type Dispatch struct {
 }
 
 // Call method on IDispatch with parameters.
-func (d *Dispatch) Call(method string, params ...interface{}) (result *VARIANT, err error) {
+func (d *Dispatch) Call(method string, params ...interface{}) (result *VARIANT, err error) { log.DebugLog()
 	id, err := d.GetId(method)
 	if err != nil {
 		return
@@ -87,7 +87,7 @@ func (d *Dispatch) Call(method string, params ...interface{}) (result *VARIANT, 
 }
 
 // MustCall method on IDispatch with parameters.
-func (d *Dispatch) MustCall(method string, params ...interface{}) (result *VARIANT) {
+func (d *Dispatch) MustCall(method string, params ...interface{}) (result *VARIANT) { log.DebugLog()
 	id, err := d.GetId(method)
 	if err != nil {
 		panic(err)
@@ -102,7 +102,7 @@ func (d *Dispatch) MustCall(method string, params ...interface{}) (result *VARIA
 }
 
 // Get property on IDispatch with parameters.
-func (d *Dispatch) Get(name string, params ...interface{}) (result *VARIANT, err error) {
+func (d *Dispatch) Get(name string, params ...interface{}) (result *VARIANT, err error) { log.DebugLog()
 	id, err := d.GetId(name)
 	if err != nil {
 		return
@@ -112,7 +112,7 @@ func (d *Dispatch) Get(name string, params ...interface{}) (result *VARIANT, err
 }
 
 // MustGet property on IDispatch with parameters.
-func (d *Dispatch) MustGet(name string, params ...interface{}) (result *VARIANT) {
+func (d *Dispatch) MustGet(name string, params ...interface{}) (result *VARIANT) { log.DebugLog()
 	id, err := d.GetId(name)
 	if err != nil {
 		panic(err)
@@ -126,7 +126,7 @@ func (d *Dispatch) MustGet(name string, params ...interface{}) (result *VARIANT)
 }
 
 // Set property on IDispatch with parameters.
-func (d *Dispatch) Set(name string, params ...interface{}) (result *VARIANT, err error) {
+func (d *Dispatch) Set(name string, params ...interface{}) (result *VARIANT, err error) { log.DebugLog()
 	id, err := d.GetId(name)
 	if err != nil {
 		return
@@ -136,7 +136,7 @@ func (d *Dispatch) Set(name string, params ...interface{}) (result *VARIANT, err
 }
 
 // MustSet property on IDispatch with parameters.
-func (d *Dispatch) MustSet(name string, params ...interface{}) (result *VARIANT) {
+func (d *Dispatch) MustSet(name string, params ...interface{}) (result *VARIANT) { log.DebugLog()
 	id, err := d.GetId(name)
 	if err != nil {
 		panic(err)
@@ -150,7 +150,7 @@ func (d *Dispatch) MustSet(name string, params ...interface{}) (result *VARIANT)
 }
 
 // GetId retrieves ID of name on IDispatch.
-func (d *Dispatch) GetId(name string) (id int32, err error) {
+func (d *Dispatch) GetId(name string) (id int32, err error) { log.DebugLog()
 	var dispid []int32
 	dispid, err = d.Object.GetIDsOfName([]string{name})
 	if err != nil {
@@ -161,7 +161,7 @@ func (d *Dispatch) GetId(name string) (id int32, err error) {
 }
 
 // GetIds retrieves all IDs of names on IDispatch.
-func (d *Dispatch) GetIds(names ...string) (dispid []int32, err error) {
+func (d *Dispatch) GetIds(names ...string) (dispid []int32, err error) { log.DebugLog()
 	dispid, err = d.Object.GetIDsOfName(names)
 	return
 }
@@ -170,7 +170,7 @@ func (d *Dispatch) GetIds(names ...string) (dispid []int32, err error) {
 //
 // There have been problems where if send cascading params..., it would error
 // out because the parameters would be empty.
-func (d *Dispatch) Invoke(id int32, dispatch int16, params []interface{}) (result *VARIANT, err error) {
+func (d *Dispatch) Invoke(id int32, dispatch int16, params []interface{}) (result *VARIANT, err error) { log.DebugLog()
 	if len(params) < 1 {
 		result, err = d.Object.Invoke(id, dispatch)
 	} else {
@@ -180,12 +180,12 @@ func (d *Dispatch) Invoke(id int32, dispatch int16, params []interface{}) (resul
 }
 
 // Release IDispatch object.
-func (d *Dispatch) Release() {
+func (d *Dispatch) Release() { log.DebugLog()
 	d.Object.Release()
 }
 
 // Connect initializes COM and attempts to load IUnknown based on given names.
-func Connect(names ...string) (connection *Connection) {
+func Connect(names ...string) (connection *Connection) { log.DebugLog()
 	connection.Initialize()
 	connection.Load(names...)
 	return

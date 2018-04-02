@@ -54,7 +54,7 @@ var (
 
 // Capture new values for the Go runtime statistics exported in
 // runtime.MemStats.  This is designed to be called as a goroutine.
-func CaptureRuntimeMemStats(r Registry, d time.Duration) {
+func CaptureRuntimeMemStats(r Registry, d time.Duration) { log.DebugLog()
 	for range time.Tick(d) {
 		CaptureRuntimeMemStatsOnce(r)
 	}
@@ -68,7 +68,7 @@ func CaptureRuntimeMemStats(r Registry, d time.Duration) {
 // Be very careful with this because runtime.ReadMemStats calls the C
 // functions runtime·semacquire(&runtime·worldsema) and runtime·stoptheworld()
 // and that last one does what it says on the tin.
-func CaptureRuntimeMemStatsOnce(r Registry) {
+func CaptureRuntimeMemStatsOnce(r Registry) { log.DebugLog()
 	t := time.Now()
 	runtime.ReadMemStats(&memStats) // This takes 50-200us.
 	runtimeMetrics.ReadMemStats.UpdateSince(t)
@@ -145,7 +145,7 @@ func CaptureRuntimeMemStatsOnce(r Registry) {
 // Register runtimeMetrics for the Go runtime statistics exported in runtime and
 // specifically runtime.MemStats.  The runtimeMetrics are named by their
 // fully-qualified Go symbols, i.e. runtime.MemStats.Alloc.
-func RegisterRuntimeMemStats(r Registry) {
+func RegisterRuntimeMemStats(r Registry) { log.DebugLog()
 	runtimeMetrics.MemStats.Alloc = NewGauge()
 	runtimeMetrics.MemStats.BuckHashSys = NewGauge()
 	runtimeMetrics.MemStats.DebugGC = NewGauge()

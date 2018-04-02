@@ -13,22 +13,22 @@ import (
 	"syscall"
 )
 
-func newFileLock(path string, readOnly bool) (fl fileLock, err error) {
+func newFileLock(path string, readOnly bool) (fl fileLock, err error) { log.DebugLog()
 	return nil, syscall.ENOTSUP
 }
 
-func setFileLock(f *os.File, readOnly, lock bool) error {
+func setFileLock(f *os.File, readOnly, lock bool) error { log.DebugLog()
 	return syscall.ENOTSUP
 }
 
-func rename(oldpath, newpath string) error {
+func rename(oldpath, newpath string) error { log.DebugLog()
 	return syscall.ENOTSUP
 }
 
-func isErrInvalid(err error) bool {
+func isErrInvalid(err error) bool { log.DebugLog()
 	return false
 }
 
-func syncDir(name string) error {
+func syncDir(name string) error { log.DebugLog()
 	return syscall.ENOTSUP
 }

@@ -33,7 +33,7 @@ var compileCommand = cli.Command{
 	ArgsUsage: "<file>",
 }
 
-func compileCmd(ctx *cli.Context) error {
+func compileCmd(ctx *cli.Context) error { log.DebugLog()
 	debug := ctx.GlobalBool(DebugFlag.Name)
 
 	if len(ctx.Args().First()) == 0 {

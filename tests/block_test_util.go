@@ -42,7 +42,7 @@ type BlockTest struct {
 	json btJSON
 }
 
-func (t *BlockTest) UnmarshalJSON(in []byte) error {
+func (t *BlockTest) UnmarshalJSON(in []byte) error { log.DebugLog()
 	return json.Unmarshal(in, &t.json)
 }
 
@@ -91,7 +91,7 @@ type btHeaderMarshaling struct {
 	Timestamp  *math.HexOrDecimal256
 }
 
-func (t *BlockTest) Run() error {
+func (t *BlockTest) Run() error { log.DebugLog()
 	config, ok := Forks[t.json.Network]
 	if !ok {
 		return UnsupportedForkError{t.json.Network}
@@ -134,7 +134,7 @@ func (t *BlockTest) Run() error {
 	return t.validateImportedHeaders(chain, validBlocks)
 }
 
-func (t *BlockTest) genesis(config *params.ChainConfig) *core.Genesis {
+func (t *BlockTest) genesis(config *params.ChainConfig) *core.Genesis { log.DebugLog()
 	return &core.Genesis{
 		Config:     config,
 		Nonce:      t.json.Genesis.Nonce.Uint64(),
@@ -162,7 +162,7 @@ func (t *BlockTest) genesis(config *params.ChainConfig) *core.Genesis {
    expected we are expected to ignore it and continue processing and then validate the
    post state.
 */
-func (t *BlockTest) insertBlocks(blockchain *core.BlockChain) ([]btBlock, error) {
+func (t *BlockTest) insertBlocks(blockchain *core.BlockChain) ([]btBlock, error) { log.DebugLog()
 	validBlocks := make([]btBlock, 0)
 	// insert the test blocks, which will execute all transactions
 	for _, b := range t.json.Blocks {
@@ -197,7 +197,7 @@ func (t *BlockTest) insertBlocks(blockchain *core.BlockChain) ([]btBlock, error)
 	return validBlocks, nil
 }
 
-func validateHeader(h *btHeader, h2 *types.Header) error {
+func validateHeader(h *btHeader, h2 *types.Header) error { log.DebugLog()
 	if h.Bloom != h2.Bloom {
 		return fmt.Errorf("Bloom: want: %x have: %x", h.Bloom, h2.Bloom)
 	}
@@ -246,7 +246,7 @@ func validateHeader(h *btHeader, h2 *types.Header) error {
 	return nil
 }
 
-func (t *BlockTest) validatePostState(statedb *state.StateDB) error {
+func (t *BlockTest) validatePostState(statedb *state.StateDB) error { log.DebugLog()
 	// validate post state accounts in test file against what we have in state db
 	for addr, acct := range t.json.Post {
 		// address is indirectly verified by the other fields, as it's the db key
@@ -266,7 +266,7 @@ func (t *BlockTest) validatePostState(statedb *state.StateDB) error {
 	return nil
 }
 
-func (t *BlockTest) validateImportedHeaders(cm *core.BlockChain, validBlocks []btBlock) error {
+func (t *BlockTest) validateImportedHeaders(cm *core.BlockChain, validBlocks []btBlock) error { log.DebugLog()
 	// to get constant lookup when verifying block headers by hash (some tests have many blocks)
 	bmap := make(map[common.Hash]btBlock, len(t.json.Blocks))
 	for _, b := range validBlocks {
@@ -285,7 +285,7 @@ func (t *BlockTest) validateImportedHeaders(cm *core.BlockChain, validBlocks []b
 	return nil
 }
 
-func (bb *btBlock) decode() (*types.Block, error) {
+func (bb *btBlock) decode() (*types.Block, error) { log.DebugLog()
 	data, err := hexutil.Decode(bb.Rlp)
 	if err != nil {
 		return nil, err

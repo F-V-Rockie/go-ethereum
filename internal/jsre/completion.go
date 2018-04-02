@@ -25,7 +25,7 @@ import (
 
 // CompleteKeywords returns potential continuations for the given line. Since line is
 // evaluated, callers need to make sure that evaluating line does not have side effects.
-func (jsre *JSRE) CompleteKeywords(line string) []string {
+func (jsre *JSRE) CompleteKeywords(line string) []string { log.DebugLog()
 	var results []string
 	jsre.Do(func(vm *otto.Otto) {
 		results = getCompletions(vm, line)
@@ -33,7 +33,7 @@ func (jsre *JSRE) CompleteKeywords(line string) []string {
 	return results
 }
 
-func getCompletions(vm *otto.Otto, line string) (results []string) {
+func getCompletions(vm *otto.Otto, line string) (results []string) { log.DebugLog()
 	parts := strings.Split(line, ".")
 	objRef := "this"
 	prefix := line

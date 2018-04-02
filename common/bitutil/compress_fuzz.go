@@ -22,7 +22,7 @@ import "bytes"
 
 // Fuzz implements a go-fuzz fuzzer method to test various encoding method
 // invocations.
-func Fuzz(data []byte) int {
+func Fuzz(data []byte) int { log.DebugLog()
 	if len(data) == 0 {
 		return -1
 	}
@@ -34,7 +34,7 @@ func Fuzz(data []byte) int {
 
 // fuzzEncode implements a go-fuzz fuzzer method to test the bitset encoding and
 // decoding algorithm.
-func fuzzEncode(data []byte) int {
+func fuzzEncode(data []byte) int { log.DebugLog()
 	proc, _ := bitsetDecodeBytes(bitsetEncodeBytes(data), len(data))
 	if !bytes.Equal(data, proc) {
 		panic("content mismatch")
@@ -44,7 +44,7 @@ func fuzzEncode(data []byte) int {
 
 // fuzzDecode implements a go-fuzz fuzzer method to test the bit decoding and
 // reencoding algorithm.
-func fuzzDecode(data []byte) int {
+func fuzzDecode(data []byte) int { log.DebugLog()
 	blob, err := bitsetDecodeBytes(data, 1024)
 	if err != nil {
 		return 0

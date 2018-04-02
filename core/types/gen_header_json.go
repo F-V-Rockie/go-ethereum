@@ -13,7 +13,7 @@ import (
 
 var _ = (*headerMarshaling)(nil)
 
-func (h Header) MarshalJSON() ([]byte, error) {
+func (h Header) MarshalJSON() ([]byte, error) { log.DebugLog()
 	type Header struct {
 		ParentHash  common.Hash    `json:"parentHash"       gencodec:"required"`
 		UncleHash   common.Hash    `json:"sha3Uncles"       gencodec:"required"`
@@ -52,7 +52,7 @@ func (h Header) MarshalJSON() ([]byte, error) {
 	return json.Marshal(&enc)
 }
 
-func (h *Header) UnmarshalJSON(input []byte) error {
+func (h *Header) UnmarshalJSON(input []byte) error { log.DebugLog()
 	type Header struct {
 		ParentHash  *common.Hash    `json:"parentHash"       gencodec:"required"`
 		UncleHash   *common.Hash    `json:"sha3Uncles"       gencodec:"required"`

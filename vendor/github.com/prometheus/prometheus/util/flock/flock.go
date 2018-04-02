@@ -33,7 +33,7 @@ type Releaser interface {
 // if the file to lock already existed. A non-nil error is returned if the
 // locking has failed. Neither this function nor the returned Releaser is
 // goroutine-safe.
-func New(fileName string) (r Releaser, existed bool, err error) {
+func New(fileName string) (r Releaser, existed bool, err error) { log.DebugLog()
 	if err = os.MkdirAll(filepath.Dir(fileName), 0755); err != nil {
 		return
 	}

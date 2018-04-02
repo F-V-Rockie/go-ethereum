@@ -31,11 +31,11 @@ type Api struct {
 	chequebookf func() *Chequebook
 }
 
-func NewApi(ch func() *Chequebook) *Api {
+func NewApi(ch func() *Chequebook) *Api { log.DebugLog()
 	return &Api{ch}
 }
 
-func (self *Api) Balance() (string, error) {
+func (self *Api) Balance() (string, error) { log.DebugLog()
 	ch := self.chequebookf()
 	if ch == nil {
 		return "", errNoChequebook
@@ -43,7 +43,7 @@ func (self *Api) Balance() (string, error) {
 	return ch.Balance().String(), nil
 }
 
-func (self *Api) Issue(beneficiary common.Address, amount *big.Int) (cheque *Cheque, err error) {
+func (self *Api) Issue(beneficiary common.Address, amount *big.Int) (cheque *Cheque, err error) { log.DebugLog()
 	ch := self.chequebookf()
 	if ch == nil {
 		return nil, errNoChequebook
@@ -51,7 +51,7 @@ func (self *Api) Issue(beneficiary common.Address, amount *big.Int) (cheque *Che
 	return ch.Issue(beneficiary, amount)
 }
 
-func (self *Api) Cash(cheque *Cheque) (txhash string, err error) {
+func (self *Api) Cash(cheque *Cheque) (txhash string, err error) { log.DebugLog()
 	ch := self.chequebookf()
 	if ch == nil {
 		return "", errNoChequebook
@@ -59,7 +59,7 @@ func (self *Api) Cash(cheque *Cheque) (txhash string, err error) {
 	return ch.Cash(cheque)
 }
 
-func (self *Api) Deposit(amount *big.Int) (txhash string, err error) {
+func (self *Api) Deposit(amount *big.Int) (txhash string, err error) { log.DebugLog()
 	ch := self.chequebookf()
 	if ch == nil {
 		return "", errNoChequebook

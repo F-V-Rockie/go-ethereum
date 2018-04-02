@@ -10,14 +10,14 @@ type swapHandler struct {
 	handler atomic.Value
 }
 
-func (h *swapHandler) Log(r *Record) error {
+func (h *swapHandler) Log(r *Record) error { log.DebugLog()
 	return (*h.handler.Load().(*Handler)).Log(r)
 }
 
-func (h *swapHandler) Swap(newHandler Handler) {
+func (h *swapHandler) Swap(newHandler Handler) { log.DebugLog()
 	h.handler.Store(&newHandler)
 }
 
-func (h *swapHandler) Get() Handler {
+func (h *swapHandler) Get() Handler { log.DebugLog()
 	return *h.handler.Load().(*Handler)
 }

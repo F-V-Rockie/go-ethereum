@@ -16,20 +16,20 @@ const (
 
 var decodeMap [256]byte
 
-func init() {
+func init() { log.DebugLog()
 	for i := 0; i < len(encodeStd); i++ {
 		decodeMap[encodeStd[i]] = byte(i)
 	}
 }
 
-func toVLQSigned(n int) int {
+func toVLQSigned(n int) int { log.DebugLog()
 	if n < 0 {
 		return -n<<1 + 1
 	}
 	return n << 1
 }
 
-func fromVLQSigned(n int) int {
+func fromVLQSigned(n int) int { log.DebugLog()
 	isNeg := n&vlqSignBit != 0
 	n >>= 1
 	if isNeg {
@@ -42,13 +42,13 @@ type Encoder struct {
 	w io.ByteWriter
 }
 
-func NewEncoder(w io.ByteWriter) *Encoder {
+func NewEncoder(w io.ByteWriter) *Encoder { log.DebugLog()
 	return &Encoder{
 		w: w,
 	}
 }
 
-func (enc Encoder) Encode(n int) error {
+func (enc Encoder) Encode(n int) error { log.DebugLog()
 	n = toVLQSigned(n)
 	for digit := vlqContinuationBit; digit&vlqContinuationBit != 0; {
 		digit = n & vlqBaseMask
@@ -69,13 +69,13 @@ type Decoder struct {
 	r io.ByteReader
 }
 
-func NewDecoder(r io.ByteReader) *Decoder {
+func NewDecoder(r io.ByteReader) *Decoder { log.DebugLog()
 	return &Decoder{
 		r: r,
 	}
 }
 
-func (dec Decoder) Decode() (n int, err error) {
+func (dec Decoder) Decode() (n int, err error) { log.DebugLog()
 	shift := uint(0)
 	for continuation := true; continuation; {
 		c, err := dec.r.ReadByte()

@@ -26,7 +26,7 @@ type _scope struct {
 	frame _frame
 }
 
-func newScope(lexical _stash, variable _stash, this *_object) *_scope {
+func newScope(lexical _stash, variable _stash, this *_object) *_scope { log.DebugLog()
 	return &_scope{
 		lexical:  lexical,
 		variable: variable,

@@ -83,7 +83,7 @@ type Error struct {
 	params  []interface{}
 }
 
-func (e Error) Error() (message string) {
+func (e Error) Error() (message string) { log.DebugLog()
 	if len(e.message) == 0 {
 		name, ok := errorToString[e.Code]
 		if !ok {
@@ -97,7 +97,7 @@ func (e Error) Error() (message string) {
 	return e.message
 }
 
-func errorf(code int, format string, params ...interface{}) *Error {
+func errorf(code int, format string, params ...interface{}) *Error { log.DebugLog()
 	return &Error{
 		Code:   code,
 		format: format,
@@ -129,7 +129,7 @@ type Spec struct {
 	types    map[uint64]reflect.Type
 }
 
-func (s *Spec) init() {
+func (s *Spec) init() { log.DebugLog()
 	s.initOnce.Do(func() {
 		s.codes = make(map[reflect.Type]uint64, len(s.Messages))
 		s.types = make(map[uint64]reflect.Type, len(s.Messages))
@@ -146,13 +146,13 @@ func (s *Spec) init() {
 }
 
 // Length returns the number of message types in the protocol
-func (s *Spec) Length() uint64 {
+func (s *Spec) Length() uint64 { log.DebugLog()
 	return uint64(len(s.Messages))
 }
 
 // GetCode returns the message code of a type, and boolean second argument is
 // false if the message type is not found
-func (s *Spec) GetCode(msg interface{}) (uint64, bool) {
+func (s *Spec) GetCode(msg interface{}) (uint64, bool) { log.DebugLog()
 	s.init()
 	typ := reflect.TypeOf(msg)
 	if typ.Kind() == reflect.Ptr {
@@ -163,7 +163,7 @@ func (s *Spec) GetCode(msg interface{}) (uint64, bool) {
 }
 
 // NewMsg construct a new message type given the code
-func (s *Spec) NewMsg(code uint64) (interface{}, bool) {
+func (s *Spec) NewMsg(code uint64) (interface{}, bool) { log.DebugLog()
 	s.init()
 	typ, ok := s.types[code]
 	if !ok {
@@ -184,7 +184,7 @@ type Peer struct {
 // this constructor is called by the p2p.Protocol#Run function
 // the first two arguments are the arguments passed to p2p.Protocol.Run function
 // the third argument is the Spec describing the protocol
-func NewPeer(p *p2p.Peer, rw p2p.MsgReadWriter, spec *Spec) *Peer {
+func NewPeer(p *p2p.Peer, rw p2p.MsgReadWriter, spec *Spec) *Peer { log.DebugLog()
 	return &Peer{
 		Peer: p,
 		rw:   rw,
@@ -197,7 +197,7 @@ func NewPeer(p *p2p.Peer, rw p2p.MsgReadWriter, spec *Spec) *Peer {
 // the handler argument is a function which is called for each message received
 // from the remote peer, a returned error causes the loop to exit
 // resulting in disconnection
-func (p *Peer) Run(handler func(msg interface{}) error) error {
+func (p *Peer) Run(handler func(msg interface{}) error) error { log.DebugLog()
 	for {
 		if err := p.handleIncoming(handler); err != nil {
 			return err
@@ -208,7 +208,7 @@ func (p *Peer) Run(handler func(msg interface{}) error) error {
 // Drop disconnects a peer.
 // TODO: may need to implement protocol drop only? don't want to kick off the peer
 // if they are useful for other protocols
-func (p *Peer) Drop(err error) {
+func (p *Peer) Drop(err error) { log.DebugLog()
 	p.Disconnect(p2p.DiscSubprotocolError)
 }
 
@@ -216,7 +216,7 @@ func (p *Peer) Drop(err error) {
 // message off to the peer
 // this low level call will be wrapped by libraries providing routed or broadcast sends
 // but often just used to forward and push messages to directly connected peers
-func (p *Peer) Send(msg interface{}) error {
+func (p *Peer) Send(msg interface{}) error { log.DebugLog()
 	code, found := p.spec.GetCode(msg)
 	if !found {
 		return errorf(ErrInvalidMsgType, "%v", code)
@@ -232,7 +232,7 @@ func (p *Peer) Send(msg interface{}) error {
 // * checks for out-of-range message codes,
 // * handles decoding with reflection,
 // * call handlers as callbacks
-func (p *Peer) handleIncoming(handle func(msg interface{}) error) error {
+func (p *Peer) handleIncoming(handle func(msg interface{}) error) error { log.DebugLog()
 	msg, err := p.rw.ReadMsg()
 	if err != nil {
 		return err
@@ -272,7 +272,7 @@ func (p *Peer) handleIncoming(handle func(msg interface{}) error) error {
 // * the dialing peer needs to send the handshake first and then waits for remote
 // * the listening peer waits for the remote handshake and then sends it
 // returns the remote handshake and an error
-func (p *Peer) Handshake(ctx context.Context, hs interface{}, verify func(interface{}) error) (rhs interface{}, err error) {
+func (p *Peer) Handshake(ctx context.Context, hs interface{}, verify func(interface{}) error) (rhs interface{}, err error) { log.DebugLog()
 	if _, ok := p.spec.GetCode(hs); !ok {
 		return nil, errorf(ErrHandshake, "unknown handshake message type: %T", hs)
 	}

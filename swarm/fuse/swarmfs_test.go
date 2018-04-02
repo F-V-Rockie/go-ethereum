@@ -38,7 +38,7 @@ type fileInfo struct {
 	contents []byte
 }
 
-func createTestFilesAndUploadToSwarm(t *testing.T, api *api.Api, files map[string]fileInfo, uploadDir string) string {
+func createTestFilesAndUploadToSwarm(t *testing.T, api *api.Api, files map[string]fileInfo, uploadDir string) string { log.DebugLog()
 	os.RemoveAll(uploadDir)
 
 	for fname, finfo := range files {
@@ -70,7 +70,7 @@ func createTestFilesAndUploadToSwarm(t *testing.T, api *api.Api, files map[strin
 	return bzzhash
 }
 
-func mountDir(t *testing.T, api *api.Api, files map[string]fileInfo, bzzHash string, mountDir string) *SwarmFS {
+func mountDir(t *testing.T, api *api.Api, files map[string]fileInfo, bzzHash string, mountDir string) *SwarmFS { log.DebugLog()
 	os.RemoveAll(mountDir)
 	os.MkdirAll(mountDir, 0777)
 	swarmfs := NewSwarmFS(api)
@@ -105,7 +105,7 @@ func mountDir(t *testing.T, api *api.Api, files map[string]fileInfo, bzzHash str
 	return swarmfs
 }
 
-func compareGeneratedFileWithFileInMount(t *testing.T, files map[string]fileInfo, mountDir string) {
+func compareGeneratedFileWithFileInMount(t *testing.T, files map[string]fileInfo, mountDir string) { log.DebugLog()
 	err := filepath.Walk(mountDir, func(path string, f os.FileInfo, err error) error {
 		if f.IsDir() {
 			return nil
@@ -148,7 +148,7 @@ func compareGeneratedFileWithFileInMount(t *testing.T, files map[string]fileInfo
 	}
 }
 
-func checkFile(t *testing.T, testMountDir, fname string, contents []byte) {
+func checkFile(t *testing.T, testMountDir, fname string, contents []byte) { log.DebugLog()
 	destinationFile := filepath.Join(testMountDir, fname)
 	dfinfo, err1 := os.Stat(destinationFile)
 	if err1 != nil {
@@ -171,13 +171,13 @@ func checkFile(t *testing.T, testMountDir, fname string, contents []byte) {
 	}
 }
 
-func getRandomBtes(size int) []byte {
+func getRandomBtes(size int) []byte { log.DebugLog()
 	contents := make([]byte, size)
 	rand.Read(contents)
 	return contents
 }
 
-func isDirEmpty(name string) bool {
+func isDirEmpty(name string) bool { log.DebugLog()
 	f, err := os.Open(name)
 	if err != nil {
 		return false
@@ -193,7 +193,7 @@ type testAPI struct {
 	api *api.Api
 }
 
-func (ta *testAPI) mountListAndUnmount(t *testing.T) {
+func (ta *testAPI) mountListAndUnmount(t *testing.T) { log.DebugLog()
 	files := make(map[string]fileInfo)
 	testUploadDir, _ := ioutil.TempDir(os.TempDir(), "fuse-source")
 	testMountDir, _ := ioutil.TempDir(os.TempDir(), "fuse-dest")
@@ -230,7 +230,7 @@ func (ta *testAPI) mountListAndUnmount(t *testing.T) {
 
 }
 
-func (ta *testAPI) maxMounts(t *testing.T) {
+func (ta *testAPI) maxMounts(t *testing.T) { log.DebugLog()
 	files := make(map[string]fileInfo)
 	files["1.txt"] = fileInfo{0700, 333, 444, getRandomBtes(10)}
 	uploadDir1, _ := ioutil.TempDir(os.TempDir(), "max-upload1")
@@ -281,7 +281,7 @@ func (ta *testAPI) maxMounts(t *testing.T) {
 
 }
 
-func (ta *testAPI) remount(t *testing.T) {
+func (ta *testAPI) remount(t *testing.T) { log.DebugLog()
 	files := make(map[string]fileInfo)
 	files["1.txt"] = fileInfo{0700, 333, 444, getRandomBtes(10)}
 	uploadDir1, _ := ioutil.TempDir(os.TempDir(), "re-upload1")
@@ -315,7 +315,7 @@ func (ta *testAPI) remount(t *testing.T) {
 	}
 }
 
-func (ta *testAPI) unmount(t *testing.T) {
+func (ta *testAPI) unmount(t *testing.T) { log.DebugLog()
 	files := make(map[string]fileInfo)
 	uploadDir, _ := ioutil.TempDir(os.TempDir(), "ex-upload")
 	testMountDir, _ := ioutil.TempDir(os.TempDir(), "ex-mount")
@@ -336,7 +336,7 @@ func (ta *testAPI) unmount(t *testing.T) {
 	}
 }
 
-func (ta *testAPI) unmountWhenResourceBusy(t *testing.T) {
+func (ta *testAPI) unmountWhenResourceBusy(t *testing.T) { log.DebugLog()
 	files := make(map[string]fileInfo)
 	testUploadDir, _ := ioutil.TempDir(os.TempDir(), "ex-upload")
 	testMountDir, _ := ioutil.TempDir(os.TempDir(), "ex-mount")
@@ -365,7 +365,7 @@ func (ta *testAPI) unmountWhenResourceBusy(t *testing.T) {
 	}
 }
 
-func (ta *testAPI) seekInMultiChunkFile(t *testing.T) {
+func (ta *testAPI) seekInMultiChunkFile(t *testing.T) { log.DebugLog()
 	files := make(map[string]fileInfo)
 	testUploadDir, _ := ioutil.TempDir(os.TempDir(), "seek-upload")
 	testMountDir, _ := ioutil.TempDir(os.TempDir(), "seek-mount")
@@ -392,7 +392,7 @@ func (ta *testAPI) seekInMultiChunkFile(t *testing.T) {
 	d.Close()
 }
 
-func (ta *testAPI) createNewFile(t *testing.T) {
+func (ta *testAPI) createNewFile(t *testing.T) { log.DebugLog()
 	files := make(map[string]fileInfo)
 	testUploadDir, _ := ioutil.TempDir(os.TempDir(), "create-upload")
 	testMountDir, _ := ioutil.TempDir(os.TempDir(), "create-mount")
@@ -429,7 +429,7 @@ func (ta *testAPI) createNewFile(t *testing.T) {
 	checkFile(t, testMountDir, "2.txt", contents)
 }
 
-func (ta *testAPI) createNewFileInsideDirectory(t *testing.T) {
+func (ta *testAPI) createNewFileInsideDirectory(t *testing.T) { log.DebugLog()
 	files := make(map[string]fileInfo)
 	testUploadDir, _ := ioutil.TempDir(os.TempDir(), "createinsidedir-upload")
 	testMountDir, _ := ioutil.TempDir(os.TempDir(), "createinsidedir-mount")
@@ -465,7 +465,7 @@ func (ta *testAPI) createNewFileInsideDirectory(t *testing.T) {
 	checkFile(t, testMountDir, "one/2.txt", contents)
 }
 
-func (ta *testAPI) createNewFileInsideNewDirectory(t *testing.T) {
+func (ta *testAPI) createNewFileInsideNewDirectory(t *testing.T) { log.DebugLog()
 	files := make(map[string]fileInfo)
 	testUploadDir, _ := ioutil.TempDir(os.TempDir(), "createinsidenewdir-upload")
 	testMountDir, _ := ioutil.TempDir(os.TempDir(), "createinsidenewdir-mount")
@@ -502,7 +502,7 @@ func (ta *testAPI) createNewFileInsideNewDirectory(t *testing.T) {
 	checkFile(t, testMountDir, "one/2.txt", contents)
 }
 
-func (ta *testAPI) removeExistingFile(t *testing.T) {
+func (ta *testAPI) removeExistingFile(t *testing.T) { log.DebugLog()
 	files := make(map[string]fileInfo)
 	testUploadDir, _ := ioutil.TempDir(os.TempDir(), "remove-upload")
 	testMountDir, _ := ioutil.TempDir(os.TempDir(), "remove-mount")
@@ -530,7 +530,7 @@ func (ta *testAPI) removeExistingFile(t *testing.T) {
 	defer swarmfs2.Stop()
 }
 
-func (ta *testAPI) removeExistingFileInsideDir(t *testing.T) {
+func (ta *testAPI) removeExistingFileInsideDir(t *testing.T) { log.DebugLog()
 	files := make(map[string]fileInfo)
 	testUploadDir, _ := ioutil.TempDir(os.TempDir(), "remove-upload")
 	testMountDir, _ := ioutil.TempDir(os.TempDir(), "remove-mount")
@@ -558,7 +558,7 @@ func (ta *testAPI) removeExistingFileInsideDir(t *testing.T) {
 	defer swarmfs2.Stop()
 }
 
-func (ta *testAPI) removeNewlyAddedFile(t *testing.T) {
+func (ta *testAPI) removeNewlyAddedFile(t *testing.T) { log.DebugLog()
 
 	files := make(map[string]fileInfo)
 	testUploadDir, _ := ioutil.TempDir(os.TempDir(), "removenew-upload")
@@ -603,7 +603,7 @@ func (ta *testAPI) removeNewlyAddedFile(t *testing.T) {
 	}
 }
 
-func (ta *testAPI) addNewFileAndModifyContents(t *testing.T) {
+func (ta *testAPI) addNewFileAndModifyContents(t *testing.T) { log.DebugLog()
 	files := make(map[string]fileInfo)
 	testUploadDir, _ := ioutil.TempDir(os.TempDir(), "modifyfile-upload")
 	testMountDir, _ := ioutil.TempDir(os.TempDir(), "modifyfile-mount")
@@ -673,7 +673,7 @@ func (ta *testAPI) addNewFileAndModifyContents(t *testing.T) {
 	checkFile(t, testMountDir, "2.txt", line1and2)
 }
 
-func (ta *testAPI) removeEmptyDir(t *testing.T) {
+func (ta *testAPI) removeEmptyDir(t *testing.T) { log.DebugLog()
 	files := make(map[string]fileInfo)
 	testUploadDir, _ := ioutil.TempDir(os.TempDir(), "rmdir-upload")
 	testMountDir, _ := ioutil.TempDir(os.TempDir(), "rmdir-mount")
@@ -697,7 +697,7 @@ func (ta *testAPI) removeEmptyDir(t *testing.T) {
 	}
 }
 
-func (ta *testAPI) removeDirWhichHasFiles(t *testing.T) {
+func (ta *testAPI) removeDirWhichHasFiles(t *testing.T) { log.DebugLog()
 	files := make(map[string]fileInfo)
 	testUploadDir, _ := ioutil.TempDir(os.TempDir(), "rmdir-upload")
 	testMountDir, _ := ioutil.TempDir(os.TempDir(), "rmdir-mount")
@@ -726,7 +726,7 @@ func (ta *testAPI) removeDirWhichHasFiles(t *testing.T) {
 	defer swarmfs2.Stop()
 }
 
-func (ta *testAPI) removeDirWhichHasSubDirs(t *testing.T) {
+func (ta *testAPI) removeDirWhichHasSubDirs(t *testing.T) { log.DebugLog()
 	files := make(map[string]fileInfo)
 	testUploadDir, _ := ioutil.TempDir(os.TempDir(), "rmsubdir-upload")
 	testMountDir, _ := ioutil.TempDir(os.TempDir(), "rmsubdir-mount")
@@ -762,7 +762,7 @@ func (ta *testAPI) removeDirWhichHasSubDirs(t *testing.T) {
 	defer swarmfs2.Stop()
 }
 
-func (ta *testAPI) appendFileContentsToEnd(t *testing.T) {
+func (ta *testAPI) appendFileContentsToEnd(t *testing.T) { log.DebugLog()
 	files := make(map[string]fileInfo)
 	testUploadDir, _ := ioutil.TempDir(os.TempDir(), "appendlargefile-upload")
 	testMountDir, _ := ioutil.TempDir(os.TempDir(), "appendlargefile-mount")
@@ -801,7 +801,7 @@ func (ta *testAPI) appendFileContentsToEnd(t *testing.T) {
 	checkFile(t, testMountDir, "1.txt", line1and2)
 }
 
-func TestFUSE(t *testing.T) {
+func TestFUSE(t *testing.T) { log.DebugLog()
 	datadir, err := ioutil.TempDir("", "fuse")
 	if err != nil {
 		t.Fatalf("unable to create temp dir: %v", err)

@@ -101,7 +101,7 @@ var unmarshalLogTests = map[string]struct {
 	},
 }
 
-func TestUnmarshalLog(t *testing.T) {
+func TestUnmarshalLog(t *testing.T) { log.DebugLog()
 	dumper := spew.ConfigState{DisableMethods: true, Indent: "    "}
 	for name, test := range unmarshalLogTests {
 		var log *Log
@@ -115,7 +115,7 @@ func TestUnmarshalLog(t *testing.T) {
 	}
 }
 
-func checkError(t *testing.T, testname string, got, want error) bool {
+func checkError(t *testing.T, testname string, got, want error) bool { log.DebugLog()
 	if got == nil {
 		if want != nil {
 			t.Errorf("test %q: got no error, want %q", testname, want)

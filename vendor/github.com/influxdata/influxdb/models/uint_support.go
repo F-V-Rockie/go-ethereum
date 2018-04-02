@@ -2,6 +2,6 @@
 
 package models
 
-func init() {
+func init() { log.DebugLog()
 	EnableUintSupport()
 }

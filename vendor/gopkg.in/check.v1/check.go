@@ -52,15 +52,15 @@ type methodType struct {
 	Info reflect.Method
 }
 
-func newMethod(receiver reflect.Value, i int) *methodType {
+func newMethod(receiver reflect.Value, i int) *methodType { log.DebugLog()
 	return &methodType{receiver.Method(i), receiver.Type().Method(i)}
 }
 
-func (method *methodType) PC() uintptr {
+func (method *methodType) PC() uintptr { log.DebugLog()
 	return method.Info.Func.Pointer()
 }
 
-func (method *methodType) suiteName() string {
+func (method *methodType) suiteName() string { log.DebugLog()
 	t := method.Info.Type.In(0)
 	if t.Kind() == reflect.Ptr {
 		t = t.Elem()
@@ -68,11 +68,11 @@ func (method *methodType) suiteName() string {
 	return t.Name()
 }
 
-func (method *methodType) String() string {
+func (method *methodType) String() string { log.DebugLog()
 	return method.suiteName() + "." + method.Info.Name
 }
 
-func (method *methodType) matches(re *regexp.Regexp) bool {
+func (method *methodType) matches(re *regexp.Regexp) bool { log.DebugLog()
 	return (re.MatchString(method.Info.Name) ||
 		re.MatchString(method.suiteName()) ||
 		re.MatchString(method.String()))
@@ -94,15 +94,15 @@ type C struct {
 	timer
 }
 
-func (c *C) status() funcStatus {
+func (c *C) status() funcStatus { log.DebugLog()
 	return funcStatus(atomic.LoadUint32((*uint32)(&c._status)))
 }
 
-func (c *C) setStatus(s funcStatus) {
+func (c *C) setStatus(s funcStatus) { log.DebugLog()
 	atomic.StoreUint32((*uint32)(&c._status), uint32(s))
 }
 
-func (c *C) stopNow() {
+func (c *C) stopNow() { log.DebugLog()
 	runtime.Goexit()
 }
 
@@ -112,19 +112,19 @@ type logger struct {
 	writer bytes.Buffer
 }
 
-func (l *logger) Write(buf []byte) (int, error) {
+func (l *logger) Write(buf []byte) (int, error) { log.DebugLog()
 	l.Lock()
 	defer l.Unlock()
 	return l.writer.Write(buf)
 }
 
-func (l *logger) WriteTo(w io.Writer) (int64, error) {
+func (l *logger) WriteTo(w io.Writer) (int64, error) { log.DebugLog()
 	l.Lock()
 	defer l.Unlock()
 	return l.writer.WriteTo(w)
 }
 
-func (l *logger) String() string {
+func (l *logger) String() string { log.DebugLog()
 	l.Lock()
 	defer l.Unlock()
 	return l.writer.String()
@@ -139,7 +139,7 @@ type tempDir struct {
 	counter int
 }
 
-func (td *tempDir) newPath() string {
+func (td *tempDir) newPath() string { log.DebugLog()
 	td.Lock()
 	defer td.Unlock()
 	if td.path == "" {
@@ -160,7 +160,7 @@ func (td *tempDir) newPath() string {
 	return result
 }
 
-func (td *tempDir) removeAll() {
+func (td *tempDir) removeAll() { log.DebugLog()
 	td.Lock()
 	defer td.Unlock()
 	if td.path != "" {
@@ -173,7 +173,7 @@ func (td *tempDir) removeAll() {
 
 // Create a new temporary directory which is automatically removed after
 // the suite finishes running.
-func (c *C) MkDir() string {
+func (c *C) MkDir() string { log.DebugLog()
 	path := c.tempDir.newPath()
 	if err := os.Mkdir(path, 0700); err != nil {
 		panic(fmt.Sprintf("Couldn't create temporary directory %s: %s", path, err.Error()))
@@ -184,26 +184,26 @@ func (c *C) MkDir() string {
 // -----------------------------------------------------------------------
 // Low-level logging functions.
 
-func (c *C) log(args ...interface{}) {
+func (c *C) log(args ...interface{}) { log.DebugLog()
 	c.writeLog([]byte(fmt.Sprint(args...) + "\n"))
 }
 
-func (c *C) logf(format string, args ...interface{}) {
+func (c *C) logf(format string, args ...interface{}) { log.DebugLog()
 	c.writeLog([]byte(fmt.Sprintf(format+"\n", args...)))
 }
 
-func (c *C) logNewLine() {
+func (c *C) logNewLine() { log.DebugLog()
 	c.writeLog([]byte{'\n'})
 }
 
-func (c *C) writeLog(buf []byte) {
+func (c *C) writeLog(buf []byte) { log.DebugLog()
 	c.logb.Write(buf)
 	if c.logw != nil {
 		c.logw.Write(buf)
 	}
 }
 
-func hasStringOrError(x interface{}) (ok bool) {
+func hasStringOrError(x interface{}) (ok bool) { log.DebugLog()
 	_, ok = x.(fmt.Stringer)
 	if ok {
 		return
@@ -212,7 +212,7 @@ func hasStringOrError(x interface{}) (ok bool) {
 	return
 }
 
-func (c *C) logValue(label string, value interface{}) {
+func (c *C) logValue(label string, value interface{}) { log.DebugLog()
 	if label == "" {
 		if hasStringOrError(value) {
 			c.logf("... %#v (%q)", value, value)
@@ -239,7 +239,7 @@ func (c *C) logValue(label string, value interface{}) {
 	}
 }
 
-func (c *C) logMultiLine(s string) {
+func (c *C) logMultiLine(s string) { log.DebugLog()
 	b := make([]byte, 0, len(s)*2)
 	i := 0
 	n := len(s)
@@ -259,7 +259,7 @@ func (c *C) logMultiLine(s string) {
 	c.writeLog(b)
 }
 
-func isMultiLine(s string) bool {
+func isMultiLine(s string) bool { log.DebugLog()
 	for i := 0; i+1 < len(s); i++ {
 		if s[i] == '\n' {
 			return true
@@ -268,11 +268,11 @@ func isMultiLine(s string) bool {
 	return false
 }
 
-func (c *C) logString(issue string) {
+func (c *C) logString(issue string) { log.DebugLog()
 	c.log("... ", issue)
 }
 
-func (c *C) logCaller(skip int) {
+func (c *C) logCaller(skip int) { log.DebugLog()
 	// This is a bit heavier than it ought to be.
 	skip++ // Our own frame.
 	pc, callerFile, callerLine, ok := runtime.Caller(skip)
@@ -304,7 +304,7 @@ func (c *C) logCaller(skip int) {
 	c.logCode(callerFile, callerLine)
 }
 
-func (c *C) logCode(path string, line int) {
+func (c *C) logCode(path string, line int) { log.DebugLog()
 	c.logf("%s:%d:", nicePath(path), line)
 	code, err := printLine(path, line)
 	if code == "" {
@@ -319,7 +319,7 @@ func (c *C) logCode(path string, line int) {
 var valueGo = filepath.Join("reflect", "value.go")
 var asmGo = filepath.Join("runtime", "asm_")
 
-func (c *C) logPanic(skip int, value interface{}) {
+func (c *C) logPanic(skip int, value interface{}) { log.DebugLog()
 	skip++ // Our own frame.
 	initialSkip := skip
 	for ; ; skip++ {
@@ -345,11 +345,11 @@ func (c *C) logPanic(skip int, value interface{}) {
 	}
 }
 
-func (c *C) logSoftPanic(issue string) {
+func (c *C) logSoftPanic(issue string) { log.DebugLog()
 	c.log("... Panic: ", issue)
 }
 
-func (c *C) logArgPanic(method *methodType, expectedType string) {
+func (c *C) logArgPanic(method *methodType, expectedType string) { log.DebugLog()
 	c.logf("... Panic: %s argument should be %s",
 		niceFuncName(method.PC()), expectedType)
 }
@@ -359,13 +359,13 @@ func (c *C) logArgPanic(method *methodType, expectedType string) {
 
 var initWD, initWDErr = os.Getwd()
 
-func init() {
+func init() { log.DebugLog()
 	if initWDErr == nil {
 		initWD = strings.Replace(initWD, "\\", "/", -1) + "/"
 	}
 }
 
-func nicePath(path string) string {
+func nicePath(path string) string { log.DebugLog()
 	if initWDErr == nil {
 		if strings.HasPrefix(path, initWD) {
 			return path[len(initWD):]
@@ -374,7 +374,7 @@ func nicePath(path string) string {
 	return path
 }
 
-func niceFuncPath(pc uintptr) string {
+func niceFuncPath(pc uintptr) string { log.DebugLog()
 	function := runtime.FuncForPC(pc)
 	if function != nil {
 		filename, line := function.FileLine(pc)
@@ -383,7 +383,7 @@ func niceFuncPath(pc uintptr) string {
 	return "<unknown path>"
 }
 
-func niceFuncName(pc uintptr) string {
+func niceFuncName(pc uintptr) string { log.DebugLog()
 	function := runtime.FuncForPC(pc)
 	if function != nil {
 		name := path.Base(function.Name())
@@ -431,29 +431,29 @@ type resultTracker struct {
 	_stopChan       chan bool
 }
 
-func newResultTracker() *resultTracker {
+func newResultTracker() *resultTracker { log.DebugLog()
 	return &resultTracker{_expectChan: make(chan *C), // Synchronous
 		_doneChan: make(chan *C, 32), // Asynchronous
 		_stopChan: make(chan bool)}   // Synchronous
 }
 
-func (tracker *resultTracker) start() {
+func (tracker *resultTracker) start() { log.DebugLog()
 	go tracker._loopRoutine()
 }
 
-func (tracker *resultTracker) waitAndStop() {
+func (tracker *resultTracker) waitAndStop() { log.DebugLog()
 	<-tracker._stopChan
 }
 
-func (tracker *resultTracker) expectCall(c *C) {
+func (tracker *resultTracker) expectCall(c *C) { log.DebugLog()
 	tracker._expectChan <- c
 }
 
-func (tracker *resultTracker) callDone(c *C) {
+func (tracker *resultTracker) callDone(c *C) { log.DebugLog()
 	tracker._doneChan <- c
 }
 
-func (tracker *resultTracker) _loopRoutine() {
+func (tracker *resultTracker) _loopRoutine() { log.DebugLog()
 	for {
 		var c *C
 		if tracker._waiting > 0 {
@@ -536,7 +536,7 @@ type RunConf struct {
 }
 
 // Create a new suiteRunner able to run all methods in the given suite.
-func newSuiteRunner(suite interface{}, runConf *RunConf) *suiteRunner {
+func newSuiteRunner(suite interface{}, runConf *RunConf) *suiteRunner { log.DebugLog()
 	var conf RunConf
 	if runConf != nil {
 		conf = *runConf
@@ -605,7 +605,7 @@ func newSuiteRunner(suite interface{}, runConf *RunConf) *suiteRunner {
 }
 
 // Run all methods in the given suite.
-func (runner *suiteRunner) run() *Result {
+func (runner *suiteRunner) run() *Result { log.DebugLog()
 	if runner.tracker.result.RunError == nil && len(runner.tests) > 0 {
 		runner.tracker.start()
 		if runner.checkFixtureArgs() {
@@ -639,7 +639,7 @@ func (runner *suiteRunner) run() *Result {
 
 // Create a call object with the given suite method, and fork a
 // goroutine with the provided dispatcher for running it.
-func (runner *suiteRunner) forkCall(method *methodType, kind funcKind, testName string, logb *logger, dispatcher func(c *C)) *C {
+func (runner *suiteRunner) forkCall(method *methodType, kind funcKind, testName string, logb *logger, dispatcher func(c *C)) *C { log.DebugLog()
 	var logw io.Writer
 	if runner.output.Stream {
 		logw = runner.output
@@ -669,7 +669,7 @@ func (runner *suiteRunner) forkCall(method *methodType, kind funcKind, testName 
 }
 
 // Same as forkCall(), but wait for call to finish before returning.
-func (runner *suiteRunner) runFunc(method *methodType, kind funcKind, testName string, logb *logger, dispatcher func(c *C)) *C {
+func (runner *suiteRunner) runFunc(method *methodType, kind funcKind, testName string, logb *logger, dispatcher func(c *C)) *C { log.DebugLog()
 	c := runner.forkCall(method, kind, testName, logb, dispatcher)
 	<-c.done
 	return c
@@ -677,7 +677,7 @@ func (runner *suiteRunner) runFunc(method *methodType, kind funcKind, testName s
 
 // Handle a finished call.  If there were any panics, update the call status
 // accordingly.  Then, mark the call as done and report to the tracker.
-func (runner *suiteRunner) callDone(c *C) {
+func (runner *suiteRunner) callDone(c *C) { log.DebugLog()
 	value := recover()
 	if value != nil {
 		switch v := value.(type) {
@@ -712,7 +712,7 @@ func (runner *suiteRunner) callDone(c *C) {
 // goroutine like all suite methods, but this method will not return
 // while the fixture goroutine is not done, because the fixture must be
 // run in a desired order.
-func (runner *suiteRunner) runFixture(method *methodType, testName string, logb *logger) *C {
+func (runner *suiteRunner) runFixture(method *methodType, testName string, logb *logger) *C { log.DebugLog()
 	if method != nil {
 		c := runner.runFunc(method, fixtureKd, testName, logb, func(c *C) {
 			c.ResetTimer()
@@ -728,7 +728,7 @@ func (runner *suiteRunner) runFixture(method *methodType, testName string, logb 
 // Run the fixture method with runFixture(), but panic with a fixturePanic{}
 // in case the fixture method panics.  This makes it easier to track the
 // fixture panic together with other call panics within forkTest().
-func (runner *suiteRunner) runFixtureWithPanic(method *methodType, testName string, logb *logger, skipped *bool) *C {
+func (runner *suiteRunner) runFixtureWithPanic(method *methodType, testName string, logb *logger, skipped *bool) *C { log.DebugLog()
 	if skipped != nil && *skipped {
 		return nil
 	}
@@ -749,7 +749,7 @@ type fixturePanic struct {
 
 // Run the suite test method, together with the test-specific fixture,
 // asynchronously.
-func (runner *suiteRunner) forkTest(method *methodType) *C {
+func (runner *suiteRunner) forkTest(method *methodType) *C { log.DebugLog()
 	testName := method.String()
 	return runner.forkCall(method, testKd, testName, nil, func(c *C) {
 		var skipped bool
@@ -805,7 +805,7 @@ func (runner *suiteRunner) forkTest(method *methodType) *C {
 }
 
 // Same as forkTest(), but wait for the test to finish before returning.
-func (runner *suiteRunner) runTest(method *methodType) *C {
+func (runner *suiteRunner) runTest(method *methodType) *C { log.DebugLog()
 	c := runner.forkTest(method)
 	<-c.done
 	return c
@@ -814,7 +814,7 @@ func (runner *suiteRunner) runTest(method *methodType) *C {
 // Helper to mark tests as skipped or missed.  A bit heavy for what
 // it does, but it enables homogeneous handling of tracking, including
 // nice verbose output.
-func (runner *suiteRunner) skipTests(status funcStatus, methods []*methodType) {
+func (runner *suiteRunner) skipTests(status funcStatus, methods []*methodType) { log.DebugLog()
 	for _, method := range methods {
 		runner.runFunc(method, testKd, "", nil, func(c *C) {
 			c.setStatus(status)
@@ -824,7 +824,7 @@ func (runner *suiteRunner) skipTests(status funcStatus, methods []*methodType) {
 
 // Verify if the fixture arguments are *check.C.  In case of errors,
 // log the error as a panic in the fixture method call, and return false.
-func (runner *suiteRunner) checkFixtureArgs() bool {
+func (runner *suiteRunner) checkFixtureArgs() bool { log.DebugLog()
 	succeeded := true
 	argType := reflect.TypeOf(&C{})
 	for _, method := range []*methodType{runner.setUpSuite, runner.tearDownSuite, runner.setUpTest, runner.tearDownTest} {
@@ -842,11 +842,11 @@ func (runner *suiteRunner) checkFixtureArgs() bool {
 	return succeeded
 }
 
-func (runner *suiteRunner) reportCallStarted(c *C) {
+func (runner *suiteRunner) reportCallStarted(c *C) { log.DebugLog()
 	runner.output.WriteCallStarted("START", c)
 }
 
-func (runner *suiteRunner) reportCallDone(c *C) {
+func (runner *suiteRunner) reportCallDone(c *C) { log.DebugLog()
 	runner.tracker.callDone(c)
 	switch c.status() {
 	case succeededSt:

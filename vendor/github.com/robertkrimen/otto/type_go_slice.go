@@ -5,7 +5,7 @@ import (
 	"strconv"
 )
 
-func (runtime *_runtime) newGoSliceObject(value reflect.Value) *_object {
+func (runtime *_runtime) newGoSliceObject(value reflect.Value) *_object { log.DebugLog()
 	self := runtime.newObject()
 	self.class = "GoArray" // TODO GoSlice?
 	self.objectClass = _classGoSlice
@@ -17,21 +17,21 @@ type _goSliceObject struct {
 	value reflect.Value
 }
 
-func _newGoSliceObject(value reflect.Value) *_goSliceObject {
+func _newGoSliceObject(value reflect.Value) *_goSliceObject { log.DebugLog()
 	self := &_goSliceObject{
 		value: value,
 	}
 	return self
 }
 
-func (self _goSliceObject) getValue(index int64) (reflect.Value, bool) {
+func (self _goSliceObject) getValue(index int64) (reflect.Value, bool) { log.DebugLog()
 	if index < int64(self.value.Len()) {
 		return self.value.Index(int(index)), true
 	}
 	return reflect.Value{}, false
 }
 
-func (self _goSliceObject) setValue(index int64, value Value) bool {
+func (self _goSliceObject) setValue(index int64, value Value) bool { log.DebugLog()
 	indexValue, exists := self.getValue(index)
 	if !exists {
 		return false
@@ -44,7 +44,7 @@ func (self _goSliceObject) setValue(index int64, value Value) bool {
 	return true
 }
 
-func goSliceGetOwnProperty(self *_object, name string) *_property {
+func goSliceGetOwnProperty(self *_object, name string) *_property { log.DebugLog()
 	// length
 	if name == "length" {
 		return &_property{
@@ -78,7 +78,7 @@ func goSliceGetOwnProperty(self *_object, name string) *_property {
 	return objectGetOwnProperty(self, name)
 }
 
-func goSliceEnumerate(self *_object, all bool, each func(string) bool) {
+func goSliceEnumerate(self *_object, all bool, each func(string) bool) { log.DebugLog()
 	object := self.value.(*_goSliceObject)
 	// .0, .1, .2, ...
 
@@ -92,7 +92,7 @@ func goSliceEnumerate(self *_object, all bool, each func(string) bool) {
 	objectEnumerate(self, all, each)
 }
 
-func goSliceDefineOwnProperty(self *_object, name string, descriptor _property, throw bool) bool {
+func goSliceDefineOwnProperty(self *_object, name string, descriptor _property, throw bool) bool { log.DebugLog()
 	if name == "length" {
 		return self.runtime.typeErrorResult(throw)
 	} else if index := stringToArrayIndex(name); index >= 0 {
@@ -104,7 +104,7 @@ func goSliceDefineOwnProperty(self *_object, name string, descriptor _property, 
 	return objectDefineOwnProperty(self, name, descriptor, throw)
 }
 
-func goSliceDelete(self *_object, name string, throw bool) bool {
+func goSliceDelete(self *_object, name string, throw bool) bool { log.DebugLog()
 	// length
 	if name == "length" {
 		return self.runtime.typeErrorResult(throw)

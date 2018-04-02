@@ -20,7 +20,7 @@ type fieldInfo struct {
 	ignored bool
 }
 
-func makeFieldCache(cfg *Config, rt reflect.Type) fieldCache {
+func makeFieldCache(cfg *Config, rt reflect.Type) fieldCache { log.DebugLog()
 	named, auto := make(map[string]fieldInfo), make(map[string]fieldInfo)
 	for i := 0; i < rt.NumField(); i++ {
 		ft := rt.Field(i)
@@ -39,7 +39,7 @@ func makeFieldCache(cfg *Config, rt reflect.Type) fieldCache {
 	return fieldCache{named, auto}
 }
 
-func (fc fieldCache) findField(cfg *Config, rv reflect.Value, name string) (reflect.Value, string, error) {
+func (fc fieldCache) findField(cfg *Config, rv reflect.Value, name string) (reflect.Value, string, error) { log.DebugLog()
 	info, found := fc.named[name]
 	if !found {
 		info, found = fc.auto[cfg.NormFieldName(rv.Type(), name)]
@@ -56,7 +56,7 @@ func (fc fieldCache) findField(cfg *Config, rv reflect.Value, name string) (refl
 	return rv.FieldByIndex(info.index), info.name, nil
 }
 
-func extractTag(tag string) (col, rest string) {
+func extractTag(tag string) (col, rest string) { log.DebugLog()
 	tags := strings.SplitN(tag, ",", 2)
 	if len(tags) == 2 {
 		return strings.TrimSpace(tags[0]), strings.TrimSpace(tags[1])

@@ -28,7 +28,7 @@ import (
 // one.
 //
 // If the user elects not to use a reverse proxy, an empty hostname is returned!
-func (w *wizard) ensureVirtualHost(client *sshClient, port int, def string) (string, error) {
+func (w *wizard) ensureVirtualHost(client *sshClient, port int, def string) (string, error) { log.DebugLog()
 	proxy, _ := checkNginx(client, w.network)
 	if proxy != nil {
 		// Reverse proxy is running, if ports match, we need a virtual host

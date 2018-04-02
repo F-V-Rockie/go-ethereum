@@ -4,6 +4,6 @@ package metrics
 
 import "runtime"
 
-func gcCPUFraction(memStats *runtime.MemStats) float64 {
+func gcCPUFraction(memStats *runtime.MemStats) float64 { log.DebugLog()
 	return 0
 }

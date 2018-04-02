@@ -23,7 +23,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 )
 
-func TestSet(t *testing.T) {
+func TestSet(t *testing.T) { log.DebugLog()
 	a := Uint(0)
 	b := Uint(10)
 	a.Set(b)
@@ -37,7 +37,7 @@ func TestSet(t *testing.T) {
 	}
 }
 
-func TestInitialiser(t *testing.T) {
+func TestInitialiser(t *testing.T) { log.DebugLog()
 	check := false
 	init := NewInitialiser(func(x *Number) *Number {
 		check = true
@@ -52,7 +52,7 @@ func TestInitialiser(t *testing.T) {
 	}
 }
 
-func TestGet(t *testing.T) {
+func TestGet(t *testing.T) { log.DebugLog()
 	a := Uint(10)
 	if a.Uint64() != 10 {
 		t.Error("expected to get 10. got", a.Uint64())
@@ -64,7 +64,7 @@ func TestGet(t *testing.T) {
 	}
 }
 
-func TestCmp(t *testing.T) {
+func TestCmp(t *testing.T) { log.DebugLog()
 	a := Uint(10)
 	b := Uint(10)
 	c := Uint(11)
@@ -82,7 +82,7 @@ func TestCmp(t *testing.T) {
 	}
 }
 
-func TestMaxArith(t *testing.T) {
+func TestMaxArith(t *testing.T) { log.DebugLog()
 	a := Uint(0).Add(MaxUint256, One)
 	if a.Cmp(Zero) != 0 {
 		t.Error("expected max256 + 1 = 0 got", a)
@@ -99,7 +99,7 @@ func TestMaxArith(t *testing.T) {
 	}
 }
 
-func TestConversion(t *testing.T) {
+func TestConversion(t *testing.T) { log.DebugLog()
 	a := Int(-1)
 	b := a.Uint256()
 	if b.Cmp(MaxUint256) != 0 {

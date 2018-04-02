@@ -67,17 +67,17 @@ type Hub struct {
 }
 
 // NewLedgerHub creates a new hardware wallet manager for Ledger devices.
-func NewLedgerHub() (*Hub, error) {
+func NewLedgerHub() (*Hub, error) { log.DebugLog()
 	return newHub(LedgerScheme, 0x2c97, []uint16{0x0000 /* Ledger Blue */, 0x0001 /* Ledger Nano S */}, 0xffa0, 0, newLedgerDriver)
 }
 
 // NewTrezorHub creates a new hardware wallet manager for Trezor devices.
-func NewTrezorHub() (*Hub, error) {
+func NewTrezorHub() (*Hub, error) { log.DebugLog()
 	return newHub(TrezorScheme, 0x534c, []uint16{0x0001 /* Trezor 1 */}, 0xff00, 0, newTrezorDriver)
 }
 
 // newHub creates a new hardware wallet manager for generic USB devices.
-func newHub(scheme string, vendorID uint16, productIDs []uint16, usageID uint16, endpointID int, makeDriver func(log.Logger) driver) (*Hub, error) {
+func newHub(scheme string, vendorID uint16, productIDs []uint16, usageID uint16, endpointID int, makeDriver func(log.Logger) driver) (*Hub, error) { log.DebugLog()
 	if !hid.Supported() {
 		return nil, errors.New("unsupported platform")
 	}
@@ -96,7 +96,7 @@ func newHub(scheme string, vendorID uint16, productIDs []uint16, usageID uint16,
 
 // Wallets implements accounts.Backend, returning all the currently tracked USB
 // devices that appear to be hardware wallets.
-func (hub *Hub) Wallets() []accounts.Wallet {
+func (hub *Hub) Wallets() []accounts.Wallet { log.DebugLog()
 	// Make sure the list of wallets is up to date
 	hub.refreshWallets()
 
@@ -110,7 +110,7 @@ func (hub *Hub) Wallets() []accounts.Wallet {
 
 // refreshWallets scans the USB devices attached to the machine and updates the
 // list of wallets based on the found devices.
-func (hub *Hub) refreshWallets() {
+func (hub *Hub) refreshWallets() { log.DebugLog()
 	// Don't scan the USB like crazy it the user fetches wallets in a loop
 	hub.stateLock.RLock()
 	elapsed := time.Since(hub.refreshed)
@@ -199,7 +199,7 @@ func (hub *Hub) refreshWallets() {
 
 // Subscribe implements accounts.Backend, creating an async subscription to
 // receive notifications on the addition or removal of USB wallets.
-func (hub *Hub) Subscribe(sink chan<- accounts.WalletEvent) event.Subscription {
+func (hub *Hub) Subscribe(sink chan<- accounts.WalletEvent) event.Subscription { log.DebugLog()
 	// We need the mutex to reliably start/stop the update loop
 	hub.stateLock.Lock()
 	defer hub.stateLock.Unlock()
@@ -217,7 +217,7 @@ func (hub *Hub) Subscribe(sink chan<- accounts.WalletEvent) event.Subscription {
 
 // updater is responsible for maintaining an up-to-date list of wallets managed
 // by the USB hub, and for firing wallet addition/removal events.
-func (hub *Hub) updater() {
+func (hub *Hub) updater() { log.DebugLog()
 	for {
 		// TODO: Wait for a USB hotplug event (not supported yet) or a refresh timeout
 		// <-hub.changes

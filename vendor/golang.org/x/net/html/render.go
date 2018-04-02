@@ -42,7 +42,7 @@ type writer interface {
 // text node would become a tree containing <html>, <head> and <body> elements.
 // Another example is that the programmatic equivalent of "a<head>b</head>c"
 // becomes "<html><head><head/><body>abc</body></html>".
-func Render(w io.Writer, n *Node) error {
+func Render(w io.Writer, n *Node) error { log.DebugLog()
 	if x, ok := w.(writer); ok {
 		return render(x, n)
 	}
@@ -57,7 +57,7 @@ func Render(w io.Writer, n *Node) error {
 // has been rendered. No more end tags should be rendered after that.
 var plaintextAbort = errors.New("html: internal error (plaintext abort)")
 
-func render(w writer, n *Node) error {
+func render(w writer, n *Node) error { log.DebugLog()
 	err := render1(w, n)
 	if err == plaintextAbort {
 		err = nil
@@ -65,7 +65,7 @@ func render(w writer, n *Node) error {
 	return err
 }
 
-func render1(w writer, n *Node) error {
+func render1(w writer, n *Node) error { log.DebugLog()
 	// Render non-element nodes; these are the easy cases.
 	switch n.Type {
 	case ErrorNode:
@@ -232,7 +232,7 @@ func render1(w writer, n *Node) error {
 // quotes, but if s contains a double quote, it will use single quotes.
 // It is used for writing the identifiers in a doctype declaration.
 // In valid HTML, they can't contain both types of quotes.
-func writeQuoted(w writer, s string) error {
+func writeQuoted(w writer, s string) error { log.DebugLog()
 	var q byte = '"'
 	if strings.Contains(s, `"`) {
 		q = '\''

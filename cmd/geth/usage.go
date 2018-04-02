@@ -231,9 +231,9 @@ var AppHelpFlagGroups = []flagGroup{
 // defined in AppHelpFlagGroups.
 type byCategory []flagGroup
 
-func (a byCategory) Len() int      { return len(a) }
-func (a byCategory) Swap(i, j int) { a[i], a[j] = a[j], a[i] }
-func (a byCategory) Less(i, j int) bool {
+func (a byCategory) Len() int      { log.DebugLog() return len(a) }
+func (a byCategory) Swap(i, j int) { log.DebugLog() a[i], a[j] = a[j], a[i] }
+func (a byCategory) Less(i, j int) bool { log.DebugLog()
 	iCat, jCat := a[i].Name, a[j].Name
 	iIdx, jIdx := len(AppHelpFlagGroups), len(AppHelpFlagGroups) // ensure non categorized flags come last
 
@@ -249,7 +249,7 @@ func (a byCategory) Less(i, j int) bool {
 	return iIdx < jIdx
 }
 
-func flagCategory(flag cli.Flag) string {
+func flagCategory(flag cli.Flag) string { log.DebugLog()
 	for _, category := range AppHelpFlagGroups {
 		for _, flg := range category.Flags {
 			if flg.GetName() == flag.GetName() {
@@ -260,7 +260,7 @@ func flagCategory(flag cli.Flag) string {
 	return "MISC"
 }
 
-func init() {
+func init() { log.DebugLog()
 	// Override the default app help template
 	cli.AppHelpTemplate = AppHelpTemplate
 

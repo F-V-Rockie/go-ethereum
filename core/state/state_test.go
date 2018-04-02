@@ -36,7 +36,7 @@ var _ = checker.Suite(&StateSuite{})
 
 var toAddr = common.BytesToAddress
 
-func (s *StateSuite) TestDump(c *checker.C) {
+func (s *StateSuite) TestDump(c *checker.C) { log.DebugLog()
 	// generate a few entries
 	obj1 := s.state.GetOrNewStateObject(toAddr([]byte{0x01}))
 	obj1.AddBalance(big.NewInt(22))
@@ -86,12 +86,12 @@ func (s *StateSuite) TestDump(c *checker.C) {
 	}
 }
 
-func (s *StateSuite) SetUpTest(c *checker.C) {
+func (s *StateSuite) SetUpTest(c *checker.C) { log.DebugLog()
 	s.db, _ = ethdb.NewMemDatabase()
 	s.state, _ = New(common.Hash{}, NewDatabase(s.db))
 }
 
-func (s *StateSuite) TestNull(c *checker.C) {
+func (s *StateSuite) TestNull(c *checker.C) { log.DebugLog()
 	address := common.HexToAddress("0x823140710bf13990e4500136726d8b55")
 	s.state.CreateAccount(address)
 	//value := common.FromHex("0x823140710bf13990e4500136726d8b55")
@@ -104,7 +104,7 @@ func (s *StateSuite) TestNull(c *checker.C) {
 	}
 }
 
-func (s *StateSuite) TestSnapshot(c *checker.C) {
+func (s *StateSuite) TestSnapshot(c *checker.C) { log.DebugLog()
 	stateobjaddr := toAddr([]byte("aa"))
 	var storageaddr common.Hash
 	data1 := common.BytesToHash([]byte{42})
@@ -126,13 +126,13 @@ func (s *StateSuite) TestSnapshot(c *checker.C) {
 	c.Assert(data1, checker.DeepEquals, res)
 }
 
-func (s *StateSuite) TestSnapshotEmpty(c *checker.C) {
+func (s *StateSuite) TestSnapshotEmpty(c *checker.C) { log.DebugLog()
 	s.state.RevertToSnapshot(s.state.Snapshot())
 }
 
 // use testing instead of checker because checker does not support
 // printing/logging in tests (-check.vv does not work)
-func TestSnapshot2(t *testing.T) {
+func TestSnapshot2(t *testing.T) { log.DebugLog()
 	db, _ := ethdb.NewMemDatabase()
 	state, _ := New(common.Hash{}, NewDatabase(db))
 
@@ -189,7 +189,7 @@ func TestSnapshot2(t *testing.T) {
 	}
 }
 
-func compareStateObjects(so0, so1 *stateObject, t *testing.T) {
+func compareStateObjects(so0, so1 *stateObject, t *testing.T) { log.DebugLog()
 	if so0.Address() != so1.Address() {
 		t.Fatalf("Address mismatch: have %v, want %v", so0.address, so1.address)
 	}

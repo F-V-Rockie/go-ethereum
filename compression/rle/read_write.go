@@ -34,7 +34,7 @@ const (
 var empty = crypto.Keccak256([]byte(""))
 var emptyList = crypto.Keccak256([]byte{0x80})
 
-func Decompress(dat []byte) ([]byte, error) {
+func Decompress(dat []byte) ([]byte, error) { log.DebugLog()
 	buf := new(bytes.Buffer)
 
 	for i := 0; i < len(dat); i++ {
@@ -62,7 +62,7 @@ func Decompress(dat []byte) ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-func compressChunk(dat []byte) (ret []byte, n int) {
+func compressChunk(dat []byte) (ret []byte, n int) { log.DebugLog()
 	switch {
 	case dat[0] == token:
 		return []byte{token, tokenToken}, 1
@@ -87,7 +87,7 @@ func compressChunk(dat []byte) (ret []byte, n int) {
 	}
 }
 
-func Compress(dat []byte) []byte {
+func Compress(dat []byte) []byte { log.DebugLog()
 	buf := new(bytes.Buffer)
 
 	i := 0

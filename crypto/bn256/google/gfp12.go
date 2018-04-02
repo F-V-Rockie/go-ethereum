@@ -18,66 +18,66 @@ type gfP12 struct {
 	x, y *gfP6 // value is xω + y
 }
 
-func newGFp12(pool *bnPool) *gfP12 {
+func newGFp12(pool *bnPool) *gfP12 { log.DebugLog()
 	return &gfP12{newGFp6(pool), newGFp6(pool)}
 }
 
-func (e *gfP12) String() string {
+func (e *gfP12) String() string { log.DebugLog()
 	return "(" + e.x.String() + "," + e.y.String() + ")"
 }
 
-func (e *gfP12) Put(pool *bnPool) {
+func (e *gfP12) Put(pool *bnPool) { log.DebugLog()
 	e.x.Put(pool)
 	e.y.Put(pool)
 }
 
-func (e *gfP12) Set(a *gfP12) *gfP12 {
+func (e *gfP12) Set(a *gfP12) *gfP12 { log.DebugLog()
 	e.x.Set(a.x)
 	e.y.Set(a.y)
 	return e
 }
 
-func (e *gfP12) SetZero() *gfP12 {
+func (e *gfP12) SetZero() *gfP12 { log.DebugLog()
 	e.x.SetZero()
 	e.y.SetZero()
 	return e
 }
 
-func (e *gfP12) SetOne() *gfP12 {
+func (e *gfP12) SetOne() *gfP12 { log.DebugLog()
 	e.x.SetZero()
 	e.y.SetOne()
 	return e
 }
 
-func (e *gfP12) Minimal() {
+func (e *gfP12) Minimal() { log.DebugLog()
 	e.x.Minimal()
 	e.y.Minimal()
 }
 
-func (e *gfP12) IsZero() bool {
+func (e *gfP12) IsZero() bool { log.DebugLog()
 	e.Minimal()
 	return e.x.IsZero() && e.y.IsZero()
 }
 
-func (e *gfP12) IsOne() bool {
+func (e *gfP12) IsOne() bool { log.DebugLog()
 	e.Minimal()
 	return e.x.IsZero() && e.y.IsOne()
 }
 
-func (e *gfP12) Conjugate(a *gfP12) *gfP12 {
+func (e *gfP12) Conjugate(a *gfP12) *gfP12 { log.DebugLog()
 	e.x.Negative(a.x)
 	e.y.Set(a.y)
 	return a
 }
 
-func (e *gfP12) Negative(a *gfP12) *gfP12 {
+func (e *gfP12) Negative(a *gfP12) *gfP12 { log.DebugLog()
 	e.x.Negative(a.x)
 	e.y.Negative(a.y)
 	return e
 }
 
 // Frobenius computes (xω+y)^p = x^p ω·ξ^((p-1)/6) + y^p
-func (e *gfP12) Frobenius(a *gfP12, pool *bnPool) *gfP12 {
+func (e *gfP12) Frobenius(a *gfP12, pool *bnPool) *gfP12 { log.DebugLog()
 	e.x.Frobenius(a.x, pool)
 	e.y.Frobenius(a.y, pool)
 	e.x.MulScalar(e.x, xiToPMinus1Over6, pool)
@@ -85,26 +85,26 @@ func (e *gfP12) Frobenius(a *gfP12, pool *bnPool) *gfP12 {
 }
 
 // FrobeniusP2 computes (xω+y)^p² = x^p² ω·ξ^((p²-1)/6) + y^p²
-func (e *gfP12) FrobeniusP2(a *gfP12, pool *bnPool) *gfP12 {
+func (e *gfP12) FrobeniusP2(a *gfP12, pool *bnPool) *gfP12 { log.DebugLog()
 	e.x.FrobeniusP2(a.x)
 	e.x.MulGFP(e.x, xiToPSquaredMinus1Over6)
 	e.y.FrobeniusP2(a.y)
 	return e
 }
 
-func (e *gfP12) Add(a, b *gfP12) *gfP12 {
+func (e *gfP12) Add(a, b *gfP12) *gfP12 { log.DebugLog()
 	e.x.Add(a.x, b.x)
 	e.y.Add(a.y, b.y)
 	return e
 }
 
-func (e *gfP12) Sub(a, b *gfP12) *gfP12 {
+func (e *gfP12) Sub(a, b *gfP12) *gfP12 { log.DebugLog()
 	e.x.Sub(a.x, b.x)
 	e.y.Sub(a.y, b.y)
 	return e
 }
 
-func (e *gfP12) Mul(a, b *gfP12, pool *bnPool) *gfP12 {
+func (e *gfP12) Mul(a, b *gfP12, pool *bnPool) *gfP12 { log.DebugLog()
 	tx := newGFp6(pool)
 	tx.Mul(a.x, b.y, pool)
 	t := newGFp6(pool)
@@ -124,13 +124,13 @@ func (e *gfP12) Mul(a, b *gfP12, pool *bnPool) *gfP12 {
 	return e
 }
 
-func (e *gfP12) MulScalar(a *gfP12, b *gfP6, pool *bnPool) *gfP12 {
+func (e *gfP12) MulScalar(a *gfP12, b *gfP6, pool *bnPool) *gfP12 { log.DebugLog()
 	e.x.Mul(e.x, b, pool)
 	e.y.Mul(e.y, b, pool)
 	return e
 }
 
-func (c *gfP12) Exp(a *gfP12, power *big.Int, pool *bnPool) *gfP12 {
+func (c *gfP12) Exp(a *gfP12, power *big.Int, pool *bnPool) *gfP12 { log.DebugLog()
 	sum := newGFp12(pool)
 	sum.SetOne()
 	t := newGFp12(pool)
@@ -152,7 +152,7 @@ func (c *gfP12) Exp(a *gfP12, power *big.Int, pool *bnPool) *gfP12 {
 	return c
 }
 
-func (e *gfP12) Square(a *gfP12, pool *bnPool) *gfP12 {
+func (e *gfP12) Square(a *gfP12, pool *bnPool) *gfP12 { log.DebugLog()
 	// Complex squaring algorithm
 	v0 := newGFp6(pool)
 	v0.Mul(a.x, a.y, pool)
@@ -177,7 +177,7 @@ func (e *gfP12) Square(a *gfP12, pool *bnPool) *gfP12 {
 	return e
 }
 
-func (e *gfP12) Invert(a *gfP12, pool *bnPool) *gfP12 {
+func (e *gfP12) Invert(a *gfP12, pool *bnPool) *gfP12 { log.DebugLog()
 	// See "Implementing cryptographic pairings", M. Scott, section 3.2.
 	// ftp://136.206.11.249/pub/crypto/pairings.pdf
 	t1 := newGFp6(pool)

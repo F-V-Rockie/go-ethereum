@@ -49,7 +49,7 @@ type StateSubtest struct {
 	Index int
 }
 
-func (t *StateTest) UnmarshalJSON(in []byte) error {
+func (t *StateTest) UnmarshalJSON(in []byte) error { log.DebugLog()
 	return json.Unmarshal(in, &t.json)
 }
 
@@ -109,7 +109,7 @@ type stTransactionMarshaling struct {
 }
 
 // Subtests returns all valid subtests of the test.
-func (t *StateTest) Subtests() []StateSubtest {
+func (t *StateTest) Subtests() []StateSubtest { log.DebugLog()
 	var sub []StateSubtest
 	for fork, pss := range t.json.Post {
 		for i := range pss {
@@ -120,7 +120,7 @@ func (t *StateTest) Subtests() []StateSubtest {
 }
 
 // Run executes a specific subtest.
-func (t *StateTest) Run(subtest StateSubtest, vmconfig vm.Config) (*state.StateDB, error) {
+func (t *StateTest) Run(subtest StateSubtest, vmconfig vm.Config) (*state.StateDB, error) { log.DebugLog()
 	config, ok := Forks[subtest.Fork]
 	if !ok {
 		return nil, UnsupportedForkError{subtest.Fork}
@@ -154,11 +154,11 @@ func (t *StateTest) Run(subtest StateSubtest, vmconfig vm.Config) (*state.StateD
 	return statedb, nil
 }
 
-func (t *StateTest) gasLimit(subtest StateSubtest) uint64 {
+func (t *StateTest) gasLimit(subtest StateSubtest) uint64 { log.DebugLog()
 	return t.json.Tx.GasLimit[t.json.Post[subtest.Fork][subtest.Index].Indexes.Gas]
 }
 
-func MakePreState(db ethdb.Database, accounts core.GenesisAlloc) *state.StateDB {
+func MakePreState(db ethdb.Database, accounts core.GenesisAlloc) *state.StateDB { log.DebugLog()
 	sdb := state.NewDatabase(db)
 	statedb, _ := state.New(common.Hash{}, sdb)
 	for addr, a := range accounts {
@@ -175,7 +175,7 @@ func MakePreState(db ethdb.Database, accounts core.GenesisAlloc) *state.StateDB 
 	return statedb
 }
 
-func (t *StateTest) genesis(config *params.ChainConfig) *core.Genesis {
+func (t *StateTest) genesis(config *params.ChainConfig) *core.Genesis { log.DebugLog()
 	return &core.Genesis{
 		Config:     config,
 		Coinbase:   t.json.Env.Coinbase,
@@ -187,7 +187,7 @@ func (t *StateTest) genesis(config *params.ChainConfig) *core.Genesis {
 	}
 }
 
-func (tx *stTransaction) toMessage(ps stPostState) (core.Message, error) {
+func (tx *stTransaction) toMessage(ps stPostState) (core.Message, error) { log.DebugLog()
 	// Derive sender from private key if present.
 	var from common.Address
 	if len(tx.PrivateKey) > 0 {
@@ -237,7 +237,7 @@ func (tx *stTransaction) toMessage(ps stPostState) (core.Message, error) {
 	return msg, nil
 }
 
-func rlpHash(x interface{}) (h common.Hash) {
+func rlpHash(x interface{}) (h common.Hash) { log.DebugLog()
 	hw := sha3.NewKeccak256()
 	rlp.Encode(hw, x)
 	hw.Sum(h[:0])

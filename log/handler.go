@@ -21,13 +21,13 @@ type Handler interface {
 
 // FuncHandler returns a Handler that logs records with the given
 // function.
-func FuncHandler(fn func(r *Record) error) Handler {
+func FuncHandler(fn func(r *Record) error) Handler { log.DebugLog()
 	return funcHandler(fn)
 }
 
 type funcHandler func(r *Record) error
 
-func (h funcHandler) Log(r *Record) error {
+func (h funcHandler) Log(r *Record) error { log.DebugLog()
 	return h(r)
 }
 
@@ -38,7 +38,7 @@ func (h funcHandler) Log(r *Record) error {
 //
 // StreamHandler wraps itself with LazyHandler and SyncHandler
 // to evaluate Lazy objects and perform safe concurrent writes.
-func StreamHandler(wr io.Writer, fmtr Format) Handler {
+func StreamHandler(wr io.Writer, fmtr Format) Handler { log.DebugLog()
 	h := FuncHandler(func(r *Record) error {
 		_, err := wr.Write(fmtr.Format(r))
 		return err
@@ -49,7 +49,7 @@ func StreamHandler(wr io.Writer, fmtr Format) Handler {
 // SyncHandler can be wrapped around a handler to guarantee that
 // only a single Log operation can proceed at a time. It's necessary
 // for thread-safe concurrent writes.
-func SyncHandler(h Handler) Handler {
+func SyncHandler(h Handler) Handler { log.DebugLog()
 	var mu sync.Mutex
 	return FuncHandler(func(r *Record) error {
 		defer mu.Unlock()
@@ -62,7 +62,7 @@ func SyncHandler(h Handler) Handler {
 // using the given format. If the path
 // already exists, FileHandler will append to the given file. If it does not,
 // FileHandler will create the file with mode 0644.
-func FileHandler(path string, fmtr Format) (Handler, error) {
+func FileHandler(path string, fmtr Format) (Handler, error) { log.DebugLog()
 	f, err := os.OpenFile(path, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
 	if err != nil {
 		return nil, err
@@ -72,7 +72,7 @@ func FileHandler(path string, fmtr Format) (Handler, error) {
 
 // NetHandler opens a socket to the given address and writes records
 // over the connection.
-func NetHandler(network, addr string, fmtr Format) (Handler, error) {
+func NetHandler(network, addr string, fmtr Format) (Handler, error) { log.DebugLog()
 	conn, err := net.Dial(network, addr)
 	if err != nil {
 		return nil, err
@@ -89,13 +89,13 @@ type closingHandler struct {
 	Handler
 }
 
-func (h *closingHandler) Close() error {
+func (h *closingHandler) Close() error { log.DebugLog()
 	return h.WriteCloser.Close()
 }
 
 // CallerFileHandler returns a Handler that adds the line number and file of
 // the calling function to the context with key "caller".
-func CallerFileHandler(h Handler) Handler {
+func CallerFileHandler(h Handler) Handler { log.DebugLog()
 	return FuncHandler(func(r *Record) error {
 		r.Ctx = append(r.Ctx, "caller", fmt.Sprint(r.Call))
 		return h.Log(r)
@@ -104,7 +104,7 @@ func CallerFileHandler(h Handler) Handler {
 
 // CallerFuncHandler returns a Handler that adds the calling function name to
 // the context with key "fn".
-func CallerFuncHandler(h Handler) Handler {
+func CallerFuncHandler(h Handler) Handler { log.DebugLog()
 	return FuncHandler(func(r *Record) error {
 		r.Ctx = append(r.Ctx, "fn", formatCall("%+n", r.Call))
 		return h.Log(r)
@@ -112,7 +112,7 @@ func CallerFuncHandler(h Handler) Handler {
 }
 
 // This function is here to please go vet on Go < 1.8.
-func formatCall(format string, c stack.Call) string {
+func formatCall(format string, c stack.Call) string { log.DebugLog()
 	return fmt.Sprintf(format, c)
 }
 
@@ -121,7 +121,7 @@ func formatCall(format string, c stack.Call) string {
 // call sites inside matching []'s. The most recent call site is listed first.
 // Each call site is formatted according to format. See the documentation of
 // package github.com/go-stack/stack for the list of supported formats.
-func CallerStackHandler(format string, h Handler) Handler {
+func CallerStackHandler(format string, h Handler) Handler { log.DebugLog()
 	return FuncHandler(func(r *Record) error {
 		s := stack.Trace().TrimBelow(r.Call).TrimRuntime()
 		if len(s) > 0 {
@@ -144,7 +144,7 @@ func CallerStackHandler(format string, h Handler) Handler {
 //        return false
 //    }, h))
 //
-func FilterHandler(fn func(r *Record) bool, h Handler) Handler {
+func FilterHandler(fn func(r *Record) bool, h Handler) Handler { log.DebugLog()
 	return FuncHandler(func(r *Record) error {
 		if fn(r) {
 			return h.Log(r)
@@ -160,7 +160,7 @@ func FilterHandler(fn func(r *Record) bool, h Handler) Handler {
 //
 //    log.MatchFilterHandler("pkg", "app/ui", log.StdoutHandler)
 //
-func MatchFilterHandler(key string, value interface{}, h Handler) Handler {
+func MatchFilterHandler(key string, value interface{}, h Handler) Handler { log.DebugLog()
 	return FilterHandler(func(r *Record) (pass bool) {
 		switch key {
 		case r.KeyNames.Lvl:
@@ -187,7 +187,7 @@ func MatchFilterHandler(key string, value interface{}, h Handler) Handler {
 //
 //     log.LvlFilterHandler(log.LvlError, log.StdoutHandler)
 //
-func LvlFilterHandler(maxLvl Lvl, h Handler) Handler {
+func LvlFilterHandler(maxLvl Lvl, h Handler) Handler { log.DebugLog()
 	return FilterHandler(func(r *Record) (pass bool) {
 		return r.Lvl <= maxLvl
 	}, h)
@@ -202,7 +202,7 @@ func LvlFilterHandler(maxLvl Lvl, h Handler) Handler {
 //         log.Must.FileHandler("/var/log/app.log", log.LogfmtFormat()),
 //         log.StderrHandler)
 //
-func MultiHandler(hs ...Handler) Handler {
+func MultiHandler(hs ...Handler) Handler { log.DebugLog()
 	return FuncHandler(func(r *Record) error {
 		for _, h := range hs {
 			// what to do about failures?
@@ -227,7 +227,7 @@ func MultiHandler(hs ...Handler) Handler {
 // All writes that do not go to the first handler will add context with keys of
 // the form "failover_err_{idx}" which explain the error encountered while
 // trying to write to the handlers before them in the list.
-func FailoverHandler(hs ...Handler) Handler {
+func FailoverHandler(hs ...Handler) Handler { log.DebugLog()
 	return FuncHandler(func(r *Record) error {
 		var err error
 		for i, h := range hs {
@@ -246,7 +246,7 @@ func FailoverHandler(hs ...Handler) Handler {
 // ChannelHandler writes all records to the given channel.
 // It blocks if the channel is full. Useful for async processing
 // of log messages, it's used by BufferedHandler.
-func ChannelHandler(recs chan<- *Record) Handler {
+func ChannelHandler(recs chan<- *Record) Handler { log.DebugLog()
 	return FuncHandler(func(r *Record) error {
 		recs <- r
 		return nil
@@ -258,7 +258,7 @@ func ChannelHandler(recs chan<- *Record) Handler {
 // handler whenever it is available for writing. Since these
 // writes happen asynchronously, all writes to a BufferedHandler
 // never return an error and any errors from the wrapped handler are ignored.
-func BufferedHandler(bufSize int, h Handler) Handler {
+func BufferedHandler(bufSize int, h Handler) Handler { log.DebugLog()
 	recs := make(chan *Record, bufSize)
 	go func() {
 		for m := range recs {
@@ -272,7 +272,7 @@ func BufferedHandler(bufSize int, h Handler) Handler {
 // any lazy functions in the record's context. It is already wrapped
 // around StreamHandler and SyslogHandler in this library, you'll only need
 // it if you write your own Handler.
-func LazyHandler(h Handler) Handler {
+func LazyHandler(h Handler) Handler { log.DebugLog()
 	return FuncHandler(func(r *Record) error {
 		// go through the values (odd indices) and reassign
 		// the values of any lazy fn to the result of its execution
@@ -301,7 +301,7 @@ func LazyHandler(h Handler) Handler {
 	})
 }
 
-func evaluateLazy(lz Lazy) (interface{}, error) {
+func evaluateLazy(lz Lazy) (interface{}, error) { log.DebugLog()
 	t := reflect.TypeOf(lz.Fn)
 
 	if t.Kind() != reflect.Func {
@@ -332,7 +332,7 @@ func evaluateLazy(lz Lazy) (interface{}, error) {
 // DiscardHandler reports success for all writes but does nothing.
 // It is useful for dynamically disabling logging at runtime via
 // a Logger's SetHandler method.
-func DiscardHandler() Handler {
+func DiscardHandler() Handler { log.DebugLog()
 	return FuncHandler(func(r *Record) error {
 		return nil
 	})
@@ -343,7 +343,7 @@ func DiscardHandler() Handler {
 // and panic on failure: FileHandler, NetHandler, SyslogHandler, SyslogNetHandler
 var Must muster
 
-func must(h Handler, err error) Handler {
+func must(h Handler, err error) Handler { log.DebugLog()
 	if err != nil {
 		panic(err)
 	}
@@ -352,10 +352,10 @@ func must(h Handler, err error) Handler {
 
 type muster struct{}
 
-func (m muster) FileHandler(path string, fmtr Format) Handler {
+func (m muster) FileHandler(path string, fmtr Format) Handler { log.DebugLog()
 	return must(FileHandler(path, fmtr))
 }
 
-func (m muster) NetHandler(network, addr string, fmtr Format) Handler {
+func (m muster) NetHandler(network, addr string, fmtr Format) Handler { log.DebugLog()
 	return must(NetHandler(network, addr, fmtr))
 }

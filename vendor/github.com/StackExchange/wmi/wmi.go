@@ -9,7 +9,7 @@ Example code to print names of running processes:
 		Name string
 	}
 
-	func main() {
+	func main() { log.DebugLog()
 		var dst []Win32_Process
 		q := wmi.CreateQuery(&dst, "")
 		err := wmi.Query(q, &dst)
@@ -55,7 +55,7 @@ var (
 const S_FALSE = 0x00000001
 
 // QueryNamespace invokes Query with the given namespace on the local machine.
-func QueryNamespace(query string, dst interface{}, namespace string) error {
+func QueryNamespace(query string, dst interface{}, namespace string) error { log.DebugLog()
 	return Query(query, dst, nil, namespace)
 }
 
@@ -71,7 +71,7 @@ func QueryNamespace(query string, dst interface{}, namespace string) error {
 // http://msdn.microsoft.com/en-us/library/aa393720.aspx for details.
 //
 // Query is a wrapper around DefaultClient.Query.
-func Query(query string, dst interface{}, connectServerArgs ...interface{}) error {
+func Query(query string, dst interface{}, connectServerArgs ...interface{}) error { log.DebugLog()
 	if DefaultClient.SWbemServicesClient == nil {
 		return DefaultClient.Query(query, dst, connectServerArgs...)
 	}
@@ -122,7 +122,7 @@ var DefaultClient = &Client{}
 // By default, the local machine and default namespace are used. These can be
 // changed using connectServerArgs. See
 // http://msdn.microsoft.com/en-us/library/aa393720.aspx for details.
-func (c *Client) Query(query string, dst interface{}, connectServerArgs ...interface{}) error {
+func (c *Client) Query(query string, dst interface{}, connectServerArgs ...interface{}) error { log.DebugLog()
 	dv := reflect.ValueOf(dst)
 	if dv.Kind() != reflect.Ptr || dv.IsNil() {
 		return ErrInvalidEntityType
@@ -245,7 +245,7 @@ type ErrFieldMismatch struct {
 	Reason     string
 }
 
-func (e *ErrFieldMismatch) Error() string {
+func (e *ErrFieldMismatch) Error() string { log.DebugLog()
 	return fmt.Sprintf("wmi: cannot load field %q into a %q: %s",
 		e.FieldName, e.StructType, e.Reason)
 }
@@ -253,7 +253,7 @@ func (e *ErrFieldMismatch) Error() string {
 var timeType = reflect.TypeOf(time.Time{})
 
 // loadEntity loads a SWbemObject into a struct pointer.
-func (c *Client) loadEntity(dst interface{}, src *ole.IDispatch) (errFieldMismatch error) {
+func (c *Client) loadEntity(dst interface{}, src *ole.IDispatch) (errFieldMismatch error) { log.DebugLog()
 	v := reflect.ValueOf(dst).Elem()
 	for i := 0; i < v.NumField(); i++ {
 		f := v.Field(i)
@@ -432,7 +432,7 @@ const (
 //
 // It returns what category the slice's elements are, and the reflect.Type
 // that represents S.
-func checkMultiArg(v reflect.Value) (m multiArgType, elemType reflect.Type) {
+func checkMultiArg(v reflect.Value) (m multiArgType, elemType reflect.Type) { log.DebugLog()
 	if v.Kind() != reflect.Slice {
 		return multiArgTypeInvalid, nil
 	}
@@ -449,7 +449,7 @@ func checkMultiArg(v reflect.Value) (m multiArgType, elemType reflect.Type) {
 	return multiArgTypeInvalid, nil
 }
 
-func oleInt64(item *ole.IDispatch, prop string) (int64, error) {
+func oleInt64(item *ole.IDispatch, prop string) (int64, error) { log.DebugLog()
 	v, err := oleutil.GetProperty(item, prop)
 	if err != nil {
 		return 0, err
@@ -463,7 +463,7 @@ func oleInt64(item *ole.IDispatch, prop string) (int64, error) {
 // CreateQuery returns a WQL query string that queries all columns of src. where
 // is an optional string that is appended to the query, to be used with WHERE
 // clauses. In such a case, the "WHERE" string should appear at the beginning.
-func CreateQuery(src interface{}, where string) string {
+func CreateQuery(src interface{}, where string) string { log.DebugLog()
 	var b bytes.Buffer
 	b.WriteString("SELECT ")
 	s := reflect.Indirect(reflect.ValueOf(src))

@@ -49,7 +49,7 @@ var enableUint64Support = false
 // EnableUintSupport manually enables uint support for the point parser.
 // This function will be removed in the future and only exists for unit tests during the
 // transition.
-func EnableUintSupport() {
+func EnableUintSupport() { log.DebugLog()
 	enableUint64Support = true
 }
 
@@ -186,13 +186,13 @@ type FieldIterator interface {
 type Points []Point
 
 // Len implements sort.Interface.
-func (a Points) Len() int { return len(a) }
+func (a Points) Len() int { log.DebugLog() return len(a) }
 
 // Less implements sort.Interface.
-func (a Points) Less(i, j int) bool { return a[i].Time().Before(a[j].Time()) }
+func (a Points) Less(i, j int) bool { log.DebugLog() return a[i].Time().Before(a[j].Time()) }
 
 // Swap implements sort.Interface.
-func (a Points) Swap(i, j int) { a[i], a[j] = a[j], a[i] }
+func (a Points) Swap(i, j int) { log.DebugLog() a[i], a[j] = a[j], a[i] }
 
 // point is the default implementation of Point.
 type point struct {
@@ -249,12 +249,12 @@ const (
 // ParsePoints returns a slice of Points from a text representation of a point
 // with each point separated by newlines.  If any points fail to parse, a non-nil error
 // will be returned in addition to the points that parsed successfully.
-func ParsePoints(buf []byte) ([]Point, error) {
+func ParsePoints(buf []byte) ([]Point, error) { log.DebugLog()
 	return ParsePointsWithPrecision(buf, time.Now().UTC(), "n")
 }
 
 // ParsePointsString is identical to ParsePoints but accepts a string.
-func ParsePointsString(buf string) ([]Point, error) {
+func ParsePointsString(buf string) ([]Point, error) { log.DebugLog()
 	return ParsePoints([]byte(buf))
 }
 
@@ -262,12 +262,12 @@ func ParsePointsString(buf string) ([]Point, error) {
 //
 // NOTE: to minimize heap allocations, the returned Tags will refer to subslices of buf.
 // This can have the unintended effect preventing buf from being garbage collected.
-func ParseKey(buf []byte) (string, Tags) {
+func ParseKey(buf []byte) (string, Tags) { log.DebugLog()
 	meas, tags := ParseKeyBytes(buf)
 	return string(meas), tags
 }
 
-func ParseKeyBytes(buf []byte) ([]byte, Tags) {
+func ParseKeyBytes(buf []byte) ([]byte, Tags) { log.DebugLog()
 	// Ignore the error because scanMeasurement returns "missing fields" which we ignore
 	// when just parsing a key
 	state, i, _ := scanMeasurement(buf, 0)
@@ -281,11 +281,11 @@ func ParseKeyBytes(buf []byte) ([]byte, Tags) {
 	return buf[:i], tags
 }
 
-func ParseTags(buf []byte) Tags {
+func ParseTags(buf []byte) Tags { log.DebugLog()
 	return parseTags(buf)
 }
 
-func ParseName(buf []byte) ([]byte, error) {
+func ParseName(buf []byte) ([]byte, error) { log.DebugLog()
 	// Ignore the error because scanMeasurement returns "missing fields" which we ignore
 	// when just parsing a key
 	state, i, _ := scanMeasurement(buf, 0)
@@ -300,7 +300,7 @@ func ParseName(buf []byte) ([]byte, error) {
 //
 // NOTE: to minimize heap allocations, the returned Points will refer to subslices of buf.
 // This can have the unintended effect preventing buf from being garbage collected.
-func ParsePointsWithPrecision(buf []byte, defaultTime time.Time, precision string) ([]Point, error) {
+func ParsePointsWithPrecision(buf []byte, defaultTime time.Time, precision string) ([]Point, error) { log.DebugLog()
 	points := make([]Point, 0, bytes.Count(buf, []byte{'\n'})+1)
 	var (
 		pos    int
@@ -347,7 +347,7 @@ func ParsePointsWithPrecision(buf []byte, defaultTime time.Time, precision strin
 
 }
 
-func parsePoint(buf []byte, defaultTime time.Time, precision string) (Point, error) {
+func parsePoint(buf []byte, defaultTime time.Time, precision string) (Point, error) { log.DebugLog()
 	// scan the first block which is measurement[,tag1=value1,tag2=value=2...]
 	pos, key, err := scanKey(buf, 0)
 	if err != nil {
@@ -425,7 +425,7 @@ func parsePoint(buf []byte, defaultTime time.Time, precision string) (Point, err
 }
 
 // GetPrecisionMultiplier will return a multiplier for the precision specified.
-func GetPrecisionMultiplier(precision string) int64 {
+func GetPrecisionMultiplier(precision string) int64 { log.DebugLog()
 	d := time.Nanosecond
 	switch precision {
 	case "u":
@@ -445,7 +445,7 @@ func GetPrecisionMultiplier(precision string) int64 {
 // scanKey scans buf starting at i for the measurement and tag portion of the point.
 // It returns the ending position and the byte slice of key within buf.  If there
 // are tags, they will be sorted if they are not already.
-func scanKey(buf []byte, i int) (int, []byte, error) {
+func scanKey(buf []byte, i int) (int, []byte, error) { log.DebugLog()
 	start := skipWhitespace(buf, i)
 
 	i = start
@@ -551,7 +551,7 @@ const (
 
 // scanMeasurement examines the measurement part of a Point, returning
 // the next state to move to, and the current location in the buffer.
-func scanMeasurement(buf []byte, i int) (int, int, error) {
+func scanMeasurement(buf []byte, i int) (int, int, error) { log.DebugLog()
 	// Check first byte of measurement, anything except a comma is fine.
 	// It can't be a space, since whitespace is stripped prior to this
 	// function call.
@@ -587,7 +587,7 @@ func scanMeasurement(buf []byte, i int) (int, int, error) {
 // scanTags examines all the tags in a Point, keeping track of and
 // returning the updated indices slice, number of commas and location
 // in buf where to start examining the Point fields.
-func scanTags(buf []byte, i int, indices []int) (int, int, []int, error) {
+func scanTags(buf []byte, i int, indices []int) (int, int, []int, error) { log.DebugLog()
 	var (
 		err    error
 		commas int
@@ -622,7 +622,7 @@ func scanTags(buf []byte, i int, indices []int) (int, int, []int, error) {
 }
 
 // scanTagsKey scans each character in a tag key.
-func scanTagsKey(buf []byte, i int) (int, error) {
+func scanTagsKey(buf []byte, i int) (int, error) { log.DebugLog()
 	// First character of the key.
 	if i >= len(buf) || buf[i] == ' ' || buf[i] == ',' || buf[i] == '=' {
 		// cpu,{'', ' ', ',', '='}
@@ -651,7 +651,7 @@ func scanTagsKey(buf []byte, i int) (int, error) {
 }
 
 // scanTagsValue scans each character in a tag value.
-func scanTagsValue(buf []byte, i int) (int, int, error) {
+func scanTagsValue(buf []byte, i int) (int, int, error) { log.DebugLog()
 	// Tag value cannot be empty.
 	if i >= len(buf) || buf[i] == ',' || buf[i] == ' ' {
 		// cpu,tag={',', ' '}
@@ -687,7 +687,7 @@ func scanTagsValue(buf []byte, i int) (int, int, error) {
 	}
 }
 
-func insertionSort(l, r int, buf []byte, indices []int) {
+func insertionSort(l, r int, buf []byte, indices []int) { log.DebugLog()
 	for i := l + 1; i < r; i++ {
 		for j := i; j > l && less(buf, indices, j, j-1); j-- {
 			indices[j], indices[j-1] = indices[j-1], indices[j]
@@ -695,7 +695,7 @@ func insertionSort(l, r int, buf []byte, indices []int) {
 	}
 }
 
-func less(buf []byte, indices []int, i, j int) bool {
+func less(buf []byte, indices []int, i, j int) bool { log.DebugLog()
 	// This grabs the tag names for i & j, it ignores the values
 	_, a := scanTo(buf, indices[i], '=')
 	_, b := scanTo(buf, indices[j], '=')
@@ -704,7 +704,7 @@ func less(buf []byte, indices []int, i, j int) bool {
 
 // scanFields scans buf, starting at i for the fields section of a point.  It returns
 // the ending position and the byte slice of the fields within buf.
-func scanFields(buf []byte, i int) (int, []byte, error) {
+func scanFields(buf []byte, i int) (int, []byte, error) { log.DebugLog()
 	start := skipWhitespace(buf, i)
 	i = start
 	quoted := false
@@ -805,7 +805,7 @@ func scanFields(buf []byte, i int) (int, []byte, error) {
 // scanTime scans buf, starting at i for the time section of a point. It
 // returns the ending position and the byte slice of the timestamp within buf
 // and and error if the timestamp is not in the correct numeric format.
-func scanTime(buf []byte, i int) (int, []byte, error) {
+func scanTime(buf []byte, i int) (int, []byte, error) { log.DebugLog()
 	start := skipWhitespace(buf, i)
 	i = start
 
@@ -836,14 +836,14 @@ func scanTime(buf []byte, i int) (int, []byte, error) {
 	return i, buf[start:i], nil
 }
 
-func isNumeric(b byte) bool {
+func isNumeric(b byte) bool { log.DebugLog()
 	return (b >= '0' && b <= '9') || b == '.'
 }
 
 // scanNumber returns the end position within buf, start at i after
 // scanning over buf for an integer, or float.  It returns an
 // error if a invalid number is scanned.
-func scanNumber(buf []byte, i int) (int, error) {
+func scanNumber(buf []byte, i int) (int, error) { log.DebugLog()
 	start := i
 	var isInt, isUnsigned bool
 
@@ -984,7 +984,7 @@ func scanNumber(buf []byte, i int) (int, error) {
 // scanning over buf for boolean. Valid values for a boolean are
 // t, T, true, TRUE, f, F, false, FALSE.  It returns an error if a invalid boolean
 // is scanned.
-func scanBoolean(buf []byte, i int) (int, []byte, error) {
+func scanBoolean(buf []byte, i int) (int, []byte, error) { log.DebugLog()
 	start := i
 
 	if i < len(buf) && (buf[i] != 't' && buf[i] != 'f' && buf[i] != 'T' && buf[i] != 'F') {
@@ -1041,7 +1041,7 @@ func scanBoolean(buf []byte, i int) (int, []byte, error) {
 
 // skipWhitespace returns the end position within buf, starting at i after
 // scanning over spaces in tags.
-func skipWhitespace(buf []byte, i int) int {
+func skipWhitespace(buf []byte, i int) int { log.DebugLog()
 	for i < len(buf) {
 		if buf[i] != ' ' && buf[i] != '\t' && buf[i] != 0 {
 			break
@@ -1053,7 +1053,7 @@ func skipWhitespace(buf []byte, i int) int {
 
 // scanLine returns the end position in buf and the next line found within
 // buf.
-func scanLine(buf []byte, i int) (int, []byte) {
+func scanLine(buf []byte, i int) (int, []byte) { log.DebugLog()
 	start := i
 	quoted := false
 	fields := false
@@ -1110,7 +1110,7 @@ func scanLine(buf []byte, i int) (int, []byte) {
 // has not been escaped.
 //
 // If there are leading spaces, they are skipped.
-func scanTo(buf []byte, i int, stop byte) (int, []byte) {
+func scanTo(buf []byte, i int, stop byte) (int, []byte) { log.DebugLog()
 	start := i
 	for {
 		// reached the end of buf?
@@ -1131,7 +1131,7 @@ func scanTo(buf []byte, i int, stop byte) (int, []byte) {
 // scanTo returns the end position in buf and the next consecutive block
 // of bytes, starting from i and ending with stop byte.  If there are leading
 // spaces, they are skipped.
-func scanToSpaceOr(buf []byte, i int, stop byte) (int, []byte) {
+func scanToSpaceOr(buf []byte, i int, stop byte) (int, []byte) { log.DebugLog()
 	start := i
 	if buf[i] == stop || buf[i] == ' ' {
 		return i, buf[start:i]
@@ -1155,7 +1155,7 @@ func scanToSpaceOr(buf []byte, i int, stop byte) (int, []byte) {
 	}
 }
 
-func scanTagValue(buf []byte, i int) (int, []byte) {
+func scanTagValue(buf []byte, i int) (int, []byte) { log.DebugLog()
 	start := i
 	for {
 		if i >= len(buf) {
@@ -1173,7 +1173,7 @@ func scanTagValue(buf []byte, i int) (int, []byte) {
 	return i, buf[start:i]
 }
 
-func scanFieldValue(buf []byte, i int) (int, []byte) {
+func scanFieldValue(buf []byte, i int) (int, []byte) { log.DebugLog()
 	start := i
 	quoted := false
 	for i < len(buf) {
@@ -1198,21 +1198,21 @@ func scanFieldValue(buf []byte, i int) (int, []byte) {
 	return i, buf[start:i]
 }
 
-func EscapeMeasurement(in []byte) []byte {
+func EscapeMeasurement(in []byte) []byte { log.DebugLog()
 	for b, esc := range measurementEscapeCodes {
 		in = bytes.Replace(in, []byte{b}, esc, -1)
 	}
 	return in
 }
 
-func unescapeMeasurement(in []byte) []byte {
+func unescapeMeasurement(in []byte) []byte { log.DebugLog()
 	for b, esc := range measurementEscapeCodes {
 		in = bytes.Replace(in, esc, []byte{b}, -1)
 	}
 	return in
 }
 
-func escapeTag(in []byte) []byte {
+func escapeTag(in []byte) []byte { log.DebugLog()
 	for b, esc := range tagEscapeCodes {
 		if bytes.IndexByte(in, b) != -1 {
 			in = bytes.Replace(in, []byte{b}, esc, -1)
@@ -1221,7 +1221,7 @@ func escapeTag(in []byte) []byte {
 	return in
 }
 
-func unescapeTag(in []byte) []byte {
+func unescapeTag(in []byte) []byte { log.DebugLog()
 	if bytes.IndexByte(in, '\\') == -1 {
 		return in
 	}
@@ -1243,13 +1243,13 @@ var escapeStringFieldReplacer = strings.NewReplacer(`"`, `\"`, `\`, `\\`)
 
 // EscapeStringField returns a copy of in with any double quotes or
 // backslashes with escaped values.
-func EscapeStringField(in string) string {
+func EscapeStringField(in string) string { log.DebugLog()
 	return escapeStringFieldReplacer.Replace(in)
 }
 
 // unescapeStringField returns a copy of in with any escaped double-quotes
 // or backslashes unescaped.
-func unescapeStringField(in string) string {
+func unescapeStringField(in string) string { log.DebugLog()
 	if strings.IndexByte(in, '\\') == -1 {
 		return in
 	}
@@ -1281,7 +1281,7 @@ func unescapeStringField(in string) string {
 
 // NewPoint returns a new point with the given measurement name, tags, fields and timestamp.  If
 // an unsupported field value (NaN) or out of range time is passed, this function returns an error.
-func NewPoint(name string, tags Tags, fields Fields, t time.Time) (Point, error) {
+func NewPoint(name string, tags Tags, fields Fields, t time.Time) (Point, error) { log.DebugLog()
 	key, err := pointKey(name, tags, fields, t)
 	if err != nil {
 		return nil, err
@@ -1296,7 +1296,7 @@ func NewPoint(name string, tags Tags, fields Fields, t time.Time) (Point, error)
 
 // pointKey checks some basic requirements for valid points, and returns the
 // key, along with an possible error.
-func pointKey(measurement string, tags Tags, fields Fields, t time.Time) ([]byte, error) {
+func pointKey(measurement string, tags Tags, fields Fields, t time.Time) ([]byte, error) { log.DebugLog()
 	if len(fields) == 0 {
 		return nil, ErrPointMustHaveAField
 	}
@@ -1336,14 +1336,14 @@ func pointKey(measurement string, tags Tags, fields Fields, t time.Time) ([]byte
 	return key, nil
 }
 
-func seriesKeySize(key, field []byte) int {
+func seriesKeySize(key, field []byte) int { log.DebugLog()
 	// 4 is the length of the tsm1.fieldKeySeparator constant.  It's inlined here to avoid a circular
 	// dependency.
 	return len(key) + 4 + len(field)
 }
 
 // NewPointFromBytes returns a new Point from a marshalled Point.
-func NewPointFromBytes(b []byte) (Point, error) {
+func NewPointFromBytes(b []byte) (Point, error) { log.DebugLog()
 	p := &point{}
 	if err := p.UnmarshalBinary(b); err != nil {
 		return nil, err
@@ -1393,7 +1393,7 @@ func NewPointFromBytes(b []byte) (Point, error) {
 
 // MustNewPoint returns a new point with the given measurement name, tags, fields and timestamp.  If
 // an unsupported field value (NaN) is passed, this function panics.
-func MustNewPoint(name string, tags Tags, fields Fields, time time.Time) Point {
+func MustNewPoint(name string, tags Tags, fields Fields, time time.Time) Point { log.DebugLog()
 	pt, err := NewPoint(name, tags, fields, time)
 	if err != nil {
 		panic(err.Error())
@@ -1402,42 +1402,42 @@ func MustNewPoint(name string, tags Tags, fields Fields, time time.Time) Point {
 }
 
 // Key returns the key (measurement joined with tags) of the point.
-func (p *point) Key() []byte {
+func (p *point) Key() []byte { log.DebugLog()
 	return p.key
 }
 
-func (p *point) name() []byte {
+func (p *point) name() []byte { log.DebugLog()
 	_, name := scanTo(p.key, 0, ',')
 	return name
 }
 
-func (p *point) Name() []byte {
+func (p *point) Name() []byte { log.DebugLog()
 	return escape.Unescape(p.name())
 }
 
 // SetName updates the measurement name for the point.
-func (p *point) SetName(name string) {
+func (p *point) SetName(name string) { log.DebugLog()
 	p.cachedName = ""
 	p.key = MakeKey([]byte(name), p.Tags())
 }
 
 // Time return the timestamp for the point.
-func (p *point) Time() time.Time {
+func (p *point) Time() time.Time { log.DebugLog()
 	return p.time
 }
 
 // SetTime updates the timestamp for the point.
-func (p *point) SetTime(t time.Time) {
+func (p *point) SetTime(t time.Time) { log.DebugLog()
 	p.time = t
 }
 
 // Round will round the timestamp of the point to the given duration.
-func (p *point) Round(d time.Duration) {
+func (p *point) Round(d time.Duration) { log.DebugLog()
 	p.time = p.time.Round(d)
 }
 
 // Tags returns the tag set for the point.
-func (p *point) Tags() Tags {
+func (p *point) Tags() Tags { log.DebugLog()
 	if p.cachedTags != nil {
 		return p.cachedTags
 	}
@@ -1445,7 +1445,7 @@ func (p *point) Tags() Tags {
 	return p.cachedTags
 }
 
-func (p *point) HasTag(tag []byte) bool {
+func (p *point) HasTag(tag []byte) bool { log.DebugLog()
 	if len(p.key) == 0 {
 		return false
 	}
@@ -1462,7 +1462,7 @@ func (p *point) HasTag(tag []byte) bool {
 	return exists
 }
 
-func walkTags(buf []byte, fn func(key, value []byte) bool) {
+func walkTags(buf []byte, fn func(key, value []byte) bool) { log.DebugLog()
 	if len(buf) == 0 {
 		return
 	}
@@ -1504,7 +1504,7 @@ func walkTags(buf []byte, fn func(key, value []byte) bool) {
 
 // walkFields walks each field key and value via fn.  If fn returns false, the iteration
 // is stopped.  The values are the raw byte slices and not the converted types.
-func walkFields(buf []byte, fn func(key, value []byte) bool) {
+func walkFields(buf []byte, fn func(key, value []byte) bool) { log.DebugLog()
 	var i int
 	var key, val []byte
 	for len(buf) > 0 {
@@ -1523,7 +1523,7 @@ func walkFields(buf []byte, fn func(key, value []byte) bool) {
 	}
 }
 
-func parseTags(buf []byte) Tags {
+func parseTags(buf []byte) Tags { log.DebugLog()
 	if len(buf) == 0 {
 		return nil
 	}
@@ -1540,20 +1540,20 @@ func parseTags(buf []byte) Tags {
 }
 
 // MakeKey creates a key for a set of tags.
-func MakeKey(name []byte, tags Tags) []byte {
+func MakeKey(name []byte, tags Tags) []byte { log.DebugLog()
 	// unescape the name and then re-escape it to avoid double escaping.
 	// The key should always be stored in escaped form.
 	return append(EscapeMeasurement(unescapeMeasurement(name)), tags.HashKey()...)
 }
 
 // SetTags replaces the tags for the point.
-func (p *point) SetTags(tags Tags) {
+func (p *point) SetTags(tags Tags) { log.DebugLog()
 	p.key = MakeKey(p.Name(), tags)
 	p.cachedTags = tags
 }
 
 // AddTag adds or replaces a tag value for a point.
-func (p *point) AddTag(key, value string) {
+func (p *point) AddTag(key, value string) { log.DebugLog()
 	tags := p.Tags()
 	tags = append(tags, Tag{Key: []byte(key), Value: []byte(value)})
 	sort.Sort(tags)
@@ -1562,7 +1562,7 @@ func (p *point) AddTag(key, value string) {
 }
 
 // Fields returns the fields for the point.
-func (p *point) Fields() (Fields, error) {
+func (p *point) Fields() (Fields, error) { log.DebugLog()
 	if p.cachedFields != nil {
 		return p.cachedFields, nil
 	}
@@ -1575,7 +1575,7 @@ func (p *point) Fields() (Fields, error) {
 }
 
 // SetPrecision will round a time to the specified precision.
-func (p *point) SetPrecision(precision string) {
+func (p *point) SetPrecision(precision string) { log.DebugLog()
 	switch precision {
 	case "n":
 	case "u":
@@ -1592,7 +1592,7 @@ func (p *point) SetPrecision(precision string) {
 }
 
 // String returns the string representation of the point.
-func (p *point) String() string {
+func (p *point) String() string { log.DebugLog()
 	if p.Time().IsZero() {
 		return string(p.Key()) + " " + string(p.fields)
 	}
@@ -1600,7 +1600,7 @@ func (p *point) String() string {
 }
 
 // AppendString appends the string representation of the point to buf.
-func (p *point) AppendString(buf []byte) []byte {
+func (p *point) AppendString(buf []byte) []byte { log.DebugLog()
 	buf = append(buf, p.key...)
 	buf = append(buf, ' ')
 	buf = append(buf, p.fields...)
@@ -1614,7 +1614,7 @@ func (p *point) AppendString(buf []byte) []byte {
 }
 
 // StringSize returns the length of the string that would be returned by String().
-func (p *point) StringSize() int {
+func (p *point) StringSize() int { log.DebugLog()
 	size := len(p.key) + len(p.fields) + 1
 
 	if !p.time.IsZero() {
@@ -1636,7 +1636,7 @@ func (p *point) StringSize() int {
 }
 
 // MarshalBinary returns a binary representation of the point.
-func (p *point) MarshalBinary() ([]byte, error) {
+func (p *point) MarshalBinary() ([]byte, error) { log.DebugLog()
 	if len(p.fields) == 0 {
 		return nil, ErrPointMustHaveAField
 	}
@@ -1664,7 +1664,7 @@ func (p *point) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary decodes a binary representation of the point into a point struct.
-func (p *point) UnmarshalBinary(b []byte) error {
+func (p *point) UnmarshalBinary(b []byte) error { log.DebugLog()
 	var n int
 
 	// Read key length.
@@ -1701,7 +1701,7 @@ func (p *point) UnmarshalBinary(b []byte) error {
 // PrecisionString returns a string representation of the point. If there
 // is a timestamp associated with the point then it will be specified in the
 // given unit.
-func (p *point) PrecisionString(precision string) string {
+func (p *point) PrecisionString(precision string) string { log.DebugLog()
 	if p.Time().IsZero() {
 		return fmt.Sprintf("%s %s", p.Key(), string(p.fields))
 	}
@@ -1712,7 +1712,7 @@ func (p *point) PrecisionString(precision string) string {
 // RoundedString returns a string representation of the point. If there
 // is a timestamp associated with the point, then it will be rounded to the
 // given duration.
-func (p *point) RoundedString(d time.Duration) string {
+func (p *point) RoundedString(d time.Duration) string { log.DebugLog()
 	if p.Time().IsZero() {
 		return fmt.Sprintf("%s %s", p.Key(), string(p.fields))
 	}
@@ -1720,7 +1720,7 @@ func (p *point) RoundedString(d time.Duration) string {
 		p.time.Round(d).UnixNano())
 }
 
-func (p *point) unmarshalBinary() (Fields, error) {
+func (p *point) unmarshalBinary() (Fields, error) { log.DebugLog()
 	iter := p.FieldIterator()
 	fields := make(Fields, 8)
 	for iter.Next() {
@@ -1760,7 +1760,7 @@ func (p *point) unmarshalBinary() (Fields, error) {
 }
 
 // HashID returns a non-cryptographic checksum of the point's key.
-func (p *point) HashID() uint64 {
+func (p *point) HashID() uint64 { log.DebugLog()
 	h := NewInlineFNV64a()
 	h.Write(p.key)
 	sum := h.Sum64()
@@ -1768,14 +1768,14 @@ func (p *point) HashID() uint64 {
 }
 
 // UnixNano returns the timestamp of the point as nanoseconds since Unix epoch.
-func (p *point) UnixNano() int64 {
+func (p *point) UnixNano() int64 { log.DebugLog()
 	return p.Time().UnixNano()
 }
 
 // Split will attempt to return multiple points with the same timestamp whose
 // string representations are no longer than size. Points with a single field or
 // a point without a timestamp may exceed the requested size.
-func (p *point) Split(size int) []Point {
+func (p *point) Split(size int) []Point { log.DebugLog()
 	if p.time.IsZero() || p.StringSize() <= size {
 		return []Point{p}
 	}
@@ -1818,7 +1818,7 @@ type Tag struct {
 }
 
 // NewTag returns a new Tag.
-func NewTag(key, value []byte) Tag {
+func NewTag(key, value []byte) Tag { log.DebugLog()
 	return Tag{
 		Key:   key,
 		Value: value,
@@ -1826,13 +1826,13 @@ func NewTag(key, value []byte) Tag {
 }
 
 // Size returns the size of the key and value.
-func (t Tag) Size() int { return len(t.Key) + len(t.Value) }
+func (t Tag) Size() int { log.DebugLog() return len(t.Key) + len(t.Value) }
 
 // Clone returns a shallow copy of Tag.
 //
 // Tags associated with a Point created by ParsePointsWithPrecision will hold references to the byte slice that was parsed.
 // Use Clone to create a Tag with new byte slices that do not refer to the argument to ParsePointsWithPrecision.
-func (t Tag) Clone() Tag {
+func (t Tag) Clone() Tag { log.DebugLog()
 	other := Tag{
 		Key:   make([]byte, len(t.Key)),
 		Value: make([]byte, len(t.Value)),
@@ -1845,7 +1845,7 @@ func (t Tag) Clone() Tag {
 }
 
 // String returns the string reprsentation of the tag.
-func (t *Tag) String() string {
+func (t *Tag) String() string { log.DebugLog()
 	var buf bytes.Buffer
 	buf.WriteByte('{')
 	buf.WriteString(string(t.Key))
@@ -1859,7 +1859,7 @@ func (t *Tag) String() string {
 type Tags []Tag
 
 // NewTags returns a new Tags from a map.
-func NewTags(m map[string]string) Tags {
+func NewTags(m map[string]string) Tags { log.DebugLog()
 	if len(m) == 0 {
 		return nil
 	}
@@ -1872,7 +1872,7 @@ func NewTags(m map[string]string) Tags {
 }
 
 // Keys returns the list of keys for a tag set.
-func (a Tags) Keys() []string {
+func (a Tags) Keys() []string { log.DebugLog()
 	if len(a) == 0 {
 		return nil
 	}
@@ -1884,7 +1884,7 @@ func (a Tags) Keys() []string {
 }
 
 // Values returns the list of values for a tag set.
-func (a Tags) Values() []string {
+func (a Tags) Values() []string { log.DebugLog()
 	if len(a) == 0 {
 		return nil
 	}
@@ -1896,7 +1896,7 @@ func (a Tags) Values() []string {
 }
 
 // String returns the string representation of the tags.
-func (a Tags) String() string {
+func (a Tags) String() string { log.DebugLog()
 	var buf bytes.Buffer
 	buf.WriteByte('[')
 	for i := range a {
@@ -1912,7 +1912,7 @@ func (a Tags) String() string {
 // Size returns the number of bytes needed to store all tags. Note, this is
 // the number of bytes needed to store all keys and values and does not account
 // for data structures or delimiters for example.
-func (a Tags) Size() int {
+func (a Tags) Size() int { log.DebugLog()
 	var total int
 	for _, t := range a {
 		total += t.Size()
@@ -1924,7 +1924,7 @@ func (a Tags) Size() int {
 //
 // Tags associated with a Point created by ParsePointsWithPrecision will hold references to the byte slice that was parsed.
 // Use Clone to create Tags with new byte slices that do not refer to the argument to ParsePointsWithPrecision.
-func (a Tags) Clone() Tags {
+func (a Tags) Clone() Tags { log.DebugLog()
 	if len(a) == 0 {
 		return nil
 	}
@@ -1937,12 +1937,12 @@ func (a Tags) Clone() Tags {
 	return others
 }
 
-func (a Tags) Len() int           { return len(a) }
-func (a Tags) Less(i, j int) bool { return bytes.Compare(a[i].Key, a[j].Key) == -1 }
-func (a Tags) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a Tags) Len() int           { log.DebugLog() return len(a) }
+func (a Tags) Less(i, j int) bool { log.DebugLog() return bytes.Compare(a[i].Key, a[j].Key) == -1 }
+func (a Tags) Swap(i, j int)      { log.DebugLog() a[i], a[j] = a[j], a[i] }
 
 // Equal returns true if a equals other.
-func (a Tags) Equal(other Tags) bool {
+func (a Tags) Equal(other Tags) bool { log.DebugLog()
 	if len(a) != len(other) {
 		return false
 	}
@@ -1955,7 +1955,7 @@ func (a Tags) Equal(other Tags) bool {
 }
 
 // CompareTags returns -1 if a < b, 1 if a > b, and 0 if a == b.
-func CompareTags(a, b Tags) int {
+func CompareTags(a, b Tags) int { log.DebugLog()
 	// Compare each key & value until a mismatch.
 	for i := 0; i < len(a) && i < len(b); i++ {
 		if cmp := bytes.Compare(a[i].Key, b[i].Key); cmp != 0 {
@@ -1978,7 +1978,7 @@ func CompareTags(a, b Tags) int {
 }
 
 // Get returns the value for a key.
-func (a Tags) Get(key []byte) []byte {
+func (a Tags) Get(key []byte) []byte { log.DebugLog()
 	// OPTIMIZE: Use sort.Search if tagset is large.
 
 	for _, t := range a {
@@ -1990,12 +1990,12 @@ func (a Tags) Get(key []byte) []byte {
 }
 
 // GetString returns the string value for a string key.
-func (a Tags) GetString(key string) string {
+func (a Tags) GetString(key string) string { log.DebugLog()
 	return string(a.Get([]byte(key)))
 }
 
 // Set sets the value for a key.
-func (a *Tags) Set(key, value []byte) {
+func (a *Tags) Set(key, value []byte) { log.DebugLog()
 	for i, t := range *a {
 		if bytes.Equal(t.Key, key) {
 			(*a)[i].Value = value
@@ -2007,12 +2007,12 @@ func (a *Tags) Set(key, value []byte) {
 }
 
 // SetString sets the string value for a string key.
-func (a *Tags) SetString(key, value string) {
+func (a *Tags) SetString(key, value string) { log.DebugLog()
 	a.Set([]byte(key), []byte(value))
 }
 
 // Delete removes a tag by key.
-func (a *Tags) Delete(key []byte) {
+func (a *Tags) Delete(key []byte) { log.DebugLog()
 	for i, t := range *a {
 		if bytes.Equal(t.Key, key) {
 			copy((*a)[i:], (*a)[i+1:])
@@ -2024,7 +2024,7 @@ func (a *Tags) Delete(key []byte) {
 }
 
 // Map returns a map representation of the tags.
-func (a Tags) Map() map[string]string {
+func (a Tags) Map() map[string]string { log.DebugLog()
 	m := make(map[string]string, len(a))
 	for _, t := range a {
 		m[string(t.Key)] = string(t.Value)
@@ -2035,7 +2035,7 @@ func (a Tags) Map() map[string]string {
 // Merge merges the tags combining the two. If both define a tag with the
 // same key, the merged value overwrites the old value.
 // A new map is returned.
-func (a Tags) Merge(other map[string]string) Tags {
+func (a Tags) Merge(other map[string]string) Tags { log.DebugLog()
 	merged := make(map[string]string, len(a)+len(other))
 	for _, t := range a {
 		merged[string(t.Key)] = string(t.Value)
@@ -2047,7 +2047,7 @@ func (a Tags) Merge(other map[string]string) Tags {
 }
 
 // HashKey hashes all of a tag's keys.
-func (a Tags) HashKey() []byte {
+func (a Tags) HashKey() []byte { log.DebugLog()
 	// Empty maps marshal to empty bytes.
 	if len(a) == 0 {
 		return nil
@@ -2087,14 +2087,14 @@ func (a Tags) HashKey() []byte {
 }
 
 // CopyTags returns a shallow copy of tags.
-func CopyTags(a Tags) Tags {
+func CopyTags(a Tags) Tags { log.DebugLog()
 	other := make(Tags, len(a))
 	copy(other, a)
 	return other
 }
 
 // DeepCopyTags returns a deep copy of tags.
-func DeepCopyTags(a Tags) Tags {
+func DeepCopyTags(a Tags) Tags { log.DebugLog()
 	// Calculate size of keys/values in bytes.
 	var n int
 	for _, t := range a {
@@ -2123,7 +2123,7 @@ type Fields map[string]interface{}
 
 // FieldIterator retuns a FieldIterator that can be used to traverse the
 // fields of a point without constructing the in-memory map.
-func (p *point) FieldIterator() FieldIterator {
+func (p *point) FieldIterator() FieldIterator { log.DebugLog()
 	p.Reset()
 	return p
 }
@@ -2136,7 +2136,7 @@ type fieldIterator struct {
 }
 
 // Next indicates whether there any fields remaining.
-func (p *point) Next() bool {
+func (p *point) Next() bool { log.DebugLog()
 	p.it.start = p.it.end
 	if p.it.start >= len(p.fields) {
 		return false
@@ -2182,22 +2182,22 @@ func (p *point) Next() bool {
 }
 
 // FieldKey returns the key of the current field.
-func (p *point) FieldKey() []byte {
+func (p *point) FieldKey() []byte { log.DebugLog()
 	return p.it.key
 }
 
 // Type returns the FieldType of the current field.
-func (p *point) Type() FieldType {
+func (p *point) Type() FieldType { log.DebugLog()
 	return p.it.fieldType
 }
 
 // StringValue returns the string value of the current field.
-func (p *point) StringValue() string {
+func (p *point) StringValue() string { log.DebugLog()
 	return unescapeStringField(string(p.it.valueBuf[1 : len(p.it.valueBuf)-1]))
 }
 
 // IntegerValue returns the integer value of the current field.
-func (p *point) IntegerValue() (int64, error) {
+func (p *point) IntegerValue() (int64, error) { log.DebugLog()
 	n, err := parseIntBytes(p.it.valueBuf, 10, 64)
 	if err != nil {
 		return 0, fmt.Errorf("unable to parse integer value %q: %v", p.it.valueBuf, err)
@@ -2206,7 +2206,7 @@ func (p *point) IntegerValue() (int64, error) {
 }
 
 // UnsignedValue returns the unsigned value of the current field.
-func (p *point) UnsignedValue() (uint64, error) {
+func (p *point) UnsignedValue() (uint64, error) { log.DebugLog()
 	n, err := parseUintBytes(p.it.valueBuf, 10, 64)
 	if err != nil {
 		return 0, fmt.Errorf("unable to parse unsigned value %q: %v", p.it.valueBuf, err)
@@ -2215,7 +2215,7 @@ func (p *point) UnsignedValue() (uint64, error) {
 }
 
 // BooleanValue returns the boolean value of the current field.
-func (p *point) BooleanValue() (bool, error) {
+func (p *point) BooleanValue() (bool, error) { log.DebugLog()
 	b, err := parseBoolBytes(p.it.valueBuf)
 	if err != nil {
 		return false, fmt.Errorf("unable to parse bool value %q: %v", p.it.valueBuf, err)
@@ -2224,7 +2224,7 @@ func (p *point) BooleanValue() (bool, error) {
 }
 
 // FloatValue returns the float value of the current field.
-func (p *point) FloatValue() (float64, error) {
+func (p *point) FloatValue() (float64, error) { log.DebugLog()
 	f, err := parseFloatBytes(p.it.valueBuf, 64)
 	if err != nil {
 		return 0, fmt.Errorf("unable to parse floating point value %q: %v", p.it.valueBuf, err)
@@ -2233,7 +2233,7 @@ func (p *point) FloatValue() (float64, error) {
 }
 
 // Reset resets the iterator to its initial state.
-func (p *point) Reset() {
+func (p *point) Reset() { log.DebugLog()
 	p.it.fieldType = Empty
 	p.it.key = nil
 	p.it.valueBuf = nil
@@ -2246,7 +2246,7 @@ func (p *point) Reset() {
 // NOTE: uint64 is specifically not supported due to potential overflow when we decode
 // again later to an int64
 // NOTE2: uint is accepted, and may be 64 bits, and is for some reason accepted...
-func (p Fields) MarshalBinary() []byte {
+func (p Fields) MarshalBinary() []byte { log.DebugLog()
 	var b []byte
 	keys := make([]string, 0, len(p))
 
@@ -2267,7 +2267,7 @@ func (p Fields) MarshalBinary() []byte {
 	return b
 }
 
-func appendField(b []byte, k string, v interface{}) []byte {
+func appendField(b []byte, k string, v interface{}) []byte { log.DebugLog()
 	b = append(b, []byte(escape.String(k))...)
 	b = append(b, '=')
 
@@ -2332,6 +2332,6 @@ func appendField(b []byte, k string, v interface{}) []byte {
 
 type byteSlices [][]byte
 
-func (a byteSlices) Len() int           { return len(a) }
-func (a byteSlices) Less(i, j int) bool { return bytes.Compare(a[i], a[j]) == -1 }
-func (a byteSlices) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a byteSlices) Len() int           { log.DebugLog() return len(a) }
+func (a byteSlices) Less(i, j int) bool { log.DebugLog() return bytes.Compare(a[i], a[j]) == -1 }
+func (a byteSlices) Swap(i, j int)      { log.DebugLog() a[i], a[j] = a[j], a[i] }

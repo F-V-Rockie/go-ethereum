@@ -40,9 +40,9 @@ const minReloadInterval = 2 * time.Second
 
 type accountsByURL []accounts.Account
 
-func (s accountsByURL) Len() int           { return len(s) }
-func (s accountsByURL) Less(i, j int) bool { return s[i].URL.Cmp(s[j].URL) < 0 }
-func (s accountsByURL) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }
+func (s accountsByURL) Len() int           { log.DebugLog() return len(s) }
+func (s accountsByURL) Less(i, j int) bool { log.DebugLog() return s[i].URL.Cmp(s[j].URL) < 0 }
+func (s accountsByURL) Swap(i, j int)      { log.DebugLog() s[i], s[j] = s[j], s[i] }
 
 // AmbiguousAddrError is returned when attempting to unlock
 // an address for which more than one file exists.
@@ -51,7 +51,7 @@ type AmbiguousAddrError struct {
 	Matches []accounts.Account
 }
 
-func (err *AmbiguousAddrError) Error() string {
+func (err *AmbiguousAddrError) Error() string { log.DebugLog()
 	files := ""
 	for i, a := range err.Matches {
 		files += a.URL.Path
@@ -74,7 +74,7 @@ type accountCache struct {
 	fileC    fileCache
 }
 
-func newAccountCache(keydir string) (*accountCache, chan struct{}) {
+func newAccountCache(keydir string) (*accountCache, chan struct{}) { log.DebugLog()
 	ac := &accountCache{
 		keydir: keydir,
 		byAddr: make(map[common.Address][]accounts.Account),
@@ -85,7 +85,7 @@ func newAccountCache(keydir string) (*accountCache, chan struct{}) {
 	return ac, ac.notify
 }
 
-func (ac *accountCache) accounts() []accounts.Account {
+func (ac *accountCache) accounts() []accounts.Account { log.DebugLog()
 	ac.maybeReload()
 	ac.mu.Lock()
 	defer ac.mu.Unlock()
@@ -94,14 +94,14 @@ func (ac *accountCache) accounts() []accounts.Account {
 	return cpy
 }
 
-func (ac *accountCache) hasAddress(addr common.Address) bool {
+func (ac *accountCache) hasAddress(addr common.Address) bool { log.DebugLog()
 	ac.maybeReload()
 	ac.mu.Lock()
 	defer ac.mu.Unlock()
 	return len(ac.byAddr[addr]) > 0
 }
 
-func (ac *accountCache) add(newAccount accounts.Account) {
+func (ac *accountCache) add(newAccount accounts.Account) { log.DebugLog()
 	ac.mu.Lock()
 	defer ac.mu.Unlock()
 
@@ -117,7 +117,7 @@ func (ac *accountCache) add(newAccount accounts.Account) {
 }
 
 // note: removed needs to be unique here (i.e. both File and Address must be set).
-func (ac *accountCache) delete(removed accounts.Account) {
+func (ac *accountCache) delete(removed accounts.Account) { log.DebugLog()
 	ac.mu.Lock()
 	defer ac.mu.Unlock()
 
@@ -130,7 +130,7 @@ func (ac *accountCache) delete(removed accounts.Account) {
 }
 
 // deleteByFile removes an account referenced by the given path.
-func (ac *accountCache) deleteByFile(path string) {
+func (ac *accountCache) deleteByFile(path string) { log.DebugLog()
 	ac.mu.Lock()
 	defer ac.mu.Unlock()
 	i := sort.Search(len(ac.all), func(i int) bool { return ac.all[i].URL.Path >= path })
@@ -146,7 +146,7 @@ func (ac *accountCache) deleteByFile(path string) {
 	}
 }
 
-func removeAccount(slice []accounts.Account, elem accounts.Account) []accounts.Account {
+func removeAccount(slice []accounts.Account, elem accounts.Account) []accounts.Account { log.DebugLog()
 	for i := range slice {
 		if slice[i] == elem {
 			return append(slice[:i], slice[i+1:]...)
@@ -158,7 +158,7 @@ func removeAccount(slice []accounts.Account, elem accounts.Account) []accounts.A
 // find returns the cached account for address if there is a unique match.
 // The exact matching rules are explained by the documentation of accounts.Account.
 // Callers must hold ac.mu.
-func (ac *accountCache) find(a accounts.Account) (accounts.Account, error) {
+func (ac *accountCache) find(a accounts.Account) (accounts.Account, error) { log.DebugLog()
 	// Limit search to address candidates if possible.
 	matches := ac.all
 	if (a.Address != common.Address{}) {
@@ -191,7 +191,7 @@ func (ac *accountCache) find(a accounts.Account) (accounts.Account, error) {
 	}
 }
 
-func (ac *accountCache) maybeReload() {
+func (ac *accountCache) maybeReload() { log.DebugLog()
 	ac.mu.Lock()
 
 	if ac.watcher.running {
@@ -215,7 +215,7 @@ func (ac *accountCache) maybeReload() {
 	ac.scanAccounts()
 }
 
-func (ac *accountCache) close() {
+func (ac *accountCache) close() { log.DebugLog()
 	ac.mu.Lock()
 	ac.watcher.close()
 	if ac.throttle != nil {
@@ -230,7 +230,7 @@ func (ac *accountCache) close() {
 
 // scanAccounts checks if any changes have occurred on the filesystem, and
 // updates the account cache accordingly
-func (ac *accountCache) scanAccounts() error {
+func (ac *accountCache) scanAccounts() error { log.DebugLog()
 	// Scan the entire folder metadata for file changes
 	creates, deletes, updates, err := ac.fileC.scan(ac.keydir)
 	if err != nil {

@@ -60,7 +60,7 @@ var PrecompiledContractsByzantium = map[common.Address]PrecompiledContract{
 }
 
 // RunPrecompiledContract runs and evaluates the output of a precompiled contract.
-func RunPrecompiledContract(p PrecompiledContract, input []byte, contract *Contract) (ret []byte, err error) {
+func RunPrecompiledContract(p PrecompiledContract, input []byte, contract *Contract) (ret []byte, err error) { log.DebugLog()
 	gas := p.RequiredGas(input)
 	if contract.UseGas(gas) {
 		return p.Run(input)
@@ -71,11 +71,11 @@ func RunPrecompiledContract(p PrecompiledContract, input []byte, contract *Contr
 // ECRECOVER implemented as a native contract.
 type ecrecover struct{}
 
-func (c *ecrecover) RequiredGas(input []byte) uint64 {
+func (c *ecrecover) RequiredGas(input []byte) uint64 { log.DebugLog()
 	return params.EcrecoverGas
 }
 
-func (c *ecrecover) Run(input []byte) ([]byte, error) {
+func (c *ecrecover) Run(input []byte) ([]byte, error) { log.DebugLog()
 	const ecRecoverInputLength = 128
 
 	input = common.RightPadBytes(input, ecRecoverInputLength)
@@ -108,10 +108,10 @@ type sha256hash struct{}
 //
 // This method does not require any overflow checking as the input size gas costs
 // required for anything significant is so high it's impossible to pay for.
-func (c *sha256hash) RequiredGas(input []byte) uint64 {
+func (c *sha256hash) RequiredGas(input []byte) uint64 { log.DebugLog()
 	return uint64(len(input)+31)/32*params.Sha256PerWordGas + params.Sha256BaseGas
 }
-func (c *sha256hash) Run(input []byte) ([]byte, error) {
+func (c *sha256hash) Run(input []byte) ([]byte, error) { log.DebugLog()
 	h := sha256.Sum256(input)
 	return h[:], nil
 }
@@ -123,10 +123,10 @@ type ripemd160hash struct{}
 //
 // This method does not require any overflow checking as the input size gas costs
 // required for anything significant is so high it's impossible to pay for.
-func (c *ripemd160hash) RequiredGas(input []byte) uint64 {
+func (c *ripemd160hash) RequiredGas(input []byte) uint64 { log.DebugLog()
 	return uint64(len(input)+31)/32*params.Ripemd160PerWordGas + params.Ripemd160BaseGas
 }
-func (c *ripemd160hash) Run(input []byte) ([]byte, error) {
+func (c *ripemd160hash) Run(input []byte) ([]byte, error) { log.DebugLog()
 	ripemd := ripemd160.New()
 	ripemd.Write(input)
 	return common.LeftPadBytes(ripemd.Sum(nil), 32), nil
@@ -139,10 +139,10 @@ type dataCopy struct{}
 //
 // This method does not require any overflow checking as the input size gas costs
 // required for anything significant is so high it's impossible to pay for.
-func (c *dataCopy) RequiredGas(input []byte) uint64 {
+func (c *dataCopy) RequiredGas(input []byte) uint64 { log.DebugLog()
 	return uint64(len(input)+31)/32*params.IdentityPerWordGas + params.IdentityBaseGas
 }
-func (c *dataCopy) Run(in []byte) ([]byte, error) {
+func (c *dataCopy) Run(in []byte) ([]byte, error) { log.DebugLog()
 	return in, nil
 }
 
@@ -164,7 +164,7 @@ var (
 )
 
 // RequiredGas returns the gas required to execute the pre-compiled contract.
-func (c *bigModExp) RequiredGas(input []byte) uint64 {
+func (c *bigModExp) RequiredGas(input []byte) uint64 { log.DebugLog()
 	var (
 		baseLen = new(big.Int).SetBytes(getData(input, 0, 32))
 		expLen  = new(big.Int).SetBytes(getData(input, 32, 32))
@@ -223,7 +223,7 @@ func (c *bigModExp) RequiredGas(input []byte) uint64 {
 	return gas.Uint64()
 }
 
-func (c *bigModExp) Run(input []byte) ([]byte, error) {
+func (c *bigModExp) Run(input []byte) ([]byte, error) { log.DebugLog()
 	var (
 		baseLen = new(big.Int).SetBytes(getData(input, 0, 32)).Uint64()
 		expLen  = new(big.Int).SetBytes(getData(input, 32, 32)).Uint64()
@@ -253,7 +253,7 @@ func (c *bigModExp) Run(input []byte) ([]byte, error) {
 
 // newCurvePoint unmarshals a binary blob into a bn256 elliptic curve point,
 // returning it, or an error if the point is invalid.
-func newCurvePoint(blob []byte) (*bn256.G1, error) {
+func newCurvePoint(blob []byte) (*bn256.G1, error) { log.DebugLog()
 	p := new(bn256.G1)
 	if _, err := p.Unmarshal(blob); err != nil {
 		return nil, err
@@ -263,7 +263,7 @@ func newCurvePoint(blob []byte) (*bn256.G1, error) {
 
 // newTwistPoint unmarshals a binary blob into a bn256 elliptic curve point,
 // returning it, or an error if the point is invalid.
-func newTwistPoint(blob []byte) (*bn256.G2, error) {
+func newTwistPoint(blob []byte) (*bn256.G2, error) { log.DebugLog()
 	p := new(bn256.G2)
 	if _, err := p.Unmarshal(blob); err != nil {
 		return nil, err
@@ -275,11 +275,11 @@ func newTwistPoint(blob []byte) (*bn256.G2, error) {
 type bn256Add struct{}
 
 // RequiredGas returns the gas required to execute the pre-compiled contract.
-func (c *bn256Add) RequiredGas(input []byte) uint64 {
+func (c *bn256Add) RequiredGas(input []byte) uint64 { log.DebugLog()
 	return params.Bn256AddGas
 }
 
-func (c *bn256Add) Run(input []byte) ([]byte, error) {
+func (c *bn256Add) Run(input []byte) ([]byte, error) { log.DebugLog()
 	x, err := newCurvePoint(getData(input, 0, 64))
 	if err != nil {
 		return nil, err
@@ -297,11 +297,11 @@ func (c *bn256Add) Run(input []byte) ([]byte, error) {
 type bn256ScalarMul struct{}
 
 // RequiredGas returns the gas required to execute the pre-compiled contract.
-func (c *bn256ScalarMul) RequiredGas(input []byte) uint64 {
+func (c *bn256ScalarMul) RequiredGas(input []byte) uint64 { log.DebugLog()
 	return params.Bn256ScalarMulGas
 }
 
-func (c *bn256ScalarMul) Run(input []byte) ([]byte, error) {
+func (c *bn256ScalarMul) Run(input []byte) ([]byte, error) { log.DebugLog()
 	p, err := newCurvePoint(getData(input, 0, 64))
 	if err != nil {
 		return nil, err
@@ -326,11 +326,11 @@ var (
 type bn256Pairing struct{}
 
 // RequiredGas returns the gas required to execute the pre-compiled contract.
-func (c *bn256Pairing) RequiredGas(input []byte) uint64 {
+func (c *bn256Pairing) RequiredGas(input []byte) uint64 { log.DebugLog()
 	return params.Bn256PairingBaseGas + uint64(len(input)/192)*params.Bn256PairingPerPointGas
 }
 
-func (c *bn256Pairing) Run(input []byte) ([]byte, error) {
+func (c *bn256Pairing) Run(input []byte) ([]byte, error) { log.DebugLog()
 	// Handle some corner cases cheaply
 	if len(input)%192 > 0 {
 		return nil, errBadPairingInput

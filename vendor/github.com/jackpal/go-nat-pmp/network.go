@@ -15,7 +15,7 @@ type network struct {
 	gateway net.IP
 }
 
-func (n *network) call(msg []byte, timeout time.Duration) (result []byte, err error) {
+func (n *network) call(msg []byte, timeout time.Duration) (result []byte, err error) { log.DebugLog()
 	var server net.UDPAddr
 	server.IP = n.gateway
 	server.Port = nAT_PMP_PORT
@@ -75,7 +75,7 @@ func (n *network) call(msg []byte, timeout time.Duration) (result []byte, err er
 	return
 }
 
-func minTime(a, b time.Time) time.Time {
+func minTime(a, b time.Time) time.Time { log.DebugLog()
 	if a.IsZero() {
 		return b
 	}

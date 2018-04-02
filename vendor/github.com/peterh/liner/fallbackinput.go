@@ -15,12 +15,12 @@ type State struct {
 
 // Prompt displays p, and then waits for user input. Prompt does not support
 // line editing on this operating system.
-func (s *State) Prompt(p string) (string, error) {
+func (s *State) Prompt(p string) (string, error) { log.DebugLog()
 	return s.promptUnsupported(p)
 }
 
 // PasswordPrompt is not supported in this OS.
-func (s *State) PasswordPrompt(p string) (string, error) {
+func (s *State) PasswordPrompt(p string) (string, error) { log.DebugLog()
 	return "", errors.New("liner: function not supported in this terminal")
 }
 
@@ -28,30 +28,30 @@ func (s *State) PasswordPrompt(p string) (string, error) {
 //
 // Note that this operating system uses a fallback mode without line
 // editing. Patches welcome.
-func NewLiner() *State {
+func NewLiner() *State { log.DebugLog()
 	var s State
 	s.r = bufio.NewReader(os.Stdin)
 	return &s
 }
 
 // Close returns the terminal to its previous mode
-func (s *State) Close() error {
+func (s *State) Close() error { log.DebugLog()
 	return nil
 }
 
 // TerminalSupported returns false because line editing is not
 // supported on this platform.
-func TerminalSupported() bool {
+func TerminalSupported() bool { log.DebugLog()
 	return false
 }
 
 type noopMode struct{}
 
-func (n noopMode) ApplyMode() error {
+func (n noopMode) ApplyMode() error { log.DebugLog()
 	return nil
 }
 
 // TerminalMode returns a noop InputModeSetter on this platform.
-func TerminalMode() (ModeApplier, error) {
+func TerminalMode() (ModeApplier, error) { log.DebugLog()
 	return noopMode{}, nil
 }

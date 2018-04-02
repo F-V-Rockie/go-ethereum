@@ -6,66 +6,66 @@ import (
 	"runtime"
 )
 
-func (c *Cpu) Get() error {
+func (c *Cpu) Get() error { log.DebugLog()
 	return ErrNotImplemented{runtime.GOOS}
 }
 
-func (l *LoadAverage) Get() error {
+func (l *LoadAverage) Get() error { log.DebugLog()
 	return ErrNotImplemented{runtime.GOOS}
 }
 
-func (m *Mem) Get() error {
+func (m *Mem) Get() error { log.DebugLog()
 	return ErrNotImplemented{runtime.GOOS}
 }
 
-func (s *Swap) Get() error {
+func (s *Swap) Get() error { log.DebugLog()
 	return ErrNotImplemented{runtime.GOOS}
 }
 
-func (f *FDUsage) Get() error {
+func (f *FDUsage) Get() error { log.DebugLog()
 	return ErrNotImplemented{runtime.GOOS}
 }
 
-func (p *ProcTime) Get(int) error {
+func (p *ProcTime) Get(int) error { log.DebugLog()
 	return ErrNotImplemented{runtime.GOOS}
 }
 
-func (self *FileSystemUsage) Get(path string) error {
+func (self *FileSystemUsage) Get(path string) error { log.DebugLog()
 	return ErrNotImplemented{runtime.GOOS}
 }
 
-func (self *CpuList) Get() error {
+func (self *CpuList) Get() error { log.DebugLog()
 	return ErrNotImplemented{runtime.GOOS}
 }
 
-func (p *ProcState) Get(int) error {
+func (p *ProcState) Get(int) error { log.DebugLog()
 	return ErrNotImplemented{runtime.GOOS}
 }
 
-func (p *ProcExe) Get(int) error {
+func (p *ProcExe) Get(int) error { log.DebugLog()
 	return ErrNotImplemented{runtime.GOOS}
 }
 
-func (p *ProcMem) Get(int) error {
+func (p *ProcMem) Get(int) error { log.DebugLog()
 	return ErrNotImplemented{runtime.GOOS}
 }
 
-func (p *ProcFDUsage) Get(int) error {
+func (p *ProcFDUsage) Get(int) error { log.DebugLog()
 	return ErrNotImplemented{runtime.GOOS}
 }
 
-func (p *ProcEnv) Get(int) error {
+func (p *ProcEnv) Get(int) error { log.DebugLog()
 	return ErrNotImplemented{runtime.GOOS}
 }
 
-func (p *ProcList) Get() error {
+func (p *ProcList) Get() error { log.DebugLog()
 	return ErrNotImplemented{runtime.GOOS}
 }
 
-func (p *ProcArgs) Get(int) error {
+func (p *ProcArgs) Get(int) error { log.DebugLog()
 	return ErrNotImplemented{runtime.GOOS}
 }
 
-func (self *Rusage) Get(int) error {
+func (self *Rusage) Get(int) error { log.DebugLog()
 	return ErrNotImplemented{runtime.GOOS}
 }

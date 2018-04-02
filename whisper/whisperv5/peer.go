@@ -40,7 +40,7 @@ type Peer struct {
 }
 
 // newPeer creates a new whisper peer object, but does not run the handshake itself.
-func newPeer(host *Whisper, remote *p2p.Peer, rw p2p.MsgReadWriter) *Peer {
+func newPeer(host *Whisper, remote *p2p.Peer, rw p2p.MsgReadWriter) *Peer { log.DebugLog()
 	return &Peer{
 		host:    host,
 		peer:    remote,
@@ -53,20 +53,20 @@ func newPeer(host *Whisper, remote *p2p.Peer, rw p2p.MsgReadWriter) *Peer {
 
 // start initiates the peer updater, periodically broadcasting the whisper packets
 // into the network.
-func (p *Peer) start() {
+func (p *Peer) start() { log.DebugLog()
 	go p.update()
 	log.Trace("start", "peer", p.ID())
 }
 
 // stop terminates the peer updater, stopping message forwarding to it.
-func (p *Peer) stop() {
+func (p *Peer) stop() { log.DebugLog()
 	close(p.quit)
 	log.Trace("stop", "peer", p.ID())
 }
 
 // handshake sends the protocol initiation status message to the remote peer and
 // verifies the remote status too.
-func (p *Peer) handshake() error {
+func (p *Peer) handshake() error { log.DebugLog()
 	// Send the handshake status message asynchronously
 	errc := make(chan error, 1)
 	go func() {
@@ -97,7 +97,7 @@ func (p *Peer) handshake() error {
 
 // update executes periodic operations on the peer, including message transmission
 // and expiration.
-func (p *Peer) update() {
+func (p *Peer) update() { log.DebugLog()
 	// Start the tickers for the updates
 	expire := time.NewTicker(expirationCycle)
 	transmit := time.NewTicker(transmissionCycle)
@@ -121,18 +121,18 @@ func (p *Peer) update() {
 }
 
 // mark marks an envelope known to the peer so that it won't be sent back.
-func (peer *Peer) mark(envelope *Envelope) {
+func (peer *Peer) mark(envelope *Envelope) { log.DebugLog()
 	peer.known.Add(envelope.Hash())
 }
 
 // marked checks if an envelope is already known to the remote peer.
-func (peer *Peer) marked(envelope *Envelope) bool {
+func (peer *Peer) marked(envelope *Envelope) bool { log.DebugLog()
 	return peer.known.Has(envelope.Hash())
 }
 
 // expire iterates over all the known envelopes in the host and removes all
 // expired (unknown) ones from the known list.
-func (peer *Peer) expire() {
+func (peer *Peer) expire() { log.DebugLog()
 	unmark := make(map[common.Hash]struct{})
 	peer.known.Each(func(v interface{}) bool {
 		if !peer.host.isEnvelopeCached(v.(common.Hash)) {
@@ -148,7 +148,7 @@ func (peer *Peer) expire() {
 
 // broadcast iterates over the collection of envelopes and transmits yet unknown
 // ones over the network.
-func (p *Peer) broadcast() error {
+func (p *Peer) broadcast() error { log.DebugLog()
 	var cnt int
 	envelopes := p.host.Envelopes()
 	for _, envelope := range envelopes {
@@ -168,7 +168,7 @@ func (p *Peer) broadcast() error {
 	return nil
 }
 
-func (p *Peer) ID() []byte {
+func (p *Peer) ID() []byte { log.DebugLog()
 	id := p.peer.ID()
 	return id[:]
 }

@@ -110,7 +110,7 @@ type nodeConfigJSON struct {
 
 // MarshalJSON implements the json.Marshaler interface by encoding the config
 // fields as strings
-func (n *NodeConfig) MarshalJSON() ([]byte, error) {
+func (n *NodeConfig) MarshalJSON() ([]byte, error) { log.DebugLog()
 	confJSON := nodeConfigJSON{
 		ID:       n.ID.String(),
 		Name:     n.Name,
@@ -124,7 +124,7 @@ func (n *NodeConfig) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON implements the json.Unmarshaler interface by decoding the json
 // string values into the config fields
-func (n *NodeConfig) UnmarshalJSON(data []byte) error {
+func (n *NodeConfig) UnmarshalJSON(data []byte) error { log.DebugLog()
 	var confJSON nodeConfigJSON
 	if err := json.Unmarshal(data, &confJSON); err != nil {
 		return err
@@ -158,7 +158,7 @@ func (n *NodeConfig) UnmarshalJSON(data []byte) error {
 
 // RandomNodeConfig returns node configuration with a randomly generated ID and
 // PrivateKey
-func RandomNodeConfig() *NodeConfig {
+func RandomNodeConfig() *NodeConfig { log.DebugLog()
 	key, err := crypto.GenerateKey()
 	if err != nil {
 		panic("unable to generate key")
@@ -204,7 +204,7 @@ var serviceFuncs = make(Services)
 //
 // It should be called in an init function so that it has the opportunity to
 // execute the services before main() is called.
-func RegisterServices(services Services) {
+func RegisterServices(services Services) { log.DebugLog()
 	for name, f := range services {
 		if _, exists := serviceFuncs[name]; exists {
 			panic(fmt.Sprintf("node service already exists: %q", name))

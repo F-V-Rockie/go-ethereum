@@ -34,7 +34,7 @@ var (
 	addr   = crypto.PubkeyToAddress(key.PublicKey)
 )
 
-func TestENS(t *testing.T) {
+func TestENS(t *testing.T) { log.DebugLog()
 	contractBackend := backends.NewSimulatedBackend(core.GenesisAlloc{addr: {Balance: big.NewInt(1000000000)}})
 	transactOpts := bind.NewKeyedTransactor(key)
 

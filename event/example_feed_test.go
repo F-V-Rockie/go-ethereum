@@ -22,7 +22,7 @@ import (
 	"github.com/ethereum/go-ethereum/event"
 )
 
-func ExampleFeed_acknowledgedEvents() {
+func ExampleFeed_acknowledgedEvents() { log.DebugLog()
 	// This example shows how the return value of Send can be used for request/reply
 	// interaction between event consumers and producers.
 	var feed event.Feed

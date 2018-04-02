@@ -40,7 +40,7 @@ type PublicKey []byte
 type PrivateKey []byte
 
 // Public returns the PublicKey corresponding to priv.
-func (priv PrivateKey) Public() crypto.PublicKey {
+func (priv PrivateKey) Public() crypto.PublicKey { log.DebugLog()
 	publicKey := make([]byte, PublicKeySize)
 	copy(publicKey, priv[32:])
 	return PublicKey(publicKey)
@@ -51,7 +51,7 @@ func (priv PrivateKey) Public() crypto.PublicKey {
 // handle pre-hashed messages. Thus opts.HashFunc() must return zero to
 // indicate the message hasn't been hashed. This can be achieved by passing
 // crypto.Hash(0) as the value for opts.
-func (priv PrivateKey) Sign(rand io.Reader, message []byte, opts crypto.SignerOpts) (signature []byte, err error) {
+func (priv PrivateKey) Sign(rand io.Reader, message []byte, opts crypto.SignerOpts) (signature []byte, err error) { log.DebugLog()
 	if opts.HashFunc() != crypto.Hash(0) {
 		return nil, errors.New("ed25519: cannot sign hashed message")
 	}
@@ -61,7 +61,7 @@ func (priv PrivateKey) Sign(rand io.Reader, message []byte, opts crypto.SignerOp
 
 // GenerateKey generates a public/private key pair using entropy from rand.
 // If rand is nil, crypto/rand.Reader will be used.
-func GenerateKey(rand io.Reader) (publicKey PublicKey, privateKey PrivateKey, err error) {
+func GenerateKey(rand io.Reader) (publicKey PublicKey, privateKey PrivateKey, err error) { log.DebugLog()
 	if rand == nil {
 		rand = cryptorand.Reader
 	}
@@ -93,7 +93,7 @@ func GenerateKey(rand io.Reader) (publicKey PublicKey, privateKey PrivateKey, er
 
 // Sign signs the message with privateKey and returns a signature. It will
 // panic if len(privateKey) is not PrivateKeySize.
-func Sign(privateKey PrivateKey, message []byte) []byte {
+func Sign(privateKey PrivateKey, message []byte) []byte { log.DebugLog()
 	if l := len(privateKey); l != PrivateKeySize {
 		panic("ed25519: bad private key length: " + strconv.Itoa(l))
 	}
@@ -142,7 +142,7 @@ func Sign(privateKey PrivateKey, message []byte) []byte {
 
 // Verify reports whether sig is a valid signature of message by publicKey. It
 // will panic if len(publicKey) is not PublicKeySize.
-func Verify(publicKey PublicKey, message, sig []byte) bool {
+func Verify(publicKey PublicKey, message, sig []byte) bool { log.DebugLog()
 	if l := len(publicKey); l != PublicKeySize {
 		panic("ed25519: bad public key length: " + strconv.Itoa(l))
 	}

@@ -24,7 +24,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 )
 
-func initDbStore(t *testing.T) *DbStore {
+func initDbStore(t *testing.T) *DbStore { log.DebugLog()
 	dir, err := ioutil.TempDir("", "bzz-storage-test")
 	if err != nil {
 		t.Fatal(err)
@@ -36,33 +36,33 @@ func initDbStore(t *testing.T) *DbStore {
 	return m
 }
 
-func testDbStore(l int64, branches int64, t *testing.T) {
+func testDbStore(l int64, branches int64, t *testing.T) { log.DebugLog()
 	m := initDbStore(t)
 	defer m.Close()
 	testStore(m, l, branches, t)
 }
 
-func TestDbStore128_0x1000000(t *testing.T) {
+func TestDbStore128_0x1000000(t *testing.T) { log.DebugLog()
 	testDbStore(0x1000000, 128, t)
 }
 
-func TestDbStore128_10000_(t *testing.T) {
+func TestDbStore128_10000_(t *testing.T) { log.DebugLog()
 	testDbStore(10000, 128, t)
 }
 
-func TestDbStore128_1000_(t *testing.T) {
+func TestDbStore128_1000_(t *testing.T) { log.DebugLog()
 	testDbStore(1000, 128, t)
 }
 
-func TestDbStore128_100_(t *testing.T) {
+func TestDbStore128_100_(t *testing.T) { log.DebugLog()
 	testDbStore(100, 128, t)
 }
 
-func TestDbStore2_100_(t *testing.T) {
+func TestDbStore2_100_(t *testing.T) { log.DebugLog()
 	testDbStore(100, 2, t)
 }
 
-func TestDbStoreNotFound(t *testing.T) {
+func TestDbStoreNotFound(t *testing.T) { log.DebugLog()
 	m := initDbStore(t)
 	defer m.Close()
 	_, err := m.Get(ZeroKey)
@@ -71,7 +71,7 @@ func TestDbStoreNotFound(t *testing.T) {
 	}
 }
 
-func TestDbStoreSyncIterator(t *testing.T) {
+func TestDbStoreSyncIterator(t *testing.T) { log.DebugLog()
 	m := initDbStore(t)
 	defer m.Close()
 	keys := []Key{

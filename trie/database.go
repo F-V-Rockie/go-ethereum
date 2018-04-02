@@ -70,7 +70,7 @@ type cachedNode struct {
 
 // NewDatabase creates a new trie database to store ephemeral trie content before
 // its written out to disk or garbage collected.
-func NewDatabase(diskdb ethdb.Database) *Database {
+func NewDatabase(diskdb ethdb.Database) *Database { log.DebugLog()
 	return &Database{
 		diskdb: diskdb,
 		nodes: map[common.Hash]*cachedNode{
@@ -81,13 +81,13 @@ func NewDatabase(diskdb ethdb.Database) *Database {
 }
 
 // DiskDB retrieves the persistent storage backing the trie database.
-func (db *Database) DiskDB() DatabaseReader {
+func (db *Database) DiskDB() DatabaseReader { log.DebugLog()
 	return db.diskdb
 }
 
 // Insert writes a new trie node to the memory database if it's yet unknown. The
 // method will make a copy of the slice.
-func (db *Database) Insert(hash common.Hash, blob []byte) {
+func (db *Database) Insert(hash common.Hash, blob []byte) { log.DebugLog()
 	db.lock.Lock()
 	defer db.lock.Unlock()
 
@@ -95,7 +95,7 @@ func (db *Database) Insert(hash common.Hash, blob []byte) {
 }
 
 // insert is the private locked version of Insert.
-func (db *Database) insert(hash common.Hash, blob []byte) {
+func (db *Database) insert(hash common.Hash, blob []byte) { log.DebugLog()
 	if _, ok := db.nodes[hash]; ok {
 		return
 	}
@@ -110,7 +110,7 @@ func (db *Database) insert(hash common.Hash, blob []byte) {
 // yet unknown. The method will make a copy of the slice.
 //
 // Note, this method assumes that the database's lock is held!
-func (db *Database) insertPreimage(hash common.Hash, preimage []byte) {
+func (db *Database) insertPreimage(hash common.Hash, preimage []byte) { log.DebugLog()
 	if _, ok := db.preimages[hash]; ok {
 		return
 	}
@@ -120,7 +120,7 @@ func (db *Database) insertPreimage(hash common.Hash, preimage []byte) {
 
 // Node retrieves a cached trie node from memory. If it cannot be found cached,
 // the method queries the persistent database for the content.
-func (db *Database) Node(hash common.Hash) ([]byte, error) {
+func (db *Database) Node(hash common.Hash) ([]byte, error) { log.DebugLog()
 	// Retrieve the node from cache if available
 	db.lock.RLock()
 	node := db.nodes[hash]
@@ -135,7 +135,7 @@ func (db *Database) Node(hash common.Hash) ([]byte, error) {
 
 // preimage retrieves a cached trie node pre-image from memory. If it cannot be
 // found cached, the method queries the persistent database for the content.
-func (db *Database) preimage(hash common.Hash) ([]byte, error) {
+func (db *Database) preimage(hash common.Hash) ([]byte, error) { log.DebugLog()
 	// Retrieve the node from cache if available
 	db.lock.RLock()
 	preimage := db.preimages[hash]
@@ -151,7 +151,7 @@ func (db *Database) preimage(hash common.Hash) ([]byte, error) {
 // secureKey returns the database key for the preimage of key, as an ephemeral
 // buffer. The caller must not hold onto the return value because it will become
 // invalid on the next call.
-func (db *Database) secureKey(key []byte) []byte {
+func (db *Database) secureKey(key []byte) []byte { log.DebugLog()
 	buf := append(db.seckeybuf[:0], secureKeyPrefix...)
 	buf = append(buf, key...)
 	return buf
@@ -160,7 +160,7 @@ func (db *Database) secureKey(key []byte) []byte {
 // Nodes retrieves the hashes of all the nodes cached within the memory database.
 // This method is extremely expensive and should only be used to validate internal
 // states in test code.
-func (db *Database) Nodes() []common.Hash {
+func (db *Database) Nodes() []common.Hash { log.DebugLog()
 	db.lock.RLock()
 	defer db.lock.RUnlock()
 
@@ -174,7 +174,7 @@ func (db *Database) Nodes() []common.Hash {
 }
 
 // Reference adds a new reference from a parent node to a child node.
-func (db *Database) Reference(child common.Hash, parent common.Hash) {
+func (db *Database) Reference(child common.Hash, parent common.Hash) { log.DebugLog()
 	db.lock.RLock()
 	defer db.lock.RUnlock()
 
@@ -182,7 +182,7 @@ func (db *Database) Reference(child common.Hash, parent common.Hash) {
 }
 
 // reference is the private locked version of Reference.
-func (db *Database) reference(child common.Hash, parent common.Hash) {
+func (db *Database) reference(child common.Hash, parent common.Hash) { log.DebugLog()
 	// If the node does not exist, it's a node pulled from disk, skip
 	node, ok := db.nodes[child]
 	if !ok {
@@ -197,7 +197,7 @@ func (db *Database) reference(child common.Hash, parent common.Hash) {
 }
 
 // Dereference removes an existing reference from a parent node to a child node.
-func (db *Database) Dereference(child common.Hash, parent common.Hash) {
+func (db *Database) Dereference(child common.Hash, parent common.Hash) { log.DebugLog()
 	db.lock.Lock()
 	defer db.lock.Unlock()
 
@@ -213,7 +213,7 @@ func (db *Database) Dereference(child common.Hash, parent common.Hash) {
 }
 
 // dereference is the private locked version of Dereference.
-func (db *Database) dereference(child common.Hash, parent common.Hash) {
+func (db *Database) dereference(child common.Hash, parent common.Hash) { log.DebugLog()
 	// Dereference the parent-child
 	node := db.nodes[parent]
 
@@ -241,7 +241,7 @@ func (db *Database) dereference(child common.Hash, parent common.Hash) {
 // to disk, forcefully tearing down all references in both directions.
 //
 // As a side effect, all pre-images accumulated up to this point are also written.
-func (db *Database) Commit(node common.Hash, report bool) error {
+func (db *Database) Commit(node common.Hash, report bool) error { log.DebugLog()
 	// Create a database batch to flush persistent data out. It is important that
 	// outside code doesn't see an inconsistent state (referenced data removed from
 	// memory cache during commit but not yet in persistent storage). This is ensured
@@ -303,7 +303,7 @@ func (db *Database) Commit(node common.Hash, report bool) error {
 }
 
 // commit is the private locked version of Commit.
-func (db *Database) commit(hash common.Hash, batch ethdb.Batch) error {
+func (db *Database) commit(hash common.Hash, batch ethdb.Batch) error { log.DebugLog()
 	// If the node does not exist, it's a previously committed node
 	node, ok := db.nodes[hash]
 	if !ok {
@@ -331,7 +331,7 @@ func (db *Database) commit(hash common.Hash, batch ethdb.Batch) error {
 // persisted trie is removed from the cache. The reason behind the two-phase
 // commit is to ensure consistent data availability while moving from memory
 // to disk.
-func (db *Database) uncache(hash common.Hash) {
+func (db *Database) uncache(hash common.Hash) { log.DebugLog()
 	// If the node does not exist, we're done on this path
 	node, ok := db.nodes[hash]
 	if !ok {
@@ -347,7 +347,7 @@ func (db *Database) uncache(hash common.Hash) {
 
 // Size returns the current storage size of the memory cache in front of the
 // persistent database layer.
-func (db *Database) Size() common.StorageSize {
+func (db *Database) Size() common.StorageSize { log.DebugLog()
 	db.lock.RLock()
 	defer db.lock.RUnlock()
 

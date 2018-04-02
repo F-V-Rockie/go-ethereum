@@ -20,7 +20,7 @@ import (
 	"testing"
 )
 
-func TestRLP(t *testing.T) {
+func TestRLP(t *testing.T) { log.DebugLog()
 	t.Parallel()
 	tm := new(testMatcher)
 	tm.walk(t, rlpTestDir, func(t *testing.T, name string, test *RLPTest) {

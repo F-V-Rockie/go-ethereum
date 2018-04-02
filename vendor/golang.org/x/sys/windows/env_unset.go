@@ -9,7 +9,7 @@ package windows
 
 import "syscall"
 
-func Unsetenv(key string) error {
+func Unsetenv(key string) error { log.DebugLog()
 	// This was added in Go 1.4.
 	return syscall.Unsetenv(key)
 }

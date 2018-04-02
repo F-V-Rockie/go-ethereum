@@ -28,7 +28,7 @@ var (
 
 // formatSliceString formats the reflection kind with the given slice size
 // and returns a formatted string representation.
-func formatSliceString(kind reflect.Kind, sliceSize int) string {
+func formatSliceString(kind reflect.Kind, sliceSize int) string { log.DebugLog()
 	if sliceSize == -1 {
 		return fmt.Sprintf("[]%v", kind)
 	}
@@ -37,7 +37,7 @@ func formatSliceString(kind reflect.Kind, sliceSize int) string {
 
 // sliceTypeCheck checks that the given slice can by assigned to the reflection
 // type in t.
-func sliceTypeCheck(t Type, val reflect.Value) error {
+func sliceTypeCheck(t Type, val reflect.Value) error { log.DebugLog()
 	if val.Kind() != reflect.Slice && val.Kind() != reflect.Array {
 		return typeErr(formatSliceString(t.Kind, t.Size), val.Type())
 	}
@@ -62,7 +62,7 @@ func sliceTypeCheck(t Type, val reflect.Value) error {
 
 // typeCheck checks that the given reflection value can be assigned to the reflection
 // type in t.
-func typeCheck(t Type, value reflect.Value) error {
+func typeCheck(t Type, value reflect.Value) error { log.DebugLog()
 	if t.T == SliceTy || t.T == ArrayTy {
 		return sliceTypeCheck(t, value)
 	}
@@ -79,6 +79,6 @@ func typeCheck(t Type, value reflect.Value) error {
 }
 
 // typeErr returns a formatted type casting error.
-func typeErr(expected, got interface{}) error {
+func typeErr(expected, got interface{}) error { log.DebugLog()
 	return fmt.Errorf("abi: cannot use %v as type %v as argument", got, expected)
 }

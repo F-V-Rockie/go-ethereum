@@ -22,7 +22,7 @@ To get started, you'll want to import the library:
 
 Now you're ready to start logging:
 
-    func main() {
+    func main() { log.DebugLog()
         log.Info("Program starting", "args", os.Args())
     }
 
@@ -134,7 +134,7 @@ fails you want to log those records to a file on disk.
         Secondary Handler
     }
 
-    func (h *BackupHandler) Log (r *Record) error {
+    func (h *BackupHandler) Log (r *Record) error { log.DebugLog()
         err := h.Primary.Log(r)
         if err != nil {
             r.Ctx = append(ctx, "primary_err", err)
@@ -155,7 +155,7 @@ This package provides a simple type to annotate a logging operation that you wan
 lazily, just when it is about to be logged, so that it would not be evaluated if an upstream Handler
 filters it out. Just wrap any function which takes no arguments with the log.Lazy type. For example:
 
-    func factorRSAKey() (factors []int) {
+    func factorRSAKey() (factors []int) { log.DebugLog()
         // return the factors of a very large number
     }
 
@@ -228,7 +228,7 @@ by default and to provide a public Logger instance that consumers of your librar
 
     var Log = log.New()
 
-    func init() {
+    func init() { log.DebugLog()
         Log.SetHandler(log.DiscardHandler())
     }
 
@@ -237,7 +237,7 @@ Users of your library may then enable it if they like:
     import "github.com/inconshreveable/log15"
     import "example.com/yourlib"
 
-    func main() {
+    func main() { log.DebugLog()
         handler := // custom handler setup
         yourlib.Log.SetHandler(handler)
     }
@@ -256,7 +256,7 @@ unique, tracing context keys to it. For instance, imagine I am writing a web bro
         Logger
     }
 
-    func NewTab(url string) *Tab {
+    func NewTab(url string) *Tab { log.DebugLog()
         return &Tab {
             // ...
             url: url,

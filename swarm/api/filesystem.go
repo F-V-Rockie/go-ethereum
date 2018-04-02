@@ -37,7 +37,7 @@ type FileSystem struct {
 	api *Api
 }
 
-func NewFileSystem(api *Api) *FileSystem {
+func NewFileSystem(api *Api) *FileSystem { log.DebugLog()
 	return &FileSystem{api}
 }
 
@@ -46,7 +46,7 @@ func NewFileSystem(api *Api) *FileSystem {
 // TODO: localpath should point to a manifest
 //
 // DEPRECATED: Use the HTTP API instead
-func (self *FileSystem) Upload(lpath, index string) (string, error) {
+func (self *FileSystem) Upload(lpath, index string) (string, error) { log.DebugLog()
 	var list []*manifestTrieEntry
 	localpath, err := filepath.Abs(filepath.Clean(lpath))
 	if err != nil {
@@ -173,7 +173,7 @@ func (self *FileSystem) Upload(lpath, index string) (string, error) {
 // under localpath
 //
 // DEPRECATED: Use the HTTP API instead
-func (self *FileSystem) Download(bzzpath, localpath string) error {
+func (self *FileSystem) Download(bzzpath, localpath string) error { log.DebugLog()
 	lpath, err := filepath.Abs(filepath.Clean(localpath))
 	if err != nil {
 		return err
@@ -267,7 +267,7 @@ func (self *FileSystem) Download(bzzpath, localpath string) error {
 	}
 }
 
-func retrieveToFile(quitC chan bool, dpa *storage.DPA, key storage.Key, path string) error {
+func retrieveToFile(quitC chan bool, dpa *storage.DPA, key storage.Key, path string) error { log.DebugLog()
 	f, err := os.Create(path) // TODO: basePath separators
 	if err != nil {
 		return err

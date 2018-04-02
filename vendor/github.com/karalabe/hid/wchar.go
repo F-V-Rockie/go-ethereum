@@ -36,7 +36,7 @@ import (
 
 var sizeofWcharT C.size_t = C.size_t(C.SIZEOF_WCHAR_T)
 
-func stringToWcharT(s string) (*C.wchar_t, C.size_t) {
+func stringToWcharT(s string) (*C.wchar_t, C.size_t) { log.DebugLog()
 	switch sizeofWcharT {
 	case 2:
 		return stringToWchar2(s) // Windows
@@ -47,7 +47,7 @@ func stringToWcharT(s string) (*C.wchar_t, C.size_t) {
 	}
 }
 
-func wcharTToString(s *C.wchar_t) (string, error) {
+func wcharTToString(s *C.wchar_t) (string, error) { log.DebugLog()
 	switch sizeofWcharT {
 	case 2:
 		return wchar2ToString(s) // Windows
@@ -58,7 +58,7 @@ func wcharTToString(s *C.wchar_t) (string, error) {
 	}
 }
 
-func wcharTNToString(s *C.wchar_t, size C.size_t) (string, error) {
+func wcharTNToString(s *C.wchar_t, size C.size_t) (string, error) { log.DebugLog()
 	switch sizeofWcharT {
 	case 2:
 		return wchar2NToString(s, size) // Windows
@@ -70,7 +70,7 @@ func wcharTNToString(s *C.wchar_t, size C.size_t) (string, error) {
 }
 
 // Windows
-func stringToWchar2(s string) (*C.wchar_t, C.size_t) {
+func stringToWchar2(s string) (*C.wchar_t, C.size_t) { log.DebugLog()
 	var slen int
 	s1 := s
 	for len(s1) > 0 {
@@ -103,7 +103,7 @@ func stringToWchar2(s string) (*C.wchar_t, C.size_t) {
 }
 
 // Unix
-func stringToWchar4(s string) (*C.wchar_t, C.size_t) {
+func stringToWchar4(s string) (*C.wchar_t, C.size_t) { log.DebugLog()
 	slen := utf8.RuneCountInString(s)
 	slen++ // \0
 	res := C.malloc(C.size_t(slen) * sizeofWcharT)
@@ -119,7 +119,7 @@ func stringToWchar4(s string) (*C.wchar_t, C.size_t) {
 }
 
 // Windows
-func wchar2ToString(s *C.wchar_t) (string, error) {
+func wchar2ToString(s *C.wchar_t) (string, error) { log.DebugLog()
 	var i int
 	var res string
 	for {
@@ -151,7 +151,7 @@ func wchar2ToString(s *C.wchar_t) (string, error) {
 }
 
 // Unix
-func wchar4ToString(s *C.wchar_t) (string, error) {
+func wchar4ToString(s *C.wchar_t) (string, error) { log.DebugLog()
 	var i int
 	var res string
 	for {
@@ -171,7 +171,7 @@ func wchar4ToString(s *C.wchar_t) (string, error) {
 }
 
 // Windows
-func wchar2NToString(s *C.wchar_t, size C.size_t) (string, error) {
+func wchar2NToString(s *C.wchar_t, size C.size_t) (string, error) { log.DebugLog()
 	var i int
 	var res string
 	N := int(size)
@@ -209,7 +209,7 @@ func wchar2NToString(s *C.wchar_t, size C.size_t) (string, error) {
 }
 
 // Unix
-func wchar4NToString(s *C.wchar_t, size C.size_t) (string, error) {
+func wchar4NToString(s *C.wchar_t, size C.size_t) (string, error) { log.DebugLog()
 	var i int
 	var res string
 	N := int(size)

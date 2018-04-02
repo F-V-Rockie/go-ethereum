@@ -12,7 +12,7 @@ import (
 
 var _ = (*logMarshaling)(nil)
 
-func (l Log) MarshalJSON() ([]byte, error) {
+func (l Log) MarshalJSON() ([]byte, error) { log.DebugLog()
 	type Log struct {
 		Address     common.Address `json:"address" gencodec:"required"`
 		Topics      []common.Hash  `json:"topics" gencodec:"required"`
@@ -37,7 +37,7 @@ func (l Log) MarshalJSON() ([]byte, error) {
 	return json.Marshal(&enc)
 }
 
-func (l *Log) UnmarshalJSON(input []byte) error {
+func (l *Log) UnmarshalJSON(input []byte) error { log.DebugLog()
 	type Log struct {
 		Address     *common.Address `json:"address" gencodec:"required"`
 		Topics      []common.Hash   `json:"topics" gencodec:"required"`

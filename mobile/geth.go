@@ -85,7 +85,7 @@ var defaultNodeConfig = &NodeConfig{
 }
 
 // NewNodeConfig creates a new node option set, initialized to the default values.
-func NewNodeConfig() *NodeConfig {
+func NewNodeConfig() *NodeConfig { log.DebugLog()
 	config := *defaultNodeConfig
 	return &config
 }
@@ -96,7 +96,7 @@ type Node struct {
 }
 
 // NewNode creates and configures a new Geth node.
-func NewNode(datadir string, config *NodeConfig) (stack *Node, _ error) {
+func NewNode(datadir string, config *NodeConfig) (stack *Node, _ error) { log.DebugLog()
 	// If no or partial configurations were specified, use defaults
 	if config == nil {
 		config = NewNodeConfig()
@@ -178,18 +178,18 @@ func NewNode(datadir string, config *NodeConfig) (stack *Node, _ error) {
 }
 
 // Start creates a live P2P node and starts running it.
-func (n *Node) Start() error {
+func (n *Node) Start() error { log.DebugLog()
 	return n.node.Start()
 }
 
 // Stop terminates a running node along with all it's services. In the node was
 // not started, an error is returned.
-func (n *Node) Stop() error {
+func (n *Node) Stop() error { log.DebugLog()
 	return n.node.Stop()
 }
 
 // GetEthereumClient retrieves a client to access the Ethereum subsystem.
-func (n *Node) GetEthereumClient() (client *EthereumClient, _ error) {
+func (n *Node) GetEthereumClient() (client *EthereumClient, _ error) { log.DebugLog()
 	rpc, err := n.node.Attach()
 	if err != nil {
 		return nil, err
@@ -198,11 +198,11 @@ func (n *Node) GetEthereumClient() (client *EthereumClient, _ error) {
 }
 
 // GetNodeInfo gathers and returns a collection of metadata known about the host.
-func (n *Node) GetNodeInfo() *NodeInfo {
+func (n *Node) GetNodeInfo() *NodeInfo { log.DebugLog()
 	return &NodeInfo{n.node.Server().NodeInfo()}
 }
 
 // GetPeersInfo returns an array of metadata objects describing connected peers.
-func (n *Node) GetPeersInfo() *PeerInfos {
+func (n *Node) GetPeersInfo() *PeerInfos { log.DebugLog()
 	return &PeerInfos{n.node.Server().PeersInfo()}
 }

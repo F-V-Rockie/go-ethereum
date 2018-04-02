@@ -30,7 +30,7 @@ type sstack struct {
 }
 
 // Creates a new, empty stack.
-func newSstack() *sstack {
+func newSstack() *sstack { log.DebugLog()
 	result := new(sstack)
 	result.active = make([]*item, blockSize)
 	result.blocks = [][]*item{result.active}
@@ -40,7 +40,7 @@ func newSstack() *sstack {
 
 // Pushes a value onto the stack, expanding it if necessary. Required by
 // heap.Interface.
-func (s *sstack) Push(data interface{}) {
+func (s *sstack) Push(data interface{}) { log.DebugLog()
 	if s.size == s.capacity {
 		s.active = make([]*item, blockSize)
 		s.blocks = append(s.blocks, s.active)
@@ -57,7 +57,7 @@ func (s *sstack) Push(data interface{}) {
 
 // Pops a value off the stack and returns it. Currently no shrinking is done.
 // Required by heap.Interface.
-func (s *sstack) Pop() (res interface{}) {
+func (s *sstack) Pop() (res interface{}) { log.DebugLog()
 	s.size--
 	s.offset--
 	if s.offset < 0 {
@@ -69,23 +69,23 @@ func (s *sstack) Pop() (res interface{}) {
 }
 
 // Returns the length of the stack. Required by sort.Interface.
-func (s *sstack) Len() int {
+func (s *sstack) Len() int { log.DebugLog()
 	return s.size
 }
 
 // Compares the priority of two elements of the stack (higher is first).
 // Required by sort.Interface.
-func (s *sstack) Less(i, j int) bool {
+func (s *sstack) Less(i, j int) bool { log.DebugLog()
 	return s.blocks[i/blockSize][i%blockSize].priority > s.blocks[j/blockSize][j%blockSize].priority
 }
 
 // Swaps two elements in the stack. Required by sort.Interface.
-func (s *sstack) Swap(i, j int) {
+func (s *sstack) Swap(i, j int) { log.DebugLog()
 	ib, io, jb, jo := i/blockSize, i%blockSize, j/blockSize, j%blockSize
 	s.blocks[ib][io], s.blocks[jb][jo] = s.blocks[jb][jo], s.blocks[ib][io]
 }
 
 // Resets the stack, effectively clearing its contents.
-func (s *sstack) Reset() {
+func (s *sstack) Reset() { log.DebugLog()
 	*s = *newSstack()
 }

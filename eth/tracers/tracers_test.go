@@ -118,7 +118,7 @@ type callTracerTest struct {
 
 // Iterates over all the input-output datasets in the tracer test harness and
 // runs the JavaScript tracers against them.
-func TestCallTracer(t *testing.T) {
+func TestCallTracer(t *testing.T) { log.DebugLog()
 	files, err := ioutil.ReadDir("testdata")
 	if err != nil {
 		t.Fatalf("failed to retrieve tracer test suite: %v", err)

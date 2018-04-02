@@ -75,7 +75,7 @@ type Trie interface {
 // concurrent use and retains cached trie nodes in memory. The pool is an optional
 // intermediate trie-node memory pool between the low level storage layer and the
 // high level trie abstraction.
-func NewDatabase(db ethdb.Database) Database {
+func NewDatabase(db ethdb.Database) Database { log.DebugLog()
 	csc, _ := lru.New(codeSizeCacheSize)
 	return &cachingDB{
 		db:            trie.NewDatabase(db),
@@ -91,7 +91,7 @@ type cachingDB struct {
 }
 
 // OpenTrie opens the main account trie.
-func (db *cachingDB) OpenTrie(root common.Hash) (Trie, error) {
+func (db *cachingDB) OpenTrie(root common.Hash) (Trie, error) { log.DebugLog()
 	db.mu.Lock()
 	defer db.mu.Unlock()
 
@@ -107,7 +107,7 @@ func (db *cachingDB) OpenTrie(root common.Hash) (Trie, error) {
 	return cachedTrie{tr, db}, nil
 }
 
-func (db *cachingDB) pushTrie(t *trie.SecureTrie) {
+func (db *cachingDB) pushTrie(t *trie.SecureTrie) { log.DebugLog()
 	db.mu.Lock()
 	defer db.mu.Unlock()
 
@@ -120,12 +120,12 @@ func (db *cachingDB) pushTrie(t *trie.SecureTrie) {
 }
 
 // OpenStorageTrie opens the storage trie of an account.
-func (db *cachingDB) OpenStorageTrie(addrHash, root common.Hash) (Trie, error) {
+func (db *cachingDB) OpenStorageTrie(addrHash, root common.Hash) (Trie, error) { log.DebugLog()
 	return trie.NewSecure(root, db.db, 0)
 }
 
 // CopyTrie returns an independent copy of the given trie.
-func (db *cachingDB) CopyTrie(t Trie) Trie {
+func (db *cachingDB) CopyTrie(t Trie) Trie { log.DebugLog()
 	switch t := t.(type) {
 	case cachedTrie:
 		return cachedTrie{t.SecureTrie.Copy(), db}
@@ -137,7 +137,7 @@ func (db *cachingDB) CopyTrie(t Trie) Trie {
 }
 
 // ContractCode retrieves a particular contract's code.
-func (db *cachingDB) ContractCode(addrHash, codeHash common.Hash) ([]byte, error) {
+func (db *cachingDB) ContractCode(addrHash, codeHash common.Hash) ([]byte, error) { log.DebugLog()
 	code, err := db.db.Node(codeHash)
 	if err == nil {
 		db.codeSizeCache.Add(codeHash, len(code))
@@ -146,7 +146,7 @@ func (db *cachingDB) ContractCode(addrHash, codeHash common.Hash) ([]byte, error
 }
 
 // ContractCodeSize retrieves a particular contracts code's size.
-func (db *cachingDB) ContractCodeSize(addrHash, codeHash common.Hash) (int, error) {
+func (db *cachingDB) ContractCodeSize(addrHash, codeHash common.Hash) (int, error) { log.DebugLog()
 	if cached, ok := db.codeSizeCache.Get(codeHash); ok {
 		return cached.(int), nil
 	}
@@ -158,7 +158,7 @@ func (db *cachingDB) ContractCodeSize(addrHash, codeHash common.Hash) (int, erro
 }
 
 // TrieDB retrieves any intermediate trie-node caching layer.
-func (db *cachingDB) TrieDB() *trie.Database {
+func (db *cachingDB) TrieDB() *trie.Database { log.DebugLog()
 	return db.db
 }
 
@@ -168,7 +168,7 @@ type cachedTrie struct {
 	db *cachingDB
 }
 
-func (m cachedTrie) Commit(onleaf trie.LeafCallback) (common.Hash, error) {
+func (m cachedTrie) Commit(onleaf trie.LeafCallback) (common.Hash, error) { log.DebugLog()
 	root, err := m.SecureTrie.Commit(onleaf)
 	if err == nil {
 		m.db.pushTrie(m.SecureTrie)
@@ -176,6 +176,6 @@ func (m cachedTrie) Commit(onleaf trie.LeafCallback) (common.Hash, error) {
 	return root, err
 }
 
-func (m cachedTrie) Prove(key []byte, fromLevel uint, proofDb ethdb.Putter) error {
+func (m cachedTrie) Prove(key []byte, fromLevel uint, proofDb ethdb.Putter) error { log.DebugLog()
 	return m.SecureTrie.Prove(key, fromLevel, proofDb)
 }

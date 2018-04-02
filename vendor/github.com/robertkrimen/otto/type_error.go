@@ -1,6 +1,6 @@
 package otto
 
-func (rt *_runtime) newErrorObject(name string, message Value, stackFramesToPop int) *_object {
+func (rt *_runtime) newErrorObject(name string, message Value, stackFramesToPop int) *_object { log.DebugLog()
 	self := rt.newClassObject("Error")
 	if message.IsDefined() {
 		msg := message.string()

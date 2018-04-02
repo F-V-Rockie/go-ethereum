@@ -36,47 +36,47 @@ type TestManager struct {
 	Blocks     []*types.Block
 }
 
-func (tm *TestManager) IsListening() bool {
+func (tm *TestManager) IsListening() bool { log.DebugLog()
 	return false
 }
 
-func (tm *TestManager) IsMining() bool {
+func (tm *TestManager) IsMining() bool { log.DebugLog()
 	return false
 }
 
-func (tm *TestManager) PeerCount() int {
+func (tm *TestManager) PeerCount() int { log.DebugLog()
 	return 0
 }
 
-func (tm *TestManager) Peers() *list.List {
+func (tm *TestManager) Peers() *list.List { log.DebugLog()
 	return list.New()
 }
 
-func (tm *TestManager) BlockChain() *BlockChain {
+func (tm *TestManager) BlockChain() *BlockChain { log.DebugLog()
 	return tm.blockChain
 }
 
-func (tm *TestManager) TxPool() *TxPool {
+func (tm *TestManager) TxPool() *TxPool { log.DebugLog()
 	return tm.txPool
 }
 
-// func (tm *TestManager) StateManager() *StateManager {
+// func (tm *TestManager) StateManager() *StateManager { log.DebugLog()
 // 	return tm.stateManager
 // }
 
-func (tm *TestManager) EventMux() *event.TypeMux {
+func (tm *TestManager) EventMux() *event.TypeMux { log.DebugLog()
 	return tm.eventMux
 }
 
-// func (tm *TestManager) KeyManager() *crypto.KeyManager {
+// func (tm *TestManager) KeyManager() *crypto.KeyManager { log.DebugLog()
 // 	return nil
 // }
 
-func (tm *TestManager) Db() ethdb.Database {
+func (tm *TestManager) Db() ethdb.Database { log.DebugLog()
 	return tm.db
 }
 
-func NewTestManager() *TestManager {
+func NewTestManager() *TestManager { log.DebugLog()
 	db, err := ethdb.NewMemDatabase()
 	if err != nil {
 		fmt.Println("Could not create mem-db, failing")

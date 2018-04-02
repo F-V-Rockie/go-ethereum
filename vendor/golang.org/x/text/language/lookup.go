@@ -15,7 +15,7 @@ import (
 
 // findIndex tries to find the given tag in idx and returns a standardized error
 // if it could not be found.
-func findIndex(idx tag.Index, key []byte, form string) (index int, err error) {
+func findIndex(idx tag.Index, key []byte, form string) (index int, err error) { log.DebugLog()
 	if !tag.FixCase(form, key) {
 		return 0, errSyntax
 	}
@@ -26,7 +26,7 @@ func findIndex(idx tag.Index, key []byte, form string) (index int, err error) {
 	return i, nil
 }
 
-func searchUint(imap []uint16, key uint16) int {
+func searchUint(imap []uint16, key uint16) int { log.DebugLog()
 	return sort.Search(len(imap), func(i int) bool {
 		return imap[i] >= key
 	})
@@ -36,7 +36,7 @@ type langID uint16
 
 // getLangID returns the langID of s if s is a canonical subtag
 // or langUnknown if s is not a canonical subtag.
-func getLangID(s []byte) (langID, error) {
+func getLangID(s []byte) (langID, error) { log.DebugLog()
 	if len(s) == 2 {
 		return getLangISO2(s)
 	}
@@ -44,7 +44,7 @@ func getLangID(s []byte) (langID, error) {
 }
 
 // mapLang returns the mapped langID of id according to mapping m.
-func normLang(id langID) (langID, langAliasType) {
+func normLang(id langID) (langID, langAliasType) { log.DebugLog()
 	k := sort.Search(len(langAliasMap), func(i int) bool {
 		return langAliasMap[i].from >= uint16(id)
 	})
@@ -56,7 +56,7 @@ func normLang(id langID) (langID, langAliasType) {
 
 // getLangISO2 returns the langID for the given 2-letter ISO language code
 // or unknownLang if this does not exist.
-func getLangISO2(s []byte) (langID, error) {
+func getLangISO2(s []byte) (langID, error) { log.DebugLog()
 	if !tag.FixCase("zz", s) {
 		return 0, errSyntax
 	}
@@ -68,7 +68,7 @@ func getLangISO2(s []byte) (langID, error) {
 
 const base = 'z' - 'a' + 1
 
-func strToInt(s []byte) uint {
+func strToInt(s []byte) uint { log.DebugLog()
 	v := uint(0)
 	for i := 0; i < len(s); i++ {
 		v *= base
@@ -79,7 +79,7 @@ func strToInt(s []byte) uint {
 
 // converts the given integer to the original ASCII string passed to strToInt.
 // len(s) must match the number of characters obtained.
-func intToStr(v uint, s []byte) {
+func intToStr(v uint, s []byte) { log.DebugLog()
 	for i := len(s) - 1; i >= 0; i-- {
 		s[i] = byte(v%base) + 'a'
 		v /= base
@@ -88,7 +88,7 @@ func intToStr(v uint, s []byte) {
 
 // getLangISO3 returns the langID for the given 3-letter ISO language code
 // or unknownLang if this does not exist.
-func getLangISO3(s []byte) (langID, error) {
+func getLangISO3(s []byte) (langID, error) { log.DebugLog()
 	if tag.FixCase("und", s) {
 		// first try to match canonical 3-letter entries
 		for i := lang.Index(s[:2]); i != -1; i = lang.Next(s[:2], i) {
@@ -123,7 +123,7 @@ func getLangISO3(s []byte) (langID, error) {
 
 // stringToBuf writes the string to b and returns the number of bytes
 // written.  cap(b) must be >= 3.
-func (id langID) stringToBuf(b []byte) int {
+func (id langID) stringToBuf(b []byte) int { log.DebugLog()
 	if id >= langNoIndexOffset {
 		intToStr(uint(id)-langNoIndexOffset, b[:3])
 		return 3
@@ -140,7 +140,7 @@ func (id langID) stringToBuf(b []byte) int {
 // String returns the BCP 47 representation of the langID.
 // Use b as variable name, instead of id, to ensure the variable
 // used is consistent with that of Base in which this type is embedded.
-func (b langID) String() string {
+func (b langID) String() string { log.DebugLog()
 	if b == 0 {
 		return "und"
 	} else if b >= langNoIndexOffset {
@@ -157,7 +157,7 @@ func (b langID) String() string {
 }
 
 // ISO3 returns the ISO 639-3 language code.
-func (b langID) ISO3() string {
+func (b langID) ISO3() string { log.DebugLog()
 	if b == 0 || b >= langNoIndexOffset {
 		return b.String()
 	}
@@ -173,7 +173,7 @@ func (b langID) ISO3() string {
 }
 
 // IsPrivateUse reports whether this language code is reserved for private use.
-func (b langID) IsPrivateUse() bool {
+func (b langID) IsPrivateUse() bool { log.DebugLog()
 	return langPrivateStart <= b && b <= langPrivateEnd
 }
 
@@ -181,7 +181,7 @@ type regionID uint16
 
 // getRegionID returns the region id for s if s is a valid 2-letter region code
 // or unknownRegion.
-func getRegionID(s []byte) (regionID, error) {
+func getRegionID(s []byte) (regionID, error) { log.DebugLog()
 	if len(s) == 3 {
 		if isAlpha(s[0]) {
 			return getRegionISO3(s)
@@ -195,7 +195,7 @@ func getRegionID(s []byte) (regionID, error) {
 
 // getRegionISO2 returns the regionID for the given 2-letter ISO country code
 // or unknownRegion if this does not exist.
-func getRegionISO2(s []byte) (regionID, error) {
+func getRegionISO2(s []byte) (regionID, error) { log.DebugLog()
 	i, err := findIndex(regionISO, s, "ZZ")
 	if err != nil {
 		return 0, err
@@ -205,7 +205,7 @@ func getRegionISO2(s []byte) (regionID, error) {
 
 // getRegionISO3 returns the regionID for the given 3-letter ISO country code
 // or unknownRegion if this does not exist.
-func getRegionISO3(s []byte) (regionID, error) {
+func getRegionISO3(s []byte) (regionID, error) { log.DebugLog()
 	if tag.FixCase("ZZZ", s) {
 		for i := regionISO.Index(s[:1]); i != -1; i = regionISO.Next(s[:1], i) {
 			if e := regionISO.Elem(i); e[2] == s[1] && e[3] == s[2] {
@@ -222,7 +222,7 @@ func getRegionISO3(s []byte) (regionID, error) {
 	return 0, errSyntax
 }
 
-func getRegionM49(n int) (regionID, error) {
+func getRegionM49(n int) (regionID, error) { log.DebugLog()
 	if 0 < n && n <= 999 {
 		const (
 			searchBits = 7
@@ -247,7 +247,7 @@ func getRegionM49(n int) (regionID, error) {
 // normRegion returns a region if r is deprecated or 0 otherwise.
 // TODO: consider supporting BYS (-> BLR), CSK (-> 200 or CZ), PHI (-> PHL) and AFI (-> DJ).
 // TODO: consider mapping split up regions to new most populous one (like CLDR).
-func normRegion(r regionID) regionID {
+func normRegion(r regionID) regionID { log.DebugLog()
 	m := regionOldMap
 	k := sort.Search(len(m), func(i int) bool {
 		return m[i].from >= uint16(r)
@@ -264,13 +264,13 @@ const (
 	bcp47Region
 )
 
-func (r regionID) typ() byte {
+func (r regionID) typ() byte { log.DebugLog()
 	return regionTypes[r]
 }
 
 // String returns the BCP 47 representation for the region.
 // It returns "ZZ" for an unspecified region.
-func (r regionID) String() string {
+func (r regionID) String() string { log.DebugLog()
 	if r < isoRegionOffset {
 		if r == 0 {
 			return "ZZ"
@@ -284,7 +284,7 @@ func (r regionID) String() string {
 // ISO3 returns the 3-letter ISO code of r.
 // Note that not all regions have a 3-letter ISO code.
 // In such cases this method returns "ZZZ".
-func (r regionID) ISO3() string {
+func (r regionID) ISO3() string { log.DebugLog()
 	if r < isoRegionOffset {
 		return "ZZZ"
 	}
@@ -301,14 +301,14 @@ func (r regionID) ISO3() string {
 
 // M49 returns the UN M.49 encoding of r, or 0 if this encoding
 // is not defined for r.
-func (r regionID) M49() int {
+func (r regionID) M49() int { log.DebugLog()
 	return int(m49[r])
 }
 
 // IsPrivateUse reports whether r has the ISO 3166 User-assigned status. This
 // may include private-use tags that are assigned by CLDR and used in this
 // implementation. So IsPrivateUse and IsCountry can be simultaneously true.
-func (r regionID) IsPrivateUse() bool {
+func (r regionID) IsPrivateUse() bool { log.DebugLog()
 	return r.typ()&iso3166UserAssigned != 0
 }
 
@@ -316,14 +316,14 @@ type scriptID uint8
 
 // getScriptID returns the script id for string s. It assumes that s
 // is of the format [A-Z][a-z]{3}.
-func getScriptID(idx tag.Index, s []byte) (scriptID, error) {
+func getScriptID(idx tag.Index, s []byte) (scriptID, error) { log.DebugLog()
 	i, err := findIndex(idx, s, "Zzzz")
 	return scriptID(i), err
 }
 
 // String returns the script code in title case.
 // It returns "Zzzz" for an unspecified script.
-func (s scriptID) String() string {
+func (s scriptID) String() string { log.DebugLog()
 	if s == 0 {
 		return "Zzzz"
 	}
@@ -331,7 +331,7 @@ func (s scriptID) String() string {
 }
 
 // IsPrivateUse reports whether this script code is reserved for private use.
-func (s scriptID) IsPrivateUse() bool {
+func (s scriptID) IsPrivateUse() bool { log.DebugLog()
 	return _Qaaa <= s && s <= _Qabx
 }
 
@@ -384,7 +384,7 @@ var (
 	altTags = "xtg-x-cel-gaulishen-GB-oxendicten-x-i-defaultund-x-i-enochiansee-x-i-mingonan-x-zh-minen-US-u-va-posix"
 )
 
-func grandfathered(s [maxAltTaglen]byte) (t Tag, ok bool) {
+func grandfathered(s [maxAltTaglen]byte) (t Tag, ok bool) { log.DebugLog()
 	if v, ok := grandfatheredMap[s]; ok {
 		if v < 0 {
 			return Make(altTags[altTagIndex[-v-1]:altTagIndex[-v]]), true

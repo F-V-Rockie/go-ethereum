@@ -141,7 +141,7 @@ It is possible to refer to a file containing the message.`,
 	},
 }
 
-func getMessage(ctx *cli.Context, msgarg int) []byte {
+func getMessage(ctx *cli.Context, msgarg int) []byte { log.DebugLog()
 	if file := ctx.String("msgfile"); file != "" {
 		if len(ctx.Args()) > msgarg {
 			utils.Fatalf("Can't use --msgfile and message argument at the same time.")

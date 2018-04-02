@@ -4,7 +4,7 @@ package otto
 type _constructFunction func(*_object, []Value) Value
 
 // 13.2.2 [[Construct]]
-func defaultConstruct(fn *_object, argumentList []Value) Value {
+func defaultConstruct(fn *_object, argumentList []Value) Value { log.DebugLog()
 	object := fn.runtime.newObject()
 	object.class = "Object"
 
@@ -37,7 +37,7 @@ type _nativeFunctionObject struct {
 	construct _constructFunction // [[Construct]]
 }
 
-func (runtime *_runtime) newNativeFunctionObject(name, file string, line int, native _nativeFunction, length int) *_object {
+func (runtime *_runtime) newNativeFunctionObject(name, file string, line int, native _nativeFunction, length int) *_object { log.DebugLog()
 	self := runtime.newClassObject("Function")
 	self.value = _nativeFunctionObject{
 		name:      name,
@@ -60,7 +60,7 @@ type _bindFunctionObject struct {
 	argumentList []Value
 }
 
-func (runtime *_runtime) newBoundFunctionObject(target *_object, this Value, argumentList []Value) *_object {
+func (runtime *_runtime) newBoundFunctionObject(target *_object, this Value, argumentList []Value) *_object { log.DebugLog()
 	self := runtime.newClassObject("Function")
 	self.value = _bindFunctionObject{
 		target:       target,
@@ -79,7 +79,7 @@ func (runtime *_runtime) newBoundFunctionObject(target *_object, this Value, arg
 }
 
 // [[Construct]]
-func (fn _bindFunctionObject) construct(argumentList []Value) Value {
+func (fn _bindFunctionObject) construct(argumentList []Value) Value { log.DebugLog()
 	object := fn.target
 	switch value := object.value.(type) {
 	case _nativeFunctionObject:
@@ -100,7 +100,7 @@ type _nodeFunctionObject struct {
 	stash _stash
 }
 
-func (runtime *_runtime) newNodeFunctionObject(node *_nodeFunctionLiteral, stash _stash) *_object {
+func (runtime *_runtime) newNodeFunctionObject(node *_nodeFunctionLiteral, stash _stash) *_object { log.DebugLog()
 	self := runtime.newClassObject("Function")
 	self.value = _nodeFunctionObject{
 		node:  node,
@@ -114,7 +114,7 @@ func (runtime *_runtime) newNodeFunctionObject(node *_nodeFunctionLiteral, stash
 // _object //
 // ======= //
 
-func (self *_object) isCall() bool {
+func (self *_object) isCall() bool { log.DebugLog()
 	switch fn := self.value.(type) {
 	case _nativeFunctionObject:
 		return fn.call != nil
@@ -126,7 +126,7 @@ func (self *_object) isCall() bool {
 	return false
 }
 
-func (self *_object) call(this Value, argumentList []Value, eval bool, frame _frame) Value {
+func (self *_object) call(this Value, argumentList []Value, eval bool, frame _frame) Value { log.DebugLog()
 	switch fn := self.value.(type) {
 
 	case _nativeFunctionObject:
@@ -185,7 +185,7 @@ func (self *_object) call(this Value, argumentList []Value, eval bool, frame _fr
 	panic(self.runtime.panicTypeError("%v is not a function", toValue_object(self)))
 }
 
-func (self *_object) construct(argumentList []Value) Value {
+func (self *_object) construct(argumentList []Value) Value { log.DebugLog()
 	switch fn := self.value.(type) {
 
 	case _nativeFunctionObject:
@@ -208,7 +208,7 @@ func (self *_object) construct(argumentList []Value) Value {
 }
 
 // 15.3.5.3
-func (self *_object) hasInstance(of Value) bool {
+func (self *_object) hasInstance(of Value) bool { log.DebugLog()
 	if !self.isCall() {
 		// We should not have a hasInstance method
 		panic(self.runtime.panicTypeError())
@@ -250,22 +250,22 @@ type FunctionCall struct {
 // Argument will return the value of the argument at the given index.
 //
 // If no such argument exists, undefined is returned.
-func (self FunctionCall) Argument(index int) Value {
+func (self FunctionCall) Argument(index int) Value { log.DebugLog()
 	return valueOfArrayIndex(self.ArgumentList, index)
 }
 
-func (self FunctionCall) getArgument(index int) (Value, bool) {
+func (self FunctionCall) getArgument(index int) (Value, bool) { log.DebugLog()
 	return getValueOfArrayIndex(self.ArgumentList, index)
 }
 
-func (self FunctionCall) slice(index int) []Value {
+func (self FunctionCall) slice(index int) []Value { log.DebugLog()
 	if index < len(self.ArgumentList) {
 		return self.ArgumentList[index:]
 	}
 	return []Value{}
 }
 
-func (self *FunctionCall) thisObject() *_object {
+func (self *FunctionCall) thisObject() *_object { log.DebugLog()
 	if self._thisObject == nil {
 		this := self.This.resolve() // FIXME Is this right?
 		self._thisObject = self.runtime.toObject(this)
@@ -273,7 +273,7 @@ func (self *FunctionCall) thisObject() *_object {
 	return self._thisObject
 }
 
-func (self *FunctionCall) thisClassObject(class string) *_object {
+func (self *FunctionCall) thisClassObject(class string) *_object { log.DebugLog()
 	thisObject := self.thisObject()
 	if thisObject.class != class {
 		panic(self.runtime.panicTypeError())
@@ -281,12 +281,12 @@ func (self *FunctionCall) thisClassObject(class string) *_object {
 	return self._thisObject
 }
 
-func (self FunctionCall) toObject(value Value) *_object {
+func (self FunctionCall) toObject(value Value) *_object { log.DebugLog()
 	return self.runtime.toObject(value)
 }
 
 // CallerLocation will return file location information (file:line:pos) where this function is being called.
-func (self FunctionCall) CallerLocation() string {
+func (self FunctionCall) CallerLocation() string { log.DebugLog()
 	// see error.go for location()
 	return self.runtime.scope.outer.frame.location()
 }

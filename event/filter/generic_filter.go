@@ -24,7 +24,7 @@ type Generic struct {
 }
 
 // self = registered, f = incoming
-func (self Generic) Compare(f Filter) bool {
+func (self Generic) Compare(f Filter) bool { log.DebugLog()
 	var strMatch, dataMatch = true, true
 
 	filter := f.(Generic)
@@ -43,6 +43,6 @@ func (self Generic) Compare(f Filter) bool {
 	return strMatch && dataMatch
 }
 
-func (self Generic) Trigger(data interface{}) {
+func (self Generic) Trigger(data interface{}) { log.DebugLog()
 	self.Fn(data)
 }

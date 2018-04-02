@@ -34,7 +34,7 @@ import (
 	"github.com/docker/docker/pkg/reexec"
 )
 
-func NewTestCmd(t *testing.T, data interface{}) *TestCmd {
+func NewTestCmd(t *testing.T, data interface{}) *TestCmd { log.DebugLog()
 	return &TestCmd{T: t, Data: data}
 }
 
@@ -54,7 +54,7 @@ type TestCmd struct {
 
 // Run exec's the current binary using name as argv[0] which will trigger the
 // reexec init function for that name (e.g. "geth-test" in cmd/geth/run_test.go)
-func (tt *TestCmd) Run(name string, args ...string) {
+func (tt *TestCmd) Run(name string, args ...string) { log.DebugLog()
 	tt.stderr = &testlogger{t: tt.T}
 	tt.cmd = &exec.Cmd{
 		Path:   reexec.Self(),
@@ -78,13 +78,13 @@ func (tt *TestCmd) Run(name string, args ...string) {
 // This method can also be called from an expect template, e.g.:
 //
 //     geth.expect(`Passphrase: {{.InputLine "password"}}`)
-func (tt *TestCmd) InputLine(s string) string {
+func (tt *TestCmd) InputLine(s string) string { log.DebugLog()
 	io.WriteString(tt.stdin, s+"\n")
 	return ""
 }
 
-func (tt *TestCmd) SetTemplateFunc(name string, fn interface{}) {
-	if tt.Func == nil {
+func (tt *TestCmd) SetTemplateFunc(name string, fn interface{}) { log.DebugLog()
+	if tt.func == nil { log.DebugLog()
 		tt.Func = make(map[string]interface{})
 	}
 	tt.Func[name] = fn
@@ -95,7 +95,7 @@ func (tt *TestCmd) SetTemplateFunc(name string, fn interface{}) {
 //
 // If the template starts with a newline, the newline is removed
 // before matching.
-func (tt *TestCmd) Expect(tplsource string) {
+func (tt *TestCmd) Expect(tplsource string) { log.DebugLog()
 	// Generate the expected output by running the template.
 	tpl := template.Must(template.New("").Funcs(tt.Func).Parse(tplsource))
 	wantbuf := new(bytes.Buffer)
@@ -111,7 +111,7 @@ func (tt *TestCmd) Expect(tplsource string) {
 	tt.Logf("Matched stdout text:\n%s", want)
 }
 
-func (tt *TestCmd) matchExactOutput(want []byte) error {
+func (tt *TestCmd) matchExactOutput(want []byte) error { log.DebugLog()
 	buf := make([]byte, len(want))
 	n := 0
 	tt.withKillTimeout(func() { n, _ = io.ReadFull(tt.stdout, buf) })
@@ -142,7 +142,7 @@ func (tt *TestCmd) matchExactOutput(want []byte) error {
 // Note that an arbitrary amount of output may be consumed by the
 // regular expression. This usually means that expect cannot be used
 // after ExpectRegexp.
-func (tt *TestCmd) ExpectRegexp(regex string) (*regexp.Regexp, []string) {
+func (tt *TestCmd) ExpectRegexp(regex string) (*regexp.Regexp, []string) { log.DebugLog()
 	regex = strings.TrimPrefix(regex, "\n")
 	var (
 		re      = regexp.MustCompile(regex)
@@ -167,7 +167,7 @@ func (tt *TestCmd) ExpectRegexp(regex string) (*regexp.Regexp, []string) {
 
 // ExpectExit expects the child process to exit within 5s without
 // printing any additional text on stdout.
-func (tt *TestCmd) ExpectExit() {
+func (tt *TestCmd) ExpectExit() { log.DebugLog()
 	var output []byte
 	tt.withKillTimeout(func() {
 		output, _ = ioutil.ReadAll(tt.stdout)
@@ -181,35 +181,35 @@ func (tt *TestCmd) ExpectExit() {
 	}
 }
 
-func (tt *TestCmd) WaitExit() {
+func (tt *TestCmd) WaitExit() { log.DebugLog()
 	tt.cmd.Wait()
 }
 
-func (tt *TestCmd) Interrupt() {
+func (tt *TestCmd) Interrupt() { log.DebugLog()
 	tt.cmd.Process.Signal(os.Interrupt)
 }
 
 // StderrText returns any stderr output written so far.
 // The returned text holds all log lines after ExpectExit has
 // returned.
-func (tt *TestCmd) StderrText() string {
+func (tt *TestCmd) StderrText() string { log.DebugLog()
 	tt.stderr.mu.Lock()
 	defer tt.stderr.mu.Unlock()
 	return tt.stderr.buf.String()
 }
 
-func (tt *TestCmd) CloseStdin() {
+func (tt *TestCmd) CloseStdin() { log.DebugLog()
 	tt.stdin.Close()
 }
 
-func (tt *TestCmd) Kill() {
+func (tt *TestCmd) Kill() { log.DebugLog()
 	tt.cmd.Process.Kill()
 	if tt.Cleanup != nil {
 		tt.Cleanup()
 	}
 }
 
-func (tt *TestCmd) withKillTimeout(fn func()) {
+func (tt *TestCmd) withKillTimeout(fn func()) { log.DebugLog()
 	timeout := time.AfterFunc(5*time.Second, func() {
 		tt.Log("killing the child process (timeout)")
 		tt.Kill()
@@ -226,7 +226,7 @@ type testlogger struct {
 	buf bytes.Buffer
 }
 
-func (tl *testlogger) Write(b []byte) (n int, err error) {
+func (tl *testlogger) Write(b []byte) (n int, err error) { log.DebugLog()
 	lines := bytes.Split(b, []byte("\n"))
 	for _, line := range lines {
 		if len(line) > 0 {
@@ -249,13 +249,13 @@ type runeTee struct {
 	buf bytes.Buffer
 }
 
-func (rtee *runeTee) Read(b []byte) (n int, err error) {
+func (rtee *runeTee) Read(b []byte) (n int, err error) { log.DebugLog()
 	n, err = rtee.in.Read(b)
 	rtee.buf.Write(b[:n])
 	return n, err
 }
 
-func (rtee *runeTee) ReadRune() (r rune, size int, err error) {
+func (rtee *runeTee) ReadRune() (r rune, size int, err error) { log.DebugLog()
 	r, size, err = rtee.in.ReadRune()
 	if err == nil {
 		rtee.buf.WriteRune(r)
@@ -263,7 +263,7 @@ func (rtee *runeTee) ReadRune() (r rune, size int, err error) {
 	return r, size, err
 }
 
-func (rtee *runeTee) ReadByte() (b byte, err error) {
+func (rtee *runeTee) ReadByte() (b byte, err error) { log.DebugLog()
 	b, err = rtee.in.ReadByte()
 	if err == nil {
 		rtee.buf.WriteByte(b)

@@ -12,7 +12,7 @@ import (
 )
 
 // Commands returns a list of possible commands to use to open a url.
-func Commands() [][]string {
+func Commands() [][]string { log.DebugLog()
 	var cmds [][]string
 	if exe := os.Getenv("BROWSER"); exe != "" {
 		cmds = append(cmds, []string{exe})
@@ -35,7 +35,7 @@ func Commands() [][]string {
 }
 
 // Open tries to open url in a browser and reports whether it succeeded.
-func Open(url string) bool {
+func Open(url string) bool { log.DebugLog()
 	for _, args := range Commands() {
 		cmd := exec.Command(args[0], append(args[1:], url)...)
 		if cmd.Start() == nil {

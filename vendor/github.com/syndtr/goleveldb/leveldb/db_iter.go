@@ -27,13 +27,13 @@ type memdbReleaser struct {
 	m    *memDB
 }
 
-func (mr *memdbReleaser) Release() {
+func (mr *memdbReleaser) Release() { log.DebugLog()
 	mr.once.Do(func() {
 		mr.m.decref()
 	})
 }
 
-func (db *DB) newRawIterator(auxm *memDB, auxt tFiles, slice *util.Range, ro *opt.ReadOptions) iterator.Iterator {
+func (db *DB) newRawIterator(auxm *memDB, auxt tFiles, slice *util.Range, ro *opt.ReadOptions) iterator.Iterator { log.DebugLog()
 	strict := opt.GetStrict(db.s.o.Options, ro, opt.StrictReader)
 	em, fm := db.getMems()
 	v := db.s.version()
@@ -65,7 +65,7 @@ func (db *DB) newRawIterator(auxm *memDB, auxt tFiles, slice *util.Range, ro *op
 	return mi
 }
 
-func (db *DB) newIterator(auxm *memDB, auxt tFiles, seq uint64, slice *util.Range, ro *opt.ReadOptions) *dbIter {
+func (db *DB) newIterator(auxm *memDB, auxt tFiles, seq uint64, slice *util.Range, ro *opt.ReadOptions) *dbIter { log.DebugLog()
 	var islice *util.Range
 	if slice != nil {
 		islice = &util.Range{}
@@ -91,7 +91,7 @@ func (db *DB) newIterator(auxm *memDB, auxt tFiles, seq uint64, slice *util.Rang
 	return iter
 }
 
-func (db *DB) iterSamplingRate() int {
+func (db *DB) iterSamplingRate() int { log.DebugLog()
 	return rand.Intn(2 * db.s.o.GetIteratorSamplingRate())
 }
 
@@ -121,7 +121,7 @@ type dbIter struct {
 	releaser    util.Releaser
 }
 
-func (i *dbIter) sampleSeek() {
+func (i *dbIter) sampleSeek() { log.DebugLog()
 	ikey := i.iter.Key()
 	i.smaplingGap -= len(ikey) + len(i.iter.Value())
 	for i.smaplingGap < 0 {
@@ -130,23 +130,23 @@ func (i *dbIter) sampleSeek() {
 	}
 }
 
-func (i *dbIter) setErr(err error) {
+func (i *dbIter) setErr(err error) { log.DebugLog()
 	i.err = err
 	i.key = nil
 	i.value = nil
 }
 
-func (i *dbIter) iterErr() {
+func (i *dbIter) iterErr() { log.DebugLog()
 	if err := i.iter.Error(); err != nil {
 		i.setErr(err)
 	}
 }
 
-func (i *dbIter) Valid() bool {
+func (i *dbIter) Valid() bool { log.DebugLog()
 	return i.err == nil && i.dir > dirEOI
 }
 
-func (i *dbIter) First() bool {
+func (i *dbIter) First() bool { log.DebugLog()
 	if i.err != nil {
 		return false
 	} else if i.dir == dirReleased {
@@ -163,7 +163,7 @@ func (i *dbIter) First() bool {
 	return false
 }
 
-func (i *dbIter) Last() bool {
+func (i *dbIter) Last() bool { log.DebugLog()
 	if i.err != nil {
 		return false
 	} else if i.dir == dirReleased {
@@ -179,7 +179,7 @@ func (i *dbIter) Last() bool {
 	return false
 }
 
-func (i *dbIter) Seek(key []byte) bool {
+func (i *dbIter) Seek(key []byte) bool { log.DebugLog()
 	if i.err != nil {
 		return false
 	} else if i.dir == dirReleased {
@@ -197,7 +197,7 @@ func (i *dbIter) Seek(key []byte) bool {
 	return false
 }
 
-func (i *dbIter) next() bool {
+func (i *dbIter) next() bool { log.DebugLog()
 	for {
 		if ukey, seq, kt, kerr := parseInternalKey(i.iter.Key()); kerr == nil {
 			i.sampleSeek()
@@ -229,7 +229,7 @@ func (i *dbIter) next() bool {
 	return false
 }
 
-func (i *dbIter) Next() bool {
+func (i *dbIter) Next() bool { log.DebugLog()
 	if i.dir == dirEOI || i.err != nil {
 		return false
 	} else if i.dir == dirReleased {
@@ -245,7 +245,7 @@ func (i *dbIter) Next() bool {
 	return i.next()
 }
 
-func (i *dbIter) prev() bool {
+func (i *dbIter) prev() bool { log.DebugLog()
 	i.dir = dirBackward
 	del := true
 	if i.iter.Valid() {
@@ -279,7 +279,7 @@ func (i *dbIter) prev() bool {
 	return true
 }
 
-func (i *dbIter) Prev() bool {
+func (i *dbIter) Prev() bool { log.DebugLog()
 	if i.dir == dirSOI || i.err != nil {
 		return false
 	} else if i.dir == dirReleased {
@@ -311,21 +311,21 @@ cont:
 	return i.prev()
 }
 
-func (i *dbIter) Key() []byte {
+func (i *dbIter) Key() []byte { log.DebugLog()
 	if i.err != nil || i.dir <= dirEOI {
 		return nil
 	}
 	return i.key
 }
 
-func (i *dbIter) Value() []byte {
+func (i *dbIter) Value() []byte { log.DebugLog()
 	if i.err != nil || i.dir <= dirEOI {
 		return nil
 	}
 	return i.value
 }
 
-func (i *dbIter) Release() {
+func (i *dbIter) Release() { log.DebugLog()
 	if i.dir != dirReleased {
 		// Clear the finalizer.
 		runtime.SetFinalizer(i, nil)
@@ -345,7 +345,7 @@ func (i *dbIter) Release() {
 	}
 }
 
-func (i *dbIter) SetReleaser(releaser util.Releaser) {
+func (i *dbIter) SetReleaser(releaser util.Releaser) { log.DebugLog()
 	if i.dir == dirReleased {
 		panic(util.ErrReleased)
 	}
@@ -355,6 +355,6 @@ func (i *dbIter) SetReleaser(releaser util.Releaser) {
 	i.releaser = releaser
 }
 
-func (i *dbIter) Error() error {
+func (i *dbIter) Error() error { log.DebugLog()
 	return i.err
 }

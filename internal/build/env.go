@@ -43,14 +43,14 @@ type Environment struct {
 	IsCronJob           bool
 }
 
-func (env Environment) String() string {
+func (env Environment) String() string { log.DebugLog()
 	return fmt.Sprintf("%s env (commit:%s branch:%s tag:%s buildnum:%s pr:%t)",
 		env.Name, env.Commit, env.Branch, env.Tag, env.Buildnum, env.IsPullRequest)
 }
 
 // Env returns metadata about the current CI environment, falling back to LocalEnv
 // if not running on CI.
-func Env() Environment {
+func Env() Environment { log.DebugLog()
 	switch {
 	case os.Getenv("CI") == "true" && os.Getenv("TRAVIS") == "true":
 		return Environment{
@@ -80,7 +80,7 @@ func Env() Environment {
 }
 
 // LocalEnv returns build environment metadata gathered from git.
-func LocalEnv() Environment {
+func LocalEnv() Environment { log.DebugLog()
 	env := applyEnvFlags(Environment{Name: "local", Repo: "ethereum/go-ethereum"})
 
 	head := readGitFile("HEAD")
@@ -103,11 +103,11 @@ func LocalEnv() Environment {
 	return env
 }
 
-func firstLine(s string) string {
+func firstLine(s string) string { log.DebugLog()
 	return strings.Split(s, "\n")[0]
 }
 
-func applyEnvFlags(env Environment) Environment {
+func applyEnvFlags(env Environment) Environment { log.DebugLog()
 	if !flag.Parsed() {
 		panic("you need to call flag.Parse before Env or LocalEnv")
 	}

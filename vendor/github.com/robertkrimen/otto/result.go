@@ -17,14 +17,14 @@ type _result struct {
 	target string
 }
 
-func newReturnResult(value Value) _result {
+func newReturnResult(value Value) _result { log.DebugLog()
 	return _result{resultReturn, value, ""}
 }
 
-func newContinueResult(target string) _result {
+func newContinueResult(target string) _result { log.DebugLog()
 	return _result{resultContinue, emptyValue, target}
 }
 
-func newBreakResult(target string) _result {
+func newBreakResult(target string) _result { log.DebugLog()
 	return _result{resultBreak, emptyValue, target}
 }

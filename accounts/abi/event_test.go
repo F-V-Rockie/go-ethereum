@@ -64,7 +64,7 @@ var transferData1 = "00000000000000000000000000000000000000000000000000000000000
 // "0x00Ce0d46d924CC8437c806721496599FC3FFA268", 2218516807680, "usd"
 var pledgeData1 = "00000000000000000000000000ce0d46d924cc8437c806721496599fc3ffa2680000000000000000000000000000000000000000000000000000020489e800007573640000000000000000000000000000000000000000000000000000000000"
 
-func TestEventId(t *testing.T) {
+func TestEventId(t *testing.T) { log.DebugLog()
 	var table = []struct {
 		definition   string
 		expectations map[string]common.Hash
@@ -96,7 +96,7 @@ func TestEventId(t *testing.T) {
 }
 
 // TestEventMultiValueWithArrayUnpack verifies that array fields will be counted after parsing array.
-func TestEventMultiValueWithArrayUnpack(t *testing.T) {
+func TestEventMultiValueWithArrayUnpack(t *testing.T) { log.DebugLog()
 	definition := `[{"name": "test", "type": "event", "inputs": [{"indexed": false, "name":"value1", "type":"uint8[2]"},{"indexed": false, "name":"value2", "type":"uint8"}]}]`
 	type testStruct struct {
 		Value1 [2]uint8
@@ -115,7 +115,7 @@ func TestEventMultiValueWithArrayUnpack(t *testing.T) {
 	require.Equal(t, uint8(3), rst.Value2)
 }
 
-func TestEventTupleUnpack(t *testing.T) {
+func TestEventTupleUnpack(t *testing.T) { log.DebugLog()
 
 	type EventTransfer struct {
 		Value *big.Int
@@ -233,7 +233,7 @@ func TestEventTupleUnpack(t *testing.T) {
 	}
 }
 
-func unpackTestEventData(dest interface{}, hexData string, jsonEvent []byte, assert *assert.Assertions) error {
+func unpackTestEventData(dest interface{}, hexData string, jsonEvent []byte, assert *assert.Assertions) error { log.DebugLog()
 	data, err := hex.DecodeString(hexData)
 	assert.NoError(err, "Hex data should be a correct hex-string")
 	var e Event
@@ -258,7 +258,7 @@ type testCase struct {
 	want       testResult
 }
 
-func (tc testCase) encoded(intType, arrayType Type) []byte {
+func (tc testCase) encoded(intType, arrayType Type) []byte { log.DebugLog()
 	var b bytes.Buffer
 	if tc.want.Value1 != nil {
 		val, _ := intType.pack(reflect.ValueOf(tc.want.Value1))
@@ -277,7 +277,7 @@ func (tc testCase) encoded(intType, arrayType Type) []byte {
 }
 
 // TestEventUnpackIndexed verifies that indexed field will be skipped by event decoder.
-func TestEventUnpackIndexed(t *testing.T) {
+func TestEventUnpackIndexed(t *testing.T) { log.DebugLog()
 	definition := `[{"name": "test", "type": "event", "inputs": [{"indexed": true, "name":"value1", "type":"uint8"},{"indexed": false, "name":"value2", "type":"uint8"}]}]`
 	type testStruct struct {
 		Value1 uint8
@@ -294,7 +294,7 @@ func TestEventUnpackIndexed(t *testing.T) {
 }
 
 // TestEventIndexedWithArrayUnpack verifies that decoder will not overlow when static array is indexed input.
-func TestEventIndexedWithArrayUnpack(t *testing.T) {
+func TestEventIndexedWithArrayUnpack(t *testing.T) { log.DebugLog()
 	definition := `[{"name": "test", "type": "event", "inputs": [{"indexed": true, "name":"value1", "type":"uint8[2]"},{"indexed": false, "name":"value2", "type":"string"}]}]`
 	type testStruct struct {
 		Value1 [2]uint8

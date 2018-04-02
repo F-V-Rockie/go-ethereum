@@ -15,7 +15,7 @@ type interval struct {
 
 type table []interval
 
-func inTables(r rune, ts ...table) bool {
+func inTables(r rune, ts ...table) bool { log.DebugLog()
 	for _, t := range ts {
 		if inTable(r, t) {
 			return true
@@ -24,8 +24,8 @@ func inTables(r rune, ts ...table) bool {
 	return false
 }
 
-func inTable(r rune, t table) bool {
-	// func (t table) IncludesRune(r rune) bool {
+func inTable(r rune, t table) bool { log.DebugLog()
+	// func (t table) IncludesRune(r rune) bool { log.DebugLog()
 	if r < t[0].first {
 		return false
 	}
@@ -1083,13 +1083,13 @@ type Condition struct {
 }
 
 // NewCondition return new instance of Condition which is current locale.
-func NewCondition() *Condition {
+func NewCondition() *Condition { log.DebugLog()
 	return &Condition{EastAsianWidth}
 }
 
 // RuneWidth returns the number of cells in r.
 // See http://www.unicode.org/reports/tr11/
-func (c *Condition) RuneWidth(r rune) int {
+func (c *Condition) RuneWidth(r rune) int { log.DebugLog()
 	switch {
 	case r < 0 || r > 0x10FFFF ||
 		inTables(r, nonprint, combining, notassigned):
@@ -1103,7 +1103,7 @@ func (c *Condition) RuneWidth(r rune) int {
 }
 
 // StringWidth return width as you can see
-func (c *Condition) StringWidth(s string) (width int) {
+func (c *Condition) StringWidth(s string) (width int) { log.DebugLog()
 	for _, r := range []rune(s) {
 		width += c.RuneWidth(r)
 	}
@@ -1111,7 +1111,7 @@ func (c *Condition) StringWidth(s string) (width int) {
 }
 
 // Truncate return string truncated with w cells
-func (c *Condition) Truncate(s string, w int, tail string) string {
+func (c *Condition) Truncate(s string, w int, tail string) string { log.DebugLog()
 	if c.StringWidth(s) <= w {
 		return s
 	}
@@ -1131,7 +1131,7 @@ func (c *Condition) Truncate(s string, w int, tail string) string {
 }
 
 // Wrap return string wrapped with w cells
-func (c *Condition) Wrap(s string, w int) string {
+func (c *Condition) Wrap(s string, w int) string { log.DebugLog()
 	width := 0
 	out := ""
 	for _, r := range []rune(s) {
@@ -1154,7 +1154,7 @@ func (c *Condition) Wrap(s string, w int) string {
 }
 
 // FillLeft return string filled in left by spaces in w cells
-func (c *Condition) FillLeft(s string, w int) string {
+func (c *Condition) FillLeft(s string, w int) string { log.DebugLog()
 	width := c.StringWidth(s)
 	count := w - width
 	if count > 0 {
@@ -1168,7 +1168,7 @@ func (c *Condition) FillLeft(s string, w int) string {
 }
 
 // FillRight return string filled in left by spaces in w cells
-func (c *Condition) FillRight(s string, w int) string {
+func (c *Condition) FillRight(s string, w int) string { log.DebugLog()
 	width := c.StringWidth(s)
 	count := w - width
 	if count > 0 {
@@ -1183,41 +1183,41 @@ func (c *Condition) FillRight(s string, w int) string {
 
 // RuneWidth returns the number of cells in r.
 // See http://www.unicode.org/reports/tr11/
-func RuneWidth(r rune) int {
+func RuneWidth(r rune) int { log.DebugLog()
 	return DefaultCondition.RuneWidth(r)
 }
 
 // IsAmbiguousWidth returns whether is ambiguous width or not.
-func IsAmbiguousWidth(r rune) bool {
+func IsAmbiguousWidth(r rune) bool { log.DebugLog()
 	return inTables(r, private, ambiguous)
 }
 
 // IsNeutralWidth returns whether is neutral width or not.
-func IsNeutralWidth(r rune) bool {
+func IsNeutralWidth(r rune) bool { log.DebugLog()
 	return inTable(r, neutral)
 }
 
 // StringWidth return width as you can see
-func StringWidth(s string) (width int) {
+func StringWidth(s string) (width int) { log.DebugLog()
 	return DefaultCondition.StringWidth(s)
 }
 
 // Truncate return string truncated with w cells
-func Truncate(s string, w int, tail string) string {
+func Truncate(s string, w int, tail string) string { log.DebugLog()
 	return DefaultCondition.Truncate(s, w, tail)
 }
 
 // Wrap return string wrapped with w cells
-func Wrap(s string, w int) string {
+func Wrap(s string, w int) string { log.DebugLog()
 	return DefaultCondition.Wrap(s, w)
 }
 
 // FillLeft return string filled in left by spaces in w cells
-func FillLeft(s string, w int) string {
+func FillLeft(s string, w int) string { log.DebugLog()
 	return DefaultCondition.FillLeft(s, w)
 }
 
 // FillRight return string filled in left by spaces in w cells
-func FillRight(s string, w int) string {
+func FillRight(s string, w int) string { log.DebugLog()
 	return DefaultCondition.FillRight(s, w)
 }

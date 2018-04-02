@@ -54,11 +54,11 @@ type feedTypeError struct {
 	op        string
 }
 
-func (e feedTypeError) Error() string {
+func (e feedTypeError) Error() string { log.DebugLog()
 	return "event: wrong type in " + e.op + " got " + e.got.String() + ", want " + e.want.String()
 }
 
-func (f *Feed) init() {
+func (f *Feed) init() { log.DebugLog()
 	f.removeSub = make(chan interface{})
 	f.sendLock = make(chan struct{}, 1)
 	f.sendLock <- struct{}{}
@@ -70,7 +70,7 @@ func (f *Feed) init() {
 //
 // The channel should have ample buffer space to avoid blocking other subscribers.
 // Slow subscribers are not dropped.
-func (f *Feed) Subscribe(channel interface{}) Subscription {
+func (f *Feed) Subscribe(channel interface{}) Subscription { log.DebugLog()
 	f.once.Do(f.init)
 
 	chanval := reflect.ValueOf(channel)
@@ -93,7 +93,7 @@ func (f *Feed) Subscribe(channel interface{}) Subscription {
 }
 
 // note: callers must hold f.mu
-func (f *Feed) typecheck(typ reflect.Type) bool {
+func (f *Feed) typecheck(typ reflect.Type) bool { log.DebugLog()
 	if f.etype == nil {
 		f.etype = typ
 		return true
@@ -101,7 +101,7 @@ func (f *Feed) typecheck(typ reflect.Type) bool {
 	return f.etype == typ
 }
 
-func (f *Feed) remove(sub *feedSub) {
+func (f *Feed) remove(sub *feedSub) { log.DebugLog()
 	// Delete from inbox first, which covers channels
 	// that have not been added to f.sendCases yet.
 	ch := sub.channel.Interface()
@@ -126,7 +126,7 @@ func (f *Feed) remove(sub *feedSub) {
 
 // Send delivers to all subscribed channels simultaneously.
 // It returns the number of subscribers that the value was sent to.
-func (f *Feed) Send(value interface{}) (nsent int) {
+func (f *Feed) Send(value interface{}) (nsent int) { log.DebugLog()
 	rvalue := reflect.ValueOf(value)
 
 	f.once.Do(f.init)
@@ -193,21 +193,21 @@ type feedSub struct {
 	err     chan error
 }
 
-func (sub *feedSub) Unsubscribe() {
+func (sub *feedSub) Unsubscribe() { log.DebugLog()
 	sub.errOnce.Do(func() {
 		sub.feed.remove(sub)
 		close(sub.err)
 	})
 }
 
-func (sub *feedSub) Err() <-chan error {
+func (sub *feedSub) Err() <-chan error { log.DebugLog()
 	return sub.err
 }
 
 type caseList []reflect.SelectCase
 
 // find returns the index of a case containing the given channel.
-func (cs caseList) find(channel interface{}) int {
+func (cs caseList) find(channel interface{}) int { log.DebugLog()
 	for i, cas := range cs {
 		if cas.Chan.Interface() == channel {
 			return i
@@ -217,18 +217,18 @@ func (cs caseList) find(channel interface{}) int {
 }
 
 // delete removes the given case from cs.
-func (cs caseList) delete(index int) caseList {
+func (cs caseList) delete(index int) caseList { log.DebugLog()
 	return append(cs[:index], cs[index+1:]...)
 }
 
 // deactivate moves the case at index into the non-accessible portion of the cs slice.
-func (cs caseList) deactivate(index int) caseList {
+func (cs caseList) deactivate(index int) caseList { log.DebugLog()
 	last := len(cs) - 1
 	cs[index], cs[last] = cs[last], cs[index]
 	return cs[:last]
 }
 
-// func (cs caseList) String() string {
+// func (cs caseList) String() string { log.DebugLog()
 //     s := "["
 //     for i, cas := range cs {
 //             if i != 0 {

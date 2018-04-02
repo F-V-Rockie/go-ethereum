@@ -25,7 +25,7 @@ import (
 
 // deployEthstats queries the user for various input on deploying an ethstats
 // monitoring server, after which it executes it.
-func (w *wizard) deployEthstats() {
+func (w *wizard) deployEthstats() { log.DebugLog()
 	// Select the server to interact with
 	server := w.selectServer()
 	if server == "" {

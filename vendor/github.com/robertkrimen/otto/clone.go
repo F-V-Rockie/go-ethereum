@@ -12,7 +12,7 @@ type _clone struct {
 	_fnStash     map[*_fnStash]*_fnStash
 }
 
-func (in *_runtime) clone() *_runtime {
+func (in *_runtime) clone() *_runtime { log.DebugLog()
 
 	in.lck.Lock()
 	defer in.lck.Unlock()
@@ -84,7 +84,7 @@ func (in *_runtime) clone() *_runtime {
 	return out
 }
 
-func (clone *_clone) object(in *_object) *_object {
+func (clone *_clone) object(in *_object) *_object { log.DebugLog()
 	if out, exists := clone._object[in]; exists {
 		return out
 	}
@@ -93,7 +93,7 @@ func (clone *_clone) object(in *_object) *_object {
 	return in.objectClass.clone(in, out, clone)
 }
 
-func (clone *_clone) dclStash(in *_dclStash) (*_dclStash, bool) {
+func (clone *_clone) dclStash(in *_dclStash) (*_dclStash, bool) { log.DebugLog()
 	if out, exists := clone._dclStash[in]; exists {
 		return out, true
 	}
@@ -102,7 +102,7 @@ func (clone *_clone) dclStash(in *_dclStash) (*_dclStash, bool) {
 	return out, false
 }
 
-func (clone *_clone) objectStash(in *_objectStash) (*_objectStash, bool) {
+func (clone *_clone) objectStash(in *_objectStash) (*_objectStash, bool) { log.DebugLog()
 	if out, exists := clone._objectStash[in]; exists {
 		return out, true
 	}
@@ -111,7 +111,7 @@ func (clone *_clone) objectStash(in *_objectStash) (*_objectStash, bool) {
 	return out, false
 }
 
-func (clone *_clone) fnStash(in *_fnStash) (*_fnStash, bool) {
+func (clone *_clone) fnStash(in *_fnStash) (*_fnStash, bool) { log.DebugLog()
 	if out, exists := clone._fnStash[in]; exists {
 		return out, true
 	}
@@ -120,7 +120,7 @@ func (clone *_clone) fnStash(in *_fnStash) (*_fnStash, bool) {
 	return out, false
 }
 
-func (clone *_clone) value(in Value) Value {
+func (clone *_clone) value(in Value) Value { log.DebugLog()
 	out := in
 	switch value := in.value.(type) {
 	case *_object:
@@ -129,7 +129,7 @@ func (clone *_clone) value(in Value) Value {
 	return out
 }
 
-func (clone *_clone) valueArray(in []Value) []Value {
+func (clone *_clone) valueArray(in []Value) []Value { log.DebugLog()
 	out := make([]Value, len(in))
 	for index, value := range in {
 		out[index] = clone.value(value)
@@ -137,14 +137,14 @@ func (clone *_clone) valueArray(in []Value) []Value {
 	return out
 }
 
-func (clone *_clone) stash(in _stash) _stash {
+func (clone *_clone) stash(in _stash) _stash { log.DebugLog()
 	if in == nil {
 		return nil
 	}
 	return in.clone(clone)
 }
 
-func (clone *_clone) property(in _property) _property {
+func (clone *_clone) property(in _property) _property { log.DebugLog()
 	out := in
 
 	switch value := in.value.(type) {
@@ -166,7 +166,7 @@ func (clone *_clone) property(in _property) _property {
 	return out
 }
 
-func (clone *_clone) dclProperty(in _dclProperty) _dclProperty {
+func (clone *_clone) dclProperty(in _dclProperty) _dclProperty { log.DebugLog()
 	out := in
 	out.value = clone.value(in.value)
 	return out

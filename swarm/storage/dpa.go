@@ -63,7 +63,7 @@ type DPA struct {
 }
 
 // for testing locally
-func NewLocalDPA(datadir string) (*DPA, error) {
+func NewLocalDPA(datadir string) (*DPA, error) { log.DebugLog()
 
 	hash := MakeHashFunc("SHA256")
 
@@ -78,7 +78,7 @@ func NewLocalDPA(datadir string) (*DPA, error) {
 	}, NewChunkerParams()), nil
 }
 
-func NewDPA(store ChunkStore, params *ChunkerParams) *DPA {
+func NewDPA(store ChunkStore, params *ChunkerParams) *DPA { log.DebugLog()
 	chunker := NewTreeChunker(params)
 	return &DPA{
 		Chunker:    chunker,
@@ -90,17 +90,17 @@ func NewDPA(store ChunkStore, params *ChunkerParams) *DPA {
 // FS-aware API and httpaccess
 // Chunk retrieval blocks on netStore requests with a timeout so reader will
 // report error if retrieval of chunks within requested range time out.
-func (self *DPA) Retrieve(key Key) LazySectionReader {
+func (self *DPA) Retrieve(key Key) LazySectionReader { log.DebugLog()
 	return self.Chunker.Join(key, self.retrieveC)
 }
 
 // Public API. Main entry point for document storage directly. Used by the
 // FS-aware API and httpaccess
-func (self *DPA) Store(data io.Reader, size int64, swg *sync.WaitGroup, wwg *sync.WaitGroup) (key Key, err error) {
+func (self *DPA) Store(data io.Reader, size int64, swg *sync.WaitGroup, wwg *sync.WaitGroup) (key Key, err error) { log.DebugLog()
 	return self.Chunker.Split(data, size, self.storeC, swg, wwg)
 }
 
-func (self *DPA) Start() {
+func (self *DPA) Start() { log.DebugLog()
 	self.lock.Lock()
 	defer self.lock.Unlock()
 	if self.running {
@@ -114,7 +114,7 @@ func (self *DPA) Start() {
 	self.retrieveLoop()
 }
 
-func (self *DPA) Stop() {
+func (self *DPA) Stop() { log.DebugLog()
 	self.lock.Lock()
 	defer self.lock.Unlock()
 	if !self.running {
@@ -126,14 +126,14 @@ func (self *DPA) Stop() {
 
 // retrieveLoop dispatches the parallel chunk retrieval requests received on the
 // retrieve channel to its ChunkStore  (NetStore or LocalStore)
-func (self *DPA) retrieveLoop() {
+func (self *DPA) retrieveLoop() { log.DebugLog()
 	for i := 0; i < maxRetrieveProcesses; i++ {
 		go self.retrieveWorker()
 	}
 	log.Trace(fmt.Sprintf("dpa: retrieve loop spawning %v workers", maxRetrieveProcesses))
 }
 
-func (self *DPA) retrieveWorker() {
+func (self *DPA) retrieveWorker() { log.DebugLog()
 	for chunk := range self.retrieveC {
 		log.Trace(fmt.Sprintf("dpa: retrieve loop : chunk %v", chunk.Key.Log()))
 		storedChunk, err := self.Get(chunk.Key)
@@ -157,14 +157,14 @@ func (self *DPA) retrieveWorker() {
 
 // storeLoop dispatches the parallel chunk store request processors
 // received on the store channel to its ChunkStore (NetStore or LocalStore)
-func (self *DPA) storeLoop() {
+func (self *DPA) storeLoop() { log.DebugLog()
 	for i := 0; i < maxStoreProcesses; i++ {
 		go self.storeWorker()
 	}
 	log.Trace(fmt.Sprintf("dpa: store spawning %v workers", maxStoreProcesses))
 }
 
-func (self *DPA) storeWorker() {
+func (self *DPA) storeWorker() { log.DebugLog()
 
 	for chunk := range self.storeC {
 		self.Put(chunk)
@@ -192,13 +192,13 @@ type dpaChunkStore struct {
 	netStore   ChunkStore
 }
 
-func NewDpaChunkStore(localStore, netStore ChunkStore) *dpaChunkStore {
+func NewDpaChunkStore(localStore, netStore ChunkStore) *dpaChunkStore { log.DebugLog()
 	return &dpaChunkStore{0, localStore, netStore}
 }
 
 // Get is the entrypoint for local retrieve requests
 // waits for response or times out
-func (self *dpaChunkStore) Get(key Key) (chunk *Chunk, err error) {
+func (self *dpaChunkStore) Get(key Key) (chunk *Chunk, err error) { log.DebugLog()
 	chunk, err = self.netStore.Get(key)
 	// timeout := time.Now().Add(searchTimeout)
 	if chunk.SData != nil {
@@ -218,7 +218,7 @@ func (self *dpaChunkStore) Get(key Key) (chunk *Chunk, err error) {
 }
 
 // Put is the entrypoint for local store requests coming from storeLoop
-func (self *dpaChunkStore) Put(entry *Chunk) {
+func (self *dpaChunkStore) Put(entry *Chunk) { log.DebugLog()
 	chunk, err := self.localStore.Get(entry.Key)
 	if err != nil {
 		log.Trace(fmt.Sprintf("DPA.Put: %v new chunk. call netStore.Put", entry.Key.Log()))
@@ -238,4 +238,4 @@ func (self *dpaChunkStore) Put(entry *Chunk) {
 }
 
 // Close chunk store
-func (self *dpaChunkStore) Close() {}
+func (self *dpaChunkStore) Close() { log.DebugLog()}

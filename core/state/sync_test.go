@@ -36,7 +36,7 @@ type testAccount struct {
 }
 
 // makeTestState create a sample test state to test node-wise reconstruction.
-func makeTestState() (Database, common.Hash, []*testAccount) {
+func makeTestState() (Database, common.Hash, []*testAccount) { log.DebugLog()
 	// Create an empty state
 	diskdb, _ := ethdb.NewMemDatabase()
 	db := NewDatabase(diskdb)
@@ -69,7 +69,7 @@ func makeTestState() (Database, common.Hash, []*testAccount) {
 
 // checkStateAccounts cross references a reconstructed state with an expected
 // account array.
-func checkStateAccounts(t *testing.T, db ethdb.Database, root common.Hash, accounts []*testAccount) {
+func checkStateAccounts(t *testing.T, db ethdb.Database, root common.Hash, accounts []*testAccount) { log.DebugLog()
 	// Check root availability and state contents
 	state, err := New(root, NewDatabase(db))
 	if err != nil {
@@ -92,7 +92,7 @@ func checkStateAccounts(t *testing.T, db ethdb.Database, root common.Hash, accou
 }
 
 // checkTrieConsistency checks that all nodes in a (sub-)trie are indeed present.
-func checkTrieConsistency(db ethdb.Database, root common.Hash) error {
+func checkTrieConsistency(db ethdb.Database, root common.Hash) error { log.DebugLog()
 	if v, _ := db.Get(root[:]); v == nil {
 		return nil // Consider a non existent state consistent.
 	}
@@ -107,7 +107,7 @@ func checkTrieConsistency(db ethdb.Database, root common.Hash) error {
 }
 
 // checkStateConsistency checks that all data of a state root is present.
-func checkStateConsistency(db ethdb.Database, root common.Hash) error {
+func checkStateConsistency(db ethdb.Database, root common.Hash) error { log.DebugLog()
 	// Create and iterate a state trie rooted in a sub-node
 	if _, err := db.Get(root.Bytes()); err != nil {
 		return nil // Consider a non existent state consistent.
@@ -123,7 +123,7 @@ func checkStateConsistency(db ethdb.Database, root common.Hash) error {
 }
 
 // Tests that an empty state is not scheduled for syncing.
-func TestEmptyStateSync(t *testing.T) {
+func TestEmptyStateSync(t *testing.T) { log.DebugLog()
 	empty := common.HexToHash("56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421")
 	db, _ := ethdb.NewMemDatabase()
 	if req := NewStateSync(empty, db).Missing(1); len(req) != 0 {
@@ -133,10 +133,10 @@ func TestEmptyStateSync(t *testing.T) {
 
 // Tests that given a root hash, a state can sync iteratively on a single thread,
 // requesting retrieval tasks and returning all of them in one go.
-func TestIterativeStateSyncIndividual(t *testing.T) { testIterativeStateSync(t, 1) }
-func TestIterativeStateSyncBatched(t *testing.T)    { testIterativeStateSync(t, 100) }
+func TestIterativeStateSyncIndividual(t *testing.T) { log.DebugLog() testIterativeStateSync(t, 1) }
+func TestIterativeStateSyncBatched(t *testing.T)    { log.DebugLog() testIterativeStateSync(t, 100) }
 
-func testIterativeStateSync(t *testing.T, batch int) {
+func testIterativeStateSync(t *testing.T, batch int) { log.DebugLog()
 	// Create a random state to copy
 	srcDb, srcRoot, srcAccounts := makeTestState()
 
@@ -168,7 +168,7 @@ func testIterativeStateSync(t *testing.T, batch int) {
 
 // Tests that the trie scheduler can correctly reconstruct the state even if only
 // partial results are returned, and the others sent only later.
-func TestIterativeDelayedStateSync(t *testing.T) {
+func TestIterativeDelayedStateSync(t *testing.T) { log.DebugLog()
 	// Create a random state to copy
 	srcDb, srcRoot, srcAccounts := makeTestState()
 
@@ -202,10 +202,10 @@ func TestIterativeDelayedStateSync(t *testing.T) {
 // Tests that given a root hash, a trie can sync iteratively on a single thread,
 // requesting retrieval tasks and returning all of them in one go, however in a
 // random order.
-func TestIterativeRandomStateSyncIndividual(t *testing.T) { testIterativeRandomStateSync(t, 1) }
-func TestIterativeRandomStateSyncBatched(t *testing.T)    { testIterativeRandomStateSync(t, 100) }
+func TestIterativeRandomStateSyncIndividual(t *testing.T) { log.DebugLog() testIterativeRandomStateSync(t, 1) }
+func TestIterativeRandomStateSyncBatched(t *testing.T)    { log.DebugLog() testIterativeRandomStateSync(t, 100) }
 
-func testIterativeRandomStateSync(t *testing.T, batch int) {
+func testIterativeRandomStateSync(t *testing.T, batch int) { log.DebugLog()
 	// Create a random state to copy
 	srcDb, srcRoot, srcAccounts := makeTestState()
 
@@ -245,7 +245,7 @@ func testIterativeRandomStateSync(t *testing.T, batch int) {
 
 // Tests that the trie scheduler can correctly reconstruct the state even if only
 // partial results are returned (Even those randomly), others sent only later.
-func TestIterativeRandomDelayedStateSync(t *testing.T) {
+func TestIterativeRandomDelayedStateSync(t *testing.T) { log.DebugLog()
 	// Create a random state to copy
 	srcDb, srcRoot, srcAccounts := makeTestState()
 
@@ -290,7 +290,7 @@ func TestIterativeRandomDelayedStateSync(t *testing.T) {
 
 // Tests that at any point in time during a sync, only complete sub-tries are in
 // the database.
-func TestIncompleteStateSync(t *testing.T) {
+func TestIncompleteStateSync(t *testing.T) { log.DebugLog()
 	// Create a random state to copy
 	srcDb, srcRoot, srcAccounts := makeTestState()
 

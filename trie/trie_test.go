@@ -36,19 +36,19 @@ import (
 	"github.com/ethereum/go-ethereum/rlp"
 )
 
-func init() {
+func init() { log.DebugLog()
 	spew.Config.Indent = "    "
 	spew.Config.DisableMethods = false
 }
 
 // Used for testing
-func newEmpty() *Trie {
+func newEmpty() *Trie { log.DebugLog()
 	diskdb, _ := ethdb.NewMemDatabase()
 	trie, _ := New(common.Hash{}, NewDatabase(diskdb))
 	return trie
 }
 
-func TestEmptyTrie(t *testing.T) {
+func TestEmptyTrie(t *testing.T) { log.DebugLog()
 	var trie Trie
 	res := trie.Hash()
 	exp := emptyRoot
@@ -57,7 +57,7 @@ func TestEmptyTrie(t *testing.T) {
 	}
 }
 
-func TestNull(t *testing.T) {
+func TestNull(t *testing.T) { log.DebugLog()
 	var trie Trie
 	key := make([]byte, 32)
 	value := []byte("test")
@@ -67,7 +67,7 @@ func TestNull(t *testing.T) {
 	}
 }
 
-func TestMissingRoot(t *testing.T) {
+func TestMissingRoot(t *testing.T) { log.DebugLog()
 	diskdb, _ := ethdb.NewMemDatabase()
 	trie, err := New(common.HexToHash("0beec7b5ea3f0fdbc95d0dd47f3c5bc275da8a33"), NewDatabase(diskdb))
 	if trie != nil {
@@ -78,10 +78,10 @@ func TestMissingRoot(t *testing.T) {
 	}
 }
 
-func TestMissingNodeDisk(t *testing.T)    { testMissingNode(t, false) }
-func TestMissingNodeMemonly(t *testing.T) { testMissingNode(t, true) }
+func TestMissingNodeDisk(t *testing.T)    { log.DebugLog() testMissingNode(t, false) }
+func TestMissingNodeMemonly(t *testing.T) { log.DebugLog() testMissingNode(t, true) }
 
-func testMissingNode(t *testing.T, memonly bool) {
+func testMissingNode(t *testing.T, memonly bool) { log.DebugLog()
 	diskdb, _ := ethdb.NewMemDatabase()
 	triedb := NewDatabase(diskdb)
 
@@ -153,7 +153,7 @@ func testMissingNode(t *testing.T, memonly bool) {
 	}
 }
 
-func TestInsert(t *testing.T) {
+func TestInsert(t *testing.T) { log.DebugLog()
 	trie := newEmpty()
 
 	updateString(trie, "doe", "reindeer")
@@ -179,7 +179,7 @@ func TestInsert(t *testing.T) {
 	}
 }
 
-func TestGet(t *testing.T) {
+func TestGet(t *testing.T) { log.DebugLog()
 	trie := newEmpty()
 	updateString(trie, "doe", "reindeer")
 	updateString(trie, "dog", "puppy")
@@ -203,7 +203,7 @@ func TestGet(t *testing.T) {
 	}
 }
 
-func TestDelete(t *testing.T) {
+func TestDelete(t *testing.T) { log.DebugLog()
 	trie := newEmpty()
 	vals := []struct{ k, v string }{
 		{"do", "verb"},
@@ -230,7 +230,7 @@ func TestDelete(t *testing.T) {
 	}
 }
 
-func TestEmptyValues(t *testing.T) {
+func TestEmptyValues(t *testing.T) { log.DebugLog()
 	trie := newEmpty()
 
 	vals := []struct{ k, v string }{
@@ -254,7 +254,7 @@ func TestEmptyValues(t *testing.T) {
 	}
 }
 
-func TestReplication(t *testing.T) {
+func TestReplication(t *testing.T) { log.DebugLog()
 	trie := newEmpty()
 	vals := []struct{ k, v string }{
 		{"do", "verb"},
@@ -311,7 +311,7 @@ func TestReplication(t *testing.T) {
 	}
 }
 
-func TestLargeValue(t *testing.T) {
+func TestLargeValue(t *testing.T) { log.DebugLog()
 	trie := newEmpty()
 	trie.Update([]byte("key1"), []byte{99, 99, 99, 99})
 	trie.Update([]byte("key2"), bytes.Repeat([]byte{1}, 32))
@@ -323,14 +323,14 @@ type countingDB struct {
 	gets map[string]int
 }
 
-func (db *countingDB) Get(key []byte) ([]byte, error) {
+func (db *countingDB) Get(key []byte) ([]byte, error) { log.DebugLog()
 	db.gets[string(key)]++
 	return db.Database.Get(key)
 }
 
 // TestCacheUnload checks that decoded nodes are unloaded after a
 // certain number of commit operations.
-func TestCacheUnload(t *testing.T) {
+func TestCacheUnload(t *testing.T) { log.DebugLog()
 	// Create test trie with two branches.
 	trie := newEmpty()
 	key1 := "---------------------------------"
@@ -382,7 +382,7 @@ const (
 	opMax // boundary value, not an actual op
 )
 
-func (randTest) Generate(r *rand.Rand, size int) reflect.Value {
+func (randTest) Generate(r *rand.Rand, size int) reflect.Value { log.DebugLog()
 	var allKeys [][]byte
 	genKey := func() []byte {
 		if len(allKeys) < 2 || r.Intn(100) < 10 {
@@ -412,7 +412,7 @@ func (randTest) Generate(r *rand.Rand, size int) reflect.Value {
 	return reflect.ValueOf(steps)
 }
 
-func runRandTest(rt randTest) bool {
+func runRandTest(rt randTest) bool { log.DebugLog()
 	diskdb, _ := ethdb.NewMemDatabase()
 	triedb := NewDatabase(diskdb)
 
@@ -469,7 +469,7 @@ func runRandTest(rt randTest) bool {
 	return true
 }
 
-func checkCacheInvariant(n, parent node, parentCachegen uint16, parentDirty bool, depth int) error {
+func checkCacheInvariant(n, parent node, parentCachegen uint16, parentDirty bool, depth int) error { log.DebugLog()
 	var children []node
 	var flag nodeFlag
 	switch n := n.(type) {
@@ -503,7 +503,7 @@ func checkCacheInvariant(n, parent node, parentCachegen uint16, parentDirty bool
 	return nil
 }
 
-func TestRandom(t *testing.T) {
+func TestRandom(t *testing.T) { log.DebugLog()
 	if err := quick.Check(runRandTest, nil); err != nil {
 		if cerr, ok := err.(*quick.CheckError); ok {
 			t.Fatalf("random test iteration %d failed: %s", cerr.Count, spew.Sdump(cerr.In))
@@ -512,14 +512,14 @@ func TestRandom(t *testing.T) {
 	}
 }
 
-func BenchmarkGet(b *testing.B)      { benchGet(b, false) }
-func BenchmarkGetDB(b *testing.B)    { benchGet(b, true) }
-func BenchmarkUpdateBE(b *testing.B) { benchUpdate(b, binary.BigEndian) }
-func BenchmarkUpdateLE(b *testing.B) { benchUpdate(b, binary.LittleEndian) }
+func BenchmarkGet(b *testing.B)      { log.DebugLog() benchGet(b, false) }
+func BenchmarkGetDB(b *testing.B)    { log.DebugLog() benchGet(b, true) }
+func BenchmarkUpdateBE(b *testing.B) { log.DebugLog() benchUpdate(b, binary.BigEndian) }
+func BenchmarkUpdateLE(b *testing.B) { log.DebugLog() benchUpdate(b, binary.LittleEndian) }
 
 const benchElemCount = 20000
 
-func benchGet(b *testing.B, commit bool) {
+func benchGet(b *testing.B, commit bool) { log.DebugLog()
 	trie := new(Trie)
 	if commit {
 		_, tmpdb := tempDB()
@@ -548,7 +548,7 @@ func benchGet(b *testing.B, commit bool) {
 	}
 }
 
-func benchUpdate(b *testing.B, e binary.ByteOrder) *Trie {
+func benchUpdate(b *testing.B, e binary.ByteOrder) *Trie { log.DebugLog()
 	trie := newEmpty()
 	k := make([]byte, 32)
 	for i := 0; i < b.N; i++ {
@@ -562,7 +562,7 @@ func benchUpdate(b *testing.B, e binary.ByteOrder) *Trie {
 // we cannot use b.N as the number of hashing rouns, since all rounds apart from
 // the first one will be NOOP. As such, we'll use b.N as the number of account to
 // insert into the trie before measuring the hashing.
-func BenchmarkHash(b *testing.B) {
+func BenchmarkHash(b *testing.B) { log.DebugLog()
 	// Make the random benchmark deterministic
 	random := rand.New(rand.NewSource(0))
 
@@ -593,7 +593,7 @@ func BenchmarkHash(b *testing.B) {
 	trie.Hash()
 }
 
-func tempDB() (string, *Database) {
+func tempDB() (string, *Database) { log.DebugLog()
 	dir, err := ioutil.TempDir("", "trie-bench")
 	if err != nil {
 		panic(fmt.Sprintf("can't create temporary directory: %v", err))
@@ -605,14 +605,14 @@ func tempDB() (string, *Database) {
 	return dir, NewDatabase(diskdb)
 }
 
-func getString(trie *Trie, k string) []byte {
+func getString(trie *Trie, k string) []byte { log.DebugLog()
 	return trie.Get([]byte(k))
 }
 
-func updateString(trie *Trie, k, v string) {
+func updateString(trie *Trie, k, v string) { log.DebugLog()
 	trie.Update([]byte(k), []byte(v))
 }
 
-func deleteString(trie *Trie, k string) {
+func deleteString(trie *Trie, k string) { log.DebugLog()
 	trie.Delete([]byte(k))
 }

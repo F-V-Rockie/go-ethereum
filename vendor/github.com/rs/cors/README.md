@@ -15,7 +15,7 @@ import (
     "github.com/rs/cors"
 )
 
-func main() {
+func main() { log.DebugLog()
     mux := http.NewServeMux()
     mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
         w.Header().Set("Content-Type", "application/json")

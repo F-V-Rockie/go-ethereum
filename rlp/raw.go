@@ -30,13 +30,13 @@ var rawValueType = reflect.TypeOf(RawValue{})
 
 // ListSize returns the encoded size of an RLP list with the given
 // content size.
-func ListSize(contentSize uint64) uint64 {
+func ListSize(contentSize uint64) uint64 { log.DebugLog()
 	return uint64(headsize(contentSize)) + contentSize
 }
 
 // Split returns the content of first RLP value and any
 // bytes after the value as subslices of b.
-func Split(b []byte) (k Kind, content, rest []byte, err error) {
+func Split(b []byte) (k Kind, content, rest []byte, err error) { log.DebugLog()
 	k, ts, cs, err := readKind(b)
 	if err != nil {
 		return 0, nil, b, err
@@ -46,7 +46,7 @@ func Split(b []byte) (k Kind, content, rest []byte, err error) {
 
 // SplitString splits b into the content of an RLP string
 // and any remaining bytes after the string.
-func SplitString(b []byte) (content, rest []byte, err error) {
+func SplitString(b []byte) (content, rest []byte, err error) { log.DebugLog()
 	k, content, rest, err := Split(b)
 	if err != nil {
 		return nil, b, err
@@ -59,7 +59,7 @@ func SplitString(b []byte) (content, rest []byte, err error) {
 
 // SplitList splits b into the content of a list and any remaining
 // bytes after the list.
-func SplitList(b []byte) (content, rest []byte, err error) {
+func SplitList(b []byte) (content, rest []byte, err error) { log.DebugLog()
 	k, content, rest, err := Split(b)
 	if err != nil {
 		return nil, b, err
@@ -71,7 +71,7 @@ func SplitList(b []byte) (content, rest []byte, err error) {
 }
 
 // CountValues counts the number of encoded values in b.
-func CountValues(b []byte) (int, error) {
+func CountValues(b []byte) (int, error) { log.DebugLog()
 	i := 0
 	for ; len(b) > 0; i++ {
 		_, tagsize, size, err := readKind(b)
@@ -83,7 +83,7 @@ func CountValues(b []byte) (int, error) {
 	return i, nil
 }
 
-func readKind(buf []byte) (k Kind, tagsize, contentsize uint64, err error) {
+func readKind(buf []byte) (k Kind, tagsize, contentsize uint64, err error) { log.DebugLog()
 	if len(buf) == 0 {
 		return 0, 0, 0, io.ErrUnexpectedEOF
 	}
@@ -124,7 +124,7 @@ func readKind(buf []byte) (k Kind, tagsize, contentsize uint64, err error) {
 	return k, tagsize, contentsize, err
 }
 
-func readSize(b []byte, slen byte) (uint64, error) {
+func readSize(b []byte, slen byte) (uint64, error) { log.DebugLog()
 	if int(slen) > len(b) {
 		return 0, io.ErrUnexpectedEOF
 	}

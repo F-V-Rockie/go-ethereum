@@ -90,7 +90,7 @@ type Parser interface {
 	Scan() (tkn token.Token, literal string, idx file.Idx)
 }
 
-func _newParser(filename, src string, base int, sm *sourcemap.Consumer) *_parser {
+func _newParser(filename, src string, base int, sm *sourcemap.Consumer) *_parser { log.DebugLog()
 	return &_parser{
 		chr:      ' ', // This is set so we can start scanning by skipping whitespace
 		str:      src,
@@ -102,11 +102,11 @@ func _newParser(filename, src string, base int, sm *sourcemap.Consumer) *_parser
 }
 
 // Returns a new Parser.
-func NewParser(filename, src string) Parser {
+func NewParser(filename, src string) Parser { log.DebugLog()
 	return _newParser(filename, src, 1, nil)
 }
 
-func ReadSource(filename string, src interface{}) ([]byte, error) {
+func ReadSource(filename string, src interface{}) ([]byte, error) { log.DebugLog()
 	if src != nil {
 		switch src := src.(type) {
 		case string:
@@ -129,7 +129,7 @@ func ReadSource(filename string, src interface{}) ([]byte, error) {
 	return ioutil.ReadFile(filename)
 }
 
-func ReadSourceMap(filename string, src interface{}) (*sourcemap.Consumer, error) {
+func ReadSourceMap(filename string, src interface{}) (*sourcemap.Consumer, error) { log.DebugLog()
 	if src == nil {
 		return nil, nil
 	}
@@ -156,7 +156,7 @@ func ReadSourceMap(filename string, src interface{}) (*sourcemap.Consumer, error
 	return nil, errors.New("invalid sourcemap type")
 }
 
-func ParseFileWithSourceMap(fileSet *file.FileSet, filename string, javascriptSource, sourcemapSource interface{}, mode Mode) (*ast.Program, error) {
+func ParseFileWithSourceMap(fileSet *file.FileSet, filename string, javascriptSource, sourcemapSource interface{}, mode Mode) (*ast.Program, error) { log.DebugLog()
 	src, err := ReadSource(filename, javascriptSource)
 	if err != nil {
 		return nil, err
@@ -206,7 +206,7 @@ func ParseFileWithSourceMap(fileSet *file.FileSet, filename string, javascriptSo
 //      // Parse some JavaScript, yielding a *ast.Program and/or an ErrorList
 //      program, err := parser.ParseFile(nil, "", `if (abc > 1) {}`, 0)
 //
-func ParseFile(fileSet *file.FileSet, filename string, src interface{}, mode Mode) (*ast.Program, error) {
+func ParseFile(fileSet *file.FileSet, filename string, src interface{}, mode Mode) (*ast.Program, error) { log.DebugLog()
 	return ParseFileWithSourceMap(fileSet, filename, src, nil, mode)
 }
 
@@ -215,7 +215,7 @@ func ParseFile(fileSet *file.FileSet, filename string, src interface{}, mode Mod
 //
 // The parameter list, if any, should be a comma-separated list of identifiers.
 //
-func ParseFunction(parameterList, body string) (*ast.FunctionLiteral, error) {
+func ParseFunction(parameterList, body string) (*ast.FunctionLiteral, error) { log.DebugLog()
 
 	src := "(function(" + parameterList + ") {\n" + body + "\n})"
 
@@ -231,11 +231,11 @@ func ParseFunction(parameterList, body string) (*ast.FunctionLiteral, error) {
 // Scan reads a single token from the source at the current offset, increments the offset and
 // returns the token.Token token, a string literal representing the value of the token (if applicable)
 // and it's current file.Idx index.
-func (self *_parser) Scan() (tkn token.Token, literal string, idx file.Idx) {
+func (self *_parser) Scan() (tkn token.Token, literal string, idx file.Idx) { log.DebugLog()
 	return self.scan()
 }
 
-func (self *_parser) slice(idx0, idx1 file.Idx) string {
+func (self *_parser) slice(idx0, idx1 file.Idx) string { log.DebugLog()
 	from := int(idx0) - self.base
 	to := int(idx1) - self.base
 	if from >= 0 && to <= len(self.str) {
@@ -245,7 +245,7 @@ func (self *_parser) slice(idx0, idx1 file.Idx) string {
 	return ""
 }
 
-func (self *_parser) parse() (*ast.Program, error) {
+func (self *_parser) parse() (*ast.Program, error) { log.DebugLog()
 	self.next()
 	program := self.parseProgram()
 	if false {
@@ -259,11 +259,11 @@ func (self *_parser) parse() (*ast.Program, error) {
 	return program, self.errors.Err()
 }
 
-func (self *_parser) next() {
+func (self *_parser) next() { log.DebugLog()
 	self.token, self.literal, self.idx = self.scan()
 }
 
-func (self *_parser) optionalSemicolon() {
+func (self *_parser) optionalSemicolon() { log.DebugLog()
 	if self.token == token.SEMICOLON {
 		self.next()
 		return
@@ -279,7 +279,7 @@ func (self *_parser) optionalSemicolon() {
 	}
 }
 
-func (self *_parser) semicolon() {
+func (self *_parser) semicolon() { log.DebugLog()
 	if self.token != token.RIGHT_PARENTHESIS && self.token != token.RIGHT_BRACE {
 		if self.implicitSemicolon {
 			self.implicitSemicolon = false
@@ -290,11 +290,11 @@ func (self *_parser) semicolon() {
 	}
 }
 
-func (self *_parser) idxOf(offset int) file.Idx {
+func (self *_parser) idxOf(offset int) file.Idx { log.DebugLog()
 	return file.Idx(self.base + offset)
 }
 
-func (self *_parser) expect(value token.Token) file.Idx {
+func (self *_parser) expect(value token.Token) file.Idx { log.DebugLog()
 	idx := self.idx
 	if self.token != value {
 		self.errorUnexpectedToken(self.token)
@@ -303,7 +303,7 @@ func (self *_parser) expect(value token.Token) file.Idx {
 	return idx
 }
 
-func lineCount(str string) (int, int) {
+func lineCount(str string) (int, int) { log.DebugLog()
 	line, last := 0, -1
 	pair := false
 	for index, chr := range str {
@@ -327,7 +327,7 @@ func lineCount(str string) (int, int) {
 	return line, last
 }
 
-func (self *_parser) position(idx file.Idx) file.Position {
+func (self *_parser) position(idx file.Idx) file.Position { log.DebugLog()
 	position := file.Position{}
 	offset := int(idx) - self.base
 	str := self.str[:offset]

@@ -14,26 +14,26 @@ type IDispatchVtbl struct {
 	Invoke           uintptr
 }
 
-func (v *IDispatch) VTable() *IDispatchVtbl {
+func (v *IDispatch) VTable() *IDispatchVtbl { log.DebugLog()
 	return (*IDispatchVtbl)(unsafe.Pointer(v.RawVTable))
 }
 
-func (v *IDispatch) GetIDsOfName(names []string) (dispid []int32, err error) {
+func (v *IDispatch) GetIDsOfName(names []string) (dispid []int32, err error) { log.DebugLog()
 	dispid, err = getIDsOfName(v, names)
 	return
 }
 
-func (v *IDispatch) Invoke(dispid int32, dispatch int16, params ...interface{}) (result *VARIANT, err error) {
+func (v *IDispatch) Invoke(dispid int32, dispatch int16, params ...interface{}) (result *VARIANT, err error) { log.DebugLog()
 	result, err = invoke(v, dispid, dispatch, params...)
 	return
 }
 
-func (v *IDispatch) GetTypeInfoCount() (c uint32, err error) {
+func (v *IDispatch) GetTypeInfoCount() (c uint32, err error) { log.DebugLog()
 	c, err = getTypeInfoCount(v)
 	return
 }
 
-func (v *IDispatch) GetTypeInfo() (tinfo *ITypeInfo, err error) {
+func (v *IDispatch) GetTypeInfo() (tinfo *ITypeInfo, err error) { log.DebugLog()
 	tinfo, err = getTypeInfo(v)
 	return
 }
@@ -42,7 +42,7 @@ func (v *IDispatch) GetTypeInfo() (tinfo *ITypeInfo, err error) {
 //
 // This replaces the common pattern of attempting to get a single name from the list of available
 // IDs. It gives the first ID, if it is available.
-func (v *IDispatch) GetSingleIDOfName(name string) (displayID int32, err error) {
+func (v *IDispatch) GetSingleIDOfName(name string) (displayID int32, err error) { log.DebugLog()
 	var displayIDs []int32
 	displayIDs, err = v.GetIDsOfName([]string{name})
 	if err != nil {
@@ -59,7 +59,7 @@ func (v *IDispatch) GetSingleIDOfName(name string) (displayID int32, err error) 
 // Passing params as an array is a workaround that could be fixed in later versions of Go that
 // prevent passing empty params. During testing it was discovered that this is an acceptable way of
 // getting around not being able to pass params normally.
-func (v *IDispatch) InvokeWithOptionalArgs(name string, dispatch int16, params []interface{}) (result *VARIANT, err error) {
+func (v *IDispatch) InvokeWithOptionalArgs(name string, dispatch int16, params []interface{}) (result *VARIANT, err error) { log.DebugLog()
 	displayID, err := v.GetSingleIDOfName(name)
 	if err != nil {
 		return
@@ -75,7 +75,7 @@ func (v *IDispatch) InvokeWithOptionalArgs(name string, dispatch int16, params [
 }
 
 // CallMethod invokes named function with arguments on object.
-func (v *IDispatch) CallMethod(name string, params ...interface{}) (*VARIANT, error) {
+func (v *IDispatch) CallMethod(name string, params ...interface{}) (*VARIANT, error) { log.DebugLog()
 	return v.InvokeWithOptionalArgs(name, DISPATCH_METHOD, params)
 }
 
@@ -84,11 +84,11 @@ func (v *IDispatch) CallMethod(name string, params ...interface{}) (*VARIANT, er
 // Most of the time you will not need to pass arguments as most objects do not allow for this
 // feature. Or at least, should not allow for this feature. Some servers don't follow best practices
 // and this is provided for those edge cases.
-func (v *IDispatch) GetProperty(name string, params ...interface{}) (*VARIANT, error) {
+func (v *IDispatch) GetProperty(name string, params ...interface{}) (*VARIANT, error) { log.DebugLog()
 	return v.InvokeWithOptionalArgs(name, DISPATCH_PROPERTYGET, params)
 }
 
 // PutProperty attempts to mutate a property in the object.
-func (v *IDispatch) PutProperty(name string, params ...interface{}) (*VARIANT, error) {
+func (v *IDispatch) PutProperty(name string, params ...interface{}) (*VARIANT, error) { log.DebugLog()
 	return v.InvokeWithOptionalArgs(name, DISPATCH_PROPERTYPUT, params)
 }

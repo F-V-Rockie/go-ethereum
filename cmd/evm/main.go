@@ -24,6 +24,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/cmd/utils"
 	"gopkg.in/urfave/cli.v1"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 var gitCommit = "" // Git SHA1 commit hash of the release (set via linker flags)
@@ -112,7 +113,7 @@ var (
 	}
 )
 
-func init() {
+func init() { log.DebugLog()
 	app.Flags = []cli.Flag{
 		CreateFlag,
 		DebugFlag,
@@ -142,7 +143,7 @@ func init() {
 	}
 }
 
-func main() {
+func main() { log.DebugLog()
 	if err := app.Run(os.Args); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)

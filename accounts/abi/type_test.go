@@ -30,7 +30,7 @@ import (
 type typeWithoutStringer Type
 
 // Tests that all allowed types get recognized by the type parser.
-func TestTypeRegexp(t *testing.T) {
+func TestTypeRegexp(t *testing.T) { log.DebugLog()
 	tests := []struct {
 		blob string
 		kind Type
@@ -107,7 +107,7 @@ func TestTypeRegexp(t *testing.T) {
 	}
 }
 
-func TestTypeCheck(t *testing.T) {
+func TestTypeCheck(t *testing.T) { log.DebugLog()
 	for i, test := range []struct {
 		typ   string
 		input interface{}

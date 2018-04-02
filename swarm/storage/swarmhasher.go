@@ -34,7 +34,7 @@ type HashWithLength struct {
 	hash.Hash
 }
 
-func (self *HashWithLength) ResetWithLength(length []byte) {
+func (self *HashWithLength) ResetWithLength(length []byte) { log.DebugLog()
 	self.Reset()
 	self.Write(length)
 }

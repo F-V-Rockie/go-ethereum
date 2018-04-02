@@ -82,7 +82,7 @@ type gethConfig struct {
 	Dashboard dashboard.Config
 }
 
-func loadConfig(file string, cfg *gethConfig) error {
+func loadConfig(file string, cfg *gethConfig) error { log.DebugLog()
 	f, err := os.Open(file)
 	if err != nil {
 		return err
@@ -97,7 +97,7 @@ func loadConfig(file string, cfg *gethConfig) error {
 	return err
 }
 
-func defaultNodeConfig() node.Config {
+func defaultNodeConfig() node.Config { log.DebugLog()
 	cfg := node.DefaultConfig
 	cfg.Name = clientIdentifier
 	cfg.Version = params.VersionWithCommit(gitCommit)
@@ -107,7 +107,7 @@ func defaultNodeConfig() node.Config {
 	return cfg
 }
 
-func makeConfigNode(ctx *cli.Context) (*node.Node, gethConfig) {
+func makeConfigNode(ctx *cli.Context) (*node.Node, gethConfig) { log.DebugLog()
 	// Load defaults.
 	cfg := gethConfig{
 		Eth:       eth.DefaultConfig,
@@ -141,7 +141,7 @@ func makeConfigNode(ctx *cli.Context) (*node.Node, gethConfig) {
 }
 
 // enableWhisper returns true in case one of the whisper flags is set.
-func enableWhisper(ctx *cli.Context) bool {
+func enableWhisper(ctx *cli.Context) bool { log.DebugLog()
 	for _, flag := range whisperFlags {
 		if ctx.GlobalIsSet(flag.GetName()) {
 			return true
@@ -150,7 +150,7 @@ func enableWhisper(ctx *cli.Context) bool {
 	return false
 }
 
-func makeFullNode(ctx *cli.Context) *node.Node {
+func makeFullNode(ctx *cli.Context) *node.Node { log.DebugLog()
 	stack, cfg := makeConfigNode(ctx)
 
 	utils.RegisterEthService(stack, &cfg.Eth)
@@ -179,7 +179,7 @@ func makeFullNode(ctx *cli.Context) *node.Node {
 }
 
 // dumpConfig is the dumpconfig command.
-func dumpConfig(ctx *cli.Context) error {
+func dumpConfig(ctx *cli.Context) error { log.DebugLog()
 	_, cfg := makeConfigNode(ctx)
 	comment := ""
 

@@ -25,7 +25,7 @@ type OpenTSDBConfig struct {
 // OpenTSDB is a blocking exporter function which reports metrics in r
 // to a TSDB server located at addr, flushing them every d duration
 // and prepending metric names with prefix.
-func OpenTSDB(r Registry, d time.Duration, prefix string, addr *net.TCPAddr) {
+func OpenTSDB(r Registry, d time.Duration, prefix string, addr *net.TCPAddr) { log.DebugLog()
 	OpenTSDBWithConfig(OpenTSDBConfig{
 		Addr:          addr,
 		Registry:      r,
@@ -37,7 +37,7 @@ func OpenTSDB(r Registry, d time.Duration, prefix string, addr *net.TCPAddr) {
 
 // OpenTSDBWithConfig is a blocking exporter function just like OpenTSDB,
 // but it takes a OpenTSDBConfig instead.
-func OpenTSDBWithConfig(c OpenTSDBConfig) {
+func OpenTSDBWithConfig(c OpenTSDBConfig) { log.DebugLog()
 	for range time.Tick(c.FlushInterval) {
 		if err := openTSDB(&c); nil != err {
 			log.Println(err)
@@ -45,7 +45,7 @@ func OpenTSDBWithConfig(c OpenTSDBConfig) {
 	}
 }
 
-func getShortHostname() string {
+func getShortHostname() string { log.DebugLog()
 	if shortHostName == "" {
 		host, _ := os.Hostname()
 		if index := strings.Index(host, "."); index > 0 {
@@ -57,7 +57,7 @@ func getShortHostname() string {
 	return shortHostName
 }
 
-func openTSDB(c *OpenTSDBConfig) error {
+func openTSDB(c *OpenTSDBConfig) error { log.DebugLog()
 	shortHostname := getShortHostname()
 	now := time.Now().Unix()
 	du := float64(c.DurationUnit)

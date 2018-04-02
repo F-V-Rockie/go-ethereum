@@ -37,7 +37,7 @@ const (
 
 // Tests that a node embedded within a console can be started up properly and
 // then terminated by closing the input stream.
-func TestConsoleWelcome(t *testing.T) {
+func TestConsoleWelcome(t *testing.T) { log.DebugLog()
 	coinbase := "0x8605cdbbdb6d264aa742e77020dcbc58fcdce182"
 
 	// Start a geth console, make sure it's cleaned up and terminate the console
@@ -70,7 +70,7 @@ at block: 0 ({{niltime}})
 }
 
 // Tests that a console can be attached to a running node via various means.
-func TestIPCAttachWelcome(t *testing.T) {
+func TestIPCAttachWelcome(t *testing.T) { log.DebugLog()
 	// Configure the instance for IPC attachement
 	coinbase := "0x8605cdbbdb6d264aa742e77020dcbc58fcdce182"
 	var ipc string
@@ -94,7 +94,7 @@ func TestIPCAttachWelcome(t *testing.T) {
 	geth.ExpectExit()
 }
 
-func TestHTTPAttachWelcome(t *testing.T) {
+func TestHTTPAttachWelcome(t *testing.T) { log.DebugLog()
 	coinbase := "0x8605cdbbdb6d264aa742e77020dcbc58fcdce182"
 	port := strconv.Itoa(trulyRandInt(1024, 65536)) // Yeah, sometimes this will fail, sorry :P
 	geth := runGeth(t,
@@ -108,7 +108,7 @@ func TestHTTPAttachWelcome(t *testing.T) {
 	geth.ExpectExit()
 }
 
-func TestWSAttachWelcome(t *testing.T) {
+func TestWSAttachWelcome(t *testing.T) { log.DebugLog()
 	coinbase := "0x8605cdbbdb6d264aa742e77020dcbc58fcdce182"
 	port := strconv.Itoa(trulyRandInt(1024, 65536)) // Yeah, sometimes this will fail, sorry :P
 
@@ -123,7 +123,7 @@ func TestWSAttachWelcome(t *testing.T) {
 	geth.ExpectExit()
 }
 
-func testAttachWelcome(t *testing.T, geth *testgeth, endpoint, apis string) {
+func testAttachWelcome(t *testing.T, geth *testgeth, endpoint, apis string) { log.DebugLog()
 	// Attach to a running geth note and terminate immediately
 	attach := runGeth(t, "attach", endpoint)
 	defer attach.ExpectExit()
@@ -157,7 +157,7 @@ at block: 0 ({{niltime}}){{if ipc}}
 
 // trulyRandInt generates a crypto random integer used by the console tests to
 // not clash network ports with other tests running cocurrently.
-func trulyRandInt(lo, hi int) int {
+func trulyRandInt(lo, hi int) int { log.DebugLog()
 	num, _ := rand.Int(rand.Reader, big.NewInt(int64(hi-lo)))
 	return int(num.Int64()) + lo
 }

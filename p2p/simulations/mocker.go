@@ -36,13 +36,13 @@ var mockerList = map[string]func(net *Network, quit chan struct{}, nodeCount int
 }
 
 //Lookup a mocker by its name, returns the mockerFn
-func LookupMocker(mockerType string) func(net *Network, quit chan struct{}, nodeCount int) {
+func LookupMocker(mockerType string) func(net *Network, quit chan struct{}, nodeCount int) { log.DebugLog()
 	return mockerList[mockerType]
 }
 
 //Get a list of mockers (keys of the map)
 //Useful for frontend to build available mocker selection
-func GetMockerList() []string {
+func GetMockerList() []string { log.DebugLog()
 	list := make([]string, 0, len(mockerList))
 	for k := range mockerList {
 		list = append(list, k)
@@ -51,7 +51,7 @@ func GetMockerList() []string {
 }
 
 //The boot mockerFn only connects the node in a ring and doesn't do anything else
-func boot(net *Network, quit chan struct{}, nodeCount int) {
+func boot(net *Network, quit chan struct{}, nodeCount int) { log.DebugLog()
 	_, err := connectNodesInRing(net, nodeCount)
 	if err != nil {
 		panic("Could not startup node network for mocker")
@@ -59,7 +59,7 @@ func boot(net *Network, quit chan struct{}, nodeCount int) {
 }
 
 //The startStop mockerFn stops and starts nodes in a defined period (ticker)
-func startStop(net *Network, quit chan struct{}, nodeCount int) {
+func startStop(net *Network, quit chan struct{}, nodeCount int) { log.DebugLog()
 	nodes, err := connectNodesInRing(net, nodeCount)
 	if err != nil {
 		panic("Could not startup node network for mocker")
@@ -99,7 +99,7 @@ func startStop(net *Network, quit chan struct{}, nodeCount int) {
 //(the implementation could probably be improved):
 //nodes are connected in a ring, then a varying number of random nodes is selected,
 //mocker then stops and starts them in random intervals, and continues the loop
-func probabilistic(net *Network, quit chan struct{}, nodeCount int) {
+func probabilistic(net *Network, quit chan struct{}, nodeCount int) { log.DebugLog()
 	nodes, err := connectNodesInRing(net, nodeCount)
 	if err != nil {
 		panic("Could not startup node network for mocker")
@@ -162,7 +162,7 @@ func probabilistic(net *Network, quit chan struct{}, nodeCount int) {
 }
 
 //connect nodeCount number of nodes in a ring
-func connectNodesInRing(net *Network, nodeCount int) ([]discover.NodeID, error) {
+func connectNodesInRing(net *Network, nodeCount int) ([]discover.NodeID, error) { log.DebugLog()
 	ids := make([]discover.NodeID, nodeCount)
 	for i := 0; i < nodeCount; i++ {
 		node, err := net.NewNode()

@@ -25,7 +25,7 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 )
 
-func TestEnvelopeOpenAcceptsOnlyOneKeyTypeInFilter(t *testing.T) {
+func TestEnvelopeOpenAcceptsOnlyOneKeyTypeInFilter(t *testing.T) { log.DebugLog()
 	symKey := make([]byte, aesKeyLength)
 	mrand.Read(symKey)
 

@@ -26,7 +26,7 @@ type testWrsItem struct {
 	widx *int
 }
 
-func (t *testWrsItem) Weight() int64 {
+func (t *testWrsItem) Weight() int64 { log.DebugLog()
 	w := *t.widx
 	if w == -1 || w == t.idx {
 		return int64(t.idx + 1)
@@ -34,7 +34,7 @@ func (t *testWrsItem) Weight() int64 {
 	return 0
 }
 
-func TestWeightedRandomSelect(t *testing.T) {
+func TestWeightedRandomSelect(t *testing.T) { log.DebugLog()
 	testFn := func(cnt int) {
 		s := newWeightedRandomSelect()
 		w := -1

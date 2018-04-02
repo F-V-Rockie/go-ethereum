@@ -29,12 +29,12 @@ import (
 	"github.com/ethereum/go-ethereum/trie"
 )
 
-func NewState(ctx context.Context, head *types.Header, odr OdrBackend) *state.StateDB {
+func NewState(ctx context.Context, head *types.Header, odr OdrBackend) *state.StateDB { log.DebugLog()
 	state, _ := state.New(head.Root, NewStateDatabase(ctx, head, odr))
 	return state
 }
 
-func NewStateDatabase(ctx context.Context, head *types.Header, odr OdrBackend) state.Database {
+func NewStateDatabase(ctx context.Context, head *types.Header, odr OdrBackend) state.Database { log.DebugLog()
 	return &odrDatabase{ctx, StateTrieID(head), odr}
 }
 
@@ -44,15 +44,15 @@ type odrDatabase struct {
 	backend OdrBackend
 }
 
-func (db *odrDatabase) OpenTrie(root common.Hash) (state.Trie, error) {
+func (db *odrDatabase) OpenTrie(root common.Hash) (state.Trie, error) { log.DebugLog()
 	return &odrTrie{db: db, id: db.id}, nil
 }
 
-func (db *odrDatabase) OpenStorageTrie(addrHash, root common.Hash) (state.Trie, error) {
+func (db *odrDatabase) OpenStorageTrie(addrHash, root common.Hash) (state.Trie, error) { log.DebugLog()
 	return &odrTrie{db: db, id: StorageTrieID(db.id, addrHash, root)}, nil
 }
 
-func (db *odrDatabase) CopyTrie(t state.Trie) state.Trie {
+func (db *odrDatabase) CopyTrie(t state.Trie) state.Trie { log.DebugLog()
 	switch t := t.(type) {
 	case *odrTrie:
 		cpy := &odrTrie{db: t.db, id: t.id}
@@ -66,7 +66,7 @@ func (db *odrDatabase) CopyTrie(t state.Trie) state.Trie {
 	}
 }
 
-func (db *odrDatabase) ContractCode(addrHash, codeHash common.Hash) ([]byte, error) {
+func (db *odrDatabase) ContractCode(addrHash, codeHash common.Hash) ([]byte, error) { log.DebugLog()
 	if codeHash == sha3_nil {
 		return nil, nil
 	}
@@ -80,12 +80,12 @@ func (db *odrDatabase) ContractCode(addrHash, codeHash common.Hash) ([]byte, err
 	return req.Data, err
 }
 
-func (db *odrDatabase) ContractCodeSize(addrHash, codeHash common.Hash) (int, error) {
+func (db *odrDatabase) ContractCodeSize(addrHash, codeHash common.Hash) (int, error) { log.DebugLog()
 	code, err := db.ContractCode(addrHash, codeHash)
 	return len(code), err
 }
 
-func (db *odrDatabase) TrieDB() *trie.Database {
+func (db *odrDatabase) TrieDB() *trie.Database { log.DebugLog()
 	return nil
 }
 
@@ -95,7 +95,7 @@ type odrTrie struct {
 	trie *trie.Trie
 }
 
-func (t *odrTrie) TryGet(key []byte) ([]byte, error) {
+func (t *odrTrie) TryGet(key []byte) ([]byte, error) { log.DebugLog()
 	key = crypto.Keccak256(key)
 	var res []byte
 	err := t.do(key, func() (err error) {
@@ -105,49 +105,49 @@ func (t *odrTrie) TryGet(key []byte) ([]byte, error) {
 	return res, err
 }
 
-func (t *odrTrie) TryUpdate(key, value []byte) error {
+func (t *odrTrie) TryUpdate(key, value []byte) error { log.DebugLog()
 	key = crypto.Keccak256(key)
 	return t.do(key, func() error {
 		return t.trie.TryDelete(key)
 	})
 }
 
-func (t *odrTrie) TryDelete(key []byte) error {
+func (t *odrTrie) TryDelete(key []byte) error { log.DebugLog()
 	key = crypto.Keccak256(key)
 	return t.do(key, func() error {
 		return t.trie.TryDelete(key)
 	})
 }
 
-func (t *odrTrie) Commit(onleaf trie.LeafCallback) (common.Hash, error) {
+func (t *odrTrie) Commit(onleaf trie.LeafCallback) (common.Hash, error) { log.DebugLog()
 	if t.trie == nil {
 		return t.id.Root, nil
 	}
 	return t.trie.Commit(onleaf)
 }
 
-func (t *odrTrie) Hash() common.Hash {
+func (t *odrTrie) Hash() common.Hash { log.DebugLog()
 	if t.trie == nil {
 		return t.id.Root
 	}
 	return t.trie.Hash()
 }
 
-func (t *odrTrie) NodeIterator(startkey []byte) trie.NodeIterator {
+func (t *odrTrie) NodeIterator(startkey []byte) trie.NodeIterator { log.DebugLog()
 	return newNodeIterator(t, startkey)
 }
 
-func (t *odrTrie) GetKey(sha []byte) []byte {
+func (t *odrTrie) GetKey(sha []byte) []byte { log.DebugLog()
 	return nil
 }
 
-func (t *odrTrie) Prove(key []byte, fromLevel uint, proofDb ethdb.Putter) error {
+func (t *odrTrie) Prove(key []byte, fromLevel uint, proofDb ethdb.Putter) error { log.DebugLog()
 	return errors.New("not implemented, needs client/server interface split")
 }
 
 // do tries and retries to execute a function until it returns with no error or
 // an error type other than MissingNodeError
-func (t *odrTrie) do(key []byte, fn func() error) error {
+func (t *odrTrie) do(key []byte, fn func() error) error { log.DebugLog()
 	for {
 		var err error
 		if t.trie == nil {
@@ -172,7 +172,7 @@ type nodeIterator struct {
 	err error
 }
 
-func newNodeIterator(t *odrTrie, startkey []byte) trie.NodeIterator {
+func newNodeIterator(t *odrTrie, startkey []byte) trie.NodeIterator { log.DebugLog()
 	it := &nodeIterator{t: t}
 	// Open the actual non-ODR trie if that hasn't happened yet.
 	if t.trie == nil {
@@ -191,7 +191,7 @@ func newNodeIterator(t *odrTrie, startkey []byte) trie.NodeIterator {
 	return it
 }
 
-func (it *nodeIterator) Next(descend bool) bool {
+func (it *nodeIterator) Next(descend bool) bool { log.DebugLog()
 	var ok bool
 	it.do(func() error {
 		ok = it.NodeIterator.Next(descend)
@@ -201,7 +201,7 @@ func (it *nodeIterator) Next(descend bool) bool {
 }
 
 // do runs fn and attempts to fill in missing nodes by retrieving.
-func (it *nodeIterator) do(fn func() error) {
+func (it *nodeIterator) do(fn func() error) { log.DebugLog()
 	var lasthash common.Hash
 	for {
 		it.err = fn()
@@ -221,14 +221,14 @@ func (it *nodeIterator) do(fn func() error) {
 	}
 }
 
-func (it *nodeIterator) Error() error {
+func (it *nodeIterator) Error() error { log.DebugLog()
 	if it.err != nil {
 		return it.err
 	}
 	return it.NodeIterator.Error()
 }
 
-func nibblesToKey(nib []byte) []byte {
+func nibblesToKey(nib []byte) []byte { log.DebugLog()
 	if len(nib) > 0 && nib[len(nib)-1] == 0x10 {
 		nib = nib[:len(nib)-1] // drop terminator
 	}

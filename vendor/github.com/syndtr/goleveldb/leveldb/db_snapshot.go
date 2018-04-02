@@ -25,7 +25,7 @@ type snapshotElement struct {
 }
 
 // Acquires a snapshot, based on latest sequence.
-func (db *DB) acquireSnapshot() *snapshotElement {
+func (db *DB) acquireSnapshot() *snapshotElement { log.DebugLog()
 	db.snapsMu.Lock()
 	defer db.snapsMu.Unlock()
 
@@ -46,7 +46,7 @@ func (db *DB) acquireSnapshot() *snapshotElement {
 }
 
 // Releases given snapshot element.
-func (db *DB) releaseSnapshot(se *snapshotElement) {
+func (db *DB) releaseSnapshot(se *snapshotElement) { log.DebugLog()
 	db.snapsMu.Lock()
 	defer db.snapsMu.Unlock()
 
@@ -60,7 +60,7 @@ func (db *DB) releaseSnapshot(se *snapshotElement) {
 }
 
 // Gets minimum sequence that not being snapshotted.
-func (db *DB) minSeq() uint64 {
+func (db *DB) minSeq() uint64 { log.DebugLog()
 	db.snapsMu.Lock()
 	defer db.snapsMu.Unlock()
 
@@ -80,7 +80,7 @@ type Snapshot struct {
 }
 
 // Creates new snapshot object.
-func (db *DB) newSnapshot() *Snapshot {
+func (db *DB) newSnapshot() *Snapshot { log.DebugLog()
 	snap := &Snapshot{
 		db:   db,
 		elem: db.acquireSnapshot(),
@@ -90,7 +90,7 @@ func (db *DB) newSnapshot() *Snapshot {
 	return snap
 }
 
-func (snap *Snapshot) String() string {
+func (snap *Snapshot) String() string { log.DebugLog()
 	return fmt.Sprintf("leveldb.Snapshot{%d}", snap.elem.seq)
 }
 
@@ -99,7 +99,7 @@ func (snap *Snapshot) String() string {
 //
 // The caller should not modify the contents of the returned slice, but
 // it is safe to modify the contents of the argument after Get returns.
-func (snap *Snapshot) Get(key []byte, ro *opt.ReadOptions) (value []byte, err error) {
+func (snap *Snapshot) Get(key []byte, ro *opt.ReadOptions) (value []byte, err error) { log.DebugLog()
 	err = snap.db.ok()
 	if err != nil {
 		return
@@ -116,7 +116,7 @@ func (snap *Snapshot) Get(key []byte, ro *opt.ReadOptions) (value []byte, err er
 // Has returns true if the DB does contains the given key.
 //
 // It is safe to modify the contents of the argument after Get returns.
-func (snap *Snapshot) Has(key []byte, ro *opt.ReadOptions) (ret bool, err error) {
+func (snap *Snapshot) Has(key []byte, ro *opt.ReadOptions) (ret bool, err error) { log.DebugLog()
 	err = snap.db.ok()
 	if err != nil {
 		return
@@ -147,7 +147,7 @@ func (snap *Snapshot) Has(key []byte, ro *opt.ReadOptions) (ret bool, err error)
 // iterator would be still valid until released.
 //
 // Also read Iterator documentation of the leveldb/iterator package.
-func (snap *Snapshot) NewIterator(slice *util.Range, ro *opt.ReadOptions) iterator.Iterator {
+func (snap *Snapshot) NewIterator(slice *util.Range, ro *opt.ReadOptions) iterator.Iterator { log.DebugLog()
 	if err := snap.db.ok(); err != nil {
 		return iterator.NewEmptyIterator(err)
 	}
@@ -166,7 +166,7 @@ func (snap *Snapshot) NewIterator(slice *util.Range, ro *opt.ReadOptions) iterat
 // underlying DB is closed.
 //
 // Other methods should not be called after the snapshot has been released.
-func (snap *Snapshot) Release() {
+func (snap *Snapshot) Release() { log.DebugLog()
 	snap.mu.Lock()
 	defer snap.mu.Unlock()
 

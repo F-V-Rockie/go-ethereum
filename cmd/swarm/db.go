@@ -28,7 +28,7 @@ import (
 	"gopkg.in/urfave/cli.v1"
 )
 
-func dbExport(ctx *cli.Context) {
+func dbExport(ctx *cli.Context) { log.DebugLog()
 	args := ctx.Args()
 	if len(args) != 2 {
 		utils.Fatalf("invalid arguments, please specify both <chunkdb> (path to a local chunk database) and <file> (path to write the tar archive to, - for stdout)")
@@ -60,7 +60,7 @@ func dbExport(ctx *cli.Context) {
 	log.Info(fmt.Sprintf("successfully exported %d chunks", count))
 }
 
-func dbImport(ctx *cli.Context) {
+func dbImport(ctx *cli.Context) { log.DebugLog()
 	args := ctx.Args()
 	if len(args) != 2 {
 		utils.Fatalf("invalid arguments, please specify both <chunkdb> (path to a local chunk database) and <file> (path to read the tar archive from, - for stdin)")
@@ -92,7 +92,7 @@ func dbImport(ctx *cli.Context) {
 	log.Info(fmt.Sprintf("successfully imported %d chunks", count))
 }
 
-func dbClean(ctx *cli.Context) {
+func dbClean(ctx *cli.Context) { log.DebugLog()
 	args := ctx.Args()
 	if len(args) != 1 {
 		utils.Fatalf("invalid arguments, please specify <chunkdb> (path to a local chunk database)")
@@ -107,7 +107,7 @@ func dbClean(ctx *cli.Context) {
 	store.Cleanup()
 }
 
-func openDbStore(path string) (*storage.DbStore, error) {
+func openDbStore(path string) (*storage.DbStore, error) { log.DebugLog()
 	if _, err := os.Stat(filepath.Join(path, "CURRENT")); err != nil {
 		return nil, fmt.Errorf("invalid chunkdb path: %s", err)
 	}

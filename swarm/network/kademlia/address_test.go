@@ -24,7 +24,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 )
 
-func (Address) Generate(rand *rand.Rand, size int) reflect.Value {
+func (Address) Generate(rand *rand.Rand, size int) reflect.Value { log.DebugLog()
 	var id Address
 	for i := 0; i < len(id); i++ {
 		id[i] = byte(uint8(rand.Intn(255)))
@@ -32,7 +32,7 @@ func (Address) Generate(rand *rand.Rand, size int) reflect.Value {
 	return reflect.ValueOf(id)
 }
 
-func TestCommonBitsAddrF(t *testing.T) {
+func TestCommonBitsAddrF(t *testing.T) { log.DebugLog()
 	a := Address(common.HexToHash("0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"))
 	b := Address(common.HexToHash("0x8123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"))
 	c := Address(common.HexToHash("0x4123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"))
@@ -83,7 +83,7 @@ func TestCommonBitsAddrF(t *testing.T) {
 
 }
 
-func TestRandomAddressAt(t *testing.T) {
+func TestRandomAddressAt(t *testing.T) { log.DebugLog()
 	var a Address
 	for i := 0; i < 100; i++ {
 		a = RandomAddress()

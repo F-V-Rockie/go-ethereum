@@ -39,7 +39,7 @@ type LesTxRelay struct {
 	reqDist *requestDistributor
 }
 
-func NewLesTxRelay(ps *peerSet, reqDist *requestDistributor) *LesTxRelay {
+func NewLesTxRelay(ps *peerSet, reqDist *requestDistributor) *LesTxRelay { log.DebugLog()
 	r := &LesTxRelay{
 		txSent:    make(map[common.Hash]*ltrInfo),
 		txPending: make(map[common.Hash]struct{}),
@@ -50,14 +50,14 @@ func NewLesTxRelay(ps *peerSet, reqDist *requestDistributor) *LesTxRelay {
 	return r
 }
 
-func (self *LesTxRelay) registerPeer(p *peer) {
+func (self *LesTxRelay) registerPeer(p *peer) { log.DebugLog()
 	self.lock.Lock()
 	defer self.lock.Unlock()
 
 	self.peerList = self.ps.AllPeers()
 }
 
-func (self *LesTxRelay) unregisterPeer(p *peer) {
+func (self *LesTxRelay) unregisterPeer(p *peer) { log.DebugLog()
 	self.lock.Lock()
 	defer self.lock.Unlock()
 
@@ -66,7 +66,7 @@ func (self *LesTxRelay) unregisterPeer(p *peer) {
 
 // send sends a list of transactions to at most a given number of peers at
 // once, never resending any particular transaction to the same peer twice
-func (self *LesTxRelay) send(txs types.Transactions, count int) {
+func (self *LesTxRelay) send(txs types.Transactions, count int) { log.DebugLog()
 	sendTo := make(map[*peer]types.Transactions)
 
 	self.peerStartPos++ // rotate the starting position of the peer list
@@ -134,14 +134,14 @@ func (self *LesTxRelay) send(txs types.Transactions, count int) {
 	}
 }
 
-func (self *LesTxRelay) Send(txs types.Transactions) {
+func (self *LesTxRelay) Send(txs types.Transactions) { log.DebugLog()
 	self.lock.Lock()
 	defer self.lock.Unlock()
 
 	self.send(txs, 3)
 }
 
-func (self *LesTxRelay) NewHead(head common.Hash, mined []common.Hash, rollback []common.Hash) {
+func (self *LesTxRelay) NewHead(head common.Hash, mined []common.Hash, rollback []common.Hash) { log.DebugLog()
 	self.lock.Lock()
 	defer self.lock.Unlock()
 
@@ -164,7 +164,7 @@ func (self *LesTxRelay) NewHead(head common.Hash, mined []common.Hash, rollback 
 	}
 }
 
-func (self *LesTxRelay) Discard(hashes []common.Hash) {
+func (self *LesTxRelay) Discard(hashes []common.Hash) { log.DebugLog()
 	self.lock.Lock()
 	defer self.lock.Unlock()
 

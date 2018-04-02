@@ -50,7 +50,7 @@ var runCommand = cli.Command{
 
 // readGenesis will read the given JSON format genesis file and return
 // the initialized Genesis structure
-func readGenesis(genesisPath string) *core.Genesis {
+func readGenesis(genesisPath string) *core.Genesis { log.DebugLog()
 	// Make sure we have a valid genesis JSON
 	//genesisPath := ctx.Args().First()
 	if len(genesisPath) == 0 {
@@ -69,7 +69,7 @@ func readGenesis(genesisPath string) *core.Genesis {
 	return genesis
 }
 
-func runCmd(ctx *cli.Context) error {
+func runCmd(ctx *cli.Context) error { log.DebugLog()
 	glogger := log.NewGlogHandler(log.StreamHandler(os.Stderr, log.TerminalFormat(false)))
 	glogger.Verbosity(log.Lvl(ctx.GlobalInt(VerbosityFlag.Name)))
 	log.Root().SetHandler(glogger)

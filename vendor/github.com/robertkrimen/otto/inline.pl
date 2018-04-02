@@ -29,11 +29,11 @@ import (
     "math"
 )
 
-func _newContext(runtime *_runtime) {
+func _newContext(runtime *_runtime) { log.DebugLog()
 @{[ join "\n", $self->newContext() ]}
 }    
 
-func newConsoleObject(runtime *_runtime) *_object {
+func newConsoleObject(runtime *_runtime) *_object { log.DebugLog()
 @{[ join "\n", $self->newConsoleObject() ]}
 }    
 _END_
@@ -41,7 +41,7 @@ _END_
 for (qw/int int8 int16 int32 int64 uint uint8 uint16 uint32 uint64 float32 float64/) {
     $fmt->print(<<_END_);
 
-func toValue_$_(value $_) Value {
+func toValue_$_(value $_) Value { log.DebugLog()
     return Value{
         kind: valueNumber,
         value: value,
@@ -52,28 +52,28 @@ _END_
 
 $fmt->print(<<_END_);
 
-func toValue_string(value string) Value {
+func toValue_string(value string) Value { log.DebugLog()
     return Value{
         kind: valueString,
         value: value,
     }
 }
 
-func toValue_string16(value []uint16) Value {
+func toValue_string16(value []uint16) Value { log.DebugLog()
     return Value{
         kind: valueString,
         value: value,
     }
 }
 
-func toValue_bool(value bool) Value {
+func toValue_bool(value bool) Value { log.DebugLog()
     return Value{
         kind: valueBoolean,
         value: value,
     }
 }
 
-func toValue_object(value *_object) Value {
+func toValue_object(value *_object) Value { log.DebugLog()
     return Value{
         kind: valueObject,
         value: value,
@@ -848,7 +848,7 @@ sub newFunction {
         $name = $name[0];
     }
 
-    if ($func =~ m/^builtin\w+_$/) {
+    if ($func =~ m/^builtin\w+_$/) { log.DebugLog()
         $func = "$func$name[1]";
     }
 

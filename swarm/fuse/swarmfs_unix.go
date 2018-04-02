@@ -41,7 +41,7 @@ var (
 	errAlreadyMounted  = errors.New("mount point is already serving")
 )
 
-func isFUSEUnsupportedError(err error) bool {
+func isFUSEUnsupportedError(err error) bool { log.DebugLog()
 	if perr, ok := err.(*os.PathError); ok {
 		return perr.Op == "open" && perr.Path == "/dev/fuse"
 	}
@@ -59,7 +59,7 @@ type MountInfo struct {
 	lock           *sync.RWMutex
 }
 
-func NewMountInfo(mhash, mpoint string, sapi *api.Api) *MountInfo {
+func NewMountInfo(mhash, mpoint string, sapi *api.Api) *MountInfo { log.DebugLog()
 	newMountInfo := &MountInfo{
 		MountPoint:     mpoint,
 		StartManifest:  mhash,
@@ -72,7 +72,7 @@ func NewMountInfo(mhash, mpoint string, sapi *api.Api) *MountInfo {
 	return newMountInfo
 }
 
-func (self *SwarmFS) Mount(mhash, mountpoint string) (*MountInfo, error) {
+func (self *SwarmFS) Mount(mhash, mountpoint string) (*MountInfo, error) { log.DebugLog()
 
 	if mountpoint == "" {
 		return nil, errEmptyMountPoint
@@ -178,7 +178,7 @@ func (self *SwarmFS) Mount(mhash, mountpoint string) (*MountInfo, error) {
 	return mi, nil
 }
 
-func (self *SwarmFS) Unmount(mountpoint string) (*MountInfo, error) {
+func (self *SwarmFS) Unmount(mountpoint string) (*MountInfo, error) { log.DebugLog()
 
 	self.swarmFsLock.Lock()
 	defer self.swarmFsLock.Unlock()
@@ -212,7 +212,7 @@ func (self *SwarmFS) Unmount(mountpoint string) (*MountInfo, error) {
 	return mountInfo, nil
 }
 
-func (self *SwarmFS) Listmounts() []*MountInfo {
+func (self *SwarmFS) Listmounts() []*MountInfo { log.DebugLog()
 	self.swarmFsLock.RLock()
 	defer self.swarmFsLock.RUnlock()
 
@@ -223,7 +223,7 @@ func (self *SwarmFS) Listmounts() []*MountInfo {
 	return rows
 }
 
-func (self *SwarmFS) Stop() bool {
+func (self *SwarmFS) Stop() bool { log.DebugLog()
 	for mp := range self.activeMounts {
 		mountInfo := self.activeMounts[mp]
 		self.Unmount(mountInfo.MountPoint)

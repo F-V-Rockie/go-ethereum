@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestMetricsSorting(t *testing.T) {
+func TestMetricsSorting(t *testing.T) { log.DebugLog()
 	var namedMetrics = namedMetricSlice{
 		{name: "zzz"},
 		{name: "bbb"},

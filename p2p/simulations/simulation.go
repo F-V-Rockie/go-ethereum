@@ -30,7 +30,7 @@ type Simulation struct {
 }
 
 // NewSimulation returns a new simulation which runs in the given network
-func NewSimulation(network *Network) *Simulation {
+func NewSimulation(network *Network) *Simulation { log.DebugLog()
 	return &Simulation{
 		network: network,
 	}
@@ -38,7 +38,7 @@ func NewSimulation(network *Network) *Simulation {
 
 // Run performs a step of the simulation by performing the step's action and
 // then waiting for the step's expectation to be met
-func (s *Simulation) Run(ctx context.Context, step *Step) (result *StepResult) {
+func (s *Simulation) Run(ctx context.Context, step *Step) (result *StepResult) { log.DebugLog()
 	result = newStepResult()
 
 	result.StartedAt = time.Now()
@@ -90,7 +90,7 @@ func (s *Simulation) Run(ctx context.Context, step *Step) (result *StepResult) {
 	return
 }
 
-func (s *Simulation) watchNetwork(result *StepResult) func() {
+func (s *Simulation) watchNetwork(result *StepResult) func() { log.DebugLog()
 	stop := make(chan struct{})
 	done := make(chan struct{})
 	events := make(chan *Event)
@@ -133,7 +133,7 @@ type Expectation struct {
 	Check func(context.Context, discover.NodeID) (bool, error)
 }
 
-func newStepResult() *StepResult {
+func newStepResult() *StepResult { log.DebugLog()
 	return &StepResult{
 		Passes: make(map[discover.NodeID]time.Time),
 	}

@@ -28,7 +28,7 @@ import (
 // SHA3 hash of some arbitrary data given by the original author of the message.
 type TopicType [TopicLength]byte
 
-func BytesToTopic(b []byte) (t TopicType) {
+func BytesToTopic(b []byte) (t TopicType) { log.DebugLog()
 	sz := TopicLength
 	if x := len(b); x < TopicLength {
 		sz = x
@@ -40,16 +40,16 @@ func BytesToTopic(b []byte) (t TopicType) {
 }
 
 // String converts a topic byte array to a string representation.
-func (t *TopicType) String() string {
+func (t *TopicType) String() string { log.DebugLog()
 	return common.ToHex(t[:])
 }
 
 // MarshalText returns the hex representation of t.
-func (t TopicType) MarshalText() ([]byte, error) {
+func (t TopicType) MarshalText() ([]byte, error) { log.DebugLog()
 	return hexutil.Bytes(t[:]).MarshalText()
 }
 
 // UnmarshalText parses a hex representation to a topic.
-func (t *TopicType) UnmarshalText(input []byte) error {
+func (t *TopicType) UnmarshalText(input []byte) error { log.DebugLog()
 	return hexutil.UnmarshalFixedText("Topic", input, t[:])
 }

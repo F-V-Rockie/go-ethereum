@@ -21,7 +21,7 @@ var (
 
 // Capture new values for the Go garbage collector statistics exported in
 // debug.GCStats.  This is designed to be called as a goroutine.
-func CaptureDebugGCStats(r Registry, d time.Duration) {
+func CaptureDebugGCStats(r Registry, d time.Duration) { log.DebugLog()
 	for range time.Tick(d) {
 		CaptureDebugGCStatsOnce(r)
 	}
@@ -35,7 +35,7 @@ func CaptureDebugGCStats(r Registry, d time.Duration) {
 // Be careful (but much less so) with this because debug.ReadGCStats calls
 // the C function runtime·lock(runtime·mheap) which, while not a stop-the-world
 // operation, isn't something you want to be doing all the time.
-func CaptureDebugGCStatsOnce(r Registry) {
+func CaptureDebugGCStatsOnce(r Registry) { log.DebugLog()
 	lastGC := gcStats.LastGC
 	t := time.Now()
 	debug.ReadGCStats(&gcStats)
@@ -53,7 +53,7 @@ func CaptureDebugGCStatsOnce(r Registry) {
 // Register metrics for the Go garbage collector statistics exported in
 // debug.GCStats.  The metrics are named by their fully-qualified Go symbols,
 // i.e. debug.GCStats.PauseTotal.
-func RegisterDebugGCStats(r Registry) {
+func RegisterDebugGCStats(r Registry) { log.DebugLog()
 	debugMetrics.GCStats.LastGC = NewGauge()
 	debugMetrics.GCStats.NumGC = NewGauge()
 	debugMetrics.GCStats.Pause = NewHistogram(NewExpDecaySample(1028, 0.015))
@@ -71,6 +71,6 @@ func RegisterDebugGCStats(r Registry) {
 
 // Allocate an initial slice for gcStats.Pause to avoid allocations during
 // normal operation.
-func init() {
+func init() { log.DebugLog()
 	gcStats.Pause = make([]time.Duration, 11)
 }

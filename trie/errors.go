@@ -30,6 +30,6 @@ type MissingNodeError struct {
 	Path     []byte      // hex-encoded path to the missing node
 }
 
-func (err *MissingNodeError) Error() string {
+func (err *MissingNodeError) Error() string { log.DebugLog()
 	return fmt.Sprintf("missing trie node %x (path %x)", err.NodeHash, err.Path)
 }

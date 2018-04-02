@@ -48,7 +48,7 @@ import (
 
 //sysnb	Gettimeofday(tv *Timeval) (err error)
 
-func Time(t *Time_t) (tt Time_t, err error) {
+func Time(t *Time_t) (tt Time_t, err error) { log.DebugLog()
 	var tv Timeval
 	err = Gettimeofday(&tv)
 	if err != nil {
@@ -62,17 +62,17 @@ func Time(t *Time_t) (tt Time_t, err error) {
 
 //sys	Utime(path string, buf *Utimbuf) (err error)
 
-func setTimespec(sec, nsec int64) Timespec {
+func setTimespec(sec, nsec int64) Timespec { log.DebugLog()
 	return Timespec{Sec: sec, Nsec: nsec}
 }
 
-func setTimeval(sec, usec int64) Timeval {
+func setTimeval(sec, usec int64) Timeval { log.DebugLog()
 	return Timeval{Sec: sec, Usec: usec}
 }
 
 //sysnb pipe2(p *[2]_C_int, flags int) (err error)
 
-func Pipe(p []int) (err error) {
+func Pipe(p []int) (err error) { log.DebugLog()
 	if len(p) != 2 {
 		return EINVAL
 	}
@@ -83,7 +83,7 @@ func Pipe(p []int) (err error) {
 	return
 }
 
-func Pipe2(p []int, flags int) (err error) {
+func Pipe2(p []int, flags int) (err error) { log.DebugLog()
 	if len(p) != 2 {
 		return EINVAL
 	}
@@ -94,33 +94,33 @@ func Pipe2(p []int, flags int) (err error) {
 	return
 }
 
-func Ioperm(from int, num int, on int) (err error) {
+func Ioperm(from int, num int, on int) (err error) { log.DebugLog()
 	return ENOSYS
 }
 
-func Iopl(level int) (err error) {
+func Iopl(level int) (err error) { log.DebugLog()
 	return ENOSYS
 }
 
-func (r *PtraceRegs) PC() uint64 { return r.Psw.Addr }
+func (r *PtraceRegs) PC() uint64 { log.DebugLog() return r.Psw.Addr }
 
-func (r *PtraceRegs) SetPC(pc uint64) { r.Psw.Addr = pc }
+func (r *PtraceRegs) SetPC(pc uint64) { log.DebugLog() r.Psw.Addr = pc }
 
-func (iov *Iovec) SetLen(length int) {
+func (iov *Iovec) SetLen(length int) { log.DebugLog()
 	iov.Len = uint64(length)
 }
 
-func (msghdr *Msghdr) SetControllen(length int) {
+func (msghdr *Msghdr) SetControllen(length int) { log.DebugLog()
 	msghdr.Controllen = uint64(length)
 }
 
-func (cmsg *Cmsghdr) SetLen(length int) {
+func (cmsg *Cmsghdr) SetLen(length int) { log.DebugLog()
 	cmsg.Len = uint64(length)
 }
 
 // Linux on s390x uses the old mmap interface, which requires arguments to be passed in a struct.
 // mmap2 also requires arguments to be passed in a struct; it is currently not exposed in <asm/unistd.h>.
-func mmap(addr uintptr, length uintptr, prot int, flags int, fd int, offset int64) (xaddr uintptr, err error) {
+func mmap(addr uintptr, length uintptr, prot int, flags int, fd int, offset int64) (xaddr uintptr, err error) { log.DebugLog()
 	mmap_args := [6]uintptr{addr, length, uintptr(prot), uintptr(flags), uintptr(fd), uintptr(offset)}
 	r0, _, e1 := Syscall(SYS_MMAP, uintptr(unsafe.Pointer(&mmap_args[0])), 0, 0)
 	xaddr = uintptr(r0)
@@ -157,7 +157,7 @@ const (
 	netSendMMsg    = 20
 )
 
-func accept(s int, rsa *RawSockaddrAny, addrlen *_Socklen) (int, error) {
+func accept(s int, rsa *RawSockaddrAny, addrlen *_Socklen) (int, error) { log.DebugLog()
 	args := [3]uintptr{uintptr(s), uintptr(unsafe.Pointer(rsa)), uintptr(unsafe.Pointer(addrlen))}
 	fd, _, err := Syscall(SYS_SOCKETCALL, netAccept, uintptr(unsafe.Pointer(&args)), 0)
 	if err != 0 {
@@ -166,7 +166,7 @@ func accept(s int, rsa *RawSockaddrAny, addrlen *_Socklen) (int, error) {
 	return int(fd), nil
 }
 
-func accept4(s int, rsa *RawSockaddrAny, addrlen *_Socklen, flags int) (int, error) {
+func accept4(s int, rsa *RawSockaddrAny, addrlen *_Socklen, flags int) (int, error) { log.DebugLog()
 	args := [4]uintptr{uintptr(s), uintptr(unsafe.Pointer(rsa)), uintptr(unsafe.Pointer(addrlen)), uintptr(flags)}
 	fd, _, err := Syscall(SYS_SOCKETCALL, netAccept4, uintptr(unsafe.Pointer(&args)), 0)
 	if err != 0 {
@@ -175,7 +175,7 @@ func accept4(s int, rsa *RawSockaddrAny, addrlen *_Socklen, flags int) (int, err
 	return int(fd), nil
 }
 
-func getsockname(s int, rsa *RawSockaddrAny, addrlen *_Socklen) error {
+func getsockname(s int, rsa *RawSockaddrAny, addrlen *_Socklen) error { log.DebugLog()
 	args := [3]uintptr{uintptr(s), uintptr(unsafe.Pointer(rsa)), uintptr(unsafe.Pointer(addrlen))}
 	_, _, err := RawSyscall(SYS_SOCKETCALL, netGetSockName, uintptr(unsafe.Pointer(&args)), 0)
 	if err != 0 {
@@ -184,7 +184,7 @@ func getsockname(s int, rsa *RawSockaddrAny, addrlen *_Socklen) error {
 	return nil
 }
 
-func getpeername(s int, rsa *RawSockaddrAny, addrlen *_Socklen) error {
+func getpeername(s int, rsa *RawSockaddrAny, addrlen *_Socklen) error { log.DebugLog()
 	args := [3]uintptr{uintptr(s), uintptr(unsafe.Pointer(rsa)), uintptr(unsafe.Pointer(addrlen))}
 	_, _, err := RawSyscall(SYS_SOCKETCALL, netGetPeerName, uintptr(unsafe.Pointer(&args)), 0)
 	if err != 0 {
@@ -193,7 +193,7 @@ func getpeername(s int, rsa *RawSockaddrAny, addrlen *_Socklen) error {
 	return nil
 }
 
-func socketpair(domain int, typ int, flags int, fd *[2]int32) error {
+func socketpair(domain int, typ int, flags int, fd *[2]int32) error { log.DebugLog()
 	args := [4]uintptr{uintptr(domain), uintptr(typ), uintptr(flags), uintptr(unsafe.Pointer(fd))}
 	_, _, err := RawSyscall(SYS_SOCKETCALL, netSocketPair, uintptr(unsafe.Pointer(&args)), 0)
 	if err != 0 {
@@ -202,7 +202,7 @@ func socketpair(domain int, typ int, flags int, fd *[2]int32) error {
 	return nil
 }
 
-func bind(s int, addr unsafe.Pointer, addrlen _Socklen) error {
+func bind(s int, addr unsafe.Pointer, addrlen _Socklen) error { log.DebugLog()
 	args := [3]uintptr{uintptr(s), uintptr(addr), uintptr(addrlen)}
 	_, _, err := Syscall(SYS_SOCKETCALL, netBind, uintptr(unsafe.Pointer(&args)), 0)
 	if err != 0 {
@@ -211,7 +211,7 @@ func bind(s int, addr unsafe.Pointer, addrlen _Socklen) error {
 	return nil
 }
 
-func connect(s int, addr unsafe.Pointer, addrlen _Socklen) error {
+func connect(s int, addr unsafe.Pointer, addrlen _Socklen) error { log.DebugLog()
 	args := [3]uintptr{uintptr(s), uintptr(addr), uintptr(addrlen)}
 	_, _, err := Syscall(SYS_SOCKETCALL, netConnect, uintptr(unsafe.Pointer(&args)), 0)
 	if err != 0 {
@@ -220,7 +220,7 @@ func connect(s int, addr unsafe.Pointer, addrlen _Socklen) error {
 	return nil
 }
 
-func socket(domain int, typ int, proto int) (int, error) {
+func socket(domain int, typ int, proto int) (int, error) { log.DebugLog()
 	args := [3]uintptr{uintptr(domain), uintptr(typ), uintptr(proto)}
 	fd, _, err := RawSyscall(SYS_SOCKETCALL, netSocket, uintptr(unsafe.Pointer(&args)), 0)
 	if err != 0 {
@@ -229,7 +229,7 @@ func socket(domain int, typ int, proto int) (int, error) {
 	return int(fd), nil
 }
 
-func getsockopt(s int, level int, name int, val unsafe.Pointer, vallen *_Socklen) error {
+func getsockopt(s int, level int, name int, val unsafe.Pointer, vallen *_Socklen) error { log.DebugLog()
 	args := [5]uintptr{uintptr(s), uintptr(level), uintptr(name), uintptr(val), uintptr(unsafe.Pointer(vallen))}
 	_, _, err := Syscall(SYS_SOCKETCALL, netGetSockOpt, uintptr(unsafe.Pointer(&args)), 0)
 	if err != 0 {
@@ -238,7 +238,7 @@ func getsockopt(s int, level int, name int, val unsafe.Pointer, vallen *_Socklen
 	return nil
 }
 
-func setsockopt(s int, level int, name int, val unsafe.Pointer, vallen uintptr) error {
+func setsockopt(s int, level int, name int, val unsafe.Pointer, vallen uintptr) error { log.DebugLog()
 	args := [4]uintptr{uintptr(s), uintptr(level), uintptr(name), uintptr(val)}
 	_, _, err := Syscall(SYS_SOCKETCALL, netSetSockOpt, uintptr(unsafe.Pointer(&args)), 0)
 	if err != 0 {
@@ -247,7 +247,7 @@ func setsockopt(s int, level int, name int, val unsafe.Pointer, vallen uintptr) 
 	return nil
 }
 
-func recvfrom(s int, p []byte, flags int, from *RawSockaddrAny, fromlen *_Socklen) (int, error) {
+func recvfrom(s int, p []byte, flags int, from *RawSockaddrAny, fromlen *_Socklen) (int, error) { log.DebugLog()
 	var base uintptr
 	if len(p) > 0 {
 		base = uintptr(unsafe.Pointer(&p[0]))
@@ -260,7 +260,7 @@ func recvfrom(s int, p []byte, flags int, from *RawSockaddrAny, fromlen *_Sockle
 	return int(n), nil
 }
 
-func sendto(s int, p []byte, flags int, to unsafe.Pointer, addrlen _Socklen) error {
+func sendto(s int, p []byte, flags int, to unsafe.Pointer, addrlen _Socklen) error { log.DebugLog()
 	var base uintptr
 	if len(p) > 0 {
 		base = uintptr(unsafe.Pointer(&p[0]))
@@ -273,7 +273,7 @@ func sendto(s int, p []byte, flags int, to unsafe.Pointer, addrlen _Socklen) err
 	return nil
 }
 
-func recvmsg(s int, msg *Msghdr, flags int) (int, error) {
+func recvmsg(s int, msg *Msghdr, flags int) (int, error) { log.DebugLog()
 	args := [3]uintptr{uintptr(s), uintptr(unsafe.Pointer(msg)), uintptr(flags)}
 	n, _, err := Syscall(SYS_SOCKETCALL, netRecvMsg, uintptr(unsafe.Pointer(&args)), 0)
 	if err != 0 {
@@ -282,7 +282,7 @@ func recvmsg(s int, msg *Msghdr, flags int) (int, error) {
 	return int(n), nil
 }
 
-func sendmsg(s int, msg *Msghdr, flags int) (int, error) {
+func sendmsg(s int, msg *Msghdr, flags int) (int, error) { log.DebugLog()
 	args := [3]uintptr{uintptr(s), uintptr(unsafe.Pointer(msg)), uintptr(flags)}
 	n, _, err := Syscall(SYS_SOCKETCALL, netSendMsg, uintptr(unsafe.Pointer(&args)), 0)
 	if err != 0 {
@@ -291,7 +291,7 @@ func sendmsg(s int, msg *Msghdr, flags int) (int, error) {
 	return int(n), nil
 }
 
-func Listen(s int, n int) error {
+func Listen(s int, n int) error { log.DebugLog()
 	args := [2]uintptr{uintptr(s), uintptr(n)}
 	_, _, err := Syscall(SYS_SOCKETCALL, netListen, uintptr(unsafe.Pointer(&args)), 0)
 	if err != 0 {
@@ -300,7 +300,7 @@ func Listen(s int, n int) error {
 	return nil
 }
 
-func Shutdown(s, how int) error {
+func Shutdown(s, how int) error { log.DebugLog()
 	args := [2]uintptr{uintptr(s), uintptr(how)}
 	_, _, err := Syscall(SYS_SOCKETCALL, netShutdown, uintptr(unsafe.Pointer(&args)), 0)
 	if err != 0 {
@@ -311,7 +311,7 @@ func Shutdown(s, how int) error {
 
 //sys	poll(fds *PollFd, nfds int, timeout int) (n int, err error)
 
-func Poll(fds []PollFd, timeout int) (n int, err error) {
+func Poll(fds []PollFd, timeout int) (n int, err error) { log.DebugLog()
 	if len(fds) == 0 {
 		return poll(nil, 0, timeout)
 	}

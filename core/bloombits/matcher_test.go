@@ -29,7 +29,7 @@ import (
 const testSectionSize = 4096
 
 // Tests that wildcard filter rules (nil) can be specified and are handled well.
-func TestMatcherWildcards(t *testing.T) {
+func TestMatcherWildcards(t *testing.T) { log.DebugLog()
 	matcher := NewMatcher(testSectionSize, [][][]byte{
 		{common.Address{}.Bytes(), common.Address{0x01}.Bytes()}, // Default address is not a wildcard
 		{common.Hash{}.Bytes(), common.Hash{0x01}.Bytes()},       // Default hash is not a wildcard
@@ -55,7 +55,7 @@ func TestMatcherWildcards(t *testing.T) {
 }
 
 // Tests the matcher pipeline on a single continuous workflow without interrupts.
-func TestMatcherContinuous(t *testing.T) {
+func TestMatcherContinuous(t *testing.T) { log.DebugLog()
 	testMatcherDiffBatches(t, [][]bloomIndexes{{{10, 20, 30}}}, 0, 100000, false, 75)
 	testMatcherDiffBatches(t, [][]bloomIndexes{{{32, 3125, 100}}, {{40, 50, 10}}}, 0, 100000, false, 81)
 	testMatcherDiffBatches(t, [][]bloomIndexes{{{4, 8, 11}, {7, 8, 17}}, {{9, 9, 12}, {15, 20, 13}}, {{18, 15, 15}, {12, 10, 4}}}, 0, 10000, false, 36)
@@ -63,14 +63,14 @@ func TestMatcherContinuous(t *testing.T) {
 
 // Tests the matcher pipeline on a constantly interrupted and resumed work pattern
 // with the aim of ensuring data items are requested only once.
-func TestMatcherIntermittent(t *testing.T) {
+func TestMatcherIntermittent(t *testing.T) { log.DebugLog()
 	testMatcherDiffBatches(t, [][]bloomIndexes{{{10, 20, 30}}}, 0, 100000, true, 75)
 	testMatcherDiffBatches(t, [][]bloomIndexes{{{32, 3125, 100}}, {{40, 50, 10}}}, 0, 100000, true, 81)
 	testMatcherDiffBatches(t, [][]bloomIndexes{{{4, 8, 11}, {7, 8, 17}}, {{9, 9, 12}, {15, 20, 13}}, {{18, 15, 15}, {12, 10, 4}}}, 0, 10000, true, 36)
 }
 
 // Tests the matcher pipeline on random input to hopefully catch anomalies.
-func TestMatcherRandom(t *testing.T) {
+func TestMatcherRandom(t *testing.T) { log.DebugLog()
 	for i := 0; i < 10; i++ {
 		testMatcherBothModes(t, makeRandomIndexes([]int{1}, 50), 0, 10000, 0)
 		testMatcherBothModes(t, makeRandomIndexes([]int{3}, 50), 0, 10000, 0)
@@ -83,7 +83,7 @@ func TestMatcherRandom(t *testing.T) {
 // Tests that the matcher can properly find matches if the starting block is
 // shifter from a multiple of 8. This is needed to cover an optimisation with
 // bitset matching https://github.com/ethereum/go-ethereum/issues/15309.
-func TestMatcherShifted(t *testing.T) {
+func TestMatcherShifted(t *testing.T) { log.DebugLog()
 	// Block 0 always matches in the tests, skip ahead of first 8 blocks with the
 	// start to get a potential zero byte in the matcher bitset.
 
@@ -96,14 +96,14 @@ func TestMatcherShifted(t *testing.T) {
 }
 
 // Tests that matching on everything doesn't crash (special case internally).
-func TestWildcardMatcher(t *testing.T) {
+func TestWildcardMatcher(t *testing.T) { log.DebugLog()
 	testMatcherBothModes(t, nil, 0, 10000, 0)
 }
 
 // makeRandomIndexes generates a random filter system, composed on multiple filter
 // criteria, each having one bloom list component for the address and arbitrarily
 // many topic bloom list components.
-func makeRandomIndexes(lengths []int, max int) [][]bloomIndexes {
+func makeRandomIndexes(lengths []int, max int) [][]bloomIndexes { log.DebugLog()
 	res := make([][]bloomIndexes, len(lengths))
 	for i, topics := range lengths {
 		res[i] = make([]bloomIndexes, topics)
@@ -119,7 +119,7 @@ func makeRandomIndexes(lengths []int, max int) [][]bloomIndexes {
 // testMatcherDiffBatches runs the given matches test in single-delivery and also
 // in batches delivery mode, verifying that all kinds of deliveries are handled
 // correctly withn.
-func testMatcherDiffBatches(t *testing.T, filter [][]bloomIndexes, start, blocks uint64, intermittent bool, retrievals uint32) {
+func testMatcherDiffBatches(t *testing.T, filter [][]bloomIndexes, start, blocks uint64, intermittent bool, retrievals uint32) { log.DebugLog()
 	singleton := testMatcher(t, filter, start, blocks, intermittent, retrievals, 1)
 	batched := testMatcher(t, filter, start, blocks, intermittent, retrievals, 16)
 
@@ -130,7 +130,7 @@ func testMatcherDiffBatches(t *testing.T, filter [][]bloomIndexes, start, blocks
 
 // testMatcherBothModes runs the given matcher test in both continuous as well as
 // in intermittent mode, verifying that the request counts match each other.
-func testMatcherBothModes(t *testing.T, filter [][]bloomIndexes, start, blocks uint64, retrievals uint32) {
+func testMatcherBothModes(t *testing.T, filter [][]bloomIndexes, start, blocks uint64, retrievals uint32) { log.DebugLog()
 	continuous := testMatcher(t, filter, start, blocks, false, retrievals, 16)
 	intermittent := testMatcher(t, filter, start, blocks, true, retrievals, 16)
 
@@ -141,7 +141,7 @@ func testMatcherBothModes(t *testing.T, filter [][]bloomIndexes, start, blocks u
 
 // testMatcher is a generic tester to run the given matcher test and return the
 // number of requests made for cross validation between different modes.
-func testMatcher(t *testing.T, filter [][]bloomIndexes, start, blocks uint64, intermittent bool, retrievals uint32, maxReqCount int) uint32 {
+func testMatcher(t *testing.T, filter [][]bloomIndexes, start, blocks uint64, intermittent bool, retrievals uint32, maxReqCount int) uint32 { log.DebugLog()
 	// Create a new matcher an simulate our explicit random bitsets
 	matcher := NewMatcher(testSectionSize, nil)
 	matcher.filters = filter
@@ -210,7 +210,7 @@ func testMatcher(t *testing.T, filter [][]bloomIndexes, start, blocks uint64, in
 
 // startRetrievers starts a batch of goroutines listening for section requests
 // and serving them.
-func startRetrievers(session *MatcherSession, quit chan struct{}, retrievals *uint32, batch int) {
+func startRetrievers(session *MatcherSession, quit chan struct{}, retrievals *uint32, batch int) { log.DebugLog()
 	requests := make(chan chan *Retrieval)
 
 	for i := 0; i < 10; i++ {
@@ -244,7 +244,7 @@ func startRetrievers(session *MatcherSession, quit chan struct{}, retrievals *ui
 
 // generateBitset generates the rotated bitset for the given bloom bit and section
 // numbers.
-func generateBitset(bit uint, section uint64) []byte {
+func generateBitset(bit uint, section uint64) []byte { log.DebugLog()
 	bitset := make([]byte, testSectionSize/8)
 	for i := 0; i < len(bitset); i++ {
 		for b := 0; b < 8; b++ {
@@ -258,7 +258,7 @@ func generateBitset(bit uint, section uint64) []byte {
 	return bitset
 }
 
-func expMatch1(filter bloomIndexes, i uint64) bool {
+func expMatch1(filter bloomIndexes, i uint64) bool { log.DebugLog()
 	for _, ii := range filter {
 		if (i % uint64(ii)) != 0 {
 			return false
@@ -267,7 +267,7 @@ func expMatch1(filter bloomIndexes, i uint64) bool {
 	return true
 }
 
-func expMatch2(filter []bloomIndexes, i uint64) bool {
+func expMatch2(filter []bloomIndexes, i uint64) bool { log.DebugLog()
 	for _, ii := range filter {
 		if expMatch1(ii, i) {
 			return true
@@ -276,7 +276,7 @@ func expMatch2(filter []bloomIndexes, i uint64) bool {
 	return false
 }
 
-func expMatch3(filter [][]bloomIndexes, i uint64) bool {
+func expMatch3(filter [][]bloomIndexes, i uint64) bool { log.DebugLog()
 	for _, ii := range filter {
 		if !expMatch2(ii, i) {
 			return false

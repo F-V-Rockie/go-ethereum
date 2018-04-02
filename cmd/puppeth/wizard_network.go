@@ -25,7 +25,7 @@ import (
 
 // manageServers displays a list of servers the user can disconnect from, and an
 // option to connect to new servers.
-func (w *wizard) manageServers() {
+func (w *wizard) manageServers() { log.DebugLog()
 	// List all the servers we can disconnect, along with an entry to connect a new one
 	fmt.Println()
 
@@ -67,7 +67,7 @@ func (w *wizard) manageServers() {
 // baseline validations.
 //
 // If connection succeeds, the server is added to the wizards configs!
-func (w *wizard) makeServer() string {
+func (w *wizard) makeServer() string { log.DebugLog()
 	fmt.Println()
 	fmt.Println("Please enter remote server's address:")
 
@@ -89,7 +89,7 @@ func (w *wizard) makeServer() string {
 
 // selectServer lists the user all the currnetly known servers to choose from,
 // also granting the option to add a new one.
-func (w *wizard) selectServer() string {
+func (w *wizard) selectServer() string { log.DebugLog()
 	// List the available server to the user and wait for a choice
 	fmt.Println()
 	fmt.Println("Which server do you want to interact with?")
@@ -114,7 +114,7 @@ func (w *wizard) selectServer() string {
 
 // manageComponents displays a list of network components the user can tear down
 // and an option
-func (w *wizard) manageComponents() {
+func (w *wizard) manageComponents() { log.DebugLog()
 	// List all the componens we can tear down, along with an entry to deploy a new one
 	fmt.Println()
 
@@ -167,7 +167,7 @@ func (w *wizard) manageComponents() {
 
 // deployComponent displays a list of network components the user can deploy and
 // guides through the process.
-func (w *wizard) deployComponent() {
+func (w *wizard) deployComponent() { log.DebugLog()
 	// Print all the things we can deploy and wait or user choice
 	fmt.Println()
 	fmt.Println("What would you like to deploy? (recommended order)")

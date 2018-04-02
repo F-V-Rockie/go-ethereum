@@ -25,7 +25,7 @@ import (
 type StorageSize float64
 
 // String implements the stringer interface.
-func (s StorageSize) String() string {
+func (s StorageSize) String() string { log.DebugLog()
 	if s > 1000000 {
 		return fmt.Sprintf("%.2f mB", s/1000000)
 	} else if s > 1000 {
@@ -37,7 +37,7 @@ func (s StorageSize) String() string {
 
 // TerminalString implements log.TerminalStringer, formatting a string for console
 // output during logging.
-func (s StorageSize) TerminalString() string {
+func (s StorageSize) TerminalString() string { log.DebugLog()
 	if s > 1000000 {
 		return fmt.Sprintf("%.2fmB", s/1000000)
 	} else if s > 1000 {

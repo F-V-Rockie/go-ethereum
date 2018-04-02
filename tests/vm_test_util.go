@@ -39,7 +39,7 @@ type VMTest struct {
 	json vmJSON
 }
 
-func (t *VMTest) UnmarshalJSON(data []byte) error {
+func (t *VMTest) UnmarshalJSON(data []byte) error { log.DebugLog()
 	return json.Unmarshal(data, &t.json)
 }
 
@@ -78,7 +78,7 @@ type vmExecMarshaling struct {
 	GasPrice *math.HexOrDecimal256
 }
 
-func (t *VMTest) Run(vmconfig vm.Config) error {
+func (t *VMTest) Run(vmconfig vm.Config) error { log.DebugLog()
 	db, _ := ethdb.NewMemDatabase()
 	statedb := MakePreState(db, t.json.Pre)
 	ret, gasRemaining, err := t.exec(statedb, vmconfig)
@@ -115,13 +115,13 @@ func (t *VMTest) Run(vmconfig vm.Config) error {
 	return nil
 }
 
-func (t *VMTest) exec(statedb *state.StateDB, vmconfig vm.Config) ([]byte, uint64, error) {
+func (t *VMTest) exec(statedb *state.StateDB, vmconfig vm.Config) ([]byte, uint64, error) { log.DebugLog()
 	evm := t.newEVM(statedb, vmconfig)
 	e := t.json.Exec
 	return evm.Call(vm.AccountRef(e.Caller), e.Address, e.Data, e.GasLimit, e.Value)
 }
 
-func (t *VMTest) newEVM(statedb *state.StateDB, vmconfig vm.Config) *vm.EVM {
+func (t *VMTest) newEVM(statedb *state.StateDB, vmconfig vm.Config) *vm.EVM { log.DebugLog()
 	initialCall := true
 	canTransfer := func(db vm.StateDB, address common.Address, amount *big.Int) bool {
 		if initialCall {
@@ -147,6 +147,6 @@ func (t *VMTest) newEVM(statedb *state.StateDB, vmconfig vm.Config) *vm.EVM {
 	return vm.NewEVM(context, statedb, params.MainnetChainConfig, vmconfig)
 }
 
-func vmTestBlockHash(n uint64) common.Hash {
+func vmTestBlockHash(n uint64) common.Hash { log.DebugLog()
 	return common.BytesToHash(crypto.Keccak256([]byte(big.NewInt(int64(n)).String())))
 }

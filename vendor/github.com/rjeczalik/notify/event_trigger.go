@@ -13,10 +13,10 @@ type event struct {
 	pe interface{}
 }
 
-func (e *event) Event() Event { return e.e }
+func (e *event) Event() Event { log.DebugLog() return e.e }
 
-func (e *event) Path() string { return e.p }
+func (e *event) Path() string { log.DebugLog() return e.p }
 
-func (e *event) Sys() interface{} { return e.pe }
+func (e *event) Sys() interface{} { log.DebugLog() return e.pe }
 
-func (e *event) isDir() (bool, error) { return e.d, nil }
+func (e *event) isDir() (bool, error) { log.DebugLog() return e.d, nil }

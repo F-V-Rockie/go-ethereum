@@ -11,33 +11,33 @@ import (
 	"unsafe"
 )
 
-func setTimespec(sec, nsec int64) Timespec {
+func setTimespec(sec, nsec int64) Timespec { log.DebugLog()
 	return Timespec{Sec: sec, Nsec: nsec}
 }
 
-func setTimeval(sec, usec int64) Timeval {
+func setTimeval(sec, usec int64) Timeval { log.DebugLog()
 	return Timeval{Sec: sec, Usec: usec}
 }
 
-func SetKevent(k *Kevent_t, fd, mode, flags int) {
+func SetKevent(k *Kevent_t, fd, mode, flags int) { log.DebugLog()
 	k.Ident = uint64(fd)
 	k.Filter = int16(mode)
 	k.Flags = uint16(flags)
 }
 
-func (iov *Iovec) SetLen(length int) {
+func (iov *Iovec) SetLen(length int) { log.DebugLog()
 	iov.Len = uint64(length)
 }
 
-func (msghdr *Msghdr) SetControllen(length int) {
+func (msghdr *Msghdr) SetControllen(length int) { log.DebugLog()
 	msghdr.Controllen = uint32(length)
 }
 
-func (cmsg *Cmsghdr) SetLen(length int) {
+func (cmsg *Cmsghdr) SetLen(length int) { log.DebugLog()
 	cmsg.Len = uint32(length)
 }
 
-func sendfile(outfd int, infd int, offset *int64, count int) (written int, err error) {
+func sendfile(outfd int, infd int, offset *int64, count int) (written int, err error) { log.DebugLog()
 	var writtenOut uint64 = 0
 	_, _, e1 := Syscall9(SYS_SENDFILE, uintptr(infd), uintptr(outfd), uintptr(*offset), uintptr(count), 0, uintptr(unsafe.Pointer(&writtenOut)), 0, 0, 0)
 

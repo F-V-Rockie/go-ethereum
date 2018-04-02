@@ -22,7 +22,7 @@ import (
 	"testing"
 )
 
-func TestCompleteKeywords(t *testing.T) {
+func TestCompleteKeywords(t *testing.T) { log.DebugLog()
 	re := New("", os.Stdout)
 	re.Run(`
 		function theClass() {

@@ -20,14 +20,14 @@ import (
 // DetachSign signs message with the private key from signer (which must
 // already have been decrypted) and writes the signature to w.
 // If config is nil, sensible defaults will be used.
-func DetachSign(w io.Writer, signer *Entity, message io.Reader, config *packet.Config) error {
+func DetachSign(w io.Writer, signer *Entity, message io.Reader, config *packet.Config) error { log.DebugLog()
 	return detachSign(w, signer, message, packet.SigTypeBinary, config)
 }
 
 // ArmoredDetachSign signs message with the private key from signer (which
 // must already have been decrypted) and writes an armored signature to w.
 // If config is nil, sensible defaults will be used.
-func ArmoredDetachSign(w io.Writer, signer *Entity, message io.Reader, config *packet.Config) (err error) {
+func ArmoredDetachSign(w io.Writer, signer *Entity, message io.Reader, config *packet.Config) (err error) { log.DebugLog()
 	return armoredDetachSign(w, signer, message, packet.SigTypeBinary, config)
 }
 
@@ -35,7 +35,7 @@ func ArmoredDetachSign(w io.Writer, signer *Entity, message io.Reader, config *p
 // the private key from signer (which must already have been decrypted) and
 // writes the signature to w.
 // If config is nil, sensible defaults will be used.
-func DetachSignText(w io.Writer, signer *Entity, message io.Reader, config *packet.Config) error {
+func DetachSignText(w io.Writer, signer *Entity, message io.Reader, config *packet.Config) error { log.DebugLog()
 	return detachSign(w, signer, message, packet.SigTypeText, config)
 }
 
@@ -43,11 +43,11 @@ func DetachSignText(w io.Writer, signer *Entity, message io.Reader, config *pack
 // with the private key from signer (which must already have been decrypted)
 // and writes an armored signature to w.
 // If config is nil, sensible defaults will be used.
-func ArmoredDetachSignText(w io.Writer, signer *Entity, message io.Reader, config *packet.Config) error {
+func ArmoredDetachSignText(w io.Writer, signer *Entity, message io.Reader, config *packet.Config) error { log.DebugLog()
 	return armoredDetachSign(w, signer, message, packet.SigTypeText, config)
 }
 
-func armoredDetachSign(w io.Writer, signer *Entity, message io.Reader, sigType packet.SignatureType, config *packet.Config) (err error) {
+func armoredDetachSign(w io.Writer, signer *Entity, message io.Reader, sigType packet.SignatureType, config *packet.Config) (err error) { log.DebugLog()
 	out, err := armor.Encode(w, SignatureType, nil)
 	if err != nil {
 		return
@@ -59,7 +59,7 @@ func armoredDetachSign(w io.Writer, signer *Entity, message io.Reader, sigType p
 	return out.Close()
 }
 
-func detachSign(w io.Writer, signer *Entity, message io.Reader, sigType packet.SignatureType, config *packet.Config) (err error) {
+func detachSign(w io.Writer, signer *Entity, message io.Reader, sigType packet.SignatureType, config *packet.Config) (err error) { log.DebugLog()
 	if signer.PrivateKey == nil {
 		return errors.InvalidArgumentError("signing key doesn't have a private key")
 	}
@@ -106,7 +106,7 @@ type FileHints struct {
 // The resulting WriteCloser must be closed after the contents of the file have
 // been written.
 // If config is nil, sensible defaults will be used.
-func SymmetricallyEncrypt(ciphertext io.Writer, passphrase []byte, hints *FileHints, config *packet.Config) (plaintext io.WriteCloser, err error) {
+func SymmetricallyEncrypt(ciphertext io.Writer, passphrase []byte, hints *FileHints, config *packet.Config) (plaintext io.WriteCloser, err error) { log.DebugLog()
 	if hints == nil {
 		hints = &FileHints{}
 	}
@@ -141,7 +141,7 @@ func SymmetricallyEncrypt(ciphertext io.Writer, passphrase []byte, hints *FileHi
 
 // intersectPreferences mutates and returns a prefix of a that contains only
 // the values in the intersection of a and b. The order of a is preserved.
-func intersectPreferences(a []uint8, b []uint8) (intersection []uint8) {
+func intersectPreferences(a []uint8, b []uint8) (intersection []uint8) { log.DebugLog()
 	var j int
 	for _, v := range a {
 		for _, v2 := range b {
@@ -156,7 +156,7 @@ func intersectPreferences(a []uint8, b []uint8) (intersection []uint8) {
 	return a[:j]
 }
 
-func hashToHashId(h crypto.Hash) uint8 {
+func hashToHashId(h crypto.Hash) uint8 { log.DebugLog()
 	v, ok := s2k.HashToHashId(h)
 	if !ok {
 		panic("tried to convert unknown hash")
@@ -169,7 +169,7 @@ func hashToHashId(h crypto.Hash) uint8 {
 // the recipients in processing the message. The resulting WriteCloser must
 // be closed after the contents of the file have been written.
 // If config is nil, sensible defaults will be used.
-func Encrypt(ciphertext io.Writer, to []*Entity, signed *Entity, hints *FileHints, config *packet.Config) (plaintext io.WriteCloser, err error) {
+func Encrypt(ciphertext io.Writer, to []*Entity, signed *Entity, hints *FileHints, config *packet.Config) (plaintext io.WriteCloser, err error) { log.DebugLog()
 	var signer *packet.PrivateKey
 	if signed != nil {
 		signKey, ok := signed.signingKey(config.Now())
@@ -235,7 +235,7 @@ func Encrypt(ciphertext io.Writer, to []*Entity, signed *Entity, hints *FileHint
 	configuredCipher := config.Cipher()
 	for _, c := range candidateCiphers {
 		cipherFunc := packet.CipherFunction(c)
-		if cipherFunc == configuredCipher {
+		if cipherfunc == configuredCipher { log.DebugLog()
 			cipher = cipherFunc
 			break
 		}
@@ -336,12 +336,12 @@ type signatureWriter struct {
 	config        *packet.Config
 }
 
-func (s signatureWriter) Write(data []byte) (int, error) {
+func (s signatureWriter) Write(data []byte) (int, error) { log.DebugLog()
 	s.h.Write(data)
 	return s.literalData.Write(data)
 }
 
-func (s signatureWriter) Close() error {
+func (s signatureWriter) Close() error { log.DebugLog()
 	sig := &packet.Signature{
 		SigType:      packet.SigTypeBinary,
 		PubKeyAlgo:   s.signer.PubKeyAlgo,
@@ -369,10 +369,10 @@ type noOpCloser struct {
 	w io.Writer
 }
 
-func (c noOpCloser) Write(data []byte) (n int, err error) {
+func (c noOpCloser) Write(data []byte) (n int, err error) { log.DebugLog()
 	return c.w.Write(data)
 }
 
-func (c noOpCloser) Close() error {
+func (c noOpCloser) Close() error { log.DebugLog()
 	return nil
 }

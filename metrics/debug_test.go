@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func BenchmarkDebugGCStats(b *testing.B) {
+func BenchmarkDebugGCStats(b *testing.B) { log.DebugLog()
 	r := NewRegistry()
 	RegisterDebugGCStats(r)
 	b.ResetTimer()
@@ -16,7 +16,7 @@ func BenchmarkDebugGCStats(b *testing.B) {
 	}
 }
 
-func TestDebugGCStatsBlocking(t *testing.T) {
+func TestDebugGCStatsBlocking(t *testing.T) { log.DebugLog()
 	if g := runtime.GOMAXPROCS(0); g < 2 {
 		t.Skipf("skipping TestDebugGCMemStatsBlocking with GOMAXPROCS=%d\n", g)
 		return
@@ -35,7 +35,7 @@ func TestDebugGCStatsBlocking(t *testing.T) {
 	t.Log("i++ during time.Sleep:", <-ch)
 }
 
-func testDebugGCStatsBlocking(ch chan int) {
+func testDebugGCStatsBlocking(ch chan int) { log.DebugLog()
 	i := 0
 	for {
 		select {

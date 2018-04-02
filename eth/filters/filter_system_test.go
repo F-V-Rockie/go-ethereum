@@ -47,15 +47,15 @@ type testBackend struct {
 	chainFeed  *event.Feed
 }
 
-func (b *testBackend) ChainDb() ethdb.Database {
+func (b *testBackend) ChainDb() ethdb.Database { log.DebugLog()
 	return b.db
 }
 
-func (b *testBackend) EventMux() *event.TypeMux {
+func (b *testBackend) EventMux() *event.TypeMux { log.DebugLog()
 	return b.mux
 }
 
-func (b *testBackend) HeaderByNumber(ctx context.Context, blockNr rpc.BlockNumber) (*types.Header, error) {
+func (b *testBackend) HeaderByNumber(ctx context.Context, blockNr rpc.BlockNumber) (*types.Header, error) { log.DebugLog()
 	var hash common.Hash
 	var num uint64
 	if blockNr == rpc.LatestBlockNumber {
@@ -68,12 +68,12 @@ func (b *testBackend) HeaderByNumber(ctx context.Context, blockNr rpc.BlockNumbe
 	return core.GetHeader(b.db, hash, num), nil
 }
 
-func (b *testBackend) GetReceipts(ctx context.Context, blockHash common.Hash) (types.Receipts, error) {
+func (b *testBackend) GetReceipts(ctx context.Context, blockHash common.Hash) (types.Receipts, error) { log.DebugLog()
 	number := core.GetBlockNumber(b.db, blockHash)
 	return core.GetBlockReceipts(b.db, blockHash, number), nil
 }
 
-func (b *testBackend) GetLogs(ctx context.Context, blockHash common.Hash) ([][]*types.Log, error) {
+func (b *testBackend) GetLogs(ctx context.Context, blockHash common.Hash) ([][]*types.Log, error) { log.DebugLog()
 	number := core.GetBlockNumber(b.db, blockHash)
 	receipts := core.GetBlockReceipts(b.db, blockHash, number)
 
@@ -84,27 +84,27 @@ func (b *testBackend) GetLogs(ctx context.Context, blockHash common.Hash) ([][]*
 	return logs, nil
 }
 
-func (b *testBackend) SubscribeTxPreEvent(ch chan<- core.TxPreEvent) event.Subscription {
+func (b *testBackend) SubscribeTxPreEvent(ch chan<- core.TxPreEvent) event.Subscription { log.DebugLog()
 	return b.txFeed.Subscribe(ch)
 }
 
-func (b *testBackend) SubscribeRemovedLogsEvent(ch chan<- core.RemovedLogsEvent) event.Subscription {
+func (b *testBackend) SubscribeRemovedLogsEvent(ch chan<- core.RemovedLogsEvent) event.Subscription { log.DebugLog()
 	return b.rmLogsFeed.Subscribe(ch)
 }
 
-func (b *testBackend) SubscribeLogsEvent(ch chan<- []*types.Log) event.Subscription {
+func (b *testBackend) SubscribeLogsEvent(ch chan<- []*types.Log) event.Subscription { log.DebugLog()
 	return b.logsFeed.Subscribe(ch)
 }
 
-func (b *testBackend) SubscribeChainEvent(ch chan<- core.ChainEvent) event.Subscription {
+func (b *testBackend) SubscribeChainEvent(ch chan<- core.ChainEvent) event.Subscription { log.DebugLog()
 	return b.chainFeed.Subscribe(ch)
 }
 
-func (b *testBackend) BloomStatus() (uint64, uint64) {
+func (b *testBackend) BloomStatus() (uint64, uint64) { log.DebugLog()
 	return params.BloomBitsBlocks, b.sections
 }
 
-func (b *testBackend) ServiceFilter(ctx context.Context, session *bloombits.MatcherSession) {
+func (b *testBackend) ServiceFilter(ctx context.Context, session *bloombits.MatcherSession) { log.DebugLog()
 	requests := make(chan chan *bloombits.Retrieval)
 
 	go session.Multiplex(16, 0, requests)
@@ -136,7 +136,7 @@ func (b *testBackend) ServiceFilter(ctx context.Context, session *bloombits.Matc
 // - one at the start and should receive all posted chain events and a second (blockHashes)
 // - one that is created after a cutoff moment and uninstalled after a second cutoff moment (blockHashes[cutoff1:cutoff2])
 // - one that is created after the second cutoff moment (blockHashes[cutoff2:])
-func TestBlockSubscription(t *testing.T) {
+func TestBlockSubscription(t *testing.T) { log.DebugLog()
 	t.Parallel()
 
 	var (
@@ -193,7 +193,7 @@ func TestBlockSubscription(t *testing.T) {
 }
 
 // TestPendingTxFilter tests whether pending tx filters retrieve all pending transactions that are posted to the event mux.
-func TestPendingTxFilter(t *testing.T) {
+func TestPendingTxFilter(t *testing.T) { log.DebugLog()
 	t.Parallel()
 
 	var (
@@ -258,7 +258,7 @@ func TestPendingTxFilter(t *testing.T) {
 
 // TestLogFilterCreation test whether a given filter criteria makes sense.
 // If not it must return an error.
-func TestLogFilterCreation(t *testing.T) {
+func TestLogFilterCreation(t *testing.T) { log.DebugLog()
 	var (
 		mux        = new(event.TypeMux)
 		db, _      = ethdb.NewMemDatabase()
@@ -305,7 +305,7 @@ func TestLogFilterCreation(t *testing.T) {
 
 // TestInvalidLogFilterCreation tests whether invalid filter log criteria results in an error
 // when the filter is created.
-func TestInvalidLogFilterCreation(t *testing.T) {
+func TestInvalidLogFilterCreation(t *testing.T) { log.DebugLog()
 	t.Parallel()
 
 	var (
@@ -335,7 +335,7 @@ func TestInvalidLogFilterCreation(t *testing.T) {
 }
 
 // TestLogFilter tests whether log filters match the correct logs that are posted to the event feed.
-func TestLogFilter(t *testing.T) {
+func TestLogFilter(t *testing.T) { log.DebugLog()
 	t.Parallel()
 
 	var (
@@ -454,7 +454,7 @@ func TestLogFilter(t *testing.T) {
 }
 
 // TestPendingLogsSubscription tests if a subscription receives the correct pending logs that are posted to the event feed.
-func TestPendingLogsSubscription(t *testing.T) {
+func TestPendingLogsSubscription(t *testing.T) { log.DebugLog()
 	t.Parallel()
 
 	var (

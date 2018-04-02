@@ -34,20 +34,20 @@ type testPromise struct {
 	amount *big.Int
 }
 
-func (self *testInPayment) Receive(promise Promise) (*big.Int, error) {
+func (self *testInPayment) Receive(promise Promise) (*big.Int, error) { log.DebugLog()
 	p := promise.(*testPromise)
 	self.received = append(self.received, p)
 	return p.amount, nil
 }
 
-func (self *testInPayment) AutoCash(interval time.Duration, limit *big.Int) {
+func (self *testInPayment) AutoCash(interval time.Duration, limit *big.Int) { log.DebugLog()
 	self.autocashInterval = interval
 	self.autocashLimit = limit
 }
 
-func (self *testInPayment) Cash() (string, error) { return "", nil }
+func (self *testInPayment) Cash() (string, error) { log.DebugLog() return "", nil }
 
-func (self *testInPayment) Stop() {}
+func (self *testInPayment) Stop() { log.DebugLog()}
 
 type testOutPayment struct {
 	deposits             []*big.Int
@@ -56,22 +56,22 @@ type testOutPayment struct {
 	autodepositBuffer    *big.Int
 }
 
-func (self *testOutPayment) Issue(amount *big.Int) (promise Promise, err error) {
+func (self *testOutPayment) Issue(amount *big.Int) (promise Promise, err error) { log.DebugLog()
 	return &testPromise{amount}, nil
 }
 
-func (self *testOutPayment) Deposit(amount *big.Int) (string, error) {
+func (self *testOutPayment) Deposit(amount *big.Int) (string, error) { log.DebugLog()
 	self.deposits = append(self.deposits, amount)
 	return "", nil
 }
 
-func (self *testOutPayment) AutoDeposit(interval time.Duration, threshold, buffer *big.Int) {
+func (self *testOutPayment) AutoDeposit(interval time.Duration, threshold, buffer *big.Int) { log.DebugLog()
 	self.autodepositInterval = interval
 	self.autodepositThreshold = threshold
 	self.autodepositBuffer = buffer
 }
 
-func (self *testOutPayment) Stop() {}
+func (self *testOutPayment) Stop() { log.DebugLog()}
 
 type testProtocol struct {
 	drop     bool
@@ -79,21 +79,21 @@ type testProtocol struct {
 	promises []*testPromise
 }
 
-func (self *testProtocol) Drop() {
+func (self *testProtocol) Drop() { log.DebugLog()
 	self.drop = true
 }
 
-func (self *testProtocol) String() string {
+func (self *testProtocol) String() string { log.DebugLog()
 	return ""
 }
 
-func (self *testProtocol) Pay(amount int, promise Promise) {
+func (self *testProtocol) Pay(amount int, promise Promise) { log.DebugLog()
 	p := promise.(*testPromise)
 	self.promises = append(self.promises, p)
 	self.amounts = append(self.amounts, amount)
 }
 
-func TestSwap(t *testing.T) {
+func TestSwap(t *testing.T) { log.DebugLog()
 
 	strategy := &Strategy{
 		AutoCashInterval:     1 * time.Second,

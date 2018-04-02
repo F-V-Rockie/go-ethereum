@@ -74,7 +74,7 @@ type Node struct {
 }
 
 // New creates a new P2P node, ready for protocol registration.
-func New(conf *Config) (*Node, error) {
+func New(conf *Config) (*Node, error) { log.DebugLog()
 	// Copy config and resolve the datadir so future changes to the current
 	// working directory don't affect the node.
 	confCopy := *conf
@@ -123,7 +123,7 @@ func New(conf *Config) (*Node, error) {
 
 // Register injects a new service into the node's stack. The service created by
 // the passed constructor must be unique in its type with regard to sibling ones.
-func (n *Node) Register(constructor ServiceConstructor) error {
+func (n *Node) Register(constructor ServiceConstructor) error { log.DebugLog()
 	n.lock.Lock()
 	defer n.lock.Unlock()
 
@@ -135,7 +135,7 @@ func (n *Node) Register(constructor ServiceConstructor) error {
 }
 
 // Start create a live P2P node and starts running it.
-func (n *Node) Start() error {
+func (n *Node) Start() error { log.DebugLog()
 	n.lock.Lock()
 	defer n.lock.Unlock()
 
@@ -227,7 +227,7 @@ func (n *Node) Start() error {
 	return nil
 }
 
-func (n *Node) openDataDir() error {
+func (n *Node) openDataDir() error { log.DebugLog()
 	if n.config.DataDir == "" {
 		return nil // ephemeral
 	}
@@ -249,7 +249,7 @@ func (n *Node) openDataDir() error {
 // startRPC is a helper method to start all the various RPC endpoint during node
 // startup. It's not meant to be called at any time afterwards as it makes certain
 // assumptions about the state of the node.
-func (n *Node) startRPC(services map[reflect.Type]Service) error {
+func (n *Node) startRPC(services map[reflect.Type]Service) error { log.DebugLog()
 	// Gather all the possible APIs to surface
 	apis := n.apis()
 	for _, service := range services {
@@ -280,7 +280,7 @@ func (n *Node) startRPC(services map[reflect.Type]Service) error {
 }
 
 // startInProc initializes an in-process RPC endpoint.
-func (n *Node) startInProc(apis []rpc.API) error {
+func (n *Node) startInProc(apis []rpc.API) error { log.DebugLog()
 	// Register all the APIs exposed by the services
 	handler := rpc.NewServer()
 	for _, api := range apis {
@@ -294,7 +294,7 @@ func (n *Node) startInProc(apis []rpc.API) error {
 }
 
 // stopInProc terminates the in-process RPC endpoint.
-func (n *Node) stopInProc() {
+func (n *Node) stopInProc() { log.DebugLog()
 	if n.inprocHandler != nil {
 		n.inprocHandler.Stop()
 		n.inprocHandler = nil
@@ -302,7 +302,7 @@ func (n *Node) stopInProc() {
 }
 
 // startIPC initializes and starts the IPC RPC endpoint.
-func (n *Node) startIPC(apis []rpc.API) error {
+func (n *Node) startIPC(apis []rpc.API) error { log.DebugLog()
 	// Short circuit if the IPC endpoint isn't being exposed
 	if n.ipcEndpoint == "" {
 		return nil
@@ -351,7 +351,7 @@ func (n *Node) startIPC(apis []rpc.API) error {
 }
 
 // stopIPC terminates the IPC RPC endpoint.
-func (n *Node) stopIPC() {
+func (n *Node) stopIPC() { log.DebugLog()
 	if n.ipcListener != nil {
 		n.ipcListener.Close()
 		n.ipcListener = nil
@@ -365,7 +365,7 @@ func (n *Node) stopIPC() {
 }
 
 // startHTTP initializes and starts the HTTP RPC endpoint.
-func (n *Node) startHTTP(endpoint string, apis []rpc.API, modules []string, cors []string, vhosts []string) error {
+func (n *Node) startHTTP(endpoint string, apis []rpc.API, modules []string, cors []string, vhosts []string) error { log.DebugLog()
 	// Short circuit if the HTTP endpoint isn't being exposed
 	if endpoint == "" {
 		return nil
@@ -404,7 +404,7 @@ func (n *Node) startHTTP(endpoint string, apis []rpc.API, modules []string, cors
 }
 
 // stopHTTP terminates the HTTP RPC endpoint.
-func (n *Node) stopHTTP() {
+func (n *Node) stopHTTP() { log.DebugLog()
 	if n.httpListener != nil {
 		n.httpListener.Close()
 		n.httpListener = nil
@@ -418,7 +418,7 @@ func (n *Node) stopHTTP() {
 }
 
 // startWS initializes and starts the websocket RPC endpoint.
-func (n *Node) startWS(endpoint string, apis []rpc.API, modules []string, wsOrigins []string, exposeAll bool) error {
+func (n *Node) startWS(endpoint string, apis []rpc.API, modules []string, wsOrigins []string, exposeAll bool) error { log.DebugLog()
 	// Short circuit if the WS endpoint isn't being exposed
 	if endpoint == "" {
 		return nil
@@ -458,7 +458,7 @@ func (n *Node) startWS(endpoint string, apis []rpc.API, modules []string, wsOrig
 }
 
 // stopWS terminates the websocket RPC endpoint.
-func (n *Node) stopWS() {
+func (n *Node) stopWS() { log.DebugLog()
 	if n.wsListener != nil {
 		n.wsListener.Close()
 		n.wsListener = nil
@@ -473,7 +473,7 @@ func (n *Node) stopWS() {
 
 // Stop terminates a running node along with all it's services. In the node was
 // not started, an error is returned.
-func (n *Node) Stop() error {
+func (n *Node) Stop() error { log.DebugLog()
 	n.lock.Lock()
 	defer n.lock.Unlock()
 
@@ -527,7 +527,7 @@ func (n *Node) Stop() error {
 
 // Wait blocks the thread until the node is stopped. If the node is not running
 // at the time of invocation, the method immediately returns.
-func (n *Node) Wait() {
+func (n *Node) Wait() { log.DebugLog()
 	n.lock.RLock()
 	if n.server == nil {
 		n.lock.RUnlock()
@@ -541,7 +541,7 @@ func (n *Node) Wait() {
 
 // Restart terminates a running node and boots up a new one in its place. If the
 // node isn't running, an error is returned.
-func (n *Node) Restart() error {
+func (n *Node) Restart() error { log.DebugLog()
 	if err := n.Stop(); err != nil {
 		return err
 	}
@@ -552,7 +552,7 @@ func (n *Node) Restart() error {
 }
 
 // Attach creates an RPC client attached to an in-process API handler.
-func (n *Node) Attach() (*rpc.Client, error) {
+func (n *Node) Attach() (*rpc.Client, error) { log.DebugLog()
 	n.lock.RLock()
 	defer n.lock.RUnlock()
 
@@ -563,7 +563,7 @@ func (n *Node) Attach() (*rpc.Client, error) {
 }
 
 // RPCHandler returns the in-process RPC request handler.
-func (n *Node) RPCHandler() (*rpc.Server, error) {
+func (n *Node) RPCHandler() (*rpc.Server, error) { log.DebugLog()
 	n.lock.RLock()
 	defer n.lock.RUnlock()
 
@@ -576,7 +576,7 @@ func (n *Node) RPCHandler() (*rpc.Server, error) {
 // Server retrieves the currently running P2P network layer. This method is meant
 // only to inspect fields of the currently running server, life cycle management
 // should be left to this Node entity.
-func (n *Node) Server() *p2p.Server {
+func (n *Node) Server() *p2p.Server { log.DebugLog()
 	n.lock.RLock()
 	defer n.lock.RUnlock()
 
@@ -584,7 +584,7 @@ func (n *Node) Server() *p2p.Server {
 }
 
 // Service retrieves a currently running service registered of a specific type.
-func (n *Node) Service(service interface{}) error {
+func (n *Node) Service(service interface{}) error { log.DebugLog()
 	n.lock.RLock()
 	defer n.lock.RUnlock()
 
@@ -603,45 +603,45 @@ func (n *Node) Service(service interface{}) error {
 
 // DataDir retrieves the current datadir used by the protocol stack.
 // Deprecated: No files should be stored in this directory, use InstanceDir instead.
-func (n *Node) DataDir() string {
+func (n *Node) DataDir() string { log.DebugLog()
 	return n.config.DataDir
 }
 
 // InstanceDir retrieves the instance directory used by the protocol stack.
-func (n *Node) InstanceDir() string {
+func (n *Node) InstanceDir() string { log.DebugLog()
 	return n.config.instanceDir()
 }
 
 // AccountManager retrieves the account manager used by the protocol stack.
-func (n *Node) AccountManager() *accounts.Manager {
+func (n *Node) AccountManager() *accounts.Manager { log.DebugLog()
 	return n.accman
 }
 
 // IPCEndpoint retrieves the current IPC endpoint used by the protocol stack.
-func (n *Node) IPCEndpoint() string {
+func (n *Node) IPCEndpoint() string { log.DebugLog()
 	return n.ipcEndpoint
 }
 
 // HTTPEndpoint retrieves the current HTTP endpoint used by the protocol stack.
-func (n *Node) HTTPEndpoint() string {
+func (n *Node) HTTPEndpoint() string { log.DebugLog()
 	return n.httpEndpoint
 }
 
 // WSEndpoint retrieves the current WS endpoint used by the protocol stack.
-func (n *Node) WSEndpoint() string {
+func (n *Node) WSEndpoint() string { log.DebugLog()
 	return n.wsEndpoint
 }
 
 // EventMux retrieves the event multiplexer used by all the network services in
 // the current protocol stack.
-func (n *Node) EventMux() *event.TypeMux {
+func (n *Node) EventMux() *event.TypeMux { log.DebugLog()
 	return n.eventmux
 }
 
 // OpenDatabase opens an existing database with the given name (or creates one if no
 // previous can be found) from within the node's instance directory. If the node is
 // ephemeral, a memory database is returned.
-func (n *Node) OpenDatabase(name string, cache, handles int) (ethdb.Database, error) {
+func (n *Node) OpenDatabase(name string, cache, handles int) (ethdb.Database, error) { log.DebugLog()
 	if n.config.DataDir == "" {
 		return ethdb.NewMemDatabase()
 	}
@@ -649,12 +649,12 @@ func (n *Node) OpenDatabase(name string, cache, handles int) (ethdb.Database, er
 }
 
 // ResolvePath returns the absolute path of a resource in the instance directory.
-func (n *Node) ResolvePath(x string) string {
+func (n *Node) ResolvePath(x string) string { log.DebugLog()
 	return n.config.resolvePath(x)
 }
 
 // apis returns the collection of RPC descriptors this node offers.
-func (n *Node) apis() []rpc.API {
+func (n *Node) apis() []rpc.API { log.DebugLog()
 	return []rpc.API{
 		{
 			Namespace: "admin",

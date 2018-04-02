@@ -54,7 +54,7 @@ var nodeDBKeyTests = []struct {
 	},
 }
 
-func TestNodeDBKeys(t *testing.T) {
+func TestNodeDBKeys(t *testing.T) { log.DebugLog()
 	for i, tt := range nodeDBKeyTests {
 		if key := makeKey(tt.id, tt.field); !bytes.Equal(key, tt.key) {
 			t.Errorf("make test %d: key mismatch: have 0x%x, want 0x%x", i, key, tt.key)
@@ -78,7 +78,7 @@ var nodeDBInt64Tests = []struct {
 	{key: []byte{0x03}, value: 3},
 }
 
-func TestNodeDBInt64(t *testing.T) {
+func TestNodeDBInt64(t *testing.T) { log.DebugLog()
 	db, _ := newNodeDB("", Version, NodeID{})
 	defer db.close()
 
@@ -101,7 +101,7 @@ func TestNodeDBInt64(t *testing.T) {
 	}
 }
 
-func TestNodeDBFetchStore(t *testing.T) {
+func TestNodeDBFetchStore(t *testing.T) { log.DebugLog()
 	node := NewNode(
 		MustHexID("0x1dd9d65c4552b5eb43d5ad55a2ee3f56c6cbc1c64a5c8d659f51fcd51bace24351232b8d7821617d2b29b54b81cdefb9b3e9c37d7fd5f63270bcc9e1a6f6a439"),
 		net.IP{192, 168, 0, 1},
@@ -215,7 +215,7 @@ var nodeDBSeedQueryNodes = []struct {
 	},
 }
 
-func TestNodeDBSeedQuery(t *testing.T) {
+func TestNodeDBSeedQuery(t *testing.T) { log.DebugLog()
 	db, _ := newNodeDB("", Version, nodeDBSeedQueryNodes[1].node.ID)
 	defer db.close()
 
@@ -254,7 +254,7 @@ func TestNodeDBSeedQuery(t *testing.T) {
 	}
 }
 
-func TestNodeDBPersistency(t *testing.T) {
+func TestNodeDBPersistency(t *testing.T) { log.DebugLog()
 	root, err := ioutil.TempDir("", "nodedb-")
 	if err != nil {
 		t.Fatalf("failed to create temporary data folder: %v", err)
@@ -323,7 +323,7 @@ var nodeDBExpirationNodes = []struct {
 	},
 }
 
-func TestNodeDBExpiration(t *testing.T) {
+func TestNodeDBExpiration(t *testing.T) { log.DebugLog()
 	db, _ := newNodeDB("", Version, NodeID{})
 	defer db.close()
 
@@ -348,7 +348,7 @@ func TestNodeDBExpiration(t *testing.T) {
 	}
 }
 
-func TestNodeDBSelfExpiration(t *testing.T) {
+func TestNodeDBSelfExpiration(t *testing.T) { log.DebugLog()
 	// Find a node in the tests that shouldn't expire, and assign it as self
 	var self NodeID
 	for _, node := range nodeDBExpirationNodes {

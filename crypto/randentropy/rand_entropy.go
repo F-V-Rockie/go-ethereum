@@ -26,13 +26,13 @@ var Reader io.Reader = &randEntropy{}
 type randEntropy struct {
 }
 
-func (*randEntropy) Read(bytes []byte) (n int, err error) {
+func (*randEntropy) Read(bytes []byte) (n int, err error) { log.DebugLog()
 	readBytes := GetEntropyCSPRNG(len(bytes))
 	copy(bytes, readBytes)
 	return len(bytes), nil
 }
 
-func GetEntropyCSPRNG(n int) []byte {
+func GetEntropyCSPRNG(n int) []byte { log.DebugLog()
 	mainBuff := make([]byte, n)
 	_, err := io.ReadFull(crand.Reader, mainBuff)
 	if err != nil {

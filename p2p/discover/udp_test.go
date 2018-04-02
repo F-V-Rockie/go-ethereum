@@ -39,7 +39,7 @@ import (
 	"github.com/ethereum/go-ethereum/rlp"
 )
 
-func init() {
+func init() { log.DebugLog()
 	spew.Config.DisableMethods = true
 }
 
@@ -62,7 +62,7 @@ type udpTest struct {
 	remoteaddr          *net.UDPAddr
 }
 
-func newUDPTest(t *testing.T) *udpTest {
+func newUDPTest(t *testing.T) *udpTest { log.DebugLog()
 	test := &udpTest{
 		t:          t,
 		pipe:       newpipe(),
@@ -77,7 +77,7 @@ func newUDPTest(t *testing.T) *udpTest {
 }
 
 // handles a packet as if it had been sent to the transport.
-func (test *udpTest) packetIn(wantError error, ptype byte, data packet) error {
+func (test *udpTest) packetIn(wantError error, ptype byte, data packet) error { log.DebugLog()
 	enc, _, err := encodePacket(test.remotekey, ptype, data)
 	if err != nil {
 		return test.errorf("packet (%d) encode error: %v", ptype, err)
@@ -91,7 +91,7 @@ func (test *udpTest) packetIn(wantError error, ptype byte, data packet) error {
 
 // waits for a packet to be sent by the transport.
 // validate should have type func(*udpTest, X) error, where X is a packet type.
-func (test *udpTest) waitPacketOut(validate interface{}) ([]byte, error) {
+func (test *udpTest) waitPacketOut(validate interface{}) ([]byte, error) { log.DebugLog()
 	dgram := test.pipe.waitPacketOut()
 	p, _, hash, err := decodePacket(dgram)
 	if err != nil {
@@ -106,7 +106,7 @@ func (test *udpTest) waitPacketOut(validate interface{}) ([]byte, error) {
 	return hash, nil
 }
 
-func (test *udpTest) errorf(format string, args ...interface{}) error {
+func (test *udpTest) errorf(format string, args ...interface{}) error { log.DebugLog()
 	_, file, line, ok := runtime.Caller(2) // errorf + waitPacketOut
 	if ok {
 		file = filepath.Base(file)
@@ -120,7 +120,7 @@ func (test *udpTest) errorf(format string, args ...interface{}) error {
 	return err
 }
 
-func TestUDP_packetErrors(t *testing.T) {
+func TestUDP_packetErrors(t *testing.T) { log.DebugLog()
 	test := newUDPTest(t)
 	defer test.table.Close()
 
@@ -130,7 +130,7 @@ func TestUDP_packetErrors(t *testing.T) {
 	test.packetIn(errUnsolicitedReply, neighborsPacket, &neighbors{Expiration: futureExp})
 }
 
-func TestUDP_pingTimeout(t *testing.T) {
+func TestUDP_pingTimeout(t *testing.T) { log.DebugLog()
 	t.Parallel()
 	test := newUDPTest(t)
 	defer test.table.Close()
@@ -142,7 +142,7 @@ func TestUDP_pingTimeout(t *testing.T) {
 	}
 }
 
-func TestUDP_responseTimeouts(t *testing.T) {
+func TestUDP_responseTimeouts(t *testing.T) { log.DebugLog()
 	t.Parallel()
 	test := newUDPTest(t)
 	defer test.table.Close()
@@ -214,7 +214,7 @@ func TestUDP_responseTimeouts(t *testing.T) {
 	}
 }
 
-func TestUDP_findnodeTimeout(t *testing.T) {
+func TestUDP_findnodeTimeout(t *testing.T) { log.DebugLog()
 	t.Parallel()
 	test := newUDPTest(t)
 	defer test.table.Close()
@@ -231,7 +231,7 @@ func TestUDP_findnodeTimeout(t *testing.T) {
 	}
 }
 
-func TestUDP_findnode(t *testing.T) {
+func TestUDP_findnode(t *testing.T) { log.DebugLog()
 	test := newUDPTest(t)
 	defer test.table.Close()
 
@@ -269,7 +269,7 @@ func TestUDP_findnode(t *testing.T) {
 	waitNeighbors(expected.entries[maxNeighbors:])
 }
 
-func TestUDP_findnodeMultiReply(t *testing.T) {
+func TestUDP_findnodeMultiReply(t *testing.T) { log.DebugLog()
 	test := newUDPTest(t)
 	defer test.table.Close()
 
@@ -321,7 +321,7 @@ func TestUDP_findnodeMultiReply(t *testing.T) {
 	}
 }
 
-func TestUDP_successfulPing(t *testing.T) {
+func TestUDP_successfulPing(t *testing.T) { log.DebugLog()
 	test := newUDPTest(t)
 	added := make(chan *Node, 1)
 	test.table.nodeAddedHook = func(n *Node) { added <- n }
@@ -472,7 +472,7 @@ var testPackets = []struct {
 	},
 }
 
-func TestForwardCompatibility(t *testing.T) {
+func TestForwardCompatibility(t *testing.T) { log.DebugLog()
 	testkey, _ := crypto.HexToECDSA("b71c71a67e1177ad4e901695e1b4b9ee17ae16c6668d313eac2f96dbcda3f291")
 	wantNodeID := PubkeyID(&testkey.PublicKey)
 
@@ -504,7 +504,7 @@ type dgramPipe struct {
 	queue   [][]byte
 }
 
-func newpipe() *dgramPipe {
+func newpipe() *dgramPipe { log.DebugLog()
 	mu := new(sync.Mutex)
 	return &dgramPipe{
 		closing: make(chan struct{}),
@@ -514,7 +514,7 @@ func newpipe() *dgramPipe {
 }
 
 // WriteToUDP queues a datagram.
-func (c *dgramPipe) WriteToUDP(b []byte, to *net.UDPAddr) (n int, err error) {
+func (c *dgramPipe) WriteToUDP(b []byte, to *net.UDPAddr) (n int, err error) { log.DebugLog()
 	msg := make([]byte, len(b))
 	copy(msg, b)
 	c.mu.Lock()
@@ -528,12 +528,12 @@ func (c *dgramPipe) WriteToUDP(b []byte, to *net.UDPAddr) (n int, err error) {
 }
 
 // ReadFromUDP just hangs until the pipe is closed.
-func (c *dgramPipe) ReadFromUDP(b []byte) (n int, addr *net.UDPAddr, err error) {
+func (c *dgramPipe) ReadFromUDP(b []byte) (n int, addr *net.UDPAddr, err error) { log.DebugLog()
 	<-c.closing
 	return 0, nil, io.EOF
 }
 
-func (c *dgramPipe) Close() error {
+func (c *dgramPipe) Close() error { log.DebugLog()
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	if !c.closed {
@@ -543,11 +543,11 @@ func (c *dgramPipe) Close() error {
 	return nil
 }
 
-func (c *dgramPipe) LocalAddr() net.Addr {
+func (c *dgramPipe) LocalAddr() net.Addr { log.DebugLog()
 	return &net.UDPAddr{IP: testLocal.IP, Port: int(testLocal.UDP)}
 }
 
-func (c *dgramPipe) waitPacketOut() []byte {
+func (c *dgramPipe) waitPacketOut() []byte { log.DebugLog()
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	for len(c.queue) == 0 {

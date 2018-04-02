@@ -32,7 +32,7 @@ import (
 
 const bzzManifestJSON = "application/bzz-manifest+json"
 
-func add(ctx *cli.Context) {
+func add(ctx *cli.Context) { log.DebugLog()
 	args := ctx.Args()
 	if len(args) < 3 {
 		utils.Fatalf("Need at least three arguments <MHASH> <path> <HASH> [<content-type>]")
@@ -65,7 +65,7 @@ func add(ctx *cli.Context) {
 	}
 }
 
-func update(ctx *cli.Context) {
+func update(ctx *cli.Context) { log.DebugLog()
 
 	args := ctx.Args()
 	if len(args) < 3 {
@@ -98,7 +98,7 @@ func update(ctx *cli.Context) {
 	}
 }
 
-func remove(ctx *cli.Context) {
+func remove(ctx *cli.Context) { log.DebugLog()
 	args := ctx.Args()
 	if len(args) < 2 {
 		utils.Fatalf("Need at least two arguments <MHASH> <path>")
@@ -123,7 +123,7 @@ func remove(ctx *cli.Context) {
 	}
 }
 
-func addEntryToManifest(ctx *cli.Context, mhash, path, hash, ctype string) string {
+func addEntryToManifest(ctx *cli.Context, mhash, path, hash, ctype string) string { log.DebugLog()
 
 	var (
 		bzzapi           = strings.TrimRight(ctx.GlobalString(SwarmApiFlag.Name), "/")
@@ -188,7 +188,7 @@ func addEntryToManifest(ctx *cli.Context, mhash, path, hash, ctype string) strin
 
 }
 
-func updateEntryInManifest(ctx *cli.Context, mhash, path, hash, ctype string) string {
+func updateEntryInManifest(ctx *cli.Context, mhash, path, hash, ctype string) string { log.DebugLog()
 
 	var (
 		bzzapi           = strings.TrimRight(ctx.GlobalString(SwarmApiFlag.Name), "/")
@@ -264,7 +264,7 @@ func updateEntryInManifest(ctx *cli.Context, mhash, path, hash, ctype string) st
 	return newManifestHash
 }
 
-func removeEntryFromManifest(ctx *cli.Context, mhash, path string) string {
+func removeEntryFromManifest(ctx *cli.Context, mhash, path string) string { log.DebugLog()
 
 	var (
 		bzzapi           = strings.TrimRight(ctx.GlobalString(SwarmApiFlag.Name), "/")

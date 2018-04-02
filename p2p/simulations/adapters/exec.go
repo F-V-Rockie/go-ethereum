@@ -60,7 +60,7 @@ type ExecAdapter struct {
 
 // NewExecAdapter returns an ExecAdapter which stores node data in
 // subdirectories of the given base directory
-func NewExecAdapter(baseDir string) *ExecAdapter {
+func NewExecAdapter(baseDir string) *ExecAdapter { log.DebugLog()
 	return &ExecAdapter{
 		BaseDir: baseDir,
 		nodes:   make(map[discover.NodeID]*ExecNode),
@@ -68,12 +68,12 @@ func NewExecAdapter(baseDir string) *ExecAdapter {
 }
 
 // Name returns the name of the adapter for logging purposes
-func (e *ExecAdapter) Name() string {
+func (e *ExecAdapter) Name() string { log.DebugLog()
 	return "exec-adapter"
 }
 
 // NewNode returns a new ExecNode using the given config
-func (e *ExecAdapter) NewNode(config *NodeConfig) (Node, error) {
+func (e *ExecAdapter) NewNode(config *NodeConfig) (Node, error) { log.DebugLog()
 	if len(config.Services) == 0 {
 		return nil, errors.New("node must have at least one service")
 	}
@@ -137,7 +137,7 @@ type ExecNode struct {
 }
 
 // Addr returns the node's enode URL
-func (n *ExecNode) Addr() []byte {
+func (n *ExecNode) Addr() []byte { log.DebugLog()
 	if n.Info == nil {
 		return nil
 	}
@@ -146,7 +146,7 @@ func (n *ExecNode) Addr() []byte {
 
 // Client returns an rpc.Client which can be used to communicate with the
 // underlying services (it is set once the node has started)
-func (n *ExecNode) Client() (*rpc.Client, error) {
+func (n *ExecNode) Client() (*rpc.Client, error) { log.DebugLog()
 	return n.client, nil
 }
 
@@ -157,7 +157,7 @@ var wsAddrPattern = regexp.MustCompile(`ws://[\d.:]+`)
 // Start exec's the node passing the ID and service as command line arguments
 // and the node config encoded as JSON in the _P2P_NODE_CONFIG environment
 // variable
-func (n *ExecNode) Start(snapshots map[string][]byte) (err error) {
+func (n *ExecNode) Start(snapshots map[string][]byte) (err error) { log.DebugLog()
 	if n.Cmd != nil {
 		return errors.New("already started")
 	}
@@ -236,7 +236,7 @@ func (n *ExecNode) Start(snapshots map[string][]byte) (err error) {
 // execCommand returns a command which runs the node locally by exec'ing
 // the current binary but setting argv[0] to "p2p-node" so that the child
 // runs execP2PNode
-func (n *ExecNode) execCommand() *exec.Cmd {
+func (n *ExecNode) execCommand() *exec.Cmd { log.DebugLog()
 	return &exec.Cmd{
 		Path: reexec.Self(),
 		Args: []string{"p2p-node", strings.Join(n.Config.Node.Services, ","), n.ID.String()},
@@ -245,7 +245,7 @@ func (n *ExecNode) execCommand() *exec.Cmd {
 
 // Stop stops the node by first sending SIGTERM and then SIGKILL if the node
 // doesn't stop within 5s
-func (n *ExecNode) Stop() error {
+func (n *ExecNode) Stop() error { log.DebugLog()
 	if n.Cmd == nil {
 		return nil
 	}
@@ -276,7 +276,7 @@ func (n *ExecNode) Stop() error {
 }
 
 // NodeInfo returns information about the node
-func (n *ExecNode) NodeInfo() *p2p.NodeInfo {
+func (n *ExecNode) NodeInfo() *p2p.NodeInfo { log.DebugLog()
 	info := &p2p.NodeInfo{
 		ID: n.ID.String(),
 	}
@@ -288,7 +288,7 @@ func (n *ExecNode) NodeInfo() *p2p.NodeInfo {
 
 // ServeRPC serves RPC requests over the given connection by dialling the
 // node's WebSocket address and joining the two connections
-func (n *ExecNode) ServeRPC(clientConn net.Conn) error {
+func (n *ExecNode) ServeRPC(clientConn net.Conn) error { log.DebugLog()
 	conn, err := websocket.Dial(n.wsAddr, "", "http://localhost")
 	if err != nil {
 		return err
@@ -315,7 +315,7 @@ func (n *ExecNode) ServeRPC(clientConn net.Conn) error {
 
 // Snapshots creates snapshots of the services by calling the
 // simulation_snapshot RPC method
-func (n *ExecNode) Snapshots() (map[string][]byte, error) {
+func (n *ExecNode) Snapshots() (map[string][]byte, error) { log.DebugLog()
 	if n.client == nil {
 		return nil, errors.New("RPC not started")
 	}
@@ -323,7 +323,7 @@ func (n *ExecNode) Snapshots() (map[string][]byte, error) {
 	return snapshots, n.client.Call(&snapshots, "simulation_snapshot")
 }
 
-func init() {
+func init() { log.DebugLog()
 	// register a reexec function to start a devp2p node when the current
 	// binary is executed as "p2p-node"
 	reexec.Register("p2p-node", execP2PNode)
@@ -341,7 +341,7 @@ type execNodeConfig struct {
 // execP2PNode starts a devp2p node when the current binary is executed with
 // argv[0] being "p2p-node", reading the service / ID from argv[1] / argv[2]
 // and the node config from the _P2P_NODE_CONFIG environment variable
-func execP2PNode() {
+func execP2PNode() { log.DebugLog()
 	glogger := log.NewGlogHandler(log.StreamHandler(os.Stderr, log.LogfmtFormat()))
 	glogger.Verbosity(log.LvlInfo)
 	log.Root().SetHandler(glogger)
@@ -449,7 +449,7 @@ type snapshotService struct {
 	services map[string]node.Service
 }
 
-func (s *snapshotService) APIs() []rpc.API {
+func (s *snapshotService) APIs() []rpc.API { log.DebugLog()
 	return []rpc.API{{
 		Namespace: "simulation",
 		Version:   "1.0",
@@ -457,15 +457,15 @@ func (s *snapshotService) APIs() []rpc.API {
 	}}
 }
 
-func (s *snapshotService) Protocols() []p2p.Protocol {
+func (s *snapshotService) Protocols() []p2p.Protocol { log.DebugLog()
 	return nil
 }
 
-func (s *snapshotService) Start(*p2p.Server) error {
+func (s *snapshotService) Start(*p2p.Server) error { log.DebugLog()
 	return nil
 }
 
-func (s *snapshotService) Stop() error {
+func (s *snapshotService) Stop() error { log.DebugLog()
 	return nil
 }
 
@@ -474,7 +474,7 @@ type SnapshotAPI struct {
 	services map[string]node.Service
 }
 
-func (api SnapshotAPI) Snapshot() (map[string][]byte, error) {
+func (api SnapshotAPI) Snapshot() (map[string][]byte, error) { log.DebugLog()
 	snapshots := make(map[string][]byte)
 	for name, service := range api.services {
 		if s, ok := service.(interface {
@@ -496,7 +496,7 @@ type wsRPCDialer struct {
 
 // DialRPC implements the RPCDialer interface by creating a WebSocket RPC
 // client of the given node
-func (w *wsRPCDialer) DialRPC(id discover.NodeID) (*rpc.Client, error) {
+func (w *wsRPCDialer) DialRPC(id discover.NodeID) (*rpc.Client, error) { log.DebugLog()
 	addr, ok := w.addrs[id.String()]
 	if !ok {
 		return nil, fmt.Errorf("unknown node: %s", id)

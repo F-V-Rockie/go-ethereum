@@ -51,7 +51,7 @@ type Privilege struct {
 	Used             bool   `json:"used,omitempty"`
 }
 
-func (p Privilege) String() string {
+func (p Privilege) String() string { log.DebugLog()
 	var buf bytes.Buffer
 	buf.WriteString(p.Name)
 	buf.WriteString("=(")
@@ -88,7 +88,7 @@ type User struct {
 	Type    uint32
 }
 
-func (u User) String() string {
+func (u User) String() string { log.DebugLog()
 	return fmt.Sprintf(`User:%v\%v, SID:%v, Type:%v`, u.Domain, u.Account, u.SID, u.Type)
 }
 
@@ -101,13 +101,13 @@ type DebugInfo struct {
 	ProcessPrivs map[string]Privilege // Privileges held by the process.
 }
 
-func (d DebugInfo) String() string {
+func (d DebugInfo) String() string { log.DebugLog()
 	bytes, _ := json.Marshal(d)
 	return string(bytes)
 }
 
 // LookupPrivilegeName looks up a privilege name given a LUID value.
-func LookupPrivilegeName(systemName string, luid int64) (string, error) {
+func LookupPrivilegeName(systemName string, luid int64) (string, error) { log.DebugLog()
 	buf := make([]uint16, 256)
 	bufSize := uint32(len(buf))
 	err := _LookupPrivilegeName(systemName, &luid, &buf[0], &bufSize)
@@ -119,7 +119,7 @@ func LookupPrivilegeName(systemName string, luid int64) (string, error) {
 }
 
 // mapPrivileges maps privilege names to LUID values.
-func mapPrivileges(names []string) ([]int64, error) {
+func mapPrivileges(names []string) ([]int64, error) { log.DebugLog()
 	var privileges []int64
 	privNameMutex.Lock()
 	defer privNameMutex.Unlock()
@@ -140,7 +140,7 @@ func mapPrivileges(names []string) ([]int64, error) {
 // EnableTokenPrivileges enables the specified privileges in the given
 // Token. The token must have TOKEN_ADJUST_PRIVILEGES access. If the token
 // does not already contain the privilege it cannot be enabled.
-func EnableTokenPrivileges(token syscall.Token, privileges ...string) error {
+func EnableTokenPrivileges(token syscall.Token, privileges ...string) error { log.DebugLog()
 	privValues, err := mapPrivileges(privileges)
 	if err != nil {
 		return err
@@ -168,7 +168,7 @@ func EnableTokenPrivileges(token syscall.Token, privileges ...string) error {
 // The provided token must have at a minimum TOKEN_QUERY access. This is a
 // wrapper around the GetTokenInformation function.
 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa446671(v=vs.85).aspx
-func GetTokenPrivileges(token syscall.Token) (map[string]Privilege, error) {
+func GetTokenPrivileges(token syscall.Token) (map[string]Privilege, error) { log.DebugLog()
 	// Determine the required buffer size.
 	var size uint32
 	syscall.GetTokenInformation(token, syscall.TokenPrivileges, nil, 0, &size)
@@ -219,7 +219,7 @@ func GetTokenPrivileges(token syscall.Token) (map[string]Privilege, error) {
 }
 
 // GetTokenUser returns the User associated with the given Token.
-func GetTokenUser(token syscall.Token) (User, error) {
+func GetTokenUser(token syscall.Token) (User, error) { log.DebugLog()
 	tokenUser, err := token.GetTokenUser()
 	if err != nil {
 		return User{}, errors.Wrap(err, "GetTokenUser failed")
@@ -240,7 +240,7 @@ func GetTokenUser(token syscall.Token) (User, error) {
 }
 
 // GetDebugInfo returns general debug info about the current process.
-func GetDebugInfo() (*DebugInfo, error) {
+func GetDebugInfo() (*DebugInfo, error) { log.DebugLog()
 	h, err := windows.GetCurrentProcess()
 	if err != nil {
 		return nil, err

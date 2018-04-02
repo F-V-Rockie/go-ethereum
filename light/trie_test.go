@@ -32,7 +32,7 @@ import (
 	"github.com/ethereum/go-ethereum/trie"
 )
 
-func TestNodeIterator(t *testing.T) {
+func TestNodeIterator(t *testing.T) { log.DebugLog()
 	var (
 		fulldb, _  = ethdb.NewMemDatabase()
 		lightdb, _ = ethdb.NewMemDatabase()
@@ -56,7 +56,7 @@ func TestNodeIterator(t *testing.T) {
 	}
 }
 
-func diffTries(t1, t2 state.Trie) error {
+func diffTries(t1, t2 state.Trie) error { log.DebugLog()
 	i1 := trie.NewIterator(t1.NodeIterator(nil))
 	i2 := trie.NewIterator(t2.NodeIterator(nil))
 	for i1.Next() && i2.Next() {

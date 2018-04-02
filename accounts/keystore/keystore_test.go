@@ -33,7 +33,7 @@ import (
 
 var testSigData = make([]byte, 32)
 
-func TestKeyStore(t *testing.T) {
+func TestKeyStore(t *testing.T) { log.DebugLog()
 	dir, ks := tmpKeyStore(t, true)
 	defer os.RemoveAll(dir)
 
@@ -68,7 +68,7 @@ func TestKeyStore(t *testing.T) {
 	}
 }
 
-func TestSign(t *testing.T) {
+func TestSign(t *testing.T) { log.DebugLog()
 	dir, ks := tmpKeyStore(t, true)
 	defer os.RemoveAll(dir)
 
@@ -85,7 +85,7 @@ func TestSign(t *testing.T) {
 	}
 }
 
-func TestSignWithPassphrase(t *testing.T) {
+func TestSignWithPassphrase(t *testing.T) { log.DebugLog()
 	dir, ks := tmpKeyStore(t, true)
 	defer os.RemoveAll(dir)
 
@@ -113,7 +113,7 @@ func TestSignWithPassphrase(t *testing.T) {
 	}
 }
 
-func TestTimedUnlock(t *testing.T) {
+func TestTimedUnlock(t *testing.T) { log.DebugLog()
 	dir, ks := tmpKeyStore(t, true)
 	defer os.RemoveAll(dir)
 
@@ -148,7 +148,7 @@ func TestTimedUnlock(t *testing.T) {
 	}
 }
 
-func TestOverrideUnlock(t *testing.T) {
+func TestOverrideUnlock(t *testing.T) { log.DebugLog()
 	dir, ks := tmpKeyStore(t, false)
 	defer os.RemoveAll(dir)
 
@@ -189,7 +189,7 @@ func TestOverrideUnlock(t *testing.T) {
 }
 
 // This test should fail under -race if signing races the expiration goroutine.
-func TestSignRace(t *testing.T) {
+func TestSignRace(t *testing.T) { log.DebugLog()
 	dir, ks := tmpKeyStore(t, false)
 	defer os.RemoveAll(dir)
 
@@ -217,7 +217,7 @@ func TestSignRace(t *testing.T) {
 
 // Tests that the wallet notifier loop starts and stops correctly based on the
 // addition and removal of wallet event subscriptions.
-func TestWalletNotifierLifecycle(t *testing.T) {
+func TestWalletNotifierLifecycle(t *testing.T) { log.DebugLog()
 	// Create a temporary kesytore to test with
 	dir, ks := tmpKeyStore(t, false)
 	defer os.RemoveAll(dir)
@@ -279,7 +279,7 @@ type walletEvent struct {
 
 // Tests that wallet notifications and correctly fired when accounts are added
 // or deleted from the keystore.
-func TestWalletNotifications(t *testing.T) {
+func TestWalletNotifications(t *testing.T) { log.DebugLog()
 	dir, ks := tmpKeyStore(t, false)
 	defer os.RemoveAll(dir)
 
@@ -339,7 +339,7 @@ func TestWalletNotifications(t *testing.T) {
 }
 
 // checkAccounts checks that all known live accounts are present in the wallet list.
-func checkAccounts(t *testing.T, live map[common.Address]accounts.Account, wallets []accounts.Wallet) {
+func checkAccounts(t *testing.T, live map[common.Address]accounts.Account, wallets []accounts.Wallet) { log.DebugLog()
 	if len(live) != len(wallets) {
 		t.Errorf("wallet list doesn't match required accounts: have %d, want %d", len(wallets), len(live))
 		return
@@ -359,7 +359,7 @@ func checkAccounts(t *testing.T, live map[common.Address]accounts.Account, walle
 }
 
 // checkEvents checks that all events in 'want' are present in 'have'. Events may be present multiple times.
-func checkEvents(t *testing.T, want []walletEvent, have []walletEvent) {
+func checkEvents(t *testing.T, want []walletEvent, have []walletEvent) { log.DebugLog()
 	for _, wantEv := range want {
 		nmatch := 0
 		for ; len(have) > 0; nmatch++ {
@@ -374,7 +374,7 @@ func checkEvents(t *testing.T, want []walletEvent, have []walletEvent) {
 	}
 }
 
-func tmpKeyStore(t *testing.T, encrypted bool) (string, *KeyStore) {
+func tmpKeyStore(t *testing.T, encrypted bool) (string, *KeyStore) { log.DebugLog()
 	d, err := ioutil.TempDir("", "eth-keystore-test")
 	if err != nil {
 		t.Fatal(err)

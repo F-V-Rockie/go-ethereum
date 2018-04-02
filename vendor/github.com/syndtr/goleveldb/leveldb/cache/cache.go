@@ -54,7 +54,7 @@ type NamespaceGetter struct {
 }
 
 // Get simply calls Cache.Get() method.
-func (g *NamespaceGetter) Get(key uint64, setFunc func() (size int, value Value)) *Handle {
+func (g *NamespaceGetter) Get(key uint64, setFunc func() (size int, value Value)) *Handle { log.DebugLog()
 	return g.Cache.Get(g.NS, key, setFunc)
 }
 
@@ -75,7 +75,7 @@ type mBucket struct {
 	frozen bool
 }
 
-func (b *mBucket) freeze() []*Node {
+func (b *mBucket) freeze() []*Node { log.DebugLog()
 	b.mu.Lock()
 	defer b.mu.Unlock()
 	if !b.frozen {
@@ -84,7 +84,7 @@ func (b *mBucket) freeze() []*Node {
 	return b.node
 }
 
-func (b *mBucket) get(r *Cache, h *mNode, hash uint32, ns, key uint64, noset bool) (done, added bool, n *Node) {
+func (b *mBucket) get(r *Cache, h *mNode, hash uint32, ns, key uint64, noset bool) (done, added bool, n *Node) { log.DebugLog()
 	b.mu.Lock()
 
 	if b.frozen {
@@ -146,7 +146,7 @@ func (b *mBucket) get(r *Cache, h *mNode, hash uint32, ns, key uint64, noset boo
 	return true, true, n
 }
 
-func (b *mBucket) delete(r *Cache, h *mNode, hash uint32, ns, key uint64) (done, deleted bool) {
+func (b *mBucket) delete(r *Cache, h *mNode, hash uint32, ns, key uint64) (done, deleted bool) { log.DebugLog()
 	b.mu.Lock()
 
 	if b.frozen {
@@ -227,7 +227,7 @@ type mNode struct {
 	shrinkThreshold int32
 }
 
-func (n *mNode) initBucket(i uint32) *mBucket {
+func (n *mNode) initBucket(i uint32) *mBucket { log.DebugLog()
 	if b := (*mBucket)(atomic.LoadPointer(&n.buckets[i])); b != nil {
 		return b
 	}
@@ -277,7 +277,7 @@ func (n *mNode) initBucket(i uint32) *mBucket {
 	return (*mBucket)(atomic.LoadPointer(&n.buckets[i]))
 }
 
-func (n *mNode) initBuckets() {
+func (n *mNode) initBuckets() { log.DebugLog()
 	for i := range n.buckets {
 		n.initBucket(uint32(i))
 	}
@@ -296,7 +296,7 @@ type Cache struct {
 
 // NewCache creates a new 'cache map'. The cacher is optional and
 // may be nil.
-func NewCache(cacher Cacher) *Cache {
+func NewCache(cacher Cacher) *Cache { log.DebugLog()
 	h := &mNode{
 		buckets:         make([]unsafe.Pointer, mInitialSize),
 		mask:            mInitialSize - 1,
@@ -313,7 +313,7 @@ func NewCache(cacher Cacher) *Cache {
 	return r
 }
 
-func (r *Cache) getBucket(hash uint32) (*mNode, *mBucket) {
+func (r *Cache) getBucket(hash uint32) (*mNode, *mBucket) { log.DebugLog()
 	h := (*mNode)(atomic.LoadPointer(&r.mHead))
 	i := hash & h.mask
 	b := (*mBucket)(atomic.LoadPointer(&h.buckets[i]))
@@ -323,7 +323,7 @@ func (r *Cache) getBucket(hash uint32) (*mNode, *mBucket) {
 	return h, b
 }
 
-func (r *Cache) delete(n *Node) bool {
+func (r *Cache) delete(n *Node) bool { log.DebugLog()
 	for {
 		h, b := r.getBucket(n.hash)
 		done, deleted := b.delete(r, h, n.hash, n.ns, n.key)
@@ -335,17 +335,17 @@ func (r *Cache) delete(n *Node) bool {
 }
 
 // Nodes returns number of 'cache node' in the map.
-func (r *Cache) Nodes() int {
+func (r *Cache) Nodes() int { log.DebugLog()
 	return int(atomic.LoadInt32(&r.nodes))
 }
 
 // Size returns sums of 'cache node' size in the map.
-func (r *Cache) Size() int {
+func (r *Cache) Size() int { log.DebugLog()
 	return int(atomic.LoadInt32(&r.size))
 }
 
 // Capacity returns cache capacity.
-func (r *Cache) Capacity() int {
+func (r *Cache) Capacity() int { log.DebugLog()
 	if r.cacher == nil {
 		return 0
 	}
@@ -353,7 +353,7 @@ func (r *Cache) Capacity() int {
 }
 
 // SetCapacity sets cache capacity.
-func (r *Cache) SetCapacity(capacity int) {
+func (r *Cache) SetCapacity(capacity int) { log.DebugLog()
 	if r.cacher != nil {
 		r.cacher.SetCapacity(capacity)
 	}
@@ -365,7 +365,7 @@ func (r *Cache) SetCapacity(capacity int) {
 //
 // The returned 'cache handle' should be released after use by calling Release
 // method.
-func (r *Cache) Get(ns, key uint64, setFunc func() (size int, value Value)) *Handle {
+func (r *Cache) Get(ns, key uint64, setFunc func() (size int, value Value)) *Handle { log.DebugLog()
 	r.mu.RLock()
 	defer r.mu.RUnlock()
 	if r.closed {
@@ -380,7 +380,7 @@ func (r *Cache) Get(ns, key uint64, setFunc func() (size int, value Value)) *Han
 			if n != nil {
 				n.mu.Lock()
 				if n.value == nil {
-					if setFunc == nil {
+					if setfunc == nil { log.DebugLog()
 						n.mu.Unlock()
 						n.unref()
 						return nil
@@ -417,7 +417,7 @@ func (r *Cache) Get(ns, key uint64, setFunc func() (size int, value Value)) *Han
 // doesn't exist or once the 'cache node' is released.
 //
 // Delete return true is such 'cache node' exist.
-func (r *Cache) Delete(ns, key uint64, onDel func()) bool {
+func (r *Cache) Delete(ns, key uint64, onDel func()) bool { log.DebugLog()
 	r.mu.RLock()
 	defer r.mu.RUnlock()
 	if r.closed {
@@ -457,7 +457,7 @@ func (r *Cache) Delete(ns, key uint64, onDel func()) bool {
 // simply call Cacher.Evict.
 //
 // Evict return true is such 'cache node' exist.
-func (r *Cache) Evict(ns, key uint64) bool {
+func (r *Cache) Evict(ns, key uint64) bool { log.DebugLog()
 	r.mu.RLock()
 	defer r.mu.RUnlock()
 	if r.closed {
@@ -486,7 +486,7 @@ func (r *Cache) Evict(ns, key uint64) bool {
 
 // EvictNS evicts 'cache node' with the given namespace. This will
 // simply call Cacher.EvictNS.
-func (r *Cache) EvictNS(ns uint64) {
+func (r *Cache) EvictNS(ns uint64) { log.DebugLog()
 	r.mu.RLock()
 	defer r.mu.RUnlock()
 	if r.closed {
@@ -499,7 +499,7 @@ func (r *Cache) EvictNS(ns uint64) {
 }
 
 // EvictAll evicts all 'cache node'. This will simply call Cacher.EvictAll.
-func (r *Cache) EvictAll() {
+func (r *Cache) EvictAll() { log.DebugLog()
 	r.mu.RLock()
 	defer r.mu.RUnlock()
 	if r.closed {
@@ -512,7 +512,7 @@ func (r *Cache) EvictAll() {
 }
 
 // Close closes the 'cache map' and forcefully releases all 'cache node'.
-func (r *Cache) Close() error {
+func (r *Cache) Close() error { log.DebugLog()
 	r.mu.Lock()
 	if !r.closed {
 		r.closed = true
@@ -552,7 +552,7 @@ func (r *Cache) Close() error {
 
 // CloseWeak closes the 'cache map' and evict all 'cache node' from cacher, but
 // unlike Close it doesn't forcefully releases 'cache node'.
-func (r *Cache) CloseWeak() error {
+func (r *Cache) CloseWeak() error { log.DebugLog()
 	r.mu.Lock()
 	if !r.closed {
 		r.closed = true
@@ -587,45 +587,45 @@ type Node struct {
 }
 
 // NS returns this 'cache node' namespace.
-func (n *Node) NS() uint64 {
+func (n *Node) NS() uint64 { log.DebugLog()
 	return n.ns
 }
 
 // Key returns this 'cache node' key.
-func (n *Node) Key() uint64 {
+func (n *Node) Key() uint64 { log.DebugLog()
 	return n.key
 }
 
 // Size returns this 'cache node' size.
-func (n *Node) Size() int {
+func (n *Node) Size() int { log.DebugLog()
 	return n.size
 }
 
 // Value returns this 'cache node' value.
-func (n *Node) Value() Value {
+func (n *Node) Value() Value { log.DebugLog()
 	return n.value
 }
 
 // Ref returns this 'cache node' ref counter.
-func (n *Node) Ref() int32 {
+func (n *Node) Ref() int32 { log.DebugLog()
 	return atomic.LoadInt32(&n.ref)
 }
 
 // GetHandle returns an handle for this 'cache node'.
-func (n *Node) GetHandle() *Handle {
+func (n *Node) GetHandle() *Handle { log.DebugLog()
 	if atomic.AddInt32(&n.ref, 1) <= 1 {
 		panic("BUG: Node.GetHandle on zero ref")
 	}
 	return &Handle{unsafe.Pointer(n)}
 }
 
-func (n *Node) unref() {
+func (n *Node) unref() { log.DebugLog()
 	if atomic.AddInt32(&n.ref, -1) == 0 {
 		n.r.delete(n)
 	}
 }
 
-func (n *Node) unrefLocked() {
+func (n *Node) unrefLocked() { log.DebugLog()
 	if atomic.AddInt32(&n.ref, -1) == 0 {
 		n.r.mu.RLock()
 		if !n.r.closed {
@@ -641,7 +641,7 @@ type Handle struct {
 }
 
 // Value returns the value of the 'cache node'.
-func (h *Handle) Value() Value {
+func (h *Handle) Value() Value { log.DebugLog()
 	n := (*Node)(atomic.LoadPointer(&h.n))
 	if n != nil {
 		return n.value
@@ -651,7 +651,7 @@ func (h *Handle) Value() Value {
 
 // Release releases this 'cache handle'.
 // It is safe to call release multiple times.
-func (h *Handle) Release() {
+func (h *Handle) Release() { log.DebugLog()
 	nPtr := atomic.LoadPointer(&h.n)
 	if nPtr != nil && atomic.CompareAndSwapPointer(&h.n, nPtr, nil) {
 		n := (*Node)(nPtr)
@@ -659,7 +659,7 @@ func (h *Handle) Release() {
 	}
 }
 
-func murmur32(ns, key uint64, seed uint32) uint32 {
+func murmur32(ns, key uint64, seed uint32) uint32 { log.DebugLog()
 	const (
 		m = uint32(0x5bd1e995)
 		r = 24

@@ -44,7 +44,7 @@ var (
 
 // LanguageDefault returns the canonical name of the default encoding for a
 // given language.
-func LanguageDefault(tag language.Tag) string {
+func LanguageDefault(tag language.Tag) string { log.DebugLog()
 	matcherOnce.Do(func() {
 		tags := []language.Tag{}
 		for _, t := range strings.Split(locales, " ") {
@@ -59,7 +59,7 @@ func LanguageDefault(tag language.Tag) string {
 // Get returns an Encoding for one of the names listed in
 // http://www.w3.org/TR/encoding using the Default Index. Matching is case-
 // insensitive.
-func Get(name string) (encoding.Encoding, error) {
+func Get(name string) (encoding.Encoding, error) { log.DebugLog()
 	x, ok := nameMap[strings.ToLower(strings.TrimSpace(name))]
 	if !ok {
 		return nil, errInvalidName
@@ -69,7 +69,7 @@ func Get(name string) (encoding.Encoding, error) {
 
 // Name reports the canonical name of the given Encoding. It will return
 // an error if e is not associated with a supported encoding scheme.
-func Name(e encoding.Encoding) (string, error) {
+func Name(e encoding.Encoding) (string, error) { log.DebugLog()
 	id, ok := e.(identifier.Interface)
 	if !ok {
 		return "", errUnknown

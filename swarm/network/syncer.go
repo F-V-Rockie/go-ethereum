@@ -72,17 +72,17 @@ type DbAccess struct {
 	loc *storage.LocalStore
 }
 
-func NewDbAccess(loc *storage.LocalStore) *DbAccess {
+func NewDbAccess(loc *storage.LocalStore) *DbAccess { log.DebugLog()
 	return &DbAccess{loc.DbStore.(*storage.DbStore), loc}
 }
 
 // to obtain the chunks from key or request db entry only
-func (self *DbAccess) get(key storage.Key) (*storage.Chunk, error) {
+func (self *DbAccess) get(key storage.Key) (*storage.Chunk, error) { log.DebugLog()
 	return self.loc.Get(key)
 }
 
 // current storage counter of chunk db
-func (self *DbAccess) counter() uint64 {
+func (self *DbAccess) counter() uint64 { log.DebugLog()
 	return self.db.Counter()
 }
 
@@ -92,7 +92,7 @@ type keyIterator interface {
 }
 
 // generator function for iteration by address range and storage counter
-func (self *DbAccess) iterator(s *syncState) keyIterator {
+func (self *DbAccess) iterator(s *syncState) keyIterator { log.DebugLog()
 	it, err := self.db.NewSyncIterator(*(s.DbSyncState))
 	if err != nil {
 		return nil
@@ -100,7 +100,7 @@ func (self *DbAccess) iterator(s *syncState) keyIterator {
 	return keyIterator(it)
 }
 
-func (self syncState) String() string {
+func (self syncState) String() string { log.DebugLog()
 	if self.Synced {
 		return fmt.Sprintf(
 			"session started at: %v, last seen at: %v, latest key: %v",
@@ -131,7 +131,7 @@ type SyncParams struct {
 }
 
 // constructor with default values
-func NewDefaultSyncParams() *SyncParams {
+func NewDefaultSyncParams() *SyncParams { log.DebugLog()
 	return &SyncParams{
 		RequestDbBatchSize: requestDbBatchSize,
 		KeyBufferSize:      keyBufferSize,
@@ -145,7 +145,7 @@ func NewDefaultSyncParams() *SyncParams {
 
 //this can only finally be set after all config options (file, cmd line, env vars)
 //have been evaluated
-func (self *SyncParams) Init(path string) {
+func (self *SyncParams) Init(path string) { log.DebugLog()
 	self.RequestDbPath = filepath.Join(path, "requests")
 }
 
@@ -226,7 +226,7 @@ func newSyncer(
 }
 
 // metadata serialisation
-func encodeSync(state *syncState) (*json.RawMessage, error) {
+func encodeSync(state *syncState) (*json.RawMessage, error) { log.DebugLog()
 	data, err := json.MarshalIndent(state, "", " ")
 	if err != nil {
 		return nil, err
@@ -235,7 +235,7 @@ func encodeSync(state *syncState) (*json.RawMessage, error) {
 	return &meta, nil
 }
 
-func decodeSync(meta *json.RawMessage) (*syncState, error) {
+func decodeSync(meta *json.RawMessage) (*syncState, error) { log.DebugLog()
 	if meta == nil {
 		return nil, fmt.Errorf("unable to deserialise sync state from <nil>")
 	}
@@ -266,7 +266,7 @@ func decodeSync(meta *json.RawMessage) (*syncState, error) {
 
  sync is called from the syncer constructor and is not supposed to be used externally
 */
-func (self *syncer) sync() {
+func (self *syncer) sync() { log.DebugLog()
 	state := self.state
 	// sync finished
 	defer close(self.syncStates)
@@ -325,7 +325,7 @@ func (self *syncer) sync() {
 }
 
 // wait till syncronised block uptil state is synced
-func (self *syncer) syncState(state *syncState) {
+func (self *syncer) syncState(state *syncState) { log.DebugLog()
 	self.syncStates <- state
 	select {
 	case <-state.synced:
@@ -334,7 +334,7 @@ func (self *syncer) syncState(state *syncState) {
 }
 
 // stop quits both request processor and saves the request cache to disk
-func (self *syncer) stop() {
+func (self *syncer) stop() { log.DebugLog()
 	close(self.quit)
 	log.Trace(fmt.Sprintf("syncer[%v]: stop and save sync request db backlog", self.key.Log()))
 	for _, db := range self.queues {
@@ -348,11 +348,11 @@ type syncRequest struct {
 	Priority uint
 }
 
-func (self *syncRequest) String() string {
+func (self *syncRequest) String() string { log.DebugLog()
 	return fmt.Sprintf("<Key: %v, Priority: %v>", self.Key.Log(), self.Priority)
 }
 
-func (self *syncer) newSyncRequest(req interface{}, p int) (*syncRequest, error) {
+func (self *syncer) newSyncRequest(req interface{}, p int) (*syncRequest, error) { log.DebugLog()
 	key, _, _, _, err := parseRequest(req)
 	// TODO: if req has chunk, it should be put in a cache
 	// create
@@ -366,7 +366,7 @@ func (self *syncer) newSyncRequest(req interface{}, p int) (*syncRequest, error)
 // * read is on demand, blocking unless history channel is read
 // * accepts sync requests (syncStates) to create new db iterator
 // * closes the channel one iteration finishes
-func (self *syncer) syncHistory(state *syncState) chan interface{} {
+func (self *syncer) syncHistory(state *syncState) chan interface{} { log.DebugLog()
 	var n uint
 	history := make(chan interface{})
 	log.Debug(fmt.Sprintf("syncer[%v]: syncing history between %v - %v for chunk addresses %v - %v", self.key.Log(), state.First, state.Last, state.Start, state.Stop))
@@ -398,7 +398,7 @@ func (self *syncer) syncHistory(state *syncState) chan interface{} {
 }
 
 // triggers key syncronisation
-func (self *syncer) sendUnsyncedKeys() {
+func (self *syncer) sendUnsyncedKeys() { log.DebugLog()
 	select {
 	case self.deliveryRequest <- true:
 	default:
@@ -411,7 +411,7 @@ func (self *syncer) sendUnsyncedKeys() {
 //   historical data is used so historical items are lower priority within
 //   their priority group.
 // * Order of historical data is unspecified
-func (self *syncer) syncUnsyncedKeys() {
+func (self *syncer) syncUnsyncedKeys() { log.DebugLog()
 	// send out new
 	var unsynced []*syncRequest
 	var more, justSynced bool
@@ -566,7 +566,7 @@ LOOP:
 // delivery loop
 // takes into account priority, send store Requests with chunk (delivery)
 // idle blocking if no new deliveries in any of the queues
-func (self *syncer) syncDeliveries() {
+func (self *syncer) syncDeliveries() { log.DebugLog()
 	var req *storeRequestMsgData
 	p := High
 	var deliveries chan *storeRequestMsgData
@@ -635,7 +635,7 @@ func (self *syncer) syncDeliveries() {
 
  If sync mode is off then, requests are directly sent to deliveries
 */
-func (self *syncer) addRequest(req interface{}, ty int) {
+func (self *syncer) addRequest(req interface{}, ty int) { log.DebugLog()
 	// retrieve priority for request type name int8
 
 	priority := self.SyncPriorities[ty]
@@ -651,7 +651,7 @@ func (self *syncer) addRequest(req interface{}, ty int) {
 
 // addKey queues sync request for sync confirmation with given priority
 // ie the key will go out in an unsyncedKeys message
-func (self *syncer) addKey(req interface{}, priority uint, quit chan bool) bool {
+func (self *syncer) addKey(req interface{}, priority uint, quit chan bool) bool { log.DebugLog()
 	select {
 	case self.keys[priority] <- req:
 		// this wakes up the unsynced keys loop if idle
@@ -668,7 +668,7 @@ func (self *syncer) addKey(req interface{}, priority uint, quit chan bool) bool 
 // addDelivery queues delivery request for with given priority
 // ie the chunk will be delivered ASAP mod priority queueing handled by syncdb
 // requests are persisted across sessions for correct sync
-func (self *syncer) addDelivery(req interface{}, priority uint, quit chan bool) bool {
+func (self *syncer) addDelivery(req interface{}, priority uint, quit chan bool) bool { log.DebugLog()
 	select {
 	case self.queues[priority].buffer <- req:
 		return true
@@ -679,7 +679,7 @@ func (self *syncer) addDelivery(req interface{}, priority uint, quit chan bool) 
 
 // doDelivery delivers the chunk for the request with given priority
 // without queuing
-func (self *syncer) doDelivery(req interface{}, priority uint, quit chan bool) bool {
+func (self *syncer) doDelivery(req interface{}, priority uint, quit chan bool) bool { log.DebugLog()
 	msgdata, err := self.newStoreRequestMsgData(req)
 	if err != nil {
 		log.Warn(fmt.Sprintf("unable to deliver request %v: %v", msgdata, err))
@@ -695,7 +695,7 @@ func (self *syncer) doDelivery(req interface{}, priority uint, quit chan bool) b
 
 // returns the delivery function for given priority
 // passed on to syncDb
-func (self *syncer) deliver(priority uint) func(req interface{}, quit chan bool) bool {
+func (self *syncer) deliver(priority uint) func(req interface{}, quit chan bool) bool { log.DebugLog()
 	return func(req interface{}, quit chan bool) bool {
 		return self.doDelivery(req, priority, quit)
 	}
@@ -705,7 +705,7 @@ func (self *syncer) deliver(priority uint) func(req interface{}, quit chan bool)
 // depending on sync mode settings for BacklogReq,
 // re	play of request db backlog sends items via confirmation
 // or directly delivers
-func (self *syncer) replay() func(req interface{}, quit chan bool) bool {
+func (self *syncer) replay() func(req interface{}, quit chan bool) bool { log.DebugLog()
 	sync := self.SyncModes[BacklogReq]
 	priority := self.SyncPriorities[BacklogReq]
 	// sync mode for this type ON
@@ -723,7 +723,7 @@ func (self *syncer) replay() func(req interface{}, quit chan bool) bool {
 
 // given a request, extends it to a full storeRequestMsgData
 // polimorphic: see addRequest for the types accepted
-func (self *syncer) newStoreRequestMsgData(req interface{}) (*storeRequestMsgData, error) {
+func (self *syncer) newStoreRequestMsgData(req interface{}) (*storeRequestMsgData, error) { log.DebugLog()
 
 	key, id, chunk, sreq, err := parseRequest(req)
 	if err != nil {
@@ -751,7 +751,7 @@ func (self *syncer) newStoreRequestMsgData(req interface{}) (*storeRequestMsgDat
 
 // parse request types and extracts, key, id, chunk, request if available
 // does not do chunk lookup !
-func parseRequest(req interface{}) (storage.Key, uint64, *storage.Chunk, *storeRequestMsgData, error) {
+func parseRequest(req interface{}) (storage.Key, uint64, *storage.Chunk, *storeRequestMsgData, error) { log.DebugLog()
 	var key storage.Key
 	var entry *syncDbEntry
 	var chunk *storage.Chunk

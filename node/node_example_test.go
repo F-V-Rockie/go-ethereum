@@ -35,12 +35,12 @@ import (
 //  - Stop() error               - method invoked when the node terminates the service
 type SampleService struct{}
 
-func (s *SampleService) Protocols() []p2p.Protocol { return nil }
-func (s *SampleService) APIs() []rpc.API           { return nil }
-func (s *SampleService) Start(*p2p.Server) error   { fmt.Println("Service starting..."); return nil }
-func (s *SampleService) Stop() error               { fmt.Println("Service stopping..."); return nil }
+func (s *SampleService) Protocols() []p2p.Protocol { log.DebugLog() return nil }
+func (s *SampleService) APIs() []rpc.API           { log.DebugLog() return nil }
+func (s *SampleService) Start(*p2p.Server) error   { log.DebugLog() fmt.Println("Service starting..."); return nil }
+func (s *SampleService) Stop() error               { log.DebugLog() fmt.Println("Service stopping..."); return nil }
 
-func ExampleService() {
+func ExampleService() { log.DebugLog()
 	// Create a network node to run protocols with the default values.
 	stack, err := node.New(&node.Config{})
 	if err != nil {

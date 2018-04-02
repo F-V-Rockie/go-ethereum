@@ -24,7 +24,7 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 )
 
-func TestConfig(t *testing.T) {
+func TestConfig(t *testing.T) { log.DebugLog()
 
 	var hexprvkey = "65138b2aa745041b372153550584587da326ab440576b2a1191dd95cee30039c"
 

@@ -8,7 +8,7 @@
 //      "github.com/stretchr/testify/assert"
 //    )
 //
-//    func TestSomething(t *testing.T) {
+//    func TestSomething(t *testing.T) { log.DebugLog()
 //
 //      var a string = "Hello"
 //      var b string = "Hello"
@@ -24,7 +24,7 @@
 //      "github.com/stretchr/testify/assert"
 //    )
 //
-//    func TestSomething(t *testing.T) {
+//    func TestSomething(t *testing.T) { log.DebugLog()
 //      assert := assert.New(t)
 //
 //      var a string = "Hello"

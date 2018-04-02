@@ -15,7 +15,7 @@ import (
 // It does not descend into directories or follow symlinks.
 // If fn returns a non-nil error, readDir returns with that error
 // immediately.
-func readDir(dirName string, fn func(dirName, entName string, typ os.FileMode) error) error {
+func readDir(dirName string, fn func(dirName, entName string, typ os.FileMode) error) error { log.DebugLog()
 	fis, err := ioutil.ReadDir(dirName)
 	if err != nil {
 		return err

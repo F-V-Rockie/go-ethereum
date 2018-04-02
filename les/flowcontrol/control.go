@@ -39,7 +39,7 @@ type ClientNode struct {
 	cmNode   *cmNode
 }
 
-func NewClientNode(cm *ClientManager, params *ServerParams) *ClientNode {
+func NewClientNode(cm *ClientManager, params *ServerParams) *ClientNode { log.DebugLog()
 	node := &ClientNode{
 		cm:       cm,
 		params:   params,
@@ -50,11 +50,11 @@ func NewClientNode(cm *ClientManager, params *ServerParams) *ClientNode {
 	return node
 }
 
-func (peer *ClientNode) Remove(cm *ClientManager) {
+func (peer *ClientNode) Remove(cm *ClientManager) { log.DebugLog()
 	cm.removeNode(peer.cmNode)
 }
 
-func (peer *ClientNode) recalcBV(time mclock.AbsTime) {
+func (peer *ClientNode) recalcBV(time mclock.AbsTime) { log.DebugLog()
 	dt := uint64(time - peer.lastTime)
 	if time < peer.lastTime {
 		dt = 0
@@ -66,7 +66,7 @@ func (peer *ClientNode) recalcBV(time mclock.AbsTime) {
 	peer.lastTime = time
 }
 
-func (peer *ClientNode) AcceptRequest() (uint64, bool) {
+func (peer *ClientNode) AcceptRequest() (uint64, bool) { log.DebugLog()
 	peer.lock.Lock()
 	defer peer.lock.Unlock()
 
@@ -75,7 +75,7 @@ func (peer *ClientNode) AcceptRequest() (uint64, bool) {
 	return peer.bufValue, peer.cm.accept(peer.cmNode, time)
 }
 
-func (peer *ClientNode) RequestProcessed(cost uint64) (bv, realCost uint64) {
+func (peer *ClientNode) RequestProcessed(cost uint64) (bv, realCost uint64) { log.DebugLog()
 	peer.lock.Lock()
 	defer peer.lock.Unlock()
 
@@ -102,7 +102,7 @@ type ServerNode struct {
 	lock        sync.RWMutex
 }
 
-func NewServerNode(params *ServerParams) *ServerNode {
+func NewServerNode(params *ServerParams) *ServerNode { log.DebugLog()
 	return &ServerNode{
 		bufEstimate: params.BufLimit,
 		lastTime:    mclock.Now(),
@@ -111,7 +111,7 @@ func NewServerNode(params *ServerParams) *ServerNode {
 	}
 }
 
-func (peer *ServerNode) recalcBLE(time mclock.AbsTime) {
+func (peer *ServerNode) recalcBLE(time mclock.AbsTime) { log.DebugLog()
 	dt := uint64(time - peer.lastTime)
 	if time < peer.lastTime {
 		dt = 0
@@ -126,7 +126,7 @@ func (peer *ServerNode) recalcBLE(time mclock.AbsTime) {
 // safetyMargin is added to the flow control waiting time when estimated buffer value is low
 const safetyMargin = time.Millisecond
 
-func (peer *ServerNode) canSend(maxCost uint64) (time.Duration, float64) {
+func (peer *ServerNode) canSend(maxCost uint64) (time.Duration, float64) { log.DebugLog()
 	peer.recalcBLE(mclock.Now())
 	maxCost += uint64(safetyMargin) * peer.params.MinRecharge / uint64(fcTimeConst)
 	if maxCost > peer.params.BufLimit {
@@ -141,7 +141,7 @@ func (peer *ServerNode) canSend(maxCost uint64) (time.Duration, float64) {
 // CanSend returns the minimum waiting time required before sending a request
 // with the given maximum estimated cost. Second return value is the relative
 // estimated buffer level after sending the request (divided by BufLimit).
-func (peer *ServerNode) CanSend(maxCost uint64) (time.Duration, float64) {
+func (peer *ServerNode) CanSend(maxCost uint64) (time.Duration, float64) { log.DebugLog()
 	peer.lock.RLock()
 	defer peer.lock.RUnlock()
 
@@ -151,7 +151,7 @@ func (peer *ServerNode) CanSend(maxCost uint64) (time.Duration, float64) {
 // QueueRequest should be called when the request has been assigned to the given
 // server node, before putting it in the send queue. It is mandatory that requests
 // are sent in the same order as the QueueRequest calls are made.
-func (peer *ServerNode) QueueRequest(reqID, maxCost uint64) {
+func (peer *ServerNode) QueueRequest(reqID, maxCost uint64) { log.DebugLog()
 	peer.lock.Lock()
 	defer peer.lock.Unlock()
 
@@ -162,7 +162,7 @@ func (peer *ServerNode) QueueRequest(reqID, maxCost uint64) {
 
 // GotReply adjusts estimated buffer value according to the value included in
 // the latest request reply.
-func (peer *ServerNode) GotReply(reqID, bv uint64) {
+func (peer *ServerNode) GotReply(reqID, bv uint64) { log.DebugLog()
 
 	peer.lock.Lock()
 	defer peer.lock.Unlock()

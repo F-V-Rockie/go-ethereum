@@ -27,14 +27,14 @@ type BytesSuite struct{}
 
 var _ = checker.Suite(&BytesSuite{})
 
-func (s *BytesSuite) TestCopyBytes(c *checker.C) {
+func (s *BytesSuite) TestCopyBytes(c *checker.C) { log.DebugLog()
 	data1 := []byte{1, 2, 3, 4}
 	exp1 := []byte{1, 2, 3, 4}
 	res1 := CopyBytes(data1)
 	c.Assert(res1, checker.DeepEquals, exp1)
 }
 
-func (s *BytesSuite) TestLeftPadBytes(c *checker.C) {
+func (s *BytesSuite) TestLeftPadBytes(c *checker.C) { log.DebugLog()
 	val1 := []byte{1, 2, 3, 4}
 	exp1 := []byte{0, 0, 0, 0, 1, 2, 3, 4}
 
@@ -45,7 +45,7 @@ func (s *BytesSuite) TestLeftPadBytes(c *checker.C) {
 	c.Assert(res2, checker.DeepEquals, val1)
 }
 
-func (s *BytesSuite) TestRightPadBytes(c *checker.C) {
+func (s *BytesSuite) TestRightPadBytes(c *checker.C) { log.DebugLog()
 	val := []byte{1, 2, 3, 4}
 	exp := []byte{1, 2, 3, 4, 0, 0, 0, 0}
 
@@ -56,7 +56,7 @@ func (s *BytesSuite) TestRightPadBytes(c *checker.C) {
 	c.Assert(resshrt, checker.DeepEquals, val)
 }
 
-func TestFromHex(t *testing.T) {
+func TestFromHex(t *testing.T) { log.DebugLog()
 	input := "0x01"
 	expected := []byte{1}
 	result := FromHex(input)
@@ -65,7 +65,7 @@ func TestFromHex(t *testing.T) {
 	}
 }
 
-func TestIsHex(t *testing.T) {
+func TestIsHex(t *testing.T) { log.DebugLog()
 	tests := []struct {
 		input string
 		ok    bool
@@ -86,7 +86,7 @@ func TestIsHex(t *testing.T) {
 	}
 }
 
-func TestFromHexOddLength(t *testing.T) {
+func TestFromHexOddLength(t *testing.T) { log.DebugLog()
 	input := "0x1"
 	expected := []byte{1}
 	result := FromHex(input)
@@ -95,7 +95,7 @@ func TestFromHexOddLength(t *testing.T) {
 	}
 }
 
-func TestNoPrefixShortHexOddLength(t *testing.T) {
+func TestNoPrefixShortHexOddLength(t *testing.T) { log.DebugLog()
 	input := "1"
 	expected := []byte{1}
 	result := FromHex(input)

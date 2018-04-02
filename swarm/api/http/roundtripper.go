@@ -51,7 +51,7 @@ type RoundTripper struct {
 	Port string
 }
 
-func (self *RoundTripper) RoundTrip(req *http.Request) (resp *http.Response, err error) {
+func (self *RoundTripper) RoundTrip(req *http.Request) (resp *http.Response, err error) { log.DebugLog()
 	host := self.Host
 	if len(host) == 0 {
 		host = "localhost"

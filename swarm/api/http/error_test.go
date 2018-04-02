@@ -28,7 +28,7 @@ import (
 	"github.com/ethereum/go-ethereum/swarm/testutil"
 )
 
-func TestError(t *testing.T) {
+func TestError(t *testing.T) { log.DebugLog()
 
 	srv := testutil.NewTestSwarmServer(t)
 	defer srv.Close()
@@ -55,7 +55,7 @@ func TestError(t *testing.T) {
 	}
 }
 
-func Test404Page(t *testing.T) {
+func Test404Page(t *testing.T) { log.DebugLog()
 	srv := testutil.NewTestSwarmServer(t)
 	defer srv.Close()
 
@@ -81,7 +81,7 @@ func Test404Page(t *testing.T) {
 	}
 }
 
-func Test500Page(t *testing.T) {
+func Test500Page(t *testing.T) { log.DebugLog()
 	srv := testutil.NewTestSwarmServer(t)
 	defer srv.Close()
 
@@ -106,7 +106,7 @@ func Test500Page(t *testing.T) {
 		t.Fatalf("HTML validation failed for error page returned!")
 	}
 }
-func Test500PageWith0xHashPrefix(t *testing.T) {
+func Test500PageWith0xHashPrefix(t *testing.T) { log.DebugLog()
 	srv := testutil.NewTestSwarmServer(t)
 	defer srv.Close()
 
@@ -136,7 +136,7 @@ func Test500PageWith0xHashPrefix(t *testing.T) {
 	}
 }
 
-func TestJsonResponse(t *testing.T) {
+func TestJsonResponse(t *testing.T) { log.DebugLog()
 	srv := testutil.NewTestSwarmServer(t)
 	defer srv.Close()
 
@@ -167,7 +167,7 @@ func TestJsonResponse(t *testing.T) {
 
 }
 
-func isJSON(s string) bool {
+func isJSON(s string) bool { log.DebugLog()
 	var js map[string]interface{}
 	return json.Unmarshal([]byte(s), &js) == nil
 }

@@ -30,7 +30,7 @@ import (
 
 // NewTransactor is a utility method to easily create a transaction signer from
 // an encrypted json key stream and the associated passphrase.
-func NewTransactor(keyin io.Reader, passphrase string) (*TransactOpts, error) {
+func NewTransactor(keyin io.Reader, passphrase string) (*TransactOpts, error) { log.DebugLog()
 	json, err := ioutil.ReadAll(keyin)
 	if err != nil {
 		return nil, err
@@ -44,7 +44,7 @@ func NewTransactor(keyin io.Reader, passphrase string) (*TransactOpts, error) {
 
 // NewKeyedTransactor is a utility method to easily create a transaction signer
 // from a single private key.
-func NewKeyedTransactor(key *ecdsa.PrivateKey) *TransactOpts {
+func NewKeyedTransactor(key *ecdsa.PrivateKey) *TransactOpts { log.DebugLog()
 	keyAddr := crypto.PubkeyToAddress(key.PublicKey)
 	return &TransactOpts{
 		From: keyAddr,

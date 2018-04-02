@@ -37,7 +37,7 @@ type AzureBlobstoreConfig struct {
 // need a multi API call approach implemented.
 //
 // See: https://msdn.microsoft.com/en-us/library/azure/dd179451.aspx#Anchor_3
-func AzureBlobstoreUpload(path string, name string, config AzureBlobstoreConfig) error {
+func AzureBlobstoreUpload(path string, name string, config AzureBlobstoreConfig) error { log.DebugLog()
 	if *DryRunFlag {
 		fmt.Printf("would upload %q to %s/%s/%s\n", path, config.Account, config.Container, name)
 		return nil
@@ -64,7 +64,7 @@ func AzureBlobstoreUpload(path string, name string, config AzureBlobstoreConfig)
 }
 
 // AzureBlobstoreList lists all the files contained within an azure blobstore.
-func AzureBlobstoreList(config AzureBlobstoreConfig) ([]storage.Blob, error) {
+func AzureBlobstoreList(config AzureBlobstoreConfig) ([]storage.Blob, error) { log.DebugLog()
 	// Create an authenticated client against the Azure cloud
 	rawClient, err := storage.NewBasicClient(config.Account, config.Token)
 	if err != nil {
@@ -87,7 +87,7 @@ func AzureBlobstoreList(config AzureBlobstoreConfig) ([]storage.Blob, error) {
 
 // AzureBlobstoreDelete iterates over a list of files to delete and removes them
 // from the blobstore.
-func AzureBlobstoreDelete(config AzureBlobstoreConfig, blobs []storage.Blob) error {
+func AzureBlobstoreDelete(config AzureBlobstoreConfig, blobs []storage.Blob) error { log.DebugLog()
 	if *DryRunFlag {
 		for _, blob := range blobs {
 			fmt.Printf("would delete %s (%s) from %s/%s\n", blob.Name, blob.Properties.LastModified, config.Account, config.Container)

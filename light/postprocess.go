@@ -95,7 +95,7 @@ type ChtNode struct {
 
 // GetChtRoot reads the CHT root assoctiated to the given section from the database
 // Note that sectionIdx is specified according to LES/1 CHT section size
-func GetChtRoot(db ethdb.Database, sectionIdx uint64, sectionHead common.Hash) common.Hash {
+func GetChtRoot(db ethdb.Database, sectionIdx uint64, sectionHead common.Hash) common.Hash { log.DebugLog()
 	var encNumber [8]byte
 	binary.BigEndian.PutUint64(encNumber[:], sectionIdx)
 	data, _ := db.Get(append(append(chtPrefix, encNumber[:]...), sectionHead.Bytes()...))
@@ -104,13 +104,13 @@ func GetChtRoot(db ethdb.Database, sectionIdx uint64, sectionHead common.Hash) c
 
 // GetChtV2Root reads the CHT root assoctiated to the given section from the database
 // Note that sectionIdx is specified according to LES/2 CHT section size
-func GetChtV2Root(db ethdb.Database, sectionIdx uint64, sectionHead common.Hash) common.Hash {
+func GetChtV2Root(db ethdb.Database, sectionIdx uint64, sectionHead common.Hash) common.Hash { log.DebugLog()
 	return GetChtRoot(db, (sectionIdx+1)*(CHTFrequencyClient/CHTFrequencyServer)-1, sectionHead)
 }
 
 // StoreChtRoot writes the CHT root assoctiated to the given section into the database
 // Note that sectionIdx is specified according to LES/1 CHT section size
-func StoreChtRoot(db ethdb.Database, sectionIdx uint64, sectionHead, root common.Hash) {
+func StoreChtRoot(db ethdb.Database, sectionIdx uint64, sectionHead, root common.Hash) { log.DebugLog()
 	var encNumber [8]byte
 	binary.BigEndian.PutUint64(encNumber[:], sectionIdx)
 	db.Put(append(append(chtPrefix, encNumber[:]...), sectionHead.Bytes()...), root.Bytes())
@@ -126,7 +126,7 @@ type ChtIndexerBackend struct {
 }
 
 // NewBloomTrieIndexer creates a BloomTrie chain indexer
-func NewChtIndexer(db ethdb.Database, clientMode bool) *core.ChainIndexer {
+func NewChtIndexer(db ethdb.Database, clientMode bool) *core.ChainIndexer { log.DebugLog()
 	var sectionSize, confirmReq uint64
 	if clientMode {
 		sectionSize = CHTFrequencyClient
@@ -145,7 +145,7 @@ func NewChtIndexer(db ethdb.Database, clientMode bool) *core.ChainIndexer {
 }
 
 // Reset implements core.ChainIndexerBackend
-func (c *ChtIndexerBackend) Reset(section uint64, lastSectionHead common.Hash) error {
+func (c *ChtIndexerBackend) Reset(section uint64, lastSectionHead common.Hash) error { log.DebugLog()
 	var root common.Hash
 	if section > 0 {
 		root = GetChtRoot(c.diskdb, section-1, lastSectionHead)
@@ -157,7 +157,7 @@ func (c *ChtIndexerBackend) Reset(section uint64, lastSectionHead common.Hash) e
 }
 
 // Process implements core.ChainIndexerBackend
-func (c *ChtIndexerBackend) Process(header *types.Header) {
+func (c *ChtIndexerBackend) Process(header *types.Header) { log.DebugLog()
 	hash, num := header.Hash(), header.Number.Uint64()
 	c.lastHash = hash
 
@@ -172,7 +172,7 @@ func (c *ChtIndexerBackend) Process(header *types.Header) {
 }
 
 // Commit implements core.ChainIndexerBackend
-func (c *ChtIndexerBackend) Commit() error {
+func (c *ChtIndexerBackend) Commit() error { log.DebugLog()
 	root, err := c.trie.Commit(nil)
 	if err != nil {
 		return err
@@ -198,7 +198,7 @@ var (
 )
 
 // GetBloomTrieRoot reads the BloomTrie root assoctiated to the given section from the database
-func GetBloomTrieRoot(db ethdb.Database, sectionIdx uint64, sectionHead common.Hash) common.Hash {
+func GetBloomTrieRoot(db ethdb.Database, sectionIdx uint64, sectionHead common.Hash) common.Hash { log.DebugLog()
 	var encNumber [8]byte
 	binary.BigEndian.PutUint64(encNumber[:], sectionIdx)
 	data, _ := db.Get(append(append(bloomTriePrefix, encNumber[:]...), sectionHead.Bytes()...))
@@ -206,7 +206,7 @@ func GetBloomTrieRoot(db ethdb.Database, sectionIdx uint64, sectionHead common.H
 }
 
 // StoreBloomTrieRoot writes the BloomTrie root assoctiated to the given section into the database
-func StoreBloomTrieRoot(db ethdb.Database, sectionIdx uint64, sectionHead, root common.Hash) {
+func StoreBloomTrieRoot(db ethdb.Database, sectionIdx uint64, sectionHead, root common.Hash) { log.DebugLog()
 	var encNumber [8]byte
 	binary.BigEndian.PutUint64(encNumber[:], sectionIdx)
 	db.Put(append(append(bloomTriePrefix, encNumber[:]...), sectionHead.Bytes()...), root.Bytes())
@@ -222,7 +222,7 @@ type BloomTrieIndexerBackend struct {
 }
 
 // NewBloomTrieIndexer creates a BloomTrie chain indexer
-func NewBloomTrieIndexer(db ethdb.Database, clientMode bool) *core.ChainIndexer {
+func NewBloomTrieIndexer(db ethdb.Database, clientMode bool) *core.ChainIndexer { log.DebugLog()
 	backend := &BloomTrieIndexerBackend{
 		diskdb: db,
 		triedb: trie.NewDatabase(ethdb.NewTable(db, BloomTrieTablePrefix)),
@@ -243,7 +243,7 @@ func NewBloomTrieIndexer(db ethdb.Database, clientMode bool) *core.ChainIndexer 
 }
 
 // Reset implements core.ChainIndexerBackend
-func (b *BloomTrieIndexerBackend) Reset(section uint64, lastSectionHead common.Hash) error {
+func (b *BloomTrieIndexerBackend) Reset(section uint64, lastSectionHead common.Hash) error { log.DebugLog()
 	var root common.Hash
 	if section > 0 {
 		root = GetBloomTrieRoot(b.diskdb, section-1, lastSectionHead)
@@ -255,7 +255,7 @@ func (b *BloomTrieIndexerBackend) Reset(section uint64, lastSectionHead common.H
 }
 
 // Process implements core.ChainIndexerBackend
-func (b *BloomTrieIndexerBackend) Process(header *types.Header) {
+func (b *BloomTrieIndexerBackend) Process(header *types.Header) { log.DebugLog()
 	num := header.Number.Uint64() - b.section*BloomTrieFrequency
 	if (num+1)%b.parentSectionSize == 0 {
 		b.sectionHeads[num/b.parentSectionSize] = header.Hash()
@@ -263,7 +263,7 @@ func (b *BloomTrieIndexerBackend) Process(header *types.Header) {
 }
 
 // Commit implements core.ChainIndexerBackend
-func (b *BloomTrieIndexerBackend) Commit() error {
+func (b *BloomTrieIndexerBackend) Commit() error { log.DebugLog()
 	var compSize, decompSize uint64
 
 	for i := uint(0); i < types.BloomBitLength; i++ {

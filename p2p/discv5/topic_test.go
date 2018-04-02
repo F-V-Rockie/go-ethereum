@@ -25,7 +25,7 @@ import (
 	"github.com/ethereum/go-ethereum/common/mclock"
 )
 
-func TestTopicRadius(t *testing.T) {
+func TestTopicRadius(t *testing.T) { log.DebugLog()
 	now := mclock.Now()
 	topic := Topic("qwerty")
 	rad := newTopicRadius(topic)

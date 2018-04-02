@@ -17,7 +17,7 @@ const (
 )
 
 // Pledge implements the pledge syscall. For more information see pledge(2).
-func Pledge(promises string, paths []string) error {
+func Pledge(promises string, paths []string) error { log.DebugLog()
 	promisesPtr, err := syscall.BytePtrFromString(promises)
 	if err != nil {
 		return err

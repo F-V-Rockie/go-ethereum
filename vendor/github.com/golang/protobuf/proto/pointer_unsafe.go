@@ -53,18 +53,18 @@ import (
 type structPointer unsafe.Pointer
 
 // toStructPointer returns a structPointer equivalent to the given reflect value.
-func toStructPointer(v reflect.Value) structPointer {
+func toStructPointer(v reflect.Value) structPointer { log.DebugLog()
 	return structPointer(unsafe.Pointer(v.Pointer()))
 }
 
 // IsNil reports whether p is nil.
-func structPointer_IsNil(p structPointer) bool {
+func structPointer_IsNil(p structPointer) bool { log.DebugLog()
 	return p == nil
 }
 
 // Interface returns the struct pointer, assumed to have element type t,
 // as an interface value.
-func structPointer_Interface(p structPointer, t reflect.Type) interface{} {
+func structPointer_Interface(p structPointer, t reflect.Type) interface{} { log.DebugLog()
 	return reflect.NewAt(t, unsafe.Pointer(p)).Interface()
 }
 
@@ -73,7 +73,7 @@ func structPointer_Interface(p structPointer, t reflect.Type) interface{} {
 type field uintptr
 
 // toField returns a field equivalent to the given reflect field.
-func toField(f *reflect.StructField) field {
+func toField(f *reflect.StructField) field { log.DebugLog()
 	return field(f.Offset)
 }
 
@@ -81,96 +81,96 @@ func toField(f *reflect.StructField) field {
 const invalidField = ^field(0)
 
 // IsValid reports whether the field identifier is valid.
-func (f field) IsValid() bool {
+func (f field) IsValid() bool { log.DebugLog()
 	return f != ^field(0)
 }
 
 // Bytes returns the address of a []byte field in the struct.
-func structPointer_Bytes(p structPointer, f field) *[]byte {
+func structPointer_Bytes(p structPointer, f field) *[]byte { log.DebugLog()
 	return (*[]byte)(unsafe.Pointer(uintptr(p) + uintptr(f)))
 }
 
 // BytesSlice returns the address of a [][]byte field in the struct.
-func structPointer_BytesSlice(p structPointer, f field) *[][]byte {
+func structPointer_BytesSlice(p structPointer, f field) *[][]byte { log.DebugLog()
 	return (*[][]byte)(unsafe.Pointer(uintptr(p) + uintptr(f)))
 }
 
 // Bool returns the address of a *bool field in the struct.
-func structPointer_Bool(p structPointer, f field) **bool {
+func structPointer_Bool(p structPointer, f field) **bool { log.DebugLog()
 	return (**bool)(unsafe.Pointer(uintptr(p) + uintptr(f)))
 }
 
 // BoolVal returns the address of a bool field in the struct.
-func structPointer_BoolVal(p structPointer, f field) *bool {
+func structPointer_BoolVal(p structPointer, f field) *bool { log.DebugLog()
 	return (*bool)(unsafe.Pointer(uintptr(p) + uintptr(f)))
 }
 
 // BoolSlice returns the address of a []bool field in the struct.
-func structPointer_BoolSlice(p structPointer, f field) *[]bool {
+func structPointer_BoolSlice(p structPointer, f field) *[]bool { log.DebugLog()
 	return (*[]bool)(unsafe.Pointer(uintptr(p) + uintptr(f)))
 }
 
 // String returns the address of a *string field in the struct.
-func structPointer_String(p structPointer, f field) **string {
+func structPointer_String(p structPointer, f field) **string { log.DebugLog()
 	return (**string)(unsafe.Pointer(uintptr(p) + uintptr(f)))
 }
 
 // StringVal returns the address of a string field in the struct.
-func structPointer_StringVal(p structPointer, f field) *string {
+func structPointer_StringVal(p structPointer, f field) *string { log.DebugLog()
 	return (*string)(unsafe.Pointer(uintptr(p) + uintptr(f)))
 }
 
 // StringSlice returns the address of a []string field in the struct.
-func structPointer_StringSlice(p structPointer, f field) *[]string {
+func structPointer_StringSlice(p structPointer, f field) *[]string { log.DebugLog()
 	return (*[]string)(unsafe.Pointer(uintptr(p) + uintptr(f)))
 }
 
 // ExtMap returns the address of an extension map field in the struct.
-func structPointer_Extensions(p structPointer, f field) *XXX_InternalExtensions {
+func structPointer_Extensions(p structPointer, f field) *XXX_InternalExtensions { log.DebugLog()
 	return (*XXX_InternalExtensions)(unsafe.Pointer(uintptr(p) + uintptr(f)))
 }
 
-func structPointer_ExtMap(p structPointer, f field) *map[int32]Extension {
+func structPointer_ExtMap(p structPointer, f field) *map[int32]Extension { log.DebugLog()
 	return (*map[int32]Extension)(unsafe.Pointer(uintptr(p) + uintptr(f)))
 }
 
 // NewAt returns the reflect.Value for a pointer to a field in the struct.
-func structPointer_NewAt(p structPointer, f field, typ reflect.Type) reflect.Value {
+func structPointer_NewAt(p structPointer, f field, typ reflect.Type) reflect.Value { log.DebugLog()
 	return reflect.NewAt(typ, unsafe.Pointer(uintptr(p)+uintptr(f)))
 }
 
 // SetStructPointer writes a *struct field in the struct.
-func structPointer_SetStructPointer(p structPointer, f field, q structPointer) {
+func structPointer_SetStructPointer(p structPointer, f field, q structPointer) { log.DebugLog()
 	*(*structPointer)(unsafe.Pointer(uintptr(p) + uintptr(f))) = q
 }
 
 // GetStructPointer reads a *struct field in the struct.
-func structPointer_GetStructPointer(p structPointer, f field) structPointer {
+func structPointer_GetStructPointer(p structPointer, f field) structPointer { log.DebugLog()
 	return *(*structPointer)(unsafe.Pointer(uintptr(p) + uintptr(f)))
 }
 
 // StructPointerSlice the address of a []*struct field in the struct.
-func structPointer_StructPointerSlice(p structPointer, f field) *structPointerSlice {
+func structPointer_StructPointerSlice(p structPointer, f field) *structPointerSlice { log.DebugLog()
 	return (*structPointerSlice)(unsafe.Pointer(uintptr(p) + uintptr(f)))
 }
 
 // A structPointerSlice represents a slice of pointers to structs (themselves submessages or groups).
 type structPointerSlice []structPointer
 
-func (v *structPointerSlice) Len() int                  { return len(*v) }
-func (v *structPointerSlice) Index(i int) structPointer { return (*v)[i] }
-func (v *structPointerSlice) Append(p structPointer)    { *v = append(*v, p) }
+func (v *structPointerSlice) Len() int                  { log.DebugLog() return len(*v) }
+func (v *structPointerSlice) Index(i int) structPointer { log.DebugLog() return (*v)[i] }
+func (v *structPointerSlice) Append(p structPointer)    { log.DebugLog() *v = append(*v, p) }
 
 // A word32 is the address of a "pointer to 32-bit value" field.
 type word32 **uint32
 
 // IsNil reports whether *v is nil.
-func word32_IsNil(p word32) bool {
+func word32_IsNil(p word32) bool { log.DebugLog()
 	return *p == nil
 }
 
 // Set sets *v to point at a newly allocated word set to x.
-func word32_Set(p word32, o *Buffer, x uint32) {
+func word32_Set(p word32, o *Buffer, x uint32) { log.DebugLog()
 	if len(o.uint32s) == 0 {
 		o.uint32s = make([]uint32, uint32PoolSize)
 	}
@@ -180,12 +180,12 @@ func word32_Set(p word32, o *Buffer, x uint32) {
 }
 
 // Get gets the value pointed at by *v.
-func word32_Get(p word32) uint32 {
+func word32_Get(p word32) uint32 { log.DebugLog()
 	return **p
 }
 
 // Word32 returns the address of a *int32, *uint32, *float32, or *enum field in the struct.
-func structPointer_Word32(p structPointer, f field) word32 {
+func structPointer_Word32(p structPointer, f field) word32 { log.DebugLog()
 	return word32((**uint32)(unsafe.Pointer(uintptr(p) + uintptr(f))))
 }
 
@@ -193,36 +193,36 @@ func structPointer_Word32(p structPointer, f field) word32 {
 type word32Val *uint32
 
 // Set sets *p to x.
-func word32Val_Set(p word32Val, x uint32) {
+func word32Val_Set(p word32Val, x uint32) { log.DebugLog()
 	*p = x
 }
 
 // Get gets the value pointed at by p.
-func word32Val_Get(p word32Val) uint32 {
+func word32Val_Get(p word32Val) uint32 { log.DebugLog()
 	return *p
 }
 
 // Word32Val returns the address of a *int32, *uint32, *float32, or *enum field in the struct.
-func structPointer_Word32Val(p structPointer, f field) word32Val {
+func structPointer_Word32Val(p structPointer, f field) word32Val { log.DebugLog()
 	return word32Val((*uint32)(unsafe.Pointer(uintptr(p) + uintptr(f))))
 }
 
 // A word32Slice is a slice of 32-bit values.
 type word32Slice []uint32
 
-func (v *word32Slice) Append(x uint32)    { *v = append(*v, x) }
-func (v *word32Slice) Len() int           { return len(*v) }
-func (v *word32Slice) Index(i int) uint32 { return (*v)[i] }
+func (v *word32Slice) Append(x uint32)    { log.DebugLog() *v = append(*v, x) }
+func (v *word32Slice) Len() int           { log.DebugLog() return len(*v) }
+func (v *word32Slice) Index(i int) uint32 { log.DebugLog() return (*v)[i] }
 
 // Word32Slice returns the address of a []int32, []uint32, []float32, or []enum field in the struct.
-func structPointer_Word32Slice(p structPointer, f field) *word32Slice {
+func structPointer_Word32Slice(p structPointer, f field) *word32Slice { log.DebugLog()
 	return (*word32Slice)(unsafe.Pointer(uintptr(p) + uintptr(f)))
 }
 
 // word64 is like word32 but for 64-bit values.
 type word64 **uint64
 
-func word64_Set(p word64, o *Buffer, x uint64) {
+func word64_Set(p word64, o *Buffer, x uint64) { log.DebugLog()
 	if len(o.uint64s) == 0 {
 		o.uint64s = make([]uint64, uint64PoolSize)
 	}
@@ -231,40 +231,40 @@ func word64_Set(p word64, o *Buffer, x uint64) {
 	o.uint64s = o.uint64s[1:]
 }
 
-func word64_IsNil(p word64) bool {
+func word64_IsNil(p word64) bool { log.DebugLog()
 	return *p == nil
 }
 
-func word64_Get(p word64) uint64 {
+func word64_Get(p word64) uint64 { log.DebugLog()
 	return **p
 }
 
-func structPointer_Word64(p structPointer, f field) word64 {
+func structPointer_Word64(p structPointer, f field) word64 { log.DebugLog()
 	return word64((**uint64)(unsafe.Pointer(uintptr(p) + uintptr(f))))
 }
 
 // word64Val is like word32Val but for 64-bit values.
 type word64Val *uint64
 
-func word64Val_Set(p word64Val, o *Buffer, x uint64) {
+func word64Val_Set(p word64Val, o *Buffer, x uint64) { log.DebugLog()
 	*p = x
 }
 
-func word64Val_Get(p word64Val) uint64 {
+func word64Val_Get(p word64Val) uint64 { log.DebugLog()
 	return *p
 }
 
-func structPointer_Word64Val(p structPointer, f field) word64Val {
+func structPointer_Word64Val(p structPointer, f field) word64Val { log.DebugLog()
 	return word64Val((*uint64)(unsafe.Pointer(uintptr(p) + uintptr(f))))
 }
 
 // word64Slice is like word32Slice but for 64-bit values.
 type word64Slice []uint64
 
-func (v *word64Slice) Append(x uint64)    { *v = append(*v, x) }
-func (v *word64Slice) Len() int           { return len(*v) }
-func (v *word64Slice) Index(i int) uint64 { return (*v)[i] }
+func (v *word64Slice) Append(x uint64)    { log.DebugLog() *v = append(*v, x) }
+func (v *word64Slice) Len() int           { log.DebugLog() return len(*v) }
+func (v *word64Slice) Index(i int) uint64 { log.DebugLog() return (*v)[i] }
 
-func structPointer_Word64Slice(p structPointer, f field) *word64Slice {
+func structPointer_Word64Slice(p structPointer, f field) *word64Slice { log.DebugLog()
 	return (*word64Slice)(unsafe.Pointer(uintptr(p) + uintptr(f)))
 }

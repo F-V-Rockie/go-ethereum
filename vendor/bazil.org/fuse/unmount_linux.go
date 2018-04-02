@@ -6,7 +6,7 @@ import (
 	"os/exec"
 )
 
-func unmount(dir string) error {
+func unmount(dir string) error { log.DebugLog()
 	cmd := exec.Command("fusermount", "-u", dir)
 	output, err := cmd.CombinedOutput()
 	if err != nil {

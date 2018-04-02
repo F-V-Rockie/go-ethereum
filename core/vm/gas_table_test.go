@@ -18,7 +18,7 @@ package vm
 
 import "testing"
 
-func TestMemoryGasCost(t *testing.T) {
+func TestMemoryGasCost(t *testing.T) { log.DebugLog()
 	//size := uint64(math.MaxUint64 - 64)
 	size := uint64(0xffffffffe0)
 	v, err := memoryGasCost(&Memory{}, size)

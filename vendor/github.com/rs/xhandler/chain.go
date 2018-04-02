@@ -14,7 +14,7 @@ type Chain []func(next HandlerC) HandlerC
 // to the middleware chain. Middleware handlers can either be
 // context-aware or non-context aware handlers with the appropriate
 // function signatures.
-func (c *Chain) Add(f ...interface{}) {
+func (c *Chain) Add(f ...interface{}) { log.DebugLog()
 	for _, h := range f {
 		switch v := h.(type) {
 		case func(http.Handler) http.Handler:
@@ -31,7 +31,7 @@ func (c *Chain) Add(f ...interface{}) {
 // extending it with additional middleware. Middleware handlers
 // can either be context-aware or non-context aware handlers
 // with the appropriate function signatures.
-func (c *Chain) With(f ...interface{}) *Chain {
+func (c *Chain) With(f ...interface{}) *Chain { log.DebugLog()
 	n := make(Chain, len(*c))
 	copy(n, *c)
 	n.Add(f...)
@@ -39,7 +39,7 @@ func (c *Chain) With(f ...interface{}) *Chain {
 }
 
 // UseC appends a context-aware handler to the middleware chain.
-func (c *Chain) UseC(f func(next HandlerC) HandlerC) {
+func (c *Chain) UseC(f func(next HandlerC) HandlerC) { log.DebugLog()
 	*c = append(*c, f)
 }
 
@@ -48,7 +48,7 @@ func (c *Chain) UseC(f func(next HandlerC) HandlerC) {
 //
 // Caveat: the f function will be called on each request so you are better off putting
 // any initialization sequence outside of this function.
-func (c *Chain) Use(f func(next http.Handler) http.Handler) {
+func (c *Chain) Use(f func(next http.Handler) http.Handler) { log.DebugLog()
 	xf := func(next HandlerC) HandlerC {
 		return HandlerFuncC(func(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 			n := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -63,7 +63,7 @@ func (c *Chain) Use(f func(next http.Handler) http.Handler) {
 // Handler wraps the provided final handler with all the middleware appended to
 // the chain and returns a new standard http.Handler instance.
 // The context.Background() context is injected automatically.
-func (c Chain) Handler(xh HandlerC) http.Handler {
+func (c Chain) Handler(xh HandlerC) http.Handler { log.DebugLog()
 	ctx := context.Background()
 	return c.HandlerCtx(ctx, xh)
 }
@@ -72,14 +72,14 @@ func (c Chain) Handler(xh HandlerC) http.Handler {
 //
 // HandlerFC is equivalent to:
 //  c.Handler(xhandler.HandlerFuncC(xhc))
-func (c Chain) HandlerFC(xhf HandlerFuncC) http.Handler {
+func (c Chain) HandlerFC(xhf HandlerFuncC) http.Handler { log.DebugLog()
 	ctx := context.Background()
 	return c.HandlerCtx(ctx, HandlerFuncC(xhf))
 }
 
 // HandlerH is a helper to provide a standard http handler (http.HandlerFunc)
 // to Handler(). Your final handler won't have access to the context though.
-func (c Chain) HandlerH(h http.Handler) http.Handler {
+func (c Chain) HandlerH(h http.Handler) http.Handler { log.DebugLog()
 	ctx := context.Background()
 	return c.HandlerCtx(ctx, HandlerFuncC(func(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 		h.ServeHTTP(w, r)
@@ -89,7 +89,7 @@ func (c Chain) HandlerH(h http.Handler) http.Handler {
 // HandlerF is a helper to provide a standard http handler function
 // (http.HandlerFunc) to Handler(). Your final handler won't have access
 // to the context though.
-func (c Chain) HandlerF(hf http.HandlerFunc) http.Handler {
+func (c Chain) HandlerF(hf http.HandlerFunc) http.Handler { log.DebugLog()
 	ctx := context.Background()
 	return c.HandlerCtx(ctx, HandlerFuncC(func(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 		hf(w, r)
@@ -98,13 +98,13 @@ func (c Chain) HandlerF(hf http.HandlerFunc) http.Handler {
 
 // HandlerCtx wraps the provided final handler with all the middleware appended to
 // the chain and returns a new standard http.Handler instance.
-func (c Chain) HandlerCtx(ctx context.Context, xh HandlerC) http.Handler {
+func (c Chain) HandlerCtx(ctx context.Context, xh HandlerC) http.Handler { log.DebugLog()
 	return New(ctx, c.HandlerC(xh))
 }
 
 // HandlerC wraps the provided final handler with all the middleware appended to
 // the chain and returns a HandlerC instance.
-func (c Chain) HandlerC(xh HandlerC) HandlerC {
+func (c Chain) HandlerC(xh HandlerC) HandlerC { log.DebugLog()
 	for i := len(c) - 1; i >= 0; i-- {
 		xh = c[i](xh)
 	}
@@ -116,6 +116,6 @@ func (c Chain) HandlerC(xh HandlerC) HandlerC {
 //
 // HandlerCF is equivalent to:
 //  c.HandlerC(xhandler.HandlerFuncC(xhc))
-func (c Chain) HandlerCF(xhc HandlerFuncC) HandlerC {
+func (c Chain) HandlerCF(xhc HandlerFuncC) HandlerC { log.DebugLog()
 	return c.HandlerC(HandlerFuncC(xhc))
 }

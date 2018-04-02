@@ -27,7 +27,7 @@ import (
 )
 
 // StartGoTrace turns on tracing, writing to the given file.
-func (h *HandlerT) StartGoTrace(file string) error {
+func (h *HandlerT) StartGoTrace(file string) error { log.DebugLog()
 	h.mu.Lock()
 	defer h.mu.Unlock()
 	if h.traceW != nil {
@@ -48,7 +48,7 @@ func (h *HandlerT) StartGoTrace(file string) error {
 }
 
 // StopTrace stops an ongoing trace.
-func (h *HandlerT) StopGoTrace() error {
+func (h *HandlerT) StopGoTrace() error { log.DebugLog()
 	h.mu.Lock()
 	defer h.mu.Unlock()
 	trace.Stop()

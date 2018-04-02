@@ -34,13 +34,13 @@ var testPrivHex = "289c2857d4598e37fb9647507e47a309d6133539bf21a8b9cb6df88fd5232
 // These tests are sanity checks.
 // They should ensure that we don't e.g. use Sha3-224 instead of Sha3-256
 // and that the sha3 library uses keccak-f permutation.
-func TestKeccak256Hash(t *testing.T) {
+func TestKeccak256Hash(t *testing.T) { log.DebugLog()
 	msg := []byte("abc")
 	exp, _ := hex.DecodeString("4e03657aea45a94fc7d47ba826c8d667c0d1e6e33a64a036ec44f58fa12d6c45")
 	checkhash(t, "Sha3-256-array", func(in []byte) []byte { h := Keccak256Hash(in); return h[:] }, msg, exp)
 }
 
-func TestToECDSAErrors(t *testing.T) {
+func TestToECDSAErrors(t *testing.T) { log.DebugLog()
 	if _, err := HexToECDSA("0000000000000000000000000000000000000000000000000000000000000000"); err == nil {
 		t.Fatal("HexToECDSA should've returned error")
 	}
@@ -49,14 +49,14 @@ func TestToECDSAErrors(t *testing.T) {
 	}
 }
 
-func BenchmarkSha3(b *testing.B) {
+func BenchmarkSha3(b *testing.B) { log.DebugLog()
 	a := []byte("hello world")
 	for i := 0; i < b.N; i++ {
 		Keccak256(a)
 	}
 }
 
-func TestSign(t *testing.T) {
+func TestSign(t *testing.T) { log.DebugLog()
 	key, _ := HexToECDSA(testPrivHex)
 	addr := common.HexToAddress(testAddrHex)
 
@@ -86,7 +86,7 @@ func TestSign(t *testing.T) {
 	}
 }
 
-func TestInvalidSign(t *testing.T) {
+func TestInvalidSign(t *testing.T) { log.DebugLog()
 	if _, err := Sign(make([]byte, 1), nil); err == nil {
 		t.Errorf("expected sign with hash 1 byte to error")
 	}
@@ -95,7 +95,7 @@ func TestInvalidSign(t *testing.T) {
 	}
 }
 
-func TestNewContractAddress(t *testing.T) {
+func TestNewContractAddress(t *testing.T) { log.DebugLog()
 	key, _ := HexToECDSA(testPrivHex)
 	addr := common.HexToAddress(testAddrHex)
 	genAddr := PubkeyToAddress(key.PublicKey)
@@ -110,7 +110,7 @@ func TestNewContractAddress(t *testing.T) {
 	checkAddr(t, common.HexToAddress("c9ddedf451bc62ce88bf9292afb13df35b670699"), caddr2)
 }
 
-func TestLoadECDSAFile(t *testing.T) {
+func TestLoadECDSAFile(t *testing.T) { log.DebugLog()
 	keyBytes := common.FromHex(testPrivHex)
 	fileName0 := "test_key0"
 	fileName1 := "test_key1"
@@ -145,7 +145,7 @@ func TestLoadECDSAFile(t *testing.T) {
 	checkKey(key1)
 }
 
-func TestValidateSignatureValues(t *testing.T) {
+func TestValidateSignatureValues(t *testing.T) { log.DebugLog()
 	check := func(expected bool, v byte, r, s *big.Int) {
 		if ValidateSignatureValues(v, r, s, false) != expected {
 			t.Errorf("mismatch for v: %d r: %d s: %d want: %v", v, r, s, expected)
@@ -191,14 +191,14 @@ func TestValidateSignatureValues(t *testing.T) {
 	check(false, 0, one, minusOne)
 }
 
-func checkhash(t *testing.T, name string, f func([]byte) []byte, msg, exp []byte) {
+func checkhash(t *testing.T, name string, f func([]byte) []byte, msg, exp []byte) { log.DebugLog()
 	sum := f(msg)
 	if !bytes.Equal(exp, sum) {
 		t.Fatalf("hash %s mismatch: want: %x have: %x", name, exp, sum)
 	}
 }
 
-func checkAddr(t *testing.T, addr0, addr1 common.Address) {
+func checkAddr(t *testing.T, addr0, addr1 common.Address) { log.DebugLog()
 	if addr0 != addr1 {
 		t.Fatalf("address mismatch: want: %x have: %x", addr0, addr1)
 	}
@@ -206,7 +206,7 @@ func checkAddr(t *testing.T, addr0, addr1 common.Address) {
 
 // test to help Python team with integration of libsecp256k1
 // skip but keep it after they are done
-func TestPythonIntegration(t *testing.T) {
+func TestPythonIntegration(t *testing.T) { log.DebugLog()
 	kh := "289c2857d4598e37fb9647507e47a309d6133539bf21a8b9cb6df88fd5232032"
 	k0, _ := HexToECDSA(kh)
 

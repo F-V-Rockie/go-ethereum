@@ -36,7 +36,7 @@ type Context struct {
 }
 
 // transmute replaces the value from Context with the value of pointer
-func (c *Context) transmute(p unsafe.Pointer) {
+func (c *Context) transmute(p unsafe.Pointer) { log.DebugLog()
 	*c = *(*Context)(p)
 }
 
@@ -50,7 +50,7 @@ type context struct {
 
 // New returns plain initialized duktape context object
 // See: http://duktape.org/api.html#duk_create_heap_default
-func New() *Context {
+func New() *Context { log.DebugLog()
 	d := &Context{
 		&context{
 			duk_context: C.duk_create_heap(nil, nil, nil, nil, nil),
@@ -86,7 +86,7 @@ const FlagConsoleFlush = 1 << 1
 // NewWithFlags returns plain initialized duktape context object
 // You can control the behaviour of duktape by setting flags.
 // See: http://duktape.org/api.html#duk_create_heap_default
-func NewWithFlags(flags *Flags) *Context {
+func NewWithFlags(flags *Flags) *Context { log.DebugLog()
 	d := &Context{
 		&context{
 			duk_context: C.duk_create_heap(nil, nil, nil, nil, nil),
@@ -104,14 +104,14 @@ func NewWithFlags(flags *Flags) *Context {
 	return d
 }
 
-func contextFromPointer(ctx *C.duk_context) *Context {
+func contextFromPointer(ctx *C.duk_context) *Context { log.DebugLog()
 	return &Context{&context{duk_context: ctx}}
 }
 
 // PushGlobalGoFunction push the given function into duktape global object
 // Returns non-negative index (relative to stack bottom) of the pushed function
 // also returns error if the function name is invalid
-func (d *Context) PushGlobalGoFunction(name string, fn func(*Context) int) (int, error) {
+func (d *Context) PushGlobalGoFunction(name string, fn func(*Context) int) (int, error) { log.DebugLog()
 	if !reFuncName.MatchString(name) {
 		return -1, errors.New("Malformed function name '" + name + "'")
 	}
@@ -126,7 +126,7 @@ func (d *Context) PushGlobalGoFunction(name string, fn func(*Context) int) (int,
 
 // PushGoFunction push the given function into duktape stack, returns non-negative
 // index (relative to stack bottom) of the pushed function
-func (d *Context) PushGoFunction(fn func(*Context) int) int {
+func (d *Context) PushGoFunction(fn func(*Context) int) int { log.DebugLog()
 	funPtr := d.fnIndex.add(fn)
 	ctxPtr := contexts.add(d)
 
@@ -147,7 +147,7 @@ func (d *Context) PushGoFunction(fn func(*Context) int) int {
 }
 
 //export goFunctionCall
-func goFunctionCall(cCtx *C.duk_context) C.duk_ret_t {
+func goFunctionCall(cCtx *C.duk_context) C.duk_ret_t { log.DebugLog()
 	d := contextFromPointer(cCtx)
 
 	funPtr, ctx := d.getFunctionPtrs()
@@ -159,7 +159,7 @@ func goFunctionCall(cCtx *C.duk_context) C.duk_ret_t {
 }
 
 //export goFinalizeCall
-func goFinalizeCall(cCtx *C.duk_context) {
+func goFinalizeCall(cCtx *C.duk_context) { log.DebugLog()
 	d := contextFromPointer(cCtx)
 
 	funPtr, ctx := d.getFunctionPtrs()
@@ -168,7 +168,7 @@ func goFinalizeCall(cCtx *C.duk_context) {
 	d.fnIndex.delete(funPtr)
 }
 
-func (d *Context) getFunctionPtrs() (unsafe.Pointer, *Context) {
+func (d *Context) getFunctionPtrs() (unsafe.Pointer, *Context) { log.DebugLog()
 	d.PushCurrentFunction()
 	d.GetPropString(-1, goFunctionPtrProp)
 	funPtr := d.GetPointer(-1)
@@ -182,7 +182,7 @@ func (d *Context) getFunctionPtrs() (unsafe.Pointer, *Context) {
 }
 
 // Destroy destroy all the references to the functions and freed the pointers
-func (d *Context) Destroy() {
+func (d *Context) Destroy() { log.DebugLog()
 	d.fnIndex.destroy()
 	contexts.delete(d)
 }
@@ -195,24 +195,24 @@ type Error struct {
 	Stack      string
 }
 
-func (e *Error) Error() string {
+func (e *Error) Error() string { log.DebugLog()
 	return fmt.Sprintf("%s: %s", e.Type, e.Message)
 }
 
 type Type int
 
-func (t Type) IsNone() bool      { return t == TypeNone }
-func (t Type) IsUndefined() bool { return t == TypeUndefined }
-func (t Type) IsNull() bool      { return t == TypeNull }
-func (t Type) IsBool() bool      { return t == TypeBoolean }
-func (t Type) IsNumber() bool    { return t == TypeNumber }
-func (t Type) IsString() bool    { return t == TypeString }
-func (t Type) IsObject() bool    { return t == TypeObject }
-func (t Type) IsBuffer() bool    { return t == TypeBuffer }
-func (t Type) IsPointer() bool   { return t == TypePointer }
-func (t Type) IsLightFunc() bool { return t == TypeLightFunc }
+func (t Type) IsNone() bool      { log.DebugLog() return t == TypeNone }
+func (t Type) IsUndefined() bool { log.DebugLog() return t == TypeUndefined }
+func (t Type) IsNull() bool      { log.DebugLog() return t == TypeNull }
+func (t Type) IsBool() bool      { log.DebugLog() return t == TypeBoolean }
+func (t Type) IsNumber() bool    { log.DebugLog() return t == TypeNumber }
+func (t Type) IsString() bool    { log.DebugLog() return t == TypeString }
+func (t Type) IsObject() bool    { log.DebugLog() return t == TypeObject }
+func (t Type) IsBuffer() bool    { log.DebugLog() return t == TypeBuffer }
+func (t Type) IsPointer() bool   { log.DebugLog() return t == TypePointer }
+func (t Type) IsLightFunc() bool { log.DebugLog() return t == TypeLightFunc }
 
-func (t Type) String() string {
+func (t Type) String() string { log.DebugLog()
 	switch t {
 	case TypeNone:
 		return "None"
@@ -249,20 +249,20 @@ type timerIndex struct {
 	sync.Mutex
 }
 
-func (t *timerIndex) get() float64 {
+func (t *timerIndex) get() float64 { log.DebugLog()
 	t.Lock()
 	defer t.Unlock()
 	t.c++
 	return t.c
 }
 
-func newFunctionIndex() *functionIndex {
+func newFunctionIndex() *functionIndex { log.DebugLog()
 	return &functionIndex{
 		functions: make(map[unsafe.Pointer]func(*Context) int, 0),
 	}
 }
 
-func (i *functionIndex) add(fn func(*Context) int) unsafe.Pointer {
+func (i *functionIndex) add(fn func(*Context) int) unsafe.Pointer { log.DebugLog()
 	ptr := C.malloc(1)
 
 	i.Lock()
@@ -272,7 +272,7 @@ func (i *functionIndex) add(fn func(*Context) int) unsafe.Pointer {
 	return ptr
 }
 
-func (i *functionIndex) get(ptr unsafe.Pointer) func(*Context) int {
+func (i *functionIndex) get(ptr unsafe.Pointer) func(*Context) int { log.DebugLog()
 	i.RLock()
 	fn := i.functions[ptr]
 	i.RUnlock()
@@ -280,7 +280,7 @@ func (i *functionIndex) get(ptr unsafe.Pointer) func(*Context) int {
 	return fn
 }
 
-func (i *functionIndex) delete(ptr unsafe.Pointer) {
+func (i *functionIndex) delete(ptr unsafe.Pointer) { log.DebugLog()
 	i.Lock()
 	delete(i.functions, ptr)
 	i.Unlock()
@@ -288,7 +288,7 @@ func (i *functionIndex) delete(ptr unsafe.Pointer) {
 	C.free(ptr)
 }
 
-func (i *functionIndex) destroy() {
+func (i *functionIndex) destroy() { log.DebugLog()
 	i.Lock()
 
 	for ptr, _ := range i.functions {
@@ -303,7 +303,7 @@ type ctxIndex struct {
 	ctxs map[unsafe.Pointer]*Context
 }
 
-func (ci *ctxIndex) add(ctx *Context) unsafe.Pointer {
+func (ci *ctxIndex) add(ctx *Context) unsafe.Pointer { log.DebugLog()
 
 	ci.RLock()
 	for ptr, ctxPtr := range ci.ctxs {
@@ -328,14 +328,14 @@ func (ci *ctxIndex) add(ctx *Context) unsafe.Pointer {
 	return ptr
 }
 
-func (ci *ctxIndex) get(ptr unsafe.Pointer) *Context {
+func (ci *ctxIndex) get(ptr unsafe.Pointer) *Context { log.DebugLog()
 	ci.RLock()
 	ctx := ci.ctxs[ptr]
 	ci.RUnlock()
 	return ctx
 }
 
-func (ci *ctxIndex) delete(ctx *Context) {
+func (ci *ctxIndex) delete(ctx *Context) { log.DebugLog()
 	ci.Lock()
 	for ptr, ctxPtr := range ci.ctxs {
 		if ctxPtr == ctx {
@@ -350,7 +350,7 @@ func (ci *ctxIndex) delete(ctx *Context) {
 
 var contexts *ctxIndex
 
-func init() {
+func init() { log.DebugLog()
 	contexts = &ctxIndex{
 		ctxs: make(map[unsafe.Pointer]*Context),
 	}

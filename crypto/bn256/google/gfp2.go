@@ -18,40 +18,40 @@ type gfP2 struct {
 	x, y *big.Int // value is xi+y.
 }
 
-func newGFp2(pool *bnPool) *gfP2 {
+func newGFp2(pool *bnPool) *gfP2 { log.DebugLog()
 	return &gfP2{pool.Get(), pool.Get()}
 }
 
-func (e *gfP2) String() string {
+func (e *gfP2) String() string { log.DebugLog()
 	x := new(big.Int).Mod(e.x, P)
 	y := new(big.Int).Mod(e.y, P)
 	return "(" + x.String() + "," + y.String() + ")"
 }
 
-func (e *gfP2) Put(pool *bnPool) {
+func (e *gfP2) Put(pool *bnPool) { log.DebugLog()
 	pool.Put(e.x)
 	pool.Put(e.y)
 }
 
-func (e *gfP2) Set(a *gfP2) *gfP2 {
+func (e *gfP2) Set(a *gfP2) *gfP2 { log.DebugLog()
 	e.x.Set(a.x)
 	e.y.Set(a.y)
 	return e
 }
 
-func (e *gfP2) SetZero() *gfP2 {
+func (e *gfP2) SetZero() *gfP2 { log.DebugLog()
 	e.x.SetInt64(0)
 	e.y.SetInt64(0)
 	return e
 }
 
-func (e *gfP2) SetOne() *gfP2 {
+func (e *gfP2) SetOne() *gfP2 { log.DebugLog()
 	e.x.SetInt64(0)
 	e.y.SetInt64(1)
 	return e
 }
 
-func (e *gfP2) Minimal() {
+func (e *gfP2) Minimal() { log.DebugLog()
 	if e.x.Sign() < 0 || e.x.Cmp(P) >= 0 {
 		e.x.Mod(e.x, P)
 	}
@@ -60,11 +60,11 @@ func (e *gfP2) Minimal() {
 	}
 }
 
-func (e *gfP2) IsZero() bool {
+func (e *gfP2) IsZero() bool { log.DebugLog()
 	return e.x.Sign() == 0 && e.y.Sign() == 0
 }
 
-func (e *gfP2) IsOne() bool {
+func (e *gfP2) IsOne() bool { log.DebugLog()
 	if e.x.Sign() != 0 {
 		return false
 	}
@@ -72,37 +72,37 @@ func (e *gfP2) IsOne() bool {
 	return len(words) == 1 && words[0] == 1
 }
 
-func (e *gfP2) Conjugate(a *gfP2) *gfP2 {
+func (e *gfP2) Conjugate(a *gfP2) *gfP2 { log.DebugLog()
 	e.y.Set(a.y)
 	e.x.Neg(a.x)
 	return e
 }
 
-func (e *gfP2) Negative(a *gfP2) *gfP2 {
+func (e *gfP2) Negative(a *gfP2) *gfP2 { log.DebugLog()
 	e.x.Neg(a.x)
 	e.y.Neg(a.y)
 	return e
 }
 
-func (e *gfP2) Add(a, b *gfP2) *gfP2 {
+func (e *gfP2) Add(a, b *gfP2) *gfP2 { log.DebugLog()
 	e.x.Add(a.x, b.x)
 	e.y.Add(a.y, b.y)
 	return e
 }
 
-func (e *gfP2) Sub(a, b *gfP2) *gfP2 {
+func (e *gfP2) Sub(a, b *gfP2) *gfP2 { log.DebugLog()
 	e.x.Sub(a.x, b.x)
 	e.y.Sub(a.y, b.y)
 	return e
 }
 
-func (e *gfP2) Double(a *gfP2) *gfP2 {
+func (e *gfP2) Double(a *gfP2) *gfP2 { log.DebugLog()
 	e.x.Lsh(a.x, 1)
 	e.y.Lsh(a.y, 1)
 	return e
 }
 
-func (c *gfP2) Exp(a *gfP2, power *big.Int, pool *bnPool) *gfP2 {
+func (c *gfP2) Exp(a *gfP2, power *big.Int, pool *bnPool) *gfP2 { log.DebugLog()
 	sum := newGFp2(pool)
 	sum.SetOne()
 	t := newGFp2(pool)
@@ -126,7 +126,7 @@ func (c *gfP2) Exp(a *gfP2, power *big.Int, pool *bnPool) *gfP2 {
 
 // See "Multiplication and Squaring in Pairing-Friendly Fields",
 // http://eprint.iacr.org/2006/471.pdf
-func (e *gfP2) Mul(a, b *gfP2, pool *bnPool) *gfP2 {
+func (e *gfP2) Mul(a, b *gfP2, pool *bnPool) *gfP2 { log.DebugLog()
 	tx := pool.Get().Mul(a.x, b.y)
 	t := pool.Get().Mul(b.x, a.y)
 	tx.Add(tx, t)
@@ -145,14 +145,14 @@ func (e *gfP2) Mul(a, b *gfP2, pool *bnPool) *gfP2 {
 	return e
 }
 
-func (e *gfP2) MulScalar(a *gfP2, b *big.Int) *gfP2 {
+func (e *gfP2) MulScalar(a *gfP2, b *big.Int) *gfP2 { log.DebugLog()
 	e.x.Mul(a.x, b)
 	e.y.Mul(a.y, b)
 	return e
 }
 
 // MulXi sets e=ξa where ξ=i+9 and then returns e.
-func (e *gfP2) MulXi(a *gfP2, pool *bnPool) *gfP2 {
+func (e *gfP2) MulXi(a *gfP2, pool *bnPool) *gfP2 { log.DebugLog()
 	// (xi+y)(i+3) = (9x+y)i+(9y-x)
 	tx := pool.Get().Lsh(a.x, 3)
 	tx.Add(tx, a.x)
@@ -171,7 +171,7 @@ func (e *gfP2) MulXi(a *gfP2, pool *bnPool) *gfP2 {
 	return e
 }
 
-func (e *gfP2) Square(a *gfP2, pool *bnPool) *gfP2 {
+func (e *gfP2) Square(a *gfP2, pool *bnPool) *gfP2 { log.DebugLog()
 	// Complex squaring algorithm:
 	// (xi+b)² = (x+y)(y-x) + 2*i*x*y
 	t1 := pool.Get().Sub(a.y, a.x)
@@ -192,7 +192,7 @@ func (e *gfP2) Square(a *gfP2, pool *bnPool) *gfP2 {
 	return e
 }
 
-func (e *gfP2) Invert(a *gfP2, pool *bnPool) *gfP2 {
+func (e *gfP2) Invert(a *gfP2, pool *bnPool) *gfP2 { log.DebugLog()
 	// See "Implementing cryptographic pairings", M. Scott, section 3.2.
 	// ftp://136.206.11.249/pub/crypto/pairings.pdf
 	t := pool.Get()
@@ -218,10 +218,10 @@ func (e *gfP2) Invert(a *gfP2, pool *bnPool) *gfP2 {
 	return e
 }
 
-func (e *gfP2) Real() *big.Int {
+func (e *gfP2) Real() *big.Int { log.DebugLog()
 	return e.x
 }
 
-func (e *gfP2) Imag() *big.Int {
+func (e *gfP2) Imag() *big.Int { log.DebugLog()
 	return e.y
 }

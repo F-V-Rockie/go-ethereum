@@ -73,7 +73,7 @@ type meteredMsgReadWriter struct {
 
 // newMeteredMsgWriter wraps a p2p MsgReadWriter with metering support. If the
 // metrics system is disabled, this function returns the original object.
-func newMeteredMsgWriter(rw p2p.MsgReadWriter) p2p.MsgReadWriter {
+func newMeteredMsgWriter(rw p2p.MsgReadWriter) p2p.MsgReadWriter { log.DebugLog()
 	if !metrics.Enabled {
 		return rw
 	}
@@ -82,11 +82,11 @@ func newMeteredMsgWriter(rw p2p.MsgReadWriter) p2p.MsgReadWriter {
 
 // Init sets the protocol version used by the stream to know which meters to
 // increment in case of overlapping message ids between protocol versions.
-func (rw *meteredMsgReadWriter) Init(version int) {
+func (rw *meteredMsgReadWriter) Init(version int) { log.DebugLog()
 	rw.version = version
 }
 
-func (rw *meteredMsgReadWriter) ReadMsg() (p2p.Msg, error) {
+func (rw *meteredMsgReadWriter) ReadMsg() (p2p.Msg, error) { log.DebugLog()
 	// Read the message and short circuit in case of an error
 	msg, err := rw.MsgReadWriter.ReadMsg()
 	if err != nil {
@@ -100,7 +100,7 @@ func (rw *meteredMsgReadWriter) ReadMsg() (p2p.Msg, error) {
 	return msg, err
 }
 
-func (rw *meteredMsgReadWriter) WriteMsg(msg p2p.Msg) error {
+func (rw *meteredMsgReadWriter) WriteMsg(msg p2p.Msg) error { log.DebugLog()
 	// Account for the data traffic
 	packets, traffic := miscOutPacketsMeter, miscOutTrafficMeter
 	packets.Mark(1)

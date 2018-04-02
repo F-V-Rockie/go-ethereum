@@ -31,13 +31,13 @@ import (
 type divServer struct{ results event.Feed }
 type mulServer struct{ results event.Feed }
 
-func (s *divServer) do(a, b int) int {
+func (s *divServer) do(a, b int) int { log.DebugLog()
 	r := a / b
 	s.results.Send(r)
 	return r
 }
 
-func (s *mulServer) do(a, b int) int {
+func (s *mulServer) do(a, b int) int { log.DebugLog()
 	r := a * b
 	s.results.Send(r)
 	return r
@@ -51,7 +51,7 @@ type App struct {
 	scope event.SubscriptionScope
 }
 
-func (s *App) Calc(op byte, a, b int) int {
+func (s *App) Calc(op byte, a, b int) int { log.DebugLog()
 	switch op {
 	case '/':
 		return s.divServer.do(a, b)
@@ -65,7 +65,7 @@ func (s *App) Calc(op byte, a, b int) int {
 // The app's SubscribeResults method starts sending calculation results to the given
 // channel. Subscriptions created through this method are tied to the lifetime of the App
 // because they are registered in the scope.
-func (s *App) SubscribeResults(op byte, ch chan<- int) event.Subscription {
+func (s *App) SubscribeResults(op byte, ch chan<- int) event.Subscription { log.DebugLog()
 	switch op {
 	case '/':
 		return s.scope.Track(s.divServer.results.Subscribe(ch))
@@ -77,11 +77,11 @@ func (s *App) SubscribeResults(op byte, ch chan<- int) event.Subscription {
 }
 
 // Stop stops the App, closing all subscriptions created through SubscribeResults.
-func (s *App) Stop() {
+func (s *App) Stop() { log.DebugLog()
 	s.scope.Close()
 }
 
-func ExampleSubscriptionScope() {
+func ExampleSubscriptionScope() { log.DebugLog()
 	// Create the app.
 	var (
 		app  App

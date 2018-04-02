@@ -32,7 +32,7 @@ These initializers should be registered by calling the `adapters.RegisterService
 function in an `init()` hook:
 
 ```go
-func init() {
+func init() { log.DebugLog()
 	adapters.RegisterServices(adapters.Services{
 		"service1": initService1,
 		"service2": initService2,

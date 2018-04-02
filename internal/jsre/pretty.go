@@ -52,12 +52,12 @@ var boringKeys = map[string]bool{
 }
 
 // prettyPrint writes value to standard output.
-func prettyPrint(vm *otto.Otto, value otto.Value, w io.Writer) {
+func prettyPrint(vm *otto.Otto, value otto.Value, w io.Writer) { log.DebugLog()
 	ppctx{vm: vm, w: w}.printValue(value, 0, false)
 }
 
 // prettyError writes err to standard output.
-func prettyError(vm *otto.Otto, err error, w io.Writer) {
+func prettyError(vm *otto.Otto, err error, w io.Writer) { log.DebugLog()
 	failure := err.Error()
 	if ottoErr, ok := err.(*otto.Error); ok {
 		failure = ottoErr.String()
@@ -65,7 +65,7 @@ func prettyError(vm *otto.Otto, err error, w io.Writer) {
 	fmt.Fprint(w, ErrorColor("%s", failure))
 }
 
-func (re *JSRE) prettyPrintJS(call otto.FunctionCall) otto.Value {
+func (re *JSRE) prettyPrintJS(call otto.FunctionCall) otto.Value { log.DebugLog()
 	for _, v := range call.ArgumentList {
 		prettyPrint(call.Otto, v, re.output)
 		fmt.Fprintln(re.output)
@@ -78,11 +78,11 @@ type ppctx struct {
 	w  io.Writer
 }
 
-func (ctx ppctx) indent(level int) string {
+func (ctx ppctx) indent(level int) string { log.DebugLog()
 	return strings.Repeat(indentString, level)
 }
 
-func (ctx ppctx) printValue(v otto.Value, level int, inArray bool) {
+func (ctx ppctx) printValue(v otto.Value, level int, inArray bool) { log.DebugLog()
 	switch {
 	case v.IsObject():
 		ctx.printObject(v.Object(), level, inArray)
@@ -106,7 +106,7 @@ func (ctx ppctx) printValue(v otto.Value, level int, inArray bool) {
 	}
 }
 
-func (ctx ppctx) printObject(obj *otto.Object, level int, inArray bool) {
+func (ctx ppctx) printObject(obj *otto.Object, level int, inArray bool) { log.DebugLog()
 	switch obj.Class() {
 	case "Array", "GoArray":
 		lv, _ := obj.Get("length")
@@ -185,7 +185,7 @@ func (ctx ppctx) printObject(obj *otto.Object, level int, inArray bool) {
 	}
 }
 
-func (ctx ppctx) fields(obj *otto.Object) []string {
+func (ctx ppctx) fields(obj *otto.Object) []string { log.DebugLog()
 	var (
 		vals, methods []string
 		seen          = make(map[string]bool)
@@ -207,7 +207,7 @@ func (ctx ppctx) fields(obj *otto.Object) []string {
 	return append(vals, methods...)
 }
 
-func iterOwnAndConstructorKeys(vm *otto.Otto, obj *otto.Object, f func(string)) {
+func iterOwnAndConstructorKeys(vm *otto.Otto, obj *otto.Object, f func(string)) { log.DebugLog()
 	seen := make(map[string]bool)
 	iterOwnKeys(vm, obj, func(prop string) {
 		seen[prop] = true
@@ -222,7 +222,7 @@ func iterOwnAndConstructorKeys(vm *otto.Otto, obj *otto.Object, f func(string)) 
 	}
 }
 
-func iterOwnKeys(vm *otto.Otto, obj *otto.Object, f func(string)) {
+func iterOwnKeys(vm *otto.Otto, obj *otto.Object, f func(string)) { log.DebugLog()
 	Object, _ := vm.Object("Object")
 	rv, _ := Object.Call("getOwnPropertyNames", obj.Value())
 	gv, _ := rv.Export()
@@ -240,7 +240,7 @@ func iterOwnKeys(vm *otto.Otto, obj *otto.Object, f func(string)) {
 	}
 }
 
-func (ctx ppctx) isBigNumber(v *otto.Object) bool {
+func (ctx ppctx) isBigNumber(v *otto.Object) bool { log.DebugLog()
 	// Handle numbers with custom constructor.
 	if v, _ := v.Get("constructor"); v.Object() != nil {
 		if strings.HasPrefix(toString(v.Object()), "function BigNumber") {
@@ -257,12 +257,12 @@ func (ctx ppctx) isBigNumber(v *otto.Object) bool {
 	return b
 }
 
-func toString(obj *otto.Object) string {
+func toString(obj *otto.Object) string { log.DebugLog()
 	s, _ := obj.Call("toString")
 	return s.String()
 }
 
-func constructorPrototype(obj *otto.Object) *otto.Object {
+func constructorPrototype(obj *otto.Object) *otto.Object { log.DebugLog()
 	if v, _ := obj.Get("constructor"); v.Object() != nil {
 		if v, _ = v.Object().Get("prototype"); v.Object() != nil {
 			return v.Object()

@@ -20,7 +20,7 @@ import (
 	"testing"
 )
 
-func TestStorageSizeString(t *testing.T) {
+func TestStorageSizeString(t *testing.T) { log.DebugLog()
 	tests := []struct {
 		size StorageSize
 		str  string

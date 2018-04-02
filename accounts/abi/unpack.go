@@ -26,7 +26,7 @@ import (
 )
 
 // reads the integer based on its kind
-func readInteger(kind reflect.Kind, b []byte) interface{} {
+func readInteger(kind reflect.Kind, b []byte) interface{} { log.DebugLog()
 	switch kind {
 	case reflect.Uint8:
 		return b[len(b)-1]
@@ -50,7 +50,7 @@ func readInteger(kind reflect.Kind, b []byte) interface{} {
 }
 
 // reads a bool
-func readBool(word []byte) (bool, error) {
+func readBool(word []byte) (bool, error) { log.DebugLog()
 	for _, b := range word[:31] {
 		if b != 0 {
 			return false, errBadBool
@@ -68,7 +68,7 @@ func readBool(word []byte) (bool, error) {
 
 // A function type is simply the address with the function selection signature at the end.
 // This enforces that standard by always presenting it as a 24-array (address + sig = 24 bytes)
-func readFunctionType(t Type, word []byte) (funcTy [24]byte, err error) {
+func readFunctionType(t Type, word []byte) (funcTy [24]byte, err error) { log.DebugLog()
 	if t.T != FunctionTy {
 		return [24]byte{}, fmt.Errorf("abi: invalid type in call to make function type byte array")
 	}
@@ -81,7 +81,7 @@ func readFunctionType(t Type, word []byte) (funcTy [24]byte, err error) {
 }
 
 // through reflection, creates a fixed array to be read from
-func readFixedBytes(t Type, word []byte) (interface{}, error) {
+func readFixedBytes(t Type, word []byte) (interface{}, error) { log.DebugLog()
 	if t.T != FixedBytesTy {
 		return nil, fmt.Errorf("abi: invalid type in call to make fixed byte array")
 	}
@@ -93,7 +93,7 @@ func readFixedBytes(t Type, word []byte) (interface{}, error) {
 
 }
 
-func getFullElemSize(elem *Type) int {
+func getFullElemSize(elem *Type) int { log.DebugLog()
 	//all other should be counted as 32 (slices have pointers to respective elements)
 	size := 32
 	//arrays wrap it, each element being the same size
@@ -105,7 +105,7 @@ func getFullElemSize(elem *Type) int {
 }
 
 // iteratively unpack elements
-func forEachUnpack(t Type, output []byte, start, size int) (interface{}, error) {
+func forEachUnpack(t Type, output []byte, start, size int) (interface{}, error) { log.DebugLog()
 	if size < 0 {
 		return nil, fmt.Errorf("cannot marshal input to array, size is negative (%d)", size)
 	}
@@ -150,7 +150,7 @@ func forEachUnpack(t Type, output []byte, start, size int) (interface{}, error) 
 
 // toGoType parses the output bytes and recursively assigns the value of these bytes
 // into a go type with accordance with the ABI spec.
-func toGoType(index int, t Type, output []byte) (interface{}, error) {
+func toGoType(index int, t Type, output []byte) (interface{}, error) { log.DebugLog()
 	if index+32 > len(output) {
 		return nil, fmt.Errorf("abi: cannot marshal in to go type: length insufficient %d require %d", len(output), index+32)
 	}
@@ -198,7 +198,7 @@ func toGoType(index int, t Type, output []byte) (interface{}, error) {
 }
 
 // interprets a 32 byte slice as an offset and then determines which indice to look to decode the type.
-func lengthPrefixPointsTo(index int, output []byte) (start int, length int, err error) {
+func lengthPrefixPointsTo(index int, output []byte) (start int, length int, err error) { log.DebugLog()
 	bigOffsetEnd := big.NewInt(0).SetBytes(output[index : index+32])
 	bigOffsetEnd.Add(bigOffsetEnd, common.Big32)
 	outputLength := big.NewInt(int64(len(output)))

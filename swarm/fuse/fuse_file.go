@@ -58,7 +58,7 @@ type SwarmFile struct {
 	lock      *sync.RWMutex
 }
 
-func NewSwarmFile(path, fname string, minfo *MountInfo) *SwarmFile {
+func NewSwarmFile(path, fname string, minfo *MountInfo) *SwarmFile { log.DebugLog()
 	newFile := &SwarmFile{
 		inode:    NewInode(),
 		name:     fname,
@@ -73,7 +73,7 @@ func NewSwarmFile(path, fname string, minfo *MountInfo) *SwarmFile {
 	return newFile
 }
 
-func (file *SwarmFile) Attr(ctx context.Context, a *fuse.Attr) error {
+func (file *SwarmFile) Attr(ctx context.Context, a *fuse.Attr) error { log.DebugLog()
 
 	a.Inode = file.inode
 	//TODO: need to get permission as argument
@@ -94,7 +94,7 @@ func (file *SwarmFile) Attr(ctx context.Context, a *fuse.Attr) error {
 	return nil
 }
 
-func (sf *SwarmFile) Read(ctx context.Context, req *fuse.ReadRequest, resp *fuse.ReadResponse) error {
+func (sf *SwarmFile) Read(ctx context.Context, req *fuse.ReadRequest, resp *fuse.ReadResponse) error { log.DebugLog()
 
 	sf.lock.RLock()
 	defer sf.lock.RUnlock()
@@ -112,7 +112,7 @@ func (sf *SwarmFile) Read(ctx context.Context, req *fuse.ReadRequest, resp *fuse
 
 }
 
-func (sf *SwarmFile) Write(ctx context.Context, req *fuse.WriteRequest, resp *fuse.WriteResponse) error {
+func (sf *SwarmFile) Write(ctx context.Context, req *fuse.WriteRequest, resp *fuse.WriteResponse) error { log.DebugLog()
 
 	if sf.fileSize == 0 && req.Offset == 0 {
 

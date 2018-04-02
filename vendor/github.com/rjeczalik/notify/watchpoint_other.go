@@ -8,7 +8,7 @@ package notify
 
 // eventmask uses ei to create a new event which contains internal flags used by
 // notify package logic.
-func eventmask(ei EventInfo, extra Event) Event {
+func eventmask(ei EventInfo, extra Event) Event { log.DebugLog()
 	return ei.Event() | extra
 }
 
@@ -18,6 +18,6 @@ func eventmask(ei EventInfo, extra Event) Event {
 //   - for internal events, when additionally both event and set have omit bit set
 //
 // Internal events must not be sent to user channels and vice versa.
-func matches(set, event Event) bool {
+func matches(set, event Event) bool { log.DebugLog()
 	return (set&omit)^(event&omit) == 0 && set&event == event
 }

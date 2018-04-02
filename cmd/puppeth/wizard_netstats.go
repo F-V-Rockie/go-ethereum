@@ -30,7 +30,7 @@ import (
 
 // networkStats verifies the status of network components and generates a protip
 // configuration set to give users hints on how to do various tasks.
-func (w *wizard) networkStats() {
+func (w *wizard) networkStats() { log.DebugLog()
 	if len(w.servers) == 0 {
 		log.Info("No remote machines to gather stats from")
 		return
@@ -70,7 +70,7 @@ func (w *wizard) networkStats() {
 }
 
 // gatherStats gathers service statistics for a particular remote server.
-func (w *wizard) gatherStats(server string, pubkey []byte, client *sshClient) *serverStat {
+func (w *wizard) gatherStats(server string, pubkey []byte, client *sshClient) *serverStat { log.DebugLog()
 	// Gather some global stats to feed into the wizard
 	var (
 		genesis   string
@@ -197,7 +197,7 @@ type serverStats map[string]*serverStat
 
 // render converts the gathered statistics into a user friendly tabular report
 // and prints it to the standard output.
-func (stats serverStats) render() {
+func (stats serverStats) render() { log.DebugLog()
 	// Start gathering service statistics and config parameters
 	table := tablewriter.NewWriter(os.Stdout)
 

@@ -112,7 +112,7 @@ type Peer struct {
 }
 
 // NewPeer returns a peer for testing purposes.
-func NewPeer(id discover.NodeID, name string, caps []Cap) *Peer {
+func NewPeer(id discover.NodeID, name string, caps []Cap) *Peer { log.DebugLog()
 	pipe, _ := net.Pipe()
 	conn := &conn{fd: pipe, transport: nil, id: id, caps: caps, name: name}
 	peer := newPeer(conn, nil)
@@ -121,34 +121,34 @@ func NewPeer(id discover.NodeID, name string, caps []Cap) *Peer {
 }
 
 // ID returns the node's public key.
-func (p *Peer) ID() discover.NodeID {
+func (p *Peer) ID() discover.NodeID { log.DebugLog()
 	return p.rw.id
 }
 
 // Name returns the node name that the remote node advertised.
-func (p *Peer) Name() string {
+func (p *Peer) Name() string { log.DebugLog()
 	return p.rw.name
 }
 
 // Caps returns the capabilities (supported subprotocols) of the remote peer.
-func (p *Peer) Caps() []Cap {
+func (p *Peer) Caps() []Cap { log.DebugLog()
 	// TODO: maybe return copy
 	return p.rw.caps
 }
 
 // RemoteAddr returns the remote address of the network connection.
-func (p *Peer) RemoteAddr() net.Addr {
+func (p *Peer) RemoteAddr() net.Addr { log.DebugLog()
 	return p.rw.fd.RemoteAddr()
 }
 
 // LocalAddr returns the local address of the network connection.
-func (p *Peer) LocalAddr() net.Addr {
+func (p *Peer) LocalAddr() net.Addr { log.DebugLog()
 	return p.rw.fd.LocalAddr()
 }
 
 // Disconnect terminates the peer connection with the given reason.
 // It returns immediately and does not wait until the connection is closed.
-func (p *Peer) Disconnect(reason DiscReason) {
+func (p *Peer) Disconnect(reason DiscReason) { log.DebugLog()
 	select {
 	case p.disc <- reason:
 	case <-p.closed:
@@ -156,16 +156,16 @@ func (p *Peer) Disconnect(reason DiscReason) {
 }
 
 // String implements fmt.Stringer.
-func (p *Peer) String() string {
+func (p *Peer) String() string { log.DebugLog()
 	return fmt.Sprintf("Peer %x %v", p.rw.id[:8], p.RemoteAddr())
 }
 
 // Inbound returns true if the peer is an inbound connection
-func (p *Peer) Inbound() bool {
+func (p *Peer) Inbound() bool { log.DebugLog()
 	return p.rw.flags&inboundConn != 0
 }
 
-func newPeer(conn *conn, protocols []Protocol) *Peer {
+func newPeer(conn *conn, protocols []Protocol) *Peer { log.DebugLog()
 	protomap := matchProtocols(protocols, conn.caps, conn)
 	p := &Peer{
 		rw:       conn,
@@ -179,11 +179,11 @@ func newPeer(conn *conn, protocols []Protocol) *Peer {
 	return p
 }
 
-func (p *Peer) Log() log.Logger {
+func (p *Peer) Log() log.Logger { log.DebugLog()
 	return p.log
 }
 
-func (p *Peer) run() (remoteRequested bool, err error) {
+func (p *Peer) run() (remoteRequested bool, err error) { log.DebugLog()
 	var (
 		writeStart = make(chan struct{}, 1)
 		writeErr   = make(chan error, 1)
@@ -232,7 +232,7 @@ loop:
 	return remoteRequested, err
 }
 
-func (p *Peer) pingLoop() {
+func (p *Peer) pingLoop() { log.DebugLog()
 	ping := time.NewTimer(pingInterval)
 	defer p.wg.Done()
 	defer ping.Stop()
@@ -250,7 +250,7 @@ func (p *Peer) pingLoop() {
 	}
 }
 
-func (p *Peer) readLoop(errc chan<- error) {
+func (p *Peer) readLoop(errc chan<- error) { log.DebugLog()
 	defer p.wg.Done()
 	for {
 		msg, err := p.rw.ReadMsg()
@@ -266,7 +266,7 @@ func (p *Peer) readLoop(errc chan<- error) {
 	}
 }
 
-func (p *Peer) handle(msg Msg) error {
+func (p *Peer) handle(msg Msg) error { log.DebugLog()
 	switch {
 	case msg.Code == pingMsg:
 		msg.Discard()
@@ -296,7 +296,7 @@ func (p *Peer) handle(msg Msg) error {
 	return nil
 }
 
-func countMatchingProtocols(protocols []Protocol, caps []Cap) int {
+func countMatchingProtocols(protocols []Protocol, caps []Cap) int { log.DebugLog()
 	n := 0
 	for _, cap := range caps {
 		for _, proto := range protocols {
@@ -309,7 +309,7 @@ func countMatchingProtocols(protocols []Protocol, caps []Cap) int {
 }
 
 // matchProtocols creates structures for matching named subprotocols.
-func matchProtocols(protocols []Protocol, caps []Cap, rw MsgReadWriter) map[string]*protoRW {
+func matchProtocols(protocols []Protocol, caps []Cap, rw MsgReadWriter) map[string]*protoRW { log.DebugLog()
 	sort.Sort(capsByNameAndVersion(caps))
 	offset := baseProtocolLength
 	result := make(map[string]*protoRW)
@@ -333,7 +333,7 @@ outer:
 	return result
 }
 
-func (p *Peer) startProtocols(writeStart <-chan struct{}, writeErr chan<- error) {
+func (p *Peer) startProtocols(writeStart <-chan struct{}, writeErr chan<- error) { log.DebugLog()
 	p.wg.Add(len(p.running))
 	for _, proto := range p.running {
 		proto := proto
@@ -361,7 +361,7 @@ func (p *Peer) startProtocols(writeStart <-chan struct{}, writeErr chan<- error)
 
 // getProto finds the protocol responsible for handling
 // the given message code.
-func (p *Peer) getProto(code uint64) (*protoRW, error) {
+func (p *Peer) getProto(code uint64) (*protoRW, error) { log.DebugLog()
 	for _, proto := range p.running {
 		if code >= proto.offset && code < proto.offset+proto.Length {
 			return proto, nil
@@ -380,7 +380,7 @@ type protoRW struct {
 	w      MsgWriter
 }
 
-func (rw *protoRW) WriteMsg(msg Msg) (err error) {
+func (rw *protoRW) WriteMsg(msg Msg) (err error) { log.DebugLog()
 	if msg.Code >= rw.Length {
 		return newPeerError(errInvalidMsgCode, "not handled")
 	}
@@ -399,7 +399,7 @@ func (rw *protoRW) WriteMsg(msg Msg) (err error) {
 	return err
 }
 
-func (rw *protoRW) ReadMsg() (Msg, error) {
+func (rw *protoRW) ReadMsg() (Msg, error) { log.DebugLog()
 	select {
 	case msg := <-rw.in:
 		msg.Code -= rw.offset
@@ -427,7 +427,7 @@ type PeerInfo struct {
 }
 
 // Info gathers and returns a collection of metadata known about a peer.
-func (p *Peer) Info() *PeerInfo {
+func (p *Peer) Info() *PeerInfo { log.DebugLog()
 	// Gather the protocol capabilities
 	var caps []string
 	for _, cap := range p.Caps() {

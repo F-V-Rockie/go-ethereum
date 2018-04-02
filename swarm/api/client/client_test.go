@@ -30,7 +30,7 @@ import (
 )
 
 // TestClientUploadDownloadRaw test uploading and downloading raw data to swarm
-func TestClientUploadDownloadRaw(t *testing.T) {
+func TestClientUploadDownloadRaw(t *testing.T) { log.DebugLog()
 	srv := testutil.NewTestSwarmServer(t)
 	defer srv.Close()
 
@@ -60,7 +60,7 @@ func TestClientUploadDownloadRaw(t *testing.T) {
 
 // TestClientUploadDownloadFiles test uploading and downloading files to swarm
 // manifests
-func TestClientUploadDownloadFiles(t *testing.T) {
+func TestClientUploadDownloadFiles(t *testing.T) { log.DebugLog()
 	srv := testutil.NewTestSwarmServer(t)
 	defer srv.Close()
 
@@ -135,7 +135,7 @@ var testDirFiles = []string{
 	"dir2/dir4/file8.txt",
 }
 
-func newTestDirectory(t *testing.T) string {
+func newTestDirectory(t *testing.T) string { log.DebugLog()
 	dir, err := ioutil.TempDir("", "swarm-client-test")
 	if err != nil {
 		t.Fatal(err)
@@ -158,7 +158,7 @@ func newTestDirectory(t *testing.T) string {
 
 // TestClientUploadDownloadDirectory tests uploading and downloading a
 // directory of files to a swarm manifest
-func TestClientUploadDownloadDirectory(t *testing.T) {
+func TestClientUploadDownloadDirectory(t *testing.T) { log.DebugLog()
 	srv := testutil.NewTestSwarmServer(t)
 	defer srv.Close()
 
@@ -216,7 +216,7 @@ func TestClientUploadDownloadDirectory(t *testing.T) {
 }
 
 // TestClientFileList tests listing files in a swarm manifest
-func TestClientFileList(t *testing.T) {
+func TestClientFileList(t *testing.T) { log.DebugLog()
 	srv := testutil.NewTestSwarmServer(t)
 	defer srv.Close()
 
@@ -274,7 +274,7 @@ func TestClientFileList(t *testing.T) {
 
 // TestClientMultipartUpload tests uploading files to swarm using a multipart
 // upload
-func TestClientMultipartUpload(t *testing.T) {
+func TestClientMultipartUpload(t *testing.T) { log.DebugLog()
 	srv := testutil.NewTestSwarmServer(t)
 	defer srv.Close()
 

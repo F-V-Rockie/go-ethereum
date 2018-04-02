@@ -143,7 +143,7 @@ import (
   "github.com/urfave/cli"
 )
 
-func main() {
+func main() { log.DebugLog()
   cli.NewApp().Run(os.Args)
 }
 ```
@@ -164,7 +164,7 @@ import (
   "github.com/urfave/cli"
 )
 
-func main() {
+func main() { log.DebugLog()
   app := cli.NewApp()
   app.Name = "boom"
   app.Usage = "make an explosive entrance"
@@ -202,7 +202,7 @@ import (
   "github.com/urfave/cli"
 )
 
-func main() {
+func main() { log.DebugLog()
   app := cli.NewApp()
   app.Name = "greet"
   app.Usage = "fight the loneliness!"
@@ -265,7 +265,7 @@ import (
   "github.com/urfave/cli"
 )
 
-func main() {
+func main() { log.DebugLog()
   app := cli.NewApp()
 
   app.Action = func(c *cli.Context) error {
@@ -294,7 +294,7 @@ import (
   "github.com/urfave/cli"
 )
 
-func main() {
+func main() { log.DebugLog()
   app := cli.NewApp()
 
   app.Flags = []cli.Flag {
@@ -338,7 +338,7 @@ import (
   "github.com/urfave/cli"
 )
 
-func main() {
+func main() { log.DebugLog()
   var language string
 
   app := cli.NewApp()
@@ -391,7 +391,7 @@ import (
   "github.com/urfave/cli"
 )
 
-func main() {
+func main() { log.DebugLog()
   app := cli.NewApp()
 
   app.Flags = []cli.Flag{
@@ -432,7 +432,7 @@ import (
   "github.com/urfave/cli"
 )
 
-func main() {
+func main() { log.DebugLog()
   app := cli.NewApp()
 
   app.Flags = []cli.Flag {
@@ -473,7 +473,7 @@ import (
   "github.com/urfave/cli"
 )
 
-func main() {
+func main() { log.DebugLog()
   app := cli.NewApp()
 
   app.Flags = []cli.Flag {
@@ -538,7 +538,7 @@ import (
   "github.com/urfave/cli"
 )
 
-func main() {
+func main() { log.DebugLog()
   app := cli.NewApp()
 
   app.Flags = []cli.Flag {
@@ -570,7 +570,7 @@ import (
   "github.com/urfave/cli"
 )
 
-func main() {
+func main() { log.DebugLog()
   app := cli.NewApp()
 
   app.Flags = []cli.Flag {
@@ -636,7 +636,7 @@ import (
   "github.com/urfave/cli/altsrc"
 )
 
-func main() {
+func main() { log.DebugLog()
   app := cli.NewApp()
 
   flags := []cli.Flag{
@@ -674,7 +674,7 @@ import (
   "github.com/urfave/cli"
 )
 
-func main() {
+func main() { log.DebugLog()
   app := cli.NewApp()
 
   app.Commands = []cli.Command{
@@ -742,7 +742,7 @@ import (
   "github.com/urfave/cli"
 )
 
-func main() {
+func main() { log.DebugLog()
   app := cli.NewApp()
 
   app.Commands = []cli.Command{
@@ -790,7 +790,7 @@ import (
   "github.com/urfave/cli"
 )
 
-func main() {
+func main() { log.DebugLog()
   app := cli.NewApp()
   app.Flags = []cli.Flag{
     cli.BoolTFlag{
@@ -830,7 +830,7 @@ import (
   "github.com/urfave/cli"
 )
 
-func main() {
+func main() { log.DebugLog()
   tasks := []string{"cook", "clean", "laundry", "eat", "sleep", "code"}
 
   app := cli.NewApp()
@@ -901,7 +901,7 @@ import (
   "github.com/urfave/cli"
 )
 
-func main() {
+func main() { log.DebugLog()
   cli.BashCompletionFlag = cli.BoolFlag{
     Name:   "compgen",
     Hidden: true,
@@ -946,7 +946,7 @@ import (
   "github.com/urfave/cli"
 )
 
-func main() {
+func main() { log.DebugLog()
   // EXAMPLE: Append to an existing template
   cli.AppHelpTemplate = fmt.Sprintf(`%s
 
@@ -1003,7 +1003,7 @@ import (
   "github.com/urfave/cli"
 )
 
-func main() {
+func main() { log.DebugLog()
   cli.HelpFlag = cli.BoolFlag{
     Name: "halp, haaaaalp",
     Usage: "HALP",
@@ -1038,7 +1038,7 @@ import (
   "github.com/urfave/cli"
 )
 
-func main() {
+func main() { log.DebugLog()
   cli.VersionFlag = cli.BoolFlag{
     Name: "print-version, V",
     Usage: "print only the version",
@@ -1071,7 +1071,7 @@ var (
   Revision = "fafafaf"
 )
 
-func main() {
+func main() { log.DebugLog()
   cli.VersionPrinter = func(c *cli.Context) {
     fmt.Printf("version=%s revision=%s\n", c.App.Version, Revision)
   }
@@ -1106,7 +1106,7 @@ import (
   "github.com/urfave/cli"
 )
 
-func init() {
+func init() { log.DebugLog()
   cli.AppHelpTemplate += "\nCUSTOMIZED: you bet ur muffins\n"
   cli.CommandHelpTemplate += "\nYMMV\n"
   cli.SubcommandHelpTemplate += "\nor something\n"
@@ -1132,7 +1132,7 @@ func init() {
 
 type hexWriter struct{}
 
-func (w *hexWriter) Write(p []byte) (int, error) {
+func (w *hexWriter) Write(p []byte) (int, error) { log.DebugLog()
   for _, b := range p {
     fmt.Printf("%x", b)
   }
@@ -1145,16 +1145,16 @@ type genericType struct{
   s string
 }
 
-func (g *genericType) Set(value string) error {
+func (g *genericType) Set(value string) error { log.DebugLog()
   g.s = value
   return nil
 }
 
-func (g *genericType) String() string {
+func (g *genericType) String() string { log.DebugLog()
   return g.s
 }
 
-func main() {
+func main() { log.DebugLog()
   app := cli.NewApp()
   app.Name = "kənˈtrīv"
   app.Version = "19.99.0"
@@ -1358,7 +1358,7 @@ func main() {
   app.Run(os.Args)
 }
 
-func wopAction(c *cli.Context) error {
+func wopAction(c *cli.Context) error { log.DebugLog()
   fmt.Fprintf(c.App.Writer, ":wave: over here, eh\n")
   return nil
 }

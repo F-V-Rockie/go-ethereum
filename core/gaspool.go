@@ -26,7 +26,7 @@ import (
 type GasPool uint64
 
 // AddGas makes gas available for execution.
-func (gp *GasPool) AddGas(amount uint64) *GasPool {
+func (gp *GasPool) AddGas(amount uint64) *GasPool { log.DebugLog()
 	if uint64(*gp) > math.MaxUint64-amount {
 		panic("gas pool pushed above uint64")
 	}
@@ -36,7 +36,7 @@ func (gp *GasPool) AddGas(amount uint64) *GasPool {
 
 // SubGas deducts the given amount from the pool if enough gas is
 // available and returns an error otherwise.
-func (gp *GasPool) SubGas(amount uint64) error {
+func (gp *GasPool) SubGas(amount uint64) error { log.DebugLog()
 	if uint64(*gp) < amount {
 		return ErrGasLimitReached
 	}
@@ -45,10 +45,10 @@ func (gp *GasPool) SubGas(amount uint64) error {
 }
 
 // Gas returns the amount of gas remaining in the pool.
-func (gp *GasPool) Gas() uint64 {
+func (gp *GasPool) Gas() uint64 { log.DebugLog()
 	return uint64(*gp)
 }
 
-func (gp *GasPool) String() string {
+func (gp *GasPool) String() string { log.DebugLog()
 	return fmt.Sprintf("%d", *gp)
 }

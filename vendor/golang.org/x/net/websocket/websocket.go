@@ -47,7 +47,7 @@ type ProtocolError struct {
 	ErrorString string
 }
 
-func (err *ProtocolError) Error() string { return err.ErrorString }
+func (err *ProtocolError) Error() string { log.DebugLog() return err.ErrorString }
 
 var (
 	ErrBadProtocolVersion   = &ProtocolError{"bad protocol version"}
@@ -76,7 +76,7 @@ type Addr struct {
 }
 
 // Network returns the network type for a WebSocket, "websocket".
-func (addr *Addr) Network() string { return "websocket" }
+func (addr *Addr) Network() string { log.DebugLog() return "websocket" }
 
 // Config is a WebSocket configuration
 type Config struct {
@@ -189,7 +189,7 @@ type Conn struct {
 // if msg is not large enough for the frame data, it fills the msg and next Read
 // will read the rest of the frame data.
 // it reads Text frame or Binary frame.
-func (ws *Conn) Read(msg []byte) (n int, err error) {
+func (ws *Conn) Read(msg []byte) (n int, err error) { log.DebugLog()
 	ws.rio.Lock()
 	defer ws.rio.Unlock()
 again:
@@ -219,7 +219,7 @@ again:
 
 // Write implements the io.Writer interface:
 // it writes data as a frame to the WebSocket connection.
-func (ws *Conn) Write(msg []byte) (n int, err error) {
+func (ws *Conn) Write(msg []byte) (n int, err error) { log.DebugLog()
 	ws.wio.Lock()
 	defer ws.wio.Unlock()
 	w, err := ws.frameWriterFactory.NewFrameWriter(ws.PayloadType)
@@ -232,7 +232,7 @@ func (ws *Conn) Write(msg []byte) (n int, err error) {
 }
 
 // Close implements the io.Closer interface.
-func (ws *Conn) Close() error {
+func (ws *Conn) Close() error { log.DebugLog()
 	err := ws.frameHandler.WriteClose(ws.defaultCloseStatus)
 	err1 := ws.rwc.Close()
 	if err != nil {
@@ -241,12 +241,12 @@ func (ws *Conn) Close() error {
 	return err1
 }
 
-func (ws *Conn) IsClientConn() bool { return ws.request == nil }
-func (ws *Conn) IsServerConn() bool { return ws.request != nil }
+func (ws *Conn) IsClientConn() bool { log.DebugLog() return ws.request == nil }
+func (ws *Conn) IsServerConn() bool { log.DebugLog() return ws.request != nil }
 
 // LocalAddr returns the WebSocket Origin for the connection for client, or
 // the WebSocket location for server.
-func (ws *Conn) LocalAddr() net.Addr {
+func (ws *Conn) LocalAddr() net.Addr { log.DebugLog()
 	if ws.IsClientConn() {
 		return &Addr{ws.config.Origin}
 	}
@@ -255,7 +255,7 @@ func (ws *Conn) LocalAddr() net.Addr {
 
 // RemoteAddr returns the WebSocket location for the connection for client, or
 // the Websocket Origin for server.
-func (ws *Conn) RemoteAddr() net.Addr {
+func (ws *Conn) RemoteAddr() net.Addr { log.DebugLog()
 	if ws.IsClientConn() {
 		return &Addr{ws.config.Location}
 	}
@@ -265,7 +265,7 @@ func (ws *Conn) RemoteAddr() net.Addr {
 var errSetDeadline = errors.New("websocket: cannot set deadline: not using a net.Conn")
 
 // SetDeadline sets the connection's network read & write deadlines.
-func (ws *Conn) SetDeadline(t time.Time) error {
+func (ws *Conn) SetDeadline(t time.Time) error { log.DebugLog()
 	if conn, ok := ws.rwc.(net.Conn); ok {
 		return conn.SetDeadline(t)
 	}
@@ -273,7 +273,7 @@ func (ws *Conn) SetDeadline(t time.Time) error {
 }
 
 // SetReadDeadline sets the connection's network read deadline.
-func (ws *Conn) SetReadDeadline(t time.Time) error {
+func (ws *Conn) SetReadDeadline(t time.Time) error { log.DebugLog()
 	if conn, ok := ws.rwc.(net.Conn); ok {
 		return conn.SetReadDeadline(t)
 	}
@@ -281,7 +281,7 @@ func (ws *Conn) SetReadDeadline(t time.Time) error {
 }
 
 // SetWriteDeadline sets the connection's network write deadline.
-func (ws *Conn) SetWriteDeadline(t time.Time) error {
+func (ws *Conn) SetWriteDeadline(t time.Time) error { log.DebugLog()
 	if conn, ok := ws.rwc.(net.Conn); ok {
 		return conn.SetWriteDeadline(t)
 	}
@@ -289,11 +289,11 @@ func (ws *Conn) SetWriteDeadline(t time.Time) error {
 }
 
 // Config returns the WebSocket config.
-func (ws *Conn) Config() *Config { return ws.config }
+func (ws *Conn) Config() *Config { log.DebugLog() return ws.config }
 
 // Request returns the http request upgraded to the WebSocket.
 // It is nil for client side.
-func (ws *Conn) Request() *http.Request { return ws.request }
+func (ws *Conn) Request() *http.Request { log.DebugLog() return ws.request }
 
 // Codec represents a symmetric pair of functions that implement a codec.
 type Codec struct {
@@ -302,7 +302,7 @@ type Codec struct {
 }
 
 // Send sends v marshaled by cd.Marshal as single frame to ws.
-func (cd Codec) Send(ws *Conn, v interface{}) (err error) {
+func (cd Codec) Send(ws *Conn, v interface{}) (err error) { log.DebugLog()
 	data, payloadType, err := cd.Marshal(v)
 	if err != nil {
 		return err
@@ -324,7 +324,7 @@ func (cd Codec) Send(ws *Conn, v interface{}) (err error) {
 // limit, ErrFrameTooLarge is returned; in this case frame is not read off wire
 // completely. The next call to Receive would read and discard leftover data of
 // previous oversized frame before processing next frame.
-func (cd Codec) Receive(ws *Conn, v interface{}) (err error) {
+func (cd Codec) Receive(ws *Conn, v interface{}) (err error) { log.DebugLog()
 	ws.rio.Lock()
 	defer ws.rio.Unlock()
 	if ws.frameReader != nil {
@@ -367,7 +367,7 @@ again:
 	return cd.Unmarshal(data, payloadType, v)
 }
 
-func marshal(v interface{}) (msg []byte, payloadType byte, err error) {
+func marshal(v interface{}) (msg []byte, payloadType byte, err error) { log.DebugLog()
 	switch data := v.(type) {
 	case string:
 		return []byte(data), TextFrame, nil
@@ -377,7 +377,7 @@ func marshal(v interface{}) (msg []byte, payloadType byte, err error) {
 	return nil, UnknownFrame, ErrNotSupported
 }
 
-func unmarshal(msg []byte, payloadType byte, v interface{}) (err error) {
+func unmarshal(msg []byte, payloadType byte, v interface{}) (err error) { log.DebugLog()
 	switch data := v.(type) {
 	case *string:
 		*data = string(msg)
@@ -417,12 +417,12 @@ Trivial usage:
 */
 var Message = Codec{marshal, unmarshal}
 
-func jsonMarshal(v interface{}) (msg []byte, payloadType byte, err error) {
+func jsonMarshal(v interface{}) (msg []byte, payloadType byte, err error) { log.DebugLog()
 	msg, err = json.Marshal(v)
 	return msg, TextFrame, err
 }
 
-func jsonUnmarshal(msg []byte, payloadType byte, v interface{}) (err error) {
+func jsonUnmarshal(msg []byte, payloadType byte, v interface{}) (err error) { log.DebugLog()
 	return json.Unmarshal(msg, v)
 }
 

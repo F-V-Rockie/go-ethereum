@@ -41,7 +41,7 @@ type lattice struct {
 }
 
 // decompose takes a scalar mod Order as input and finds a short, positive decomposition of it wrt to the lattice basis.
-func (l *lattice) decompose(k *big.Int) []*big.Int {
+func (l *lattice) decompose(k *big.Int) []*big.Int { log.DebugLog()
 	n := len(l.inverse)
 
 	// Calculate closest vector in lattice to <k,0,0,...> with Babai's rounding.
@@ -71,7 +71,7 @@ func (l *lattice) decompose(k *big.Int) []*big.Int {
 	return out
 }
 
-func (l *lattice) Precompute(add func(i, j uint)) {
+func (l *lattice) Precompute(add func(i, j uint)) { log.DebugLog()
 	n := uint(len(l.vectors))
 	total := uint(1) << n
 
@@ -84,7 +84,7 @@ func (l *lattice) Precompute(add func(i, j uint)) {
 	}
 }
 
-func (l *lattice) Multi(scalar *big.Int) []uint8 {
+func (l *lattice) Multi(scalar *big.Int) []uint8 { log.DebugLog()
 	decomp := l.decompose(scalar)
 
 	maxLen := 0
@@ -105,7 +105,7 @@ func (l *lattice) Multi(scalar *big.Int) []uint8 {
 }
 
 // round sets num to num/denom rounded to the nearest integer.
-func round(num, denom *big.Int) {
+func round(num, denom *big.Int) { log.DebugLog()
 	r := new(big.Int)
 	num.DivMod(num, denom, r)
 

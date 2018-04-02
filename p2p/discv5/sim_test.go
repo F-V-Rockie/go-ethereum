@@ -32,7 +32,7 @@ import (
 )
 
 // In this test, nodes try to randomly resolve each other.
-func TestSimRandomResolve(t *testing.T) {
+func TestSimRandomResolve(t *testing.T) { log.DebugLog()
 	t.Skip("boring")
 	if runWithPlaygroundTime(t) {
 		return
@@ -60,7 +60,7 @@ func TestSimRandomResolve(t *testing.T) {
 	sim.printStats()
 }
 
-func TestSimTopics(t *testing.T) {
+func TestSimTopics(t *testing.T) { log.DebugLog()
 	t.Skip("NaCl test")
 	if runWithPlaygroundTime(t) {
 		return
@@ -131,7 +131,7 @@ func TestSimTopics(t *testing.T) {
 	//printNet.log.printLogs()
 }
 
-/*func testHierarchicalTopics(i int) []Topic {
+/*func testHierarchicalTopics(i int) []Topic { log.DebugLog()
 	digits := strconv.FormatInt(int64(256+i/4), 4)
 	res := make([]Topic, 5)
 	for i, _ := range res {
@@ -140,7 +140,7 @@ func TestSimTopics(t *testing.T) {
 	return res
 }*/
 
-func testHierarchicalTopics(i int) []Topic {
+func testHierarchicalTopics(i int) []Topic { log.DebugLog()
 	digits := strconv.FormatInt(int64(128+i/8), 2)
 	res := make([]Topic, 8)
 	for i := range res {
@@ -149,7 +149,7 @@ func testHierarchicalTopics(i int) []Topic {
 	return res
 }
 
-func TestSimTopicHierarchy(t *testing.T) {
+func TestSimTopicHierarchy(t *testing.T) { log.DebugLog()
 	t.Skip("NaCl test")
 	if runWithPlaygroundTime(t) {
 		return
@@ -186,7 +186,7 @@ func TestSimTopicHierarchy(t *testing.T) {
 	sim.shutdown()
 }
 
-func randomResolves(t *testing.T, s *simulation, net *Network) {
+func randomResolves(t *testing.T, s *simulation, net *Network) { log.DebugLog()
 	randtime := func() time.Duration {
 		return time.Duration(rand.Intn(50)+20) * time.Second
 	}
@@ -216,11 +216,11 @@ type simulation struct {
 	nodectr uint32
 }
 
-func newSimulation() *simulation {
+func newSimulation() *simulation { log.DebugLog()
 	return &simulation{nodes: make(map[NodeID]*Network)}
 }
 
-func (s *simulation) shutdown() {
+func (s *simulation) shutdown() { log.DebugLog()
 	s.mu.RLock()
 	alive := make([]*Network, 0, len(s.nodes))
 	for _, n := range s.nodes {
@@ -233,7 +233,7 @@ func (s *simulation) shutdown() {
 	}
 }
 
-func (s *simulation) printStats() {
+func (s *simulation) printStats() { log.DebugLog()
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	fmt.Println("node counter:", s.nodectr)
@@ -255,7 +255,7 @@ func (s *simulation) printStats() {
 
 }
 
-func (s *simulation) randomNode() *Network {
+func (s *simulation) randomNode() *Network { log.DebugLog()
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
@@ -269,7 +269,7 @@ func (s *simulation) randomNode() *Network {
 	return nil
 }
 
-func (s *simulation) launchNode(log bool) *Network {
+func (s *simulation) launchNode(log bool) *Network { log.DebugLog()
 	var (
 		num = s.nodectr
 		key = newkey()
@@ -294,7 +294,7 @@ func (s *simulation) launchNode(log bool) *Network {
 	return net
 }
 
-func (s *simulation) dropNode(id NodeID) {
+func (s *simulation) dropNode(id NodeID) { log.DebugLog()
 	s.mu.Lock()
 	n := s.nodes[id]
 	delete(s.nodes, id)
@@ -312,13 +312,13 @@ type simTransport struct {
 	priv       *ecdsa.PrivateKey
 }
 
-func (st *simTransport) localAddr() *net.UDPAddr {
+func (st *simTransport) localAddr() *net.UDPAddr { log.DebugLog()
 	return st.senderAddr
 }
 
-func (st *simTransport) Close() {}
+func (st *simTransport) Close() { log.DebugLog()}
 
-func (st *simTransport) send(remote *Node, ptype nodeEvent, data interface{}) (hash []byte) {
+func (st *simTransport) send(remote *Node, ptype nodeEvent, data interface{}) (hash []byte) { log.DebugLog()
 	hash = st.nextHash()
 	var raw []byte
 	if ptype == pongPacket {
@@ -340,7 +340,7 @@ func (st *simTransport) send(remote *Node, ptype nodeEvent, data interface{}) (h
 	return hash
 }
 
-func (st *simTransport) sendPing(remote *Node, remoteAddr *net.UDPAddr, topics []Topic) []byte {
+func (st *simTransport) sendPing(remote *Node, remoteAddr *net.UDPAddr, topics []Topic) []byte { log.DebugLog()
 	hash := st.nextHash()
 	st.sendPacket(remote.ID, ingressPacket{
 		remoteID:   st.sender,
@@ -358,7 +358,7 @@ func (st *simTransport) sendPing(remote *Node, remoteAddr *net.UDPAddr, topics [
 	return hash
 }
 
-func (st *simTransport) sendPong(remote *Node, pingHash []byte) {
+func (st *simTransport) sendPong(remote *Node, pingHash []byte) { log.DebugLog()
 	raddr := remote.addr()
 
 	st.sendPacket(remote.ID, ingressPacket{
@@ -374,7 +374,7 @@ func (st *simTransport) sendPong(remote *Node, pingHash []byte) {
 	})
 }
 
-func (st *simTransport) sendFindnodeHash(remote *Node, target common.Hash) {
+func (st *simTransport) sendFindnodeHash(remote *Node, target common.Hash) { log.DebugLog()
 	st.sendPacket(remote.ID, ingressPacket{
 		remoteID:   st.sender,
 		remoteAddr: st.senderAddr,
@@ -387,7 +387,7 @@ func (st *simTransport) sendFindnodeHash(remote *Node, target common.Hash) {
 	})
 }
 
-func (st *simTransport) sendTopicRegister(remote *Node, topics []Topic, idx int, pong []byte) {
+func (st *simTransport) sendTopicRegister(remote *Node, topics []Topic, idx int, pong []byte) { log.DebugLog()
 	//fmt.Println("send", topics, pong)
 	st.sendPacket(remote.ID, ingressPacket{
 		remoteID:   st.sender,
@@ -402,7 +402,7 @@ func (st *simTransport) sendTopicRegister(remote *Node, topics []Topic, idx int,
 	})
 }
 
-func (st *simTransport) sendTopicNodes(remote *Node, queryHash common.Hash, nodes []*Node) {
+func (st *simTransport) sendTopicNodes(remote *Node, queryHash common.Hash, nodes []*Node) { log.DebugLog()
 	rnodes := make([]rpcNode, len(nodes))
 	for i := range nodes {
 		rnodes[i] = nodeToRPC(nodes[i])
@@ -416,7 +416,7 @@ func (st *simTransport) sendTopicNodes(remote *Node, queryHash common.Hash, node
 	})
 }
 
-func (st *simTransport) sendNeighbours(remote *Node, nodes []*Node) {
+func (st *simTransport) sendNeighbours(remote *Node, nodes []*Node) { log.DebugLog()
 	// TODO: send multiple packets
 	rnodes := make([]rpcNode, len(nodes))
 	for i := range nodes {
@@ -434,7 +434,7 @@ func (st *simTransport) sendNeighbours(remote *Node, nodes []*Node) {
 	})
 }
 
-func (st *simTransport) nextHash() []byte {
+func (st *simTransport) nextHash() []byte { log.DebugLog()
 	v := atomic.AddUint64(&st.hashctr, 1)
 	var hash common.Hash
 	binary.BigEndian.PutUint64(hash[:], v)
@@ -443,7 +443,7 @@ func (st *simTransport) nextHash() []byte {
 
 const packetLoss = 0 // 1/1000
 
-func (st *simTransport) sendPacket(remote NodeID, p ingressPacket) {
+func (st *simTransport) sendPacket(remote NodeID, p ingressPacket) { log.DebugLog()
 	if rand.Int31n(1000) >= packetLoss {
 		st.sim.mu.RLock()
 		recipient := st.sim.nodes[remote]

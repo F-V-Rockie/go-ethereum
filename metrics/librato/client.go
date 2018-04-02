@@ -65,7 +65,7 @@ type Batch struct {
 	Source      string        `json:"source"`
 }
 
-func (self *LibratoClient) PostMetrics(batch Batch) (err error) {
+func (self *LibratoClient) PostMetrics(batch Batch) (err error) { log.DebugLog()
 	var (
 		js   []byte
 		req  *http.Request

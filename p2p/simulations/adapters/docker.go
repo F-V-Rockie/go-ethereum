@@ -45,7 +45,7 @@ type DockerAdapter struct {
 
 // NewDockerAdapter builds the p2p-node Docker image containing the current
 // binary and returns a DockerAdapter
-func NewDockerAdapter() (*DockerAdapter, error) {
+func NewDockerAdapter() (*DockerAdapter, error) { log.DebugLog()
 	// Since Docker containers run on Linux and this adapter runs the
 	// current binary in the container, it must be compiled for Linux.
 	//
@@ -67,12 +67,12 @@ func NewDockerAdapter() (*DockerAdapter, error) {
 }
 
 // Name returns the name of the adapter for logging purposes
-func (d *DockerAdapter) Name() string {
+func (d *DockerAdapter) Name() string { log.DebugLog()
 	return "docker-adapter"
 }
 
 // NewNode returns a new DockerNode using the given config
-func (d *DockerAdapter) NewNode(config *NodeConfig) (Node, error) {
+func (d *DockerAdapter) NewNode(config *NodeConfig) (Node, error) { log.DebugLog()
 	if len(config.Services) == 0 {
 		return nil, errors.New("node must have at least one service")
 	}
@@ -120,7 +120,7 @@ type DockerNode struct {
 //
 // It uses a shell so that we can pass the _P2P_NODE_CONFIG environment
 // variable to the container using the --env flag.
-func (n *DockerNode) dockerCommand() *exec.Cmd {
+func (n *DockerNode) dockerCommand() *exec.Cmd { log.DebugLog()
 	return exec.Command(
 		"sh", "-c",
 		fmt.Sprintf(
@@ -139,7 +139,7 @@ const dockerImage = "p2p-node"
 //
 // It adds the current binary as "p2p-node" so that it runs execP2PNode
 // when executed.
-func buildDockerImage() error {
+func buildDockerImage() error { log.DebugLog()
 	// create a directory to use as the build context
 	dir, err := ioutil.TempDir("", "p2p-docker")
 	if err != nil {

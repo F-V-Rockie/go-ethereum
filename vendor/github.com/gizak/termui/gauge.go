@@ -34,7 +34,7 @@ type Gauge struct {
 }
 
 // NewGauge return a new gauge with current theme.
-func NewGauge() *Gauge {
+func NewGauge() *Gauge { log.DebugLog()
 	g := &Gauge{
 		Block:                   *NewBlock(),
 		PercentColor:            ThemeAttr("gauge.percent.fg"),
@@ -50,7 +50,7 @@ func NewGauge() *Gauge {
 }
 
 // Buffer implements Bufferer interface.
-func (g *Gauge) Buffer() Buffer {
+func (g *Gauge) Buffer() Buffer { log.DebugLog()
 	buf := g.Block.Buffer()
 
 	// plot bar

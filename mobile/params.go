@@ -28,12 +28,12 @@ import (
 
 // MainnetGenesis returns the JSON spec to use for the main Ethereum network. It
 // is actually empty since that defaults to the hard coded binary genesis block.
-func MainnetGenesis() string {
+func MainnetGenesis() string { log.DebugLog()
 	return ""
 }
 
 // TestnetGenesis returns the JSON spec to use for the Ethereum test network.
-func TestnetGenesis() string {
+func TestnetGenesis() string { log.DebugLog()
 	enc, err := json.Marshal(core.DefaultTestnetGenesisBlock())
 	if err != nil {
 		panic(err)
@@ -42,7 +42,7 @@ func TestnetGenesis() string {
 }
 
 // RinkebyGenesis returns the JSON spec to use for the Rinkeby test network
-func RinkebyGenesis() string {
+func RinkebyGenesis() string { log.DebugLog()
 	enc, err := json.Marshal(core.DefaultRinkebyGenesisBlock())
 	if err != nil {
 		panic(err)
@@ -52,7 +52,7 @@ func RinkebyGenesis() string {
 
 // FoundationBootnodes returns the enode URLs of the P2P bootstrap nodes operated
 // by the foundation running the V5 discovery protocol.
-func FoundationBootnodes() *Enodes {
+func FoundationBootnodes() *Enodes { log.DebugLog()
 	nodes := &Enodes{nodes: make([]*discv5.Node, len(params.DiscoveryV5Bootnodes))}
 	for i, url := range params.DiscoveryV5Bootnodes {
 		nodes.nodes[i] = discv5.MustParseNode(url)

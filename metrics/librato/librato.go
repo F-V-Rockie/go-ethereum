@@ -14,7 +14,7 @@ import (
 var unitRegexp = regexp.MustCompile(`[^\\d]+$`)
 
 // a helper that turns a time.Duration into librato display attributes for timer metrics
-func translateTimerAttributes(d time.Duration) (attrs map[string]interface{}) {
+func translateTimerAttributes(d time.Duration) (attrs map[string]interface{}) { log.DebugLog()
 	attrs = make(map[string]interface{})
 	attrs[DisplayTransform] = fmt.Sprintf("x/%d", int64(d))
 	attrs[DisplayUnitsShort] = string(unitRegexp.Find([]byte(d.String())))
@@ -32,15 +32,15 @@ type Reporter struct {
 	intervalSec     int64
 }
 
-func NewReporter(r metrics.Registry, d time.Duration, e string, t string, s string, p []float64, u time.Duration) *Reporter {
+func NewReporter(r metrics.Registry, d time.Duration, e string, t string, s string, p []float64, u time.Duration) *Reporter { log.DebugLog()
 	return &Reporter{e, t, "", s, d, r, p, translateTimerAttributes(u), int64(d / time.Second)}
 }
 
-func Librato(r metrics.Registry, d time.Duration, e string, t string, s string, p []float64, u time.Duration) {
+func Librato(r metrics.Registry, d time.Duration, e string, t string, s string, p []float64, u time.Duration) { log.DebugLog()
 	NewReporter(r, d, e, t, s, p, u).Run()
 }
 
-func (self *Reporter) Run() {
+func (self *Reporter) Run() { log.DebugLog()
 	log.Printf("WARNING: This client has been DEPRECATED! It has been moved to https://github.com/mihasya/go-metrics-librato and will be removed from rcrowley/go-metrics on August 5th 2015")
 	ticker := time.Tick(self.Interval)
 	metricsApi := &LibratoClient{self.Email, self.Token}
@@ -60,7 +60,7 @@ func (self *Reporter) Run() {
 
 // calculate sum of squares from data provided by metrics.Histogram
 // see http://en.wikipedia.org/wiki/Standard_deviation#Rapid_calculation_methods
-func sumSquares(s metrics.Sample) float64 {
+func sumSquares(s metrics.Sample) float64 { log.DebugLog()
 	count := float64(s.Count())
 	sumSquared := math.Pow(count*s.Mean(), 2)
 	sumSquares := math.Pow(count*s.StdDev(), 2) + sumSquared/count
@@ -69,7 +69,7 @@ func sumSquares(s metrics.Sample) float64 {
 	}
 	return sumSquares
 }
-func sumSquaresTimer(t metrics.Timer) float64 {
+func sumSquaresTimer(t metrics.Timer) float64 { log.DebugLog()
 	count := float64(t.Count())
 	sumSquared := math.Pow(count*t.Mean(), 2)
 	sumSquares := math.Pow(count*t.StdDev(), 2) + sumSquared/count
@@ -79,7 +79,7 @@ func sumSquaresTimer(t metrics.Timer) float64 {
 	return sumSquares
 }
 
-func (self *Reporter) BuildRequest(now time.Time, r metrics.Registry) (snapshot Batch, err error) {
+func (self *Reporter) BuildRequest(now time.Time, r metrics.Registry) (snapshot Batch, err error) { log.DebugLog()
 	snapshot = Batch{
 		// coerce timestamps to a stepping fn so that they line up in Librato graphs
 		MeasureTime: (now.Unix() / self.intervalSec) * self.intervalSec,

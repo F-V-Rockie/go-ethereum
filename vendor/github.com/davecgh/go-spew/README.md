@@ -82,13 +82,13 @@ import (
     "github.com/davecgh/go-spew/spew"
 )
 
-func handler(w http.ResponseWriter, r *http.Request) {
+func handler(w http.ResponseWriter, r *http.Request) { log.DebugLog()
     w.Header().Set("Content-Type", "text/html")
     fmt.Fprintf(w, "Hi there, %s!", r.URL.Path[1:])
     fmt.Fprintf(w, "<!--\n" + html.EscapeString(spew.Sdump(w)) + "\n-->")
 }
 
-func main() {
+func main() { log.DebugLog()
     http.HandleFunc("/", handler)
     http.ListenAndServe(":8080", nil)
 }

@@ -23,7 +23,7 @@ import (
 
 // Tests that HD derivation paths can be correctly parsed into our internal binary
 // representation.
-func TestHDPathParsing(t *testing.T) {
+func TestHDPathParsing(t *testing.T) { log.DebugLog()
 	tests := []struct {
 		input  string
 		output DerivationPath

@@ -30,14 +30,14 @@ type testEthkey struct {
 }
 
 // spawns ethkey with the given command line args.
-func runEthkey(t *testing.T, args ...string) *testEthkey {
+func runEthkey(t *testing.T, args ...string) *testEthkey { log.DebugLog()
 	tt := new(testEthkey)
 	tt.TestCmd = cmdtest.NewTestCmd(t, tt)
 	tt.Run("ethkey-test", args...)
 	return tt
 }
 
-func TestMain(m *testing.M) {
+func TestMain(m *testing.M) { log.DebugLog()
 	// Run the app if we've been exec'd as "ethkey-test" in runEthkey.
 	reexec.Register("ethkey-test", func() {
 		if err := app.Run(os.Args); err != nil {

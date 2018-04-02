@@ -27,7 +27,7 @@ import (
 	"time"
 )
 
-func ExampleMsgPipe() {
+func ExampleMsgPipe() { log.DebugLog()
 	rw1, rw2 := MsgPipe()
 	go func() {
 		Send(rw1, 8, [][]byte{{0, 0}})
@@ -49,7 +49,7 @@ func ExampleMsgPipe() {
 	// msg: 5, 0101
 }
 
-func TestMsgPipeUnblockWrite(t *testing.T) {
+func TestMsgPipeUnblockWrite(t *testing.T) { log.DebugLog()
 loop:
 	for i := 0; i < 100; i++ {
 		rw1, rw2 := MsgPipe()
@@ -80,14 +80,14 @@ loop:
 }
 
 // This test should panic if concurrent close isn't implemented correctly.
-func TestMsgPipeConcurrentClose(t *testing.T) {
+func TestMsgPipeConcurrentClose(t *testing.T) { log.DebugLog()
 	rw1, _ := MsgPipe()
 	for i := 0; i < 10; i++ {
 		go rw1.Close()
 	}
 }
 
-func TestEOFSignal(t *testing.T) {
+func TestEOFSignal(t *testing.T) { log.DebugLog()
 	rb := make([]byte, 10)
 
 	// empty reader
@@ -142,7 +142,7 @@ func TestEOFSignal(t *testing.T) {
 	}
 }
 
-func unhex(str string) []byte {
+func unhex(str string) []byte { log.DebugLog()
 	r := strings.NewReplacer("\t", "", " ", "", "\n", "")
 	b, err := hex.DecodeString(r.Replace(str))
 	if err != nil {

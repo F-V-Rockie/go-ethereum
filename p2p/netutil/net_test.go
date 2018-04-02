@@ -26,7 +26,7 @@ import (
 	"github.com/davecgh/go-spew/spew"
 )
 
-func TestParseNetlist(t *testing.T) {
+func TestParseNetlist(t *testing.T) { log.DebugLog()
 	var tests = []struct {
 		input    string
 		wantErr  error
@@ -68,12 +68,12 @@ func TestParseNetlist(t *testing.T) {
 	}
 }
 
-func TestNilNetListContains(t *testing.T) {
+func TestNilNetListContains(t *testing.T) { log.DebugLog()
 	var list *Netlist
 	checkContains(t, list.Contains, nil, []string{"1.2.3.4"})
 }
 
-func TestIsLAN(t *testing.T) {
+func TestIsLAN(t *testing.T) { log.DebugLog()
 	checkContains(t, IsLAN,
 		[]string{ // included
 			"0.0.0.0",
@@ -96,7 +96,7 @@ func TestIsLAN(t *testing.T) {
 	)
 }
 
-func TestIsSpecialNetwork(t *testing.T) {
+func TestIsSpecialNetwork(t *testing.T) { log.DebugLog()
 	checkContains(t, IsSpecialNetwork,
 		[]string{ // included
 			"192.0.2.1",
@@ -115,7 +115,7 @@ func TestIsSpecialNetwork(t *testing.T) {
 	)
 }
 
-func checkContains(t *testing.T, fn func(net.IP) bool, inc, exc []string) {
+func checkContains(t *testing.T, fn func(net.IP) bool, inc, exc []string) { log.DebugLog()
 	for _, s := range inc {
 		if !fn(parseIP(s)) {
 			t.Error("returned false for included address", s)
@@ -128,7 +128,7 @@ func checkContains(t *testing.T, fn func(net.IP) bool, inc, exc []string) {
 	}
 }
 
-func parseIP(s string) net.IP {
+func parseIP(s string) net.IP { log.DebugLog()
 	ip := net.ParseIP(s)
 	if ip == nil {
 		panic("invalid " + s)
@@ -136,7 +136,7 @@ func parseIP(s string) net.IP {
 	return ip
 }
 
-func TestCheckRelayIP(t *testing.T) {
+func TestCheckRelayIP(t *testing.T) { log.DebugLog()
 	tests := []struct {
 		sender, addr string
 		want         error
@@ -166,7 +166,7 @@ func TestCheckRelayIP(t *testing.T) {
 	}
 }
 
-func BenchmarkCheckRelayIP(b *testing.B) {
+func BenchmarkCheckRelayIP(b *testing.B) { log.DebugLog()
 	sender := parseIP("23.55.1.242")
 	addr := parseIP("23.55.1.2")
 	for i := 0; i < b.N; i++ {
@@ -174,7 +174,7 @@ func BenchmarkCheckRelayIP(b *testing.B) {
 	}
 }
 
-func TestSameNet(t *testing.T) {
+func TestSameNet(t *testing.T) { log.DebugLog()
 	tests := []struct {
 		ip, other string
 		bits      uint
@@ -196,7 +196,7 @@ func TestSameNet(t *testing.T) {
 	}
 }
 
-func ExampleSameNet() {
+func ExampleSameNet() { log.DebugLog()
 	// This returns true because the IPs are in the same /24 network:
 	fmt.Println(SameNet(24, net.IP{127, 0, 0, 1}, net.IP{127, 0, 0, 3}))
 	// This call returns false:
@@ -206,7 +206,7 @@ func ExampleSameNet() {
 	// false
 }
 
-func TestDistinctNetSet(t *testing.T) {
+func TestDistinctNetSet(t *testing.T) { log.DebugLog()
 	ops := []struct {
 		add, remove string
 		fails       bool
@@ -243,7 +243,7 @@ func TestDistinctNetSet(t *testing.T) {
 	}
 }
 
-func TestDistinctNetSetAddRemove(t *testing.T) {
+func TestDistinctNetSetAddRemove(t *testing.T) { log.DebugLog()
 	cfg := &quick.Config{}
 	fn := func(ips []net.IP) bool {
 		s := DistinctNetSet{Limit: 3, Subnet: 2}

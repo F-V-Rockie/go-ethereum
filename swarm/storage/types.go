@@ -38,15 +38,15 @@ type Peer interface{}
 
 type Key []byte
 
-func (x Key) Size() uint {
+func (x Key) Size() uint { log.DebugLog()
 	return uint(len(x))
 }
 
-func (x Key) isEqual(y Key) bool {
+func (x Key) isEqual(y Key) bool { log.DebugLog()
 	return bytes.Equal(x, y)
 }
 
-func (h Key) bits(i, j uint) uint {
+func (h Key) bits(i, j uint) uint { log.DebugLog()
 	ii := i >> 3
 	jj := i & 7
 	if ii >= h.Size() {
@@ -73,13 +73,13 @@ func (h Key) bits(i, j uint) uint {
 	return res
 }
 
-func IsZeroKey(key Key) bool {
+func IsZeroKey(key Key) bool { log.DebugLog()
 	return len(key) == 0 || bytes.Equal(key, ZeroKey)
 }
 
 var ZeroKey = Key(common.Hash{}.Bytes())
 
-func MakeHashFunc(hash string) SwarmHasher {
+func MakeHashFunc(hash string) SwarmHasher { log.DebugLog()
 	switch hash {
 	case "SHA256":
 		return func() SwarmHash { return &HashWithLength{crypto.SHA256.New()} }
@@ -95,26 +95,26 @@ func MakeHashFunc(hash string) SwarmHasher {
 	return nil
 }
 
-func (key Key) Hex() string {
+func (key Key) Hex() string { log.DebugLog()
 	return fmt.Sprintf("%064x", []byte(key[:]))
 }
 
-func (key Key) Log() string {
+func (key Key) Log() string { log.DebugLog()
 	if len(key[:]) < 4 {
 		return fmt.Sprintf("%x", []byte(key[:]))
 	}
 	return fmt.Sprintf("%08x", []byte(key[:4]))
 }
 
-func (key Key) String() string {
+func (key Key) String() string { log.DebugLog()
 	return fmt.Sprintf("%064x", []byte(key)[:])
 }
 
-func (key Key) MarshalJSON() (out []byte, err error) {
+func (key Key) MarshalJSON() (out []byte, err error) { log.DebugLog()
 	return []byte(`"` + key.String() + `"`), nil
 }
 
-func (key *Key) UnmarshalJSON(value []byte) error {
+func (key *Key) UnmarshalJSON(value []byte) error { log.DebugLog()
 	s := string(value)
 	*key = make([]byte, 32)
 	h := common.Hex2Bytes(s[1 : len(s)-1])
@@ -135,7 +135,7 @@ type RequestStatus struct {
 	Requesters map[uint64][]interface{}
 }
 
-func newRequestStatus(key Key) *RequestStatus {
+func newRequestStatus(key Key) *RequestStatus { log.DebugLog()
 	return &RequestStatus{
 		Key:        key,
 		Requesters: make(map[uint64][]interface{}),
@@ -159,7 +159,7 @@ type Chunk struct {
 	dbStored chan bool       // never remove a chunk from memStore before it is written to dbStore
 }
 
-func NewChunk(key Key, rs *RequestStatus) *Chunk {
+func NewChunk(key Key, rs *RequestStatus) *Chunk { log.DebugLog()
 	return &Chunk{Key: key, Req: rs}
 }
 
@@ -243,6 +243,6 @@ type LazyTestSectionReader struct {
 	*io.SectionReader
 }
 
-func (self *LazyTestSectionReader) Size(chan bool) (int64, error) {
+func (self *LazyTestSectionReader) Size(chan bool) (int64, error) { log.DebugLog()
 	return self.SectionReader.Size(), nil
 }

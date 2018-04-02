@@ -29,11 +29,11 @@ type RWC struct {
 	*bufio.ReadWriter
 }
 
-func (rwc *RWC) Close() error {
+func (rwc *RWC) Close() error { log.DebugLog()
 	return nil
 }
 
-func TestJSONRequestParsing(t *testing.T) {
+func TestJSONRequestParsing(t *testing.T) { log.DebugLog()
 	server := NewServer()
 	service := new(Service)
 
@@ -98,7 +98,7 @@ func TestJSONRequestParsing(t *testing.T) {
 	}
 }
 
-func TestJSONRequestParamsParsing(t *testing.T) {
+func TestJSONRequestParamsParsing(t *testing.T) { log.DebugLog()
 
 	var (
 		stringT = reflect.TypeOf("")

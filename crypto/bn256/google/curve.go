@@ -25,7 +25,7 @@ var curveGen = &curvePoint{
 	new(big.Int).SetInt64(1),
 }
 
-func newCurvePoint(pool *bnPool) *curvePoint {
+func newCurvePoint(pool *bnPool) *curvePoint { log.DebugLog()
 	return &curvePoint{
 		pool.Get(),
 		pool.Get(),
@@ -34,19 +34,19 @@ func newCurvePoint(pool *bnPool) *curvePoint {
 	}
 }
 
-func (c *curvePoint) String() string {
+func (c *curvePoint) String() string { log.DebugLog()
 	c.MakeAffine(new(bnPool))
 	return "(" + c.x.String() + ", " + c.y.String() + ")"
 }
 
-func (c *curvePoint) Put(pool *bnPool) {
+func (c *curvePoint) Put(pool *bnPool) { log.DebugLog()
 	pool.Put(c.x)
 	pool.Put(c.y)
 	pool.Put(c.z)
 	pool.Put(c.t)
 }
 
-func (c *curvePoint) Set(a *curvePoint) {
+func (c *curvePoint) Set(a *curvePoint) { log.DebugLog()
 	c.x.Set(a.x)
 	c.y.Set(a.y)
 	c.z.Set(a.z)
@@ -54,7 +54,7 @@ func (c *curvePoint) Set(a *curvePoint) {
 }
 
 // IsOnCurve returns true iff c is on the curve where c must be in affine form.
-func (c *curvePoint) IsOnCurve() bool {
+func (c *curvePoint) IsOnCurve() bool { log.DebugLog()
 	yy := new(big.Int).Mul(c.y, c.y)
 	xxx := new(big.Int).Mul(c.x, c.x)
 	xxx.Mul(xxx, c.x)
@@ -66,15 +66,15 @@ func (c *curvePoint) IsOnCurve() bool {
 	return yy.Sign() == 0
 }
 
-func (c *curvePoint) SetInfinity() {
+func (c *curvePoint) SetInfinity() { log.DebugLog()
 	c.z.SetInt64(0)
 }
 
-func (c *curvePoint) IsInfinity() bool {
+func (c *curvePoint) IsInfinity() bool { log.DebugLog()
 	return c.z.Sign() == 0
 }
 
-func (c *curvePoint) Add(a, b *curvePoint, pool *bnPool) {
+func (c *curvePoint) Add(a, b *curvePoint, pool *bnPool) { log.DebugLog()
 	if a.IsInfinity() {
 		c.Set(b)
 		return
@@ -180,7 +180,7 @@ func (c *curvePoint) Add(a, b *curvePoint, pool *bnPool) {
 	pool.Put(t6)
 }
 
-func (c *curvePoint) Double(a *curvePoint, pool *bnPool) {
+func (c *curvePoint) Double(a *curvePoint, pool *bnPool) { log.DebugLog()
 	// See http://hyperelliptic.org/EFD/g1p/auto-code/shortw/jacobian-0/doubling/dbl-2009-l.op3
 	A := pool.Get().Mul(a.x, a.x)
 	A.Mod(A, P)
@@ -225,7 +225,7 @@ func (c *curvePoint) Double(a *curvePoint, pool *bnPool) {
 	pool.Put(f)
 }
 
-func (c *curvePoint) Mul(a *curvePoint, scalar *big.Int, pool *bnPool) *curvePoint {
+func (c *curvePoint) Mul(a *curvePoint, scalar *big.Int, pool *bnPool) *curvePoint { log.DebugLog()
 	sum := newCurvePoint(pool)
 	sum.SetInfinity()
 	t := newCurvePoint(pool)
@@ -245,7 +245,7 @@ func (c *curvePoint) Mul(a *curvePoint, scalar *big.Int, pool *bnPool) *curvePoi
 	return c
 }
 
-func (c *curvePoint) MakeAffine(pool *bnPool) *curvePoint {
+func (c *curvePoint) MakeAffine(pool *bnPool) *curvePoint { log.DebugLog()
 	if words := c.z.Bits(); len(words) == 1 && words[0] == 1 {
 		return c
 	}
@@ -270,7 +270,7 @@ func (c *curvePoint) MakeAffine(pool *bnPool) *curvePoint {
 	return c
 }
 
-func (c *curvePoint) Negative(a *curvePoint) {
+func (c *curvePoint) Negative(a *curvePoint) { log.DebugLog()
 	c.x.Set(a.x)
 	c.y.Neg(a.y)
 	c.z.Set(a.z)

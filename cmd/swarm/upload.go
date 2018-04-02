@@ -35,7 +35,7 @@ import (
 	"gopkg.in/urfave/cli.v1"
 )
 
-func upload(ctx *cli.Context) {
+func upload(ctx *cli.Context) { log.DebugLog()
 
 	args := ctx.Args()
 	var (
@@ -125,7 +125,7 @@ func upload(ctx *cli.Context) {
 // 2. expands embedded environment variables
 // 3. cleans the path, e.g. /a/b/../c -> /a/c
 // Note, it has limitations, e.g. ~someuser/tmp will not be expanded
-func expandPath(p string) string {
+func expandPath(p string) string { log.DebugLog()
 	if strings.HasPrefix(p, "~/") || strings.HasPrefix(p, "~\\") {
 		if home := homeDir(); home != "" {
 			p = home + p[1:]
@@ -134,7 +134,7 @@ func expandPath(p string) string {
 	return path.Clean(os.ExpandEnv(p))
 }
 
-func homeDir() string {
+func homeDir() string { log.DebugLog()
 	if home := os.Getenv("HOME"); home != "" {
 		return home
 	}
@@ -144,7 +144,7 @@ func homeDir() string {
 	return ""
 }
 
-func detectMimeType(file string) string {
+func detectMimeType(file string) string { log.DebugLog()
 	if ext := filepath.Ext(file); ext != "" {
 		return mime.TypeByExtension(ext)
 	}

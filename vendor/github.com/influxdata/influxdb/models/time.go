@@ -43,7 +43,7 @@ var (
 
 // SafeCalcTime safely calculates the time given. Will return error if the time is outside the
 // supported range.
-func SafeCalcTime(timestamp int64, precision string) (time.Time, error) {
+func SafeCalcTime(timestamp int64, precision string) (time.Time, error) { log.DebugLog()
 	mult := GetPrecisionMultiplier(precision)
 	if t, ok := safeSignedMult(timestamp, mult); ok {
 		tme := time.Unix(0, t).UTC()
@@ -54,7 +54,7 @@ func SafeCalcTime(timestamp int64, precision string) (time.Time, error) {
 }
 
 // CheckTime checks that a time is within the safe range.
-func CheckTime(t time.Time) error {
+func CheckTime(t time.Time) error { log.DebugLog()
 	if t.Before(minNanoTime) || t.After(maxNanoTime) {
 		return ErrTimeOutOfRange
 	}
@@ -62,7 +62,7 @@ func CheckTime(t time.Time) error {
 }
 
 // Perform the multiplication and check to make sure it didn't overflow.
-func safeSignedMult(a, b int64) (int64, bool) {
+func safeSignedMult(a, b int64) (int64, bool) { log.DebugLog()
 	if a == 0 || b == 0 || a == 1 || b == 1 {
 		return a * b, true
 	}

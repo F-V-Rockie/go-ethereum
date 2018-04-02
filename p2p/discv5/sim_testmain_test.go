@@ -32,7 +32,7 @@ import (
 //go:linkname faketime runtime.faketime
 var faketime = 1
 
-func TestMain(m *testing.M) {
+func TestMain(m *testing.M) { log.DebugLog()
 	// We need to use unsafe somehow in order to get access to go:linkname.
 	_ = unsafe.Sizeof(0)
 

@@ -8,7 +8,7 @@ import (
 
 // DefineTimers defines `setTimeout`, `clearTimeout`, `setInterval`,
 // `clearInterval` into global context.
-func (d *Context) PushTimers() error {
+func (d *Context) PushTimers() error { log.DebugLog()
 	d.PushGlobalStash()
 	// check if timers already exists
 	if !d.HasPropString(-1, "timers") {
@@ -27,14 +27,14 @@ func (d *Context) PushTimers() error {
 	}
 }
 
-func (d *Context) FlushTimers() {
+func (d *Context) FlushTimers() { log.DebugLog()
 	d.PushGlobalStash()
 	d.PushObject()
 	d.PutPropString(-2, "timers") // stash -> [ timers:{} ]
 	d.Pop()
 }
 
-func setTimeout(c *Context) int {
+func setTimeout(c *Context) int { log.DebugLog()
 	id := c.pushTimer(0)
 	timeout := c.ToNumber(1)
 	if timeout < 1 {
@@ -60,7 +60,7 @@ func setTimeout(c *Context) int {
 	return 1
 }
 
-func clearTimeout(c *Context) int {
+func clearTimeout(c *Context) int { log.DebugLog()
 	if c.GetType(0).IsNumber() {
 		c.dropTimer(c.GetNumber(0))
 		c.Pop()
@@ -68,7 +68,7 @@ func clearTimeout(c *Context) int {
 	return 0
 }
 
-func setInterval(c *Context) int {
+func setInterval(c *Context) int { log.DebugLog()
 	id := c.pushTimer(0)
 	timeout := c.ToNumber(1)
 	if timeout < 1 {
@@ -105,7 +105,7 @@ func setInterval(c *Context) int {
 	return 1
 }
 
-func (d *Context) pushTimer(index int) float64 {
+func (d *Context) pushTimer(index int) float64 { log.DebugLog()
 	id := d.timerIndex.get()
 
 	d.PushGlobalStash()
@@ -118,7 +118,7 @@ func (d *Context) pushTimer(index int) float64 {
 	return id
 }
 
-func (d *Context) dropTimer(id float64) {
+func (d *Context) dropTimer(id float64) { log.DebugLog()
 	d.PushGlobalStash()
 	d.GetPropString(-1, "timers")
 	d.PushNumber(id)
@@ -126,7 +126,7 @@ func (d *Context) dropTimer(id float64) {
 	d.Pop2()
 }
 
-func (d *Context) putTimer(id float64) {
+func (d *Context) putTimer(id float64) { log.DebugLog()
 	d.PushGlobalStash()           // stash -> [ ..., timers: { <id>: { func: true } } ]
 	d.GetPropString(-1, "timers") // stash -> [ ..., timers: { <id>: { func: true } } }, { <id>: { func: true } ]
 	d.PushNumber(id)

@@ -50,7 +50,7 @@ var ErrMuxClosed = errors.New("event: mux closed")
 // Subscribe creates a subscription for events of the given types. The
 // subscription's channel is closed when it is unsubscribed
 // or the mux is closed.
-func (mux *TypeMux) Subscribe(types ...interface{}) *TypeMuxSubscription {
+func (mux *TypeMux) Subscribe(types ...interface{}) *TypeMuxSubscription { log.DebugLog()
 	sub := newsub(mux)
 	mux.mutex.Lock()
 	defer mux.mutex.Unlock()
@@ -80,7 +80,7 @@ func (mux *TypeMux) Subscribe(types ...interface{}) *TypeMuxSubscription {
 
 // Post sends an event to all receivers registered for the given type.
 // It returns ErrMuxClosed if the mux has been stopped.
-func (mux *TypeMux) Post(ev interface{}) error {
+func (mux *TypeMux) Post(ev interface{}) error { log.DebugLog()
 	event := &TypeMuxEvent{
 		Time: time.Now(),
 		Data: ev,
@@ -102,7 +102,7 @@ func (mux *TypeMux) Post(ev interface{}) error {
 // Stop closes a mux. The mux can no longer be used.
 // Future Post calls will fail with ErrMuxClosed.
 // Stop blocks until all current deliveries have finished.
-func (mux *TypeMux) Stop() {
+func (mux *TypeMux) Stop() { log.DebugLog()
 	mux.mutex.Lock()
 	for _, subs := range mux.subm {
 		for _, sub := range subs {
@@ -114,7 +114,7 @@ func (mux *TypeMux) Stop() {
 	mux.mutex.Unlock()
 }
 
-func (mux *TypeMux) del(s *TypeMuxSubscription) {
+func (mux *TypeMux) del(s *TypeMuxSubscription) { log.DebugLog()
 	mux.mutex.Lock()
 	for typ, subs := range mux.subm {
 		if pos := find(subs, s); pos >= 0 {
@@ -128,7 +128,7 @@ func (mux *TypeMux) del(s *TypeMuxSubscription) {
 	s.mux.mutex.Unlock()
 }
 
-func find(slice []*TypeMuxSubscription, item *TypeMuxSubscription) int {
+func find(slice []*TypeMuxSubscription, item *TypeMuxSubscription) int { log.DebugLog()
 	for i, v := range slice {
 		if v == item {
 			return i
@@ -137,7 +137,7 @@ func find(slice []*TypeMuxSubscription, item *TypeMuxSubscription) int {
 	return -1
 }
 
-func posdelete(slice []*TypeMuxSubscription, pos int) []*TypeMuxSubscription {
+func posdelete(slice []*TypeMuxSubscription, pos int) []*TypeMuxSubscription { log.DebugLog()
 	news := make([]*TypeMuxSubscription, len(slice)-1)
 	copy(news[:pos], slice[:pos])
 	copy(news[pos:], slice[pos+1:])
@@ -160,7 +160,7 @@ type TypeMuxSubscription struct {
 	postC  chan<- *TypeMuxEvent
 }
 
-func newsub(mux *TypeMux) *TypeMuxSubscription {
+func newsub(mux *TypeMux) *TypeMuxSubscription { log.DebugLog()
 	c := make(chan *TypeMuxEvent)
 	return &TypeMuxSubscription{
 		mux:     mux,
@@ -171,16 +171,16 @@ func newsub(mux *TypeMux) *TypeMuxSubscription {
 	}
 }
 
-func (s *TypeMuxSubscription) Chan() <-chan *TypeMuxEvent {
+func (s *TypeMuxSubscription) Chan() <-chan *TypeMuxEvent { log.DebugLog()
 	return s.readC
 }
 
-func (s *TypeMuxSubscription) Unsubscribe() {
+func (s *TypeMuxSubscription) Unsubscribe() { log.DebugLog()
 	s.mux.del(s)
 	s.closewait()
 }
 
-func (s *TypeMuxSubscription) closewait() {
+func (s *TypeMuxSubscription) closewait() { log.DebugLog()
 	s.closeMu.Lock()
 	defer s.closeMu.Unlock()
 	if s.closed {
@@ -195,7 +195,7 @@ func (s *TypeMuxSubscription) closewait() {
 	s.postMu.Unlock()
 }
 
-func (s *TypeMuxSubscription) deliver(event *TypeMuxEvent) {
+func (s *TypeMuxSubscription) deliver(event *TypeMuxEvent) { log.DebugLog()
 	// Short circuit delivery if stale event
 	if s.created.After(event.Time) {
 		return

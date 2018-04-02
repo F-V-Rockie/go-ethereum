@@ -45,7 +45,7 @@ const issueUrl = "https://github.com/ethereum/go-ethereum/issues/new"
 
 // reportBug reports a bug by opening a new URL to the go-ethereum GH issue
 // tracker and setting default values as the issue body.
-func reportBug(ctx *cli.Context) error {
+func reportBug(ctx *cli.Context) error { log.DebugLog()
 	// execute template and write contents to buff
 	var buff bytes.Buffer
 
@@ -63,7 +63,7 @@ func reportBug(ctx *cli.Context) error {
 }
 
 // copied from the Go source. Copyright 2017 The Go Authors
-func printOSDetails(w io.Writer) {
+func printOSDetails(w io.Writer) { log.DebugLog()
 	switch runtime.GOOS {
 	case "darwin":
 		printCmdOut(w, "uname -v: ", "uname", "-v")
@@ -87,7 +87,7 @@ func printOSDetails(w io.Writer) {
 // It ignores failures; 'go bug' is best effort.
 //
 // copied from the Go source. Copyright 2017 The Go Authors
-func printCmdOut(w io.Writer, prefix, path string, args ...string) {
+func printCmdOut(w io.Writer, prefix, path string, args ...string) { log.DebugLog()
 	cmd := exec.Command(path, args...)
 	out, err := cmd.Output()
 	if err != nil {

@@ -118,7 +118,7 @@ type (
 	}
 )
 
-func makeEndpoint(addr *net.UDPAddr, tcpPort uint16) rpcEndpoint {
+func makeEndpoint(addr *net.UDPAddr, tcpPort uint16) rpcEndpoint { log.DebugLog()
 	ip := addr.IP.To4()
 	if ip == nil {
 		ip = addr.IP.To16()
@@ -126,7 +126,7 @@ func makeEndpoint(addr *net.UDPAddr, tcpPort uint16) rpcEndpoint {
 	return rpcEndpoint{IP: ip, UDP: uint16(addr.Port), TCP: tcpPort}
 }
 
-func (t *udp) nodeFromRPC(sender *net.UDPAddr, rn rpcNode) (*Node, error) {
+func (t *udp) nodeFromRPC(sender *net.UDPAddr, rn rpcNode) (*Node, error) { log.DebugLog()
 	if rn.UDP <= 1024 {
 		return nil, errors.New("low port")
 	}
@@ -141,7 +141,7 @@ func (t *udp) nodeFromRPC(sender *net.UDPAddr, rn rpcNode) (*Node, error) {
 	return n, err
 }
 
-func nodeToRPC(n *Node) rpcNode {
+func nodeToRPC(n *Node) rpcNode { log.DebugLog()
 	return rpcNode{ID: n.ID, IP: n.IP, UDP: n.UDP, TCP: n.TCP}
 }
 
@@ -230,7 +230,7 @@ type Config struct {
 }
 
 // ListenUDP returns a new table that listens for UDP packets on laddr.
-func ListenUDP(c conn, cfg Config) (*Table, error) {
+func ListenUDP(c conn, cfg Config) (*Table, error) { log.DebugLog()
 	tab, _, err := newUDP(c, cfg)
 	if err != nil {
 		return nil, err
@@ -239,7 +239,7 @@ func ListenUDP(c conn, cfg Config) (*Table, error) {
 	return tab, nil
 }
 
-func newUDP(c conn, cfg Config) (*Table, *udp, error) {
+func newUDP(c conn, cfg Config) (*Table, *udp, error) { log.DebugLog()
 	udp := &udp{
 		conn:        c,
 		priv:        cfg.PrivateKey,
@@ -265,14 +265,14 @@ func newUDP(c conn, cfg Config) (*Table, *udp, error) {
 	return udp.Table, udp, nil
 }
 
-func (t *udp) close() {
+func (t *udp) close() { log.DebugLog()
 	close(t.closing)
 	t.conn.Close()
 	// TODO: wait for the loops to end.
 }
 
 // ping sends a ping message to the given node and waits for a reply.
-func (t *udp) ping(toid NodeID, toaddr *net.UDPAddr) error {
+func (t *udp) ping(toid NodeID, toaddr *net.UDPAddr) error { log.DebugLog()
 	req := &ping{
 		Version:    Version,
 		From:       t.ourEndpoint,
@@ -290,13 +290,13 @@ func (t *udp) ping(toid NodeID, toaddr *net.UDPAddr) error {
 	return <-errc
 }
 
-func (t *udp) waitping(from NodeID) error {
+func (t *udp) waitping(from NodeID) error { log.DebugLog()
 	return <-t.pending(from, pingPacket, func(interface{}) bool { return true })
 }
 
 // findnode sends a findnode request to the given node and waits until
 // the node has sent up to k neighbors.
-func (t *udp) findnode(toid NodeID, toaddr *net.UDPAddr, target NodeID) ([]*Node, error) {
+func (t *udp) findnode(toid NodeID, toaddr *net.UDPAddr, target NodeID) ([]*Node, error) { log.DebugLog()
 	nodes := make([]*Node, 0, bucketSize)
 	nreceived := 0
 	errc := t.pending(toid, neighborsPacket, func(r interface{}) bool {
@@ -322,7 +322,7 @@ func (t *udp) findnode(toid NodeID, toaddr *net.UDPAddr, target NodeID) ([]*Node
 
 // pending adds a reply callback to the pending reply queue.
 // see the documentation of type pending for a detailed explanation.
-func (t *udp) pending(id NodeID, ptype byte, callback func(interface{}) bool) <-chan error {
+func (t *udp) pending(id NodeID, ptype byte, callback func(interface{}) bool) <-chan error { log.DebugLog()
 	ch := make(chan error, 1)
 	p := &pending{from: id, ptype: ptype, callback: callback, errc: ch}
 	select {
@@ -334,7 +334,7 @@ func (t *udp) pending(id NodeID, ptype byte, callback func(interface{}) bool) <-
 	return ch
 }
 
-func (t *udp) handleReply(from NodeID, ptype byte, req packet) bool {
+func (t *udp) handleReply(from NodeID, ptype byte, req packet) bool { log.DebugLog()
 	matched := make(chan bool, 1)
 	select {
 	case t.gotreply <- reply{from, ptype, req, matched}:
@@ -347,7 +347,7 @@ func (t *udp) handleReply(from NodeID, ptype byte, req packet) bool {
 
 // loop runs in its own goroutine. it keeps track of
 // the refresh timer and the pending reply queue.
-func (t *udp) loop() {
+func (t *udp) loop() { log.DebugLog()
 	var (
 		plist        = list.New()
 		timeout      = time.NewTimer(0)
@@ -453,7 +453,7 @@ var (
 	maxNeighbors int
 )
 
-func init() {
+func init() { log.DebugLog()
 	p := neighbors{Expiration: ^uint64(0)}
 	maxSizeNode := rpcNode{IP: make(net.IP, 16), UDP: ^uint16(0), TCP: ^uint16(0)}
 	for n := 0; ; n++ {
@@ -470,7 +470,7 @@ func init() {
 	}
 }
 
-func (t *udp) send(toaddr *net.UDPAddr, ptype byte, req packet) ([]byte, error) {
+func (t *udp) send(toaddr *net.UDPAddr, ptype byte, req packet) ([]byte, error) { log.DebugLog()
 	packet, hash, err := encodePacket(t.priv, ptype, req)
 	if err != nil {
 		return hash, err
@@ -478,13 +478,13 @@ func (t *udp) send(toaddr *net.UDPAddr, ptype byte, req packet) ([]byte, error) 
 	return hash, t.write(toaddr, req.name(), packet)
 }
 
-func (t *udp) write(toaddr *net.UDPAddr, what string, packet []byte) error {
+func (t *udp) write(toaddr *net.UDPAddr, what string, packet []byte) error { log.DebugLog()
 	_, err := t.conn.WriteToUDP(packet, toaddr)
 	log.Trace(">> "+what, "addr", toaddr, "err", err)
 	return err
 }
 
-func encodePacket(priv *ecdsa.PrivateKey, ptype byte, req interface{}) (packet, hash []byte, err error) {
+func encodePacket(priv *ecdsa.PrivateKey, ptype byte, req interface{}) (packet, hash []byte, err error) { log.DebugLog()
 	b := new(bytes.Buffer)
 	b.Write(headSpace)
 	b.WriteByte(ptype)
@@ -508,7 +508,7 @@ func encodePacket(priv *ecdsa.PrivateKey, ptype byte, req interface{}) (packet, 
 }
 
 // readLoop runs in its own goroutine. it handles incoming UDP packets.
-func (t *udp) readLoop(unhandled chan<- ReadPacket) {
+func (t *udp) readLoop(unhandled chan<- ReadPacket) { log.DebugLog()
 	defer t.conn.Close()
 	if unhandled != nil {
 		defer close(unhandled)
@@ -537,7 +537,7 @@ func (t *udp) readLoop(unhandled chan<- ReadPacket) {
 	}
 }
 
-func (t *udp) handlePacket(from *net.UDPAddr, buf []byte) error {
+func (t *udp) handlePacket(from *net.UDPAddr, buf []byte) error { log.DebugLog()
 	packet, fromID, hash, err := decodePacket(buf)
 	if err != nil {
 		log.Debug("Bad discv4 packet", "addr", from, "err", err)
@@ -548,7 +548,7 @@ func (t *udp) handlePacket(from *net.UDPAddr, buf []byte) error {
 	return err
 }
 
-func decodePacket(buf []byte) (packet, NodeID, []byte, error) {
+func decodePacket(buf []byte) (packet, NodeID, []byte, error) { log.DebugLog()
 	if len(buf) < headSize+1 {
 		return nil, NodeID{}, nil, errPacketTooSmall
 	}
@@ -579,7 +579,7 @@ func decodePacket(buf []byte) (packet, NodeID, []byte, error) {
 	return req, fromID, hash, err
 }
 
-func (req *ping) handle(t *udp, from *net.UDPAddr, fromID NodeID, mac []byte) error {
+func (req *ping) handle(t *udp, from *net.UDPAddr, fromID NodeID, mac []byte) error { log.DebugLog()
 	if expired(req.Expiration) {
 		return errExpired
 	}
@@ -595,9 +595,9 @@ func (req *ping) handle(t *udp, from *net.UDPAddr, fromID NodeID, mac []byte) er
 	return nil
 }
 
-func (req *ping) name() string { return "PING/v4" }
+func (req *ping) name() string { log.DebugLog() return "PING/v4" }
 
-func (req *pong) handle(t *udp, from *net.UDPAddr, fromID NodeID, mac []byte) error {
+func (req *pong) handle(t *udp, from *net.UDPAddr, fromID NodeID, mac []byte) error { log.DebugLog()
 	if expired(req.Expiration) {
 		return errExpired
 	}
@@ -607,9 +607,9 @@ func (req *pong) handle(t *udp, from *net.UDPAddr, fromID NodeID, mac []byte) er
 	return nil
 }
 
-func (req *pong) name() string { return "PONG/v4" }
+func (req *pong) name() string { log.DebugLog() return "PONG/v4" }
 
-func (req *findnode) handle(t *udp, from *net.UDPAddr, fromID NodeID, mac []byte) error {
+func (req *findnode) handle(t *udp, from *net.UDPAddr, fromID NodeID, mac []byte) error { log.DebugLog()
 	if expired(req.Expiration) {
 		return errExpired
 	}
@@ -648,9 +648,9 @@ func (req *findnode) handle(t *udp, from *net.UDPAddr, fromID NodeID, mac []byte
 	return nil
 }
 
-func (req *findnode) name() string { return "FINDNODE/v4" }
+func (req *findnode) name() string { log.DebugLog() return "FINDNODE/v4" }
 
-func (req *neighbors) handle(t *udp, from *net.UDPAddr, fromID NodeID, mac []byte) error {
+func (req *neighbors) handle(t *udp, from *net.UDPAddr, fromID NodeID, mac []byte) error { log.DebugLog()
 	if expired(req.Expiration) {
 		return errExpired
 	}
@@ -660,8 +660,8 @@ func (req *neighbors) handle(t *udp, from *net.UDPAddr, fromID NodeID, mac []byt
 	return nil
 }
 
-func (req *neighbors) name() string { return "NEIGHBORS/v4" }
+func (req *neighbors) name() string { log.DebugLog() return "NEIGHBORS/v4" }
 
-func expired(ts uint64) bool {
+func expired(ts uint64) bool { log.DebugLog()
 	return time.Unix(int64(ts), 0).Before(time.Now())
 }

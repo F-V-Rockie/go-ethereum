@@ -34,7 +34,7 @@ import (
 	"github.com/ethereum/go-ethereum/log"
 )
 
-func TestClientRequest(t *testing.T) {
+func TestClientRequest(t *testing.T) { log.DebugLog()
 	server := newTestServer("service", new(Service))
 	defer server.Stop()
 	client := DialInProc(server)
@@ -49,7 +49,7 @@ func TestClientRequest(t *testing.T) {
 	}
 }
 
-func TestClientBatchRequest(t *testing.T) {
+func TestClientBatchRequest(t *testing.T) { log.DebugLog()
 	server := newTestServer("service", new(Service))
 	defer server.Stop()
 	client := DialInProc(server)
@@ -98,14 +98,14 @@ func TestClientBatchRequest(t *testing.T) {
 	}
 }
 
-// func TestClientCancelInproc(t *testing.T) { testClientCancel("inproc", t) }
-func TestClientCancelWebsocket(t *testing.T) { testClientCancel("ws", t) }
-func TestClientCancelHTTP(t *testing.T)      { testClientCancel("http", t) }
-func TestClientCancelIPC(t *testing.T)       { testClientCancel("ipc", t) }
+// func TestClientCancelInproc(t *testing.T) { log.DebugLog() testClientCancel("inproc", t) }
+func TestClientCancelWebsocket(t *testing.T) { log.DebugLog() testClientCancel("ws", t) }
+func TestClientCancelHTTP(t *testing.T)      { log.DebugLog() testClientCancel("http", t) }
+func TestClientCancelIPC(t *testing.T)       { log.DebugLog() testClientCancel("ipc", t) }
 
 // This test checks that requests made through CallContext can be canceled by canceling
 // the context.
-func testClientCancel(transport string, t *testing.T) {
+func testClientCancel(transport string, t *testing.T) { log.DebugLog()
 	server := newTestServer("service", new(Service))
 	defer server.Stop()
 
@@ -190,7 +190,7 @@ func testClientCancel(transport string, t *testing.T) {
 	wg.Wait()
 }
 
-func TestClientSubscribeInvalidArg(t *testing.T) {
+func TestClientSubscribeInvalidArg(t *testing.T) { log.DebugLog()
 	server := newTestServer("service", new(Service))
 	defer server.Stop()
 	client := DialInProc(server)
@@ -220,7 +220,7 @@ func TestClientSubscribeInvalidArg(t *testing.T) {
 	check(false, make(chan<- int))
 }
 
-func TestClientSubscribe(t *testing.T) {
+func TestClientSubscribe(t *testing.T) { log.DebugLog()
 	server := newTestServer("eth", new(NotificationTestService))
 	defer server.Stop()
 	client := DialInProc(server)
@@ -251,7 +251,7 @@ func TestClientSubscribe(t *testing.T) {
 	}
 }
 
-func TestClientSubscribeCustomNamespace(t *testing.T) {
+func TestClientSubscribeCustomNamespace(t *testing.T) { log.DebugLog()
 	namespace := "custom"
 	server := newTestServer(namespace, new(NotificationTestService))
 	defer server.Stop()
@@ -285,7 +285,7 @@ func TestClientSubscribeCustomNamespace(t *testing.T) {
 
 // In this test, the connection drops while EthSubscribe is
 // waiting for a response.
-func TestClientSubscribeClose(t *testing.T) {
+func TestClientSubscribeClose(t *testing.T) { log.DebugLog()
 	service := &NotificationTestService{
 		gotHangSubscriptionReq:  make(chan struct{}),
 		unblockHangSubscription: make(chan struct{}),
@@ -325,7 +325,7 @@ func TestClientSubscribeClose(t *testing.T) {
 
 // This test checks that Client doesn't lock up when a single subscriber
 // doesn't read subscription events.
-func TestClientNotificationStorm(t *testing.T) {
+func TestClientNotificationStorm(t *testing.T) { log.DebugLog()
 	server := newTestServer("eth", new(NotificationTestService))
 	defer server.Stop()
 
@@ -374,7 +374,7 @@ func TestClientNotificationStorm(t *testing.T) {
 	doTest(10000, true)
 }
 
-func TestClientHTTP(t *testing.T) {
+func TestClientHTTP(t *testing.T) { log.DebugLog()
 	server := newTestServer("service", new(Service))
 	defer server.Stop()
 
@@ -419,7 +419,7 @@ func TestClientHTTP(t *testing.T) {
 	}
 }
 
-func TestClientReconnect(t *testing.T) {
+func TestClientReconnect(t *testing.T) { log.DebugLog()
 	startServer := func(addr string) (*Server, net.Listener) {
 		srv := newTestServer("service", new(Service))
 		l, err := net.Listen("tcp", addr)
@@ -485,7 +485,7 @@ func TestClientReconnect(t *testing.T) {
 	}
 }
 
-func newTestServer(serviceName string, service interface{}) *Server {
+func newTestServer(serviceName string, service interface{}) *Server { log.DebugLog()
 	server := NewServer()
 	if err := server.RegisterName(serviceName, service); err != nil {
 		panic(err)
@@ -493,7 +493,7 @@ func newTestServer(serviceName string, service interface{}) *Server {
 	return server
 }
 
-func httpTestClient(srv *Server, transport string, fl *flakeyListener) (*Client, *httptest.Server) {
+func httpTestClient(srv *Server, transport string, fl *flakeyListener) (*Client, *httptest.Server) { log.DebugLog()
 	// Create the HTTP server.
 	var hs *httptest.Server
 	switch transport {
@@ -518,7 +518,7 @@ func httpTestClient(srv *Server, transport string, fl *flakeyListener) (*Client,
 	return client, hs
 }
 
-func ipcTestClient(srv *Server, fl *flakeyListener) (*Client, net.Listener) {
+func ipcTestClient(srv *Server, fl *flakeyListener) (*Client, net.Listener) { log.DebugLog()
 	// Listen on a random endpoint.
 	endpoint := fmt.Sprintf("go-ethereum-test-ipc-%d-%d", os.Getpid(), rand.Int63())
 	if runtime.GOOS == "windows" {
@@ -551,7 +551,7 @@ type flakeyListener struct {
 	maxAcceptDelay time.Duration
 }
 
-func (l *flakeyListener) Accept() (net.Conn, error) {
+func (l *flakeyListener) Accept() (net.Conn, error) { log.DebugLog()
 	delay := time.Duration(rand.Int63n(int64(l.maxAcceptDelay)))
 	time.Sleep(delay)
 

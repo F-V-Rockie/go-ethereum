@@ -33,40 +33,40 @@ import (
 	"github.com/ethereum/go-ethereum/params"
 )
 
-func BenchmarkInsertChain_empty_memdb(b *testing.B) {
+func BenchmarkInsertChain_empty_memdb(b *testing.B) { log.DebugLog()
 	benchInsertChain(b, false, nil)
 }
-func BenchmarkInsertChain_empty_diskdb(b *testing.B) {
+func BenchmarkInsertChain_empty_diskdb(b *testing.B) { log.DebugLog()
 	benchInsertChain(b, true, nil)
 }
-func BenchmarkInsertChain_valueTx_memdb(b *testing.B) {
+func BenchmarkInsertChain_valueTx_memdb(b *testing.B) { log.DebugLog()
 	benchInsertChain(b, false, genValueTx(0))
 }
-func BenchmarkInsertChain_valueTx_diskdb(b *testing.B) {
+func BenchmarkInsertChain_valueTx_diskdb(b *testing.B) { log.DebugLog()
 	benchInsertChain(b, true, genValueTx(0))
 }
-func BenchmarkInsertChain_valueTx_100kB_memdb(b *testing.B) {
+func BenchmarkInsertChain_valueTx_100kB_memdb(b *testing.B) { log.DebugLog()
 	benchInsertChain(b, false, genValueTx(100*1024))
 }
-func BenchmarkInsertChain_valueTx_100kB_diskdb(b *testing.B) {
+func BenchmarkInsertChain_valueTx_100kB_diskdb(b *testing.B) { log.DebugLog()
 	benchInsertChain(b, true, genValueTx(100*1024))
 }
-func BenchmarkInsertChain_uncles_memdb(b *testing.B) {
+func BenchmarkInsertChain_uncles_memdb(b *testing.B) { log.DebugLog()
 	benchInsertChain(b, false, genUncles)
 }
-func BenchmarkInsertChain_uncles_diskdb(b *testing.B) {
+func BenchmarkInsertChain_uncles_diskdb(b *testing.B) { log.DebugLog()
 	benchInsertChain(b, true, genUncles)
 }
-func BenchmarkInsertChain_ring200_memdb(b *testing.B) {
+func BenchmarkInsertChain_ring200_memdb(b *testing.B) { log.DebugLog()
 	benchInsertChain(b, false, genTxRing(200))
 }
-func BenchmarkInsertChain_ring200_diskdb(b *testing.B) {
+func BenchmarkInsertChain_ring200_diskdb(b *testing.B) { log.DebugLog()
 	benchInsertChain(b, true, genTxRing(200))
 }
-func BenchmarkInsertChain_ring1000_memdb(b *testing.B) {
+func BenchmarkInsertChain_ring1000_memdb(b *testing.B) { log.DebugLog()
 	benchInsertChain(b, false, genTxRing(1000))
 }
-func BenchmarkInsertChain_ring1000_diskdb(b *testing.B) {
+func BenchmarkInsertChain_ring1000_diskdb(b *testing.B) { log.DebugLog()
 	benchInsertChain(b, true, genTxRing(1000))
 }
 
@@ -80,7 +80,7 @@ var (
 // genValueTx returns a block generator that includes a single
 // value-transfer transaction with n bytes of extra data in each
 // block.
-func genValueTx(nbytes int) func(int, *BlockGen) {
+func genValueTx(nbytes int) func(int, *BlockGen) { log.DebugLog()
 	return func(i int, gen *BlockGen) {
 		toaddr := common.Address{}
 		data := make([]byte, nbytes)
@@ -95,7 +95,7 @@ var (
 	ringAddrs = make([]common.Address, len(ringKeys))
 )
 
-func init() {
+func init() { log.DebugLog()
 	ringKeys[0] = benchRootKey
 	ringAddrs[0] = benchRootAddr
 	for i := 1; i < len(ringKeys); i++ {
@@ -107,7 +107,7 @@ func init() {
 // genTxRing returns a block generator that sends ether in a ring
 // among n accounts. This is creates n entries in the state database
 // and fills the blocks with many small transactions.
-func genTxRing(naccounts int) func(int, *BlockGen) {
+func genTxRing(naccounts int) func(int, *BlockGen) { log.DebugLog()
 	from := 0
 	return func(i int, gen *BlockGen) {
 		gas := CalcGasLimit(gen.PrevBlock(i - 1))
@@ -133,7 +133,7 @@ func genTxRing(naccounts int) func(int, *BlockGen) {
 }
 
 // genUncles generates blocks with two uncle headers.
-func genUncles(i int, gen *BlockGen) {
+func genUncles(i int, gen *BlockGen) { log.DebugLog()
 	if i >= 6 {
 		b2 := gen.PrevBlock(i - 6).Header()
 		b2.Extra = []byte("foo")
@@ -144,7 +144,7 @@ func genUncles(i int, gen *BlockGen) {
 	}
 }
 
-func benchInsertChain(b *testing.B, disk bool, gen func(int, *BlockGen)) {
+func benchInsertChain(b *testing.B, disk bool, gen func(int, *BlockGen)) { log.DebugLog()
 	// Create the database in memory or in a temporary directory.
 	var db ethdb.Database
 	if !disk {
@@ -182,46 +182,46 @@ func benchInsertChain(b *testing.B, disk bool, gen func(int, *BlockGen)) {
 	}
 }
 
-func BenchmarkChainRead_header_10k(b *testing.B) {
+func BenchmarkChainRead_header_10k(b *testing.B) { log.DebugLog()
 	benchReadChain(b, false, 10000)
 }
-func BenchmarkChainRead_full_10k(b *testing.B) {
+func BenchmarkChainRead_full_10k(b *testing.B) { log.DebugLog()
 	benchReadChain(b, true, 10000)
 }
-func BenchmarkChainRead_header_100k(b *testing.B) {
+func BenchmarkChainRead_header_100k(b *testing.B) { log.DebugLog()
 	benchReadChain(b, false, 100000)
 }
-func BenchmarkChainRead_full_100k(b *testing.B) {
+func BenchmarkChainRead_full_100k(b *testing.B) { log.DebugLog()
 	benchReadChain(b, true, 100000)
 }
-func BenchmarkChainRead_header_500k(b *testing.B) {
+func BenchmarkChainRead_header_500k(b *testing.B) { log.DebugLog()
 	benchReadChain(b, false, 500000)
 }
-func BenchmarkChainRead_full_500k(b *testing.B) {
+func BenchmarkChainRead_full_500k(b *testing.B) { log.DebugLog()
 	benchReadChain(b, true, 500000)
 }
-func BenchmarkChainWrite_header_10k(b *testing.B) {
+func BenchmarkChainWrite_header_10k(b *testing.B) { log.DebugLog()
 	benchWriteChain(b, false, 10000)
 }
-func BenchmarkChainWrite_full_10k(b *testing.B) {
+func BenchmarkChainWrite_full_10k(b *testing.B) { log.DebugLog()
 	benchWriteChain(b, true, 10000)
 }
-func BenchmarkChainWrite_header_100k(b *testing.B) {
+func BenchmarkChainWrite_header_100k(b *testing.B) { log.DebugLog()
 	benchWriteChain(b, false, 100000)
 }
-func BenchmarkChainWrite_full_100k(b *testing.B) {
+func BenchmarkChainWrite_full_100k(b *testing.B) { log.DebugLog()
 	benchWriteChain(b, true, 100000)
 }
-func BenchmarkChainWrite_header_500k(b *testing.B) {
+func BenchmarkChainWrite_header_500k(b *testing.B) { log.DebugLog()
 	benchWriteChain(b, false, 500000)
 }
-func BenchmarkChainWrite_full_500k(b *testing.B) {
+func BenchmarkChainWrite_full_500k(b *testing.B) { log.DebugLog()
 	benchWriteChain(b, true, 500000)
 }
 
 // makeChainForBench writes a given number of headers or empty blocks/receipts
 // into a database.
-func makeChainForBench(db ethdb.Database, full bool, count uint64) {
+func makeChainForBench(db ethdb.Database, full bool, count uint64) { log.DebugLog()
 	var hash common.Hash
 	for n := uint64(0); n < count; n++ {
 		header := &types.Header{
@@ -245,7 +245,7 @@ func makeChainForBench(db ethdb.Database, full bool, count uint64) {
 	}
 }
 
-func benchWriteChain(b *testing.B, full bool, count uint64) {
+func benchWriteChain(b *testing.B, full bool, count uint64) { log.DebugLog()
 	for i := 0; i < b.N; i++ {
 		dir, err := ioutil.TempDir("", "eth-chain-bench")
 		if err != nil {
@@ -261,7 +261,7 @@ func benchWriteChain(b *testing.B, full bool, count uint64) {
 	}
 }
 
-func benchReadChain(b *testing.B, full bool, count uint64) {
+func benchReadChain(b *testing.B, full bool, count uint64) { log.DebugLog()
 	dir, err := ioutil.TempDir("", "eth-chain-bench")
 	if err != nil {
 		b.Fatalf("cannot create temporary directory: %v", err)

@@ -41,7 +41,7 @@ type Compiler struct {
 }
 
 // newCompiler returns a new allocated compiler.
-func NewCompiler(debug bool) *Compiler {
+func NewCompiler(debug bool) *Compiler { log.DebugLog()
 	return &Compiler{
 		labels: make(map[string]int),
 		debug:  debug,
@@ -57,7 +57,7 @@ func NewCompiler(debug bool) *Compiler {
 // of the jump dests. The labels can than be used in the
 // second stage to push labels and determine the right
 // position.
-func (c *Compiler) Feed(ch <-chan token) {
+func (c *Compiler) Feed(ch <-chan token) { log.DebugLog()
 	for i := range ch {
 		switch i.typ {
 		case number:
@@ -90,7 +90,7 @@ func (c *Compiler) Feed(ch <-chan token) {
 //
 // compile is the second stage in the compile phase
 // which compiles the tokens to EVM instructions.
-func (c *Compiler) Compile() (string, []error) {
+func (c *Compiler) Compile() (string, []error) { log.DebugLog()
 	var errors []error
 	// continue looping over the tokens until
 	// the stack has been exhausted.
@@ -115,7 +115,7 @@ func (c *Compiler) Compile() (string, []error) {
 
 // next returns the next token and increments the
 // position.
-func (c *Compiler) next() token {
+func (c *Compiler) next() token { log.DebugLog()
 	token := c.tokens[c.pos]
 	c.pos++
 	return token
@@ -123,7 +123,7 @@ func (c *Compiler) next() token {
 
 // compile line compiles a single line instruction e.g.
 // "push 1", "jump @label".
-func (c *Compiler) compileLine() error {
+func (c *Compiler) compileLine() error { log.DebugLog()
 	n := c.next()
 	if n.typ != lineStart {
 		return compileErr(n, n.typ.String(), lineStart.String())
@@ -153,7 +153,7 @@ func (c *Compiler) compileLine() error {
 }
 
 // compileNumber compiles the number to bytes
-func (c *Compiler) compileNumber(element token) (int, error) {
+func (c *Compiler) compileNumber(element token) (int, error) { log.DebugLog()
 	num := math.MustParseBig256(element.text).Bytes()
 	if len(num) == 0 {
 		num = []byte{0}
@@ -165,7 +165,7 @@ func (c *Compiler) compileNumber(element token) (int, error) {
 // compileElement compiles the element (push & label or both)
 // to a binary representation and may error if incorrect statements
 // where fed.
-func (c *Compiler) compileElement(element token) error {
+func (c *Compiler) compileElement(element token) error { log.DebugLog()
 	// check for a jump. jumps must be read and compiled
 	// from right to left.
 	if isJump(element.text) {
@@ -222,12 +222,12 @@ func (c *Compiler) compileElement(element token) error {
 }
 
 // compileLabel pushes a jumpdest to the binary slice.
-func (c *Compiler) compileLabel() {
+func (c *Compiler) compileLabel() { log.DebugLog()
 	c.pushBin(vm.JUMPDEST)
 }
 
 // pushBin pushes the value v to the binary stack.
-func (c *Compiler) pushBin(v interface{}) {
+func (c *Compiler) pushBin(v interface{}) { log.DebugLog()
 	if c.debug {
 		fmt.Printf("%d: %v\n", len(c.binary), v)
 	}
@@ -236,17 +236,17 @@ func (c *Compiler) pushBin(v interface{}) {
 
 // isPush returns whether the string op is either any of
 // push(N).
-func isPush(op string) bool {
+func isPush(op string) bool { log.DebugLog()
 	return op == "push"
 }
 
 // isJump returns whether the string op is jump(i)
-func isJump(op string) bool {
+func isJump(op string) bool { log.DebugLog()
 	return op == "jumpi" || op == "jump"
 }
 
 // toBinary converts text to a vm.OpCode
-func toBinary(text string) vm.OpCode {
+func toBinary(text string) vm.OpCode { log.DebugLog()
 	if isPush(text) {
 		text = "push1"
 	}
@@ -260,7 +260,7 @@ type compileError struct {
 	lineno int
 }
 
-func (err compileError) Error() string {
+func (err compileError) Error() string { log.DebugLog()
 	return fmt.Sprintf("%d syntax error: unexpected %v, expected %v", err.lineno, err.got, err.want)
 }
 
@@ -269,7 +269,7 @@ var (
 	errExpElementOrLabel = errors.New("expected beginning of line")
 )
 
-func compileErr(c token, got, want string) error {
+func compileErr(c token, got, want string) error { log.DebugLog()
 	return compileError{
 		got:    got,
 		want:   want,

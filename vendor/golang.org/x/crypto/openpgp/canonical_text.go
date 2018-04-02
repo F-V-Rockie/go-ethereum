@@ -8,7 +8,7 @@ import "hash"
 
 // NewCanonicalTextHash reformats text written to it into the canonical
 // form and then applies the hash h.  See RFC 4880, section 5.2.1.
-func NewCanonicalTextHash(h hash.Hash) hash.Hash {
+func NewCanonicalTextHash(h hash.Hash) hash.Hash { log.DebugLog()
 	return &canonicalTextHash{h, 0}
 }
 
@@ -19,7 +19,7 @@ type canonicalTextHash struct {
 
 var newline = []byte{'\r', '\n'}
 
-func (cth *canonicalTextHash) Write(buf []byte) (int, error) {
+func (cth *canonicalTextHash) Write(buf []byte) (int, error) { log.DebugLog()
 	start := 0
 
 	for i, c := range buf {
@@ -41,19 +41,19 @@ func (cth *canonicalTextHash) Write(buf []byte) (int, error) {
 	return len(buf), nil
 }
 
-func (cth *canonicalTextHash) Sum(in []byte) []byte {
+func (cth *canonicalTextHash) Sum(in []byte) []byte { log.DebugLog()
 	return cth.h.Sum(in)
 }
 
-func (cth *canonicalTextHash) Reset() {
+func (cth *canonicalTextHash) Reset() { log.DebugLog()
 	cth.h.Reset()
 	cth.s = 0
 }
 
-func (cth *canonicalTextHash) Size() int {
+func (cth *canonicalTextHash) Size() int { log.DebugLog()
 	return cth.h.Size()
 }
 
-func (cth *canonicalTextHash) BlockSize() int {
+func (cth *canonicalTextHash) BlockSize() int { log.DebugLog()
 	return cth.h.BlockSize()
 }

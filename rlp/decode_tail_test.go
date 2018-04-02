@@ -26,7 +26,7 @@ type structWithTail struct {
 	C    []uint `rlp:"tail"`
 }
 
-func ExampleDecode_structTagTail() {
+func ExampleDecode_structTagTail() { log.DebugLog()
 	// In this example, the "tail" struct tag is used to decode lists of
 	// differing length into a struct.
 	var val structWithTail

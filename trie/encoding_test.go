@@ -21,7 +21,7 @@ import (
 	"testing"
 )
 
-func TestHexCompact(t *testing.T) {
+func TestHexCompact(t *testing.T) { log.DebugLog()
 	tests := []struct{ hex, compact []byte }{
 		// empty keys, with and without terminator.
 		{hex: []byte{}, compact: []byte{0x00}},
@@ -45,7 +45,7 @@ func TestHexCompact(t *testing.T) {
 	}
 }
 
-func TestHexKeybytes(t *testing.T) {
+func TestHexKeybytes(t *testing.T) { log.DebugLog()
 	tests := []struct{ key, hexIn, hexOut []byte }{
 		{key: []byte{}, hexIn: []byte{16}, hexOut: []byte{16}},
 		{key: []byte{}, hexIn: []byte{}, hexOut: []byte{16}},
@@ -75,28 +75,28 @@ func TestHexKeybytes(t *testing.T) {
 	}
 }
 
-func BenchmarkHexToCompact(b *testing.B) {
+func BenchmarkHexToCompact(b *testing.B) { log.DebugLog()
 	testBytes := []byte{0, 15, 1, 12, 11, 8, 16 /*term*/}
 	for i := 0; i < b.N; i++ {
 		hexToCompact(testBytes)
 	}
 }
 
-func BenchmarkCompactToHex(b *testing.B) {
+func BenchmarkCompactToHex(b *testing.B) { log.DebugLog()
 	testBytes := []byte{0, 15, 1, 12, 11, 8, 16 /*term*/}
 	for i := 0; i < b.N; i++ {
 		compactToHex(testBytes)
 	}
 }
 
-func BenchmarkKeybytesToHex(b *testing.B) {
+func BenchmarkKeybytesToHex(b *testing.B) { log.DebugLog()
 	testBytes := []byte{7, 6, 6, 5, 7, 2, 6, 2, 16}
 	for i := 0; i < b.N; i++ {
 		keybytesToHex(testBytes)
 	}
 }
 
-func BenchmarkHexToKeybytes(b *testing.B) {
+func BenchmarkHexToKeybytes(b *testing.B) { log.DebugLog()
 	testBytes := []byte{7, 6, 6, 5, 7, 2, 6, 2, 16}
 	for i := 0; i < b.N; i++ {
 		hexToKeybytes(testBytes)

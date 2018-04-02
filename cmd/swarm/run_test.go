@@ -36,7 +36,7 @@ import (
 	"github.com/ethereum/go-ethereum/swarm"
 )
 
-func init() {
+func init() { log.DebugLog()
 	// Run the app if we've been exec'd as "swarm-test" in runSwarm.
 	reexec.Register("swarm-test", func() {
 		if err := app.Run(os.Args); err != nil {
@@ -47,7 +47,7 @@ func init() {
 	})
 }
 
-func TestMain(m *testing.M) {
+func TestMain(m *testing.M) { log.DebugLog()
 	// check if we have been reexec'd
 	if reexec.Init() {
 		return
@@ -55,7 +55,7 @@ func TestMain(m *testing.M) {
 	os.Exit(m.Run())
 }
 
-func runSwarm(t *testing.T, args ...string) *cmdtest.TestCmd {
+func runSwarm(t *testing.T, args ...string) *cmdtest.TestCmd { log.DebugLog()
 	tt := cmdtest.NewTestCmd(t, nil)
 
 	// Boot "swarm". This actually runs the test binary but the TestMain
@@ -81,7 +81,7 @@ type testCluster struct {
 //
 // When starting more than one node, they are connected together using the
 // admin SetPeer RPC method.
-func newTestCluster(t *testing.T, size int) *testCluster {
+func newTestCluster(t *testing.T, size int) *testCluster { log.DebugLog()
 	cluster := &testCluster{}
 	defer func() {
 		if t.Failed() {
@@ -138,7 +138,7 @@ outer:
 	return cluster
 }
 
-func (c *testCluster) Shutdown() {
+func (c *testCluster) Shutdown() { log.DebugLog()
 	for _, node := range c.Nodes {
 		node.Shutdown()
 	}
@@ -157,7 +157,7 @@ type testNode struct {
 
 const testPassphrase = "swarm-test-passphrase"
 
-func getTestAccount(t *testing.T, dir string) (conf *node.Config, account accounts.Account) {
+func getTestAccount(t *testing.T, dir string) (conf *node.Config, account accounts.Account) { log.DebugLog()
 	// create key
 	conf = &node.Config{
 		DataDir: dir,
@@ -181,7 +181,7 @@ func getTestAccount(t *testing.T, dir string) (conf *node.Config, account accoun
 	return conf, account
 }
 
-func newTestNode(t *testing.T, dir string) *testNode {
+func newTestNode(t *testing.T, dir string) *testNode { log.DebugLog()
 
 	conf, account := getTestAccount(t, dir)
 	node := &testNode{Dir: dir}
@@ -243,13 +243,13 @@ func newTestNode(t *testing.T, dir string) *testNode {
 	return node
 }
 
-func (n *testNode) Shutdown() {
+func (n *testNode) Shutdown() { log.DebugLog()
 	if n.Cmd != nil {
 		n.Cmd.Kill()
 	}
 }
 
-func assignTCPPort() (string, error) {
+func assignTCPPort() (string, error) { log.DebugLog()
 	l, err := net.Listen("tcp", "127.0.0.1:0")
 	if err != nil {
 		return "", err

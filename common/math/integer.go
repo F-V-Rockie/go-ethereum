@@ -41,7 +41,7 @@ const (
 type HexOrDecimal64 uint64
 
 // UnmarshalText implements encoding.TextUnmarshaler.
-func (i *HexOrDecimal64) UnmarshalText(input []byte) error {
+func (i *HexOrDecimal64) UnmarshalText(input []byte) error { log.DebugLog()
 	int, ok := ParseUint64(string(input))
 	if !ok {
 		return fmt.Errorf("invalid hex or decimal integer %q", input)
@@ -51,13 +51,13 @@ func (i *HexOrDecimal64) UnmarshalText(input []byte) error {
 }
 
 // MarshalText implements encoding.TextMarshaler.
-func (i HexOrDecimal64) MarshalText() ([]byte, error) {
+func (i HexOrDecimal64) MarshalText() ([]byte, error) { log.DebugLog()
 	return []byte(fmt.Sprintf("%#x", uint64(i))), nil
 }
 
 // ParseUint64 parses s as an integer in decimal or hexadecimal syntax.
 // Leading zeros are accepted. The empty string parses as zero.
-func ParseUint64(s string) (uint64, bool) {
+func ParseUint64(s string) (uint64, bool) { log.DebugLog()
 	if s == "" {
 		return 0, true
 	}
@@ -70,7 +70,7 @@ func ParseUint64(s string) (uint64, bool) {
 }
 
 // MustParseUint64 parses s as an integer and panics if the string is invalid.
-func MustParseUint64(s string) uint64 {
+func MustParseUint64(s string) uint64 { log.DebugLog()
 	v, ok := ParseUint64(s)
 	if !ok {
 		panic("invalid unsigned 64 bit integer: " + s)
@@ -81,17 +81,17 @@ func MustParseUint64(s string) uint64 {
 // NOTE: The following methods need to be optimised using either bit checking or asm
 
 // SafeSub returns subtraction result and whether overflow occurred.
-func SafeSub(x, y uint64) (uint64, bool) {
+func SafeSub(x, y uint64) (uint64, bool) { log.DebugLog()
 	return x - y, x < y
 }
 
 // SafeAdd returns the result and whether overflow occurred.
-func SafeAdd(x, y uint64) (uint64, bool) {
+func SafeAdd(x, y uint64) (uint64, bool) { log.DebugLog()
 	return x + y, y > MaxUint64-x
 }
 
 // SafeMul returns multiplication result and whether overflow occurred.
-func SafeMul(x, y uint64) (uint64, bool) {
+func SafeMul(x, y uint64) (uint64, bool) { log.DebugLog()
 	if x == 0 || y == 0 {
 		return 0, false
 	}

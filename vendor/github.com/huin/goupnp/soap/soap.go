@@ -23,7 +23,7 @@ type SOAPClient struct {
 	HTTPClient  http.Client
 }
 
-func NewSOAPClient(endpointURL url.URL) *SOAPClient {
+func NewSOAPClient(endpointURL url.URL) *SOAPClient { log.DebugLog()
 	return &SOAPClient{
 		EndpointURL: endpointURL,
 	}
@@ -32,7 +32,7 @@ func NewSOAPClient(endpointURL url.URL) *SOAPClient {
 // PerformSOAPAction makes a SOAP request, with the given action.
 // inAction and outAction must both be pointers to structs with string fields
 // only.
-func (client *SOAPClient) PerformAction(actionNamespace, actionName string, inAction interface{}, outAction interface{}) error {
+func (client *SOAPClient) PerformAction(actionNamespace, actionName string, inAction interface{}, outAction interface{}) error { log.DebugLog()
 	requestBytes, err := encodeRequestAction(actionNamespace, actionName, inAction)
 	if err != nil {
 		return err
@@ -77,7 +77,7 @@ func (client *SOAPClient) PerformAction(actionNamespace, actionName string, inAc
 }
 
 // newSOAPAction creates a soapEnvelope with the given action and arguments.
-func newSOAPEnvelope() *soapEnvelope {
+func newSOAPEnvelope() *soapEnvelope { log.DebugLog()
 	return &soapEnvelope{
 		EncodingStyle: soapEncodingStyle,
 	}
@@ -88,7 +88,7 @@ func newSOAPEnvelope() *soapEnvelope {
 // 500s for requests where the outer default xmlns is set to the SOAP
 // namespace, and then reassigning the default namespace within that to the
 // service namespace. Hand-coding the outer XML to work-around this.
-func encodeRequestAction(actionNamespace, actionName string, inAction interface{}) ([]byte, error) {
+func encodeRequestAction(actionNamespace, actionName string, inAction interface{}) ([]byte, error) { log.DebugLog()
 	requestBuf := new(bytes.Buffer)
 	requestBuf.WriteString(soapPrefix)
 	requestBuf.WriteString(`<u:`)
@@ -108,7 +108,7 @@ func encodeRequestAction(actionNamespace, actionName string, inAction interface{
 	return requestBuf.Bytes(), nil
 }
 
-func encodeRequestArgs(w *bytes.Buffer, inAction interface{}) error {
+func encodeRequestArgs(w *bytes.Buffer, inAction interface{}) error { log.DebugLog()
 	in := reflect.Indirect(reflect.ValueOf(inAction))
 	if in.Kind() != reflect.Struct {
 		return fmt.Errorf("goupnp: SOAP inAction is not a struct but of type %v", in.Type())
@@ -152,6 +152,6 @@ type SOAPFaultError struct {
 	Detail      string `xml:"detail"`
 }
 
-func (err *SOAPFaultError) Error() string {
+func (err *SOAPFaultError) Error() string { log.DebugLog()
 	return fmt.Sprintf("SOAP fault: %s", err.FaultString)
 }

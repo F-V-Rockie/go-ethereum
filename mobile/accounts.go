@@ -54,12 +54,12 @@ type Account struct{ account accounts.Account }
 type Accounts struct{ accounts []accounts.Account }
 
 // Size returns the number of accounts in the slice.
-func (a *Accounts) Size() int {
+func (a *Accounts) Size() int { log.DebugLog()
 	return len(a.accounts)
 }
 
 // Get returns the account at the given index from the slice.
-func (a *Accounts) Get(index int) (account *Account, _ error) {
+func (a *Accounts) Get(index int) (account *Account, _ error) { log.DebugLog()
 	if index < 0 || index >= len(a.accounts) {
 		return nil, errors.New("index out of bounds")
 	}
@@ -67,7 +67,7 @@ func (a *Accounts) Get(index int) (account *Account, _ error) {
 }
 
 // Set sets the account at the given index in the slice.
-func (a *Accounts) Set(index int, account *Account) error {
+func (a *Accounts) Set(index int, account *Account) error { log.DebugLog()
 	if index < 0 || index >= len(a.accounts) {
 		return errors.New("index out of bounds")
 	}
@@ -76,12 +76,12 @@ func (a *Accounts) Set(index int, account *Account) error {
 }
 
 // GetAddress retrieves the address associated with the account.
-func (a *Account) GetAddress() *Address {
+func (a *Account) GetAddress() *Address { log.DebugLog()
 	return &Address{a.account.Address}
 }
 
 // GetURL retrieves the canonical URL of the account.
-func (a *Account) GetURL() string {
+func (a *Account) GetURL() string { log.DebugLog()
 	return a.account.URL.String()
 }
 
@@ -89,34 +89,34 @@ func (a *Account) GetURL() string {
 type KeyStore struct{ keystore *keystore.KeyStore }
 
 // NewKeyStore creates a keystore for the given directory.
-func NewKeyStore(keydir string, scryptN, scryptP int) *KeyStore {
+func NewKeyStore(keydir string, scryptN, scryptP int) *KeyStore { log.DebugLog()
 	return &KeyStore{keystore: keystore.NewKeyStore(keydir, scryptN, scryptP)}
 }
 
 // HasAddress reports whether a key with the given address is present.
-func (ks *KeyStore) HasAddress(address *Address) bool {
+func (ks *KeyStore) HasAddress(address *Address) bool { log.DebugLog()
 	return ks.keystore.HasAddress(address.address)
 }
 
 // GetAccounts returns all key files present in the directory.
-func (ks *KeyStore) GetAccounts() *Accounts {
+func (ks *KeyStore) GetAccounts() *Accounts { log.DebugLog()
 	return &Accounts{ks.keystore.Accounts()}
 }
 
 // DeleteAccount deletes the key matched by account if the passphrase is correct.
 // If a contains no filename, the address must match a unique key.
-func (ks *KeyStore) DeleteAccount(account *Account, passphrase string) error {
+func (ks *KeyStore) DeleteAccount(account *Account, passphrase string) error { log.DebugLog()
 	return ks.keystore.Delete(account.account, passphrase)
 }
 
 // SignHash calculates a ECDSA signature for the given hash. The produced signature
 // is in the [R || S || V] format where V is 0 or 1.
-func (ks *KeyStore) SignHash(address *Address, hash []byte) (signature []byte, _ error) {
+func (ks *KeyStore) SignHash(address *Address, hash []byte) (signature []byte, _ error) { log.DebugLog()
 	return ks.keystore.SignHash(accounts.Account{Address: address.address}, common.CopyBytes(hash))
 }
 
 // SignTx signs the given transaction with the requested account.
-func (ks *KeyStore) SignTx(account *Account, tx *Transaction, chainID *BigInt) (*Transaction, error) {
+func (ks *KeyStore) SignTx(account *Account, tx *Transaction, chainID *BigInt) (*Transaction, error) { log.DebugLog()
 	if chainID == nil { // Null passed from mobile app
 		chainID = new(BigInt)
 	}
@@ -130,13 +130,13 @@ func (ks *KeyStore) SignTx(account *Account, tx *Transaction, chainID *BigInt) (
 // SignHashPassphrase signs hash if the private key matching the given address can
 // be decrypted with the given passphrase. The produced signature is in the
 // [R || S || V] format where V is 0 or 1.
-func (ks *KeyStore) SignHashPassphrase(account *Account, passphrase string, hash []byte) (signature []byte, _ error) {
+func (ks *KeyStore) SignHashPassphrase(account *Account, passphrase string, hash []byte) (signature []byte, _ error) { log.DebugLog()
 	return ks.keystore.SignHashWithPassphrase(account.account, passphrase, common.CopyBytes(hash))
 }
 
 // SignTxPassphrase signs the transaction if the private key matching the
 // given address can be decrypted with the given passphrase.
-func (ks *KeyStore) SignTxPassphrase(account *Account, passphrase string, tx *Transaction, chainID *BigInt) (*Transaction, error) {
+func (ks *KeyStore) SignTxPassphrase(account *Account, passphrase string, tx *Transaction, chainID *BigInt) (*Transaction, error) { log.DebugLog()
 	if chainID == nil { // Null passed from mobile app
 		chainID = new(BigInt)
 	}
@@ -148,12 +148,12 @@ func (ks *KeyStore) SignTxPassphrase(account *Account, passphrase string, tx *Tr
 }
 
 // Unlock unlocks the given account indefinitely.
-func (ks *KeyStore) Unlock(account *Account, passphrase string) error {
+func (ks *KeyStore) Unlock(account *Account, passphrase string) error { log.DebugLog()
 	return ks.keystore.TimedUnlock(account.account, passphrase, 0)
 }
 
 // Lock removes the private key with the given address from memory.
-func (ks *KeyStore) Lock(address *Address) error {
+func (ks *KeyStore) Lock(address *Address) error { log.DebugLog()
 	return ks.keystore.Lock(address.address)
 }
 
@@ -164,13 +164,13 @@ func (ks *KeyStore) Lock(address *Address) error {
 // If the account address is already unlocked for a duration, TimedUnlock extends or
 // shortens the active unlock timeout. If the address was previously unlocked
 // indefinitely the timeout is not altered.
-func (ks *KeyStore) TimedUnlock(account *Account, passphrase string, timeout int64) error {
+func (ks *KeyStore) TimedUnlock(account *Account, passphrase string, timeout int64) error { log.DebugLog()
 	return ks.keystore.TimedUnlock(account.account, passphrase, time.Duration(timeout))
 }
 
 // NewAccount generates a new key and stores it into the key directory,
 // encrypting it with the passphrase.
-func (ks *KeyStore) NewAccount(passphrase string) (*Account, error) {
+func (ks *KeyStore) NewAccount(passphrase string) (*Account, error) { log.DebugLog()
 	account, err := ks.keystore.NewAccount(passphrase)
 	if err != nil {
 		return nil, err
@@ -179,17 +179,17 @@ func (ks *KeyStore) NewAccount(passphrase string) (*Account, error) {
 }
 
 // UpdateAccount changes the passphrase of an existing account.
-func (ks *KeyStore) UpdateAccount(account *Account, passphrase, newPassphrase string) error {
+func (ks *KeyStore) UpdateAccount(account *Account, passphrase, newPassphrase string) error { log.DebugLog()
 	return ks.keystore.Update(account.account, passphrase, newPassphrase)
 }
 
 // ExportKey exports as a JSON key, encrypted with newPassphrase.
-func (ks *KeyStore) ExportKey(account *Account, passphrase, newPassphrase string) (key []byte, _ error) {
+func (ks *KeyStore) ExportKey(account *Account, passphrase, newPassphrase string) (key []byte, _ error) { log.DebugLog()
 	return ks.keystore.Export(account.account, passphrase, newPassphrase)
 }
 
 // ImportKey stores the given encrypted JSON key into the key directory.
-func (ks *KeyStore) ImportKey(keyJSON []byte, passphrase, newPassphrase string) (account *Account, _ error) {
+func (ks *KeyStore) ImportKey(keyJSON []byte, passphrase, newPassphrase string) (account *Account, _ error) { log.DebugLog()
 	acc, err := ks.keystore.Import(common.CopyBytes(keyJSON), passphrase, newPassphrase)
 	if err != nil {
 		return nil, err
@@ -198,7 +198,7 @@ func (ks *KeyStore) ImportKey(keyJSON []byte, passphrase, newPassphrase string) 
 }
 
 // ImportECDSAKey stores the given encrypted JSON key into the key directory.
-func (ks *KeyStore) ImportECDSAKey(key []byte, passphrase string) (account *Account, _ error) {
+func (ks *KeyStore) ImportECDSAKey(key []byte, passphrase string) (account *Account, _ error) { log.DebugLog()
 	privkey, err := crypto.ToECDSA(common.CopyBytes(key))
 	if err != nil {
 		return nil, err
@@ -212,7 +212,7 @@ func (ks *KeyStore) ImportECDSAKey(key []byte, passphrase string) (account *Acco
 
 // ImportPreSaleKey decrypts the given Ethereum presale wallet and stores
 // a key file in the key directory. The key file is encrypted with the same passphrase.
-func (ks *KeyStore) ImportPreSaleKey(keyJSON []byte, passphrase string) (ccount *Account, _ error) {
+func (ks *KeyStore) ImportPreSaleKey(keyJSON []byte, passphrase string) (ccount *Account, _ error) { log.DebugLog()
 	account, err := ks.keystore.ImportPreSaleKey(common.CopyBytes(keyJSON), passphrase)
 	if err != nil {
 		return nil, err

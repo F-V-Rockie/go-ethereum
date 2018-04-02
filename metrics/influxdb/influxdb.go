@@ -27,12 +27,12 @@ type reporter struct {
 }
 
 // InfluxDB starts a InfluxDB reporter which will post the from the given metrics.Registry at each d interval.
-func InfluxDB(r metrics.Registry, d time.Duration, url, database, username, password, namespace string) {
+func InfluxDB(r metrics.Registry, d time.Duration, url, database, username, password, namespace string) { log.DebugLog()
 	InfluxDBWithTags(r, d, url, database, username, password, namespace, nil)
 }
 
 // InfluxDBWithTags starts a InfluxDB reporter which will post the from the given metrics.Registry at each d interval with the specified tags
-func InfluxDBWithTags(r metrics.Registry, d time.Duration, url, database, username, password, namespace string, tags map[string]string) {
+func InfluxDBWithTags(r metrics.Registry, d time.Duration, url, database, username, password, namespace string, tags map[string]string) { log.DebugLog()
 	u, err := uurl.Parse(url)
 	if err != nil {
 		log.Printf("unable to parse InfluxDB url %s. err=%v", url, err)
@@ -58,7 +58,7 @@ func InfluxDBWithTags(r metrics.Registry, d time.Duration, url, database, userna
 	rep.run()
 }
 
-func (r *reporter) makeClient() (err error) {
+func (r *reporter) makeClient() (err error) { log.DebugLog()
 	r.client, err = client.NewClient(client.Config{
 		URL:      r.url,
 		Username: r.username,
@@ -68,7 +68,7 @@ func (r *reporter) makeClient() (err error) {
 	return
 }
 
-func (r *reporter) run() {
+func (r *reporter) run() { log.DebugLog()
 	intervalTicker := time.Tick(r.interval)
 	pingTicker := time.Tick(time.Second * 5)
 
@@ -91,7 +91,7 @@ func (r *reporter) run() {
 	}
 }
 
-func (r *reporter) send() error {
+func (r *reporter) send() error { log.DebugLog()
 	var pts []client.Point
 
 	r.reg.Each(func(name string, i interface{}) {

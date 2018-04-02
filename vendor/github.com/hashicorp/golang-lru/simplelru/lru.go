@@ -23,7 +23,7 @@ type entry struct {
 }
 
 // NewLRU constructs an LRU of the given size
-func NewLRU(size int, onEvict EvictCallback) (*LRU, error) {
+func NewLRU(size int, onEvict EvictCallback) (*LRU, error) { log.DebugLog()
 	if size <= 0 {
 		return nil, errors.New("Must provide a positive size")
 	}
@@ -37,7 +37,7 @@ func NewLRU(size int, onEvict EvictCallback) (*LRU, error) {
 }
 
 // Purge is used to completely clear the cache
-func (c *LRU) Purge() {
+func (c *LRU) Purge() { log.DebugLog()
 	for k, v := range c.items {
 		if c.onEvict != nil {
 			c.onEvict(k, v.Value.(*entry).value)
@@ -48,7 +48,7 @@ func (c *LRU) Purge() {
 }
 
 // Add adds a value to the cache.  Returns true if an eviction occurred.
-func (c *LRU) Add(key, value interface{}) bool {
+func (c *LRU) Add(key, value interface{}) bool { log.DebugLog()
 	// Check for existing item
 	if ent, ok := c.items[key]; ok {
 		c.evictList.MoveToFront(ent)
@@ -70,7 +70,7 @@ func (c *LRU) Add(key, value interface{}) bool {
 }
 
 // Get looks up a key's value from the cache.
-func (c *LRU) Get(key interface{}) (value interface{}, ok bool) {
+func (c *LRU) Get(key interface{}) (value interface{}, ok bool) { log.DebugLog()
 	if ent, ok := c.items[key]; ok {
 		c.evictList.MoveToFront(ent)
 		return ent.Value.(*entry).value, true
@@ -80,14 +80,14 @@ func (c *LRU) Get(key interface{}) (value interface{}, ok bool) {
 
 // Check if a key is in the cache, without updating the recent-ness
 // or deleting it for being stale.
-func (c *LRU) Contains(key interface{}) (ok bool) {
+func (c *LRU) Contains(key interface{}) (ok bool) { log.DebugLog()
 	_, ok = c.items[key]
 	return ok
 }
 
 // Returns the key value (or undefined if not found) without updating
 // the "recently used"-ness of the key.
-func (c *LRU) Peek(key interface{}) (value interface{}, ok bool) {
+func (c *LRU) Peek(key interface{}) (value interface{}, ok bool) { log.DebugLog()
 	if ent, ok := c.items[key]; ok {
 		return ent.Value.(*entry).value, true
 	}
@@ -96,7 +96,7 @@ func (c *LRU) Peek(key interface{}) (value interface{}, ok bool) {
 
 // Remove removes the provided key from the cache, returning if the
 // key was contained.
-func (c *LRU) Remove(key interface{}) bool {
+func (c *LRU) Remove(key interface{}) bool { log.DebugLog()
 	if ent, ok := c.items[key]; ok {
 		c.removeElement(ent)
 		return true
@@ -105,7 +105,7 @@ func (c *LRU) Remove(key interface{}) bool {
 }
 
 // RemoveOldest removes the oldest item from the cache.
-func (c *LRU) RemoveOldest() (interface{}, interface{}, bool) {
+func (c *LRU) RemoveOldest() (interface{}, interface{}, bool) { log.DebugLog()
 	ent := c.evictList.Back()
 	if ent != nil {
 		c.removeElement(ent)
@@ -116,7 +116,7 @@ func (c *LRU) RemoveOldest() (interface{}, interface{}, bool) {
 }
 
 // GetOldest returns the oldest entry
-func (c *LRU) GetOldest() (interface{}, interface{}, bool) {
+func (c *LRU) GetOldest() (interface{}, interface{}, bool) { log.DebugLog()
 	ent := c.evictList.Back()
 	if ent != nil {
 		kv := ent.Value.(*entry)
@@ -126,7 +126,7 @@ func (c *LRU) GetOldest() (interface{}, interface{}, bool) {
 }
 
 // Keys returns a slice of the keys in the cache, from oldest to newest.
-func (c *LRU) Keys() []interface{} {
+func (c *LRU) Keys() []interface{} { log.DebugLog()
 	keys := make([]interface{}, len(c.items))
 	i := 0
 	for ent := c.evictList.Back(); ent != nil; ent = ent.Prev() {
@@ -137,12 +137,12 @@ func (c *LRU) Keys() []interface{} {
 }
 
 // Len returns the number of items in the cache.
-func (c *LRU) Len() int {
+func (c *LRU) Len() int { log.DebugLog()
 	return c.evictList.Len()
 }
 
 // removeOldest removes the oldest item from the cache.
-func (c *LRU) removeOldest() {
+func (c *LRU) removeOldest() { log.DebugLog()
 	ent := c.evictList.Back()
 	if ent != nil {
 		c.removeElement(ent)
@@ -150,7 +150,7 @@ func (c *LRU) removeOldest() {
 }
 
 // removeElement is used to remove a given list element from the cache
-func (c *LRU) removeElement(e *list.Element) {
+func (c *LRU) removeElement(e *list.Element) { log.DebugLog()
 	c.evictList.Remove(e)
 	kv := e.Value.(*entry)
 	delete(c.items, kv.key)

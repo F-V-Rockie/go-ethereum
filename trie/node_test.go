@@ -18,7 +18,7 @@ package trie
 
 import "testing"
 
-func TestCanUnload(t *testing.T) {
+func TestCanUnload(t *testing.T) { log.DebugLog()
 	tests := []struct {
 		flag                 nodeFlag
 		cachegen, cachelimit uint16

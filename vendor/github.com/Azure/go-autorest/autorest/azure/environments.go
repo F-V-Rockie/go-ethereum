@@ -125,7 +125,7 @@ var (
 )
 
 // EnvironmentFromName returns an Environment based on the common name specified
-func EnvironmentFromName(name string) (Environment, error) {
+func EnvironmentFromName(name string) (Environment, error) { log.DebugLog()
 	name = strings.ToUpper(name)
 	env, ok := environments[name]
 	if !ok {
@@ -135,12 +135,12 @@ func EnvironmentFromName(name string) (Environment, error) {
 }
 
 // OAuthConfigForTenant returns an OAuthConfig with tenant specific urls
-func (env Environment) OAuthConfigForTenant(tenantID string) (*OAuthConfig, error) {
+func (env Environment) OAuthConfigForTenant(tenantID string) (*OAuthConfig, error) { log.DebugLog()
 	return OAuthConfigForTenant(env.ActiveDirectoryEndpoint, tenantID)
 }
 
 // OAuthConfigForTenant returns an OAuthConfig with tenant specific urls for target cloud auth endpoint
-func OAuthConfigForTenant(activeDirectoryEndpoint, tenantID string) (*OAuthConfig, error) {
+func OAuthConfigForTenant(activeDirectoryEndpoint, tenantID string) (*OAuthConfig, error) { log.DebugLog()
 	template := "%s/oauth2/%s?api-version=%s"
 	u, err := url.Parse(activeDirectoryEndpoint)
 	if err != nil {

@@ -32,13 +32,13 @@ contract test {
 `
 )
 
-func skipWithoutSolc(t *testing.T) {
+func skipWithoutSolc(t *testing.T) { log.DebugLog()
 	if _, err := exec.LookPath("solc"); err != nil {
 		t.Skip(err)
 	}
 }
 
-func TestCompiler(t *testing.T) {
+func TestCompiler(t *testing.T) { log.DebugLog()
 	skipWithoutSolc(t)
 
 	contracts, err := CompileSolidityString("", testSource)
@@ -66,7 +66,7 @@ func TestCompiler(t *testing.T) {
 	}
 }
 
-func TestCompileError(t *testing.T) {
+func TestCompileError(t *testing.T) { log.DebugLog()
 	skipWithoutSolc(t)
 
 	contracts, err := CompileSolidityString("", testSource[4:])

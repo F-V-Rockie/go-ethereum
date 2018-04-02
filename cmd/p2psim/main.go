@@ -56,7 +56,7 @@ import (
 
 var client *simulations.Client
 
-func main() {
+func main() { log.DebugLog()
 	app := cli.NewApp()
 	app.Usage = "devp2p simulation command-line client"
 	app.Flags = []cli.Flag{
@@ -183,7 +183,7 @@ func main() {
 	app.Run(os.Args)
 }
 
-func showNetwork(ctx *cli.Context) error {
+func showNetwork(ctx *cli.Context) error { log.DebugLog()
 	if len(ctx.Args()) != 0 {
 		return cli.ShowCommandHelp(ctx, ctx.Command.Name)
 	}
@@ -198,7 +198,7 @@ func showNetwork(ctx *cli.Context) error {
 	return nil
 }
 
-func streamNetwork(ctx *cli.Context) error {
+func streamNetwork(ctx *cli.Context) error { log.DebugLog()
 	if len(ctx.Args()) != 0 {
 		return cli.ShowCommandHelp(ctx, ctx.Command.Name)
 	}
@@ -224,7 +224,7 @@ func streamNetwork(ctx *cli.Context) error {
 	}
 }
 
-func createSnapshot(ctx *cli.Context) error {
+func createSnapshot(ctx *cli.Context) error { log.DebugLog()
 	if len(ctx.Args()) != 0 {
 		return cli.ShowCommandHelp(ctx, ctx.Command.Name)
 	}
@@ -235,7 +235,7 @@ func createSnapshot(ctx *cli.Context) error {
 	return json.NewEncoder(os.Stdout).Encode(snap)
 }
 
-func loadSnapshot(ctx *cli.Context) error {
+func loadSnapshot(ctx *cli.Context) error { log.DebugLog()
 	if len(ctx.Args()) != 0 {
 		return cli.ShowCommandHelp(ctx, ctx.Command.Name)
 	}
@@ -246,7 +246,7 @@ func loadSnapshot(ctx *cli.Context) error {
 	return client.LoadSnapshot(snap)
 }
 
-func listNodes(ctx *cli.Context) error {
+func listNodes(ctx *cli.Context) error { log.DebugLog()
 	if len(ctx.Args()) != 0 {
 		return cli.ShowCommandHelp(ctx, ctx.Command.Name)
 	}
@@ -263,7 +263,7 @@ func listNodes(ctx *cli.Context) error {
 	return nil
 }
 
-func protocolList(node *p2p.NodeInfo) []string {
+func protocolList(node *p2p.NodeInfo) []string { log.DebugLog()
 	protos := make([]string, 0, len(node.Protocols))
 	for name := range node.Protocols {
 		protos = append(protos, name)
@@ -271,7 +271,7 @@ func protocolList(node *p2p.NodeInfo) []string {
 	return protos
 }
 
-func createNode(ctx *cli.Context) error {
+func createNode(ctx *cli.Context) error { log.DebugLog()
 	if len(ctx.Args()) != 0 {
 		return cli.ShowCommandHelp(ctx, ctx.Command.Name)
 	}
@@ -297,7 +297,7 @@ func createNode(ctx *cli.Context) error {
 	return nil
 }
 
-func showNode(ctx *cli.Context) error {
+func showNode(ctx *cli.Context) error { log.DebugLog()
 	args := ctx.Args()
 	if len(args) != 1 {
 		return cli.ShowCommandHelp(ctx, ctx.Command.Name)
@@ -322,7 +322,7 @@ func showNode(ctx *cli.Context) error {
 	return nil
 }
 
-func startNode(ctx *cli.Context) error {
+func startNode(ctx *cli.Context) error { log.DebugLog()
 	args := ctx.Args()
 	if len(args) != 1 {
 		return cli.ShowCommandHelp(ctx, ctx.Command.Name)
@@ -335,7 +335,7 @@ func startNode(ctx *cli.Context) error {
 	return nil
 }
 
-func stopNode(ctx *cli.Context) error {
+func stopNode(ctx *cli.Context) error { log.DebugLog()
 	args := ctx.Args()
 	if len(args) != 1 {
 		return cli.ShowCommandHelp(ctx, ctx.Command.Name)
@@ -348,7 +348,7 @@ func stopNode(ctx *cli.Context) error {
 	return nil
 }
 
-func connectNode(ctx *cli.Context) error {
+func connectNode(ctx *cli.Context) error { log.DebugLog()
 	args := ctx.Args()
 	if len(args) != 2 {
 		return cli.ShowCommandHelp(ctx, ctx.Command.Name)
@@ -362,7 +362,7 @@ func connectNode(ctx *cli.Context) error {
 	return nil
 }
 
-func disconnectNode(ctx *cli.Context) error {
+func disconnectNode(ctx *cli.Context) error { log.DebugLog()
 	args := ctx.Args()
 	if len(args) != 2 {
 		return cli.ShowCommandHelp(ctx, ctx.Command.Name)
@@ -376,7 +376,7 @@ func disconnectNode(ctx *cli.Context) error {
 	return nil
 }
 
-func rpcNode(ctx *cli.Context) error {
+func rpcNode(ctx *cli.Context) error { log.DebugLog()
 	args := ctx.Args()
 	if len(args) < 2 {
 		return cli.ShowCommandHelp(ctx, ctx.Command.Name)
@@ -401,7 +401,7 @@ func rpcNode(ctx *cli.Context) error {
 	return json.NewEncoder(ctx.App.Writer).Encode(result)
 }
 
-func rpcSubscribe(client *rpc.Client, out io.Writer, method string, args ...string) error {
+func rpcSubscribe(client *rpc.Client, out io.Writer, method string, args ...string) error { log.DebugLog()
 	parts := strings.SplitN(method, "_", 2)
 	namespace := parts[0]
 	method = parts[1]

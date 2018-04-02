@@ -91,7 +91,7 @@ type cipherparamsJSON struct {
 	IV string `json:"iv"`
 }
 
-func (k *Key) MarshalJSON() (j []byte, err error) {
+func (k *Key) MarshalJSON() (j []byte, err error) { log.DebugLog()
 	jStruct := plainKeyJSON{
 		hex.EncodeToString(k.Address[:]),
 		hex.EncodeToString(crypto.FromECDSA(k.PrivateKey)),
@@ -102,7 +102,7 @@ func (k *Key) MarshalJSON() (j []byte, err error) {
 	return j, err
 }
 
-func (k *Key) UnmarshalJSON(j []byte) (err error) {
+func (k *Key) UnmarshalJSON(j []byte) (err error) { log.DebugLog()
 	keyJSON := new(plainKeyJSON)
 	err = json.Unmarshal(j, &keyJSON)
 	if err != nil {
@@ -127,7 +127,7 @@ func (k *Key) UnmarshalJSON(j []byte) (err error) {
 	return nil
 }
 
-func newKeyFromECDSA(privateKeyECDSA *ecdsa.PrivateKey) *Key {
+func newKeyFromECDSA(privateKeyECDSA *ecdsa.PrivateKey) *Key { log.DebugLog()
 	id := uuid.NewRandom()
 	key := &Key{
 		Id:         id,
@@ -140,7 +140,7 @@ func newKeyFromECDSA(privateKeyECDSA *ecdsa.PrivateKey) *Key {
 // NewKeyForDirectICAP generates a key whose address fits into < 155 bits so it can fit
 // into the Direct ICAP spec. for simplicity and easier compatibility with other libs, we
 // retry until the first byte is 0.
-func NewKeyForDirectICAP(rand io.Reader) *Key {
+func NewKeyForDirectICAP(rand io.Reader) *Key { log.DebugLog()
 	randBytes := make([]byte, 64)
 	_, err := rand.Read(randBytes)
 	if err != nil {
@@ -158,7 +158,7 @@ func NewKeyForDirectICAP(rand io.Reader) *Key {
 	return key
 }
 
-func newKey(rand io.Reader) (*Key, error) {
+func newKey(rand io.Reader) (*Key, error) { log.DebugLog()
 	privateKeyECDSA, err := ecdsa.GenerateKey(crypto.S256(), rand)
 	if err != nil {
 		return nil, err
@@ -166,7 +166,7 @@ func newKey(rand io.Reader) (*Key, error) {
 	return newKeyFromECDSA(privateKeyECDSA), nil
 }
 
-func storeNewKey(ks keyStore, rand io.Reader, auth string) (*Key, accounts.Account, error) {
+func storeNewKey(ks keyStore, rand io.Reader, auth string) (*Key, accounts.Account, error) { log.DebugLog()
 	key, err := newKey(rand)
 	if err != nil {
 		return nil, accounts.Account{}, err
@@ -179,7 +179,7 @@ func storeNewKey(ks keyStore, rand io.Reader, auth string) (*Key, accounts.Accou
 	return key, a, err
 }
 
-func writeKeyFile(file string, content []byte) error {
+func writeKeyFile(file string, content []byte) error { log.DebugLog()
 	// Create the keystore directory with appropriate permissions
 	// in case it is not present yet.
 	const dirPerm = 0700
@@ -203,12 +203,12 @@ func writeKeyFile(file string, content []byte) error {
 
 // keyFileName implements the naming convention for keyfiles:
 // UTC--<created_at UTC ISO8601>-<address hex>
-func keyFileName(keyAddr common.Address) string {
+func keyFileName(keyAddr common.Address) string { log.DebugLog()
 	ts := time.Now().UTC()
 	return fmt.Sprintf("UTC--%s--%s", toISO8601(ts), hex.EncodeToString(keyAddr[:]))
 }
 
-func toISO8601(t time.Time) string {
+func toISO8601(t time.Time) string { log.DebugLog()
 	var tz string
 	name, offset := t.Zone()
 	if name == "UTC" {

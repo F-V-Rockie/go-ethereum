@@ -26,7 +26,7 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 )
 
-func TestNetwork_Lookup(t *testing.T) {
+func TestNetwork_Lookup(t *testing.T) { log.DebugLog()
 	key, _ := crypto.GenerateKey()
 	network, err := newNetwork(lookupTestnet, key.PublicKey, "", nil)
 	if err != nil {
@@ -265,11 +265,11 @@ type preminedTestnet struct {
 	net       *Network
 }
 
-func (tn *preminedTestnet) sendFindnode(to *Node, target NodeID) {
+func (tn *preminedTestnet) sendFindnode(to *Node, target NodeID) { log.DebugLog()
 	panic("sendFindnode called")
 }
 
-func (tn *preminedTestnet) sendFindnodeHash(to *Node, target common.Hash) {
+func (tn *preminedTestnet) sendFindnodeHash(to *Node, target common.Hash) { log.DebugLog()
 	// current log distance is encoded in port number
 	// fmt.Println("findnode query at dist", toaddr.Port)
 	if to.UDP <= lowPort {
@@ -283,12 +283,12 @@ func (tn *preminedTestnet) sendFindnodeHash(to *Node, target common.Hash) {
 	injectResponse(tn.net, to, neighborsPacket, &neighbors{Nodes: result})
 }
 
-func (tn *preminedTestnet) sendPing(to *Node, addr *net.UDPAddr, topics []Topic) []byte {
+func (tn *preminedTestnet) sendPing(to *Node, addr *net.UDPAddr, topics []Topic) []byte { log.DebugLog()
 	injectResponse(tn.net, to, pongPacket, &pong{ReplyTok: []byte{1}})
 	return []byte{1}
 }
 
-func (tn *preminedTestnet) send(to *Node, ptype nodeEvent, data interface{}) (hash []byte) {
+func (tn *preminedTestnet) send(to *Node, ptype nodeEvent, data interface{}) (hash []byte) { log.DebugLog()
 	switch ptype {
 	case pingPacket:
 		injectResponse(tn.net, to, pongPacket, &pong{ReplyTok: []byte{1}})
@@ -312,31 +312,31 @@ func (tn *preminedTestnet) send(to *Node, ptype nodeEvent, data interface{}) (ha
 	return []byte{2}
 }
 
-func (tn *preminedTestnet) sendNeighbours(to *Node, nodes []*Node) {
+func (tn *preminedTestnet) sendNeighbours(to *Node, nodes []*Node) { log.DebugLog()
 	panic("sendNeighbours called")
 }
 
-func (tn *preminedTestnet) sendTopicQuery(to *Node, topic Topic) {
+func (tn *preminedTestnet) sendTopicQuery(to *Node, topic Topic) { log.DebugLog()
 	panic("sendTopicQuery called")
 }
 
-func (tn *preminedTestnet) sendTopicNodes(to *Node, queryHash common.Hash, nodes []*Node) {
+func (tn *preminedTestnet) sendTopicNodes(to *Node, queryHash common.Hash, nodes []*Node) { log.DebugLog()
 	panic("sendTopicNodes called")
 }
 
-func (tn *preminedTestnet) sendTopicRegister(to *Node, topics []Topic, idx int, pong []byte) {
+func (tn *preminedTestnet) sendTopicRegister(to *Node, topics []Topic, idx int, pong []byte) { log.DebugLog()
 	panic("sendTopicRegister called")
 }
 
-func (*preminedTestnet) Close() {}
+func (*preminedTestnet) Close() { log.DebugLog()}
 
-func (*preminedTestnet) localAddr() *net.UDPAddr {
+func (*preminedTestnet) localAddr() *net.UDPAddr { log.DebugLog()
 	return &net.UDPAddr{IP: net.ParseIP("10.0.1.1"), Port: 40000}
 }
 
 // mine generates a testnet struct literal with nodes at
 // various distances to the given target.
-func (n *preminedTestnet) mine(target NodeID) {
+func (n *preminedTestnet) mine(target NodeID) { log.DebugLog()
 	n.target = target
 	n.targetSha = crypto.Keccak256Hash(n.target[:])
 	found := 0
@@ -369,6 +369,6 @@ func (n *preminedTestnet) mine(target NodeID) {
 	fmt.Println("}")
 }
 
-func injectResponse(net *Network, from *Node, ev nodeEvent, packet interface{}) {
+func injectResponse(net *Network, from *Node, ev nodeEvent, packet interface{}) { log.DebugLog()
 	go net.reqReadPacket(ingressPacket{remoteID: from.ID, remoteAddr: from.addr(), ev: ev, data: packet})
 }

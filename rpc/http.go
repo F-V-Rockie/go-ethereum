@@ -49,26 +49,26 @@ type httpConn struct {
 }
 
 // httpConn is treated specially by Client.
-func (hc *httpConn) LocalAddr() net.Addr              { return nullAddr }
-func (hc *httpConn) RemoteAddr() net.Addr             { return nullAddr }
-func (hc *httpConn) SetReadDeadline(time.Time) error  { return nil }
-func (hc *httpConn) SetWriteDeadline(time.Time) error { return nil }
-func (hc *httpConn) SetDeadline(time.Time) error      { return nil }
-func (hc *httpConn) Write([]byte) (int, error)        { panic("Write called") }
+func (hc *httpConn) LocalAddr() net.Addr              { log.DebugLog() return nullAddr }
+func (hc *httpConn) RemoteAddr() net.Addr             { log.DebugLog() return nullAddr }
+func (hc *httpConn) SetReadDeadline(time.Time) error  { log.DebugLog() return nil }
+func (hc *httpConn) SetWriteDeadline(time.Time) error { log.DebugLog() return nil }
+func (hc *httpConn) SetDeadline(time.Time) error      { log.DebugLog() return nil }
+func (hc *httpConn) Write([]byte) (int, error)        { log.DebugLog() panic("Write called") }
 
-func (hc *httpConn) Read(b []byte) (int, error) {
+func (hc *httpConn) Read(b []byte) (int, error) { log.DebugLog()
 	<-hc.closed
 	return 0, io.EOF
 }
 
-func (hc *httpConn) Close() error {
+func (hc *httpConn) Close() error { log.DebugLog()
 	hc.closeOnce.Do(func() { close(hc.closed) })
 	return nil
 }
 
 // DialHTTPWithClient creates a new RPC client that connects to an RPC server over HTTP
 // using the provided HTTP Client.
-func DialHTTPWithClient(endpoint string, client *http.Client) (*Client, error) {
+func DialHTTPWithClient(endpoint string, client *http.Client) (*Client, error) { log.DebugLog()
 	req, err := http.NewRequest(http.MethodPost, endpoint, nil)
 	if err != nil {
 		return nil, err
@@ -83,11 +83,11 @@ func DialHTTPWithClient(endpoint string, client *http.Client) (*Client, error) {
 }
 
 // DialHTTP creates a new RPC client that connects to an RPC server over HTTP.
-func DialHTTP(endpoint string) (*Client, error) {
+func DialHTTP(endpoint string) (*Client, error) { log.DebugLog()
 	return DialHTTPWithClient(endpoint, new(http.Client))
 }
 
-func (c *Client) sendHTTP(ctx context.Context, op *requestOp, msg interface{}) error {
+func (c *Client) sendHTTP(ctx context.Context, op *requestOp, msg interface{}) error { log.DebugLog()
 	hc := c.writeConn.(*httpConn)
 	respBody, err := hc.doRequest(ctx, msg)
 	if err != nil {
@@ -102,7 +102,7 @@ func (c *Client) sendHTTP(ctx context.Context, op *requestOp, msg interface{}) e
 	return nil
 }
 
-func (c *Client) sendBatchHTTP(ctx context.Context, op *requestOp, msgs []*jsonrpcMessage) error {
+func (c *Client) sendBatchHTTP(ctx context.Context, op *requestOp, msgs []*jsonrpcMessage) error { log.DebugLog()
 	hc := c.writeConn.(*httpConn)
 	respBody, err := hc.doRequest(ctx, msgs)
 	if err != nil {
@@ -119,7 +119,7 @@ func (c *Client) sendBatchHTTP(ctx context.Context, op *requestOp, msgs []*jsonr
 	return nil
 }
 
-func (hc *httpConn) doRequest(ctx context.Context, msg interface{}) (io.ReadCloser, error) {
+func (hc *httpConn) doRequest(ctx context.Context, msg interface{}) (io.ReadCloser, error) { log.DebugLog()
 	body, err := json.Marshal(msg)
 	if err != nil {
 		return nil, err
@@ -142,14 +142,14 @@ type httpReadWriteNopCloser struct {
 }
 
 // Close does nothing and returns always nil
-func (t *httpReadWriteNopCloser) Close() error {
+func (t *httpReadWriteNopCloser) Close() error { log.DebugLog()
 	return nil
 }
 
 // NewHTTPServer creates a new HTTP RPC server around an API provider.
 //
 // Deprecated: Server implements http.Handler
-func NewHTTPServer(cors []string, vhosts []string, srv *Server) *http.Server {
+func NewHTTPServer(cors []string, vhosts []string, srv *Server) *http.Server { log.DebugLog()
 	// Wrap the CORS-handler within a host-handler
 	handler := newCorsHandler(srv, cors)
 	handler = newVHostHandler(vhosts, handler)
@@ -157,7 +157,7 @@ func NewHTTPServer(cors []string, vhosts []string, srv *Server) *http.Server {
 }
 
 // ServeHTTP serves JSON-RPC requests over HTTP.
-func (srv *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (srv *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) { log.DebugLog()
 	// Permit dumb empty requests for remote health-checks (AWS)
 	if r.Method == http.MethodGet && r.ContentLength == 0 && r.URL.RawQuery == "" {
 		return
@@ -179,7 +179,7 @@ func (srv *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 // validateRequest returns a non-zero response code and error message if the
 // request is invalid.
-func validateRequest(r *http.Request) (int, error) {
+func validateRequest(r *http.Request) (int, error) { log.DebugLog()
 	if r.Method == http.MethodPut || r.Method == http.MethodDelete {
 		return http.StatusMethodNotAllowed, errors.New("method not allowed")
 	}
@@ -195,7 +195,7 @@ func validateRequest(r *http.Request) (int, error) {
 	return 0, nil
 }
 
-func newCorsHandler(srv *Server, allowedOrigins []string) http.Handler {
+func newCorsHandler(srv *Server, allowedOrigins []string) http.Handler { log.DebugLog()
 	// disable CORS support if user has not specified a custom CORS configuration
 	if len(allowedOrigins) == 0 {
 		return srv
@@ -219,7 +219,7 @@ type virtualHostHandler struct {
 }
 
 // ServeHTTP serves JSON-RPC requests over HTTP, implements http.Handler
-func (h *virtualHostHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (h *virtualHostHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) { log.DebugLog()
 	// if r.Host is not set, we can continue serving since a browser would set the Host header
 	if r.Host == "" {
 		h.next.ServeHTTP(w, r)
@@ -248,7 +248,7 @@ func (h *virtualHostHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	http.Error(w, "invalid host specified", http.StatusForbidden)
 }
 
-func newVHostHandler(vhosts []string, next http.Handler) http.Handler {
+func newVHostHandler(vhosts []string, next http.Handler) http.Handler { log.DebugLog()
 	vhostMap := make(map[string]struct{})
 	for _, allowedHost := range vhosts {
 		vhostMap[strings.ToLower(allowedHost)] = struct{}{}

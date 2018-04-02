@@ -39,7 +39,7 @@ import (
 // sideeffects used during testing.
 var testTxPoolConfig TxPoolConfig
 
-func init() {
+func init() { log.DebugLog()
 	testTxPoolConfig = DefaultTxPoolConfig
 	testTxPoolConfig.Journal = ""
 }
@@ -50,34 +50,34 @@ type testBlockChain struct {
 	chainHeadFeed *event.Feed
 }
 
-func (bc *testBlockChain) CurrentBlock() *types.Block {
+func (bc *testBlockChain) CurrentBlock() *types.Block { log.DebugLog()
 	return types.NewBlock(&types.Header{
 		GasLimit: bc.gasLimit,
 	}, nil, nil, nil)
 }
 
-func (bc *testBlockChain) GetBlock(hash common.Hash, number uint64) *types.Block {
+func (bc *testBlockChain) GetBlock(hash common.Hash, number uint64) *types.Block { log.DebugLog()
 	return bc.CurrentBlock()
 }
 
-func (bc *testBlockChain) StateAt(common.Hash) (*state.StateDB, error) {
+func (bc *testBlockChain) StateAt(common.Hash) (*state.StateDB, error) { log.DebugLog()
 	return bc.statedb, nil
 }
 
-func (bc *testBlockChain) SubscribeChainHeadEvent(ch chan<- ChainHeadEvent) event.Subscription {
+func (bc *testBlockChain) SubscribeChainHeadEvent(ch chan<- ChainHeadEvent) event.Subscription { log.DebugLog()
 	return bc.chainHeadFeed.Subscribe(ch)
 }
 
-func transaction(nonce uint64, gaslimit uint64, key *ecdsa.PrivateKey) *types.Transaction {
+func transaction(nonce uint64, gaslimit uint64, key *ecdsa.PrivateKey) *types.Transaction { log.DebugLog()
 	return pricedTransaction(nonce, gaslimit, big.NewInt(1), key)
 }
 
-func pricedTransaction(nonce uint64, gaslimit uint64, gasprice *big.Int, key *ecdsa.PrivateKey) *types.Transaction {
+func pricedTransaction(nonce uint64, gaslimit uint64, gasprice *big.Int, key *ecdsa.PrivateKey) *types.Transaction { log.DebugLog()
 	tx, _ := types.SignTx(types.NewTransaction(nonce, common.Address{}, big.NewInt(100), gaslimit, gasprice, nil), types.HomesteadSigner{}, key)
 	return tx
 }
 
-func setupTxPool() (*TxPool, *ecdsa.PrivateKey) {
+func setupTxPool() (*TxPool, *ecdsa.PrivateKey) { log.DebugLog()
 	diskdb, _ := ethdb.NewMemDatabase()
 	statedb, _ := state.New(common.Hash{}, state.NewDatabase(diskdb))
 	blockchain := &testBlockChain{statedb, 1000000, new(event.Feed)}
@@ -89,7 +89,7 @@ func setupTxPool() (*TxPool, *ecdsa.PrivateKey) {
 }
 
 // validateTxPoolInternals checks various consistency invariants within the pool.
-func validateTxPoolInternals(pool *TxPool) error {
+func validateTxPoolInternals(pool *TxPool) error { log.DebugLog()
 	pool.mu.RLock()
 	defer pool.mu.RUnlock()
 
@@ -119,7 +119,7 @@ func validateTxPoolInternals(pool *TxPool) error {
 
 // validateEvents checks that the correct number of transaction addition events
 // were fired on the pool's event feed.
-func validateEvents(events chan TxPreEvent, count int) error {
+func validateEvents(events chan TxPreEvent, count int) error { log.DebugLog()
 	for i := 0; i < count; i++ {
 		select {
 		case <-events:
@@ -139,7 +139,7 @@ func validateEvents(events chan TxPreEvent, count int) error {
 	return nil
 }
 
-func deriveSender(tx *types.Transaction) (common.Address, error) {
+func deriveSender(tx *types.Transaction) (common.Address, error) { log.DebugLog()
 	return types.Sender(types.HomesteadSigner{}, tx)
 }
 
@@ -152,7 +152,7 @@ type testChain struct {
 // testChain.State() is used multiple times to reset the pending state.
 // when simulate is true it will create a state that indicates
 // that tx0 and tx1 are included in the chain.
-func (c *testChain) State() (*state.StateDB, error) {
+func (c *testChain) State() (*state.StateDB, error) { log.DebugLog()
 	// delay "state change" by one. The tx pool fetches the
 	// state multiple times and by delaying it a bit we simulate
 	// a state change between those fetches.
@@ -171,7 +171,7 @@ func (c *testChain) State() (*state.StateDB, error) {
 // This test simulates a scenario where a new block is imported during a
 // state reset and tests whether the pending state is in sync with the
 // block head event that initiated the resetState().
-func TestStateChangeDuringTransactionPoolReset(t *testing.T) {
+func TestStateChangeDuringTransactionPoolReset(t *testing.T) { log.DebugLog()
 	t.Parallel()
 
 	var (
@@ -224,7 +224,7 @@ func TestStateChangeDuringTransactionPoolReset(t *testing.T) {
 	}
 }
 
-func TestInvalidTransactions(t *testing.T) {
+func TestInvalidTransactions(t *testing.T) { log.DebugLog()
 	t.Parallel()
 
 	pool, key := setupTxPool()
@@ -261,7 +261,7 @@ func TestInvalidTransactions(t *testing.T) {
 	}
 }
 
-func TestTransactionQueue(t *testing.T) {
+func TestTransactionQueue(t *testing.T) { log.DebugLog()
 	t.Parallel()
 
 	pool, key := setupTxPool()
@@ -315,7 +315,7 @@ func TestTransactionQueue(t *testing.T) {
 	}
 }
 
-func TestTransactionNegativeValue(t *testing.T) {
+func TestTransactionNegativeValue(t *testing.T) { log.DebugLog()
 	t.Parallel()
 
 	pool, key := setupTxPool()
@@ -329,7 +329,7 @@ func TestTransactionNegativeValue(t *testing.T) {
 	}
 }
 
-func TestTransactionChainFork(t *testing.T) {
+func TestTransactionChainFork(t *testing.T) { log.DebugLog()
 	t.Parallel()
 
 	pool, key := setupTxPool()
@@ -359,7 +359,7 @@ func TestTransactionChainFork(t *testing.T) {
 	}
 }
 
-func TestTransactionDoubleNonce(t *testing.T) {
+func TestTransactionDoubleNonce(t *testing.T) { log.DebugLog()
 	t.Parallel()
 
 	pool, key := setupTxPool()
@@ -410,7 +410,7 @@ func TestTransactionDoubleNonce(t *testing.T) {
 	}
 }
 
-func TestTransactionMissingNonce(t *testing.T) {
+func TestTransactionMissingNonce(t *testing.T) { log.DebugLog()
 	t.Parallel()
 
 	pool, key := setupTxPool()
@@ -433,7 +433,7 @@ func TestTransactionMissingNonce(t *testing.T) {
 	}
 }
 
-func TestTransactionNonceRecovery(t *testing.T) {
+func TestTransactionNonceRecovery(t *testing.T) { log.DebugLog()
 	t.Parallel()
 
 	const n = 10
@@ -459,7 +459,7 @@ func TestTransactionNonceRecovery(t *testing.T) {
 
 // Tests that if an account runs out of funds, any pending and queued transactions
 // are dropped.
-func TestTransactionDropping(t *testing.T) {
+func TestTransactionDropping(t *testing.T) { log.DebugLog()
 	t.Parallel()
 
 	// Create a test account and fund it
@@ -554,7 +554,7 @@ func TestTransactionDropping(t *testing.T) {
 // Tests that if a transaction is dropped from the current pending pool (e.g. out
 // of fund), all consecutive (still valid, but not executable) transactions are
 // postponed back into the future queue to prevent broadcasting them.
-func TestTransactionPostponing(t *testing.T) {
+func TestTransactionPostponing(t *testing.T) { log.DebugLog()
 	t.Parallel()
 
 	// Create the pool to test the postponing with
@@ -669,7 +669,7 @@ func TestTransactionPostponing(t *testing.T) {
 // Tests that if the transaction pool has both executable and non-executable
 // transactions from an origin account, filling the nonce gap moves all queued
 // ones into the pending pool.
-func TestTransactionGapFilling(t *testing.T) {
+func TestTransactionGapFilling(t *testing.T) { log.DebugLog()
 	t.Parallel()
 
 	// Create a test account and fund it
@@ -725,7 +725,7 @@ func TestTransactionGapFilling(t *testing.T) {
 
 // Tests that if the transaction count belonging to a single account goes above
 // some threshold, the higher transactions are dropped to prevent DOS attacks.
-func TestTransactionQueueAccountLimiting(t *testing.T) {
+func TestTransactionQueueAccountLimiting(t *testing.T) { log.DebugLog()
 	t.Parallel()
 
 	// Create a test account and fund it
@@ -763,14 +763,14 @@ func TestTransactionQueueAccountLimiting(t *testing.T) {
 //
 // This logic should not hold for local transactions, unless the local tracking
 // mechanism is disabled.
-func TestTransactionQueueGlobalLimiting(t *testing.T) {
+func TestTransactionQueueGlobalLimiting(t *testing.T) { log.DebugLog()
 	testTransactionQueueGlobalLimiting(t, false)
 }
-func TestTransactionQueueGlobalLimitingNoLocals(t *testing.T) {
+func TestTransactionQueueGlobalLimitingNoLocals(t *testing.T) { log.DebugLog()
 	testTransactionQueueGlobalLimiting(t, true)
 }
 
-func testTransactionQueueGlobalLimiting(t *testing.T, nolocals bool) {
+func testTransactionQueueGlobalLimiting(t *testing.T, nolocals bool) { log.DebugLog()
 	t.Parallel()
 
 	// Create the pool to test the limit enforcement with
@@ -854,10 +854,10 @@ func testTransactionQueueGlobalLimiting(t *testing.T, nolocals bool) {
 //
 // This logic should not hold for local transactions, unless the local tracking
 // mechanism is disabled.
-func TestTransactionQueueTimeLimiting(t *testing.T)         { testTransactionQueueTimeLimiting(t, false) }
-func TestTransactionQueueTimeLimitingNoLocals(t *testing.T) { testTransactionQueueTimeLimiting(t, true) }
+func TestTransactionQueueTimeLimiting(t *testing.T)         { log.DebugLog() testTransactionQueueTimeLimiting(t, false) }
+func TestTransactionQueueTimeLimitingNoLocals(t *testing.T) { log.DebugLog() testTransactionQueueTimeLimiting(t, true) }
 
-func testTransactionQueueTimeLimiting(t *testing.T, nolocals bool) {
+func testTransactionQueueTimeLimiting(t *testing.T, nolocals bool) { log.DebugLog()
 	// Reduce the eviction interval to a testable amount
 	defer func(old time.Duration) { evictionInterval = old }(evictionInterval)
 	evictionInterval = time.Second
@@ -922,7 +922,7 @@ func testTransactionQueueTimeLimiting(t *testing.T, nolocals bool) {
 // Tests that even if the transaction count belonging to a single account goes
 // above some threshold, as long as the transactions are executable, they are
 // accepted.
-func TestTransactionPendingLimiting(t *testing.T) {
+func TestTransactionPendingLimiting(t *testing.T) { log.DebugLog()
 	t.Parallel()
 
 	// Create a test account and fund it
@@ -962,10 +962,10 @@ func TestTransactionPendingLimiting(t *testing.T) {
 
 // Tests that the transaction limits are enforced the same way irrelevant whether
 // the transactions are added one by one or in batches.
-func TestTransactionQueueLimitingEquivalency(t *testing.T)   { testTransactionLimitingEquivalency(t, 1) }
-func TestTransactionPendingLimitingEquivalency(t *testing.T) { testTransactionLimitingEquivalency(t, 0) }
+func TestTransactionQueueLimitingEquivalency(t *testing.T)   { log.DebugLog() testTransactionLimitingEquivalency(t, 1) }
+func TestTransactionPendingLimitingEquivalency(t *testing.T) { log.DebugLog() testTransactionLimitingEquivalency(t, 0) }
 
-func testTransactionLimitingEquivalency(t *testing.T, origin uint64) {
+func testTransactionLimitingEquivalency(t *testing.T, origin uint64) { log.DebugLog()
 	t.Parallel()
 
 	// Add a batch of transactions to a pool one by one
@@ -1014,7 +1014,7 @@ func testTransactionLimitingEquivalency(t *testing.T, origin uint64) {
 // Tests that if the transaction count belonging to multiple accounts go above
 // some hard threshold, the higher transactions are dropped to prevent DOS
 // attacks.
-func TestTransactionPendingGlobalLimiting(t *testing.T) {
+func TestTransactionPendingGlobalLimiting(t *testing.T) { log.DebugLog()
 	t.Parallel()
 
 	// Create the pool to test the limit enforcement with
@@ -1061,7 +1061,7 @@ func TestTransactionPendingGlobalLimiting(t *testing.T) {
 }
 
 // Tests that if transactions start being capped, transactions are also removed from 'all'
-func TestTransactionCapClearsFromAll(t *testing.T) {
+func TestTransactionCapClearsFromAll(t *testing.T) { log.DebugLog()
 	t.Parallel()
 
 	// Create the pool to test the limit enforcement with
@@ -1096,7 +1096,7 @@ func TestTransactionCapClearsFromAll(t *testing.T) {
 // Tests that if the transaction count belonging to multiple accounts go above
 // some hard threshold, if they are under the minimum guaranteed slot count then
 // the transactions are still kept.
-func TestTransactionPendingMinimumAllowance(t *testing.T) {
+func TestTransactionPendingMinimumAllowance(t *testing.T) { log.DebugLog()
 	t.Parallel()
 
 	// Create the pool to test the limit enforcement with
@@ -1145,7 +1145,7 @@ func TestTransactionPendingMinimumAllowance(t *testing.T) {
 // from the pending pool to the queue.
 //
 // Note, local transactions are never allowed to be dropped.
-func TestTransactionPoolRepricing(t *testing.T) {
+func TestTransactionPoolRepricing(t *testing.T) { log.DebugLog()
 	t.Parallel()
 
 	// Create the pool to test the pricing enforcement with
@@ -1267,7 +1267,7 @@ func TestTransactionPoolRepricing(t *testing.T) {
 
 // Tests that setting the transaction pool gas price to a higher value does not
 // remove local transactions.
-func TestTransactionPoolRepricingKeepsLocals(t *testing.T) {
+func TestTransactionPoolRepricingKeepsLocals(t *testing.T) { log.DebugLog()
 	t.Parallel()
 
 	// Create the pool to test the pricing enforcement with
@@ -1330,7 +1330,7 @@ func TestTransactionPoolRepricingKeepsLocals(t *testing.T) {
 // pending transactions are moved into the queue.
 //
 // Note, local transactions are never allowed to be dropped.
-func TestTransactionPoolUnderpricing(t *testing.T) {
+func TestTransactionPoolUnderpricing(t *testing.T) { log.DebugLog()
 	t.Parallel()
 
 	// Create the pool to test the pricing enforcement with
@@ -1432,7 +1432,7 @@ func TestTransactionPoolUnderpricing(t *testing.T) {
 
 // Tests that the pool rejects replacement transactions that don't meet the minimum
 // price bump required.
-func TestTransactionReplacement(t *testing.T) {
+func TestTransactionReplacement(t *testing.T) { log.DebugLog()
 	t.Parallel()
 
 	// Create the pool to test the pricing enforcement with
@@ -1512,10 +1512,10 @@ func TestTransactionReplacement(t *testing.T) {
 
 // Tests that local transactions are journaled to disk, but remote transactions
 // get discarded between restarts.
-func TestTransactionJournaling(t *testing.T)         { testTransactionJournaling(t, false) }
-func TestTransactionJournalingNoLocals(t *testing.T) { testTransactionJournaling(t, true) }
+func TestTransactionJournaling(t *testing.T)         { log.DebugLog() testTransactionJournaling(t, false) }
+func TestTransactionJournalingNoLocals(t *testing.T) { log.DebugLog() testTransactionJournaling(t, true) }
 
-func testTransactionJournaling(t *testing.T, nolocals bool) {
+func testTransactionJournaling(t *testing.T, nolocals bool) { log.DebugLog()
 	t.Parallel()
 
 	// Create a temporary file for the journal
@@ -1626,7 +1626,7 @@ func testTransactionJournaling(t *testing.T, nolocals bool) {
 
 // TestTransactionStatusCheck tests that the pool can correctly retrieve the
 // pending status of individual transactions.
-func TestTransactionStatusCheck(t *testing.T) {
+func TestTransactionStatusCheck(t *testing.T) { log.DebugLog()
 	t.Parallel()
 
 	// Create the pool to test the status retrievals with
@@ -1683,11 +1683,11 @@ func TestTransactionStatusCheck(t *testing.T) {
 
 // Benchmarks the speed of validating the contents of the pending queue of the
 // transaction pool.
-func BenchmarkPendingDemotion100(b *testing.B)   { benchmarkPendingDemotion(b, 100) }
-func BenchmarkPendingDemotion1000(b *testing.B)  { benchmarkPendingDemotion(b, 1000) }
-func BenchmarkPendingDemotion10000(b *testing.B) { benchmarkPendingDemotion(b, 10000) }
+func BenchmarkPendingDemotion100(b *testing.B)   { log.DebugLog() benchmarkPendingDemotion(b, 100) }
+func BenchmarkPendingDemotion1000(b *testing.B)  { log.DebugLog() benchmarkPendingDemotion(b, 1000) }
+func BenchmarkPendingDemotion10000(b *testing.B) { log.DebugLog() benchmarkPendingDemotion(b, 10000) }
 
-func benchmarkPendingDemotion(b *testing.B, size int) {
+func benchmarkPendingDemotion(b *testing.B, size int) { log.DebugLog()
 	// Add a batch of transactions to a pool one by one
 	pool, key := setupTxPool()
 	defer pool.Stop()
@@ -1708,11 +1708,11 @@ func benchmarkPendingDemotion(b *testing.B, size int) {
 
 // Benchmarks the speed of scheduling the contents of the future queue of the
 // transaction pool.
-func BenchmarkFuturePromotion100(b *testing.B)   { benchmarkFuturePromotion(b, 100) }
-func BenchmarkFuturePromotion1000(b *testing.B)  { benchmarkFuturePromotion(b, 1000) }
-func BenchmarkFuturePromotion10000(b *testing.B) { benchmarkFuturePromotion(b, 10000) }
+func BenchmarkFuturePromotion100(b *testing.B)   { log.DebugLog() benchmarkFuturePromotion(b, 100) }
+func BenchmarkFuturePromotion1000(b *testing.B)  { log.DebugLog() benchmarkFuturePromotion(b, 1000) }
+func BenchmarkFuturePromotion10000(b *testing.B) { log.DebugLog() benchmarkFuturePromotion(b, 10000) }
 
-func benchmarkFuturePromotion(b *testing.B, size int) {
+func benchmarkFuturePromotion(b *testing.B, size int) { log.DebugLog()
 	// Add a batch of transactions to a pool one by one
 	pool, key := setupTxPool()
 	defer pool.Stop()
@@ -1732,7 +1732,7 @@ func benchmarkFuturePromotion(b *testing.B, size int) {
 }
 
 // Benchmarks the speed of iterative transaction insertion.
-func BenchmarkPoolInsert(b *testing.B) {
+func BenchmarkPoolInsert(b *testing.B) { log.DebugLog()
 	// Generate a batch of transactions to enqueue into the pool
 	pool, key := setupTxPool()
 	defer pool.Stop()
@@ -1752,11 +1752,11 @@ func BenchmarkPoolInsert(b *testing.B) {
 }
 
 // Benchmarks the speed of batched transaction insertion.
-func BenchmarkPoolBatchInsert100(b *testing.B)   { benchmarkPoolBatchInsert(b, 100) }
-func BenchmarkPoolBatchInsert1000(b *testing.B)  { benchmarkPoolBatchInsert(b, 1000) }
-func BenchmarkPoolBatchInsert10000(b *testing.B) { benchmarkPoolBatchInsert(b, 10000) }
+func BenchmarkPoolBatchInsert100(b *testing.B)   { log.DebugLog() benchmarkPoolBatchInsert(b, 100) }
+func BenchmarkPoolBatchInsert1000(b *testing.B)  { log.DebugLog() benchmarkPoolBatchInsert(b, 1000) }
+func BenchmarkPoolBatchInsert10000(b *testing.B) { log.DebugLog() benchmarkPoolBatchInsert(b, 10000) }
 
-func benchmarkPoolBatchInsert(b *testing.B, size int) {
+func benchmarkPoolBatchInsert(b *testing.B, size int) { log.DebugLog()
 	// Generate a batch of transactions to enqueue into the pool
 	pool, key := setupTxPool()
 	defer pool.Stop()

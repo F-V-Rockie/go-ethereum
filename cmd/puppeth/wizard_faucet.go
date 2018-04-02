@@ -26,7 +26,7 @@ import (
 
 // deployFaucet queries the user for various input on deploying a faucet, after
 // which it executes it.
-func (w *wizard) deployFaucet() {
+func (w *wizard) deployFaucet() { log.DebugLog()
 	// Select the server to interact with
 	server := w.selectServer()
 	if server == "" {

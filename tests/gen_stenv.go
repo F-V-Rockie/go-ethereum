@@ -13,7 +13,7 @@ import (
 
 var _ = (*stEnvMarshaling)(nil)
 
-func (s stEnv) MarshalJSON() ([]byte, error) {
+func (s stEnv) MarshalJSON() ([]byte, error) { log.DebugLog()
 	type stEnv struct {
 		Coinbase   common.UnprefixedAddress `json:"currentCoinbase"   gencodec:"required"`
 		Difficulty *math.HexOrDecimal256    `json:"currentDifficulty" gencodec:"required"`
@@ -30,7 +30,7 @@ func (s stEnv) MarshalJSON() ([]byte, error) {
 	return json.Marshal(&enc)
 }
 
-func (s *stEnv) UnmarshalJSON(input []byte) error {
+func (s *stEnv) UnmarshalJSON(input []byte) error { log.DebugLog()
 	type stEnv struct {
 		Coinbase   *common.UnprefixedAddress `json:"currentCoinbase"   gencodec:"required"`
 		Difficulty *math.HexOrDecimal256     `json:"currentDifficulty" gencodec:"required"`

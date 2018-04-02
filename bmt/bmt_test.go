@@ -37,7 +37,7 @@ const (
 
 // TestRefHasher tests that the RefHasher computes the expected BMT hash for
 // all data lengths between 0 and 256 bytes
-func TestRefHasher(t *testing.T) {
+func TestRefHasher(t *testing.T) { log.DebugLog()
 	hashFunc := sha3.NewKeccak256
 
 	sha3 := func(data ...[]byte) []byte {
@@ -196,18 +196,18 @@ func TestRefHasher(t *testing.T) {
 	}
 }
 
-func testDataReader(l int) (r io.Reader) {
+func testDataReader(l int) (r io.Reader) { log.DebugLog()
 	return io.LimitReader(crand.Reader, int64(l))
 }
 
-func TestHasherCorrectness(t *testing.T) {
+func TestHasherCorrectness(t *testing.T) { log.DebugLog()
 	err := testHasher(testBaseHasher)
 	if err != nil {
 		t.Fatal(err)
 	}
 }
 
-func testHasher(f func(BaseHasher, []byte, int, int) error) error {
+func testHasher(f func(BaseHasher, []byte, int, int) error) error { log.DebugLog()
 	tdata := testDataReader(4128)
 	data := make([]byte, 4128)
 	tdata.Read(data)
@@ -229,15 +229,15 @@ func testHasher(f func(BaseHasher, []byte, int, int) error) error {
 	return nil
 }
 
-func TestHasherReuseWithoutRelease(t *testing.T) {
+func TestHasherReuseWithoutRelease(t *testing.T) { log.DebugLog()
 	testHasherReuse(1, t)
 }
 
-func TestHasherReuseWithRelease(t *testing.T) {
+func TestHasherReuseWithRelease(t *testing.T) { log.DebugLog()
 	testHasherReuse(maxproccnt, t)
 }
 
-func testHasherReuse(i int, t *testing.T) {
+func testHasherReuse(i int, t *testing.T) { log.DebugLog()
 	hasher := sha3.NewKeccak256
 	pool := NewTreePool(hasher, 128, i)
 	defer pool.Drain(0)
@@ -256,7 +256,7 @@ func testHasherReuse(i int, t *testing.T) {
 	}
 }
 
-func TestHasherConcurrency(t *testing.T) {
+func TestHasherConcurrency(t *testing.T) { log.DebugLog()
 	hasher := sha3.NewKeccak256
 	pool := NewTreePool(hasher, 128, maxproccnt)
 	defer pool.Drain(0)
@@ -296,14 +296,14 @@ func TestHasherConcurrency(t *testing.T) {
 	}
 }
 
-func testBaseHasher(hasher BaseHasher, d []byte, n, count int) error {
+func testBaseHasher(hasher BaseHasher, d []byte, n, count int) error { log.DebugLog()
 	pool := NewTreePool(hasher, count, 1)
 	defer pool.Drain(0)
 	bmt := New(pool)
 	return testHasherCorrectness(bmt, hasher, d, n, count)
 }
 
-func testHasherCorrectness(bmt hash.Hash, hasher BaseHasher, d []byte, n, count int) (err error) {
+func testHasherCorrectness(bmt hash.Hash, hasher BaseHasher, d []byte, n, count int) (err error) { log.DebugLog()
 	data := d[:n]
 	rbmt := NewRefHasher(hasher, count)
 	exp := rbmt.Hash(data)
@@ -327,54 +327,54 @@ func testHasherCorrectness(bmt hash.Hash, hasher BaseHasher, d []byte, n, count 
 	return err
 }
 
-func BenchmarkSHA3_4k(t *testing.B)   { benchmarkSHA3(4096, t) }
-func BenchmarkSHA3_2k(t *testing.B)   { benchmarkSHA3(4096/2, t) }
-func BenchmarkSHA3_1k(t *testing.B)   { benchmarkSHA3(4096/4, t) }
-func BenchmarkSHA3_512b(t *testing.B) { benchmarkSHA3(4096/8, t) }
-func BenchmarkSHA3_256b(t *testing.B) { benchmarkSHA3(4096/16, t) }
-func BenchmarkSHA3_128b(t *testing.B) { benchmarkSHA3(4096/32, t) }
+func BenchmarkSHA3_4k(t *testing.B)   { log.DebugLog() benchmarkSHA3(4096, t) }
+func BenchmarkSHA3_2k(t *testing.B)   { log.DebugLog() benchmarkSHA3(4096/2, t) }
+func BenchmarkSHA3_1k(t *testing.B)   { log.DebugLog() benchmarkSHA3(4096/4, t) }
+func BenchmarkSHA3_512b(t *testing.B) { log.DebugLog() benchmarkSHA3(4096/8, t) }
+func BenchmarkSHA3_256b(t *testing.B) { log.DebugLog() benchmarkSHA3(4096/16, t) }
+func BenchmarkSHA3_128b(t *testing.B) { log.DebugLog() benchmarkSHA3(4096/32, t) }
 
-func BenchmarkBMTBaseline_4k(t *testing.B)   { benchmarkBMTBaseline(4096, t) }
-func BenchmarkBMTBaseline_2k(t *testing.B)   { benchmarkBMTBaseline(4096/2, t) }
-func BenchmarkBMTBaseline_1k(t *testing.B)   { benchmarkBMTBaseline(4096/4, t) }
-func BenchmarkBMTBaseline_512b(t *testing.B) { benchmarkBMTBaseline(4096/8, t) }
-func BenchmarkBMTBaseline_256b(t *testing.B) { benchmarkBMTBaseline(4096/16, t) }
-func BenchmarkBMTBaseline_128b(t *testing.B) { benchmarkBMTBaseline(4096/32, t) }
+func BenchmarkBMTBaseline_4k(t *testing.B)   { log.DebugLog() benchmarkBMTBaseline(4096, t) }
+func BenchmarkBMTBaseline_2k(t *testing.B)   { log.DebugLog() benchmarkBMTBaseline(4096/2, t) }
+func BenchmarkBMTBaseline_1k(t *testing.B)   { log.DebugLog() benchmarkBMTBaseline(4096/4, t) }
+func BenchmarkBMTBaseline_512b(t *testing.B) { log.DebugLog() benchmarkBMTBaseline(4096/8, t) }
+func BenchmarkBMTBaseline_256b(t *testing.B) { log.DebugLog() benchmarkBMTBaseline(4096/16, t) }
+func BenchmarkBMTBaseline_128b(t *testing.B) { log.DebugLog() benchmarkBMTBaseline(4096/32, t) }
 
-func BenchmarkRefHasher_4k(t *testing.B)   { benchmarkRefHasher(4096, t) }
-func BenchmarkRefHasher_2k(t *testing.B)   { benchmarkRefHasher(4096/2, t) }
-func BenchmarkRefHasher_1k(t *testing.B)   { benchmarkRefHasher(4096/4, t) }
-func BenchmarkRefHasher_512b(t *testing.B) { benchmarkRefHasher(4096/8, t) }
-func BenchmarkRefHasher_256b(t *testing.B) { benchmarkRefHasher(4096/16, t) }
-func BenchmarkRefHasher_128b(t *testing.B) { benchmarkRefHasher(4096/32, t) }
+func BenchmarkRefHasher_4k(t *testing.B)   { log.DebugLog() benchmarkRefHasher(4096, t) }
+func BenchmarkRefHasher_2k(t *testing.B)   { log.DebugLog() benchmarkRefHasher(4096/2, t) }
+func BenchmarkRefHasher_1k(t *testing.B)   { log.DebugLog() benchmarkRefHasher(4096/4, t) }
+func BenchmarkRefHasher_512b(t *testing.B) { log.DebugLog() benchmarkRefHasher(4096/8, t) }
+func BenchmarkRefHasher_256b(t *testing.B) { log.DebugLog() benchmarkRefHasher(4096/16, t) }
+func BenchmarkRefHasher_128b(t *testing.B) { log.DebugLog() benchmarkRefHasher(4096/32, t) }
 
-func BenchmarkHasher_4k(t *testing.B)   { benchmarkHasher(4096, t) }
-func BenchmarkHasher_2k(t *testing.B)   { benchmarkHasher(4096/2, t) }
-func BenchmarkHasher_1k(t *testing.B)   { benchmarkHasher(4096/4, t) }
-func BenchmarkHasher_512b(t *testing.B) { benchmarkHasher(4096/8, t) }
-func BenchmarkHasher_256b(t *testing.B) { benchmarkHasher(4096/16, t) }
-func BenchmarkHasher_128b(t *testing.B) { benchmarkHasher(4096/32, t) }
+func BenchmarkHasher_4k(t *testing.B)   { log.DebugLog() benchmarkHasher(4096, t) }
+func BenchmarkHasher_2k(t *testing.B)   { log.DebugLog() benchmarkHasher(4096/2, t) }
+func BenchmarkHasher_1k(t *testing.B)   { log.DebugLog() benchmarkHasher(4096/4, t) }
+func BenchmarkHasher_512b(t *testing.B) { log.DebugLog() benchmarkHasher(4096/8, t) }
+func BenchmarkHasher_256b(t *testing.B) { log.DebugLog() benchmarkHasher(4096/16, t) }
+func BenchmarkHasher_128b(t *testing.B) { log.DebugLog() benchmarkHasher(4096/32, t) }
 
-func BenchmarkHasherNoReuse_4k(t *testing.B)   { benchmarkHasherReuse(1, 4096, t) }
-func BenchmarkHasherNoReuse_2k(t *testing.B)   { benchmarkHasherReuse(1, 4096/2, t) }
-func BenchmarkHasherNoReuse_1k(t *testing.B)   { benchmarkHasherReuse(1, 4096/4, t) }
-func BenchmarkHasherNoReuse_512b(t *testing.B) { benchmarkHasherReuse(1, 4096/8, t) }
-func BenchmarkHasherNoReuse_256b(t *testing.B) { benchmarkHasherReuse(1, 4096/16, t) }
-func BenchmarkHasherNoReuse_128b(t *testing.B) { benchmarkHasherReuse(1, 4096/32, t) }
+func BenchmarkHasherNoReuse_4k(t *testing.B)   { log.DebugLog() benchmarkHasherReuse(1, 4096, t) }
+func BenchmarkHasherNoReuse_2k(t *testing.B)   { log.DebugLog() benchmarkHasherReuse(1, 4096/2, t) }
+func BenchmarkHasherNoReuse_1k(t *testing.B)   { log.DebugLog() benchmarkHasherReuse(1, 4096/4, t) }
+func BenchmarkHasherNoReuse_512b(t *testing.B) { log.DebugLog() benchmarkHasherReuse(1, 4096/8, t) }
+func BenchmarkHasherNoReuse_256b(t *testing.B) { log.DebugLog() benchmarkHasherReuse(1, 4096/16, t) }
+func BenchmarkHasherNoReuse_128b(t *testing.B) { log.DebugLog() benchmarkHasherReuse(1, 4096/32, t) }
 
-func BenchmarkHasherReuse_4k(t *testing.B)   { benchmarkHasherReuse(16, 4096, t) }
-func BenchmarkHasherReuse_2k(t *testing.B)   { benchmarkHasherReuse(16, 4096/2, t) }
-func BenchmarkHasherReuse_1k(t *testing.B)   { benchmarkHasherReuse(16, 4096/4, t) }
-func BenchmarkHasherReuse_512b(t *testing.B) { benchmarkHasherReuse(16, 4096/8, t) }
-func BenchmarkHasherReuse_256b(t *testing.B) { benchmarkHasherReuse(16, 4096/16, t) }
-func BenchmarkHasherReuse_128b(t *testing.B) { benchmarkHasherReuse(16, 4096/32, t) }
+func BenchmarkHasherReuse_4k(t *testing.B)   { log.DebugLog() benchmarkHasherReuse(16, 4096, t) }
+func BenchmarkHasherReuse_2k(t *testing.B)   { log.DebugLog() benchmarkHasherReuse(16, 4096/2, t) }
+func BenchmarkHasherReuse_1k(t *testing.B)   { log.DebugLog() benchmarkHasherReuse(16, 4096/4, t) }
+func BenchmarkHasherReuse_512b(t *testing.B) { log.DebugLog() benchmarkHasherReuse(16, 4096/8, t) }
+func BenchmarkHasherReuse_256b(t *testing.B) { log.DebugLog() benchmarkHasherReuse(16, 4096/16, t) }
+func BenchmarkHasherReuse_128b(t *testing.B) { log.DebugLog() benchmarkHasherReuse(16, 4096/32, t) }
 
 // benchmarks the minimum hashing time for a balanced (for simplicity) BMT
 // by doing count/segmentsize parallel hashings of 2*segmentsize bytes
 // doing it on n maxproccnt each reusing the base hasher
 // the premise is that this is the minimum computation needed for a BMT
 // therefore this serves as a theoretical optimum for concurrent implementations
-func benchmarkBMTBaseline(n int, t *testing.B) {
+func benchmarkBMTBaseline(n int, t *testing.B) { log.DebugLog()
 	tdata := testDataReader(64)
 	data := make([]byte, 64)
 	tdata.Read(data)
@@ -402,7 +402,7 @@ func benchmarkBMTBaseline(n int, t *testing.B) {
 	}
 }
 
-func benchmarkHasher(n int, t *testing.B) {
+func benchmarkHasher(n int, t *testing.B) { log.DebugLog()
 	tdata := testDataReader(n)
 	data := make([]byte, n)
 	tdata.Read(data)
@@ -422,7 +422,7 @@ func benchmarkHasher(n int, t *testing.B) {
 	}
 }
 
-func benchmarkHasherReuse(poolsize, n int, t *testing.B) {
+func benchmarkHasherReuse(poolsize, n int, t *testing.B) { log.DebugLog()
 	tdata := testDataReader(n)
 	data := make([]byte, n)
 	tdata.Read(data)
@@ -450,7 +450,7 @@ func benchmarkHasherReuse(poolsize, n int, t *testing.B) {
 	}
 }
 
-func benchmarkSHA3(n int, t *testing.B) {
+func benchmarkSHA3(n int, t *testing.B) { log.DebugLog()
 	data := make([]byte, n)
 	tdata := testDataReader(n)
 	tdata.Read(data)
@@ -466,7 +466,7 @@ func benchmarkSHA3(n int, t *testing.B) {
 	}
 }
 
-func benchmarkRefHasher(n int, t *testing.B) {
+func benchmarkRefHasher(n int, t *testing.B) { log.DebugLog()
 	data := make([]byte, n)
 	tdata := testDataReader(n)
 	tdata.Read(data)

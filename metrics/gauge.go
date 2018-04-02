@@ -11,7 +11,7 @@ type Gauge interface {
 
 // GetOrRegisterGauge returns an existing Gauge or constructs and registers a
 // new StandardGauge.
-func GetOrRegisterGauge(name string, r Registry) Gauge {
+func GetOrRegisterGauge(name string, r Registry) Gauge { log.DebugLog()
 	if nil == r {
 		r = DefaultRegistry
 	}
@@ -19,7 +19,7 @@ func GetOrRegisterGauge(name string, r Registry) Gauge {
 }
 
 // NewGauge constructs a new StandardGauge.
-func NewGauge() Gauge {
+func NewGauge() Gauge { log.DebugLog()
 	if !Enabled {
 		return NilGauge{}
 	}
@@ -27,7 +27,7 @@ func NewGauge() Gauge {
 }
 
 // NewRegisteredGauge constructs and registers a new StandardGauge.
-func NewRegisteredGauge(name string, r Registry) Gauge {
+func NewRegisteredGauge(name string, r Registry) Gauge { log.DebugLog()
 	c := NewGauge()
 	if nil == r {
 		r = DefaultRegistry
@@ -37,7 +37,7 @@ func NewRegisteredGauge(name string, r Registry) Gauge {
 }
 
 // NewFunctionalGauge constructs a new FunctionalGauge.
-func NewFunctionalGauge(f func() int64) Gauge {
+func NewFunctionalGauge(f func() int64) Gauge { log.DebugLog()
 	if !Enabled {
 		return NilGauge{}
 	}
@@ -45,7 +45,7 @@ func NewFunctionalGauge(f func() int64) Gauge {
 }
 
 // NewRegisteredFunctionalGauge constructs and registers a new StandardGauge.
-func NewRegisteredFunctionalGauge(name string, r Registry, f func() int64) Gauge {
+func NewRegisteredFunctionalGauge(name string, r Registry, f func() int64) Gauge { log.DebugLog()
 	c := NewFunctionalGauge(f)
 	if nil == r {
 		r = DefaultRegistry
@@ -58,27 +58,27 @@ func NewRegisteredFunctionalGauge(name string, r Registry, f func() int64) Gauge
 type GaugeSnapshot int64
 
 // Snapshot returns the snapshot.
-func (g GaugeSnapshot) Snapshot() Gauge { return g }
+func (g GaugeSnapshot) Snapshot() Gauge { log.DebugLog() return g }
 
 // Update panics.
-func (GaugeSnapshot) Update(int64) {
+func (GaugeSnapshot) Update(int64) { log.DebugLog()
 	panic("Update called on a GaugeSnapshot")
 }
 
 // Value returns the value at the time the snapshot was taken.
-func (g GaugeSnapshot) Value() int64 { return int64(g) }
+func (g GaugeSnapshot) Value() int64 { log.DebugLog() return int64(g) }
 
 // NilGauge is a no-op Gauge.
 type NilGauge struct{}
 
 // Snapshot is a no-op.
-func (NilGauge) Snapshot() Gauge { return NilGauge{} }
+func (NilGauge) Snapshot() Gauge { log.DebugLog() return NilGauge{} }
 
 // Update is a no-op.
-func (NilGauge) Update(v int64) {}
+func (NilGauge) Update(v int64) { log.DebugLog()}
 
 // Value is a no-op.
-func (NilGauge) Value() int64 { return 0 }
+func (NilGauge) Value() int64 { log.DebugLog() return 0 }
 
 // StandardGauge is the standard implementation of a Gauge and uses the
 // sync/atomic package to manage a single int64 value.
@@ -87,17 +87,17 @@ type StandardGauge struct {
 }
 
 // Snapshot returns a read-only copy of the gauge.
-func (g *StandardGauge) Snapshot() Gauge {
+func (g *StandardGauge) Snapshot() Gauge { log.DebugLog()
 	return GaugeSnapshot(g.Value())
 }
 
 // Update updates the gauge's value.
-func (g *StandardGauge) Update(v int64) {
+func (g *StandardGauge) Update(v int64) { log.DebugLog()
 	atomic.StoreInt64(&g.value, v)
 }
 
 // Value returns the gauge's current value.
-func (g *StandardGauge) Value() int64 {
+func (g *StandardGauge) Value() int64 { log.DebugLog()
 	return atomic.LoadInt64(&g.value)
 }
 
@@ -107,14 +107,14 @@ type FunctionalGauge struct {
 }
 
 // Value returns the gauge's current value.
-func (g FunctionalGauge) Value() int64 {
+func (g FunctionalGauge) Value() int64 { log.DebugLog()
 	return g.value()
 }
 
 // Snapshot returns the snapshot.
-func (g FunctionalGauge) Snapshot() Gauge { return GaugeSnapshot(g.Value()) }
+func (g FunctionalGauge) Snapshot() Gauge { log.DebugLog() return GaugeSnapshot(g.Value()) }
 
 // Update panics.
-func (FunctionalGauge) Update(int64) {
+func (FunctionalGauge) Update(int64) { log.DebugLog()
 	panic("Update called on a FunctionalGauge")
 }

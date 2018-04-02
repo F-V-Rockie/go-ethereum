@@ -33,7 +33,7 @@ var disasmCommand = cli.Command{
 	ArgsUsage: "<file>",
 }
 
-func disasmCmd(ctx *cli.Context) error {
+func disasmCmd(ctx *cli.Context) error { log.DebugLog()
 	if len(ctx.Args().First()) == 0 {
 		return errors.New("filename required")
 	}

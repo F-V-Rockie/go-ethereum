@@ -68,21 +68,21 @@ type Command struct {
 
 type CommandsByName []Command
 
-func (c CommandsByName) Len() int {
+func (c CommandsByName) Len() int { log.DebugLog()
 	return len(c)
 }
 
-func (c CommandsByName) Less(i, j int) bool {
+func (c CommandsByName) Less(i, j int) bool { log.DebugLog()
 	return c[i].Name < c[j].Name
 }
 
-func (c CommandsByName) Swap(i, j int) {
+func (c CommandsByName) Swap(i, j int) { log.DebugLog()
 	c[i], c[j] = c[j], c[i]
 }
 
 // FullName returns the full name of the command.
 // For subcommands this ensures that parent commands are part of the command path
-func (c Command) FullName() string {
+func (c Command) FullName() string { log.DebugLog()
 	if c.commandNamePath == nil {
 		return c.Name
 	}
@@ -93,7 +93,7 @@ func (c Command) FullName() string {
 type Commands []Command
 
 // Run invokes the command given the context, parses ctx.Args() to generate command-specific flags
-func (c Command) Run(ctx *Context) (err error) {
+func (c Command) Run(ctx *Context) (err error) { log.DebugLog()
 	if len(c.Subcommands) > 0 {
 		return c.startApp(ctx)
 	}
@@ -216,7 +216,7 @@ func (c Command) Run(ctx *Context) (err error) {
 }
 
 // Names returns the names including short names and aliases.
-func (c Command) Names() []string {
+func (c Command) Names() []string { log.DebugLog()
 	names := []string{c.Name}
 
 	if c.ShortName != "" {
@@ -227,7 +227,7 @@ func (c Command) Names() []string {
 }
 
 // HasName returns true if Command.Name or Command.ShortName matches given name
-func (c Command) HasName(name string) bool {
+func (c Command) HasName(name string) bool { log.DebugLog()
 	for _, n := range c.Names() {
 		if n == name {
 			return true
@@ -236,7 +236,7 @@ func (c Command) HasName(name string) bool {
 	return false
 }
 
-func (c Command) startApp(ctx *Context) error {
+func (c Command) startApp(ctx *Context) error { log.DebugLog()
 	app := NewApp()
 	app.Metadata = ctx.App.Metadata
 	// set the name and usage
@@ -299,6 +299,6 @@ func (c Command) startApp(ctx *Context) error {
 }
 
 // VisibleFlags returns a slice of the Flags with Hidden=false
-func (c Command) VisibleFlags() []Flag {
+func (c Command) VisibleFlags() []Flag { log.DebugLog()
 	return visibleFlags(c.Flags)
 }

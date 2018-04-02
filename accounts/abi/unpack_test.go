@@ -37,7 +37,7 @@ type unpackTest struct {
 	err  string      // empty or error if expected
 }
 
-func (test unpackTest) checkError(err error) error {
+func (test unpackTest) checkError(err error) error { log.DebugLog()
 	if err != nil {
 		if len(test.err) == 0 {
 			return fmt.Errorf("expected no err but got: %v", err)
@@ -311,7 +311,7 @@ var unpackTests = []unpackTest{
 	},
 }
 
-func TestUnpack(t *testing.T) {
+func TestUnpack(t *testing.T) { log.DebugLog()
 	for i, test := range unpackTests {
 		t.Run(strconv.Itoa(i), func(t *testing.T) {
 			def := fmt.Sprintf(`[{ "name" : "method", "outputs": %s}]`, test.def)
@@ -342,7 +342,7 @@ type methodMultiOutput struct {
 	String string
 }
 
-func methodMultiReturn(require *require.Assertions) (ABI, []byte, methodMultiOutput) {
+func methodMultiReturn(require *require.Assertions) (ABI, []byte, methodMultiOutput) { log.DebugLog()
 	const definition = `[
 	{ "name" : "multi", "constant" : false, "outputs": [ { "name": "Int", "type": "uint256" }, { "name": "String", "type": "string" } ] }]`
 	var expected = methodMultiOutput{big.NewInt(1), "hello"}
@@ -358,7 +358,7 @@ func methodMultiReturn(require *require.Assertions) (ABI, []byte, methodMultiOut
 	return abi, buff.Bytes(), expected
 }
 
-func TestMethodMultiReturn(t *testing.T) {
+func TestMethodMultiReturn(t *testing.T) { log.DebugLog()
 	type reversed struct {
 		String string
 		Int    *big.Int
@@ -417,7 +417,7 @@ func TestMethodMultiReturn(t *testing.T) {
 	}
 }
 
-func TestMultiReturnWithArray(t *testing.T) {
+func TestMultiReturnWithArray(t *testing.T) { log.DebugLog()
 	const definition = `[{"name" : "multi", "outputs": [{"type": "uint64[3]"}, {"type": "uint64"}]}]`
 	abi, err := JSON(strings.NewReader(definition))
 	if err != nil {
@@ -440,7 +440,7 @@ func TestMultiReturnWithArray(t *testing.T) {
 	}
 }
 
-func TestMultiReturnWithDeeplyNestedArray(t *testing.T) {
+func TestMultiReturnWithDeeplyNestedArray(t *testing.T) { log.DebugLog()
 	// Similar to TestMultiReturnWithArray, but with a special case in mind:
 	//  values of nested static arrays count towards the size as well, and any element following
 	//  after such nested array argument should be read with the correct offset,
@@ -480,7 +480,7 @@ func TestMultiReturnWithDeeplyNestedArray(t *testing.T) {
 	}
 }
 
-func TestUnmarshal(t *testing.T) {
+func TestUnmarshal(t *testing.T) { log.DebugLog()
 	const definition = `[
 	{ "name" : "int", "constant" : false, "outputs": [ { "type": "uint256" } ] },
 	{ "name" : "bool", "constant" : false, "outputs": [ { "type": "bool" } ] },
@@ -729,7 +729,7 @@ func TestUnmarshal(t *testing.T) {
 	}
 }
 
-func TestOOMMaliciousInput(t *testing.T) {
+func TestOOMMaliciousInput(t *testing.T) { log.DebugLog()
 	oomTests := []unpackTest{
 		{
 			def: `[{"type": "uint8[]"}]`,

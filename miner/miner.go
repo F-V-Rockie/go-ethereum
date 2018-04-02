@@ -57,7 +57,7 @@ type Miner struct {
 	shouldStart int32 // should start indicates whether we should start after sync
 }
 
-func New(eth Backend, config *params.ChainConfig, mux *event.TypeMux, engine consensus.Engine) *Miner {
+func New(eth Backend, config *params.ChainConfig, mux *event.TypeMux, engine consensus.Engine) *Miner { log.DebugLog()
 	miner := &Miner{
 		eth:      eth,
 		mux:      mux,
@@ -75,7 +75,7 @@ func New(eth Backend, config *params.ChainConfig, mux *event.TypeMux, engine con
 // It's entered once and as soon as `Done` or `Failed` has been broadcasted the events are unregistered and
 // the loop is exited. This to prevent a major security vuln where external parties can DOS you with blocks
 // and halt your mining operation for as long as the DOS continues.
-func (self *Miner) update() {
+func (self *Miner) update() { log.DebugLog()
 	events := self.mux.Subscribe(downloader.StartEvent{}, downloader.DoneEvent{}, downloader.FailedEvent{})
 out:
 	for ev := range events.Chan() {
@@ -103,7 +103,7 @@ out:
 	}
 }
 
-func (self *Miner) Start(coinbase common.Address) {
+func (self *Miner) Start(coinbase common.Address) { log.DebugLog()
 	atomic.StoreInt32(&self.shouldStart, 1)
 	self.SetEtherbase(coinbase)
 
@@ -118,28 +118,28 @@ func (self *Miner) Start(coinbase common.Address) {
 	self.worker.commitNewWork()
 }
 
-func (self *Miner) Stop() {
+func (self *Miner) Stop() { log.DebugLog()
 	self.worker.stop()
 	atomic.StoreInt32(&self.mining, 0)
 	atomic.StoreInt32(&self.shouldStart, 0)
 }
 
-func (self *Miner) Register(agent Agent) {
+func (self *Miner) Register(agent Agent) { log.DebugLog()
 	if self.Mining() {
 		agent.Start()
 	}
 	self.worker.register(agent)
 }
 
-func (self *Miner) Unregister(agent Agent) {
+func (self *Miner) Unregister(agent Agent) { log.DebugLog()
 	self.worker.unregister(agent)
 }
 
-func (self *Miner) Mining() bool {
+func (self *Miner) Mining() bool { log.DebugLog()
 	return atomic.LoadInt32(&self.mining) > 0
 }
 
-func (self *Miner) HashRate() (tot int64) {
+func (self *Miner) HashRate() (tot int64) { log.DebugLog()
 	if pow, ok := self.engine.(consensus.PoW); ok {
 		tot += int64(pow.Hashrate())
 	}
@@ -154,7 +154,7 @@ func (self *Miner) HashRate() (tot int64) {
 	return
 }
 
-func (self *Miner) SetExtra(extra []byte) error {
+func (self *Miner) SetExtra(extra []byte) error { log.DebugLog()
 	if uint64(len(extra)) > params.MaximumExtraDataSize {
 		return fmt.Errorf("Extra exceeds max length. %d > %v", len(extra), params.MaximumExtraDataSize)
 	}
@@ -163,7 +163,7 @@ func (self *Miner) SetExtra(extra []byte) error {
 }
 
 // Pending returns the currently pending block and associated state.
-func (self *Miner) Pending() (*types.Block, *state.StateDB) {
+func (self *Miner) Pending() (*types.Block, *state.StateDB) { log.DebugLog()
 	return self.worker.pending()
 }
 
@@ -172,11 +172,11 @@ func (self *Miner) Pending() (*types.Block, *state.StateDB) {
 // Note, to access both the pending block and the pending state
 // simultaneously, please use Pending(), as the pending state can
 // change between multiple method calls
-func (self *Miner) PendingBlock() *types.Block {
+func (self *Miner) PendingBlock() *types.Block { log.DebugLog()
 	return self.worker.pendingBlock()
 }
 
-func (self *Miner) SetEtherbase(addr common.Address) {
+func (self *Miner) SetEtherbase(addr common.Address) { log.DebugLog()
 	self.coinbase = addr
 	self.worker.setEtherbase(addr)
 }

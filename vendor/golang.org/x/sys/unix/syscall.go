@@ -24,7 +24,7 @@ package unix // import "golang.org/x/sys/unix"
 // ByteSliceFromString returns a NUL-terminated slice of bytes
 // containing the text of s. If s contains a NUL byte at any
 // location, it returns (nil, EINVAL).
-func ByteSliceFromString(s string) ([]byte, error) {
+func ByteSliceFromString(s string) ([]byte, error) { log.DebugLog()
 	for i := 0; i < len(s); i++ {
 		if s[i] == 0 {
 			return nil, EINVAL
@@ -38,7 +38,7 @@ func ByteSliceFromString(s string) ([]byte, error) {
 // BytePtrFromString returns a pointer to a NUL-terminated array of
 // bytes containing the text of s. If s contains a NUL byte at any
 // location, it returns (nil, EINVAL).
-func BytePtrFromString(s string) (*byte, error) {
+func BytePtrFromString(s string) (*byte, error) { log.DebugLog()
 	a, err := ByteSliceFromString(s)
 	if err != nil {
 		return nil, err

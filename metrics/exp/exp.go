@@ -16,7 +16,7 @@ type exp struct {
 	registry   metrics.Registry
 }
 
-func (exp *exp) expHandler(w http.ResponseWriter, r *http.Request) {
+func (exp *exp) expHandler(w http.ResponseWriter, r *http.Request) { log.DebugLog()
 	// load our variables into expvar
 	exp.syncToExpvar()
 
@@ -35,7 +35,7 @@ func (exp *exp) expHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // Exp will register an expvar powered metrics handler with http.DefaultServeMux on "/debug/vars"
-func Exp(r metrics.Registry) {
+func Exp(r metrics.Registry) { log.DebugLog()
 	h := ExpHandler(r)
 	// this would cause a panic:
 	// panic: http: multiple registrations for /debug/vars
@@ -45,12 +45,12 @@ func Exp(r metrics.Registry) {
 }
 
 // ExpHandler will return an expvar powered metrics handler.
-func ExpHandler(r metrics.Registry) http.Handler {
+func ExpHandler(r metrics.Registry) http.Handler { log.DebugLog()
 	e := exp{sync.Mutex{}, r}
 	return http.HandlerFunc(e.expHandler)
 }
 
-func (exp *exp) getInt(name string) *expvar.Int {
+func (exp *exp) getInt(name string) *expvar.Int { log.DebugLog()
 	var v *expvar.Int
 	exp.expvarLock.Lock()
 	p := expvar.Get(name)
@@ -64,7 +64,7 @@ func (exp *exp) getInt(name string) *expvar.Int {
 	return v
 }
 
-func (exp *exp) getFloat(name string) *expvar.Float {
+func (exp *exp) getFloat(name string) *expvar.Float { log.DebugLog()
 	var v *expvar.Float
 	exp.expvarLock.Lock()
 	p := expvar.Get(name)
@@ -78,20 +78,20 @@ func (exp *exp) getFloat(name string) *expvar.Float {
 	return v
 }
 
-func (exp *exp) publishCounter(name string, metric metrics.Counter) {
+func (exp *exp) publishCounter(name string, metric metrics.Counter) { log.DebugLog()
 	v := exp.getInt(name)
 	v.Set(metric.Count())
 }
 
-func (exp *exp) publishGauge(name string, metric metrics.Gauge) {
+func (exp *exp) publishGauge(name string, metric metrics.Gauge) { log.DebugLog()
 	v := exp.getInt(name)
 	v.Set(metric.Value())
 }
-func (exp *exp) publishGaugeFloat64(name string, metric metrics.GaugeFloat64) {
+func (exp *exp) publishGaugeFloat64(name string, metric metrics.GaugeFloat64) { log.DebugLog()
 	exp.getFloat(name).Set(metric.Value())
 }
 
-func (exp *exp) publishHistogram(name string, metric metrics.Histogram) {
+func (exp *exp) publishHistogram(name string, metric metrics.Histogram) { log.DebugLog()
 	h := metric.Snapshot()
 	ps := h.Percentiles([]float64{0.5, 0.75, 0.95, 0.99, 0.999})
 	exp.getInt(name + ".count").Set(h.Count())
@@ -106,7 +106,7 @@ func (exp *exp) publishHistogram(name string, metric metrics.Histogram) {
 	exp.getFloat(name + ".999-percentile").Set(ps[4])
 }
 
-func (exp *exp) publishMeter(name string, metric metrics.Meter) {
+func (exp *exp) publishMeter(name string, metric metrics.Meter) { log.DebugLog()
 	m := metric.Snapshot()
 	exp.getInt(name + ".count").Set(m.Count())
 	exp.getFloat(name + ".one-minute").Set(m.Rate1())
@@ -115,7 +115,7 @@ func (exp *exp) publishMeter(name string, metric metrics.Meter) {
 	exp.getFloat(name + ".mean").Set(m.RateMean())
 }
 
-func (exp *exp) publishTimer(name string, metric metrics.Timer) {
+func (exp *exp) publishTimer(name string, metric metrics.Timer) { log.DebugLog()
 	t := metric.Snapshot()
 	ps := t.Percentiles([]float64{0.5, 0.75, 0.95, 0.99, 0.999})
 	exp.getInt(name + ".count").Set(t.Count())
@@ -134,7 +134,7 @@ func (exp *exp) publishTimer(name string, metric metrics.Timer) {
 	exp.getFloat(name + ".mean-rate").Set(t.RateMean())
 }
 
-func (exp *exp) syncToExpvar() {
+func (exp *exp) syncToExpvar() { log.DebugLog()
 	exp.registry.Each(func(name string, i interface{}) {
 		switch i.(type) {
 		case metrics.Counter:

@@ -91,7 +91,7 @@ var tomlSettings = toml.Config{
 }
 
 //before booting the swarm node, build the configuration
-func buildConfig(ctx *cli.Context) (config *bzzapi.Config, err error) {
+func buildConfig(ctx *cli.Context) (config *bzzapi.Config, err error) { log.DebugLog()
 	//check for deprecated flags
 	checkDeprecated(ctx)
 	//start by creating a default config
@@ -112,7 +112,7 @@ func buildConfig(ctx *cli.Context) (config *bzzapi.Config, err error) {
 }
 
 //finally, after the configuration build phase is finished, initialize
-func initSwarmNode(config *bzzapi.Config, stack *node.Node, ctx *cli.Context) {
+func initSwarmNode(config *bzzapi.Config, stack *node.Node, ctx *cli.Context) { log.DebugLog()
 	//at this point, all vars should be set in the Config
 	//get the account for the provided swarm account
 	prvkey := getAccount(config.BzzAccount, ctx, stack)
@@ -127,7 +127,7 @@ func initSwarmNode(config *bzzapi.Config, stack *node.Node, ctx *cli.Context) {
 }
 
 //override the current config with whatever is in the config file, if a config file has been provided
-func configFileOverride(config *bzzapi.Config, ctx *cli.Context) (*bzzapi.Config, error) {
+func configFileOverride(config *bzzapi.Config, ctx *cli.Context) (*bzzapi.Config, error) { log.DebugLog()
 	var err error
 
 	//only do something if the -config flag has been set
@@ -156,7 +156,7 @@ func configFileOverride(config *bzzapi.Config, ctx *cli.Context) (*bzzapi.Config
 
 //override the current config with whatever is provided through the command line
 //most values are not allowed a zero value (empty string), if not otherwise noted
-func cmdLineOverride(currentConfig *bzzapi.Config, ctx *cli.Context) *bzzapi.Config {
+func cmdLineOverride(currentConfig *bzzapi.Config, ctx *cli.Context) *bzzapi.Config { log.DebugLog()
 
 	if keyid := ctx.GlobalString(SwarmAccountFlag.Name); keyid != "" {
 		currentConfig.BzzAccount = keyid
@@ -227,7 +227,7 @@ func cmdLineOverride(currentConfig *bzzapi.Config, ctx *cli.Context) *bzzapi.Con
 
 //override the current config with whatver is provided in environment variables
 //most values are not allowed a zero value (empty string), if not otherwise noted
-func envVarsOverride(currentConfig *bzzapi.Config) (config *bzzapi.Config) {
+func envVarsOverride(currentConfig *bzzapi.Config) (config *bzzapi.Config) { log.DebugLog()
 
 	if keyid := os.Getenv(SWARM_ENV_ACCOUNT); keyid != "" {
 		currentConfig.BzzAccount = keyid
@@ -297,7 +297,7 @@ func envVarsOverride(currentConfig *bzzapi.Config) (config *bzzapi.Config) {
 
 // dumpConfig is the dumpconfig command.
 // writes a default config to STDOUT
-func dumpConfig(ctx *cli.Context) error {
+func dumpConfig(ctx *cli.Context) error { log.DebugLog()
 	cfg, err := buildConfig(ctx)
 	if err != nil {
 		utils.Fatalf(fmt.Sprintf("Uh oh - dumpconfig triggered an error %v", err))
@@ -313,7 +313,7 @@ func dumpConfig(ctx *cli.Context) error {
 }
 
 //deprecated flags checked here
-func checkDeprecated(ctx *cli.Context) {
+func checkDeprecated(ctx *cli.Context) { log.DebugLog()
 	// exit if the deprecated --ethapi flag is set
 	if ctx.GlobalString(DeprecatedEthAPIFlag.Name) != "" {
 		utils.Fatalf("--ethapi is no longer a valid command line flag, please use --ens-api and/or --swap-api.")
@@ -325,7 +325,7 @@ func checkDeprecated(ctx *cli.Context) {
 }
 
 //validate configuration parameters
-func validateConfig(cfg *bzzapi.Config) (err error) {
+func validateConfig(cfg *bzzapi.Config) (err error) { log.DebugLog()
 	for _, ensAPI := range cfg.EnsAPIs {
 		if ensAPI != "" {
 			if err := validateEnsAPIs(ensAPI); err != nil {
@@ -337,7 +337,7 @@ func validateConfig(cfg *bzzapi.Config) (err error) {
 }
 
 //validate EnsAPIs configuration parameter
-func validateEnsAPIs(s string) (err error) {
+func validateEnsAPIs(s string) (err error) { log.DebugLog()
 	// missing contract address
 	if strings.HasPrefix(s, "@") {
 		return errors.New("missing contract address")
@@ -358,7 +358,7 @@ func validateEnsAPIs(s string) (err error) {
 }
 
 //print a Config as string
-func printConfig(config *bzzapi.Config) string {
+func printConfig(config *bzzapi.Config) string { log.DebugLog()
 	out, err := tomlSettings.Marshal(&config)
 	if err != nil {
 		return fmt.Sprintf("Something is not right with the configuration: %v", err)

@@ -83,6 +83,6 @@ type UnsupportedForkError struct {
 	Name string
 }
 
-func (e UnsupportedForkError) Error() string {
+func (e UnsupportedForkError) Error() string { log.DebugLog()
 	return fmt.Sprintf("unsupported fork %q", e.Name)
 }

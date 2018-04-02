@@ -33,37 +33,37 @@ import (
 	"github.com/ethereum/go-ethereum/node"
 )
 
-func BenchmarkBloomBits512(b *testing.B) {
+func BenchmarkBloomBits512(b *testing.B) { log.DebugLog()
 	benchmarkBloomBits(b, 512)
 }
 
-func BenchmarkBloomBits1k(b *testing.B) {
+func BenchmarkBloomBits1k(b *testing.B) { log.DebugLog()
 	benchmarkBloomBits(b, 1024)
 }
 
-func BenchmarkBloomBits2k(b *testing.B) {
+func BenchmarkBloomBits2k(b *testing.B) { log.DebugLog()
 	benchmarkBloomBits(b, 2048)
 }
 
-func BenchmarkBloomBits4k(b *testing.B) {
+func BenchmarkBloomBits4k(b *testing.B) { log.DebugLog()
 	benchmarkBloomBits(b, 4096)
 }
 
-func BenchmarkBloomBits8k(b *testing.B) {
+func BenchmarkBloomBits8k(b *testing.B) { log.DebugLog()
 	benchmarkBloomBits(b, 8192)
 }
 
-func BenchmarkBloomBits16k(b *testing.B) {
+func BenchmarkBloomBits16k(b *testing.B) { log.DebugLog()
 	benchmarkBloomBits(b, 16384)
 }
 
-func BenchmarkBloomBits32k(b *testing.B) {
+func BenchmarkBloomBits32k(b *testing.B) { log.DebugLog()
 	benchmarkBloomBits(b, 32768)
 }
 
 const benchFilterCnt = 2000
 
-func benchmarkBloomBits(b *testing.B, sectionSize uint64) {
+func benchmarkBloomBits(b *testing.B, sectionSize uint64) { log.DebugLog()
 	benchDataDir := node.DefaultDataDir() + "/geth/chaindata"
 	fmt.Println("Running bloombits benchmark   section size:", sectionSize)
 
@@ -146,7 +146,7 @@ func benchmarkBloomBits(b *testing.B, sectionSize uint64) {
 	db.Close()
 }
 
-func forEachKey(db ethdb.Database, startPrefix, endPrefix []byte, fn func(key []byte)) {
+func forEachKey(db ethdb.Database, startPrefix, endPrefix []byte, fn func(key []byte)) { log.DebugLog()
 	it := db.(*ethdb.LDBDatabase).NewIterator()
 	it.Seek(startPrefix)
 	for it.Valid() {
@@ -166,14 +166,14 @@ func forEachKey(db ethdb.Database, startPrefix, endPrefix []byte, fn func(key []
 
 var bloomBitsPrefix = []byte("bloomBits-")
 
-func clearBloomBits(db ethdb.Database) {
+func clearBloomBits(db ethdb.Database) { log.DebugLog()
 	fmt.Println("Clearing bloombits data...")
 	forEachKey(db, bloomBitsPrefix, bloomBitsPrefix, func(key []byte) {
 		db.Delete(key)
 	})
 }
 
-func BenchmarkNoBloomBits(b *testing.B) {
+func BenchmarkNoBloomBits(b *testing.B) { log.DebugLog()
 	benchDataDir := node.DefaultDataDir() + "/geth/chaindata"
 	fmt.Println("Running benchmark without bloombits")
 	db, err := ethdb.NewLDBDatabase(benchDataDir, 128, 1024)

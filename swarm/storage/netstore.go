@@ -58,7 +58,7 @@ type StoreParams struct {
 }
 
 //create params with default values
-func NewDefaultStoreParams() (self *StoreParams) {
+func NewDefaultStoreParams() (self *StoreParams) { log.DebugLog()
 	return &StoreParams{
 		DbCapacity:    defaultDbCapacity,
 		CacheCapacity: defaultCacheCapacity,
@@ -68,14 +68,14 @@ func NewDefaultStoreParams() (self *StoreParams) {
 
 //this can only finally be set after all config options (file, cmd line, env vars)
 //have been evaluated
-func (self *StoreParams) Init(path string) {
+func (self *StoreParams) Init(path string) { log.DebugLog()
 	self.ChunkDbPath = filepath.Join(path, "chunks")
 }
 
 // netstore contructor, takes path argument that is used to initialise dbStore,
 // the persistent (disk) storage component of LocalStore
 // the second argument is the hive, the connection/logistics manager for the node
-func NewNetStore(hash SwarmHasher, lstore *LocalStore, cloud CloudStore, params *StoreParams) *NetStore {
+func NewNetStore(hash SwarmHasher, lstore *LocalStore, cloud CloudStore, params *StoreParams) *NetStore { log.DebugLog()
 	return &NetStore{
 		hashfunc:   hash,
 		localStore: lstore,
@@ -97,7 +97,7 @@ var (
 // ~ unsafe put in localdb no check if exists no extra copy no hash validation
 // the chunk is forced to propagate (Cloud.Store) even if locally found!
 // caller needs to make sure if that is wanted
-func (self *NetStore) Put(entry *Chunk) {
+func (self *NetStore) Put(entry *Chunk) { log.DebugLog()
 	self.localStore.Put(entry)
 
 	// handle deliveries
@@ -117,7 +117,7 @@ func (self *NetStore) Put(entry *Chunk) {
 }
 
 // retrieve logic common for local and network chunk retrieval requests
-func (self *NetStore) Get(key Key) (*Chunk, error) {
+func (self *NetStore) Get(key Key) (*Chunk, error) { log.DebugLog()
 	var err error
 	chunk, err := self.localStore.Get(key)
 	if err == nil {
@@ -138,4 +138,4 @@ func (self *NetStore) Get(key Key) (*Chunk, error) {
 }
 
 // Close netstore
-func (self *NetStore) Close() {}
+func (self *NetStore) Close() { log.DebugLog()}

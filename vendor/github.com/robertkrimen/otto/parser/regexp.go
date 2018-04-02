@@ -33,7 +33,7 @@ type _RegExp_parser struct {
 //
 // If the pattern is valid, but incompatible (contains a lookahead or backreference),
 // then this function returns the transformation (a non-empty string) AND an error.
-func TransformRegExp(pattern string) (string, error) {
+func TransformRegExp(pattern string) (string, error) { log.DebugLog()
 
 	if pattern == "" {
 		return "", nil
@@ -60,7 +60,7 @@ func TransformRegExp(pattern string) (string, error) {
 	return parser.goRegexp.String(), err
 }
 
-func (self *_RegExp_parser) scan() {
+func (self *_RegExp_parser) scan() { log.DebugLog()
 	for self.chr != -1 {
 		switch self.chr {
 		case '\\':
@@ -83,7 +83,7 @@ func (self *_RegExp_parser) scan() {
 }
 
 // (...)
-func (self *_RegExp_parser) scanGroup() {
+func (self *_RegExp_parser) scanGroup() { log.DebugLog()
 	str := self.str[self.chrOffset:]
 	if len(str) > 1 { // A possibility of (?= or (?!
 		if str[0] == '?' {
@@ -117,7 +117,7 @@ func (self *_RegExp_parser) scanGroup() {
 }
 
 // [...]
-func (self *_RegExp_parser) scanBracket() {
+func (self *_RegExp_parser) scanBracket() { log.DebugLog()
 	for self.chr != -1 {
 		if self.chr == ']' {
 			break
@@ -137,7 +137,7 @@ func (self *_RegExp_parser) scanBracket() {
 }
 
 // \...
-func (self *_RegExp_parser) scanEscape(inClass bool) {
+func (self *_RegExp_parser) scanEscape(inClass bool) { log.DebugLog()
 	offset := self.chrOffset
 
 	var length, base uint32
@@ -340,7 +340,7 @@ skip:
 	}
 }
 
-func (self *_RegExp_parser) pass() {
+func (self *_RegExp_parser) pass() { log.DebugLog()
 	if self.chr != -1 {
 		_, err := self.goRegexp.WriteRune(self.chr)
 		if err != nil {
@@ -351,7 +351,7 @@ func (self *_RegExp_parser) pass() {
 }
 
 // TODO Better error reporting, use the offset, etc.
-func (self *_RegExp_parser) error(offset int, msg string, msgValues ...interface{}) error {
+func (self *_RegExp_parser) error(offset int, msg string, msgValues ...interface{}) error { log.DebugLog()
 	err := fmt.Errorf(msg, msgValues...)
 	self.errors = append(self.errors, err)
 	return err

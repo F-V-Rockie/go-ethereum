@@ -68,18 +68,18 @@ var themeHelloWorld = ColorScheme{
 var theme = themeDefault // global dep
 
 // Theme returns the currently used theme.
-func Theme() ColorScheme {
+func Theme() ColorScheme { log.DebugLog()
 	return theme
 }
 
 // SetTheme sets a new, custom theme.
-func SetTheme(newTheme ColorScheme) {
+func SetTheme(newTheme ColorScheme) { log.DebugLog()
 	theme = newTheme
 }
 
 // UseTheme sets a predefined scheme. Currently available: "hello-world" and
 // "black-and-white".
-func UseTheme(th string) {
+func UseTheme(th string) { log.DebugLog()
 	switch th {
 	case "helloworld":
 		theme = themeHelloWorld
@@ -98,11 +98,11 @@ var ColorMap = map[string]Attribute{
 	"par.label.bg": ColorWhite,
 }
 
-func ThemeAttr(name string) Attribute {
+func ThemeAttr(name string) Attribute { log.DebugLog()
 	return lookUpAttr(ColorMap, name)
 }
 
-func lookUpAttr(clrmap map[string]Attribute, name string) Attribute {
+func lookUpAttr(clrmap map[string]Attribute, name string) Attribute { log.DebugLog()
 
 	a, ok := clrmap[name]
 	if ok {
@@ -122,7 +122,7 @@ func lookUpAttr(clrmap map[string]Attribute, name string) Attribute {
 }
 
 // 0<=r,g,b <= 5
-func ColorRGB(r, g, b int) Attribute {
+func ColorRGB(r, g, b int) Attribute { log.DebugLog()
 	within := func(n int) int {
 		if n < 0 {
 			return 0

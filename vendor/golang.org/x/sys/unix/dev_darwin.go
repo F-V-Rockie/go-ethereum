@@ -8,17 +8,17 @@
 package unix
 
 // Major returns the major component of a Darwin device number.
-func Major(dev uint64) uint32 {
+func Major(dev uint64) uint32 { log.DebugLog()
 	return uint32((dev >> 24) & 0xff)
 }
 
 // Minor returns the minor component of a Darwin device number.
-func Minor(dev uint64) uint32 {
+func Minor(dev uint64) uint32 { log.DebugLog()
 	return uint32(dev & 0xffffff)
 }
 
 // Mkdev returns a Darwin device number generated from the given major and minor
 // components.
-func Mkdev(major, minor uint32) uint64 {
+func Mkdev(major, minor uint32) uint64 { log.DebugLog()
 	return (uint64(major) << 24) | uint64(minor)
 }

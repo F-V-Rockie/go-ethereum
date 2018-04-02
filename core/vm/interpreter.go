@@ -56,7 +56,7 @@ type Interpreter struct {
 }
 
 // NewInterpreter returns a new instance of the Interpreter.
-func NewInterpreter(evm *EVM, cfg Config) *Interpreter {
+func NewInterpreter(evm *EVM, cfg Config) *Interpreter { log.DebugLog()
 	// We use the STOP instruction whether to see
 	// the jump table was initialised. If it was not
 	// we'll set the default jump table.
@@ -81,7 +81,7 @@ func NewInterpreter(evm *EVM, cfg Config) *Interpreter {
 	}
 }
 
-func (in *Interpreter) enforceRestrictions(op OpCode, operation operation, stack *Stack) error {
+func (in *Interpreter) enforceRestrictions(op OpCode, operation operation, stack *Stack) error { log.DebugLog()
 	if in.evm.chainRules.IsByzantium {
 		if in.readOnly {
 			// If the interpreter is operating in readonly mode, make sure no
@@ -103,7 +103,7 @@ func (in *Interpreter) enforceRestrictions(op OpCode, operation operation, stack
 // It's important to note that any errors returned by the interpreter should be
 // considered a revert-and-consume-all-gas operation except for
 // errExecutionReverted which means revert-and-keep-gas-left.
-func (in *Interpreter) Run(contract *Contract, input []byte) (ret []byte, err error) {
+func (in *Interpreter) Run(contract *Contract, input []byte) (ret []byte, err error) { log.DebugLog()
 	// Increment the call depth which is restricted to 1024
 	in.evm.depth++
 	defer func() { in.evm.depth-- }()

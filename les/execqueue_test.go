@@ -20,7 +20,7 @@ import (
 	"testing"
 )
 
-func TestExecQueue(t *testing.T) {
+func TestExecQueue(t *testing.T) { log.DebugLog()
 	var (
 		N        = 10000
 		q        = newExecQueue(N)

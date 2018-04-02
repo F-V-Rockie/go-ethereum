@@ -29,7 +29,7 @@ type Bufferer interface {
 
 // Init initializes termui library. This function should be called before any others.
 // After initialization, the library must be finalized by 'Close' function.
-func Init() error {
+func Init() error { log.DebugLog()
 	if err := tm.Init(); err != nil {
 		return err
 	}
@@ -71,13 +71,13 @@ func Init() error {
 
 // Close finalizes termui library,
 // should be called after successful initialization when termui's functionality isn't required anymore.
-func Close() {
+func Close() { log.DebugLog()
 	tm.Close()
 }
 
 var renderLock sync.Mutex
 
-func termSync() {
+func termSync() { log.DebugLog()
 	renderLock.Lock()
 	tm.Sync()
 	termWidth, termHeight = tm.Size()
@@ -85,20 +85,20 @@ func termSync() {
 }
 
 // TermWidth returns the current terminal's width.
-func TermWidth() int {
+func TermWidth() int { log.DebugLog()
 	termSync()
 	return termWidth
 }
 
 // TermHeight returns the current terminal's height.
-func TermHeight() int {
+func TermHeight() int { log.DebugLog()
 	termSync()
 	return termHeight
 }
 
 // Render renders all Bufferer in the given order from left to right,
 // right could overlap on left ones.
-func render(bs ...Bufferer) {
+func render(bs ...Bufferer) { log.DebugLog()
 	defer func() {
 		if e := recover(); e != nil {
 			Close()
@@ -139,11 +139,11 @@ func render(bs ...Bufferer) {
 	renderLock.Unlock()
 }
 
-func Clear() {
+func Clear() { log.DebugLog()
 	tm.Clear(tm.ColorDefault, toTmAttr(ThemeAttr("bg")))
 }
 
-func clearArea(r image.Rectangle, bg Attribute) {
+func clearArea(r image.Rectangle, bg Attribute) { log.DebugLog()
 	for i := r.Min.X; i < r.Max.X; i++ {
 		for j := r.Min.Y; j < r.Max.Y; j++ {
 			tm.SetCell(i, j, ' ', tm.ColorDefault, toTmAttr(bg))
@@ -151,14 +151,14 @@ func clearArea(r image.Rectangle, bg Attribute) {
 	}
 }
 
-func ClearArea(r image.Rectangle, bg Attribute) {
+func ClearArea(r image.Rectangle, bg Attribute) { log.DebugLog()
 	clearArea(r, bg)
 	tm.Flush()
 }
 
 var renderJobs chan []Bufferer
 
-func Render(bs ...Bufferer) {
+func Render(bs ...Bufferer) { log.DebugLog()
 	//go func() { renderJobs <- bs }()
 	renderJobs <- bs
 }

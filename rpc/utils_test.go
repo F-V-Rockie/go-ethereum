@@ -21,7 +21,7 @@ import (
 	"testing"
 )
 
-func TestNewID(t *testing.T) {
+func TestNewID(t *testing.T) { log.DebugLog()
 	hexchars := "0123456789ABCDEFabcdef"
 	for i := 0; i < 100; i++ {
 		id := string(NewID())

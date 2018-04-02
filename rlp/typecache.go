@@ -56,7 +56,7 @@ type decoder func(*Stream, reflect.Value) error
 
 type writer func(reflect.Value, *encbuf) error
 
-func cachedTypeInfo(typ reflect.Type, tags tags) (*typeinfo, error) {
+func cachedTypeInfo(typ reflect.Type, tags tags) (*typeinfo, error) { log.DebugLog()
 	typeCacheMutex.RLock()
 	info := typeCache[typekey{typ, tags}]
 	typeCacheMutex.RUnlock()
@@ -69,7 +69,7 @@ func cachedTypeInfo(typ reflect.Type, tags tags) (*typeinfo, error) {
 	return cachedTypeInfo1(typ, tags)
 }
 
-func cachedTypeInfo1(typ reflect.Type, tags tags) (*typeinfo, error) {
+func cachedTypeInfo1(typ reflect.Type, tags tags) (*typeinfo, error) { log.DebugLog()
 	key := typekey{typ, tags}
 	info := typeCache[key]
 	if info != nil {
@@ -95,7 +95,7 @@ type field struct {
 	info  *typeinfo
 }
 
-func structFields(typ reflect.Type) (fields []field, err error) {
+func structFields(typ reflect.Type) (fields []field, err error) { log.DebugLog()
 	for i := 0; i < typ.NumField(); i++ {
 		if f := typ.Field(i); f.PkgPath == "" { // exported
 			tags, err := parseStructTag(typ, i)
@@ -115,7 +115,7 @@ func structFields(typ reflect.Type) (fields []field, err error) {
 	return fields, nil
 }
 
-func parseStructTag(typ reflect.Type, fi int) (tags, error) {
+func parseStructTag(typ reflect.Type, fi int) (tags, error) { log.DebugLog()
 	f := typ.Field(fi)
 	var ts tags
 	for _, t := range strings.Split(f.Tag.Get("rlp"), ",") {
@@ -140,7 +140,7 @@ func parseStructTag(typ reflect.Type, fi int) (tags, error) {
 	return ts, nil
 }
 
-func genTypeInfo(typ reflect.Type, tags tags) (info *typeinfo, err error) {
+func genTypeInfo(typ reflect.Type, tags tags) (info *typeinfo, err error) { log.DebugLog()
 	info = new(typeinfo)
 	if info.decoder, err = makeDecoder(typ, tags); err != nil {
 		return nil, err
@@ -151,6 +151,6 @@ func genTypeInfo(typ reflect.Type, tags tags) (info *typeinfo, err error) {
 	return info, nil
 }
 
-func isUint(k reflect.Kind) bool {
+func isUint(k reflect.Kind) bool { log.DebugLog()
 	return k >= reflect.Uint && k <= reflect.Uintptr
 }

@@ -82,7 +82,7 @@ type SwarmAPI struct {
 	PrvKey  *ecdsa.PrivateKey
 }
 
-func (self *Swarm) API() *SwarmAPI {
+func (self *Swarm) API() *SwarmAPI { log.DebugLog()
 	return &SwarmAPI{
 		Api:     self.api,
 		Backend: self.backend,
@@ -92,7 +92,7 @@ func (self *Swarm) API() *SwarmAPI {
 
 // creates a new swarm service instance
 // implements node.Service
-func NewSwarm(ctx *node.ServiceContext, backend chequebook.Backend, config *api.Config) (self *Swarm, err error) {
+func NewSwarm(ctx *node.ServiceContext, backend chequebook.Backend, config *api.Config) (self *Swarm, err error) { log.DebugLog()
 	if bytes.Equal(common.FromHex(config.PublicKey), storage.ZeroKey) {
 		return nil, fmt.Errorf("empty public key")
 	}
@@ -175,7 +175,7 @@ func NewSwarm(ctx *node.ServiceContext, backend chequebook.Backend, config *api.
 // parseEnsAPIAddress parses string according to format
 // [tld:][contract-addr@]url and returns ENSClientConfig structure
 // with endpoint, contract address and TLD.
-func parseEnsAPIAddress(s string) (tld, endpoint string, addr common.Address) {
+func parseEnsAPIAddress(s string) (tld, endpoint string, addr common.Address) { log.DebugLog()
 	isAllLetterString := func(s string) bool {
 		for _, r := range s {
 			if !unicode.IsLetter(r) {
@@ -201,7 +201,7 @@ func parseEnsAPIAddress(s string) (tld, endpoint string, addr common.Address) {
 // newEnsClient creates a new ENS client for that is a consumer of
 // a ENS API on a specific endpoint. It is used as a helper function
 // for creating multiple resolvers in NewSwarm function.
-func newEnsClient(endpoint string, addr common.Address, config *api.Config) (*ens.ENS, error) {
+func newEnsClient(endpoint string, addr common.Address, config *api.Config) (*ens.ENS, error) { log.DebugLog()
 	log.Info("connecting to ENS API", "url", endpoint)
 	client, err := rpc.Dial(endpoint)
 	if err != nil {
@@ -232,7 +232,7 @@ func newEnsClient(endpoint string, addr common.Address, config *api.Config) (*en
 // detectEnsAddr determines the ENS contract address by getting both the
 // version and genesis hash using the client and matching them to either
 // mainnet or testnet addresses
-func detectEnsAddr(client *rpc.Client) (common.Address, error) {
+func detectEnsAddr(client *rpc.Client) (common.Address, error) { log.DebugLog()
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
@@ -272,7 +272,7 @@ Start is called when the stack is started
 * TODO: start subservices like sword, swear, swarmdns
 */
 // implements the node.Service interface
-func (self *Swarm) Start(srv *p2p.Server) error {
+func (self *Swarm) Start(srv *p2p.Server) error { log.DebugLog()
 	startTime = time.Now()
 	connectPeer := func(url string) error {
 		node, err := discover.ParseNode(url)
@@ -325,7 +325,7 @@ func (self *Swarm) Start(srv *p2p.Server) error {
 	return nil
 }
 
-func (self *Swarm) periodicallyUpdateGauges() {
+func (self *Swarm) periodicallyUpdateGauges() { log.DebugLog()
 	ticker := time.NewTicker(updateGaugesPeriod)
 
 	go func() {
@@ -335,7 +335,7 @@ func (self *Swarm) periodicallyUpdateGauges() {
 	}()
 }
 
-func (self *Swarm) updateGauges() {
+func (self *Swarm) updateGauges() { log.DebugLog()
 	dbSizeGauge.Update(int64(self.lstore.DbCounter()))
 	cacheSizeGauge.Update(int64(self.lstore.CacheCounter()))
 	uptimeGauge.Update(time.Since(startTime).Nanoseconds())
@@ -343,7 +343,7 @@ func (self *Swarm) updateGauges() {
 
 // implements the node.Service interface
 // stops all component services.
-func (self *Swarm) Stop() error {
+func (self *Swarm) Stop() error { log.DebugLog()
 	self.dpa.Stop()
 	err := self.hive.Stop()
 	if ch := self.config.Swap.Chequebook(); ch != nil {
@@ -360,7 +360,7 @@ func (self *Swarm) Stop() error {
 }
 
 // implements the node.Service interface
-func (self *Swarm) Protocols() []p2p.Protocol {
+func (self *Swarm) Protocols() []p2p.Protocol { log.DebugLog()
 	proto, err := network.Bzz(self.depo, self.backend, self.hive, self.dbAccess, self.config.Swap, self.config.SyncParams, self.config.NetworkId)
 	if err != nil {
 		return nil
@@ -370,7 +370,7 @@ func (self *Swarm) Protocols() []p2p.Protocol {
 
 // implements node.Service
 // Apis returns the RPC Api descriptors the Swarm implementation offers
-func (self *Swarm) APIs() []rpc.API {
+func (self *Swarm) APIs() []rpc.API { log.DebugLog()
 	return []rpc.API{
 		// public APIs
 		{
@@ -416,12 +416,12 @@ func (self *Swarm) APIs() []rpc.API {
 	}
 }
 
-func (self *Swarm) Api() *api.Api {
+func (self *Swarm) Api() *api.Api { log.DebugLog()
 	return self.api
 }
 
 // SetChequebook ensures that the local checquebook is set up on chain.
-func (self *Swarm) SetChequebook(ctx context.Context) error {
+func (self *Swarm) SetChequebook(ctx context.Context) error { log.DebugLog()
 	err := self.config.Swap.SetChequebook(ctx, self.backend, self.config.Path)
 	if err != nil {
 		return err
@@ -432,7 +432,7 @@ func (self *Swarm) SetChequebook(ctx context.Context) error {
 }
 
 // Local swarm without netStore
-func NewLocalSwarm(datadir, port string) (self *Swarm, err error) {
+func NewLocalSwarm(datadir, port string) (self *Swarm, err error) { log.DebugLog()
 
 	prvKey, err := crypto.GenerateKey()
 	if err != nil {
@@ -463,6 +463,6 @@ type Info struct {
 	*chequebook.Params
 }
 
-func (self *Info) Info() *Info {
+func (self *Info) Info() *Info { log.DebugLog()
 	return self
 }

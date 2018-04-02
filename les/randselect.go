@@ -35,23 +35,23 @@ type weightedRandomSelect struct {
 }
 
 // newWeightedRandomSelect returns a new weightedRandomSelect structure
-func newWeightedRandomSelect() *weightedRandomSelect {
+func newWeightedRandomSelect() *weightedRandomSelect { log.DebugLog()
 	return &weightedRandomSelect{root: &wrsNode{maxItems: wrsBranches}, idx: make(map[wrsItem]int)}
 }
 
 // update updates an item's weight, adds it if it was non-existent or removes it if
 // the new weight is zero. Note that explicitly updating decreasing weights is not necessary.
-func (w *weightedRandomSelect) update(item wrsItem) {
+func (w *weightedRandomSelect) update(item wrsItem) { log.DebugLog()
 	w.setWeight(item, item.Weight())
 }
 
 // remove removes an item from the set
-func (w *weightedRandomSelect) remove(item wrsItem) {
+func (w *weightedRandomSelect) remove(item wrsItem) { log.DebugLog()
 	w.setWeight(item, 0)
 }
 
 // setWeight sets an item's weight to a specific value (removes it if zero)
-func (w *weightedRandomSelect) setWeight(item wrsItem, weight int64) {
+func (w *weightedRandomSelect) setWeight(item wrsItem, weight int64) { log.DebugLog()
 	idx, ok := w.idx[item]
 	if ok {
 		w.root.setWeight(idx, weight)
@@ -76,7 +76,7 @@ func (w *weightedRandomSelect) setWeight(item wrsItem, weight int64) {
 // current weight. If the weight of the chosen element has been decreased since the
 // last stored value, returns it with a newWeight/oldWeight chance, otherwise just
 // updates its weight and selects another one
-func (w *weightedRandomSelect) choose() wrsItem {
+func (w *weightedRandomSelect) choose() wrsItem { log.DebugLog()
 	for {
 		if w.root.sumWeight == 0 {
 			return nil
@@ -104,7 +104,7 @@ type wrsNode struct {
 }
 
 // insert recursively inserts a new item to the tree and returns the item index
-func (n *wrsNode) insert(item wrsItem, weight int64) int {
+func (n *wrsNode) insert(item wrsItem, weight int64) int { log.DebugLog()
 	branch := 0
 	for n.items[branch] != nil && (n.level == 0 || n.items[branch].(*wrsNode).itemCnt == n.items[branch].(*wrsNode).maxItems) {
 		branch++
@@ -133,7 +133,7 @@ func (n *wrsNode) insert(item wrsItem, weight int64) int {
 
 // setWeight updates the weight of a certain item (which should exist) and returns
 // the change of the last weight value stored in the tree
-func (n *wrsNode) setWeight(idx int, weight int64) int64 {
+func (n *wrsNode) setWeight(idx int, weight int64) int64 { log.DebugLog()
 	if n.level == 0 {
 		oldWeight := n.weights[idx]
 		n.weights[idx] = weight
@@ -157,7 +157,7 @@ func (n *wrsNode) setWeight(idx int, weight int64) int64 {
 }
 
 // choose recursively selects an item from the tree and returns it along with its weight
-func (n *wrsNode) choose(val int64) (wrsItem, int64) {
+func (n *wrsNode) choose(val int64) (wrsItem, int64) { log.DebugLog()
 	for i, w := range n.weights {
 		if val < w {
 			if n.level == 0 {

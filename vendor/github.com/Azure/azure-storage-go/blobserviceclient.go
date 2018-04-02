@@ -15,13 +15,13 @@ type BlobStorageClient struct {
 
 // GetServiceProperties gets the properties of your storage account's blob service.
 // See: https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/get-blob-service-properties
-func (b *BlobStorageClient) GetServiceProperties() (*ServiceProperties, error) {
+func (b *BlobStorageClient) GetServiceProperties() (*ServiceProperties, error) { log.DebugLog()
 	return b.client.getServiceProperties(blobServiceName, b.auth)
 }
 
 // SetServiceProperties sets the properties of your storage account's blob service.
 // See: https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/set-blob-service-properties
-func (b *BlobStorageClient) SetServiceProperties(props ServiceProperties) error {
+func (b *BlobStorageClient) SetServiceProperties(props ServiceProperties) error { log.DebugLog()
 	return b.client.setServiceProperties(props, blobServiceName, b.auth)
 }
 
@@ -38,7 +38,7 @@ type ListContainersParameters struct {
 }
 
 // GetContainerReference returns a Container object for the specified container name.
-func (b BlobStorageClient) GetContainerReference(name string) Container {
+func (b BlobStorageClient) GetContainerReference(name string) Container { log.DebugLog()
 	return Container{
 		bsc:  &b,
 		Name: name,
@@ -49,7 +49,7 @@ func (b BlobStorageClient) GetContainerReference(name string) Container {
 // pagination token and other response details.
 //
 // See https://msdn.microsoft.com/en-us/library/azure/dd179352.aspx
-func (b BlobStorageClient) ListContainers(params ListContainersParameters) (*ContainerListResponse, error) {
+func (b BlobStorageClient) ListContainers(params ListContainersParameters) (*ContainerListResponse, error) { log.DebugLog()
 	q := mergeParams(params.getParameters(), url.Values{"comp": {"list"}})
 	uri := b.client.getEndpoint(blobServiceName, "", q)
 	headers := b.client.getStandardHeaders()
@@ -69,7 +69,7 @@ func (b BlobStorageClient) ListContainers(params ListContainersParameters) (*Con
 	return &out, err
 }
 
-func (p ListContainersParameters) getParameters() url.Values {
+func (p ListContainersParameters) getParameters() url.Values { log.DebugLog()
 	out := url.Values{}
 
 	if p.Prefix != "" {

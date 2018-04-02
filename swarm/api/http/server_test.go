@@ -33,7 +33,7 @@ import (
 	"github.com/ethereum/go-ethereum/swarm/testutil"
 )
 
-func TestBzzGetPath(t *testing.T) {
+func TestBzzGetPath(t *testing.T) { log.DebugLog()
 
 	var err error
 
@@ -264,7 +264,7 @@ func TestBzzGetPath(t *testing.T) {
 // TestBzzRootRedirect tests that getting the root path of a manifest without
 // a trailing slash gets redirected to include the trailing slash so that
 // relative URLs work as expected.
-func TestBzzRootRedirect(t *testing.T) {
+func TestBzzRootRedirect(t *testing.T) { log.DebugLog()
 	srv := testutil.NewTestSwarmServer(t)
 	defer srv.Close()
 

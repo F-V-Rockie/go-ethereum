@@ -32,16 +32,16 @@ type JSONLogger struct {
 	cfg     *vm.LogConfig
 }
 
-func NewJSONLogger(cfg *vm.LogConfig, writer io.Writer) *JSONLogger {
+func NewJSONLogger(cfg *vm.LogConfig, writer io.Writer) *JSONLogger { log.DebugLog()
 	return &JSONLogger{json.NewEncoder(writer), cfg}
 }
 
-func (l *JSONLogger) CaptureStart(from common.Address, to common.Address, create bool, input []byte, gas uint64, value *big.Int) error {
+func (l *JSONLogger) CaptureStart(from common.Address, to common.Address, create bool, input []byte, gas uint64, value *big.Int) error { log.DebugLog()
 	return nil
 }
 
 // CaptureState outputs state information on the logger.
-func (l *JSONLogger) CaptureState(env *vm.EVM, pc uint64, op vm.OpCode, gas, cost uint64, memory *vm.Memory, stack *vm.Stack, contract *vm.Contract, depth int, err error) error {
+func (l *JSONLogger) CaptureState(env *vm.EVM, pc uint64, op vm.OpCode, gas, cost uint64, memory *vm.Memory, stack *vm.Stack, contract *vm.Contract, depth int, err error) error { log.DebugLog()
 	log := vm.StructLog{
 		Pc:         pc,
 		Op:         op,
@@ -62,12 +62,12 @@ func (l *JSONLogger) CaptureState(env *vm.EVM, pc uint64, op vm.OpCode, gas, cos
 }
 
 // CaptureFault outputs state information on the logger.
-func (l *JSONLogger) CaptureFault(env *vm.EVM, pc uint64, op vm.OpCode, gas, cost uint64, memory *vm.Memory, stack *vm.Stack, contract *vm.Contract, depth int, err error) error {
+func (l *JSONLogger) CaptureFault(env *vm.EVM, pc uint64, op vm.OpCode, gas, cost uint64, memory *vm.Memory, stack *vm.Stack, contract *vm.Contract, depth int, err error) error { log.DebugLog()
 	return nil
 }
 
 // CaptureEnd is triggered at end of execution.
-func (l *JSONLogger) CaptureEnd(output []byte, gasUsed uint64, t time.Duration, err error) error {
+func (l *JSONLogger) CaptureEnd(output []byte, gasUsed uint64, t time.Duration, err error) error { log.DebugLog()
 	type endLog struct {
 		Output  string              `json:"output"`
 		GasUsed math.HexOrDecimal64 `json:"gasUsed"`

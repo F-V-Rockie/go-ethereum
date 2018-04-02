@@ -58,13 +58,13 @@ type testOdr struct {
 	disable  bool
 }
 
-func (odr *testOdr) Database() ethdb.Database {
+func (odr *testOdr) Database() ethdb.Database { log.DebugLog()
 	return odr.ldb
 }
 
 var ErrOdrDisabled = errors.New("ODR disabled")
 
-func (odr *testOdr) Retrieve(ctx context.Context, req OdrRequest) error {
+func (odr *testOdr) Retrieve(ctx context.Context, req OdrRequest) error { log.DebugLog()
 	if odr.disable {
 		return ErrOdrDisabled
 	}
@@ -87,9 +87,9 @@ func (odr *testOdr) Retrieve(ctx context.Context, req OdrRequest) error {
 
 type odrTestFn func(ctx context.Context, db ethdb.Database, bc *core.BlockChain, lc *LightChain, bhash common.Hash) ([]byte, error)
 
-func TestOdrGetBlockLes1(t *testing.T) { testChainOdr(t, 1, odrGetBlock) }
+func TestOdrGetBlockLes1(t *testing.T) { log.DebugLog() testChainOdr(t, 1, odrGetBlock) }
 
-func odrGetBlock(ctx context.Context, db ethdb.Database, bc *core.BlockChain, lc *LightChain, bhash common.Hash) ([]byte, error) {
+func odrGetBlock(ctx context.Context, db ethdb.Database, bc *core.BlockChain, lc *LightChain, bhash common.Hash) ([]byte, error) { log.DebugLog()
 	var block *types.Block
 	if bc != nil {
 		block = bc.GetBlockByHash(bhash)
@@ -103,9 +103,9 @@ func odrGetBlock(ctx context.Context, db ethdb.Database, bc *core.BlockChain, lc
 	return rlp, nil
 }
 
-func TestOdrGetReceiptsLes1(t *testing.T) { testChainOdr(t, 1, odrGetReceipts) }
+func TestOdrGetReceiptsLes1(t *testing.T) { log.DebugLog() testChainOdr(t, 1, odrGetReceipts) }
 
-func odrGetReceipts(ctx context.Context, db ethdb.Database, bc *core.BlockChain, lc *LightChain, bhash common.Hash) ([]byte, error) {
+func odrGetReceipts(ctx context.Context, db ethdb.Database, bc *core.BlockChain, lc *LightChain, bhash common.Hash) ([]byte, error) { log.DebugLog()
 	var receipts types.Receipts
 	if bc != nil {
 		receipts = core.GetBlockReceipts(db, bhash, core.GetBlockNumber(db, bhash))
@@ -119,9 +119,9 @@ func odrGetReceipts(ctx context.Context, db ethdb.Database, bc *core.BlockChain,
 	return rlp, nil
 }
 
-func TestOdrAccountsLes1(t *testing.T) { testChainOdr(t, 1, odrAccounts) }
+func TestOdrAccountsLes1(t *testing.T) { log.DebugLog() testChainOdr(t, 1, odrAccounts) }
 
-func odrAccounts(ctx context.Context, db ethdb.Database, bc *core.BlockChain, lc *LightChain, bhash common.Hash) ([]byte, error) {
+func odrAccounts(ctx context.Context, db ethdb.Database, bc *core.BlockChain, lc *LightChain, bhash common.Hash) ([]byte, error) { log.DebugLog()
 	dummyAddr := common.HexToAddress("1234567812345678123456781234567812345678")
 	acc := []common.Address{testBankAddress, acc1Addr, acc2Addr, dummyAddr}
 
@@ -143,15 +143,15 @@ func odrAccounts(ctx context.Context, db ethdb.Database, bc *core.BlockChain, lc
 	return res, st.Error()
 }
 
-func TestOdrContractCallLes1(t *testing.T) { testChainOdr(t, 1, odrContractCall) }
+func TestOdrContractCallLes1(t *testing.T) { log.DebugLog() testChainOdr(t, 1, odrContractCall) }
 
 type callmsg struct {
 	types.Message
 }
 
-func (callmsg) CheckNonce() bool { return false }
+func (callmsg) CheckNonce() bool { log.DebugLog() return false }
 
-func odrContractCall(ctx context.Context, db ethdb.Database, bc *core.BlockChain, lc *LightChain, bhash common.Hash) ([]byte, error) {
+func odrContractCall(ctx context.Context, db ethdb.Database, bc *core.BlockChain, lc *LightChain, bhash common.Hash) ([]byte, error) { log.DebugLog()
 	data := common.Hex2Bytes("60CD26850000000000000000000000000000000000000000000000000000000000000000")
 	config := params.TestChainConfig
 
@@ -189,7 +189,7 @@ func odrContractCall(ctx context.Context, db ethdb.Database, bc *core.BlockChain
 	return res, nil
 }
 
-func testChainGen(i int, block *core.BlockGen) {
+func testChainGen(i int, block *core.BlockGen) { log.DebugLog()
 	signer := types.HomesteadSigner{}
 	switch i {
 	case 0:
@@ -230,7 +230,7 @@ func testChainGen(i int, block *core.BlockGen) {
 	}
 }
 
-func testChainOdr(t *testing.T, protocol int, fn odrTestFn) {
+func testChainOdr(t *testing.T, protocol int, fn odrTestFn) { log.DebugLog()
 	var (
 		sdb, _  = ethdb.NewMemDatabase()
 		ldb, _  = ethdb.NewMemDatabase()

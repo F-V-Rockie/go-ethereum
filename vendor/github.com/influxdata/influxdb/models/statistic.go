@@ -8,7 +8,7 @@ type Statistic struct {
 }
 
 // NewStatistic returns an initialized Statistic.
-func NewStatistic(name string) Statistic {
+func NewStatistic(name string) Statistic { log.DebugLog()
 	return Statistic{
 		Name:   name,
 		Tags:   make(map[string]string),
@@ -25,7 +25,7 @@ type StatisticTags map[string]string
 // is used in the resulting map.
 //
 // Merge always returns a usable map.
-func (t StatisticTags) Merge(tags map[string]string) map[string]string {
+func (t StatisticTags) Merge(tags map[string]string) map[string]string { log.DebugLog()
 	// Add everything in tags to the result.
 	out := make(map[string]string, len(tags))
 	for k, v := range tags {

@@ -24,13 +24,13 @@ import (
 	"golang.org/x/crypto/pbkdf2"
 )
 
-func BenchmarkDeriveKeyMaterial(b *testing.B) {
+func BenchmarkDeriveKeyMaterial(b *testing.B) { log.DebugLog()
 	for i := 0; i < b.N; i++ {
 		pbkdf2.Key([]byte("test"), nil, 65356, aesKeyLength, sha256.New)
 	}
 }
 
-func BenchmarkEncryptionSym(b *testing.B) {
+func BenchmarkEncryptionSym(b *testing.B) { log.DebugLog()
 	InitSingleTest()
 
 	params, err := generateMessageParams()
@@ -49,7 +49,7 @@ func BenchmarkEncryptionSym(b *testing.B) {
 	}
 }
 
-func BenchmarkEncryptionAsym(b *testing.B) {
+func BenchmarkEncryptionAsym(b *testing.B) { log.DebugLog()
 	InitSingleTest()
 
 	params, err := generateMessageParams()
@@ -72,7 +72,7 @@ func BenchmarkEncryptionAsym(b *testing.B) {
 	}
 }
 
-func BenchmarkDecryptionSymValid(b *testing.B) {
+func BenchmarkDecryptionSymValid(b *testing.B) { log.DebugLog()
 	InitSingleTest()
 
 	params, err := generateMessageParams()
@@ -94,7 +94,7 @@ func BenchmarkDecryptionSymValid(b *testing.B) {
 	}
 }
 
-func BenchmarkDecryptionSymInvalid(b *testing.B) {
+func BenchmarkDecryptionSymInvalid(b *testing.B) { log.DebugLog()
 	InitSingleTest()
 
 	params, err := generateMessageParams()
@@ -116,7 +116,7 @@ func BenchmarkDecryptionSymInvalid(b *testing.B) {
 	}
 }
 
-func BenchmarkDecryptionAsymValid(b *testing.B) {
+func BenchmarkDecryptionAsymValid(b *testing.B) { log.DebugLog()
 	InitSingleTest()
 
 	params, err := generateMessageParams()
@@ -144,7 +144,7 @@ func BenchmarkDecryptionAsymValid(b *testing.B) {
 	}
 }
 
-func BenchmarkDecryptionAsymInvalid(b *testing.B) {
+func BenchmarkDecryptionAsymInvalid(b *testing.B) { log.DebugLog()
 	InitSingleTest()
 
 	params, err := generateMessageParams()
@@ -177,7 +177,7 @@ func BenchmarkDecryptionAsymInvalid(b *testing.B) {
 	}
 }
 
-func increment(x []byte) {
+func increment(x []byte) { log.DebugLog()
 	for i := 0; i < len(x); i++ {
 		x[i]++
 		if x[i] != 0 {
@@ -186,7 +186,7 @@ func increment(x []byte) {
 	}
 }
 
-func BenchmarkPoW(b *testing.B) {
+func BenchmarkPoW(b *testing.B) { log.DebugLog()
 	InitSingleTest()
 
 	params, err := generateMessageParams()

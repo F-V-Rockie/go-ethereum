@@ -31,7 +31,7 @@ var topicStringTests = []struct {
 	{topic: TopicType{0xf2, 0x6e, 0x77, 0x79}, str: "0xf26e7779"},
 }
 
-func TestTopicString(t *testing.T) {
+func TestTopicString(t *testing.T) { log.DebugLog()
 	for i, tst := range topicStringTests {
 		s := tst.topic.String()
 		if s != tst.str {
@@ -88,7 +88,7 @@ var unmarshalTestsUgly = []struct {
 	{topic: TopicType{0x01, 0x00, 0x00, 0x00}, data: []byte(`"0x00000001"`)},
 }
 
-func TestBytesToTopic(t *testing.T) {
+func TestBytesToTopic(t *testing.T) { log.DebugLog()
 	for i, tst := range bytesToTopicTests {
 		top := BytesToTopic(tst.data)
 		if top != tst.topic {
@@ -97,7 +97,7 @@ func TestBytesToTopic(t *testing.T) {
 	}
 }
 
-func TestUnmarshalTestsGood(t *testing.T) {
+func TestUnmarshalTestsGood(t *testing.T) { log.DebugLog()
 	for i, tst := range unmarshalTestsGood {
 		var top TopicType
 		err := json.Unmarshal(tst.data, &top)
@@ -109,7 +109,7 @@ func TestUnmarshalTestsGood(t *testing.T) {
 	}
 }
 
-func TestUnmarshalTestsBad(t *testing.T) {
+func TestUnmarshalTestsBad(t *testing.T) { log.DebugLog()
 	// in this test UnmarshalJSON() is supposed to fail
 	for i, tst := range unmarshalTestsBad {
 		var top TopicType
@@ -120,7 +120,7 @@ func TestUnmarshalTestsBad(t *testing.T) {
 	}
 }
 
-func TestUnmarshalTestsUgly(t *testing.T) {
+func TestUnmarshalTestsUgly(t *testing.T) { log.DebugLog()
 	// in this test UnmarshalJSON() is NOT supposed to fail, but result should be wrong
 	for i, tst := range unmarshalTestsUgly {
 		var top TopicType

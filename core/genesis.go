@@ -64,7 +64,7 @@ type Genesis struct {
 // GenesisAlloc specifies the initial state that is part of the genesis block.
 type GenesisAlloc map[common.Address]GenesisAccount
 
-func (ga *GenesisAlloc) UnmarshalJSON(data []byte) error {
+func (ga *GenesisAlloc) UnmarshalJSON(data []byte) error { log.DebugLog()
 	m := make(map[common.UnprefixedAddress]GenesisAccount)
 	if err := json.Unmarshal(data, &m); err != nil {
 		return err
@@ -109,7 +109,7 @@ type genesisAccountMarshaling struct {
 // unmarshaling from hex.
 type storageJSON common.Hash
 
-func (h *storageJSON) UnmarshalText(text []byte) error {
+func (h *storageJSON) UnmarshalText(text []byte) error { log.DebugLog()
 	text = bytes.TrimPrefix(text, []byte("0x"))
 	if len(text) > 64 {
 		return fmt.Errorf("too many hex characters in storage key/value %q", text)
@@ -122,7 +122,7 @@ func (h *storageJSON) UnmarshalText(text []byte) error {
 	return nil
 }
 
-func (h storageJSON) MarshalText() ([]byte, error) {
+func (h storageJSON) MarshalText() ([]byte, error) { log.DebugLog()
 	return hexutil.Bytes(h[:]).MarshalText()
 }
 
@@ -132,7 +132,7 @@ type GenesisMismatchError struct {
 	Stored, New common.Hash
 }
 
-func (e *GenesisMismatchError) Error() string {
+func (e *GenesisMismatchError) Error() string { log.DebugLog()
 	return fmt.Sprintf("database already contains an incompatible genesis block (have %x, new %x)", e.Stored[:8], e.New[:8])
 }
 
@@ -149,7 +149,7 @@ func (e *GenesisMismatchError) Error() string {
 // error is a *params.ConfigCompatError and the new, unwritten config is returned.
 //
 // The returned chain configuration is never nil.
-func SetupGenesisBlock(db ethdb.Database, genesis *Genesis) (*params.ChainConfig, common.Hash, error) {
+func SetupGenesisBlock(db ethdb.Database, genesis *Genesis) (*params.ChainConfig, common.Hash, error) { log.DebugLog()
 	if genesis != nil && genesis.Config == nil {
 		return params.AllEthashProtocolChanges, common.Hash{}, errGenesisNoConfig
 	}
@@ -206,7 +206,7 @@ func SetupGenesisBlock(db ethdb.Database, genesis *Genesis) (*params.ChainConfig
 	return newcfg, stored, WriteChainConfig(db, stored, newcfg)
 }
 
-func (g *Genesis) configOrDefault(ghash common.Hash) *params.ChainConfig {
+func (g *Genesis) configOrDefault(ghash common.Hash) *params.ChainConfig { log.DebugLog()
 	switch {
 	case g != nil:
 		return g.Config
@@ -221,7 +221,7 @@ func (g *Genesis) configOrDefault(ghash common.Hash) *params.ChainConfig {
 
 // ToBlock creates the genesis block and writes state of a genesis specification
 // to the given database (or discards it if nil).
-func (g *Genesis) ToBlock(db ethdb.Database) *types.Block {
+func (g *Genesis) ToBlock(db ethdb.Database) *types.Block { log.DebugLog()
 	if db == nil {
 		db, _ = ethdb.NewMemDatabase()
 	}
@@ -262,7 +262,7 @@ func (g *Genesis) ToBlock(db ethdb.Database) *types.Block {
 
 // Commit writes the block and state of a genesis specification to the database.
 // The block is committed as the canonical head block.
-func (g *Genesis) Commit(db ethdb.Database) (*types.Block, error) {
+func (g *Genesis) Commit(db ethdb.Database) (*types.Block, error) { log.DebugLog()
 	block := g.ToBlock(db)
 	if block.Number().Sign() != 0 {
 		return nil, fmt.Errorf("can't commit genesis block with number > 0")
@@ -294,7 +294,7 @@ func (g *Genesis) Commit(db ethdb.Database) (*types.Block, error) {
 
 // MustCommit writes the genesis block and state to db, panicking on error.
 // The block is committed as the canonical head block.
-func (g *Genesis) MustCommit(db ethdb.Database) *types.Block {
+func (g *Genesis) MustCommit(db ethdb.Database) *types.Block { log.DebugLog()
 	block, err := g.Commit(db)
 	if err != nil {
 		panic(err)
@@ -303,14 +303,14 @@ func (g *Genesis) MustCommit(db ethdb.Database) *types.Block {
 }
 
 // GenesisBlockForTesting creates and writes a block in which addr has the given wei balance.
-func GenesisBlockForTesting(db ethdb.Database, addr common.Address, balance *big.Int) *types.Block {
+func GenesisBlockForTesting(db ethdb.Database, addr common.Address, balance *big.Int) *types.Block { log.DebugLog()
 	g := Genesis{Alloc: GenesisAlloc{addr: {Balance: balance}}}
 	return g.MustCommit(db)
 }
 
 // wyliu: GenesisBlock
 // DefaultGenesisBlock returns the Ethereum main net genesis block.
-func DefaultGenesisBlock() *Genesis {
+func DefaultGenesisBlock() *Genesis { log.DebugLog()
 	return &Genesis{
 		Config:     params.MainnetChainConfig,
 		Nonce:      66,
@@ -322,7 +322,7 @@ func DefaultGenesisBlock() *Genesis {
 }
 
 // DefaultTestnetGenesisBlock returns the Ropsten network genesis block.
-func DefaultTestnetGenesisBlock() *Genesis {
+func DefaultTestnetGenesisBlock() *Genesis { log.DebugLog()
 	return &Genesis{
 		Config:     params.TestnetChainConfig,
 		Nonce:      66,
@@ -334,7 +334,7 @@ func DefaultTestnetGenesisBlock() *Genesis {
 }
 
 // DefaultRinkebyGenesisBlock returns the Rinkeby network genesis block.
-func DefaultRinkebyGenesisBlock() *Genesis {
+func DefaultRinkebyGenesisBlock() *Genesis { log.DebugLog()
 	return &Genesis{
 		Config:     params.RinkebyChainConfig,
 		Timestamp:  1492009146,
@@ -347,7 +347,7 @@ func DefaultRinkebyGenesisBlock() *Genesis {
 
 // DeveloperGenesisBlock returns the 'geth --dev' genesis block. Note, this must
 // be seeded with the
-func DeveloperGenesisBlock(period uint64, faucet common.Address) *Genesis {
+func DeveloperGenesisBlock(period uint64, faucet common.Address) *Genesis { log.DebugLog()
 	// Override the default period to the user requested one
 	config := *params.AllCliqueProtocolChanges
 	config.Clique.Period = period
@@ -372,7 +372,7 @@ func DeveloperGenesisBlock(period uint64, faucet common.Address) *Genesis {
 	}
 }
 
-func decodePrealloc(data string) GenesisAlloc {
+func decodePrealloc(data string) GenesisAlloc { log.DebugLog()
 	var p []struct{ Addr, Balance *big.Int }
 	if err := rlp.NewStream(strings.NewReader(data), 0).Decode(&p); err != nil {
 		panic(err)

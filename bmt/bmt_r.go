@@ -36,7 +36,7 @@ type RefHasher struct {
 }
 
 // NewRefHasher returns a new RefHasher
-func NewRefHasher(hasher BaseHasher, count int) *RefHasher {
+func NewRefHasher(hasher BaseHasher, count int) *RefHasher { log.DebugLog()
 	h := hasher()
 	hashsize := h.Size()
 	maxsize := hashsize * count
@@ -56,7 +56,7 @@ func NewRefHasher(hasher BaseHasher, count int) *RefHasher {
 
 // Hash returns the BMT hash of the byte slice
 // implements the SwarmHash interface
-func (rh *RefHasher) Hash(d []byte) []byte {
+func (rh *RefHasher) Hash(d []byte) []byte { log.DebugLog()
 	if len(d) > rh.cap {
 		d = d[:rh.cap]
 	}
@@ -64,7 +64,7 @@ func (rh *RefHasher) Hash(d []byte) []byte {
 	return rh.hash(d, rh.span)
 }
 
-func (rh *RefHasher) hash(d []byte, s int) []byte {
+func (rh *RefHasher) hash(d []byte, s int) []byte { log.DebugLog()
 	l := len(d)
 	left := d
 	var right []byte

@@ -27,7 +27,7 @@ import (
 )
 
 // FuzzAdd fuzzez bn256 addition between the Google and Cloudflare libraries.
-func FuzzAdd(data []byte) int {
+func FuzzAdd(data []byte) int { log.DebugLog()
 	// Ensure we have enough data in the first place
 	if len(data) != 128 {
 		return 0
@@ -71,7 +71,7 @@ func FuzzAdd(data []byte) int {
 
 // FuzzMul fuzzez bn256 scalar multiplication between the Google and Cloudflare
 // libraries.
-func FuzzMul(data []byte) int {
+func FuzzMul(data []byte) int { log.DebugLog()
 	// Ensure we have enough data in the first place
 	if len(data) != 96 {
 		return 0
@@ -101,7 +101,7 @@ func FuzzMul(data []byte) int {
 	return 0
 }
 
-func FuzzPair(data []byte) int {
+func FuzzPair(data []byte) int { log.DebugLog()
 	// Ensure we have enough data in the first place
 	if len(data) != 192 {
 		return 0

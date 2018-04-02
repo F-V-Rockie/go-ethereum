@@ -83,7 +83,7 @@ services:
 // deployFaucet deploys a new faucet container to a remote machine via SSH,
 // docker and docker-compose. If an instance with the specified network name
 // already exists there, it will be overwritten!
-func deployFaucet(client *sshClient, network string, bootnodes []string, config *faucetInfos, nocache bool) ([]byte, error) {
+func deployFaucet(client *sshClient, network string, bootnodes []string, config *faucetInfos, nocache bool) ([]byte, error) { log.DebugLog()
 	// Generate the content to upload to the server
 	workdir := fmt.Sprintf("%d", rand.Int63())
 	files := make(map[string][]byte)
@@ -154,7 +154,7 @@ type faucetInfos struct {
 
 // Report converts the typed struct into a plain string->string map, containing
 // most - but not all - fields for reporting to the user.
-func (info *faucetInfos) Report() map[string]string {
+func (info *faucetInfos) Report() map[string]string { log.DebugLog()
 	report := map[string]string{
 		"Website address":              info.host,
 		"Website listener port":        strconv.Itoa(info.port),
@@ -183,7 +183,7 @@ func (info *faucetInfos) Report() map[string]string {
 
 // checkFaucet does a health-check against an faucet server to verify whether
 // it's running, and if yes, gathering a collection of useful infos about it.
-func checkFaucet(client *sshClient, network string) (*faucetInfos, error) {
+func checkFaucet(client *sshClient, network string) (*faucetInfos, error) { log.DebugLog()
 	// Inspect a possible faucet container on the host
 	infos, err := inspectContainer(client, fmt.Sprintf("%s_faucet_1", network))
 	if err != nil {

@@ -91,7 +91,7 @@ var isSpecialElementMap = map[string]bool{
 	"xmp":        true,
 }
 
-func isSpecialElement(element *Node) bool {
+func isSpecialElement(element *Node) bool { log.DebugLog()
 	switch element.Namespace {
 	case "", "html":
 		return isSpecialElementMap[element.Data]

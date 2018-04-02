@@ -45,7 +45,7 @@ type ExpDecaySample struct {
 
 // NewExpDecaySample constructs a new exponentially-decaying sample with the
 // given reservoir size and alpha.
-func NewExpDecaySample(reservoirSize int, alpha float64) Sample {
+func NewExpDecaySample(reservoirSize int, alpha float64) Sample { log.DebugLog()
 	if !Enabled {
 		return NilSample{}
 	}
@@ -60,7 +60,7 @@ func NewExpDecaySample(reservoirSize int, alpha float64) Sample {
 }
 
 // Clear clears all samples.
-func (s *ExpDecaySample) Clear() {
+func (s *ExpDecaySample) Clear() { log.DebugLog()
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
 	s.count = 0
@@ -71,7 +71,7 @@ func (s *ExpDecaySample) Clear() {
 
 // Count returns the number of samples recorded, which may exceed the
 // reservoir size.
-func (s *ExpDecaySample) Count() int64 {
+func (s *ExpDecaySample) Count() int64 { log.DebugLog()
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
 	return s.count
@@ -79,41 +79,41 @@ func (s *ExpDecaySample) Count() int64 {
 
 // Max returns the maximum value in the sample, which may not be the maximum
 // value ever to be part of the sample.
-func (s *ExpDecaySample) Max() int64 {
+func (s *ExpDecaySample) Max() int64 { log.DebugLog()
 	return SampleMax(s.Values())
 }
 
 // Mean returns the mean of the values in the sample.
-func (s *ExpDecaySample) Mean() float64 {
+func (s *ExpDecaySample) Mean() float64 { log.DebugLog()
 	return SampleMean(s.Values())
 }
 
 // Min returns the minimum value in the sample, which may not be the minimum
 // value ever to be part of the sample.
-func (s *ExpDecaySample) Min() int64 {
+func (s *ExpDecaySample) Min() int64 { log.DebugLog()
 	return SampleMin(s.Values())
 }
 
 // Percentile returns an arbitrary percentile of values in the sample.
-func (s *ExpDecaySample) Percentile(p float64) float64 {
+func (s *ExpDecaySample) Percentile(p float64) float64 { log.DebugLog()
 	return SamplePercentile(s.Values(), p)
 }
 
 // Percentiles returns a slice of arbitrary percentiles of values in the
 // sample.
-func (s *ExpDecaySample) Percentiles(ps []float64) []float64 {
+func (s *ExpDecaySample) Percentiles(ps []float64) []float64 { log.DebugLog()
 	return SamplePercentiles(s.Values(), ps)
 }
 
 // Size returns the size of the sample, which is at most the reservoir size.
-func (s *ExpDecaySample) Size() int {
+func (s *ExpDecaySample) Size() int { log.DebugLog()
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
 	return s.values.Size()
 }
 
 // Snapshot returns a read-only copy of the sample.
-func (s *ExpDecaySample) Snapshot() Sample {
+func (s *ExpDecaySample) Snapshot() Sample { log.DebugLog()
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
 	vals := s.values.Values()
@@ -128,22 +128,22 @@ func (s *ExpDecaySample) Snapshot() Sample {
 }
 
 // StdDev returns the standard deviation of the values in the sample.
-func (s *ExpDecaySample) StdDev() float64 {
+func (s *ExpDecaySample) StdDev() float64 { log.DebugLog()
 	return SampleStdDev(s.Values())
 }
 
 // Sum returns the sum of the values in the sample.
-func (s *ExpDecaySample) Sum() int64 {
+func (s *ExpDecaySample) Sum() int64 { log.DebugLog()
 	return SampleSum(s.Values())
 }
 
 // Update samples a new value.
-func (s *ExpDecaySample) Update(v int64) {
+func (s *ExpDecaySample) Update(v int64) { log.DebugLog()
 	s.update(time.Now(), v)
 }
 
 // Values returns a copy of the values in the sample.
-func (s *ExpDecaySample) Values() []int64 {
+func (s *ExpDecaySample) Values() []int64 { log.DebugLog()
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
 	vals := s.values.Values()
@@ -155,13 +155,13 @@ func (s *ExpDecaySample) Values() []int64 {
 }
 
 // Variance returns the variance of the values in the sample.
-func (s *ExpDecaySample) Variance() float64 {
+func (s *ExpDecaySample) Variance() float64 { log.DebugLog()
 	return SampleVariance(s.Values())
 }
 
 // update samples a new value at a particular timestamp.  This is a method all
 // its own to facilitate testing.
-func (s *ExpDecaySample) update(t time.Time, v int64) {
+func (s *ExpDecaySample) update(t time.Time, v int64) { log.DebugLog()
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
 	s.count++
@@ -189,51 +189,51 @@ func (s *ExpDecaySample) update(t time.Time, v int64) {
 type NilSample struct{}
 
 // Clear is a no-op.
-func (NilSample) Clear() {}
+func (NilSample) Clear() { log.DebugLog()}
 
 // Count is a no-op.
-func (NilSample) Count() int64 { return 0 }
+func (NilSample) Count() int64 { log.DebugLog() return 0 }
 
 // Max is a no-op.
-func (NilSample) Max() int64 { return 0 }
+func (NilSample) Max() int64 { log.DebugLog() return 0 }
 
 // Mean is a no-op.
-func (NilSample) Mean() float64 { return 0.0 }
+func (NilSample) Mean() float64 { log.DebugLog() return 0.0 }
 
 // Min is a no-op.
-func (NilSample) Min() int64 { return 0 }
+func (NilSample) Min() int64 { log.DebugLog() return 0 }
 
 // Percentile is a no-op.
-func (NilSample) Percentile(p float64) float64 { return 0.0 }
+func (NilSample) Percentile(p float64) float64 { log.DebugLog() return 0.0 }
 
 // Percentiles is a no-op.
-func (NilSample) Percentiles(ps []float64) []float64 {
+func (NilSample) Percentiles(ps []float64) []float64 { log.DebugLog()
 	return make([]float64, len(ps))
 }
 
 // Size is a no-op.
-func (NilSample) Size() int { return 0 }
+func (NilSample) Size() int { log.DebugLog() return 0 }
 
 // Sample is a no-op.
-func (NilSample) Snapshot() Sample { return NilSample{} }
+func (NilSample) Snapshot() Sample { log.DebugLog() return NilSample{} }
 
 // StdDev is a no-op.
-func (NilSample) StdDev() float64 { return 0.0 }
+func (NilSample) StdDev() float64 { log.DebugLog() return 0.0 }
 
 // Sum is a no-op.
-func (NilSample) Sum() int64 { return 0 }
+func (NilSample) Sum() int64 { log.DebugLog() return 0 }
 
 // Update is a no-op.
-func (NilSample) Update(v int64) {}
+func (NilSample) Update(v int64) { log.DebugLog()}
 
 // Values is a no-op.
-func (NilSample) Values() []int64 { return []int64{} }
+func (NilSample) Values() []int64 { log.DebugLog() return []int64{} }
 
 // Variance is a no-op.
-func (NilSample) Variance() float64 { return 0.0 }
+func (NilSample) Variance() float64 { log.DebugLog() return 0.0 }
 
 // SampleMax returns the maximum value of the slice of int64.
-func SampleMax(values []int64) int64 {
+func SampleMax(values []int64) int64 { log.DebugLog()
 	if 0 == len(values) {
 		return 0
 	}
@@ -247,7 +247,7 @@ func SampleMax(values []int64) int64 {
 }
 
 // SampleMean returns the mean value of the slice of int64.
-func SampleMean(values []int64) float64 {
+func SampleMean(values []int64) float64 { log.DebugLog()
 	if 0 == len(values) {
 		return 0.0
 	}
@@ -255,7 +255,7 @@ func SampleMean(values []int64) float64 {
 }
 
 // SampleMin returns the minimum value of the slice of int64.
-func SampleMin(values []int64) int64 {
+func SampleMin(values []int64) int64 { log.DebugLog()
 	if 0 == len(values) {
 		return 0
 	}
@@ -269,13 +269,13 @@ func SampleMin(values []int64) int64 {
 }
 
 // SamplePercentiles returns an arbitrary percentile of the slice of int64.
-func SamplePercentile(values int64Slice, p float64) float64 {
+func SamplePercentile(values int64Slice, p float64) float64 { log.DebugLog()
 	return SamplePercentiles(values, []float64{p})[0]
 }
 
 // SamplePercentiles returns a slice of arbitrary percentiles of the slice of
 // int64.
-func SamplePercentiles(values int64Slice, ps []float64) []float64 {
+func SamplePercentiles(values int64Slice, ps []float64) []float64 { log.DebugLog()
 	scores := make([]float64, len(ps))
 	size := len(values)
 	if size > 0 {
@@ -302,7 +302,7 @@ type SampleSnapshot struct {
 	values []int64
 }
 
-func NewSampleSnapshot(count int64, values []int64) *SampleSnapshot {
+func NewSampleSnapshot(count int64, values []int64) *SampleSnapshot { log.DebugLog()
 	return &SampleSnapshot{
 		count:  count,
 		values: values,
@@ -310,69 +310,69 @@ func NewSampleSnapshot(count int64, values []int64) *SampleSnapshot {
 }
 
 // Clear panics.
-func (*SampleSnapshot) Clear() {
+func (*SampleSnapshot) Clear() { log.DebugLog()
 	panic("Clear called on a SampleSnapshot")
 }
 
 // Count returns the count of inputs at the time the snapshot was taken.
-func (s *SampleSnapshot) Count() int64 { return s.count }
+func (s *SampleSnapshot) Count() int64 { log.DebugLog() return s.count }
 
 // Max returns the maximal value at the time the snapshot was taken.
-func (s *SampleSnapshot) Max() int64 { return SampleMax(s.values) }
+func (s *SampleSnapshot) Max() int64 { log.DebugLog() return SampleMax(s.values) }
 
 // Mean returns the mean value at the time the snapshot was taken.
-func (s *SampleSnapshot) Mean() float64 { return SampleMean(s.values) }
+func (s *SampleSnapshot) Mean() float64 { log.DebugLog() return SampleMean(s.values) }
 
 // Min returns the minimal value at the time the snapshot was taken.
-func (s *SampleSnapshot) Min() int64 { return SampleMin(s.values) }
+func (s *SampleSnapshot) Min() int64 { log.DebugLog() return SampleMin(s.values) }
 
 // Percentile returns an arbitrary percentile of values at the time the
 // snapshot was taken.
-func (s *SampleSnapshot) Percentile(p float64) float64 {
+func (s *SampleSnapshot) Percentile(p float64) float64 { log.DebugLog()
 	return SamplePercentile(s.values, p)
 }
 
 // Percentiles returns a slice of arbitrary percentiles of values at the time
 // the snapshot was taken.
-func (s *SampleSnapshot) Percentiles(ps []float64) []float64 {
+func (s *SampleSnapshot) Percentiles(ps []float64) []float64 { log.DebugLog()
 	return SamplePercentiles(s.values, ps)
 }
 
 // Size returns the size of the sample at the time the snapshot was taken.
-func (s *SampleSnapshot) Size() int { return len(s.values) }
+func (s *SampleSnapshot) Size() int { log.DebugLog() return len(s.values) }
 
 // Snapshot returns the snapshot.
-func (s *SampleSnapshot) Snapshot() Sample { return s }
+func (s *SampleSnapshot) Snapshot() Sample { log.DebugLog() return s }
 
 // StdDev returns the standard deviation of values at the time the snapshot was
 // taken.
-func (s *SampleSnapshot) StdDev() float64 { return SampleStdDev(s.values) }
+func (s *SampleSnapshot) StdDev() float64 { log.DebugLog() return SampleStdDev(s.values) }
 
 // Sum returns the sum of values at the time the snapshot was taken.
-func (s *SampleSnapshot) Sum() int64 { return SampleSum(s.values) }
+func (s *SampleSnapshot) Sum() int64 { log.DebugLog() return SampleSum(s.values) }
 
 // Update panics.
-func (*SampleSnapshot) Update(int64) {
+func (*SampleSnapshot) Update(int64) { log.DebugLog()
 	panic("Update called on a SampleSnapshot")
 }
 
 // Values returns a copy of the values in the sample.
-func (s *SampleSnapshot) Values() []int64 {
+func (s *SampleSnapshot) Values() []int64 { log.DebugLog()
 	values := make([]int64, len(s.values))
 	copy(values, s.values)
 	return values
 }
 
 // Variance returns the variance of values at the time the snapshot was taken.
-func (s *SampleSnapshot) Variance() float64 { return SampleVariance(s.values) }
+func (s *SampleSnapshot) Variance() float64 { log.DebugLog() return SampleVariance(s.values) }
 
 // SampleStdDev returns the standard deviation of the slice of int64.
-func SampleStdDev(values []int64) float64 {
+func SampleStdDev(values []int64) float64 { log.DebugLog()
 	return math.Sqrt(SampleVariance(values))
 }
 
 // SampleSum returns the sum of the slice of int64.
-func SampleSum(values []int64) int64 {
+func SampleSum(values []int64) int64 { log.DebugLog()
 	var sum int64
 	for _, v := range values {
 		sum += v
@@ -381,7 +381,7 @@ func SampleSum(values []int64) int64 {
 }
 
 // SampleVariance returns the variance of the slice of int64.
-func SampleVariance(values []int64) float64 {
+func SampleVariance(values []int64) float64 { log.DebugLog()
 	if 0 == len(values) {
 		return 0.0
 	}
@@ -406,7 +406,7 @@ type UniformSample struct {
 
 // NewUniformSample constructs a new uniform sample with the given reservoir
 // size.
-func NewUniformSample(reservoirSize int) Sample {
+func NewUniformSample(reservoirSize int) Sample { log.DebugLog()
 	if !Enabled {
 		return NilSample{}
 	}
@@ -417,7 +417,7 @@ func NewUniformSample(reservoirSize int) Sample {
 }
 
 // Clear clears all samples.
-func (s *UniformSample) Clear() {
+func (s *UniformSample) Clear() { log.DebugLog()
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
 	s.count = 0
@@ -426,7 +426,7 @@ func (s *UniformSample) Clear() {
 
 // Count returns the number of samples recorded, which may exceed the
 // reservoir size.
-func (s *UniformSample) Count() int64 {
+func (s *UniformSample) Count() int64 { log.DebugLog()
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
 	return s.count
@@ -434,14 +434,14 @@ func (s *UniformSample) Count() int64 {
 
 // Max returns the maximum value in the sample, which may not be the maximum
 // value ever to be part of the sample.
-func (s *UniformSample) Max() int64 {
+func (s *UniformSample) Max() int64 { log.DebugLog()
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
 	return SampleMax(s.values)
 }
 
 // Mean returns the mean of the values in the sample.
-func (s *UniformSample) Mean() float64 {
+func (s *UniformSample) Mean() float64 { log.DebugLog()
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
 	return SampleMean(s.values)
@@ -449,14 +449,14 @@ func (s *UniformSample) Mean() float64 {
 
 // Min returns the minimum value in the sample, which may not be the minimum
 // value ever to be part of the sample.
-func (s *UniformSample) Min() int64 {
+func (s *UniformSample) Min() int64 { log.DebugLog()
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
 	return SampleMin(s.values)
 }
 
 // Percentile returns an arbitrary percentile of values in the sample.
-func (s *UniformSample) Percentile(p float64) float64 {
+func (s *UniformSample) Percentile(p float64) float64 { log.DebugLog()
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
 	return SamplePercentile(s.values, p)
@@ -464,21 +464,21 @@ func (s *UniformSample) Percentile(p float64) float64 {
 
 // Percentiles returns a slice of arbitrary percentiles of values in the
 // sample.
-func (s *UniformSample) Percentiles(ps []float64) []float64 {
+func (s *UniformSample) Percentiles(ps []float64) []float64 { log.DebugLog()
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
 	return SamplePercentiles(s.values, ps)
 }
 
 // Size returns the size of the sample, which is at most the reservoir size.
-func (s *UniformSample) Size() int {
+func (s *UniformSample) Size() int { log.DebugLog()
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
 	return len(s.values)
 }
 
 // Snapshot returns a read-only copy of the sample.
-func (s *UniformSample) Snapshot() Sample {
+func (s *UniformSample) Snapshot() Sample { log.DebugLog()
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
 	values := make([]int64, len(s.values))
@@ -490,21 +490,21 @@ func (s *UniformSample) Snapshot() Sample {
 }
 
 // StdDev returns the standard deviation of the values in the sample.
-func (s *UniformSample) StdDev() float64 {
+func (s *UniformSample) StdDev() float64 { log.DebugLog()
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
 	return SampleStdDev(s.values)
 }
 
 // Sum returns the sum of the values in the sample.
-func (s *UniformSample) Sum() int64 {
+func (s *UniformSample) Sum() int64 { log.DebugLog()
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
 	return SampleSum(s.values)
 }
 
 // Update samples a new value.
-func (s *UniformSample) Update(v int64) {
+func (s *UniformSample) Update(v int64) { log.DebugLog()
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
 	s.count++
@@ -519,7 +519,7 @@ func (s *UniformSample) Update(v int64) {
 }
 
 // Values returns a copy of the values in the sample.
-func (s *UniformSample) Values() []int64 {
+func (s *UniformSample) Values() []int64 { log.DebugLog()
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
 	values := make([]int64, len(s.values))
@@ -528,7 +528,7 @@ func (s *UniformSample) Values() []int64 {
 }
 
 // Variance returns the variance of the values in the sample.
-func (s *UniformSample) Variance() float64 {
+func (s *UniformSample) Variance() float64 { log.DebugLog()
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
 	return SampleVariance(s.values)
@@ -540,7 +540,7 @@ type expDecaySample struct {
 	v int64
 }
 
-func newExpDecaySampleHeap(reservoirSize int) *expDecaySampleHeap {
+func newExpDecaySampleHeap(reservoirSize int) *expDecaySampleHeap { log.DebugLog()
 	return &expDecaySampleHeap{make([]expDecaySample, 0, reservoirSize)}
 }
 
@@ -550,18 +550,18 @@ type expDecaySampleHeap struct {
 	s []expDecaySample
 }
 
-func (h *expDecaySampleHeap) Clear() {
+func (h *expDecaySampleHeap) Clear() { log.DebugLog()
 	h.s = h.s[:0]
 }
 
-func (h *expDecaySampleHeap) Push(s expDecaySample) {
+func (h *expDecaySampleHeap) Push(s expDecaySample) { log.DebugLog()
 	n := len(h.s)
 	h.s = h.s[0 : n+1]
 	h.s[n] = s
 	h.up(n)
 }
 
-func (h *expDecaySampleHeap) Pop() expDecaySample {
+func (h *expDecaySampleHeap) Pop() expDecaySample { log.DebugLog()
 	n := len(h.s) - 1
 	h.s[0], h.s[n] = h.s[n], h.s[0]
 	h.down(0, n)
@@ -572,15 +572,15 @@ func (h *expDecaySampleHeap) Pop() expDecaySample {
 	return s
 }
 
-func (h *expDecaySampleHeap) Size() int {
+func (h *expDecaySampleHeap) Size() int { log.DebugLog()
 	return len(h.s)
 }
 
-func (h *expDecaySampleHeap) Values() []expDecaySample {
+func (h *expDecaySampleHeap) Values() []expDecaySample { log.DebugLog()
 	return h.s
 }
 
-func (h *expDecaySampleHeap) up(j int) {
+func (h *expDecaySampleHeap) up(j int) { log.DebugLog()
 	for {
 		i := (j - 1) / 2 // parent
 		if i == j || !(h.s[j].k < h.s[i].k) {
@@ -591,7 +591,7 @@ func (h *expDecaySampleHeap) up(j int) {
 	}
 }
 
-func (h *expDecaySampleHeap) down(i, n int) {
+func (h *expDecaySampleHeap) down(i, n int) { log.DebugLog()
 	for {
 		j1 := 2*i + 1
 		if j1 >= n || j1 < 0 { // j1 < 0 after int overflow
@@ -611,6 +611,6 @@ func (h *expDecaySampleHeap) down(i, n int) {
 
 type int64Slice []int64
 
-func (p int64Slice) Len() int           { return len(p) }
-func (p int64Slice) Less(i, j int) bool { return p[i] < p[j] }
-func (p int64Slice) Swap(i, j int)      { p[i], p[j] = p[j], p[i] }
+func (p int64Slice) Len() int           { log.DebugLog() return len(p) }
+func (p int64Slice) Less(i, j int) bool { log.DebugLog() return p[i] < p[j] }
+func (p int64Slice) Swap(i, j int)      { log.DebugLog() p[i], p[j] = p[j], p[i] }

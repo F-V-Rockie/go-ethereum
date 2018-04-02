@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestG1Marshal(t *testing.T) {
+func TestG1Marshal(t *testing.T) { log.DebugLog()
 	_, Ga, err := RandomG1(rand.Reader)
 	if err != nil {
 		t.Fatal(err)
@@ -25,7 +25,7 @@ func TestG1Marshal(t *testing.T) {
 	}
 }
 
-func TestG2Marshal(t *testing.T) {
+func TestG2Marshal(t *testing.T) { log.DebugLog()
 	_, Ga, err := RandomG2(rand.Reader)
 	if err != nil {
 		t.Fatal(err)
@@ -44,7 +44,7 @@ func TestG2Marshal(t *testing.T) {
 	}
 }
 
-func TestBilinearity(t *testing.T) {
+func TestBilinearity(t *testing.T) { log.DebugLog()
 	for i := 0; i < 2; i++ {
 		a, p1, _ := RandomG1(rand.Reader)
 		b, p2, _ := RandomG2(rand.Reader)
@@ -60,7 +60,7 @@ func TestBilinearity(t *testing.T) {
 	}
 }
 
-func TestTripartiteDiffieHellman(t *testing.T) {
+func TestTripartiteDiffieHellman(t *testing.T) { log.DebugLog()
 	a, _ := rand.Int(rand.Reader, Order)
 	b, _ := rand.Int(rand.Reader, Order)
 	c, _ := rand.Int(rand.Reader, Order)
@@ -92,7 +92,7 @@ func TestTripartiteDiffieHellman(t *testing.T) {
 	}
 }
 
-func BenchmarkG1(b *testing.B) {
+func BenchmarkG1(b *testing.B) { log.DebugLog()
 	x, _ := rand.Int(rand.Reader, Order)
 	b.ResetTimer()
 
@@ -101,7 +101,7 @@ func BenchmarkG1(b *testing.B) {
 	}
 }
 
-func BenchmarkG2(b *testing.B) {
+func BenchmarkG2(b *testing.B) { log.DebugLog()
 	x, _ := rand.Int(rand.Reader, Order)
 	b.ResetTimer()
 
@@ -109,7 +109,7 @@ func BenchmarkG2(b *testing.B) {
 		new(G2).ScalarBaseMult(x)
 	}
 }
-func BenchmarkPairing(b *testing.B) {
+func BenchmarkPairing(b *testing.B) { log.DebugLog()
 	for i := 0; i < b.N; i++ {
 		Pair(&G1{curveGen}, &G2{twistGen})
 	}

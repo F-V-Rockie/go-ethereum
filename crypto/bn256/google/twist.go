@@ -40,7 +40,7 @@ var twistGen = &twistPoint{
 	},
 }
 
-func newTwistPoint(pool *bnPool) *twistPoint {
+func newTwistPoint(pool *bnPool) *twistPoint { log.DebugLog()
 	return &twistPoint{
 		newGFp2(pool),
 		newGFp2(pool),
@@ -49,18 +49,18 @@ func newTwistPoint(pool *bnPool) *twistPoint {
 	}
 }
 
-func (c *twistPoint) String() string {
+func (c *twistPoint) String() string { log.DebugLog()
 	return "(" + c.x.String() + ", " + c.y.String() + ", " + c.z.String() + ")"
 }
 
-func (c *twistPoint) Put(pool *bnPool) {
+func (c *twistPoint) Put(pool *bnPool) { log.DebugLog()
 	c.x.Put(pool)
 	c.y.Put(pool)
 	c.z.Put(pool)
 	c.t.Put(pool)
 }
 
-func (c *twistPoint) Set(a *twistPoint) {
+func (c *twistPoint) Set(a *twistPoint) { log.DebugLog()
 	c.x.Set(a.x)
 	c.y.Set(a.y)
 	c.z.Set(a.z)
@@ -68,7 +68,7 @@ func (c *twistPoint) Set(a *twistPoint) {
 }
 
 // IsOnCurve returns true iff c is on the curve where c must be in affine form.
-func (c *twistPoint) IsOnCurve() bool {
+func (c *twistPoint) IsOnCurve() bool { log.DebugLog()
 	pool := new(bnPool)
 	yy := newGFp2(pool).Square(c.y, pool)
 	xxx := newGFp2(pool).Square(c.x, pool)
@@ -85,15 +85,15 @@ func (c *twistPoint) IsOnCurve() bool {
 	return cneg.z.IsZero()
 }
 
-func (c *twistPoint) SetInfinity() {
+func (c *twistPoint) SetInfinity() { log.DebugLog()
 	c.z.SetZero()
 }
 
-func (c *twistPoint) IsInfinity() bool {
+func (c *twistPoint) IsInfinity() bool { log.DebugLog()
 	return c.z.IsZero()
 }
 
-func (c *twistPoint) Add(a, b *twistPoint, pool *bnPool) {
+func (c *twistPoint) Add(a, b *twistPoint, pool *bnPool) { log.DebugLog()
 	// For additional comments, see the same function in curve.go.
 
 	if a.IsInfinity() {
@@ -167,7 +167,7 @@ func (c *twistPoint) Add(a, b *twistPoint, pool *bnPool) {
 	t6.Put(pool)
 }
 
-func (c *twistPoint) Double(a *twistPoint, pool *bnPool) {
+func (c *twistPoint) Double(a *twistPoint, pool *bnPool) { log.DebugLog()
 	// See http://hyperelliptic.org/EFD/g1p/auto-code/shortw/jacobian-0/doubling/dbl-2009-l.op3
 	A := newGFp2(pool).Square(a.x, pool)
 	B := newGFp2(pool).Square(a.y, pool)
@@ -205,7 +205,7 @@ func (c *twistPoint) Double(a *twistPoint, pool *bnPool) {
 	f.Put(pool)
 }
 
-func (c *twistPoint) Mul(a *twistPoint, scalar *big.Int, pool *bnPool) *twistPoint {
+func (c *twistPoint) Mul(a *twistPoint, scalar *big.Int, pool *bnPool) *twistPoint { log.DebugLog()
 	sum := newTwistPoint(pool)
 	sum.SetInfinity()
 	t := newTwistPoint(pool)
@@ -225,7 +225,7 @@ func (c *twistPoint) Mul(a *twistPoint, scalar *big.Int, pool *bnPool) *twistPoi
 	return c
 }
 
-func (c *twistPoint) MakeAffine(pool *bnPool) *twistPoint {
+func (c *twistPoint) MakeAffine(pool *bnPool) *twistPoint { log.DebugLog()
 	if c.z.IsOne() {
 		return c
 	}
@@ -246,7 +246,7 @@ func (c *twistPoint) MakeAffine(pool *bnPool) *twistPoint {
 	return c
 }
 
-func (c *twistPoint) Negative(a *twistPoint, pool *bnPool) {
+func (c *twistPoint) Negative(a *twistPoint, pool *bnPool) { log.DebugLog()
 	c.x.Set(a.x)
 	c.y.SetZero()
 	c.y.Sub(c.y, a.y)

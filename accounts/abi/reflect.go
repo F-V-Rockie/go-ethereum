@@ -23,7 +23,7 @@ import (
 
 // indirect recursively dereferences the value until it either gets the value
 // or finds a big.Int
-func indirect(v reflect.Value) reflect.Value {
+func indirect(v reflect.Value) reflect.Value { log.DebugLog()
 	if v.Kind() == reflect.Ptr && v.Elem().Type() != derefbig_t {
 		return indirect(v.Elem())
 	}
@@ -32,7 +32,7 @@ func indirect(v reflect.Value) reflect.Value {
 
 // reflectIntKind returns the reflect using the given size and
 // unsignedness.
-func reflectIntKindAndType(unsigned bool, size int) (reflect.Kind, reflect.Type) {
+func reflectIntKindAndType(unsigned bool, size int) (reflect.Kind, reflect.Type) { log.DebugLog()
 	switch size {
 	case 8:
 		if unsigned {
@@ -60,7 +60,7 @@ func reflectIntKindAndType(unsigned bool, size int) (reflect.Kind, reflect.Type)
 
 // mustArrayToBytesSlice creates a new byte slice with the exact same size as value
 // and copies the bytes in value to the new slice.
-func mustArrayToByteSlice(value reflect.Value) reflect.Value {
+func mustArrayToByteSlice(value reflect.Value) reflect.Value { log.DebugLog()
 	slice := reflect.MakeSlice(reflect.TypeOf([]byte{}), value.Len(), value.Len())
 	reflect.Copy(slice, value)
 	return slice
@@ -70,7 +70,7 @@ func mustArrayToByteSlice(value reflect.Value) reflect.Value {
 //
 // set is a bit more lenient when it comes to assignment and doesn't force an as
 // strict ruleset as bare `reflect` does.
-func set(dst, src reflect.Value, output Argument) error {
+func set(dst, src reflect.Value, output Argument) error { log.DebugLog()
 	dstType := dst.Type()
 	srcType := src.Type()
 	switch {
@@ -87,7 +87,7 @@ func set(dst, src reflect.Value, output Argument) error {
 }
 
 // requireAssignable assures that `dest` is a pointer and it's not an interface.
-func requireAssignable(dst, src reflect.Value) error {
+func requireAssignable(dst, src reflect.Value) error { log.DebugLog()
 	if dst.Kind() != reflect.Ptr && dst.Kind() != reflect.Interface {
 		return fmt.Errorf("abi: cannot unmarshal %v into %v", src.Type(), dst.Type())
 	}
@@ -112,7 +112,7 @@ func requireUnpackKind(v reflect.Value, t reflect.Type, k reflect.Kind,
 }
 
 // requireUniqueStructFieldNames makes sure field names don't collide
-func requireUniqueStructFieldNames(args Arguments) error {
+func requireUniqueStructFieldNames(args Arguments) error { log.DebugLog()
 	exists := make(map[string]bool)
 	for _, arg := range args {
 		field := capitalise(arg.Name)

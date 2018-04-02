@@ -187,7 +187,7 @@ var maxTopicNodes = func() int {
 	}
 }()
 
-func makeEndpoint(addr *net.UDPAddr, tcpPort uint16) rpcEndpoint {
+func makeEndpoint(addr *net.UDPAddr, tcpPort uint16) rpcEndpoint { log.DebugLog()
 	ip := addr.IP.To4()
 	if ip == nil {
 		ip = addr.IP.To16()
@@ -195,11 +195,11 @@ func makeEndpoint(addr *net.UDPAddr, tcpPort uint16) rpcEndpoint {
 	return rpcEndpoint{IP: ip, UDP: uint16(addr.Port), TCP: tcpPort}
 }
 
-func (e1 rpcEndpoint) equal(e2 rpcEndpoint) bool {
+func (e1 rpcEndpoint) equal(e2 rpcEndpoint) bool { log.DebugLog()
 	return e1.UDP == e2.UDP && e1.TCP == e2.TCP && e1.IP.Equal(e2.IP)
 }
 
-func nodeFromRPC(sender *net.UDPAddr, rn rpcNode) (*Node, error) {
+func nodeFromRPC(sender *net.UDPAddr, rn rpcNode) (*Node, error) { log.DebugLog()
 	if err := netutil.CheckRelayIP(sender.IP, rn.IP); err != nil {
 		return nil, err
 	}
@@ -208,7 +208,7 @@ func nodeFromRPC(sender *net.UDPAddr, rn rpcNode) (*Node, error) {
 	return n, err
 }
 
-func nodeToRPC(n *Node) rpcNode {
+func nodeToRPC(n *Node) rpcNode { log.DebugLog()
 	return rpcNode{ID: n.ID, IP: n.IP, UDP: n.UDP, TCP: n.TCP}
 }
 
@@ -238,7 +238,7 @@ type udp struct {
 }
 
 // ListenUDP returns a new table that listens for UDP packets on laddr.
-func ListenUDP(priv *ecdsa.PrivateKey, conn conn, realaddr *net.UDPAddr, nodeDBPath string, netrestrict *netutil.Netlist) (*Network, error) {
+func ListenUDP(priv *ecdsa.PrivateKey, conn conn, realaddr *net.UDPAddr, nodeDBPath string, netrestrict *netutil.Netlist) (*Network, error) { log.DebugLog()
 	transport, err := listenUDP(priv, conn, realaddr)
 	if err != nil {
 		return nil, err
@@ -253,24 +253,24 @@ func ListenUDP(priv *ecdsa.PrivateKey, conn conn, realaddr *net.UDPAddr, nodeDBP
 	return net, nil
 }
 
-func listenUDP(priv *ecdsa.PrivateKey, conn conn, realaddr *net.UDPAddr) (*udp, error) {
+func listenUDP(priv *ecdsa.PrivateKey, conn conn, realaddr *net.UDPAddr) (*udp, error) { log.DebugLog()
 	return &udp{conn: conn, priv: priv, ourEndpoint: makeEndpoint(realaddr, uint16(realaddr.Port))}, nil
 }
 
-func (t *udp) localAddr() *net.UDPAddr {
+func (t *udp) localAddr() *net.UDPAddr { log.DebugLog()
 	return t.conn.LocalAddr().(*net.UDPAddr)
 }
 
-func (t *udp) Close() {
+func (t *udp) Close() { log.DebugLog()
 	t.conn.Close()
 }
 
-func (t *udp) send(remote *Node, ptype nodeEvent, data interface{}) (hash []byte) {
+func (t *udp) send(remote *Node, ptype nodeEvent, data interface{}) (hash []byte) { log.DebugLog()
 	hash, _ = t.sendPacket(remote.ID, remote.addr(), byte(ptype), data)
 	return hash
 }
 
-func (t *udp) sendPing(remote *Node, toaddr *net.UDPAddr, topics []Topic) (hash []byte) {
+func (t *udp) sendPing(remote *Node, toaddr *net.UDPAddr, topics []Topic) (hash []byte) { log.DebugLog()
 	hash, _ = t.sendPacket(remote.ID, toaddr, byte(pingPacket), ping{
 		Version:    Version,
 		From:       t.ourEndpoint,
@@ -281,14 +281,14 @@ func (t *udp) sendPing(remote *Node, toaddr *net.UDPAddr, topics []Topic) (hash 
 	return hash
 }
 
-func (t *udp) sendFindnode(remote *Node, target NodeID) {
+func (t *udp) sendFindnode(remote *Node, target NodeID) { log.DebugLog()
 	t.sendPacket(remote.ID, remote.addr(), byte(findnodePacket), findnode{
 		Target:     target,
 		Expiration: uint64(time.Now().Add(expiration).Unix()),
 	})
 }
 
-func (t *udp) sendNeighbours(remote *Node, results []*Node) {
+func (t *udp) sendNeighbours(remote *Node, results []*Node) { log.DebugLog()
 	// Send neighbors in chunks with at most maxNeighbors per packet
 	// to stay below the 1280 byte limit.
 	p := neighbors{Expiration: uint64(time.Now().Add(expiration).Unix())}
@@ -301,14 +301,14 @@ func (t *udp) sendNeighbours(remote *Node, results []*Node) {
 	}
 }
 
-func (t *udp) sendFindnodeHash(remote *Node, target common.Hash) {
+func (t *udp) sendFindnodeHash(remote *Node, target common.Hash) { log.DebugLog()
 	t.sendPacket(remote.ID, remote.addr(), byte(findnodeHashPacket), findnodeHash{
 		Target:     target,
 		Expiration: uint64(time.Now().Add(expiration).Unix()),
 	})
 }
 
-func (t *udp) sendTopicRegister(remote *Node, topics []Topic, idx int, pong []byte) {
+func (t *udp) sendTopicRegister(remote *Node, topics []Topic, idx int, pong []byte) { log.DebugLog()
 	t.sendPacket(remote.ID, remote.addr(), byte(topicRegisterPacket), topicRegister{
 		Topics: topics,
 		Idx:    uint(idx),
@@ -316,7 +316,7 @@ func (t *udp) sendTopicRegister(remote *Node, topics []Topic, idx int, pong []by
 	})
 }
 
-func (t *udp) sendTopicNodes(remote *Node, queryHash common.Hash, nodes []*Node) {
+func (t *udp) sendTopicNodes(remote *Node, queryHash common.Hash, nodes []*Node) { log.DebugLog()
 	p := topicNodes{Echo: queryHash}
 	var sent bool
 	for _, result := range nodes {
@@ -334,7 +334,7 @@ func (t *udp) sendTopicNodes(remote *Node, queryHash common.Hash, nodes []*Node)
 	}
 }
 
-func (t *udp) sendPacket(toid NodeID, toaddr *net.UDPAddr, ptype byte, req interface{}) (hash []byte, err error) {
+func (t *udp) sendPacket(toid NodeID, toaddr *net.UDPAddr, ptype byte, req interface{}) (hash []byte, err error) { log.DebugLog()
 	//fmt.Println("sendPacket", nodeEvent(ptype), toaddr.String(), toid.String())
 	packet, hash, err := encodePacket(t.priv, ptype, req)
 	if err != nil {
@@ -352,7 +352,7 @@ func (t *udp) sendPacket(toid NodeID, toaddr *net.UDPAddr, ptype byte, req inter
 // zeroed padding space for encodePacket.
 var headSpace = make([]byte, headSize)
 
-func encodePacket(priv *ecdsa.PrivateKey, ptype byte, req interface{}) (p, hash []byte, err error) {
+func encodePacket(priv *ecdsa.PrivateKey, ptype byte, req interface{}) (p, hash []byte, err error) { log.DebugLog()
 	b := new(bytes.Buffer)
 	b.Write(headSpace)
 	b.WriteByte(ptype)
@@ -374,7 +374,7 @@ func encodePacket(priv *ecdsa.PrivateKey, ptype byte, req interface{}) (p, hash 
 
 // readLoop runs in its own goroutine. it injects ingress UDP packets
 // into the network loop.
-func (t *udp) readLoop() {
+func (t *udp) readLoop() { log.DebugLog()
 	defer t.conn.Close()
 	// Discovery packets are defined to be no larger than 1280 bytes.
 	// Packets larger than this size will be cut at the end and treated
@@ -395,7 +395,7 @@ func (t *udp) readLoop() {
 	}
 }
 
-func (t *udp) handlePacket(from *net.UDPAddr, buf []byte) error {
+func (t *udp) handlePacket(from *net.UDPAddr, buf []byte) error { log.DebugLog()
 	pkt := ingressPacket{remoteAddr: from}
 	if err := decodePacket(buf, &pkt); err != nil {
 		log.Debug(fmt.Sprintf("Bad packet from %v: %v", from, err))
@@ -406,7 +406,7 @@ func (t *udp) handlePacket(from *net.UDPAddr, buf []byte) error {
 	return nil
 }
 
-func decodePacket(buffer []byte, pkt *ingressPacket) error {
+func decodePacket(buffer []byte, pkt *ingressPacket) error { log.DebugLog()
 	if len(buffer) < headSize+1 {
 		return errPacketTooSmall
 	}

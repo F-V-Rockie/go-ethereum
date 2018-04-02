@@ -83,7 +83,7 @@ type Message interface {
 }
 
 // IntrinsicGas computes the 'intrinsic gas' for a message with the given data.
-func IntrinsicGas(data []byte, contractCreation, homestead bool) (uint64, error) {
+func IntrinsicGas(data []byte, contractCreation, homestead bool) (uint64, error) { log.DebugLog()
 	// Set the starting gas for the raw transaction
 	var gas uint64
 	if contractCreation && homestead {
@@ -116,7 +116,7 @@ func IntrinsicGas(data []byte, contractCreation, homestead bool) (uint64, error)
 }
 
 // NewStateTransition initialises and returns a new state transition object.
-func NewStateTransition(evm *vm.EVM, msg Message, gp *GasPool) *StateTransition {
+func NewStateTransition(evm *vm.EVM, msg Message, gp *GasPool) *StateTransition { log.DebugLog()
 	return &StateTransition{
 		gp:       gp,
 		evm:      evm,
@@ -135,11 +135,11 @@ func NewStateTransition(evm *vm.EVM, msg Message, gp *GasPool) *StateTransition 
 // the gas used (which includes gas refunds) and an error if it failed. An error always
 // indicates a core error meaning that the message would always fail for that particular
 // state and would never be accepted within a block.
-func ApplyMessage(evm *vm.EVM, msg Message, gp *GasPool) ([]byte, uint64, bool, error) {
+func ApplyMessage(evm *vm.EVM, msg Message, gp *GasPool) ([]byte, uint64, bool, error) { log.DebugLog()
 	return NewStateTransition(evm, msg, gp).TransitionDb()
 }
 
-func (st *StateTransition) from() vm.AccountRef {
+func (st *StateTransition) from() vm.AccountRef { log.DebugLog()
 	f := st.msg.From()
 	if !st.state.Exist(f) {
 		st.state.CreateAccount(f)
@@ -147,7 +147,7 @@ func (st *StateTransition) from() vm.AccountRef {
 	return vm.AccountRef(f)
 }
 
-func (st *StateTransition) to() vm.AccountRef {
+func (st *StateTransition) to() vm.AccountRef { log.DebugLog()
 	if st.msg == nil {
 		return vm.AccountRef{}
 	}
@@ -163,7 +163,7 @@ func (st *StateTransition) to() vm.AccountRef {
 	return reference
 }
 
-func (st *StateTransition) useGas(amount uint64) error {
+func (st *StateTransition) useGas(amount uint64) error { log.DebugLog()
 	if st.gas < amount {
 		return vm.ErrOutOfGas
 	}
@@ -172,7 +172,7 @@ func (st *StateTransition) useGas(amount uint64) error {
 	return nil
 }
 
-func (st *StateTransition) buyGas() error {
+func (st *StateTransition) buyGas() error { log.DebugLog()
 	var (
 		state  = st.state
 		sender = st.from()
@@ -191,7 +191,7 @@ func (st *StateTransition) buyGas() error {
 	return nil
 }
 
-func (st *StateTransition) preCheck() error {
+func (st *StateTransition) preCheck() error { log.DebugLog()
 	msg := st.msg
 	sender := st.from()
 
@@ -210,7 +210,7 @@ func (st *StateTransition) preCheck() error {
 // TransitionDb will transition the state by applying the current message and
 // returning the result including the the used gas. It returns an error if it
 // failed. An error indicates a consensus issue.
-func (st *StateTransition) TransitionDb() (ret []byte, usedGas uint64, failed bool, err error) {
+func (st *StateTransition) TransitionDb() (ret []byte, usedGas uint64, failed bool, err error) { log.DebugLog()
 	if err = st.preCheck(); err != nil {
 		return
 	}
@@ -258,7 +258,7 @@ func (st *StateTransition) TransitionDb() (ret []byte, usedGas uint64, failed bo
 	return ret, st.gasUsed(), vmerr != nil, err
 }
 
-func (st *StateTransition) refundGas() {
+func (st *StateTransition) refundGas() { log.DebugLog()
 	// Apply refund counter, capped to half of the used gas.
 	refund := st.gasUsed() / 2
 	if refund > st.state.GetRefund() {
@@ -278,6 +278,6 @@ func (st *StateTransition) refundGas() {
 }
 
 // gasUsed returns the amount of gas used up by the state transition.
-func (st *StateTransition) gasUsed() uint64 {
+func (st *StateTransition) gasUsed() uint64 { log.DebugLog()
 	return st.initialGas - st.gas
 }

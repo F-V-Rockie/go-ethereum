@@ -21,7 +21,7 @@ type dropper struct {
 	fd storage.FileDesc
 }
 
-func (d dropper) Drop(err error) {
+func (d dropper) Drop(err error) { log.DebugLog()
 	if e, ok := err.(*journal.ErrCorrupted); ok {
 		d.s.logf("journal@drop %s-%d S·%s %q", d.fd.Type, d.fd.Num, shortenb(e.Size), e.Reason)
 	} else {
@@ -29,17 +29,17 @@ func (d dropper) Drop(err error) {
 	}
 }
 
-func (s *session) log(v ...interface{})                 { s.stor.Log(fmt.Sprint(v...)) }
-func (s *session) logf(format string, v ...interface{}) { s.stor.Log(fmt.Sprintf(format, v...)) }
+func (s *session) log(v ...interface{})                 { log.DebugLog() s.stor.Log(fmt.Sprint(v...)) }
+func (s *session) logf(format string, v ...interface{}) { log.DebugLog() s.stor.Log(fmt.Sprintf(format, v...)) }
 
 // File utils.
 
-func (s *session) newTemp() storage.FileDesc {
+func (s *session) newTemp() storage.FileDesc { log.DebugLog()
 	num := atomic.AddInt64(&s.stTempFileNum, 1) - 1
 	return storage.FileDesc{storage.TypeTemp, num}
 }
 
-func (s *session) addFileRef(fd storage.FileDesc, ref int) int {
+func (s *session) addFileRef(fd storage.FileDesc, ref int) int { log.DebugLog()
 	ref += s.fileRef[fd.Num]
 	if ref > 0 {
 		s.fileRef[fd.Num] = ref
@@ -55,21 +55,21 @@ func (s *session) addFileRef(fd storage.FileDesc, ref int) int {
 
 // Get current version. This will incr version ref, must call
 // version.release (exactly once) after use.
-func (s *session) version() *version {
+func (s *session) version() *version { log.DebugLog()
 	s.vmu.Lock()
 	defer s.vmu.Unlock()
 	s.stVersion.incref()
 	return s.stVersion
 }
 
-func (s *session) tLen(level int) int {
+func (s *session) tLen(level int) int { log.DebugLog()
 	s.vmu.Lock()
 	defer s.vmu.Unlock()
 	return s.stVersion.tLen(level)
 }
 
 // Set current version to v.
-func (s *session) setVersion(v *version) {
+func (s *session) setVersion(v *version) { log.DebugLog()
 	s.vmu.Lock()
 	defer s.vmu.Unlock()
 	// Hold by session. It is important to call this first before releasing
@@ -83,17 +83,17 @@ func (s *session) setVersion(v *version) {
 }
 
 // Get current unused file number.
-func (s *session) nextFileNum() int64 {
+func (s *session) nextFileNum() int64 { log.DebugLog()
 	return atomic.LoadInt64(&s.stNextFileNum)
 }
 
 // Set current unused file number to num.
-func (s *session) setNextFileNum(num int64) {
+func (s *session) setNextFileNum(num int64) { log.DebugLog()
 	atomic.StoreInt64(&s.stNextFileNum, num)
 }
 
 // Mark file number as used.
-func (s *session) markFileNum(num int64) {
+func (s *session) markFileNum(num int64) { log.DebugLog()
 	nextFileNum := num + 1
 	for {
 		old, x := s.stNextFileNum, nextFileNum
@@ -107,12 +107,12 @@ func (s *session) markFileNum(num int64) {
 }
 
 // Allocate a file number.
-func (s *session) allocFileNum() int64 {
+func (s *session) allocFileNum() int64 { log.DebugLog()
 	return atomic.AddInt64(&s.stNextFileNum, 1) - 1
 }
 
 // Reuse given file number.
-func (s *session) reuseFileNum(num int64) {
+func (s *session) reuseFileNum(num int64) { log.DebugLog()
 	for {
 		old, x := s.stNextFileNum, num
 		if old != x+1 {
@@ -125,7 +125,7 @@ func (s *session) reuseFileNum(num int64) {
 }
 
 // Set compaction ptr at given level; need external synchronization.
-func (s *session) setCompPtr(level int, ik internalKey) {
+func (s *session) setCompPtr(level int, ik internalKey) { log.DebugLog()
 	if level >= len(s.stCompPtrs) {
 		newCompPtrs := make([]internalKey, level+1)
 		copy(newCompPtrs, s.stCompPtrs)
@@ -135,7 +135,7 @@ func (s *session) setCompPtr(level int, ik internalKey) {
 }
 
 // Get compaction ptr at given level; need external synchronization.
-func (s *session) getCompPtr(level int) internalKey {
+func (s *session) getCompPtr(level int) internalKey { log.DebugLog()
 	if level >= len(s.stCompPtrs) {
 		return nil
 	}
@@ -146,7 +146,7 @@ func (s *session) getCompPtr(level int) internalKey {
 
 // Fill given session record obj with current states; need external
 // synchronization.
-func (s *session) fillRecord(r *sessionRecord, snapshot bool) {
+func (s *session) fillRecord(r *sessionRecord, snapshot bool) { log.DebugLog()
 	r.setNextFileNum(s.nextFileNum())
 
 	if snapshot {
@@ -170,7 +170,7 @@ func (s *session) fillRecord(r *sessionRecord, snapshot bool) {
 
 // Mark if record has been committed, this will update session state;
 // need external synchronization.
-func (s *session) recordCommited(rec *sessionRecord) {
+func (s *session) recordCommited(rec *sessionRecord) { log.DebugLog()
 	if rec.has(recJournalNum) {
 		s.stJournalNum = rec.journalNum
 	}
@@ -189,7 +189,7 @@ func (s *session) recordCommited(rec *sessionRecord) {
 }
 
 // Create a new manifest file; need external synchronization.
-func (s *session) newManifest(rec *sessionRecord, v *version) (err error) {
+func (s *session) newManifest(rec *sessionRecord, v *version) (err error) { log.DebugLog()
 	fd := storage.FileDesc{storage.TypeManifest, s.allocFileNum()}
 	writer, err := s.stor.Create(fd)
 	if err != nil {
@@ -246,7 +246,7 @@ func (s *session) newManifest(rec *sessionRecord, v *version) (err error) {
 }
 
 // Flush record to disk.
-func (s *session) flushManifest(rec *sessionRecord) (err error) {
+func (s *session) flushManifest(rec *sessionRecord) (err error) { log.DebugLog()
 	s.fillRecord(rec, false)
 	w, err := s.manifest.Next()
 	if err != nil {

@@ -11,7 +11,7 @@ type GaugeFloat64 interface {
 
 // GetOrRegisterGaugeFloat64 returns an existing GaugeFloat64 or constructs and registers a
 // new StandardGaugeFloat64.
-func GetOrRegisterGaugeFloat64(name string, r Registry) GaugeFloat64 {
+func GetOrRegisterGaugeFloat64(name string, r Registry) GaugeFloat64 { log.DebugLog()
 	if nil == r {
 		r = DefaultRegistry
 	}
@@ -19,7 +19,7 @@ func GetOrRegisterGaugeFloat64(name string, r Registry) GaugeFloat64 {
 }
 
 // NewGaugeFloat64 constructs a new StandardGaugeFloat64.
-func NewGaugeFloat64() GaugeFloat64 {
+func NewGaugeFloat64() GaugeFloat64 { log.DebugLog()
 	if !Enabled {
 		return NilGaugeFloat64{}
 	}
@@ -29,7 +29,7 @@ func NewGaugeFloat64() GaugeFloat64 {
 }
 
 // NewRegisteredGaugeFloat64 constructs and registers a new StandardGaugeFloat64.
-func NewRegisteredGaugeFloat64(name string, r Registry) GaugeFloat64 {
+func NewRegisteredGaugeFloat64(name string, r Registry) GaugeFloat64 { log.DebugLog()
 	c := NewGaugeFloat64()
 	if nil == r {
 		r = DefaultRegistry
@@ -39,7 +39,7 @@ func NewRegisteredGaugeFloat64(name string, r Registry) GaugeFloat64 {
 }
 
 // NewFunctionalGauge constructs a new FunctionalGauge.
-func NewFunctionalGaugeFloat64(f func() float64) GaugeFloat64 {
+func NewFunctionalGaugeFloat64(f func() float64) GaugeFloat64 { log.DebugLog()
 	if !Enabled {
 		return NilGaugeFloat64{}
 	}
@@ -47,7 +47,7 @@ func NewFunctionalGaugeFloat64(f func() float64) GaugeFloat64 {
 }
 
 // NewRegisteredFunctionalGauge constructs and registers a new StandardGauge.
-func NewRegisteredFunctionalGaugeFloat64(name string, r Registry, f func() float64) GaugeFloat64 {
+func NewRegisteredFunctionalGaugeFloat64(name string, r Registry, f func() float64) GaugeFloat64 { log.DebugLog()
 	c := NewFunctionalGaugeFloat64(f)
 	if nil == r {
 		r = DefaultRegistry
@@ -60,27 +60,27 @@ func NewRegisteredFunctionalGaugeFloat64(name string, r Registry, f func() float
 type GaugeFloat64Snapshot float64
 
 // Snapshot returns the snapshot.
-func (g GaugeFloat64Snapshot) Snapshot() GaugeFloat64 { return g }
+func (g GaugeFloat64Snapshot) Snapshot() GaugeFloat64 { log.DebugLog() return g }
 
 // Update panics.
-func (GaugeFloat64Snapshot) Update(float64) {
+func (GaugeFloat64Snapshot) Update(float64) { log.DebugLog()
 	panic("Update called on a GaugeFloat64Snapshot")
 }
 
 // Value returns the value at the time the snapshot was taken.
-func (g GaugeFloat64Snapshot) Value() float64 { return float64(g) }
+func (g GaugeFloat64Snapshot) Value() float64 { log.DebugLog() return float64(g) }
 
 // NilGauge is a no-op Gauge.
 type NilGaugeFloat64 struct{}
 
 // Snapshot is a no-op.
-func (NilGaugeFloat64) Snapshot() GaugeFloat64 { return NilGaugeFloat64{} }
+func (NilGaugeFloat64) Snapshot() GaugeFloat64 { log.DebugLog() return NilGaugeFloat64{} }
 
 // Update is a no-op.
-func (NilGaugeFloat64) Update(v float64) {}
+func (NilGaugeFloat64) Update(v float64) { log.DebugLog()}
 
 // Value is a no-op.
-func (NilGaugeFloat64) Value() float64 { return 0.0 }
+func (NilGaugeFloat64) Value() float64 { log.DebugLog() return 0.0 }
 
 // StandardGaugeFloat64 is the standard implementation of a GaugeFloat64 and uses
 // sync.Mutex to manage a single float64 value.
@@ -90,19 +90,19 @@ type StandardGaugeFloat64 struct {
 }
 
 // Snapshot returns a read-only copy of the gauge.
-func (g *StandardGaugeFloat64) Snapshot() GaugeFloat64 {
+func (g *StandardGaugeFloat64) Snapshot() GaugeFloat64 { log.DebugLog()
 	return GaugeFloat64Snapshot(g.Value())
 }
 
 // Update updates the gauge's value.
-func (g *StandardGaugeFloat64) Update(v float64) {
+func (g *StandardGaugeFloat64) Update(v float64) { log.DebugLog()
 	g.mutex.Lock()
 	defer g.mutex.Unlock()
 	g.value = v
 }
 
 // Value returns the gauge's current value.
-func (g *StandardGaugeFloat64) Value() float64 {
+func (g *StandardGaugeFloat64) Value() float64 { log.DebugLog()
 	g.mutex.Lock()
 	defer g.mutex.Unlock()
 	return g.value
@@ -114,14 +114,14 @@ type FunctionalGaugeFloat64 struct {
 }
 
 // Value returns the gauge's current value.
-func (g FunctionalGaugeFloat64) Value() float64 {
+func (g FunctionalGaugeFloat64) Value() float64 { log.DebugLog()
 	return g.value()
 }
 
 // Snapshot returns the snapshot.
-func (g FunctionalGaugeFloat64) Snapshot() GaugeFloat64 { return GaugeFloat64Snapshot(g.Value()) }
+func (g FunctionalGaugeFloat64) Snapshot() GaugeFloat64 { log.DebugLog() return GaugeFloat64Snapshot(g.Value()) }
 
 // Update panics.
-func (FunctionalGaugeFloat64) Update(float64) {
+func (FunctionalGaugeFloat64) Update(float64) { log.DebugLog()
 	panic("Update called on a FunctionalGaugeFloat64")
 }

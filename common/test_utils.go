@@ -23,7 +23,7 @@ import (
 )
 
 // LoadJSON reads the given file and unmarshals its content.
-func LoadJSON(file string, val interface{}) error {
+func LoadJSON(file string, val interface{}) error { log.DebugLog()
 	content, err := ioutil.ReadFile(file)
 	if err != nil {
 		return err
@@ -39,7 +39,7 @@ func LoadJSON(file string, val interface{}) error {
 }
 
 // findLine returns the line number for the given offset into data.
-func findLine(data []byte, offset int64) (line int) {
+func findLine(data []byte, offset int64) (line int) { log.DebugLog()
 	line = 1
 	for i, r := range string(data) {
 		if int64(i) >= offset {

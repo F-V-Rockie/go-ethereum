@@ -27,12 +27,12 @@ import (
 type Strings struct{ strs []string }
 
 // Size returns the number of strs in the slice.
-func (s *Strings) Size() int {
+func (s *Strings) Size() int { log.DebugLog()
 	return len(s.strs)
 }
 
 // Get returns the string at the given index from the slice.
-func (s *Strings) Get(index int) (str string, _ error) {
+func (s *Strings) Get(index int) (str string, _ error) { log.DebugLog()
 	if index < 0 || index >= len(s.strs) {
 		return "", errors.New("index out of bounds")
 	}
@@ -40,7 +40,7 @@ func (s *Strings) Get(index int) (str string, _ error) {
 }
 
 // Set sets the string at the given index in the slice.
-func (s *Strings) Set(index int, str string) error {
+func (s *Strings) Set(index int, str string) error { log.DebugLog()
 	if index < 0 || index >= len(s.strs) {
 		return errors.New("index out of bounds")
 	}
@@ -49,6 +49,6 @@ func (s *Strings) Set(index int, str string) error {
 }
 
 // String implements the Stringer interface.
-func (s *Strings) String() string {
+func (s *Strings) String() string { log.DebugLog()
 	return fmt.Sprintf("%v", s.strs)
 }

@@ -38,7 +38,7 @@ type bridge struct {
 }
 
 // newBridge creates a new JavaScript wrapper around an RPC client.
-func newBridge(client *rpc.Client, prompter UserPrompter, printer io.Writer) *bridge {
+func newBridge(client *rpc.Client, prompter UserPrompter, printer io.Writer) *bridge { log.DebugLog()
 	return &bridge{
 		client:   client,
 		prompter: prompter,
@@ -49,7 +49,7 @@ func newBridge(client *rpc.Client, prompter UserPrompter, printer io.Writer) *br
 // NewAccount is a wrapper around the personal.newAccount RPC method that uses a
 // non-echoing password prompt to acquire the passphrase and executes the original
 // RPC method (saved in jeth.newAccount) with it to actually execute the RPC call.
-func (b *bridge) NewAccount(call otto.FunctionCall) (response otto.Value) {
+func (b *bridge) NewAccount(call otto.FunctionCall) (response otto.Value) { log.DebugLog()
 	var (
 		password string
 		confirm  string
@@ -86,7 +86,7 @@ func (b *bridge) NewAccount(call otto.FunctionCall) (response otto.Value) {
 
 // OpenWallet is a wrapper around personal.openWallet which can interpret and
 // react to certain error messages, such as the Trezor PIN matrix request.
-func (b *bridge) OpenWallet(call otto.FunctionCall) (response otto.Value) {
+func (b *bridge) OpenWallet(call otto.FunctionCall) (response otto.Value) { log.DebugLog()
 	// Make sure we have an wallet specified to open
 	if !call.Argument(0).IsString() {
 		throwJSException("first argument must be the wallet URL to open")
@@ -131,7 +131,7 @@ func (b *bridge) OpenWallet(call otto.FunctionCall) (response otto.Value) {
 // uses a non-echoing password prompt to acquire the passphrase and executes the
 // original RPC method (saved in jeth.unlockAccount) with it to actually execute
 // the RPC call.
-func (b *bridge) UnlockAccount(call otto.FunctionCall) (response otto.Value) {
+func (b *bridge) UnlockAccount(call otto.FunctionCall) (response otto.Value) { log.DebugLog()
 	// Make sure we have an account specified to unlock
 	if !call.Argument(0).IsString() {
 		throwJSException("first argument must be the account to unlock")
@@ -173,7 +173,7 @@ func (b *bridge) UnlockAccount(call otto.FunctionCall) (response otto.Value) {
 // Sign is a wrapper around the personal.sign RPC method that uses a non-echoing password
 // prompt to acquire the passphrase and executes the original RPC method (saved in
 // jeth.sign) with it to actually execute the RPC call.
-func (b *bridge) Sign(call otto.FunctionCall) (response otto.Value) {
+func (b *bridge) Sign(call otto.FunctionCall) (response otto.Value) { log.DebugLog()
 	var (
 		message = call.Argument(0)
 		account = call.Argument(1)
@@ -209,7 +209,7 @@ func (b *bridge) Sign(call otto.FunctionCall) (response otto.Value) {
 }
 
 // Sleep will block the console for the specified number of seconds.
-func (b *bridge) Sleep(call otto.FunctionCall) (response otto.Value) {
+func (b *bridge) Sleep(call otto.FunctionCall) (response otto.Value) { log.DebugLog()
 	if call.Argument(0).IsNumber() {
 		sleep, _ := call.Argument(0).ToInteger()
 		time.Sleep(time.Duration(sleep) * time.Second)
@@ -220,7 +220,7 @@ func (b *bridge) Sleep(call otto.FunctionCall) (response otto.Value) {
 
 // SleepBlocks will block the console for a specified number of new blocks optionally
 // until the given timeout is reached.
-func (b *bridge) SleepBlocks(call otto.FunctionCall) (response otto.Value) {
+func (b *bridge) SleepBlocks(call otto.FunctionCall) (response otto.Value) { log.DebugLog()
 	var (
 		blocks = int64(0)
 		sleep  = int64(9999999999999999) // indefinitely
@@ -277,7 +277,7 @@ type jsonrpcCall struct {
 }
 
 // Send implements the web3 provider "send" method.
-func (b *bridge) Send(call otto.FunctionCall) (response otto.Value) {
+func (b *bridge) Send(call otto.FunctionCall) (response otto.Value) { log.DebugLog()
 	// Remarshal the request into a Go value.
 	JSON, _ := call.Otto.Object("JSON")
 	reqVal, err := JSON.Call("stringify", call.Argument(0))
@@ -343,13 +343,13 @@ func (b *bridge) Send(call otto.FunctionCall) (response otto.Value) {
 	return response
 }
 
-func setError(resp *otto.Object, code int, msg string) {
+func setError(resp *otto.Object, code int, msg string) { log.DebugLog()
 	resp.Set("error", map[string]interface{}{"code": code, "message": msg})
 }
 
 // throwJSException panics on an otto.Value. The Otto VM will recover from the
 // Go panic and throw msg as a JavaScript error.
-func throwJSException(msg interface{}) otto.Value {
+func throwJSException(msg interface{}) otto.Value { log.DebugLog()
 	val, err := otto.ToValue(msg)
 	if err != nil {
 		log.Error("Failed to serialize JavaScript exception", "exception", msg, "err", err)

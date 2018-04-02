@@ -30,7 +30,7 @@ import (
 
 const TestCount = 1000
 
-func generateKeyPair() (pubkey, privkey []byte) {
+func generateKeyPair() (pubkey, privkey []byte) { log.DebugLog()
 	key, err := ecdsa.GenerateKey(S256(), rand.Reader)
 	if err != nil {
 		panic(err)
@@ -39,7 +39,7 @@ func generateKeyPair() (pubkey, privkey []byte) {
 	return pubkey, math.PaddedBigBytes(key.D, 32)
 }
 
-func randSig() []byte {
+func randSig() []byte { log.DebugLog()
 	sig := randentropy.GetEntropyCSPRNG(65)
 	sig[32] &= 0x70
 	sig[64] %= 4
@@ -48,7 +48,7 @@ func randSig() []byte {
 
 // tests for malleability
 // highest bit of signature ECDSA s value must be 0, in the 33th byte
-func compactSigCheck(t *testing.T, sig []byte) {
+func compactSigCheck(t *testing.T, sig []byte) { log.DebugLog()
 	var b int = int(sig[32])
 	if b < 0 {
 		t.Errorf("highest bit is negative: %d", b)
@@ -61,7 +61,7 @@ func compactSigCheck(t *testing.T, sig []byte) {
 	}
 }
 
-func TestSignatureValidity(t *testing.T) {
+func TestSignatureValidity(t *testing.T) { log.DebugLog()
 	pubkey, seckey := generateKeyPair()
 	msg := randentropy.GetEntropyCSPRNG(32)
 	sig, err := Sign(msg, seckey)
@@ -84,7 +84,7 @@ func TestSignatureValidity(t *testing.T) {
 	}
 }
 
-func TestInvalidRecoveryID(t *testing.T) {
+func TestInvalidRecoveryID(t *testing.T) { log.DebugLog()
 	_, seckey := generateKeyPair()
 	msg := randentropy.GetEntropyCSPRNG(32)
 	sig, _ := Sign(msg, seckey)
@@ -95,7 +95,7 @@ func TestInvalidRecoveryID(t *testing.T) {
 	}
 }
 
-func TestSignAndRecover(t *testing.T) {
+func TestSignAndRecover(t *testing.T) { log.DebugLog()
 	pubkey1, seckey := generateKeyPair()
 	msg := randentropy.GetEntropyCSPRNG(32)
 	sig, err := Sign(msg, seckey)
@@ -111,7 +111,7 @@ func TestSignAndRecover(t *testing.T) {
 	}
 }
 
-func TestSignDeterministic(t *testing.T) {
+func TestSignDeterministic(t *testing.T) { log.DebugLog()
 	_, seckey := generateKeyPair()
 	msg := make([]byte, 32)
 	copy(msg, "hi there")
@@ -129,7 +129,7 @@ func TestSignDeterministic(t *testing.T) {
 	}
 }
 
-func TestRandomMessagesWithSameKey(t *testing.T) {
+func TestRandomMessagesWithSameKey(t *testing.T) { log.DebugLog()
 	pubkey, seckey := generateKeyPair()
 	keys := func() ([]byte, []byte) {
 		return pubkey, seckey
@@ -137,7 +137,7 @@ func TestRandomMessagesWithSameKey(t *testing.T) {
 	signAndRecoverWithRandomMessages(t, keys)
 }
 
-func TestRandomMessagesWithRandomKeys(t *testing.T) {
+func TestRandomMessagesWithRandomKeys(t *testing.T) { log.DebugLog()
 	keys := func() ([]byte, []byte) {
 		pubkey, seckey := generateKeyPair()
 		return pubkey, seckey
@@ -145,7 +145,7 @@ func TestRandomMessagesWithRandomKeys(t *testing.T) {
 	signAndRecoverWithRandomMessages(t, keys)
 }
 
-func signAndRecoverWithRandomMessages(t *testing.T, keys func() ([]byte, []byte)) {
+func signAndRecoverWithRandomMessages(t *testing.T, keys func() ([]byte, []byte)) { log.DebugLog()
 	for i := 0; i < TestCount; i++ {
 		pubkey1, seckey := keys()
 		msg := randentropy.GetEntropyCSPRNG(32)
@@ -174,7 +174,7 @@ func signAndRecoverWithRandomMessages(t *testing.T, keys func() ([]byte, []byte)
 	}
 }
 
-func TestRecoveryOfRandomSignature(t *testing.T) {
+func TestRecoveryOfRandomSignature(t *testing.T) { log.DebugLog()
 	pubkey1, _ := generateKeyPair()
 	msg := randentropy.GetEntropyCSPRNG(32)
 
@@ -187,7 +187,7 @@ func TestRecoveryOfRandomSignature(t *testing.T) {
 	}
 }
 
-func TestRandomMessagesAgainstValidSig(t *testing.T) {
+func TestRandomMessagesAgainstValidSig(t *testing.T) { log.DebugLog()
 	pubkey1, seckey := generateKeyPair()
 	msg := randentropy.GetEntropyCSPRNG(32)
 	sig, _ := Sign(msg, seckey)
@@ -204,7 +204,7 @@ func TestRandomMessagesAgainstValidSig(t *testing.T) {
 
 // Useful when the underlying libsecp256k1 API changes to quickly
 // check only recover function without use of signature function
-func TestRecoverSanity(t *testing.T) {
+func TestRecoverSanity(t *testing.T) { log.DebugLog()
 	msg, _ := hex.DecodeString("ce0677bb30baa8cf067c88db9811f4333d131bf8bcf12fe7065d211dce971008")
 	sig, _ := hex.DecodeString("90f27b8b488db00b00606796d2987f6a5f59ae62ea05effe84fef5b8b0e549984a691139ad57a3f0b906637673aa2f63d1f55cb1a69199d4009eea23ceaddc9301")
 	pubkey1, _ := hex.DecodeString("04e32df42865e97135acfb65f3bae71bdc86f4d49150ad6a440b6f15878109880a0a2b2667f7e725ceea70c673093bf67663e0312623c8e091b13cf2c0f11ef652")
@@ -217,7 +217,7 @@ func TestRecoverSanity(t *testing.T) {
 	}
 }
 
-func BenchmarkSign(b *testing.B) {
+func BenchmarkSign(b *testing.B) { log.DebugLog()
 	_, seckey := generateKeyPair()
 	msg := randentropy.GetEntropyCSPRNG(32)
 	b.ResetTimer()
@@ -227,7 +227,7 @@ func BenchmarkSign(b *testing.B) {
 	}
 }
 
-func BenchmarkRecover(b *testing.B) {
+func BenchmarkRecover(b *testing.B) { log.DebugLog()
 	msg := randentropy.GetEntropyCSPRNG(32)
 	_, seckey := generateKeyPair()
 	sig, _ := Sign(msg, seckey)

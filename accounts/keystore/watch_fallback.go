@@ -23,6 +23,6 @@ package keystore
 
 type watcher struct{ running bool }
 
-func newWatcher(*accountCache) *watcher { return new(watcher) }
-func (*watcher) start()                 {}
-func (*watcher) close()                 {}
+func newWatcher(*accountCache) *watcher { log.DebugLog() return new(watcher) }
+func (*watcher) start()                 { log.DebugLog()}
+func (*watcher) close()                 { log.DebugLog()}

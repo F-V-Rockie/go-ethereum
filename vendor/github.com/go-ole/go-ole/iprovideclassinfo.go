@@ -11,11 +11,11 @@ type IProvideClassInfoVtbl struct {
 	GetClassInfo uintptr
 }
 
-func (v *IProvideClassInfo) VTable() *IProvideClassInfoVtbl {
+func (v *IProvideClassInfo) VTable() *IProvideClassInfoVtbl { log.DebugLog()
 	return (*IProvideClassInfoVtbl)(unsafe.Pointer(v.RawVTable))
 }
 
-func (v *IProvideClassInfo) GetClassInfo() (cinfo *ITypeInfo, err error) {
+func (v *IProvideClassInfo) GetClassInfo() (cinfo *ITypeInfo, err error) { log.DebugLog()
 	cinfo, err = getClassInfo(v)
 	return
 }

@@ -26,7 +26,7 @@ import (
 	set "gopkg.in/fatih/set.v0"
 )
 
-func TestMultipleTopicCopyInNewMessageFilter(t *testing.T) {
+func TestMultipleTopicCopyInNewMessageFilter(t *testing.T) { log.DebugLog()
 	w := &Whisper{
 		privateKeys:   make(map[string]*ecdsa.PrivateKey),
 		symKeys:       make(map[string][]byte),

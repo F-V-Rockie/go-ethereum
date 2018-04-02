@@ -162,7 +162,7 @@ var (
 var defaultNodeConfig = node.DefaultConfig
 
 // This init function sets defaults so cmd/swarm can run alongside geth.
-func init() {
+func init() { log.DebugLog()
 	defaultNodeConfig.Name = clientIdentifier
 	defaultNodeConfig.Version = params.VersionWithCommit(gitCommit)
 	defaultNodeConfig.P2P.ListenAddr = ":30399"
@@ -174,7 +174,7 @@ func init() {
 var app = utils.NewApp(gitCommit, "Ethereum Swarm")
 
 // This init function creates the cli.App.
-func init() {
+func init() { log.DebugLog()
 	app.Action = bzzd
 	app.HideVersion = true // we have a command to print the version
 	app.Copyright = "Copyright 2013-2016 The go-ethereum Authors"
@@ -375,14 +375,14 @@ DEPRECATED: use 'swarm db clean'.
 	}
 }
 
-func main() {
+func main() { log.DebugLog()
 	if err := app.Run(os.Args); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
 }
 
-func version(ctx *cli.Context) error {
+func version(ctx *cli.Context) error { log.DebugLog()
 	fmt.Println(strings.Title(clientIdentifier))
 	fmt.Println("Version:", params.Version)
 	if gitCommit != "" {
@@ -396,7 +396,7 @@ func version(ctx *cli.Context) error {
 	return nil
 }
 
-func bzzd(ctx *cli.Context) error {
+func bzzd(ctx *cli.Context) error { log.DebugLog()
 	//build a valid bzzapi.Config from all available sources:
 	//default config, file config, command line and env vars
 	bzzconfig, err := buildConfig(ctx)
@@ -448,7 +448,7 @@ func bzzd(ctx *cli.Context) error {
 	return nil
 }
 
-func registerBzzService(bzzconfig *bzzapi.Config, ctx *cli.Context, stack *node.Node) {
+func registerBzzService(bzzconfig *bzzapi.Config, ctx *cli.Context, stack *node.Node) { log.DebugLog()
 
 	//define the swarm service boot function
 	boot := func(ctx *node.ServiceContext) (node.Service, error) {
@@ -470,7 +470,7 @@ func registerBzzService(bzzconfig *bzzapi.Config, ctx *cli.Context, stack *node.
 	}
 }
 
-func getAccount(bzzaccount string, ctx *cli.Context, stack *node.Node) *ecdsa.PrivateKey {
+func getAccount(bzzaccount string, ctx *cli.Context, stack *node.Node) *ecdsa.PrivateKey { log.DebugLog()
 	//an account is mandatory
 	if bzzaccount == "" {
 		utils.Fatalf(SWARM_ERR_NO_BZZACCOUNT)
@@ -487,7 +487,7 @@ func getAccount(bzzaccount string, ctx *cli.Context, stack *node.Node) *ecdsa.Pr
 	return decryptStoreAccount(ks, bzzaccount, utils.MakePasswordList(ctx))
 }
 
-func decryptStoreAccount(ks *keystore.KeyStore, account string, passwords []string) *ecdsa.PrivateKey {
+func decryptStoreAccount(ks *keystore.KeyStore, account string, passwords []string) *ecdsa.PrivateKey { log.DebugLog()
 	var a accounts.Account
 	var err error
 	if common.IsHexAddress(account) {
@@ -521,7 +521,7 @@ func decryptStoreAccount(ks *keystore.KeyStore, account string, passwords []stri
 
 // getPassPhrase retrieves the password associated with bzz account, either by fetching
 // from a list of pre-loaded passwords, or by requesting it interactively from user.
-func getPassPhrase(prompt string, i int, passwords []string) string {
+func getPassPhrase(prompt string, i int, passwords []string) string { log.DebugLog()
 	// non-interactive
 	if len(passwords) > 0 {
 		if i < len(passwords) {
@@ -541,7 +541,7 @@ func getPassPhrase(prompt string, i int, passwords []string) string {
 	return password
 }
 
-func injectBootnodes(srv *p2p.Server, nodes []string) {
+func injectBootnodes(srv *p2p.Server, nodes []string) { log.DebugLog()
 	for _, url := range nodes {
 		n, err := discover.ParseNode(url)
 		if err != nil {

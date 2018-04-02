@@ -28,13 +28,13 @@ type intPool struct {
 	pool *Stack
 }
 
-func newIntPool() *intPool {
+func newIntPool() *intPool { log.DebugLog()
 	return &intPool{pool: newstack()}
 }
 
 // get retrieves a big int from the pool, allocating one if the pool is empty.
 // Note, the returned int's value is arbitrary and will not be zeroed!
-func (p *intPool) get() *big.Int {
+func (p *intPool) get() *big.Int { log.DebugLog()
 	if p.pool.len() > 0 {
 		return p.pool.pop()
 	}
@@ -43,7 +43,7 @@ func (p *intPool) get() *big.Int {
 
 // getZero retrieves a big int from the pool, setting it to zero or allocating
 // a new one if the pool is empty.
-func (p *intPool) getZero() *big.Int {
+func (p *intPool) getZero() *big.Int { log.DebugLog()
 	if p.pool.len() > 0 {
 		return p.pool.pop().SetUint64(0)
 	}
@@ -52,7 +52,7 @@ func (p *intPool) getZero() *big.Int {
 
 // put returns an allocated big int to the pool to be later reused by get calls.
 // Note, the values as saved as is; neither put nor get zeroes the ints out!
-func (p *intPool) put(is ...*big.Int) {
+func (p *intPool) put(is ...*big.Int) { log.DebugLog()
 	if len(p.pool.data) > poolLimit {
 		return
 	}

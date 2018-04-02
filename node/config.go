@@ -152,7 +152,7 @@ type Config struct {
 // IPCEndpoint resolves an IPC endpoint based on a configured value, taking into
 // account the set data folders as well as the designated platform we're currently
 // running on.
-func (c *Config) IPCEndpoint() string {
+func (c *Config) IPCEndpoint() string { log.DebugLog()
 	// Short circuit if IPC has not been enabled
 	if c.IPCPath == "" {
 		return ""
@@ -175,7 +175,7 @@ func (c *Config) IPCEndpoint() string {
 }
 
 // NodeDB returns the path to the discovery node database.
-func (c *Config) NodeDB() string {
+func (c *Config) NodeDB() string { log.DebugLog()
 	if c.DataDir == "" {
 		return "" // ephemeral
 	}
@@ -183,7 +183,7 @@ func (c *Config) NodeDB() string {
 }
 
 // DefaultIPCEndpoint returns the IPC path used by default.
-func DefaultIPCEndpoint(clientIdentifier string) string {
+func DefaultIPCEndpoint(clientIdentifier string) string { log.DebugLog()
 	if clientIdentifier == "" {
 		clientIdentifier = strings.TrimSuffix(filepath.Base(os.Args[0]), ".exe")
 		if clientIdentifier == "" {
@@ -196,7 +196,7 @@ func DefaultIPCEndpoint(clientIdentifier string) string {
 
 // HTTPEndpoint resolves an HTTP endpoint based on the configured host interface
 // and port parameters.
-func (c *Config) HTTPEndpoint() string {
+func (c *Config) HTTPEndpoint() string { log.DebugLog()
 	if c.HTTPHost == "" {
 		return ""
 	}
@@ -204,14 +204,14 @@ func (c *Config) HTTPEndpoint() string {
 }
 
 // DefaultHTTPEndpoint returns the HTTP endpoint used by default.
-func DefaultHTTPEndpoint() string {
+func DefaultHTTPEndpoint() string { log.DebugLog()
 	config := &Config{HTTPHost: DefaultHTTPHost, HTTPPort: DefaultHTTPPort}
 	return config.HTTPEndpoint()
 }
 
 // WSEndpoint resolves an websocket endpoint based on the configured host interface
 // and port parameters.
-func (c *Config) WSEndpoint() string {
+func (c *Config) WSEndpoint() string { log.DebugLog()
 	if c.WSHost == "" {
 		return ""
 	}
@@ -219,13 +219,13 @@ func (c *Config) WSEndpoint() string {
 }
 
 // DefaultWSEndpoint returns the websocket endpoint used by default.
-func DefaultWSEndpoint() string {
+func DefaultWSEndpoint() string { log.DebugLog()
 	config := &Config{WSHost: DefaultWSHost, WSPort: DefaultWSPort}
 	return config.WSEndpoint()
 }
 
 // NodeName returns the devp2p node identifier.
-func (c *Config) NodeName() string {
+func (c *Config) NodeName() string { log.DebugLog()
 	name := c.name()
 	// Backwards compatibility: previous versions used title-cased "Geth", keep that.
 	if name == "geth" || name == "geth-testnet" {
@@ -242,7 +242,7 @@ func (c *Config) NodeName() string {
 	return name
 }
 
-func (c *Config) name() string {
+func (c *Config) name() string { log.DebugLog()
 	if c.Name == "" {
 		progname := strings.TrimSuffix(filepath.Base(os.Args[0]), ".exe")
 		if progname == "" {
@@ -263,7 +263,7 @@ var isOldGethResource = map[string]bool{
 }
 
 // resolvePath resolves path in the instance directory.
-func (c *Config) resolvePath(path string) string {
+func (c *Config) resolvePath(path string) string { log.DebugLog()
 	if filepath.IsAbs(path) {
 		return path
 	}
@@ -285,7 +285,7 @@ func (c *Config) resolvePath(path string) string {
 	return filepath.Join(c.instanceDir(), path)
 }
 
-func (c *Config) instanceDir() string {
+func (c *Config) instanceDir() string { log.DebugLog()
 	if c.DataDir == "" {
 		return ""
 	}
@@ -295,7 +295,7 @@ func (c *Config) instanceDir() string {
 // NodeKey retrieves the currently configured private key of the node, checking
 // first any manually set key, falling back to the one found in the configured
 // data folder. If no key can be found, a new one is generated.
-func (c *Config) NodeKey() *ecdsa.PrivateKey {
+func (c *Config) NodeKey() *ecdsa.PrivateKey { log.DebugLog()
 	// Use any specifically configured key.
 	if c.P2P.PrivateKey != nil {
 		return c.P2P.PrivateKey
@@ -331,18 +331,18 @@ func (c *Config) NodeKey() *ecdsa.PrivateKey {
 }
 
 // StaticNodes returns a list of node enode URLs configured as static nodes.
-func (c *Config) StaticNodes() []*discover.Node {
+func (c *Config) StaticNodes() []*discover.Node { log.DebugLog()
 	return c.parsePersistentNodes(c.resolvePath(datadirStaticNodes))
 }
 
 // TrustedNodes returns a list of node enode URLs configured as trusted nodes.
-func (c *Config) TrustedNodes() []*discover.Node {
+func (c *Config) TrustedNodes() []*discover.Node { log.DebugLog()
 	return c.parsePersistentNodes(c.resolvePath(datadirTrustedNodes))
 }
 
 // parsePersistentNodes parses a list of discovery node URLs loaded from a .json
 // file from within the data directory.
-func (c *Config) parsePersistentNodes(path string) []*discover.Node {
+func (c *Config) parsePersistentNodes(path string) []*discover.Node { log.DebugLog()
 	// Short circuit if no node config is present
 	if c.DataDir == "" {
 		return nil
@@ -373,7 +373,7 @@ func (c *Config) parsePersistentNodes(path string) []*discover.Node {
 }
 
 // AccountConfig determines the settings for scrypt and keydirectory
-func (c *Config) AccountConfig() (int, int, string, error) {
+func (c *Config) AccountConfig() (int, int, string, error) { log.DebugLog()
 	scryptN := keystore.StandardScryptN
 	scryptP := keystore.StandardScryptP
 	if c.UseLightweightKDF {
@@ -400,7 +400,7 @@ func (c *Config) AccountConfig() (int, int, string, error) {
 	return scryptN, scryptP, keydir, err
 }
 
-func makeAccountManager(conf *Config) (*accounts.Manager, string, error) {
+func makeAccountManager(conf *Config) (*accounts.Manager, string, error) { log.DebugLog()
 	scryptN, scryptP, keydir, err := conf.AccountConfig()
 	var ephemeral string
 	if keydir == "" {

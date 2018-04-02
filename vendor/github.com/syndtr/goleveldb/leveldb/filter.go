@@ -14,11 +14,11 @@ type iFilter struct {
 	filter.Filter
 }
 
-func (f iFilter) Contains(filter, key []byte) bool {
+func (f iFilter) Contains(filter, key []byte) bool { log.DebugLog()
 	return f.Filter.Contains(filter, internalKey(key).ukey())
 }
 
-func (f iFilter) NewGenerator() filter.FilterGenerator {
+func (f iFilter) NewGenerator() filter.FilterGenerator { log.DebugLog()
 	return iFilterGenerator{f.Filter.NewGenerator()}
 }
 
@@ -26,6 +26,6 @@ type iFilterGenerator struct {
 	filter.FilterGenerator
 }
 
-func (g iFilterGenerator) Add(key []byte) {
+func (g iFilterGenerator) Add(key []byte) { log.DebugLog()
 	g.FilterGenerator.Add(internalKey(key).ukey())
 }

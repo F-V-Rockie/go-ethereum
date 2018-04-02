@@ -10,7 +10,7 @@ import (
 )
 
 // MarshalText implements encoding.TextMarshaler.
-func (u UUID) MarshalText() ([]byte, error) {
+func (u UUID) MarshalText() ([]byte, error) { log.DebugLog()
 	if len(u) != 16 {
 		return nil, nil
 	}
@@ -20,7 +20,7 @@ func (u UUID) MarshalText() ([]byte, error) {
 }
 
 // UnmarshalText implements encoding.TextUnmarshaler.
-func (u *UUID) UnmarshalText(data []byte) error {
+func (u *UUID) UnmarshalText(data []byte) error { log.DebugLog()
 	if len(data) == 0 {
 		return nil
 	}
@@ -33,12 +33,12 @@ func (u *UUID) UnmarshalText(data []byte) error {
 }
 
 // MarshalBinary implements encoding.BinaryMarshaler.
-func (u UUID) MarshalBinary() ([]byte, error) {
+func (u UUID) MarshalBinary() ([]byte, error) { log.DebugLog()
 	return u[:], nil
 }
 
 // UnmarshalBinary implements encoding.BinaryUnmarshaler.
-func (u *UUID) UnmarshalBinary(data []byte) error {
+func (u *UUID) UnmarshalBinary(data []byte) error { log.DebugLog()
 	if len(data) == 0 {
 		return nil
 	}
@@ -52,14 +52,14 @@ func (u *UUID) UnmarshalBinary(data []byte) error {
 }
 
 // MarshalText implements encoding.TextMarshaler.
-func (u Array) MarshalText() ([]byte, error) {
+func (u Array) MarshalText() ([]byte, error) { log.DebugLog()
 	var js [36]byte
 	encodeHex(js[:], u[:])
 	return js[:], nil
 }
 
 // UnmarshalText implements encoding.TextUnmarshaler.
-func (u *Array) UnmarshalText(data []byte) error {
+func (u *Array) UnmarshalText(data []byte) error { log.DebugLog()
 	id := Parse(string(data))
 	if id == nil {
 		return errors.New("invalid UUID")
@@ -69,12 +69,12 @@ func (u *Array) UnmarshalText(data []byte) error {
 }
 
 // MarshalBinary implements encoding.BinaryMarshaler.
-func (u Array) MarshalBinary() ([]byte, error) {
+func (u Array) MarshalBinary() ([]byte, error) { log.DebugLog()
 	return u[:], nil
 }
 
 // UnmarshalBinary implements encoding.BinaryUnmarshaler.
-func (u *Array) UnmarshalBinary(data []byte) error {
+func (u *Array) UnmarshalBinary(data []byte) error { log.DebugLog()
 	if len(data) != 16 {
 		return fmt.Errorf("invalid UUID (got %d bytes)", len(data))
 	}

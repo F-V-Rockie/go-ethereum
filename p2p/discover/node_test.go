@@ -32,7 +32,7 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 )
 
-func ExampleNewNode() {
+func ExampleNewNode() { log.DebugLog()
 	id := MustHexID("1dd9d65c4552b5eb43d5ad55a2ee3f56c6cbc1c64a5c8d659f51fcd51bace24351232b8d7821617d2b29b54b81cdefb9b3e9c37d7fd5f63270bcc9e1a6f6a439")
 
 	// Complete nodes contain UDP and TCP endpoints:
@@ -146,7 +146,7 @@ var parseNodeTests = []struct {
 	},
 }
 
-func TestParseNode(t *testing.T) {
+func TestParseNode(t *testing.T) { log.DebugLog()
 	for _, test := range parseNodeTests {
 		n, err := ParseNode(test.rawurl)
 		if test.wantError != "" {
@@ -169,7 +169,7 @@ func TestParseNode(t *testing.T) {
 	}
 }
 
-func TestNodeString(t *testing.T) {
+func TestNodeString(t *testing.T) { log.DebugLog()
 	for i, test := range parseNodeTests {
 		if test.wantError == "" && strings.HasPrefix(test.rawurl, "enode://") {
 			str := test.wantResult.String()
@@ -180,7 +180,7 @@ func TestNodeString(t *testing.T) {
 	}
 }
 
-func TestHexID(t *testing.T) {
+func TestHexID(t *testing.T) { log.DebugLog()
 	ref := NodeID{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 106, 217, 182, 31, 165, 174, 1, 67, 7, 235, 220, 150, 66, 83, 173, 205, 159, 44, 10, 57, 42, 161, 26, 188}
 	id1 := MustHexID("0x000000000000000000000000000000000000000000000000000000000000000000000000000000806ad9b61fa5ae014307ebdc964253adcd9f2c0a392aa11abc")
 	id2 := MustHexID("000000000000000000000000000000000000000000000000000000000000000000000000000000806ad9b61fa5ae014307ebdc964253adcd9f2c0a392aa11abc")
@@ -193,7 +193,7 @@ func TestHexID(t *testing.T) {
 	}
 }
 
-func TestNodeID_textEncoding(t *testing.T) {
+func TestNodeID_textEncoding(t *testing.T) { log.DebugLog()
 	ref := NodeID{
 		0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x10,
 		0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x20,
@@ -222,7 +222,7 @@ func TestNodeID_textEncoding(t *testing.T) {
 	}
 }
 
-func TestNodeID_recover(t *testing.T) {
+func TestNodeID_recover(t *testing.T) { log.DebugLog()
 	prv := newkey()
 	hash := make([]byte, 32)
 	sig, err := crypto.Sign(hash, prv)
@@ -248,7 +248,7 @@ func TestNodeID_recover(t *testing.T) {
 	}
 }
 
-func TestNodeID_pubkeyBad(t *testing.T) {
+func TestNodeID_pubkeyBad(t *testing.T) { log.DebugLog()
 	ecdsa, err := NodeID{}.Pubkey()
 	if err == nil {
 		t.Error("expected error for zero ID")
@@ -258,7 +258,7 @@ func TestNodeID_pubkeyBad(t *testing.T) {
 	}
 }
 
-func TestNodeID_distcmp(t *testing.T) {
+func TestNodeID_distcmp(t *testing.T) { log.DebugLog()
 	distcmpBig := func(target, a, b common.Hash) int {
 		tbig := new(big.Int).SetBytes(target[:])
 		abig := new(big.Int).SetBytes(a[:])
@@ -271,7 +271,7 @@ func TestNodeID_distcmp(t *testing.T) {
 }
 
 // the random tests is likely to miss the case where they're equal.
-func TestNodeID_distcmpEqual(t *testing.T) {
+func TestNodeID_distcmpEqual(t *testing.T) { log.DebugLog()
 	base := common.Hash{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}
 	x := common.Hash{15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0}
 	if distcmp(base, x, x) != 0 {
@@ -279,7 +279,7 @@ func TestNodeID_distcmpEqual(t *testing.T) {
 	}
 }
 
-func TestNodeID_logdist(t *testing.T) {
+func TestNodeID_logdist(t *testing.T) { log.DebugLog()
 	logdistBig := func(a, b common.Hash) int {
 		abig, bbig := new(big.Int).SetBytes(a[:]), new(big.Int).SetBytes(b[:])
 		return new(big.Int).Xor(abig, bbig).BitLen()
@@ -290,14 +290,14 @@ func TestNodeID_logdist(t *testing.T) {
 }
 
 // the random tests is likely to miss the case where they're equal.
-func TestNodeID_logdistEqual(t *testing.T) {
+func TestNodeID_logdistEqual(t *testing.T) { log.DebugLog()
 	x := common.Hash{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}
 	if logdist(x, x) != 0 {
 		t.Errorf("logdist(x, x) != 0")
 	}
 }
 
-func TestNodeID_hashAtDistance(t *testing.T) {
+func TestNodeID_hashAtDistance(t *testing.T) { log.DebugLog()
 	// we don't use quick.Check here because its output isn't
 	// very helpful when the test fails.
 	cfg := quickcfg()
@@ -315,7 +315,7 @@ func TestNodeID_hashAtDistance(t *testing.T) {
 	}
 }
 
-func quickcfg() *quick.Config {
+func quickcfg() *quick.Config { log.DebugLog()
 	return &quick.Config{
 		MaxCount: 5000,
 		Rand:     rand.New(rand.NewSource(time.Now().Unix())),
@@ -325,7 +325,7 @@ func quickcfg() *quick.Config {
 // TODO: The Generate method can be dropped when we require Go >= 1.5
 // because testing/quick learned to generate arrays in 1.5.
 
-func (NodeID) Generate(rand *rand.Rand, size int) reflect.Value {
+func (NodeID) Generate(rand *rand.Rand, size int) reflect.Value { log.DebugLog()
 	var id NodeID
 	m := rand.Intn(len(id))
 	for i := len(id) - 1; i > m; i-- {

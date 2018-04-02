@@ -13,7 +13,7 @@ import (
 
 var _ = (*structLogMarshaling)(nil)
 
-func (s StructLog) MarshalJSON() ([]byte, error) {
+func (s StructLog) MarshalJSON() ([]byte, error) { log.DebugLog()
 	type StructLog struct {
 		Pc          uint64                      `json:"pc"`
 		Op          OpCode                      `json:"op"`
@@ -49,7 +49,7 @@ func (s StructLog) MarshalJSON() ([]byte, error) {
 	return json.Marshal(&enc)
 }
 
-func (s *StructLog) UnmarshalJSON(input []byte) error {
+func (s *StructLog) UnmarshalJSON(input []byte) error { log.DebugLog()
 	type StructLog struct {
 		Pc         *uint64                     `json:"pc"`
 		Op         *OpCode                     `json:"op"`

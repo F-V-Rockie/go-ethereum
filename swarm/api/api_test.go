@@ -29,7 +29,7 @@ import (
 	"github.com/ethereum/go-ethereum/swarm/storage"
 )
 
-func testApi(t *testing.T, f func(*Api)) {
+func testApi(t *testing.T, f func(*Api)) { log.DebugLog()
 	datadir, err := ioutil.TempDir("", "bzz-test")
 	if err != nil {
 		t.Fatalf("unable to create temp dir: %v", err)
@@ -51,7 +51,7 @@ type testResponse struct {
 	*Response
 }
 
-func checkResponse(t *testing.T, resp *testResponse, exp *Response) {
+func checkResponse(t *testing.T, resp *testResponse, exp *Response) { log.DebugLog()
 
 	if resp.MimeType != exp.MimeType {
 		t.Errorf("incorrect mimeType. expected '%s', got '%s'", exp.MimeType, resp.MimeType)
@@ -76,14 +76,14 @@ func checkResponse(t *testing.T, resp *testResponse, exp *Response) {
 	}
 }
 
-// func expResponse(content []byte, mimeType string, status int) *Response {
-func expResponse(content string, mimeType string, status int) *Response {
+// func expResponse(content []byte, mimeType string, status int) *Response { log.DebugLog()
+func expResponse(content string, mimeType string, status int) *Response { log.DebugLog()
 	log.Trace(fmt.Sprintf("expected content (%v): %v ", len(content), content))
 	return &Response{mimeType, status, int64(len(content)), content}
 }
 
-// func testGet(t *testing.T, api *Api, bzzhash string) *testResponse {
-func testGet(t *testing.T, api *Api, bzzhash, path string) *testResponse {
+// func testGet(t *testing.T, api *Api, bzzhash string) *testResponse { log.DebugLog()
+func testGet(t *testing.T, api *Api, bzzhash, path string) *testResponse { log.DebugLog()
 	key := storage.Key(common.Hex2Bytes(bzzhash))
 	reader, mimeType, status, err := api.Get(key, path)
 	if err != nil {
@@ -105,7 +105,7 @@ func testGet(t *testing.T, api *Api, bzzhash, path string) *testResponse {
 	// return &testResponse{reader, &Response{mimeType, status, reader.Size(), nil}}
 }
 
-func TestApiPut(t *testing.T) {
+func TestApiPut(t *testing.T) { log.DebugLog()
 	testApi(t, func(api *Api) {
 		content := "hello"
 		exp := expResponse(content, "text/plain", 0)
@@ -125,7 +125,7 @@ type testResolver struct {
 	hash *common.Hash
 }
 
-func newTestResolver(addr string) *testResolver {
+func newTestResolver(addr string) *testResolver { log.DebugLog()
 	r := &testResolver{}
 	if addr != "" {
 		hash := common.HexToHash(addr)
@@ -134,7 +134,7 @@ func newTestResolver(addr string) *testResolver {
 	return r
 }
 
-func (t *testResolver) Resolve(addr string) (common.Hash, error) {
+func (t *testResolver) Resolve(addr string) (common.Hash, error) { log.DebugLog()
 	if t.hash == nil {
 		return common.Hash{}, fmt.Errorf("DNS name not found: %q", addr)
 	}
@@ -143,7 +143,7 @@ func (t *testResolver) Resolve(addr string) (common.Hash, error) {
 
 // TestAPIResolve tests resolving URIs which can either contain content hashes
 // or ENS names
-func TestAPIResolve(t *testing.T) {
+func TestAPIResolve(t *testing.T) { log.DebugLog()
 	ensAddr := "swarm.eth"
 	hashAddr := "1111111111111111111111111111111111111111111111111111111111111111"
 	resolvedAddr := "2222222222222222222222222222222222222222222222222222222222222222"
@@ -238,7 +238,7 @@ func TestAPIResolve(t *testing.T) {
 	}
 }
 
-func TestMultiResolver(t *testing.T) {
+func TestMultiResolver(t *testing.T) { log.DebugLog()
 	doesntResolve := newTestResolver("")
 
 	ethAddr := "swarm.eth"

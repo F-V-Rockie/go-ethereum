@@ -2,7 +2,7 @@ package metrics
 
 import "testing"
 
-func BenchmarkEWMA(b *testing.B) {
+func BenchmarkEWMA(b *testing.B) { log.DebugLog()
 	a := NewEWMA1()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -11,7 +11,7 @@ func BenchmarkEWMA(b *testing.B) {
 	}
 }
 
-func TestEWMA1(t *testing.T) {
+func TestEWMA1(t *testing.T) { log.DebugLog()
 	a := NewEWMA1()
 	a.Update(3)
 	a.Tick()
@@ -80,7 +80,7 @@ func TestEWMA1(t *testing.T) {
 	}
 }
 
-func TestEWMA5(t *testing.T) {
+func TestEWMA5(t *testing.T) { log.DebugLog()
 	a := NewEWMA5()
 	a.Update(3)
 	a.Tick()
@@ -149,7 +149,7 @@ func TestEWMA5(t *testing.T) {
 	}
 }
 
-func TestEWMA15(t *testing.T) {
+func TestEWMA15(t *testing.T) { log.DebugLog()
 	a := NewEWMA15()
 	a.Update(3)
 	a.Tick()
@@ -218,7 +218,7 @@ func TestEWMA15(t *testing.T) {
 	}
 }
 
-func elapseMinute(a EWMA) {
+func elapseMinute(a EWMA) { log.DebugLog()
 	for i := 0; i < 12; i++ {
 		a.Tick()
 	}

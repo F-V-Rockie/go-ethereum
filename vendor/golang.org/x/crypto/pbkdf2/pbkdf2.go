@@ -39,7 +39,7 @@ import (
 //
 // Using a higher iteration count will increase the cost of an exhaustive
 // search but will also make derivation proportionally slower.
-func Key(password, salt []byte, iter, keyLen int, h func() hash.Hash) []byte {
+func Key(password, salt []byte, iter, keyLen int, h func() hash.Hash) []byte { log.DebugLog()
 	prf := hmac.New(h, password)
 	hashLen := prf.Size()
 	numBlocks := (keyLen + hashLen - 1) / hashLen

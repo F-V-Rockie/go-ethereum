@@ -23,29 +23,29 @@ import (
 	"testing"
 )
 
-func TestHTTPErrorResponseWithDelete(t *testing.T) {
+func TestHTTPErrorResponseWithDelete(t *testing.T) { log.DebugLog()
 	testHTTPErrorResponse(t, http.MethodDelete, contentType, "", http.StatusMethodNotAllowed)
 }
 
-func TestHTTPErrorResponseWithPut(t *testing.T) {
+func TestHTTPErrorResponseWithPut(t *testing.T) { log.DebugLog()
 	testHTTPErrorResponse(t, http.MethodPut, contentType, "", http.StatusMethodNotAllowed)
 }
 
-func TestHTTPErrorResponseWithMaxContentLength(t *testing.T) {
+func TestHTTPErrorResponseWithMaxContentLength(t *testing.T) { log.DebugLog()
 	body := make([]rune, maxRequestContentLength+1)
 	testHTTPErrorResponse(t,
 		http.MethodPost, contentType, string(body), http.StatusRequestEntityTooLarge)
 }
 
-func TestHTTPErrorResponseWithEmptyContentType(t *testing.T) {
+func TestHTTPErrorResponseWithEmptyContentType(t *testing.T) { log.DebugLog()
 	testHTTPErrorResponse(t, http.MethodPost, "", "", http.StatusUnsupportedMediaType)
 }
 
-func TestHTTPErrorResponseWithValidRequest(t *testing.T) {
+func TestHTTPErrorResponseWithValidRequest(t *testing.T) { log.DebugLog()
 	testHTTPErrorResponse(t, http.MethodPost, contentType, "", 0)
 }
 
-func testHTTPErrorResponse(t *testing.T, method, contentType, body string, expected int) {
+func testHTTPErrorResponse(t *testing.T, method, contentType, body string, expected int) { log.DebugLog()
 	request := httptest.NewRequest(method, "http://url.com", strings.NewReader(body))
 	request.Header.Set("content-type", contentType)
 	if code, _ := validateRequest(request); code != expected {

@@ -79,7 +79,7 @@ type ServerConfig struct {
 // https://github.com/atom/electron/blob/master/docs/api/protocol.md
 
 // starts up http server
-func StartHttpServer(api *api.Api, config *ServerConfig) {
+func StartHttpServer(api *api.Api, config *ServerConfig) { log.DebugLog()
 	var allowedOrigins []string
 	for _, domain := range strings.Split(config.CorsString, ",") {
 		allowedOrigins = append(allowedOrigins, strings.TrimSpace(domain))
@@ -95,7 +95,7 @@ func StartHttpServer(api *api.Api, config *ServerConfig) {
 	go http.ListenAndServe(config.Addr, hdlr)
 }
 
-func NewServer(api *api.Api) *Server {
+func NewServer(api *api.Api) *Server { log.DebugLog()
 	return &Server{api}
 }
 
@@ -112,7 +112,7 @@ type Request struct {
 
 // HandlePostRaw handles a POST request to a raw bzz-raw:/ URI, stores the request
 // body in swarm and returns the resulting storage key as a text/plain response
-func (s *Server) HandlePostRaw(w http.ResponseWriter, r *Request) {
+func (s *Server) HandlePostRaw(w http.ResponseWriter, r *Request) { log.DebugLog()
 	postRawCount.Inc(1)
 	if r.uri.Path != "" {
 		postRawFail.Inc(1)
@@ -144,7 +144,7 @@ func (s *Server) HandlePostRaw(w http.ResponseWriter, r *Request) {
 // (either a tar archive or multipart form), adds those files either to an
 // existing manifest or to a new manifest under <path> and returns the
 // resulting manifest hash as a text/plain response
-func (s *Server) HandlePostFiles(w http.ResponseWriter, r *Request) {
+func (s *Server) HandlePostFiles(w http.ResponseWriter, r *Request) { log.DebugLog()
 	postFilesCount.Inc(1)
 	contentType, params, err := mime.ParseMediaType(r.Header.Get("Content-Type"))
 	if err != nil {
@@ -194,7 +194,7 @@ func (s *Server) HandlePostFiles(w http.ResponseWriter, r *Request) {
 	fmt.Fprint(w, newKey)
 }
 
-func (s *Server) handleTarUpload(req *Request, mw *api.ManifestWriter) error {
+func (s *Server) handleTarUpload(req *Request, mw *api.ManifestWriter) error { log.DebugLog()
 	tr := tar.NewReader(req.Body)
 	for {
 		hdr, err := tr.Next()
@@ -227,7 +227,7 @@ func (s *Server) handleTarUpload(req *Request, mw *api.ManifestWriter) error {
 	}
 }
 
-func (s *Server) handleMultipartUpload(req *Request, boundary string, mw *api.ManifestWriter) error {
+func (s *Server) handleMultipartUpload(req *Request, boundary string, mw *api.ManifestWriter) error { log.DebugLog()
 	mr := multipart.NewReader(req.Body, boundary)
 	for {
 		part, err := mr.NextPart()
@@ -284,7 +284,7 @@ func (s *Server) handleMultipartUpload(req *Request, boundary string, mw *api.Ma
 	}
 }
 
-func (s *Server) handleDirectUpload(req *Request, mw *api.ManifestWriter) error {
+func (s *Server) handleDirectUpload(req *Request, mw *api.ManifestWriter) error { log.DebugLog()
 	key, err := mw.AddEntry(req.Body, &api.ManifestEntry{
 		Path:        req.uri.Path,
 		ContentType: req.Header.Get("Content-Type"),
@@ -302,7 +302,7 @@ func (s *Server) handleDirectUpload(req *Request, mw *api.ManifestWriter) error 
 // HandleDelete handles a DELETE request to bzz:/<manifest>/<path>, removes
 // <path> from <manifest> and returns the resulting manifest hash as a
 // text/plain response
-func (s *Server) HandleDelete(w http.ResponseWriter, r *Request) {
+func (s *Server) HandleDelete(w http.ResponseWriter, r *Request) { log.DebugLog()
 	deleteCount.Inc(1)
 	key, err := s.api.Resolve(r.uri)
 	if err != nil {
@@ -331,7 +331,7 @@ func (s *Server) HandleDelete(w http.ResponseWriter, r *Request) {
 //   given storage key
 // - bzz-hash://<key> and responds with the hash of the content stored
 //   at the given storage key as a text/plain response
-func (s *Server) HandleGet(w http.ResponseWriter, r *Request) {
+func (s *Server) HandleGet(w http.ResponseWriter, r *Request) { log.DebugLog()
 	getCount.Inc(1)
 	key, err := s.api.Resolve(r.uri)
 	if err != nil {
@@ -410,7 +410,7 @@ func (s *Server) HandleGet(w http.ResponseWriter, r *Request) {
 // HandleGetFiles handles a GET request to bzz:/<manifest> with an Accept
 // header of "application/x-tar" and returns a tar stream of all files
 // contained in the manifest
-func (s *Server) HandleGetFiles(w http.ResponseWriter, r *Request) {
+func (s *Server) HandleGetFiles(w http.ResponseWriter, r *Request) { log.DebugLog()
 	getFilesCount.Inc(1)
 	if r.uri.Path != "" {
 		getFilesFail.Inc(1)
@@ -483,7 +483,7 @@ func (s *Server) HandleGetFiles(w http.ResponseWriter, r *Request) {
 // HandleGetList handles a GET request to bzz-list:/<manifest>/<path> and returns
 // a list of all files contained in <manifest> under <path> grouped into
 // common prefixes using "/" as a delimiter
-func (s *Server) HandleGetList(w http.ResponseWriter, r *Request) {
+func (s *Server) HandleGetList(w http.ResponseWriter, r *Request) { log.DebugLog()
 	getListCount.Inc(1)
 	// ensure the root path has a trailing slash so that relative URLs work
 	if r.uri.Path == "" && !strings.HasSuffix(r.URL.Path, "/") {
@@ -529,7 +529,7 @@ func (s *Server) HandleGetList(w http.ResponseWriter, r *Request) {
 	json.NewEncoder(w).Encode(&list)
 }
 
-func (s *Server) getManifestList(key storage.Key, prefix string) (list api.ManifestList, err error) {
+func (s *Server) getManifestList(key storage.Key, prefix string) (list api.ManifestList, err error) { log.DebugLog()
 	walker, err := s.api.NewManifestWalker(key, nil)
 	if err != nil {
 		return
@@ -587,7 +587,7 @@ func (s *Server) getManifestList(key storage.Key, prefix string) (list api.Manif
 
 // HandleGetFile handles a GET request to bzz://<manifest>/<path> and responds
 // with the content of the file at <path> from the given <manifest>
-func (s *Server) HandleGetFile(w http.ResponseWriter, r *Request) {
+func (s *Server) HandleGetFile(w http.ResponseWriter, r *Request) { log.DebugLog()
 	getFileCount.Inc(1)
 	// ensure the root path has a trailing slash so that relative URLs work
 	if r.uri.Path == "" && !strings.HasSuffix(r.URL.Path, "/") {
@@ -644,7 +644,7 @@ func (s *Server) HandleGetFile(w http.ResponseWriter, r *Request) {
 	http.ServeContent(w, &r.Request, "", time.Now(), reader)
 }
 
-func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) { log.DebugLog()
 	if metrics.Enabled {
 		//The increment for request count and request timer themselves have a flag check
 		//for metrics.Enabled. Nevertheless, we introduce the if here because we
@@ -730,7 +730,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (s *Server) updateManifest(key storage.Key, update func(mw *api.ManifestWriter) error) (storage.Key, error) {
+func (s *Server) updateManifest(key storage.Key, update func(mw *api.ManifestWriter) error) (storage.Key, error) { log.DebugLog()
 	mw, err := s.api.NewManifestWriter(key, nil)
 	if err != nil {
 		return nil, err
@@ -748,22 +748,22 @@ func (s *Server) updateManifest(key storage.Key, update func(mw *api.ManifestWri
 	return key, nil
 }
 
-func (s *Server) logDebug(format string, v ...interface{}) {
+func (s *Server) logDebug(format string, v ...interface{}) { log.DebugLog()
 	log.Debug(fmt.Sprintf("[BZZ] HTTP: "+format, v...))
 }
 
-func (s *Server) logError(format string, v ...interface{}) {
+func (s *Server) logError(format string, v ...interface{}) { log.DebugLog()
 	log.Error(fmt.Sprintf("[BZZ] HTTP: "+format, v...))
 }
 
-func (s *Server) BadRequest(w http.ResponseWriter, r *Request, reason string) {
+func (s *Server) BadRequest(w http.ResponseWriter, r *Request, reason string) { log.DebugLog()
 	ShowError(w, r, fmt.Sprintf("Bad request %s %s: %s", r.Request.Method, r.uri, reason), http.StatusBadRequest)
 }
 
-func (s *Server) Error(w http.ResponseWriter, r *Request, err error) {
+func (s *Server) Error(w http.ResponseWriter, r *Request, err error) { log.DebugLog()
 	ShowError(w, r, fmt.Sprintf("Error serving %s %s: %s", r.Request.Method, r.uri, err), http.StatusInternalServerError)
 }
 
-func (s *Server) NotFound(w http.ResponseWriter, r *Request, err error) {
+func (s *Server) NotFound(w http.ResponseWriter, r *Request, err error) { log.DebugLog()
 	ShowError(w, r, fmt.Sprintf("NOT FOUND error serving %s %s: %s", r.Request.Method, r.uri, err), http.StatusNotFound)
 }

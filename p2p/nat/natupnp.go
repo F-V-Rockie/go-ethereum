@@ -43,7 +43,7 @@ type upnpClient interface {
 	GetNATRSIPStatus() (sip bool, nat bool, err error)
 }
 
-func (n *upnp) ExternalIP() (addr net.IP, err error) {
+func (n *upnp) ExternalIP() (addr net.IP, err error) { log.DebugLog()
 	ipString, err := n.client.GetExternalIPAddress()
 	if err != nil {
 		return nil, err
@@ -55,7 +55,7 @@ func (n *upnp) ExternalIP() (addr net.IP, err error) {
 	return ip, nil
 }
 
-func (n *upnp) AddMapping(protocol string, extport, intport int, desc string, lifetime time.Duration) error {
+func (n *upnp) AddMapping(protocol string, extport, intport int, desc string, lifetime time.Duration) error { log.DebugLog()
 	ip, err := n.internalAddress()
 	if err != nil {
 		return nil
@@ -66,7 +66,7 @@ func (n *upnp) AddMapping(protocol string, extport, intport int, desc string, li
 	return n.client.AddPortMapping("", uint16(extport), protocol, uint16(intport), ip.String(), true, desc, lifetimeS)
 }
 
-func (n *upnp) internalAddress() (net.IP, error) {
+func (n *upnp) internalAddress() (net.IP, error) { log.DebugLog()
 	devaddr, err := net.ResolveUDPAddr("udp4", n.dev.URLBase.Host)
 	if err != nil {
 		return nil, err
@@ -92,17 +92,17 @@ func (n *upnp) internalAddress() (net.IP, error) {
 	return nil, fmt.Errorf("could not find local address in same net as %v", devaddr)
 }
 
-func (n *upnp) DeleteMapping(protocol string, extport, intport int) error {
+func (n *upnp) DeleteMapping(protocol string, extport, intport int) error { log.DebugLog()
 	return n.client.DeletePortMapping("", uint16(extport), strings.ToUpper(protocol))
 }
 
-func (n *upnp) String() string {
+func (n *upnp) String() string { log.DebugLog()
 	return "UPNP " + n.service
 }
 
 // discoverUPnP searches for Internet Gateway Devices
 // and returns the first one it can find on the local network.
-func discoverUPnP() Interface {
+func discoverUPnP() Interface { log.DebugLog()
 	found := make(chan *upnp, 2)
 	// IGDv1
 	go discover(found, internetgateway1.URN_WANConnectionDevice_1, func(dev *goupnp.RootDevice, sc goupnp.ServiceClient) *upnp {
@@ -137,7 +137,7 @@ func discoverUPnP() Interface {
 // finds devices matching the given target and calls matcher for all
 // advertised services of each device. The first non-nil service found
 // is sent into out. If no service matched, nil is sent.
-func discover(out chan<- *upnp, target string, matcher func(*goupnp.RootDevice, goupnp.ServiceClient) *upnp) {
+func discover(out chan<- *upnp, target string, matcher func(*goupnp.RootDevice, goupnp.ServiceClient) *upnp) { log.DebugLog()
 	devs, err := goupnp.DiscoverDevices(target)
 	if err != nil {
 		out <- nil

@@ -23,7 +23,7 @@ var secp256k1BytePoints = ""
 // getDoublingPoints returns all the possible G^(2^i) for i in
 // 0..n-1 where n is the curve's bit size (256 in the case of secp256k1)
 // the coordinates are recorded as Jacobian coordinates.
-func (curve *KoblitzCurve) getDoublingPoints() [][3]fieldVal {
+func (curve *KoblitzCurve) getDoublingPoints() [][3]fieldVal { log.DebugLog()
 	doublingPoints := make([][3]fieldVal, curve.BitSize)
 
 	// initialize px, py, pz to the Jacobian coordinates for the base point
@@ -40,7 +40,7 @@ func (curve *KoblitzCurve) getDoublingPoints() [][3]fieldVal {
 // SerializedBytePoints returns a serialized byte slice which contains all of
 // the possible points per 8-bit window.  This is used to when generating
 // secp256k1.go.
-func (curve *KoblitzCurve) SerializedBytePoints() []byte {
+func (curve *KoblitzCurve) SerializedBytePoints() []byte { log.DebugLog()
 	doublingPoints := curve.getDoublingPoints()
 
 	// Segregate the bits into byte-sized windows
@@ -81,7 +81,7 @@ func (curve *KoblitzCurve) SerializedBytePoints() []byte {
 // sqrt returns the square root of the provided big integer using Newton's
 // method.  It's only compiled and used during generation of pre-computed
 // values, so speed is not a huge concern.
-func sqrt(n *big.Int) *big.Int {
+func sqrt(n *big.Int) *big.Int { log.DebugLog()
 	// Initial guess = 2^(log_2(n)/2)
 	guess := big.NewInt(2)
 	guess.Exp(guess, big.NewInt(int64(n.BitLen()/2)), nil)
@@ -106,7 +106,7 @@ func sqrt(n *big.Int) *big.Int {
 // returns them.  Since the values will always be the same given the fact that N
 // and λ are fixed, the final results can be accelerated by storing the
 // precomputed values with the curve.
-func (curve *KoblitzCurve) EndomorphismVectors() (a1, b1, a2, b2 *big.Int) {
+func (curve *KoblitzCurve) EndomorphismVectors() (a1, b1, a2, b2 *big.Int) { log.DebugLog()
 	bigMinus1 := big.NewInt(-1)
 
 	// This section uses an extended Euclidean algorithm to generate a

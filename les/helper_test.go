@@ -77,7 +77,7 @@ contract test {
 }
 */
 
-func testChainGen(i int, block *core.BlockGen) {
+func testChainGen(i int, block *core.BlockGen) { log.DebugLog()
 	signer := types.HomesteadSigner{}
 
 	switch i {
@@ -123,7 +123,7 @@ func testChainGen(i int, block *core.BlockGen) {
 	}
 }
 
-func testRCL() RequestCostList {
+func testRCL() RequestCostList { log.DebugLog()
 	cl := make(RequestCostList, len(reqList))
 	for i, code := range reqList {
 		cl[i].MsgCode = code
@@ -136,7 +136,7 @@ func testRCL() RequestCostList {
 // newTestProtocolManager creates a new protocol manager for testing purposes,
 // with the given number of blocks already known, and potential notification
 // channels for different events.
-func newTestProtocolManager(lightSync bool, blocks int, generator func(int, *core.BlockGen), peers *peerSet, odr *LesOdr, db ethdb.Database) (*ProtocolManager, error) {
+func newTestProtocolManager(lightSync bool, blocks int, generator func(int, *core.BlockGen), peers *peerSet, odr *LesOdr, db ethdb.Database) (*ProtocolManager, error) { log.DebugLog()
 	var (
 		evmux  = new(event.TypeMux)
 		engine = ethash.NewFaker()
@@ -202,7 +202,7 @@ func newTestProtocolManager(lightSync bool, blocks int, generator func(int, *cor
 // with the given number of blocks already known, and potential notification
 // channels for different events. In case of an error, the constructor force-
 // fails the test.
-func newTestProtocolManagerMust(t *testing.T, lightSync bool, blocks int, generator func(int, *core.BlockGen), peers *peerSet, odr *LesOdr, db ethdb.Database) *ProtocolManager {
+func newTestProtocolManagerMust(t *testing.T, lightSync bool, blocks int, generator func(int, *core.BlockGen), peers *peerSet, odr *LesOdr, db ethdb.Database) *ProtocolManager { log.DebugLog()
 	pm, err := newTestProtocolManager(lightSync, blocks, generator, peers, odr, db)
 	if err != nil {
 		t.Fatalf("Failed to create protocol manager: %v", err)
@@ -218,7 +218,7 @@ type testPeer struct {
 }
 
 // newTestPeer creates a new peer registered at the given protocol manager.
-func newTestPeer(t *testing.T, name string, version int, pm *ProtocolManager, shake bool) (*testPeer, <-chan error) {
+func newTestPeer(t *testing.T, name string, version int, pm *ProtocolManager, shake bool) (*testPeer, <-chan error) { log.DebugLog()
 	// Create a message pipe to communicate through
 	app, net := p2p.MsgPipe()
 
@@ -255,7 +255,7 @@ func newTestPeer(t *testing.T, name string, version int, pm *ProtocolManager, sh
 	return tp, errc
 }
 
-func newTestPeerPair(name string, version int, pm, pm2 *ProtocolManager) (*peer, <-chan error, *peer, <-chan error) {
+func newTestPeerPair(name string, version int, pm, pm2 *ProtocolManager) (*peer, <-chan error, *peer, <-chan error) { log.DebugLog()
 	// Create a message pipe to communicate through
 	app, net := p2p.MsgPipe()
 
@@ -290,7 +290,7 @@ func newTestPeerPair(name string, version int, pm, pm2 *ProtocolManager) (*peer,
 
 // handshake simulates a trivial handshake that expects the same state from the
 // remote side as we are simulating locally.
-func (p *testPeer) handshake(t *testing.T, td *big.Int, head common.Hash, headNum uint64, genesis common.Hash) {
+func (p *testPeer) handshake(t *testing.T, td *big.Int, head common.Hash, headNum uint64, genesis common.Hash) { log.DebugLog()
 	var expList keyValueList
 	expList = expList.add("protocolVersion", uint64(p.version))
 	expList = expList.add("networkId", uint64(NetworkId))
@@ -323,6 +323,6 @@ func (p *testPeer) handshake(t *testing.T, td *big.Int, head common.Hash, headNu
 
 // close terminates the local side of the peer, notifying the remote protocol
 // manager of termination.
-func (p *testPeer) close() {
+func (p *testPeer) close() { log.DebugLog()
 	p.app.Close()
 }

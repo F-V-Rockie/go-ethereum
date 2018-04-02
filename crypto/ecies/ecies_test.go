@@ -45,14 +45,14 @@ import (
 
 var dumpEnc bool
 
-func init() {
+func init() { log.DebugLog()
 	flDump := flag.Bool("dump", false, "write encrypted test message to file")
 	flag.Parse()
 	dumpEnc = *flDump
 }
 
 // Ensure the KDF generates appropriately sized keys.
-func TestKDF(t *testing.T) {
+func TestKDF(t *testing.T) { log.DebugLog()
 	msg := []byte("Hello, world")
 	h := sha256.New()
 
@@ -71,14 +71,14 @@ var ErrBadSharedKeys = fmt.Errorf("ecies: shared keys don't match")
 
 // cmpParams compares a set of ECIES parameters. We assume, as per the
 // docs, that AES is the only supported symmetric encryption algorithm.
-func cmpParams(p1, p2 *ECIESParams) bool {
+func cmpParams(p1, p2 *ECIESParams) bool { log.DebugLog()
 	return p1.hashAlgo == p2.hashAlgo &&
 		p1.KeyLen == p2.KeyLen &&
 		p1.BlockSize == p2.BlockSize
 }
 
 // cmpPublic returns true if the two public keys represent the same pojnt.
-func cmpPublic(pub1, pub2 PublicKey) bool {
+func cmpPublic(pub1, pub2 PublicKey) bool { log.DebugLog()
 	if pub1.X == nil || pub1.Y == nil {
 		fmt.Println(ErrInvalidPublicKey.Error())
 		return false
@@ -94,7 +94,7 @@ func cmpPublic(pub1, pub2 PublicKey) bool {
 }
 
 // cmpPrivate returns true if the two private keys are the same.
-func cmpPrivate(prv1, prv2 *PrivateKey) bool {
+func cmpPrivate(prv1, prv2 *PrivateKey) bool { log.DebugLog()
 	if prv1 == nil || prv1.D == nil {
 		return false
 	} else if prv2 == nil || prv2.D == nil {
@@ -107,7 +107,7 @@ func cmpPrivate(prv1, prv2 *PrivateKey) bool {
 }
 
 // Validate the ECDH component.
-func TestSharedKey(t *testing.T) {
+func TestSharedKey(t *testing.T) { log.DebugLog()
 	prv1, err := GenerateKey(rand.Reader, DefaultCurve, nil)
 	if err != nil {
 		fmt.Println(err.Error())
@@ -139,7 +139,7 @@ func TestSharedKey(t *testing.T) {
 	}
 }
 
-func TestSharedKeyPadding(t *testing.T) {
+func TestSharedKeyPadding(t *testing.T) { log.DebugLog()
 	// sanity checks
 	prv0 := hexKey("1adf5c18167d96a1f9a0b1ef63be8aa27eaf6032c233b2b38f7850cf5b859fd9")
 	prv1 := hexKey("0097a076fc7fcd9208240668e31c9abee952cbb6e375d1b8febc7499d6e16f1a")
@@ -179,7 +179,7 @@ func TestSharedKeyPadding(t *testing.T) {
 
 // Verify that the key generation code fails when too much key data is
 // requested.
-func TestTooBigSharedKey(t *testing.T) {
+func TestTooBigSharedKey(t *testing.T) { log.DebugLog()
 	prv1, err := GenerateKey(rand.Reader, DefaultCurve, nil)
 	if err != nil {
 		fmt.Println(err.Error())
@@ -206,7 +206,7 @@ func TestTooBigSharedKey(t *testing.T) {
 }
 
 // Benchmark the generation of P256 keys.
-func BenchmarkGenerateKeyP256(b *testing.B) {
+func BenchmarkGenerateKeyP256(b *testing.B) { log.DebugLog()
 	for i := 0; i < b.N; i++ {
 		if _, err := GenerateKey(rand.Reader, elliptic.P256(), nil); err != nil {
 			fmt.Println(err.Error())
@@ -216,7 +216,7 @@ func BenchmarkGenerateKeyP256(b *testing.B) {
 }
 
 // Benchmark the generation of P256 shared keys.
-func BenchmarkGenSharedKeyP256(b *testing.B) {
+func BenchmarkGenSharedKeyP256(b *testing.B) { log.DebugLog()
 	prv, err := GenerateKey(rand.Reader, elliptic.P256(), nil)
 	if err != nil {
 		fmt.Println(err.Error())
@@ -233,7 +233,7 @@ func BenchmarkGenSharedKeyP256(b *testing.B) {
 }
 
 // Benchmark the generation of S256 shared keys.
-func BenchmarkGenSharedKeyS256(b *testing.B) {
+func BenchmarkGenSharedKeyS256(b *testing.B) { log.DebugLog()
 	prv, err := GenerateKey(rand.Reader, crypto.S256(), nil)
 	if err != nil {
 		fmt.Println(err.Error())
@@ -250,7 +250,7 @@ func BenchmarkGenSharedKeyS256(b *testing.B) {
 }
 
 // Verify that an encrypted message can be successfully decrypted.
-func TestEncryptDecrypt(t *testing.T) {
+func TestEncryptDecrypt(t *testing.T) { log.DebugLog()
 	prv1, err := GenerateKey(rand.Reader, DefaultCurve, nil)
 	if err != nil {
 		fmt.Println(err.Error())
@@ -288,7 +288,7 @@ func TestEncryptDecrypt(t *testing.T) {
 	}
 }
 
-func TestDecryptShared2(t *testing.T) {
+func TestDecryptShared2(t *testing.T) { log.DebugLog()
 	prv, err := GenerateKey(rand.Reader, DefaultCurve, nil)
 	if err != nil {
 		t.Fatal(err)
@@ -345,13 +345,13 @@ var testCases = []testCase{
 // Test parameter selection for each curve, and that P224 fails automatic
 // parameter selection (see README for a discussion of P224). Ensures that
 // selecting a set of parameters automatically for the given curve works.
-func TestParamSelection(t *testing.T) {
+func TestParamSelection(t *testing.T) { log.DebugLog()
 	for _, c := range testCases {
 		testParamSelection(t, c)
 	}
 }
 
-func testParamSelection(t *testing.T, c testCase) {
+func testParamSelection(t *testing.T, c testCase) { log.DebugLog()
 	params := ParamsFromCurve(c.Curve)
 	if params == nil && c.Expected != nil {
 		fmt.Printf("%s (%s)\n", ErrInvalidParams.Error(), c.Name)
@@ -404,7 +404,7 @@ func testParamSelection(t *testing.T, c testCase) {
 
 // Ensure that the basic public key validation in the decryption operation
 // works.
-func TestBasicKeyValidation(t *testing.T) {
+func TestBasicKeyValidation(t *testing.T) { log.DebugLog()
 	badBytes := []byte{0, 1, 5, 6, 7, 8, 9}
 
 	prv, err := GenerateKey(rand.Reader, DefaultCurve, nil)
@@ -430,7 +430,7 @@ func TestBasicKeyValidation(t *testing.T) {
 	}
 }
 
-func TestBox(t *testing.T) {
+func TestBox(t *testing.T) { log.DebugLog()
 	prv1 := hexKey("4b50fa71f5c3eeb8fdc452224b2395af2fcc3d125e06c32c82e048c0559db03f")
 	prv2 := hexKey("d0b043b4c5d657670778242d82d68a29d25d7d711127d17b8e299f156dad361a")
 	pub2 := &prv2.PublicKey
@@ -455,7 +455,7 @@ func TestBox(t *testing.T) {
 
 // Verify GenerateShared against static values - useful when
 // debugging changes in underlying libs
-func TestSharedKeyStatic(t *testing.T) {
+func TestSharedKeyStatic(t *testing.T) { log.DebugLog()
 	prv1 := hexKey("7ebbc6a8358bc76dd73ebc557056702c8cfc34e5cfcd90eb83af0347575fd2ad")
 	prv2 := hexKey("6a3d6396903245bba5837752b9e0348874e72db0c4e11e9c485a81b4ea4353b9")
 
@@ -484,7 +484,7 @@ func TestSharedKeyStatic(t *testing.T) {
 	}
 }
 
-func hexKey(prv string) *PrivateKey {
+func hexKey(prv string) *PrivateKey { log.DebugLog()
 	key, err := crypto.HexToECDSA(prv)
 	if err != nil {
 		panic(err)

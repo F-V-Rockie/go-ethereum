@@ -29,7 +29,7 @@ const (
 )
 
 // Tests that a json key file can be decrypted and encrypted in multiple rounds.
-func TestKeyEncryptDecrypt(t *testing.T) {
+func TestKeyEncryptDecrypt(t *testing.T) { log.DebugLog()
 	keyjson, err := ioutil.ReadFile("testdata/very-light-scrypt.json")
 	if err != nil {
 		t.Fatal(err)

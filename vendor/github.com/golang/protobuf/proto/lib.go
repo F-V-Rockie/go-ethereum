@@ -113,15 +113,15 @@ The resulting file, test.pb.go, is:
 		"X": 17,
 	}
 
-	func (x FOO) Enum() *FOO {
+	func (x FOO) Enum() *FOO { log.DebugLog()
 		p := new(FOO)
 		*p = x
 		return p
 	}
-	func (x FOO) String() string {
+	func (x FOO) String() string { log.DebugLog()
 		return proto.EnumName(FOO_name, int32(x))
 	}
-	func (x *FOO) UnmarshalJSON(data []byte) error {
+	func (x *FOO) UnmarshalJSON(data []byte) error { log.DebugLog()
 		value, err := proto.UnmarshalJSONEnum(FOO_value, data)
 		if err != nil {
 			return err
@@ -141,9 +141,9 @@ The resulting file, test.pb.go, is:
 		Union            isTest_Union `protobuf_oneof:"union"`
 		XXX_unrecognized []byte       `json:"-"`
 	}
-	func (m *Test) Reset()         { *m = Test{} }
-	func (m *Test) String() string { return proto.CompactTextString(m) }
-	func (*Test) ProtoMessage() {}
+	func (m *Test) Reset()         { log.DebugLog() *m = Test{} }
+	func (m *Test) String() string { log.DebugLog() return proto.CompactTextString(m) }
+	func (*Test) ProtoMessage() { log.DebugLog()}
 
 	type isTest_Union interface {
 		isTest_Union()
@@ -156,10 +156,10 @@ The resulting file, test.pb.go, is:
 		Name string `protobuf:"bytes,7,opt,name=name"`
 	}
 
-	func (*Test_Number) isTest_Union() {}
-	func (*Test_Name) isTest_Union()   {}
+	func (*Test_Number) isTest_Union() { log.DebugLog()}
+	func (*Test_Name) isTest_Union()   { log.DebugLog()}
 
-	func (m *Test) GetUnion() isTest_Union {
+	func (m *Test) GetUnion() isTest_Union { log.DebugLog()
 		if m != nil {
 			return m.Union
 		}
@@ -167,21 +167,21 @@ The resulting file, test.pb.go, is:
 	}
 	const Default_Test_Type int32 = 77
 
-	func (m *Test) GetLabel() string {
+	func (m *Test) GetLabel() string { log.DebugLog()
 		if m != nil && m.Label != nil {
 			return *m.Label
 		}
 		return ""
 	}
 
-	func (m *Test) GetType() int32 {
+	func (m *Test) GetType() int32 { log.DebugLog()
 		if m != nil && m.Type != nil {
 			return *m.Type
 		}
 		return Default_Test_Type
 	}
 
-	func (m *Test) GetOptionalgroup() *Test_OptionalGroup {
+	func (m *Test) GetOptionalgroup() *Test_OptionalGroup { log.DebugLog()
 		if m != nil {
 			return m.Optionalgroup
 		}
@@ -191,31 +191,31 @@ The resulting file, test.pb.go, is:
 	type Test_OptionalGroup struct {
 		RequiredField *string `protobuf:"bytes,5,req" json:"RequiredField,omitempty"`
 	}
-	func (m *Test_OptionalGroup) Reset()         { *m = Test_OptionalGroup{} }
-	func (m *Test_OptionalGroup) String() string { return proto.CompactTextString(m) }
+	func (m *Test_OptionalGroup) Reset()         { log.DebugLog() *m = Test_OptionalGroup{} }
+	func (m *Test_OptionalGroup) String() string { log.DebugLog() return proto.CompactTextString(m) }
 
-	func (m *Test_OptionalGroup) GetRequiredField() string {
+	func (m *Test_OptionalGroup) GetRequiredField() string { log.DebugLog()
 		if m != nil && m.RequiredField != nil {
 			return *m.RequiredField
 		}
 		return ""
 	}
 
-	func (m *Test) GetNumber() int32 {
+	func (m *Test) GetNumber() int32 { log.DebugLog()
 		if x, ok := m.GetUnion().(*Test_Number); ok {
 			return x.Number
 		}
 		return 0
 	}
 
-	func (m *Test) GetName() string {
+	func (m *Test) GetName() string { log.DebugLog()
 		if x, ok := m.GetUnion().(*Test_Name); ok {
 			return x.Name
 		}
 		return ""
 	}
 
-	func init() {
+	func init() { log.DebugLog()
 		proto.RegisterEnum("example.FOO", FOO_name, FOO_value)
 	}
 
@@ -230,7 +230,7 @@ To create and play with a Test object:
 		pb "./example.pb"
 	)
 
-	func main() {
+	func main() { log.DebugLog()
 		test := &pb.Test{
 			Label: proto.String("hello"),
 			Type:  proto.Int32(17),
@@ -298,7 +298,7 @@ const collectStats = false
 var stats Stats
 
 // GetStats returns a copy of the global Stats structure.
-func GetStats() Stats { return stats }
+func GetStats() Stats { log.DebugLog() return stats }
 
 // A Buffer is a buffer manager for marshaling and unmarshaling
 // protocol buffers.  It may be reused between invocations to
@@ -323,25 +323,25 @@ type Buffer struct {
 
 // NewBuffer allocates a new Buffer and initializes its internal data to
 // the contents of the argument slice.
-func NewBuffer(e []byte) *Buffer {
+func NewBuffer(e []byte) *Buffer { log.DebugLog()
 	return &Buffer{buf: e}
 }
 
 // Reset resets the Buffer, ready for marshaling a new protocol buffer.
-func (p *Buffer) Reset() {
+func (p *Buffer) Reset() { log.DebugLog()
 	p.buf = p.buf[0:0] // for reading/writing
 	p.index = 0        // for reading
 }
 
 // SetBuf replaces the internal buffer with the slice,
 // ready for unmarshaling the contents of the slice.
-func (p *Buffer) SetBuf(s []byte) {
+func (p *Buffer) SetBuf(s []byte) { log.DebugLog()
 	p.buf = s
 	p.index = 0
 }
 
 // Bytes returns the contents of the Buffer.
-func (p *Buffer) Bytes() []byte { return p.buf }
+func (p *Buffer) Bytes() []byte { log.DebugLog() return p.buf }
 
 /*
  * Helper routines for simplifying the creation of optional fields of basic type.
@@ -349,20 +349,20 @@ func (p *Buffer) Bytes() []byte { return p.buf }
 
 // Bool is a helper routine that allocates a new bool value
 // to store v and returns a pointer to it.
-func Bool(v bool) *bool {
+func Bool(v bool) *bool { log.DebugLog()
 	return &v
 }
 
 // Int32 is a helper routine that allocates a new int32 value
 // to store v and returns a pointer to it.
-func Int32(v int32) *int32 {
+func Int32(v int32) *int32 { log.DebugLog()
 	return &v
 }
 
 // Int is a helper routine that allocates a new int32 value
 // to store v and returns a pointer to it, but unlike Int32
 // its argument value is an int.
-func Int(v int) *int32 {
+func Int(v int) *int32 { log.DebugLog()
 	p := new(int32)
 	*p = int32(v)
 	return p
@@ -370,43 +370,43 @@ func Int(v int) *int32 {
 
 // Int64 is a helper routine that allocates a new int64 value
 // to store v and returns a pointer to it.
-func Int64(v int64) *int64 {
+func Int64(v int64) *int64 { log.DebugLog()
 	return &v
 }
 
 // Float32 is a helper routine that allocates a new float32 value
 // to store v and returns a pointer to it.
-func Float32(v float32) *float32 {
+func Float32(v float32) *float32 { log.DebugLog()
 	return &v
 }
 
 // Float64 is a helper routine that allocates a new float64 value
 // to store v and returns a pointer to it.
-func Float64(v float64) *float64 {
+func Float64(v float64) *float64 { log.DebugLog()
 	return &v
 }
 
 // Uint32 is a helper routine that allocates a new uint32 value
 // to store v and returns a pointer to it.
-func Uint32(v uint32) *uint32 {
+func Uint32(v uint32) *uint32 { log.DebugLog()
 	return &v
 }
 
 // Uint64 is a helper routine that allocates a new uint64 value
 // to store v and returns a pointer to it.
-func Uint64(v uint64) *uint64 {
+func Uint64(v uint64) *uint64 { log.DebugLog()
 	return &v
 }
 
 // String is a helper routine that allocates a new string value
 // to store v and returns a pointer to it.
-func String(v string) *string {
+func String(v string) *string { log.DebugLog()
 	return &v
 }
 
 // EnumName is a helper function to simplify printing protocol buffer enums
 // by name.  Given an enum map and a value, it returns a useful string.
-func EnumName(m map[int32]string, v int32) string {
+func EnumName(m map[int32]string, v int32) string { log.DebugLog()
 	s, ok := m[v]
 	if ok {
 		return s
@@ -420,7 +420,7 @@ func EnumName(m map[int32]string, v int32) string {
 // value, it returns an int32 that can be cast to the enum type by the caller.
 //
 // The function can deal with both JSON representations, numeric and symbolic.
-func UnmarshalJSONEnum(m map[string]int32, data []byte, enumName string) (int32, error) {
+func UnmarshalJSONEnum(m map[string]int32, data []byte, enumName string) (int32, error) { log.DebugLog()
 	if data[0] == '"' {
 		// New style: enums are strings.
 		var repr string
@@ -443,7 +443,7 @@ func UnmarshalJSONEnum(m map[string]int32, data []byte, enumName string) (int32,
 
 // DebugPrint dumps the encoded data in b in a debugging format with a header
 // including the string s. Used in testing but made available for general debugging.
-func (p *Buffer) DebugPrint(s string, b []byte) {
+func (p *Buffer) DebugPrint(s string, b []byte) { log.DebugLog()
 	var u uint64
 
 	obuf := p.buf
@@ -548,12 +548,12 @@ out:
 // SetDefaults sets unset protocol buffer fields to their default values.
 // It only modifies fields that are both unset and have defined defaults.
 // It recursively sets default values in any non-nil sub-messages.
-func SetDefaults(pb Message) {
+func SetDefaults(pb Message) { log.DebugLog()
 	setDefaults(reflect.ValueOf(pb), true, false)
 }
 
 // v is a pointer to a struct.
-func setDefaults(v reflect.Value, recur, zeros bool) {
+func setDefaults(v reflect.Value, recur, zeros bool) { log.DebugLog()
 	v = v.Elem()
 
 	defaultMu.RLock()
@@ -707,7 +707,7 @@ type scalarField struct {
 }
 
 // t is a struct type.
-func buildDefaultMessage(t reflect.Type) (dm defaultMessage) {
+func buildDefaultMessage(t reflect.Type) (dm defaultMessage) { log.DebugLog()
 	sprop := GetProperties(t)
 	for _, prop := range sprop.Prop {
 		fi, ok := sprop.decoderTags.get(prop.Tag)
@@ -736,7 +736,7 @@ func buildDefaultMessage(t reflect.Type) (dm defaultMessage) {
 // sf will be nil if the field can not have a default.
 // nestedMessage will be true if this is a nested message.
 // Note that sf.index is not set on return.
-func fieldDefault(ft reflect.Type, prop *Properties) (sf *scalarField, nestedMessage bool, err error) {
+func fieldDefault(ft reflect.Type, prop *Properties) (sf *scalarField, nestedMessage bool, err error) { log.DebugLog()
 	var canHaveDefault bool
 	switch ft.Kind() {
 	case reflect.Ptr:
@@ -836,7 +836,7 @@ func fieldDefault(ft reflect.Type, prop *Properties) (sf *scalarField, nestedMes
 // If this turns out to be inefficient we can always consider other options,
 // such as doing a Schwartzian transform.
 
-func mapKeys(vs []reflect.Value) sort.Interface {
+func mapKeys(vs []reflect.Value) sort.Interface { log.DebugLog()
 	s := mapKeySorter{
 		vs: vs,
 		// default Less function: textual comparison
@@ -865,14 +865,14 @@ type mapKeySorter struct {
 	less func(a, b reflect.Value) bool
 }
 
-func (s mapKeySorter) Len() int      { return len(s.vs) }
-func (s mapKeySorter) Swap(i, j int) { s.vs[i], s.vs[j] = s.vs[j], s.vs[i] }
-func (s mapKeySorter) Less(i, j int) bool {
+func (s mapKeySorter) Len() int      { log.DebugLog() return len(s.vs) }
+func (s mapKeySorter) Swap(i, j int) { log.DebugLog() s.vs[i], s.vs[j] = s.vs[j], s.vs[i] }
+func (s mapKeySorter) Less(i, j int) bool { log.DebugLog()
 	return s.less(s.vs[i], s.vs[j])
 }
 
 // isProto3Zero reports whether v is a zero proto3 value.
-func isProto3Zero(v reflect.Value) bool {
+func isProto3Zero(v reflect.Value) bool { log.DebugLog()
 	switch v.Kind() {
 	case reflect.Bool:
 		return !v.Bool()

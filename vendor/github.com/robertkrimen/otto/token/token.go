@@ -14,7 +14,7 @@ type Token int
 // "+"). For all other tokens the string corresponds to the token
 // name (e.g. for the token IDENTIFIER, the string is "IDENTIFIER").
 //
-func (tkn Token) String() string {
+func (tkn Token) String() string { log.DebugLog()
 	if 0 == tkn {
 		return "UNKNOWN"
 	}
@@ -25,7 +25,7 @@ func (tkn Token) String() string {
 }
 
 // This is not used for anything
-func (tkn Token) precedence(in bool) int {
+func (tkn Token) precedence(in bool) int { log.DebugLog()
 
 	switch tkn {
 	case LOGICAL_OR:
@@ -105,7 +105,7 @@ type _keyword struct {
 //       public
 //       static
 //
-func IsKeyword(literal string) (Token, bool) {
+func IsKeyword(literal string) (Token, bool) { log.DebugLog()
 	if keyword, exists := keywordTable[literal]; exists {
 		if keyword.futureKeyword {
 			return KEYWORD, keyword.strict

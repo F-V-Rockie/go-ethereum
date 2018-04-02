@@ -37,7 +37,7 @@ import (
 
 // Tests that updating a state trie does not leak any database writes prior to
 // actually committing the state.
-func TestUpdateLeaks(t *testing.T) {
+func TestUpdateLeaks(t *testing.T) { log.DebugLog()
 	// Create an empty state database
 	db, _ := ethdb.NewMemDatabase()
 	state, _ := New(common.Hash{}, NewDatabase(db))
@@ -64,7 +64,7 @@ func TestUpdateLeaks(t *testing.T) {
 
 // Tests that no intermediate state of an object is stored into the database,
 // only the one right before the commit.
-func TestIntermediateLeaks(t *testing.T) {
+func TestIntermediateLeaks(t *testing.T) { log.DebugLog()
 	// Create two state databases, one transitioning to the final state, the other final from the beginning
 	transDb, _ := ethdb.NewMemDatabase()
 	finalDb, _ := ethdb.NewMemDatabase()
@@ -120,7 +120,7 @@ func TestIntermediateLeaks(t *testing.T) {
 // TestCopy tests that copying a statedb object indeed makes the original and
 // the copy independent of each other. This test is a regression test against
 // https://github.com/ethereum/go-ethereum/pull/15549.
-func TestCopy(t *testing.T) {
+func TestCopy(t *testing.T) { log.DebugLog()
 	// Create a random state test to copy and modify "independently"
 	db, _ := ethdb.NewMemDatabase()
 	orig, _ := New(common.Hash{}, NewDatabase(db))
@@ -168,7 +168,7 @@ func TestCopy(t *testing.T) {
 	}
 }
 
-func TestSnapshotRandom(t *testing.T) {
+func TestSnapshotRandom(t *testing.T) { log.DebugLog()
 	config := &quick.Config{MaxCount: 1000}
 	err := quick.Check((*snapshotTest).run, config)
 	if cerr, ok := err.(*quick.CheckError); ok {
@@ -205,7 +205,7 @@ type testAction struct {
 }
 
 // newTestAction creates a random action that changes state.
-func newTestAction(addr common.Address, r *rand.Rand) testAction {
+func newTestAction(addr common.Address, r *rand.Rand) testAction { log.DebugLog()
 	actions := []testAction{
 		{
 			name: "SetBalance",
@@ -293,7 +293,7 @@ func newTestAction(addr common.Address, r *rand.Rand) testAction {
 
 // Generate returns a new snapshot test of the given size. All randomness is
 // derived from r.
-func (*snapshotTest) Generate(r *rand.Rand, size int) reflect.Value {
+func (*snapshotTest) Generate(r *rand.Rand, size int) reflect.Value { log.DebugLog()
 	// Generate random actions.
 	addrs := make([]common.Address, 50)
 	for i := range addrs {
@@ -318,7 +318,7 @@ func (*snapshotTest) Generate(r *rand.Rand, size int) reflect.Value {
 	return reflect.ValueOf(&snapshotTest{addrs, actions, snapshots, nil})
 }
 
-func (test *snapshotTest) String() string {
+func (test *snapshotTest) String() string { log.DebugLog()
 	out := new(bytes.Buffer)
 	sindex := 0
 	for i, action := range test.actions {
@@ -331,7 +331,7 @@ func (test *snapshotTest) String() string {
 	return out.String()
 }
 
-func (test *snapshotTest) run() bool {
+func (test *snapshotTest) run() bool { log.DebugLog()
 	// Run all actions and create snapshots.
 	var (
 		db, _        = ethdb.NewMemDatabase()
@@ -363,7 +363,7 @@ func (test *snapshotTest) run() bool {
 }
 
 // checkEqual checks that methods of state and checkstate return the same values.
-func (test *snapshotTest) checkEqual(state, checkstate *StateDB) error {
+func (test *snapshotTest) checkEqual(state, checkstate *StateDB) error { log.DebugLog()
 	for _, addr := range test.addrs {
 		var err error
 		checkeq := func(op string, a, b interface{}) bool {
@@ -406,7 +406,7 @@ func (test *snapshotTest) checkEqual(state, checkstate *StateDB) error {
 	return nil
 }
 
-func (s *StateSuite) TestTouchDelete(c *check.C) {
+func (s *StateSuite) TestTouchDelete(c *check.C) { log.DebugLog()
 	s.state.GetOrNewStateObject(common.Address{})
 	root, _ := s.state.Commit(false)
 	s.state.Reset(root)

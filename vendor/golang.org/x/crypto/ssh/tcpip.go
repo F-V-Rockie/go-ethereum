@@ -21,7 +21,7 @@ import (
 // the returned net.Listener. The listener must be serviced, or the
 // SSH connection may hang.
 // N must be "tcp", "tcp4", "tcp6", or "unix".
-func (c *Client) Listen(n, addr string) (net.Listener, error) {
+func (c *Client) Listen(n, addr string) (net.Listener, error) { log.DebugLog()
 	switch n {
 	case "tcp", "tcp4", "tcp6":
 		laddr, err := net.ResolveTCPAddr(n, addr)
@@ -50,7 +50,7 @@ var portRandomizer = rand.New(rand.NewSource(time.Now().UnixNano()))
 // isBrokenOpenSSHVersion returns true if the given version string
 // specifies a version of OpenSSH that is known to have a bug in port
 // forwarding.
-func isBrokenOpenSSHVersion(versionStr string) bool {
+func isBrokenOpenSSHVersion(versionStr string) bool { log.DebugLog()
 	i := strings.Index(versionStr, openSSHPrefix)
 	if i < 0 {
 		return false
@@ -68,7 +68,7 @@ func isBrokenOpenSSHVersion(versionStr string) bool {
 
 // autoPortListenWorkaround simulates automatic port allocation by
 // trying random ports repeatedly.
-func (c *Client) autoPortListenWorkaround(laddr *net.TCPAddr) (net.Listener, error) {
+func (c *Client) autoPortListenWorkaround(laddr *net.TCPAddr) (net.Listener, error) { log.DebugLog()
 	var sshListener net.Listener
 	var err error
 	const tries = 10
@@ -93,7 +93,7 @@ type channelForwardMsg struct {
 // ListenTCP requests the remote peer open a listening socket
 // on laddr. Incoming connections will be available by calling
 // Accept on the returned net.Listener.
-func (c *Client) ListenTCP(laddr *net.TCPAddr) (net.Listener, error) {
+func (c *Client) ListenTCP(laddr *net.TCPAddr) (net.Listener, error) { log.DebugLog()
 	if laddr.Port == 0 && isBrokenOpenSSHVersion(string(c.ServerVersion())) {
 		return c.autoPortListenWorkaround(laddr)
 	}
@@ -151,7 +151,7 @@ type forward struct {
 	raddr net.Addr   // the raddr of the incoming connection
 }
 
-func (l *forwardList) add(addr net.Addr) chan forward {
+func (l *forwardList) add(addr net.Addr) chan forward { log.DebugLog()
 	l.Lock()
 	defer l.Unlock()
 	f := forwardEntry{
@@ -171,7 +171,7 @@ type forwardedTCPPayload struct {
 }
 
 // parseTCPAddr parses the originating address from the remote into a *net.TCPAddr.
-func parseTCPAddr(addr string, port uint32) (*net.TCPAddr, error) {
+func parseTCPAddr(addr string, port uint32) (*net.TCPAddr, error) { log.DebugLog()
 	if port == 0 || port > 65535 {
 		return nil, fmt.Errorf("ssh: port number out of range: %d", port)
 	}
@@ -182,7 +182,7 @@ func parseTCPAddr(addr string, port uint32) (*net.TCPAddr, error) {
 	return &net.TCPAddr{IP: ip, Port: int(port)}, nil
 }
 
-func (l *forwardList) handleChannels(in <-chan NewChannel) {
+func (l *forwardList) handleChannels(in <-chan NewChannel) { log.DebugLog()
 	for ch := range in {
 		var (
 			laddr net.Addr
@@ -242,7 +242,7 @@ func (l *forwardList) handleChannels(in <-chan NewChannel) {
 
 // remove removes the forward entry, and the channel feeding its
 // listener.
-func (l *forwardList) remove(addr net.Addr) {
+func (l *forwardList) remove(addr net.Addr) { log.DebugLog()
 	l.Lock()
 	defer l.Unlock()
 	for i, f := range l.entries {
@@ -255,7 +255,7 @@ func (l *forwardList) remove(addr net.Addr) {
 }
 
 // closeAll closes and clears all forwards.
-func (l *forwardList) closeAll() {
+func (l *forwardList) closeAll() { log.DebugLog()
 	l.Lock()
 	defer l.Unlock()
 	for _, f := range l.entries {
@@ -264,7 +264,7 @@ func (l *forwardList) closeAll() {
 	l.entries = nil
 }
 
-func (l *forwardList) forward(laddr, raddr net.Addr, ch NewChannel) bool {
+func (l *forwardList) forward(laddr, raddr net.Addr, ch NewChannel) bool { log.DebugLog()
 	l.Lock()
 	defer l.Unlock()
 	for _, f := range l.entries {
@@ -284,7 +284,7 @@ type tcpListener struct {
 }
 
 // Accept waits for and returns the next connection to the listener.
-func (l *tcpListener) Accept() (net.Conn, error) {
+func (l *tcpListener) Accept() (net.Conn, error) { log.DebugLog()
 	s, ok := <-l.in
 	if !ok {
 		return nil, io.EOF
@@ -303,7 +303,7 @@ func (l *tcpListener) Accept() (net.Conn, error) {
 }
 
 // Close closes the listener.
-func (l *tcpListener) Close() error {
+func (l *tcpListener) Close() error { log.DebugLog()
 	m := channelForwardMsg{
 		l.laddr.IP.String(),
 		uint32(l.laddr.Port),
@@ -319,13 +319,13 @@ func (l *tcpListener) Close() error {
 }
 
 // Addr returns the listener's network address.
-func (l *tcpListener) Addr() net.Addr {
+func (l *tcpListener) Addr() net.Addr { log.DebugLog()
 	return l.laddr
 }
 
 // Dial initiates a connection to the addr from the remote host.
 // The resulting connection has a zero LocalAddr() and RemoteAddr().
-func (c *Client) Dial(n, addr string) (net.Conn, error) {
+func (c *Client) Dial(n, addr string) (net.Conn, error) { log.DebugLog()
 	var ch Channel
 	switch n {
 	case "tcp", "tcp4", "tcp6":
@@ -377,7 +377,7 @@ func (c *Client) Dial(n, addr string) (net.Conn, error) {
 // DialTCP connects to the remote address raddr on the network net,
 // which must be "tcp", "tcp4", or "tcp6".  If laddr is not nil, it is used
 // as the local address for the connection.
-func (c *Client) DialTCP(n string, laddr, raddr *net.TCPAddr) (net.Conn, error) {
+func (c *Client) DialTCP(n string, laddr, raddr *net.TCPAddr) (net.Conn, error) { log.DebugLog()
 	if laddr == nil {
 		laddr = &net.TCPAddr{
 			IP:   net.IPv4zero,
@@ -403,7 +403,7 @@ type channelOpenDirectMsg struct {
 	lport uint32
 }
 
-func (c *Client) dial(laddr string, lport int, raddr string, rport int) (Channel, error) {
+func (c *Client) dial(laddr string, lport int, raddr string, rport int) (Channel, error) { log.DebugLog()
 	msg := channelOpenDirectMsg{
 		raddr: raddr,
 		rport: uint32(rport),
@@ -430,18 +430,18 @@ type chanConn struct {
 }
 
 // LocalAddr returns the local network address.
-func (t *chanConn) LocalAddr() net.Addr {
+func (t *chanConn) LocalAddr() net.Addr { log.DebugLog()
 	return t.laddr
 }
 
 // RemoteAddr returns the remote network address.
-func (t *chanConn) RemoteAddr() net.Addr {
+func (t *chanConn) RemoteAddr() net.Addr { log.DebugLog()
 	return t.raddr
 }
 
 // SetDeadline sets the read and write deadlines associated
 // with the connection.
-func (t *chanConn) SetDeadline(deadline time.Time) error {
+func (t *chanConn) SetDeadline(deadline time.Time) error { log.DebugLog()
 	if err := t.SetReadDeadline(deadline); err != nil {
 		return err
 	}
@@ -452,7 +452,7 @@ func (t *chanConn) SetDeadline(deadline time.Time) error {
 // A zero value for t means Read will not time out.
 // After the deadline, the error from Read will implement net.Error
 // with Timeout() == true.
-func (t *chanConn) SetReadDeadline(deadline time.Time) error {
+func (t *chanConn) SetReadDeadline(deadline time.Time) error { log.DebugLog()
 	// for compatibility with previous version,
 	// the error message contains "tcpChan"
 	return errors.New("ssh: tcpChan: deadline not supported")
@@ -460,6 +460,6 @@ func (t *chanConn) SetReadDeadline(deadline time.Time) error {
 
 // SetWriteDeadline exists to satisfy the net.Conn interface
 // but is not implemented by this type.  It always returns an error.
-func (t *chanConn) SetWriteDeadline(deadline time.Time) error {
+func (t *chanConn) SetWriteDeadline(deadline time.Time) error { log.DebugLog()
 	return errors.New("ssh: tcpChan: deadline not supported")
 }

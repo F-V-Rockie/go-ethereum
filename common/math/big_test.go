@@ -25,7 +25,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 )
 
-func TestHexOrDecimal256(t *testing.T) {
+func TestHexOrDecimal256(t *testing.T) { log.DebugLog()
 	tests := []struct {
 		input string
 		num   *big.Int
@@ -61,7 +61,7 @@ func TestHexOrDecimal256(t *testing.T) {
 	}
 }
 
-func TestMustParseBig256(t *testing.T) {
+func TestMustParseBig256(t *testing.T) { log.DebugLog()
 	defer func() {
 		if recover() == nil {
 			t.Error("MustParseBig should've panicked")
@@ -70,7 +70,7 @@ func TestMustParseBig256(t *testing.T) {
 	MustParseBig256("ggg")
 }
 
-func TestBigMax(t *testing.T) {
+func TestBigMax(t *testing.T) { log.DebugLog()
 	a := big.NewInt(10)
 	b := big.NewInt(5)
 
@@ -85,7 +85,7 @@ func TestBigMax(t *testing.T) {
 	}
 }
 
-func TestBigMin(t *testing.T) {
+func TestBigMin(t *testing.T) { log.DebugLog()
 	a := big.NewInt(10)
 	b := big.NewInt(5)
 
@@ -100,7 +100,7 @@ func TestBigMin(t *testing.T) {
 	}
 }
 
-func TestFirstBigSet(t *testing.T) {
+func TestFirstBigSet(t *testing.T) { log.DebugLog()
 	tests := []struct {
 		num *big.Int
 		ix  int
@@ -117,7 +117,7 @@ func TestFirstBigSet(t *testing.T) {
 	}
 }
 
-func TestPaddedBigBytes(t *testing.T) {
+func TestPaddedBigBytes(t *testing.T) { log.DebugLog()
 	tests := []struct {
 		num    *big.Int
 		n      int
@@ -135,42 +135,42 @@ func TestPaddedBigBytes(t *testing.T) {
 	}
 }
 
-func BenchmarkPaddedBigBytesLargePadding(b *testing.B) {
+func BenchmarkPaddedBigBytesLargePadding(b *testing.B) { log.DebugLog()
 	bigint := MustParseBig256("123456789123456789123456789123456789")
 	for i := 0; i < b.N; i++ {
 		PaddedBigBytes(bigint, 200)
 	}
 }
 
-func BenchmarkPaddedBigBytesSmallPadding(b *testing.B) {
+func BenchmarkPaddedBigBytesSmallPadding(b *testing.B) { log.DebugLog()
 	bigint := MustParseBig256("0x18F8F8F1000111000110011100222004330052300000000000000000FEFCF3CC")
 	for i := 0; i < b.N; i++ {
 		PaddedBigBytes(bigint, 5)
 	}
 }
 
-func BenchmarkPaddedBigBytesSmallOnePadding(b *testing.B) {
+func BenchmarkPaddedBigBytesSmallOnePadding(b *testing.B) { log.DebugLog()
 	bigint := MustParseBig256("0x18F8F8F1000111000110011100222004330052300000000000000000FEFCF3CC")
 	for i := 0; i < b.N; i++ {
 		PaddedBigBytes(bigint, 32)
 	}
 }
 
-func BenchmarkByteAtBrandNew(b *testing.B) {
+func BenchmarkByteAtBrandNew(b *testing.B) { log.DebugLog()
 	bigint := MustParseBig256("0x18F8F8F1000111000110011100222004330052300000000000000000FEFCF3CC")
 	for i := 0; i < b.N; i++ {
 		bigEndianByteAt(bigint, 15)
 	}
 }
 
-func BenchmarkByteAt(b *testing.B) {
+func BenchmarkByteAt(b *testing.B) { log.DebugLog()
 	bigint := MustParseBig256("0x18F8F8F1000111000110011100222004330052300000000000000000FEFCF3CC")
 	for i := 0; i < b.N; i++ {
 		bigEndianByteAt(bigint, 15)
 	}
 }
 
-func BenchmarkByteAtOld(b *testing.B) {
+func BenchmarkByteAtOld(b *testing.B) { log.DebugLog()
 
 	bigint := MustParseBig256("0x18F8F8F1000111000110011100222004330052300000000000000000FEFCF3CC")
 	for i := 0; i < b.N; i++ {
@@ -178,7 +178,7 @@ func BenchmarkByteAtOld(b *testing.B) {
 	}
 }
 
-func TestReadBits(t *testing.T) {
+func TestReadBits(t *testing.T) { log.DebugLog()
 	check := func(input string) {
 		want, _ := hex.DecodeString(input)
 		int, _ := new(big.Int).SetString(input, 16)
@@ -193,7 +193,7 @@ func TestReadBits(t *testing.T) {
 	check("18F8F8F1000111000110011100222004330052300000000000000000FEFCF3F8F0")
 }
 
-func TestU256(t *testing.T) {
+func TestU256(t *testing.T) { log.DebugLog()
 	tests := []struct{ x, y *big.Int }{
 		{x: big.NewInt(0), y: big.NewInt(0)},
 		{x: big.NewInt(1), y: big.NewInt(1)},
@@ -212,7 +212,7 @@ func TestU256(t *testing.T) {
 	}
 }
 
-func TestBigEndianByteAt(t *testing.T) {
+func TestBigEndianByteAt(t *testing.T) { log.DebugLog()
 	tests := []struct {
 		x   string
 		y   int
@@ -237,7 +237,7 @@ func TestBigEndianByteAt(t *testing.T) {
 
 	}
 }
-func TestLittleEndianByteAt(t *testing.T) {
+func TestLittleEndianByteAt(t *testing.T) { log.DebugLog()
 	tests := []struct {
 		x   string
 		y   int
@@ -271,7 +271,7 @@ func TestLittleEndianByteAt(t *testing.T) {
 	}
 }
 
-func TestS256(t *testing.T) {
+func TestS256(t *testing.T) { log.DebugLog()
 	tests := []struct{ x, y *big.Int }{
 		{x: big.NewInt(0), y: big.NewInt(0)},
 		{x: big.NewInt(1), y: big.NewInt(1)},
@@ -300,7 +300,7 @@ func TestS256(t *testing.T) {
 	}
 }
 
-func TestExp(t *testing.T) {
+func TestExp(t *testing.T) { log.DebugLog()
 	tests := []struct{ base, exponent, result *big.Int }{
 		{base: big.NewInt(0), exponent: big.NewInt(0), result: big.NewInt(1)},
 		{base: big.NewInt(1), exponent: big.NewInt(0), result: big.NewInt(1)},

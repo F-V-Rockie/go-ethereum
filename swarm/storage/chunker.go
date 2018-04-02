@@ -80,7 +80,7 @@ type TreeChunker struct {
 	workerLock  sync.RWMutex // lock for the worker count
 }
 
-func NewTreeChunker(params *ChunkerParams) (self *TreeChunker) {
+func NewTreeChunker(params *ChunkerParams) (self *TreeChunker) { log.DebugLog()
 	self = &TreeChunker{}
 	self.hashFunc = MakeHashFunc(params.Hash)
 	self.branches = params.Branches
@@ -91,12 +91,12 @@ func NewTreeChunker(params *ChunkerParams) (self *TreeChunker) {
 	return
 }
 
-// func (self *TreeChunker) KeySize() int64 {
+// func (self *TreeChunker) KeySize() int64 { log.DebugLog()
 // 	return self.hashSize
 // }
 
 // String() for pretty printing
-func (self *Chunk) String() string {
+func (self *Chunk) String() string { log.DebugLog()
 	return fmt.Sprintf("Key: %v TreeSize: %v Chunksize: %v", self.Key.Log(), self.Size, len(self.SData))
 }
 
@@ -107,25 +107,25 @@ type hashJob struct {
 	parentWg *sync.WaitGroup
 }
 
-func (self *TreeChunker) incrementWorkerCount() {
+func (self *TreeChunker) incrementWorkerCount() { log.DebugLog()
 	self.workerLock.Lock()
 	defer self.workerLock.Unlock()
 	self.workerCount += 1
 }
 
-func (self *TreeChunker) getWorkerCount() int64 {
+func (self *TreeChunker) getWorkerCount() int64 { log.DebugLog()
 	self.workerLock.RLock()
 	defer self.workerLock.RUnlock()
 	return self.workerCount
 }
 
-func (self *TreeChunker) decrementWorkerCount() {
+func (self *TreeChunker) decrementWorkerCount() { log.DebugLog()
 	self.workerLock.Lock()
 	defer self.workerLock.Unlock()
 	self.workerCount -= 1
 }
 
-func (self *TreeChunker) Split(data io.Reader, size int64, chunkC chan *Chunk, swg, wwg *sync.WaitGroup) (Key, error) {
+func (self *TreeChunker) Split(data io.Reader, size int64, chunkC chan *Chunk, swg, wwg *sync.WaitGroup) (Key, error) { log.DebugLog()
 	if self.chunkSize <= 0 {
 		panic("chunker must be initialised")
 	}
@@ -182,7 +182,7 @@ func (self *TreeChunker) Split(data io.Reader, size int64, chunkC chan *Chunk, s
 	return key, nil
 }
 
-func (self *TreeChunker) split(depth int, treeSize int64, key Key, data io.Reader, size int64, jobC chan *hashJob, chunkC chan *Chunk, errC chan error, quitC chan bool, parentWg, swg, wwg *sync.WaitGroup) {
+func (self *TreeChunker) split(depth int, treeSize int64, key Key, data io.Reader, size int64, jobC chan *hashJob, chunkC chan *Chunk, errC chan error, quitC chan bool, parentWg, swg, wwg *sync.WaitGroup) { log.DebugLog()
 
 	//
 
@@ -257,7 +257,7 @@ func (self *TreeChunker) split(depth int, treeSize int64, key Key, data io.Reade
 	}
 }
 
-func (self *TreeChunker) hashWorker(jobC chan *hashJob, chunkC chan *Chunk, errC chan error, quitC chan bool, swg, wwg *sync.WaitGroup) {
+func (self *TreeChunker) hashWorker(jobC chan *hashJob, chunkC chan *Chunk, errC chan error, quitC chan bool, swg, wwg *sync.WaitGroup) { log.DebugLog()
 	defer self.decrementWorkerCount()
 
 	hasher := self.hashFunc()
@@ -282,7 +282,7 @@ func (self *TreeChunker) hashWorker(jobC chan *hashJob, chunkC chan *Chunk, errC
 // The treeChunkers own Hash hashes together
 // - the size (of the subtree encoded in the Chunk)
 // - the Chunk, ie. the contents read from the input reader
-func (self *TreeChunker) hashChunk(hasher SwarmHash, job *hashJob, chunkC chan *Chunk, swg *sync.WaitGroup) {
+func (self *TreeChunker) hashChunk(hasher SwarmHash, job *hashJob, chunkC chan *Chunk, swg *sync.WaitGroup) { log.DebugLog()
 	hasher.ResetWithLength(job.chunk[:8]) // 8 bytes of length
 	hasher.Write(job.chunk[8:])           // minus 8 []byte length
 	h := hasher.Sum(nil)
@@ -316,7 +316,7 @@ func (self *TreeChunker) hashChunk(hasher SwarmHash, job *hashJob, chunkC chan *
 	}
 }
 
-func (self *TreeChunker) Append(key Key, data io.Reader, chunkC chan *Chunk, swg, wwg *sync.WaitGroup) (Key, error) {
+func (self *TreeChunker) Append(key Key, data io.Reader, chunkC chan *Chunk, swg, wwg *sync.WaitGroup) (Key, error) { log.DebugLog()
 	return nil, errAppendOppNotSuported
 }
 
@@ -332,7 +332,7 @@ type LazyChunkReader struct {
 }
 
 // implements the Joiner interface
-func (self *TreeChunker) Join(key Key, chunkC chan *Chunk) LazySectionReader {
+func (self *TreeChunker) Join(key Key, chunkC chan *Chunk) LazySectionReader { log.DebugLog()
 	return &LazyChunkReader{
 		key:       key,
 		chunkC:    chunkC,
@@ -343,7 +343,7 @@ func (self *TreeChunker) Join(key Key, chunkC chan *Chunk) LazySectionReader {
 }
 
 // Size is meant to be called on the LazySectionReader
-func (self *LazyChunkReader) Size(quitC chan bool) (n int64, err error) {
+func (self *LazyChunkReader) Size(quitC chan bool) (n int64, err error) { log.DebugLog()
 	if self.chunk != nil {
 		return self.chunk.Size, nil
 	}
@@ -363,7 +363,7 @@ func (self *LazyChunkReader) Size(quitC chan bool) (n int64, err error) {
 // read at can be called numerous times
 // concurrent reads are allowed
 // Size() needs to be called synchronously on the LazyChunkReader first
-func (self *LazyChunkReader) ReadAt(b []byte, off int64) (read int, err error) {
+func (self *LazyChunkReader) ReadAt(b []byte, off int64) (read int, err error) { log.DebugLog()
 	// this is correct, a swarm doc cannot be zero length, so no EOF is expected
 	if len(b) == 0 {
 		return 0, nil
@@ -404,7 +404,7 @@ func (self *LazyChunkReader) ReadAt(b []byte, off int64) (read int, err error) {
 	return len(b), nil
 }
 
-func (self *LazyChunkReader) join(b []byte, off int64, eoff int64, depth int, treeSize int64, chunk *Chunk, parentWg *sync.WaitGroup, errC chan error, quitC chan bool) {
+func (self *LazyChunkReader) join(b []byte, off int64, eoff int64, depth int, treeSize int64, chunk *Chunk, parentWg *sync.WaitGroup, errC chan error, quitC chan bool) { log.DebugLog()
 	defer parentWg.Done()
 	// return NewDPA(&LocalStore{})
 
@@ -469,7 +469,7 @@ func (self *LazyChunkReader) join(b []byte, off int64, eoff int64, depth int, tr
 // the helper method submits chunks for a key to a oueue (DPA) and
 // block until they time out or arrive
 // abort if quitC is readable
-func retrieve(key Key, chunkC chan *Chunk, quitC chan bool) *Chunk {
+func retrieve(key Key, chunkC chan *Chunk, quitC chan bool) *Chunk { log.DebugLog()
 	chunk := &Chunk{
 		Key: key,
 		C:   make(chan bool), // close channel to signal data delivery
@@ -496,7 +496,7 @@ func retrieve(key Key, chunkC chan *Chunk, quitC chan bool) *Chunk {
 }
 
 // Read keeps a cursor so cannot be called simulateously, see ReadAt
-func (self *LazyChunkReader) Read(b []byte) (read int, err error) {
+func (self *LazyChunkReader) Read(b []byte) (read int, err error) { log.DebugLog()
 	read, err = self.ReadAt(b, self.off)
 
 	self.off += int64(read)
@@ -507,7 +507,7 @@ func (self *LazyChunkReader) Read(b []byte) (read int, err error) {
 var errWhence = errors.New("Seek: invalid whence")
 var errOffset = errors.New("Seek: invalid offset")
 
-func (s *LazyChunkReader) Seek(offset int64, whence int) (int64, error) {
+func (s *LazyChunkReader) Seek(offset int64, whence int) (int64, error) { log.DebugLog()
 	switch whence {
 	default:
 		return 0, errWhence

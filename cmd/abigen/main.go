@@ -42,7 +42,7 @@ var (
 	langFlag = flag.String("lang", "go", "Destination language for the bindings (go, java, objc)")
 )
 
-func main() {
+func main() { log.DebugLog()
 	// Parse and ensure all needed inputs are specified
 	flag.Parse()
 

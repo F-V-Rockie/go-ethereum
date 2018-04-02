@@ -5,7 +5,7 @@ import (
 	"github.com/robertkrimen/otto/token"
 )
 
-func (self *_parser) parseBlockStatement() *ast.BlockStatement {
+func (self *_parser) parseBlockStatement() *ast.BlockStatement { log.DebugLog()
 	node := &ast.BlockStatement{}
 
 	// Find comments before the leading brace
@@ -34,12 +34,12 @@ func (self *_parser) parseBlockStatement() *ast.BlockStatement {
 	return node
 }
 
-func (self *_parser) parseEmptyStatement() ast.Statement {
+func (self *_parser) parseEmptyStatement() ast.Statement { log.DebugLog()
 	idx := self.expect(token.SEMICOLON)
 	return &ast.EmptyStatement{Semicolon: idx}
 }
 
-func (self *_parser) parseStatementList() (list []ast.Statement) {
+func (self *_parser) parseStatementList() (list []ast.Statement) { log.DebugLog()
 	for self.token != token.RIGHT_BRACE && self.token != token.EOF {
 		statement := self.parseStatement()
 		list = append(list, statement)
@@ -48,7 +48,7 @@ func (self *_parser) parseStatementList() (list []ast.Statement) {
 	return
 }
 
-func (self *_parser) parseStatement() ast.Statement {
+func (self *_parser) parseStatement() ast.Statement { log.DebugLog()
 
 	if self.token == token.EOF {
 		self.errorUnexpectedToken(self.token)
@@ -148,7 +148,7 @@ func (self *_parser) parseStatement() ast.Statement {
 	return statement
 }
 
-func (self *_parser) parseTryStatement() ast.Statement {
+func (self *_parser) parseTryStatement() ast.Statement { log.DebugLog()
 	var tryComments []*ast.Comment
 	if self.mode&StoreComments != 0 {
 		tryComments = self.comments.FetchAll()
@@ -212,7 +212,7 @@ func (self *_parser) parseTryStatement() ast.Statement {
 	return node
 }
 
-func (self *_parser) parseFunctionParameterList() *ast.ParameterList {
+func (self *_parser) parseFunctionParameterList() *ast.ParameterList { log.DebugLog()
 	opening := self.expect(token.LEFT_PARENTHESIS)
 	if self.mode&StoreComments != 0 {
 		self.comments.Unset()
@@ -241,7 +241,7 @@ func (self *_parser) parseFunctionParameterList() *ast.ParameterList {
 	}
 }
 
-func (self *_parser) parseParameterList() (list []string) {
+func (self *_parser) parseParameterList() (list []string) { log.DebugLog()
 	for self.token != token.EOF {
 		if self.token != token.IDENTIFIER {
 			self.expect(token.IDENTIFIER)
@@ -255,7 +255,7 @@ func (self *_parser) parseParameterList() (list []string) {
 	return
 }
 
-func (self *_parser) parseFunctionStatement() *ast.FunctionStatement {
+func (self *_parser) parseFunctionStatement() *ast.FunctionStatement { log.DebugLog()
 	var comments []*ast.Comment
 	if self.mode&StoreComments != 0 {
 		comments = self.comments.FetchAll()
@@ -270,7 +270,7 @@ func (self *_parser) parseFunctionStatement() *ast.FunctionStatement {
 	return function
 }
 
-func (self *_parser) parseFunction(declaration bool) *ast.FunctionLiteral {
+func (self *_parser) parseFunction(declaration bool) *ast.FunctionLiteral { log.DebugLog()
 
 	node := &ast.FunctionLiteral{
 		Function: self.expect(token.FUNCTION),
@@ -299,7 +299,7 @@ func (self *_parser) parseFunction(declaration bool) *ast.FunctionLiteral {
 	return node
 }
 
-func (self *_parser) parseFunctionBlock(node *ast.FunctionLiteral) {
+func (self *_parser) parseFunctionBlock(node *ast.FunctionLiteral) { log.DebugLog()
 	{
 		self.openScope()
 		inFunction := self.scope.inFunction
@@ -313,7 +313,7 @@ func (self *_parser) parseFunctionBlock(node *ast.FunctionLiteral) {
 	}
 }
 
-func (self *_parser) parseDebuggerStatement() ast.Statement {
+func (self *_parser) parseDebuggerStatement() ast.Statement { log.DebugLog()
 	idx := self.expect(token.DEBUGGER)
 
 	node := &ast.DebuggerStatement{
@@ -327,7 +327,7 @@ func (self *_parser) parseDebuggerStatement() ast.Statement {
 	return node
 }
 
-func (self *_parser) parseReturnStatement() ast.Statement {
+func (self *_parser) parseReturnStatement() ast.Statement { log.DebugLog()
 	idx := self.expect(token.RETURN)
 	var comments []*ast.Comment
 	if self.mode&StoreComments != 0 {
@@ -356,7 +356,7 @@ func (self *_parser) parseReturnStatement() ast.Statement {
 	return node
 }
 
-func (self *_parser) parseThrowStatement() ast.Statement {
+func (self *_parser) parseThrowStatement() ast.Statement { log.DebugLog()
 	var comments []*ast.Comment
 	if self.mode&StoreComments != 0 {
 		comments = self.comments.FetchAll()
@@ -385,7 +385,7 @@ func (self *_parser) parseThrowStatement() ast.Statement {
 	return node
 }
 
-func (self *_parser) parseSwitchStatement() ast.Statement {
+func (self *_parser) parseSwitchStatement() ast.Statement { log.DebugLog()
 	var comments []*ast.Comment
 	if self.mode&StoreComments != 0 {
 		comments = self.comments.FetchAll()
@@ -435,7 +435,7 @@ func (self *_parser) parseSwitchStatement() ast.Statement {
 	return node
 }
 
-func (self *_parser) parseWithStatement() ast.Statement {
+func (self *_parser) parseWithStatement() ast.Statement { log.DebugLog()
 	var comments []*ast.Comment
 	if self.mode&StoreComments != 0 {
 		comments = self.comments.FetchAll()
@@ -464,7 +464,7 @@ func (self *_parser) parseWithStatement() ast.Statement {
 	return node
 }
 
-func (self *_parser) parseCaseStatement() *ast.CaseStatement {
+func (self *_parser) parseCaseStatement() *ast.CaseStatement { log.DebugLog()
 	node := &ast.CaseStatement{
 		Case: self.idx,
 	}
@@ -506,7 +506,7 @@ func (self *_parser) parseCaseStatement() *ast.CaseStatement {
 	return node
 }
 
-func (self *_parser) parseIterationStatement() ast.Statement {
+func (self *_parser) parseIterationStatement() ast.Statement { log.DebugLog()
 	inIteration := self.scope.inIteration
 	self.scope.inIteration = true
 	defer func() {
@@ -515,7 +515,7 @@ func (self *_parser) parseIterationStatement() ast.Statement {
 	return self.parseStatement()
 }
 
-func (self *_parser) parseForIn(into ast.Expression) *ast.ForInStatement {
+func (self *_parser) parseForIn(into ast.Expression) *ast.ForInStatement { log.DebugLog()
 
 	// Already have consumed "<into> in"
 
@@ -532,7 +532,7 @@ func (self *_parser) parseForIn(into ast.Expression) *ast.ForInStatement {
 	return forin
 }
 
-func (self *_parser) parseFor(initializer ast.Expression) *ast.ForStatement {
+func (self *_parser) parseFor(initializer ast.Expression) *ast.ForStatement { log.DebugLog()
 
 	// Already have consumed "<initializer> ;"
 
@@ -562,7 +562,7 @@ func (self *_parser) parseFor(initializer ast.Expression) *ast.ForStatement {
 	return forstatement
 }
 
-func (self *_parser) parseForOrForInStatement() ast.Statement {
+func (self *_parser) parseForOrForInStatement() ast.Statement { log.DebugLog()
 	var comments []*ast.Comment
 	if self.mode&StoreComments != 0 {
 		comments = self.comments.FetchAll()
@@ -644,7 +644,7 @@ func (self *_parser) parseForOrForInStatement() ast.Statement {
 	return forstatement
 }
 
-func (self *_parser) parseVariableStatement() *ast.VariableStatement {
+func (self *_parser) parseVariableStatement() *ast.VariableStatement { log.DebugLog()
 	var comments []*ast.Comment
 	if self.mode&StoreComments != 0 {
 		comments = self.comments.FetchAll()
@@ -666,7 +666,7 @@ func (self *_parser) parseVariableStatement() *ast.VariableStatement {
 	return statement
 }
 
-func (self *_parser) parseDoWhileStatement() ast.Statement {
+func (self *_parser) parseDoWhileStatement() ast.Statement { log.DebugLog()
 	inIteration := self.scope.inIteration
 	self.scope.inIteration = true
 	defer func() {
@@ -708,7 +708,7 @@ func (self *_parser) parseDoWhileStatement() ast.Statement {
 	return node
 }
 
-func (self *_parser) parseWhileStatement() ast.Statement {
+func (self *_parser) parseWhileStatement() ast.Statement { log.DebugLog()
 	var comments []*ast.Comment
 	if self.mode&StoreComments != 0 {
 		comments = self.comments.FetchAll()
@@ -735,7 +735,7 @@ func (self *_parser) parseWhileStatement() ast.Statement {
 	return node
 }
 
-func (self *_parser) parseIfStatement() ast.Statement {
+func (self *_parser) parseIfStatement() ast.Statement { log.DebugLog()
 	var comments []*ast.Comment
 	if self.mode&StoreComments != 0 {
 		comments = self.comments.FetchAll()
@@ -770,13 +770,13 @@ func (self *_parser) parseIfStatement() ast.Statement {
 	return node
 }
 
-func (self *_parser) parseSourceElement() ast.Statement {
+func (self *_parser) parseSourceElement() ast.Statement { log.DebugLog()
 	statement := self.parseStatement()
 	//self.comments.Unset()
 	return statement
 }
 
-func (self *_parser) parseSourceElements() []ast.Statement {
+func (self *_parser) parseSourceElements() []ast.Statement { log.DebugLog()
 	body := []ast.Statement(nil)
 
 	for {
@@ -793,7 +793,7 @@ func (self *_parser) parseSourceElements() []ast.Statement {
 	return body
 }
 
-func (self *_parser) parseProgram() *ast.Program {
+func (self *_parser) parseProgram() *ast.Program { log.DebugLog()
 	self.openScope()
 	defer self.closeScope()
 	return &ast.Program{
@@ -803,7 +803,7 @@ func (self *_parser) parseProgram() *ast.Program {
 	}
 }
 
-func (self *_parser) parseBreakStatement() ast.Statement {
+func (self *_parser) parseBreakStatement() ast.Statement { log.DebugLog()
 	var comments []*ast.Comment
 	if self.mode&StoreComments != 0 {
 		comments = self.comments.FetchAll()
@@ -860,7 +860,7 @@ illegal:
 	return &ast.BadStatement{From: idx, To: self.idx}
 }
 
-func (self *_parser) parseContinueStatement() ast.Statement {
+func (self *_parser) parseContinueStatement() ast.Statement { log.DebugLog()
 	idx := self.expect(token.CONTINUE)
 	semicolon := self.implicitSemicolon
 	if self.token == token.SEMICOLON {
@@ -905,7 +905,7 @@ illegal:
 }
 
 // Find the next statement after an error (recover)
-func (self *_parser) nextStatement() {
+func (self *_parser) nextStatement() { log.DebugLog()
 	for {
 		switch self.token {
 		case token.BREAK, token.CONTINUE,

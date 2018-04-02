@@ -23,7 +23,7 @@ import (
 	"github.com/ethereum/go-ethereum/common/math"
 )
 
-func TestBlockNumberJSONUnmarshal(t *testing.T) {
+func TestBlockNumberJSONUnmarshal(t *testing.T) { log.DebugLog()
 	tests := []struct {
 		input    string
 		mustFail bool

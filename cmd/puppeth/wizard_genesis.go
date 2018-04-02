@@ -32,7 +32,7 @@ import (
 )
 
 // makeGenesis creates a new genesis struct based on some user input.
-func (w *wizard) makeGenesis() {
+func (w *wizard) makeGenesis() { log.DebugLog()
 	// Construct a default genesis block
 	genesis := &core.Genesis{
 		Timestamp:  uint64(time.Now().Unix()),
@@ -132,7 +132,7 @@ func (w *wizard) makeGenesis() {
 
 // manageGenesis permits the modification of chain configuration parameters in
 // a genesis config and the export of the entire genesis spec.
-func (w *wizard) manageGenesis() {
+func (w *wizard) manageGenesis() { log.DebugLog()
 	// Figure out whether to modify or export the genesis
 	fmt.Println()
 	fmt.Println(" 1. Modify existing fork rules")

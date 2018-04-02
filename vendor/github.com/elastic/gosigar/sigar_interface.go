@@ -8,11 +8,11 @@ type ErrNotImplemented struct {
 	OS string
 }
 
-func (e ErrNotImplemented) Error() string {
+func (e ErrNotImplemented) Error() string { log.DebugLog()
 	return "not implemented on " + e.OS
 }
 
-func IsNotImplemented(err error) bool {
+func IsNotImplemented(err error) bool { log.DebugLog()
 	switch err.(type) {
 	case ErrNotImplemented, *ErrNotImplemented:
 		return true
@@ -42,12 +42,12 @@ type Cpu struct {
 	Stolen  uint64
 }
 
-func (cpu *Cpu) Total() uint64 {
+func (cpu *Cpu) Total() uint64 { log.DebugLog()
 	return cpu.User + cpu.Nice + cpu.Sys + cpu.Idle +
 		cpu.Wait + cpu.Irq + cpu.SoftIrq + cpu.Stolen
 }
 
-func (cpu Cpu) Delta(other Cpu) Cpu {
+func (cpu Cpu) Delta(other Cpu) Cpu { log.DebugLog()
 	return Cpu{
 		User:    cpu.User - other.User,
 		Nice:    cpu.Nice - other.Nice,

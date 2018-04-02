@@ -14,7 +14,7 @@ import (
 
 var _ = (*vmExecMarshaling)(nil)
 
-func (v vmExec) MarshalJSON() ([]byte, error) {
+func (v vmExec) MarshalJSON() ([]byte, error) { log.DebugLog()
 	type vmExec struct {
 		Address  common.UnprefixedAddress `json:"address"  gencodec:"required"`
 		Caller   common.UnprefixedAddress `json:"caller"   gencodec:"required"`
@@ -37,7 +37,7 @@ func (v vmExec) MarshalJSON() ([]byte, error) {
 	return json.Marshal(&enc)
 }
 
-func (v *vmExec) UnmarshalJSON(input []byte) error {
+func (v *vmExec) UnmarshalJSON(input []byte) error { log.DebugLog()
 	type vmExec struct {
 		Address  *common.UnprefixedAddress `json:"address"  gencodec:"required"`
 		Caller   *common.UnprefixedAddress `json:"caller"   gencodec:"required"`

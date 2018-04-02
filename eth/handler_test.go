@@ -38,7 +38,7 @@ import (
 )
 
 // Tests that protocol versions and modes of operations are matched up properly.
-func TestProtocolCompatibility(t *testing.T) {
+func TestProtocolCompatibility(t *testing.T) { log.DebugLog()
 	// Define the compatibility chart
 	tests := []struct {
 		version    uint
@@ -67,10 +67,10 @@ func TestProtocolCompatibility(t *testing.T) {
 }
 
 // Tests that block headers can be retrieved from a remote chain based on user queries.
-func TestGetBlockHeaders62(t *testing.T) { testGetBlockHeaders(t, 62) }
-func TestGetBlockHeaders63(t *testing.T) { testGetBlockHeaders(t, 63) }
+func TestGetBlockHeaders62(t *testing.T) { log.DebugLog() testGetBlockHeaders(t, 62) }
+func TestGetBlockHeaders63(t *testing.T) { log.DebugLog() testGetBlockHeaders(t, 63) }
 
-func testGetBlockHeaders(t *testing.T, protocol int) {
+func testGetBlockHeaders(t *testing.T, protocol int) { log.DebugLog()
 	pm, _ := newTestProtocolManagerMust(t, downloader.FullSync, downloader.MaxHashFetch+15, nil, nil)
 	peer, _ := newTestPeer("peer", protocol, pm, true)
 	defer peer.close()
@@ -226,10 +226,10 @@ func testGetBlockHeaders(t *testing.T, protocol int) {
 }
 
 // Tests that block contents can be retrieved from a remote chain based on their hashes.
-func TestGetBlockBodies62(t *testing.T) { testGetBlockBodies(t, 62) }
-func TestGetBlockBodies63(t *testing.T) { testGetBlockBodies(t, 63) }
+func TestGetBlockBodies62(t *testing.T) { log.DebugLog() testGetBlockBodies(t, 62) }
+func TestGetBlockBodies63(t *testing.T) { log.DebugLog() testGetBlockBodies(t, 63) }
 
-func testGetBlockBodies(t *testing.T, protocol int) {
+func testGetBlockBodies(t *testing.T, protocol int) { log.DebugLog()
 	pm, _ := newTestProtocolManagerMust(t, downloader.FullSync, downloader.MaxBlockFetch+15, nil, nil)
 	peer, _ := newTestPeer("peer", protocol, pm, true)
 	defer peer.close()
@@ -298,9 +298,9 @@ func testGetBlockBodies(t *testing.T, protocol int) {
 }
 
 // Tests that the node state database can be retrieved based on hashes.
-func TestGetNodeData63(t *testing.T) { testGetNodeData(t, 63) }
+func TestGetNodeData63(t *testing.T) { log.DebugLog() testGetNodeData(t, 63) }
 
-func testGetNodeData(t *testing.T, protocol int) {
+func testGetNodeData(t *testing.T, protocol int) { log.DebugLog()
 	// Define three accounts to simulate transactions with
 	acc1Key, _ := crypto.HexToECDSA("8a1f9a8f95be41cd7ccb6168179afb4504aefe388d1e14474d32c45c72ce7b7a")
 	acc2Key, _ := crypto.HexToECDSA("49a7b37aa6f6645917e7b807e9d1c00d4fa71f18343b0d4122a4d2df64dd6fee")
@@ -390,9 +390,9 @@ func testGetNodeData(t *testing.T, protocol int) {
 }
 
 // Tests that the transaction receipts can be retrieved based on hashes.
-func TestGetReceipt63(t *testing.T) { testGetReceipt(t, 63) }
+func TestGetReceipt63(t *testing.T) { log.DebugLog() testGetReceipt(t, 63) }
 
-func testGetReceipt(t *testing.T, protocol int) {
+func testGetReceipt(t *testing.T, protocol int) { log.DebugLog()
 	// Define three accounts to simulate transactions with
 	acc1Key, _ := crypto.HexToECDSA("8a1f9a8f95be41cd7ccb6168179afb4504aefe388d1e14474d32c45c72ce7b7a")
 	acc2Key, _ := crypto.HexToECDSA("49a7b37aa6f6645917e7b807e9d1c00d4fa71f18343b0d4122a4d2df64dd6fee")
@@ -451,14 +451,14 @@ func testGetReceipt(t *testing.T, protocol int) {
 // Tests that post eth protocol handshake, DAO fork-enabled clients also execute
 // a DAO "challenge" verifying each others' DAO fork headers to ensure they're on
 // compatible chains.
-func TestDAOChallengeNoVsNo(t *testing.T)       { testDAOChallenge(t, false, false, false) }
-func TestDAOChallengeNoVsPro(t *testing.T)      { testDAOChallenge(t, false, true, false) }
-func TestDAOChallengeProVsNo(t *testing.T)      { testDAOChallenge(t, true, false, false) }
-func TestDAOChallengeProVsPro(t *testing.T)     { testDAOChallenge(t, true, true, false) }
-func TestDAOChallengeNoVsTimeout(t *testing.T)  { testDAOChallenge(t, false, false, true) }
-func TestDAOChallengeProVsTimeout(t *testing.T) { testDAOChallenge(t, true, true, true) }
+func TestDAOChallengeNoVsNo(t *testing.T)       { log.DebugLog() testDAOChallenge(t, false, false, false) }
+func TestDAOChallengeNoVsPro(t *testing.T)      { log.DebugLog() testDAOChallenge(t, false, true, false) }
+func TestDAOChallengeProVsNo(t *testing.T)      { log.DebugLog() testDAOChallenge(t, true, false, false) }
+func TestDAOChallengeProVsPro(t *testing.T)     { log.DebugLog() testDAOChallenge(t, true, true, false) }
+func TestDAOChallengeNoVsTimeout(t *testing.T)  { log.DebugLog() testDAOChallenge(t, false, false, true) }
+func TestDAOChallengeProVsTimeout(t *testing.T) { log.DebugLog() testDAOChallenge(t, true, true, true) }
 
-func testDAOChallenge(t *testing.T, localForked, remoteForked bool, timeout bool) {
+func testDAOChallenge(t *testing.T, localForked, remoteForked bool, timeout bool) { log.DebugLog()
 	// Reduce the DAO handshake challenge timeout
 	if timeout {
 		defer func(old time.Duration) { daoChallengeTimeout = old }(daoChallengeTimeout)

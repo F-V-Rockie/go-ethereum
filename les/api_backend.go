@@ -42,20 +42,20 @@ type LesApiBackend struct {
 	gpo *gasprice.Oracle
 }
 
-func (b *LesApiBackend) ChainConfig() *params.ChainConfig {
+func (b *LesApiBackend) ChainConfig() *params.ChainConfig { log.DebugLog()
 	return b.eth.chainConfig
 }
 
-func (b *LesApiBackend) CurrentBlock() *types.Block {
+func (b *LesApiBackend) CurrentBlock() *types.Block { log.DebugLog()
 	return types.NewBlockWithHeader(b.eth.BlockChain().CurrentHeader())
 }
 
-func (b *LesApiBackend) SetHead(number uint64) {
+func (b *LesApiBackend) SetHead(number uint64) { log.DebugLog()
 	b.eth.protocolManager.downloader.Cancel()
 	b.eth.blockchain.SetHead(number)
 }
 
-func (b *LesApiBackend) HeaderByNumber(ctx context.Context, blockNr rpc.BlockNumber) (*types.Header, error) {
+func (b *LesApiBackend) HeaderByNumber(ctx context.Context, blockNr rpc.BlockNumber) (*types.Header, error) { log.DebugLog()
 	if blockNr == rpc.LatestBlockNumber || blockNr == rpc.PendingBlockNumber {
 		return b.eth.blockchain.CurrentHeader(), nil
 	}
@@ -63,7 +63,7 @@ func (b *LesApiBackend) HeaderByNumber(ctx context.Context, blockNr rpc.BlockNum
 	return b.eth.blockchain.GetHeaderByNumberOdr(ctx, uint64(blockNr))
 }
 
-func (b *LesApiBackend) BlockByNumber(ctx context.Context, blockNr rpc.BlockNumber) (*types.Block, error) {
+func (b *LesApiBackend) BlockByNumber(ctx context.Context, blockNr rpc.BlockNumber) (*types.Block, error) { log.DebugLog()
 	header, err := b.HeaderByNumber(ctx, blockNr)
 	if header == nil || err != nil {
 		return nil, err
@@ -71,7 +71,7 @@ func (b *LesApiBackend) BlockByNumber(ctx context.Context, blockNr rpc.BlockNumb
 	return b.GetBlock(ctx, header.Hash())
 }
 
-func (b *LesApiBackend) StateAndHeaderByNumber(ctx context.Context, blockNr rpc.BlockNumber) (*state.StateDB, *types.Header, error) {
+func (b *LesApiBackend) StateAndHeaderByNumber(ctx context.Context, blockNr rpc.BlockNumber) (*state.StateDB, *types.Header, error) { log.DebugLog()
 	header, err := b.HeaderByNumber(ctx, blockNr)
 	if header == nil || err != nil {
 		return nil, nil, err
@@ -79,105 +79,105 @@ func (b *LesApiBackend) StateAndHeaderByNumber(ctx context.Context, blockNr rpc.
 	return light.NewState(ctx, header, b.eth.odr), header, nil
 }
 
-func (b *LesApiBackend) GetBlock(ctx context.Context, blockHash common.Hash) (*types.Block, error) {
+func (b *LesApiBackend) GetBlock(ctx context.Context, blockHash common.Hash) (*types.Block, error) { log.DebugLog()
 	return b.eth.blockchain.GetBlockByHash(ctx, blockHash)
 }
 
-func (b *LesApiBackend) GetReceipts(ctx context.Context, blockHash common.Hash) (types.Receipts, error) {
+func (b *LesApiBackend) GetReceipts(ctx context.Context, blockHash common.Hash) (types.Receipts, error) { log.DebugLog()
 	return light.GetBlockReceipts(ctx, b.eth.odr, blockHash, core.GetBlockNumber(b.eth.chainDb, blockHash))
 }
 
-func (b *LesApiBackend) GetLogs(ctx context.Context, blockHash common.Hash) ([][]*types.Log, error) {
+func (b *LesApiBackend) GetLogs(ctx context.Context, blockHash common.Hash) ([][]*types.Log, error) { log.DebugLog()
 	return light.GetBlockLogs(ctx, b.eth.odr, blockHash, core.GetBlockNumber(b.eth.chainDb, blockHash))
 }
 
-func (b *LesApiBackend) GetTd(blockHash common.Hash) *big.Int {
+func (b *LesApiBackend) GetTd(blockHash common.Hash) *big.Int { log.DebugLog()
 	return b.eth.blockchain.GetTdByHash(blockHash)
 }
 
-func (b *LesApiBackend) GetEVM(ctx context.Context, msg core.Message, state *state.StateDB, header *types.Header, vmCfg vm.Config) (*vm.EVM, func() error, error) {
+func (b *LesApiBackend) GetEVM(ctx context.Context, msg core.Message, state *state.StateDB, header *types.Header, vmCfg vm.Config) (*vm.EVM, func() error, error) { log.DebugLog()
 	state.SetBalance(msg.From(), math.MaxBig256)
 	context := core.NewEVMContext(msg, header, b.eth.blockchain, nil)
 	return vm.NewEVM(context, state, b.eth.chainConfig, vmCfg), state.Error, nil
 }
 
-func (b *LesApiBackend) SendTx(ctx context.Context, signedTx *types.Transaction) error {
+func (b *LesApiBackend) SendTx(ctx context.Context, signedTx *types.Transaction) error { log.DebugLog()
 	return b.eth.txPool.Add(ctx, signedTx)
 }
 
-func (b *LesApiBackend) RemoveTx(txHash common.Hash) {
+func (b *LesApiBackend) RemoveTx(txHash common.Hash) { log.DebugLog()
 	b.eth.txPool.RemoveTx(txHash)
 }
 
-func (b *LesApiBackend) GetPoolTransactions() (types.Transactions, error) {
+func (b *LesApiBackend) GetPoolTransactions() (types.Transactions, error) { log.DebugLog()
 	return b.eth.txPool.GetTransactions()
 }
 
-func (b *LesApiBackend) GetPoolTransaction(txHash common.Hash) *types.Transaction {
+func (b *LesApiBackend) GetPoolTransaction(txHash common.Hash) *types.Transaction { log.DebugLog()
 	return b.eth.txPool.GetTransaction(txHash)
 }
 
-func (b *LesApiBackend) GetPoolNonce(ctx context.Context, addr common.Address) (uint64, error) {
+func (b *LesApiBackend) GetPoolNonce(ctx context.Context, addr common.Address) (uint64, error) { log.DebugLog()
 	return b.eth.txPool.GetNonce(ctx, addr)
 }
 
-func (b *LesApiBackend) Stats() (pending int, queued int) {
+func (b *LesApiBackend) Stats() (pending int, queued int) { log.DebugLog()
 	return b.eth.txPool.Stats(), 0
 }
 
-func (b *LesApiBackend) TxPoolContent() (map[common.Address]types.Transactions, map[common.Address]types.Transactions) {
+func (b *LesApiBackend) TxPoolContent() (map[common.Address]types.Transactions, map[common.Address]types.Transactions) { log.DebugLog()
 	return b.eth.txPool.Content()
 }
 
-func (b *LesApiBackend) SubscribeTxPreEvent(ch chan<- core.TxPreEvent) event.Subscription {
+func (b *LesApiBackend) SubscribeTxPreEvent(ch chan<- core.TxPreEvent) event.Subscription { log.DebugLog()
 	return b.eth.txPool.SubscribeTxPreEvent(ch)
 }
 
-func (b *LesApiBackend) SubscribeChainEvent(ch chan<- core.ChainEvent) event.Subscription {
+func (b *LesApiBackend) SubscribeChainEvent(ch chan<- core.ChainEvent) event.Subscription { log.DebugLog()
 	return b.eth.blockchain.SubscribeChainEvent(ch)
 }
 
-func (b *LesApiBackend) SubscribeChainHeadEvent(ch chan<- core.ChainHeadEvent) event.Subscription {
+func (b *LesApiBackend) SubscribeChainHeadEvent(ch chan<- core.ChainHeadEvent) event.Subscription { log.DebugLog()
 	return b.eth.blockchain.SubscribeChainHeadEvent(ch)
 }
 
-func (b *LesApiBackend) SubscribeChainSideEvent(ch chan<- core.ChainSideEvent) event.Subscription {
+func (b *LesApiBackend) SubscribeChainSideEvent(ch chan<- core.ChainSideEvent) event.Subscription { log.DebugLog()
 	return b.eth.blockchain.SubscribeChainSideEvent(ch)
 }
 
-func (b *LesApiBackend) SubscribeLogsEvent(ch chan<- []*types.Log) event.Subscription {
+func (b *LesApiBackend) SubscribeLogsEvent(ch chan<- []*types.Log) event.Subscription { log.DebugLog()
 	return b.eth.blockchain.SubscribeLogsEvent(ch)
 }
 
-func (b *LesApiBackend) SubscribeRemovedLogsEvent(ch chan<- core.RemovedLogsEvent) event.Subscription {
+func (b *LesApiBackend) SubscribeRemovedLogsEvent(ch chan<- core.RemovedLogsEvent) event.Subscription { log.DebugLog()
 	return b.eth.blockchain.SubscribeRemovedLogsEvent(ch)
 }
 
-func (b *LesApiBackend) Downloader() *downloader.Downloader {
+func (b *LesApiBackend) Downloader() *downloader.Downloader { log.DebugLog()
 	return b.eth.Downloader()
 }
 
-func (b *LesApiBackend) ProtocolVersion() int {
+func (b *LesApiBackend) ProtocolVersion() int { log.DebugLog()
 	return b.eth.LesVersion() + 10000
 }
 
-func (b *LesApiBackend) SuggestPrice(ctx context.Context) (*big.Int, error) {
+func (b *LesApiBackend) SuggestPrice(ctx context.Context) (*big.Int, error) { log.DebugLog()
 	return b.gpo.SuggestPrice(ctx)
 }
 
-func (b *LesApiBackend) ChainDb() ethdb.Database {
+func (b *LesApiBackend) ChainDb() ethdb.Database { log.DebugLog()
 	return b.eth.chainDb
 }
 
-func (b *LesApiBackend) EventMux() *event.TypeMux {
+func (b *LesApiBackend) EventMux() *event.TypeMux { log.DebugLog()
 	return b.eth.eventMux
 }
 
-func (b *LesApiBackend) AccountManager() *accounts.Manager {
+func (b *LesApiBackend) AccountManager() *accounts.Manager { log.DebugLog()
 	return b.eth.accountManager
 }
 
-func (b *LesApiBackend) BloomStatus() (uint64, uint64) {
+func (b *LesApiBackend) BloomStatus() (uint64, uint64) { log.DebugLog()
 	if b.eth.bloomIndexer == nil {
 		return 0, 0
 	}
@@ -185,7 +185,7 @@ func (b *LesApiBackend) BloomStatus() (uint64, uint64) {
 	return light.BloomTrieFrequency, sections
 }
 
-func (b *LesApiBackend) ServiceFilter(ctx context.Context, session *bloombits.MatcherSession) {
+func (b *LesApiBackend) ServiceFilter(ctx context.Context, session *bloombits.MatcherSession) { log.DebugLog()
 	for i := 0; i < bloomFilterThreads; i++ {
 		go session.Multiplex(bloomRetrievalBatch, bloomRetrievalWait, b.eth.bloomRequests)
 	}

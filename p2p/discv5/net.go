@@ -133,7 +133,7 @@ type timeoutEvent struct {
 	node *Node
 }
 
-func newNetwork(conn transport, ourPubkey ecdsa.PublicKey, dbPath string, netrestrict *netutil.Netlist) (*Network, error) {
+func newNetwork(conn transport, ourPubkey ecdsa.PublicKey, dbPath string, netrestrict *netutil.Netlist) (*Network, error) { log.DebugLog()
 	ourID := PubkeyID(&ourPubkey)
 
 	var db *nodeDB
@@ -171,7 +171,7 @@ func newNetwork(conn transport, ourPubkey ecdsa.PublicKey, dbPath string, netres
 }
 
 // Close terminates the network listener and flushes the node database.
-func (net *Network) Close() {
+func (net *Network) Close() { log.DebugLog()
 	net.conn.Close()
 	select {
 	case <-net.closed:
@@ -182,14 +182,14 @@ func (net *Network) Close() {
 
 // Self returns the local node.
 // The returned node should not be modified by the caller.
-func (net *Network) Self() *Node {
+func (net *Network) Self() *Node { log.DebugLog()
 	return net.tab.self
 }
 
 // ReadRandomNodes fills the given slice with random nodes from the
 // table. It will not write the same node more than once. The nodes in
 // the slice are copies and can be modified by the caller.
-func (net *Network) ReadRandomNodes(buf []*Node) (n int) {
+func (net *Network) ReadRandomNodes(buf []*Node) (n int) { log.DebugLog()
 	net.reqTableOp(func() { n = net.tab.readRandomNodes(buf) })
 	return n
 }
@@ -197,7 +197,7 @@ func (net *Network) ReadRandomNodes(buf []*Node) (n int) {
 // SetFallbackNodes sets the initial points of contact. These nodes
 // are used to connect to the network if the table is empty and there
 // are no known nodes in the database.
-func (net *Network) SetFallbackNodes(nodes []*Node) error {
+func (net *Network) SetFallbackNodes(nodes []*Node) error { log.DebugLog()
 	nursery := make([]*Node, 0, len(nodes))
 	for _, n := range nodes {
 		if err := n.validateComplete(); err != nil {
@@ -215,7 +215,7 @@ func (net *Network) SetFallbackNodes(nodes []*Node) error {
 
 // Resolve searches for a specific node with the given ID.
 // It returns nil if the node could not be found.
-func (net *Network) Resolve(targetID NodeID) *Node {
+func (net *Network) Resolve(targetID NodeID) *Node { log.DebugLog()
 	result := net.lookup(crypto.Keccak256Hash(targetID[:]), true)
 	for _, n := range result {
 		if n.ID == targetID {
@@ -232,11 +232,11 @@ func (net *Network) Resolve(targetID NodeID) *Node {
 // identifier.
 //
 // The local node may be included in the result.
-func (net *Network) Lookup(targetID NodeID) []*Node {
+func (net *Network) Lookup(targetID NodeID) []*Node { log.DebugLog()
 	return net.lookup(crypto.Keccak256Hash(targetID[:]), false)
 }
 
-func (net *Network) lookup(target common.Hash, stopOnMatch bool) []*Node {
+func (net *Network) lookup(target common.Hash, stopOnMatch bool) []*Node { log.DebugLog()
 	var (
 		asked          = make(map[NodeID]bool)
 		seen           = make(map[NodeID]bool)
@@ -282,7 +282,7 @@ func (net *Network) lookup(target common.Hash, stopOnMatch bool) []*Node {
 	return result.entries
 }
 
-func (net *Network) RegisterTopic(topic Topic, stop <-chan struct{}) {
+func (net *Network) RegisterTopic(topic Topic, stop <-chan struct{}) { log.DebugLog()
 	select {
 	case net.topicRegisterReq <- topicRegisterReq{true, topic}:
 	case <-net.closed:
@@ -298,7 +298,7 @@ func (net *Network) RegisterTopic(topic Topic, stop <-chan struct{}) {
 	}
 }
 
-func (net *Network) SearchTopic(topic Topic, setPeriod <-chan time.Duration, found chan<- *Node, lookup chan<- bool) {
+func (net *Network) SearchTopic(topic Topic, setPeriod <-chan time.Duration, found chan<- *Node, lookup chan<- bool) { log.DebugLog()
 	for {
 		select {
 		case <-net.closed:
@@ -316,7 +316,7 @@ func (net *Network) SearchTopic(topic Topic, setPeriod <-chan time.Duration, fou
 	}
 }
 
-func (net *Network) reqRefresh(nursery []*Node) <-chan struct{} {
+func (net *Network) reqRefresh(nursery []*Node) <-chan struct{} { log.DebugLog()
 	select {
 	case net.refreshReq <- nursery:
 		return <-net.refreshResp
@@ -325,7 +325,7 @@ func (net *Network) reqRefresh(nursery []*Node) <-chan struct{} {
 	}
 }
 
-func (net *Network) reqQueryFindnode(n *Node, target common.Hash, reply chan []*Node) bool {
+func (net *Network) reqQueryFindnode(n *Node, target common.Hash, reply chan []*Node) bool { log.DebugLog()
 	q := &findnodeQuery{remote: n, target: target, reply: reply}
 	select {
 	case net.queryReq <- q:
@@ -335,14 +335,14 @@ func (net *Network) reqQueryFindnode(n *Node, target common.Hash, reply chan []*
 	}
 }
 
-func (net *Network) reqReadPacket(pkt ingressPacket) {
+func (net *Network) reqReadPacket(pkt ingressPacket) { log.DebugLog()
 	select {
 	case net.read <- pkt:
 	case <-net.closed:
 	}
 }
 
-func (net *Network) reqTableOp(f func()) (called bool) {
+func (net *Network) reqTableOp(f func()) (called bool) { log.DebugLog()
 	select {
 	case net.tableOpReq <- f:
 		<-net.tableOpResp
@@ -361,7 +361,7 @@ type topicSearchInfo struct {
 
 const maxSearchCount = 5
 
-func (net *Network) loop() {
+func (net *Network) loop() { log.DebugLog()
 	var (
 		refreshTimer       = time.NewTicker(autoRefreshInterval)
 		bucketRefreshTimer = time.NewTimer(bucketRefreshInterval)
@@ -669,7 +669,7 @@ loop:
 // Everything below runs on the Network.loop goroutine
 // and can modify Node, Table and Network at any time without locking.
 
-func (net *Network) refresh(done chan<- struct{}) {
+func (net *Network) refresh(done chan<- struct{}) { log.DebugLog()
 	var seeds []*Node
 	if net.db != nil {
 		seeds = net.db.querySeeds(seedCount, seedMaxAge)
@@ -709,7 +709,7 @@ func (net *Network) refresh(done chan<- struct{}) {
 
 // Node Interning.
 
-func (net *Network) internNode(pkt *ingressPacket) *Node {
+func (net *Network) internNode(pkt *ingressPacket) *Node { log.DebugLog()
 	if n := net.nodes[pkt.remoteID]; n != nil {
 		n.IP = pkt.remoteAddr.IP
 		n.UDP = uint16(pkt.remoteAddr.Port)
@@ -722,7 +722,7 @@ func (net *Network) internNode(pkt *ingressPacket) *Node {
 	return n
 }
 
-func (net *Network) internNodeFromDB(dbn *Node) *Node {
+func (net *Network) internNodeFromDB(dbn *Node) *Node { log.DebugLog()
 	if n := net.nodes[dbn.ID]; n != nil {
 		return n
 	}
@@ -732,7 +732,7 @@ func (net *Network) internNodeFromDB(dbn *Node) *Node {
 	return n
 }
 
-func (net *Network) internNodeFromNeighbours(sender *net.UDPAddr, rn rpcNode) (n *Node, err error) {
+func (net *Network) internNodeFromNeighbours(sender *net.UDPAddr, rn rpcNode) (n *Node, err error) { log.DebugLog()
 	if rn.ID == net.tab.self.ID {
 		return nil, errors.New("is self")
 	}
@@ -785,11 +785,11 @@ type nodeNetGuts struct {
 	queryTimeouts     int
 }
 
-func (n *nodeNetGuts) deferQuery(q *findnodeQuery) {
+func (n *nodeNetGuts) deferQuery(q *findnodeQuery) { log.DebugLog()
 	n.deferredQueries = append(n.deferredQueries, q)
 }
 
-func (n *nodeNetGuts) startNextQuery(net *Network) {
+func (n *nodeNetGuts) startNextQuery(net *Network) { log.DebugLog()
 	if len(n.deferredQueries) == 0 {
 		return
 	}
@@ -799,7 +799,7 @@ func (n *nodeNetGuts) startNextQuery(net *Network) {
 	}
 }
 
-func (q *findnodeQuery) start(net *Network) bool {
+func (q *findnodeQuery) start(net *Network) bool { log.DebugLog()
 	// Satisfy queries against the local node directly.
 	if q.remote == net.tab.self {
 		closest := net.tab.closest(crypto.Keccak256Hash(q.target[:]), bucketSize)
@@ -858,7 +858,7 @@ type nodeState struct {
 	canQuery bool
 }
 
-func (s *nodeState) String() string {
+func (s *nodeState) String() string { log.DebugLog()
 	return s.name
 }
 
@@ -872,7 +872,7 @@ var (
 	unresponsive     *nodeState
 )
 
-func init() {
+func init() { log.DebugLog()
 	unknown = &nodeState{
 		name: "unknown",
 		enter: func(net *Network, n *Node) {
@@ -1029,7 +1029,7 @@ func init() {
 }
 
 // handle processes packets sent by n and events related to n.
-func (net *Network) handle(n *Node, ev nodeEvent, pkt *ingressPacket) error {
+func (net *Network) handle(n *Node, ev nodeEvent, pkt *ingressPacket) error { log.DebugLog()
 	//fmt.Println("handle", n.addr().String(), n.state, ev)
 	if pkt != nil {
 		if err := net.checkPacket(n, ev, pkt); err != nil {
@@ -1054,7 +1054,7 @@ func (net *Network) handle(n *Node, ev nodeEvent, pkt *ingressPacket) error {
 	return err
 }
 
-func (net *Network) checkPacket(n *Node, ev nodeEvent, pkt *ingressPacket) error {
+func (net *Network) checkPacket(n *Node, ev nodeEvent, pkt *ingressPacket) error { log.DebugLog()
 	// Replay prevention checks.
 	switch ev {
 	case pingPacket, findnodeHashPacket, neighborsPacket:
@@ -1076,7 +1076,7 @@ func (net *Network) checkPacket(n *Node, ev nodeEvent, pkt *ingressPacket) error
 	return nil
 }
 
-func (net *Network) transition(n *Node, next *nodeState) {
+func (net *Network) transition(n *Node, next *nodeState) { log.DebugLog()
 	if n.state != next {
 		n.state = next
 		if next.enter != nil {
@@ -1087,7 +1087,7 @@ func (net *Network) transition(n *Node, next *nodeState) {
 	// TODO: persist/unpersist node
 }
 
-func (net *Network) timedEvent(d time.Duration, n *Node, ev nodeEvent) {
+func (net *Network) timedEvent(d time.Duration, n *Node, ev nodeEvent) { log.DebugLog()
 	timeout := timeoutEvent{ev, n}
 	net.timeoutTimers[timeout] = time.AfterFunc(d, func() {
 		select {
@@ -1097,7 +1097,7 @@ func (net *Network) timedEvent(d time.Duration, n *Node, ev nodeEvent) {
 	})
 }
 
-func (net *Network) abortTimedEvent(n *Node, ev nodeEvent) {
+func (net *Network) abortTimedEvent(n *Node, ev nodeEvent) { log.DebugLog()
 	timer := net.timeoutTimers[timeoutEvent{ev, n}]
 	if timer != nil {
 		timer.Stop()
@@ -1105,7 +1105,7 @@ func (net *Network) abortTimedEvent(n *Node, ev nodeEvent) {
 	}
 }
 
-func (net *Network) ping(n *Node, addr *net.UDPAddr) {
+func (net *Network) ping(n *Node, addr *net.UDPAddr) { log.DebugLog()
 	//fmt.Println("ping", n.addr().String(), n.ID.String(), n.sha.Hex())
 	if n.pingEcho != nil || n.ID == net.tab.self.ID {
 		//fmt.Println(" not sent")
@@ -1117,7 +1117,7 @@ func (net *Network) ping(n *Node, addr *net.UDPAddr) {
 	net.timedEvent(respTimeout, n, pongTimeout)
 }
 
-func (net *Network) handlePing(n *Node, pkt *ingressPacket) {
+func (net *Network) handlePing(n *Node, pkt *ingressPacket) { log.DebugLog()
 	log.Trace("Handling remote ping", "node", n.ID)
 	ping := pkt.data.(*ping)
 	n.TCP = ping.From.TCP
@@ -1132,7 +1132,7 @@ func (net *Network) handlePing(n *Node, pkt *ingressPacket) {
 	net.conn.send(n, pongPacket, pong)
 }
 
-func (net *Network) handleKnownPong(n *Node, pkt *ingressPacket) error {
+func (net *Network) handleKnownPong(n *Node, pkt *ingressPacket) error { log.DebugLog()
 	log.Trace("Handling known pong", "node", n.ID)
 	net.abortTimedEvent(n, pongTimeout)
 	now := mclock.Now()
@@ -1148,7 +1148,7 @@ func (net *Network) handleKnownPong(n *Node, pkt *ingressPacket) error {
 	return err
 }
 
-func (net *Network) handleQueryEvent(n *Node, ev nodeEvent, pkt *ingressPacket) (*nodeState, error) {
+func (net *Network) handleQueryEvent(n *Node, ev nodeEvent, pkt *ingressPacket) (*nodeState, error) { log.DebugLog()
 	switch ev {
 	case findnodePacket:
 		target := crypto.Keccak256Hash(pkt.data.(*findnode).Target[:])
@@ -1214,7 +1214,7 @@ func (net *Network) handleQueryEvent(n *Node, ev nodeEvent, pkt *ingressPacket) 
 	}
 }
 
-func (net *Network) checkTopicRegister(data *topicRegister) (*pong, error) {
+func (net *Network) checkTopicRegister(data *topicRegister) (*pong, error) { log.DebugLog()
 	var pongpkt ingressPacket
 	if err := decodePacket(data.Pong, &pongpkt); err != nil {
 		return nil, err
@@ -1236,14 +1236,14 @@ func (net *Network) checkTopicRegister(data *topicRegister) (*pong, error) {
 	return pongpkt.data.(*pong), nil
 }
 
-func rlpHash(x interface{}) (h common.Hash) {
+func rlpHash(x interface{}) (h common.Hash) { log.DebugLog()
 	hw := sha3.NewKeccak256()
 	rlp.Encode(hw, x)
 	hw.Sum(h[:0])
 	return h
 }
 
-func (net *Network) handleNeighboursPacket(n *Node, pkt *ingressPacket) error {
+func (net *Network) handleNeighboursPacket(n *Node, pkt *ingressPacket) error { log.DebugLog()
 	if n.pendingNeighbours == nil {
 		return errNoQuery
 	}

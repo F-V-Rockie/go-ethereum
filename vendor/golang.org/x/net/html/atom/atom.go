@@ -21,7 +21,7 @@ package atom // import "golang.org/x/net/html/atom"
 type Atom uint32
 
 // String returns the atom's name.
-func (a Atom) String() string {
+func (a Atom) String() string { log.DebugLog()
 	start := uint32(a >> 8)
 	n := uint32(a & 0xff)
 	if start+n > uint32(len(atomText)) {
@@ -30,12 +30,12 @@ func (a Atom) String() string {
 	return atomText[start : start+n]
 }
 
-func (a Atom) string() string {
+func (a Atom) string() string { log.DebugLog()
 	return atomText[a>>8 : a>>8+a&0xff]
 }
 
 // fnv computes the FNV hash with an arbitrary starting value h.
-func fnv(h uint32, s []byte) uint32 {
+func fnv(h uint32, s []byte) uint32 { log.DebugLog()
 	for i := range s {
 		h ^= uint32(s[i])
 		h *= 16777619
@@ -43,7 +43,7 @@ func fnv(h uint32, s []byte) uint32 {
 	return h
 }
 
-func match(s string, t []byte) bool {
+func match(s string, t []byte) bool { log.DebugLog()
 	for i, c := range t {
 		if s[i] != c {
 			return false
@@ -54,7 +54,7 @@ func match(s string, t []byte) bool {
 
 // Lookup returns the atom whose name is s. It returns zero if there is no
 // such atom. The lookup is case sensitive.
-func Lookup(s []byte) Atom {
+func Lookup(s []byte) Atom { log.DebugLog()
 	if len(s) == 0 || len(s) > maxAtomLen {
 		return 0
 	}
@@ -70,7 +70,7 @@ func Lookup(s []byte) Atom {
 
 // String returns a string whose contents are equal to s. In that sense, it is
 // equivalent to string(s) but may be more efficient.
-func String(s []byte) string {
+func String(s []byte) string { log.DebugLog()
 	if a := Lookup(s); a != 0 {
 		return a.String()
 	}

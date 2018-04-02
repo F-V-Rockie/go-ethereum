@@ -100,7 +100,7 @@ type Payment struct {
 }
 
 // swap constructor
-func New(local *Params, pm Payment, proto Protocol) (self *Swap, err error) {
+func New(local *Params, pm Payment, proto Protocol) (self *Swap, err error) { log.DebugLog()
 
 	self = &Swap{
 		local:   local,
@@ -114,7 +114,7 @@ func New(local *Params, pm Payment, proto Protocol) (self *Swap, err error) {
 }
 
 // entry point for setting remote swap profile (e.g from handshake or other message)
-func (self *Swap) SetRemote(remote *Profile) {
+func (self *Swap) SetRemote(remote *Profile) { log.DebugLog()
 	defer self.lock.Unlock()
 	self.lock.Lock()
 
@@ -133,7 +133,7 @@ func (self *Swap) SetRemote(remote *Profile) {
 }
 
 // to set strategy dynamically
-func (self *Swap) SetParams(local *Params) {
+func (self *Swap) SetParams(local *Params) { log.DebugLog()
 	defer self.lock.Unlock()
 	self.lock.Lock()
 	self.local = local
@@ -142,7 +142,7 @@ func (self *Swap) SetParams(local *Params) {
 
 // caller holds the lock
 
-func (self *Swap) setParams(local *Params) {
+func (self *Swap) setParams(local *Params) { log.DebugLog()
 
 	if self.Sells {
 		self.In.AutoCash(local.AutoCashInterval, local.AutoCashThreshold)
@@ -161,7 +161,7 @@ func (self *Swap) setParams(local *Params) {
 // Add(n)
 // n > 0 called when promised/provided n units of service
 // n < 0 called when used/requested n units of service
-func (self *Swap) Add(n int) error {
+func (self *Swap) Add(n int) error { log.DebugLog()
 	defer self.lock.Unlock()
 	self.lock.Lock()
 	self.balance += n
@@ -184,7 +184,7 @@ func (self *Swap) Add(n int) error {
 	return nil
 }
 
-func (self *Swap) Balance() int {
+func (self *Swap) Balance() int { log.DebugLog()
 	defer self.lock.Unlock()
 	self.lock.Lock()
 	return self.balance
@@ -193,7 +193,7 @@ func (self *Swap) Balance() int {
 // send(units) is called when payment is due
 // In case of insolvency no promise is issued and sent, safe against fraud
 // No return value: no error = payment is opportunistic = hang in till dropped
-func (self *Swap) send() {
+func (self *Swap) send() { log.DebugLog()
 	if self.local.BuyAt != nil && self.balance < 0 {
 		amount := big.NewInt(int64(-self.balance))
 		amount.Mul(amount, self.remote.SellAt)
@@ -210,7 +210,7 @@ func (self *Swap) send() {
 
 // receive(units, promise) is called by the protocol when a payment msg is received
 // returns error if promise is invalid.
-func (self *Swap) Receive(units int, promise Promise) error {
+func (self *Swap) Receive(units int, promise Promise) error { log.DebugLog()
 	if units <= 0 {
 		return fmt.Errorf("invalid units: %v <= 0", units)
 	}
@@ -240,7 +240,7 @@ func (self *Swap) Receive(units int, promise Promise) error {
 
 // stop() causes autocash loop to terminate.
 // Called after protocol handle loop terminates.
-func (self *Swap) Stop() {
+func (self *Swap) Stop() { log.DebugLog()
 	defer self.lock.Unlock()
 	self.lock.Lock()
 	if self.Buys {

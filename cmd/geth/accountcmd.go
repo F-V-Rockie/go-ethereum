@@ -192,7 +192,7 @@ nodes.
 	}
 )
 
-func accountList(ctx *cli.Context) error {
+func accountList(ctx *cli.Context) error { log.DebugLog()
 	stack, _ := makeConfigNode(ctx)
 	var index int
 	for _, wallet := range stack.AccountManager().Wallets() {
@@ -205,7 +205,7 @@ func accountList(ctx *cli.Context) error {
 }
 
 // tries unlocking the specified account a few times.
-func unlockAccount(ctx *cli.Context, ks *keystore.KeyStore, address string, i int, passwords []string) (accounts.Account, string) {
+func unlockAccount(ctx *cli.Context, ks *keystore.KeyStore, address string, i int, passwords []string) (accounts.Account, string) { log.DebugLog()
 	account, err := utils.MakeAddress(ks, address)
 	if err != nil {
 		utils.Fatalf("Could not list accounts: %v", err)
@@ -235,7 +235,7 @@ func unlockAccount(ctx *cli.Context, ks *keystore.KeyStore, address string, i in
 
 // getPassPhrase retrieves the password associated with an account, either fetched
 // from a list of preloaded passphrases, or requested interactively from the user.
-func getPassPhrase(prompt string, confirmation bool, i int, passwords []string) string {
+func getPassPhrase(prompt string, confirmation bool, i int, passwords []string) string { log.DebugLog()
 	// If a list of passwords was supplied, retrieve from them
 	if len(passwords) > 0 {
 		if i < len(passwords) {
@@ -263,7 +263,7 @@ func getPassPhrase(prompt string, confirmation bool, i int, passwords []string) 
 	return password
 }
 
-func ambiguousAddrRecovery(ks *keystore.KeyStore, err *keystore.AmbiguousAddrError, auth string) accounts.Account {
+func ambiguousAddrRecovery(ks *keystore.KeyStore, err *keystore.AmbiguousAddrError, auth string) accounts.Account { log.DebugLog()
 	fmt.Printf("Multiple key files exist for address %x:\n", err.Addr)
 	for _, a := range err.Matches {
 		fmt.Println("  ", a.URL)
@@ -290,7 +290,7 @@ func ambiguousAddrRecovery(ks *keystore.KeyStore, err *keystore.AmbiguousAddrErr
 }
 
 // accountCreate creates a new account into the keystore defined by the CLI flags.
-func accountCreate(ctx *cli.Context) error {
+func accountCreate(ctx *cli.Context) error { log.DebugLog()
 	cfg := gethConfig{Node: defaultNodeConfig()}
 	// Load config file.
 	if file := ctx.GlobalString(configFileFlag.Name); file != "" {
@@ -318,7 +318,7 @@ func accountCreate(ctx *cli.Context) error {
 
 // accountUpdate transitions an account from a previous format to the current
 // one, also providing the possibility to change the pass-phrase.
-func accountUpdate(ctx *cli.Context) error {
+func accountUpdate(ctx *cli.Context) error { log.DebugLog()
 	if len(ctx.Args()) == 0 {
 		utils.Fatalf("No accounts specified to update")
 	}
@@ -335,7 +335,7 @@ func accountUpdate(ctx *cli.Context) error {
 	return nil
 }
 
-func importWallet(ctx *cli.Context) error {
+func importWallet(ctx *cli.Context) error { log.DebugLog()
 	keyfile := ctx.Args().First()
 	if len(keyfile) == 0 {
 		utils.Fatalf("keyfile must be given as argument")
@@ -357,7 +357,7 @@ func importWallet(ctx *cli.Context) error {
 	return nil
 }
 
-func accountImport(ctx *cli.Context) error {
+func accountImport(ctx *cli.Context) error { log.DebugLog()
 	keyfile := ctx.Args().First()
 	if len(keyfile) == 0 {
 		utils.Fatalf("keyfile must be given as argument")

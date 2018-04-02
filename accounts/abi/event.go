@@ -33,7 +33,7 @@ type Event struct {
 	Inputs    Arguments
 }
 
-func (event Event) String() string {
+func (event Event) String() string { log.DebugLog()
 	inputs := make([]string, len(event.Inputs))
 	for i, input := range event.Inputs {
 		inputs[i] = fmt.Sprintf("%v %v", input.Name, input.Type)
@@ -46,7 +46,7 @@ func (event Event) String() string {
 
 // Id returns the canonical representation of the event's signature used by the
 // abi definition to identify event names and types.
-func (e Event) Id() common.Hash {
+func (e Event) Id() common.Hash { log.DebugLog()
 	types := make([]string, len(e.Inputs))
 	i := 0
 	for _, input := range e.Inputs {

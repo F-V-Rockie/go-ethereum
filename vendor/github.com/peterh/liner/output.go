@@ -10,7 +10,7 @@ import (
 	"unsafe"
 )
 
-func (s *State) cursorPos(x int) {
+func (s *State) cursorPos(x int) { log.DebugLog()
 	if s.useCHA {
 		// 'G' is "Cursor Character Absolute (CHA)"
 		fmt.Printf("\x1b[%dG", x+1)
@@ -23,23 +23,23 @@ func (s *State) cursorPos(x int) {
 	}
 }
 
-func (s *State) eraseLine() {
+func (s *State) eraseLine() { log.DebugLog()
 	fmt.Print("\x1b[0K")
 }
 
-func (s *State) eraseScreen() {
+func (s *State) eraseScreen() { log.DebugLog()
 	fmt.Print("\x1b[H\x1b[2J")
 }
 
-func (s *State) moveUp(lines int) {
+func (s *State) moveUp(lines int) { log.DebugLog()
 	fmt.Printf("\x1b[%dA", lines)
 }
 
-func (s *State) moveDown(lines int) {
+func (s *State) moveDown(lines int) { log.DebugLog()
 	fmt.Printf("\x1b[%dB", lines)
 }
 
-func (s *State) emitNewLine() {
+func (s *State) emitNewLine() { log.DebugLog()
 	fmt.Print("\n")
 }
 
@@ -48,7 +48,7 @@ type winSize struct {
 	xpixel, ypixel uint16
 }
 
-func (s *State) getColumns() bool {
+func (s *State) getColumns() bool { log.DebugLog()
 	var ws winSize
 	ok, _, _ := syscall.Syscall(syscall.SYS_IOCTL, uintptr(syscall.Stdout),
 		syscall.TIOCGWINSZ, uintptr(unsafe.Pointer(&ws)))
@@ -62,7 +62,7 @@ func (s *State) getColumns() bool {
 	return true
 }
 
-func (s *State) checkOutput() {
+func (s *State) checkOutput() { log.DebugLog()
 	// xterm is known to support CHA
 	if strings.Contains(strings.ToLower(os.Getenv("TERM")), "xterm") {
 		s.useCHA = true

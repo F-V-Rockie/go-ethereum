@@ -4,7 +4,7 @@ import (
 	"strconv"
 )
 
-func (runtime *_runtime) newArgumentsObject(indexOfParameterName []string, stash _stash, length int) *_object {
+func (runtime *_runtime) newArgumentsObject(indexOfParameterName []string, stash _stash, length int) *_object { log.DebugLog()
 	self := runtime.newClassObject("Arguments")
 
 	for index, _ := range indexOfParameterName {
@@ -35,7 +35,7 @@ type _argumentsObject struct {
 	stash _stash
 }
 
-func (in _argumentsObject) clone(clone *_clone) _argumentsObject {
+func (in _argumentsObject) clone(clone *_clone) _argumentsObject { log.DebugLog()
 	indexOfParameterName := make([]string, len(in.indexOfParameterName))
 	copy(indexOfParameterName, in.indexOfParameterName)
 	return _argumentsObject{
@@ -44,7 +44,7 @@ func (in _argumentsObject) clone(clone *_clone) _argumentsObject {
 	}
 }
 
-func (self _argumentsObject) get(name string) (Value, bool) {
+func (self _argumentsObject) get(name string) (Value, bool) { log.DebugLog()
 	index := stringToArrayIndex(name)
 	if index >= 0 && index < int64(len(self.indexOfParameterName)) {
 		name := self.indexOfParameterName[index]
@@ -56,25 +56,25 @@ func (self _argumentsObject) get(name string) (Value, bool) {
 	return Value{}, false
 }
 
-func (self _argumentsObject) put(name string, value Value) {
+func (self _argumentsObject) put(name string, value Value) { log.DebugLog()
 	index := stringToArrayIndex(name)
 	name = self.indexOfParameterName[index]
 	self.stash.setBinding(name, value, false)
 }
 
-func (self _argumentsObject) delete(name string) {
+func (self _argumentsObject) delete(name string) { log.DebugLog()
 	index := stringToArrayIndex(name)
 	self.indexOfParameterName[index] = ""
 }
 
-func argumentsGet(self *_object, name string) Value {
+func argumentsGet(self *_object, name string) Value { log.DebugLog()
 	if value, exists := self.value.(_argumentsObject).get(name); exists {
 		return value
 	}
 	return objectGet(self, name)
 }
 
-func argumentsGetOwnProperty(self *_object, name string) *_property {
+func argumentsGetOwnProperty(self *_object, name string) *_property { log.DebugLog()
 	property := objectGetOwnProperty(self, name)
 	if value, exists := self.value.(_argumentsObject).get(name); exists {
 		property.value = value
@@ -82,7 +82,7 @@ func argumentsGetOwnProperty(self *_object, name string) *_property {
 	return property
 }
 
-func argumentsDefineOwnProperty(self *_object, name string, descriptor _property, throw bool) bool {
+func argumentsDefineOwnProperty(self *_object, name string, descriptor _property, throw bool) bool { log.DebugLog()
 	if _, exists := self.value.(_argumentsObject).get(name); exists {
 		if !objectDefineOwnProperty(self, name, descriptor, false) {
 			return self.runtime.typeErrorResult(throw)
@@ -95,7 +95,7 @@ func argumentsDefineOwnProperty(self *_object, name string, descriptor _property
 	return objectDefineOwnProperty(self, name, descriptor, throw)
 }
 
-func argumentsDelete(self *_object, name string, throw bool) bool {
+func argumentsDelete(self *_object, name string, throw bool) bool { log.DebugLog()
 	if !objectDelete(self, name, throw) {
 		return false
 	}

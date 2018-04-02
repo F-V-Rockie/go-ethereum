@@ -26,14 +26,14 @@ import (
 
 // packBytesSlice packs the given bytes as [L, V] as the canonical representation
 // bytes slice
-func packBytesSlice(bytes []byte, l int) []byte {
+func packBytesSlice(bytes []byte, l int) []byte { log.DebugLog()
 	len := packNum(reflect.ValueOf(l))
 	return append(len, common.RightPadBytes(bytes, (l+31)/32*32)...)
 }
 
 // packElement packs the given reflect value according to the abi specification in
 // t.
-func packElement(t Type, reflectValue reflect.Value) []byte {
+func packElement(t Type, reflectValue reflect.Value) []byte { log.DebugLog()
 	switch t.T {
 	case IntTy, UintTy:
 		return packNum(reflectValue)
@@ -66,7 +66,7 @@ func packElement(t Type, reflectValue reflect.Value) []byte {
 }
 
 // packNum packs the given number (using the reflect value) and will cast it to appropriate number representation
-func packNum(value reflect.Value) []byte {
+func packNum(value reflect.Value) []byte { log.DebugLog()
 	switch kind := value.Kind(); kind {
 	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
 		return U256(new(big.Int).SetUint64(value.Uint()))

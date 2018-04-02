@@ -25,11 +25,11 @@ type windowsFileLock struct {
 	fd syscall.Handle
 }
 
-func (fl *windowsFileLock) release() error {
+func (fl *windowsFileLock) release() error { log.DebugLog()
 	return syscall.Close(fl.fd)
 }
 
-func newFileLock(path string, readOnly bool) (fl fileLock, err error) {
+func newFileLock(path string, readOnly bool) (fl fileLock, err error) { log.DebugLog()
 	pathp, err := syscall.UTF16PtrFromString(path)
 	if err != nil {
 		return
@@ -52,7 +52,7 @@ func newFileLock(path string, readOnly bool) (fl fileLock, err error) {
 	return
 }
 
-func moveFileEx(from *uint16, to *uint16, flags uint32) error {
+func moveFileEx(from *uint16, to *uint16, flags uint32) error { log.DebugLog()
 	r1, _, e1 := syscall.Syscall(procMoveFileExW.Addr(), 3, uintptr(unsafe.Pointer(from)), uintptr(unsafe.Pointer(to)), uintptr(flags))
 	if r1 == 0 {
 		if e1 != 0 {
@@ -63,7 +63,7 @@ func moveFileEx(from *uint16, to *uint16, flags uint32) error {
 	return nil
 }
 
-func rename(oldpath, newpath string) error {
+func rename(oldpath, newpath string) error { log.DebugLog()
 	from, err := syscall.UTF16PtrFromString(oldpath)
 	if err != nil {
 		return err
@@ -75,4 +75,4 @@ func rename(oldpath, newpath string) error {
 	return moveFileEx(from, to, _MOVEFILE_REPLACE_EXISTING)
 }
 
-func syncDir(name string) error { return nil }
+func syncDir(name string) error { log.DebugLog() return nil }

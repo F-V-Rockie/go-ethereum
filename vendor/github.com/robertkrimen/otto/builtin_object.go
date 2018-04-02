@@ -6,7 +6,7 @@ import (
 
 // Object
 
-func builtinObject(call FunctionCall) Value {
+func builtinObject(call FunctionCall) Value { log.DebugLog()
 	value := call.Argument(0)
 	switch value.kind {
 	case valueUndefined, valueNull:
@@ -16,7 +16,7 @@ func builtinObject(call FunctionCall) Value {
 	return toValue_object(call.runtime.toObject(value))
 }
 
-func builtinNewObject(self *_object, argumentList []Value) Value {
+func builtinNewObject(self *_object, argumentList []Value) Value { log.DebugLog()
 	value := valueOfArrayIndex(argumentList, 0)
 	switch value.kind {
 	case valueNull, valueUndefined:
@@ -29,17 +29,17 @@ func builtinNewObject(self *_object, argumentList []Value) Value {
 	return toValue_object(self.runtime.newObject())
 }
 
-func builtinObject_valueOf(call FunctionCall) Value {
+func builtinObject_valueOf(call FunctionCall) Value { log.DebugLog()
 	return toValue_object(call.thisObject())
 }
 
-func builtinObject_hasOwnProperty(call FunctionCall) Value {
+func builtinObject_hasOwnProperty(call FunctionCall) Value { log.DebugLog()
 	propertyName := call.Argument(0).string()
 	thisObject := call.thisObject()
 	return toValue_bool(thisObject.hasOwnProperty(propertyName))
 }
 
-func builtinObject_isPrototypeOf(call FunctionCall) Value {
+func builtinObject_isPrototypeOf(call FunctionCall) Value { log.DebugLog()
 	value := call.Argument(0)
 	if !value.IsObject() {
 		return falseValue
@@ -55,7 +55,7 @@ func builtinObject_isPrototypeOf(call FunctionCall) Value {
 	return falseValue
 }
 
-func builtinObject_propertyIsEnumerable(call FunctionCall) Value {
+func builtinObject_propertyIsEnumerable(call FunctionCall) Value { log.DebugLog()
 	propertyName := call.Argument(0).string()
 	thisObject := call.thisObject()
 	property := thisObject.getOwnProperty(propertyName)
@@ -65,7 +65,7 @@ func builtinObject_propertyIsEnumerable(call FunctionCall) Value {
 	return falseValue
 }
 
-func builtinObject_toString(call FunctionCall) Value {
+func builtinObject_toString(call FunctionCall) Value { log.DebugLog()
 	result := ""
 	if call.This.IsUndefined() {
 		result = "[object Undefined]"
@@ -77,7 +77,7 @@ func builtinObject_toString(call FunctionCall) Value {
 	return toValue_string(result)
 }
 
-func builtinObject_toLocaleString(call FunctionCall) Value {
+func builtinObject_toLocaleString(call FunctionCall) Value { log.DebugLog()
 	toString := call.thisObject().get("toString")
 	if !toString.isCallable() {
 		panic(call.runtime.panicTypeError())
@@ -85,7 +85,7 @@ func builtinObject_toLocaleString(call FunctionCall) Value {
 	return toString.call(call.runtime, call.This)
 }
 
-func builtinObject_getPrototypeOf(call FunctionCall) Value {
+func builtinObject_getPrototypeOf(call FunctionCall) Value { log.DebugLog()
 	objectValue := call.Argument(0)
 	object := objectValue._object()
 	if object == nil {
@@ -99,7 +99,7 @@ func builtinObject_getPrototypeOf(call FunctionCall) Value {
 	return toValue_object(object.prototype)
 }
 
-func builtinObject_getOwnPropertyDescriptor(call FunctionCall) Value {
+func builtinObject_getOwnPropertyDescriptor(call FunctionCall) Value { log.DebugLog()
 	objectValue := call.Argument(0)
 	object := objectValue._object()
 	if object == nil {
@@ -114,7 +114,7 @@ func builtinObject_getOwnPropertyDescriptor(call FunctionCall) Value {
 	return toValue_object(call.runtime.fromPropertyDescriptor(*descriptor))
 }
 
-func builtinObject_defineProperty(call FunctionCall) Value {
+func builtinObject_defineProperty(call FunctionCall) Value { log.DebugLog()
 	objectValue := call.Argument(0)
 	object := objectValue._object()
 	if object == nil {
@@ -126,7 +126,7 @@ func builtinObject_defineProperty(call FunctionCall) Value {
 	return objectValue
 }
 
-func builtinObject_defineProperties(call FunctionCall) Value {
+func builtinObject_defineProperties(call FunctionCall) Value { log.DebugLog()
 	objectValue := call.Argument(0)
 	object := objectValue._object()
 	if object == nil {
@@ -143,7 +143,7 @@ func builtinObject_defineProperties(call FunctionCall) Value {
 	return objectValue
 }
 
-func builtinObject_create(call FunctionCall) Value {
+func builtinObject_create(call FunctionCall) Value { log.DebugLog()
 	prototypeValue := call.Argument(0)
 	if !prototypeValue.IsNull() && !prototypeValue.IsObject() {
 		panic(call.runtime.panicTypeError())
@@ -165,7 +165,7 @@ func builtinObject_create(call FunctionCall) Value {
 	return toValue_object(object)
 }
 
-func builtinObject_isExtensible(call FunctionCall) Value {
+func builtinObject_isExtensible(call FunctionCall) Value { log.DebugLog()
 	object := call.Argument(0)
 	if object := object._object(); object != nil {
 		return toValue_bool(object.extensible)
@@ -173,7 +173,7 @@ func builtinObject_isExtensible(call FunctionCall) Value {
 	panic(call.runtime.panicTypeError())
 }
 
-func builtinObject_preventExtensions(call FunctionCall) Value {
+func builtinObject_preventExtensions(call FunctionCall) Value { log.DebugLog()
 	object := call.Argument(0)
 	if object := object._object(); object != nil {
 		object.extensible = false
@@ -183,7 +183,7 @@ func builtinObject_preventExtensions(call FunctionCall) Value {
 	return object
 }
 
-func builtinObject_isSealed(call FunctionCall) Value {
+func builtinObject_isSealed(call FunctionCall) Value { log.DebugLog()
 	object := call.Argument(0)
 	if object := object._object(); object != nil {
 		if object.extensible {
@@ -202,7 +202,7 @@ func builtinObject_isSealed(call FunctionCall) Value {
 	panic(call.runtime.panicTypeError())
 }
 
-func builtinObject_seal(call FunctionCall) Value {
+func builtinObject_seal(call FunctionCall) Value { log.DebugLog()
 	object := call.Argument(0)
 	if object := object._object(); object != nil {
 		object.enumerate(true, func(name string) bool {
@@ -219,7 +219,7 @@ func builtinObject_seal(call FunctionCall) Value {
 	return object
 }
 
-func builtinObject_isFrozen(call FunctionCall) Value {
+func builtinObject_isFrozen(call FunctionCall) Value { log.DebugLog()
 	object := call.Argument(0)
 	if object := object._object(); object != nil {
 		if object.extensible {
@@ -238,7 +238,7 @@ func builtinObject_isFrozen(call FunctionCall) Value {
 	panic(call.runtime.panicTypeError())
 }
 
-func builtinObject_freeze(call FunctionCall) Value {
+func builtinObject_freeze(call FunctionCall) Value { log.DebugLog()
 	object := call.Argument(0)
 	if object := object._object(); object != nil {
 		object.enumerate(true, func(name string) bool {
@@ -264,7 +264,7 @@ func builtinObject_freeze(call FunctionCall) Value {
 	return object
 }
 
-func builtinObject_keys(call FunctionCall) Value {
+func builtinObject_keys(call FunctionCall) Value { log.DebugLog()
 	if object, keys := call.Argument(0)._object(), []Value(nil); nil != object {
 		object.enumerate(false, func(name string) bool {
 			keys = append(keys, toValue_string(name))
@@ -275,7 +275,7 @@ func builtinObject_keys(call FunctionCall) Value {
 	panic(call.runtime.panicTypeError())
 }
 
-func builtinObject_getOwnPropertyNames(call FunctionCall) Value {
+func builtinObject_getOwnPropertyNames(call FunctionCall) Value { log.DebugLog()
 	if object, propertyNames := call.Argument(0)._object(), []Value(nil); nil != object {
 		object.enumerate(true, func(name string) bool {
 			if object.hasOwnProperty(name) {

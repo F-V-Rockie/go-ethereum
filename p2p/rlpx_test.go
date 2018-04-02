@@ -38,7 +38,7 @@ import (
 	"github.com/ethereum/go-ethereum/rlp"
 )
 
-func TestSharedSecret(t *testing.T) {
+func TestSharedSecret(t *testing.T) { log.DebugLog()
 	prv0, _ := crypto.GenerateKey() // = ecdsa.GenerateKey(crypto.S256(), rand.Reader)
 	pub0 := &prv0.PublicKey
 	prv1, _ := crypto.GenerateKey()
@@ -58,7 +58,7 @@ func TestSharedSecret(t *testing.T) {
 	}
 }
 
-func TestEncHandshake(t *testing.T) {
+func TestEncHandshake(t *testing.T) { log.DebugLog()
 	for i := 0; i < 10; i++ {
 		start := time.Now()
 		if err := testEncHandshake(nil); err != nil {
@@ -77,7 +77,7 @@ func TestEncHandshake(t *testing.T) {
 	}
 }
 
-func testEncHandshake(token []byte) error {
+func testEncHandshake(token []byte) error { log.DebugLog()
 	type result struct {
 		side string
 		id   discover.NodeID
@@ -146,7 +146,7 @@ func testEncHandshake(token []byte) error {
 	return nil
 }
 
-func TestProtocolHandshake(t *testing.T) {
+func TestProtocolHandshake(t *testing.T) { log.DebugLog()
 	var (
 		prv0, _ = crypto.GenerateKey()
 		node0   = &discover.Node{ID: discover.PubkeyID(&prv0.PublicKey), IP: net.IP{1, 2, 3, 4}, TCP: 33}
@@ -223,7 +223,7 @@ func TestProtocolHandshake(t *testing.T) {
 	wg.Wait()
 }
 
-func TestProtocolHandshakeErrors(t *testing.T) {
+func TestProtocolHandshakeErrors(t *testing.T) { log.DebugLog()
 	our := &protoHandshake{Version: 3, Caps: []Cap{{"foo", 2}, {"bar", 3}}, Name: "quux"}
 	tests := []struct {
 		code uint64
@@ -267,7 +267,7 @@ func TestProtocolHandshakeErrors(t *testing.T) {
 	}
 }
 
-func TestRLPXFrameFake(t *testing.T) {
+func TestRLPXFrameFake(t *testing.T) { log.DebugLog()
 	buf := new(bytes.Buffer)
 	hash := fakeHash([]byte{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1})
 	rw := newRLPXFrameRW(buf, secrets{
@@ -314,14 +314,14 @@ ba628a4ba590cb43f7848f41c4382885
 
 type fakeHash []byte
 
-func (fakeHash) Write(p []byte) (int, error) { return len(p), nil }
-func (fakeHash) Reset()                      {}
-func (fakeHash) BlockSize() int              { return 0 }
+func (fakeHash) Write(p []byte) (int, error) { log.DebugLog() return len(p), nil }
+func (fakeHash) Reset()                      { log.DebugLog()}
+func (fakeHash) BlockSize() int              { log.DebugLog() return 0 }
 
-func (h fakeHash) Size() int           { return len(h) }
-func (h fakeHash) Sum(b []byte) []byte { return append(b, h...) }
+func (h fakeHash) Size() int           { log.DebugLog() return len(h) }
+func (h fakeHash) Sum(b []byte) []byte { log.DebugLog() return append(b, h...) }
 
-func TestRLPXFrameRW(t *testing.T) {
+func TestRLPXFrameRW(t *testing.T) { log.DebugLog()
 	var (
 		aesSecret      = make([]byte, 16)
 		macSecret      = make([]byte, 16)
@@ -501,7 +501,7 @@ var eip8HandshakeRespTests = []handshakeAckTest{
 	},
 }
 
-func TestHandshakeForwardCompatibility(t *testing.T) {
+func TestHandshakeForwardCompatibility(t *testing.T) { log.DebugLog()
 	var (
 		keyA, _       = crypto.HexToECDSA("49a7b37aa6f6645917e7b807e9d1c00d4fa71f18343b0d4122a4d2df64dd6fee")
 		keyB, _       = crypto.HexToECDSA("b71c71a67e1177ad4e901695e1b4b9ee17ae16c6668d313eac2f96dbcda3f291")
@@ -603,7 +603,7 @@ func TestHandshakeForwardCompatibility(t *testing.T) {
 }
 
 // tcpPipe creates an in process full duplex pipe based on a localhost TCP socket
-func tcpPipe() (net.Conn, net.Conn, error) {
+func tcpPipe() (net.Conn, net.Conn, error) { log.DebugLog()
 	l, err := net.Listen("tcp", "127.0.0.1:0")
 	if err != nil {
 		return nil, nil, err

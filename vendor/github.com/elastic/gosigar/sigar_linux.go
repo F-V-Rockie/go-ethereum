@@ -9,7 +9,7 @@ import (
 	"syscall"
 )
 
-func init() {
+func init() { log.DebugLog()
 	system.ticks = 100 // C.sysconf(C._SC_CLK_TCK)
 
 	Procd = "/proc"
@@ -17,11 +17,11 @@ func init() {
 	getLinuxBootTime()
 }
 
-func getMountTableFileName() string {
+func getMountTableFileName() string { log.DebugLog()
 	return "/etc/mtab"
 }
 
-func (self *Uptime) Get() error {
+func (self *Uptime) Get() error { log.DebugLog()
 	sysinfo := syscall.Sysinfo_t{}
 
 	if err := syscall.Sysinfo(&sysinfo); err != nil {
@@ -33,7 +33,7 @@ func (self *Uptime) Get() error {
 	return nil
 }
 
-func (self *FDUsage) Get() error {
+func (self *FDUsage) Get() error { log.DebugLog()
 	return readFile(Procd+"/sys/fs/file-nr", func(line string) bool {
 		fields := strings.Fields(line)
 		if len(fields) == 3 {
@@ -45,7 +45,7 @@ func (self *FDUsage) Get() error {
 	})
 }
 
-func (self *ProcFDUsage) Get(pid int) error {
+func (self *ProcFDUsage) Get(pid int) error { log.DebugLog()
 	err := readFile(procFileName(pid, "limits"), func(line string) bool {
 		if strings.HasPrefix(line, "Max open files") {
 			fields := strings.Fields(line)
@@ -68,7 +68,7 @@ func (self *ProcFDUsage) Get(pid int) error {
 	return nil
 }
 
-func parseCpuStat(self *Cpu, line string) error {
+func parseCpuStat(self *Cpu, line string) error { log.DebugLog()
 	fields := strings.Fields(line)
 
 	self.User, _ = strtoull(fields[1])

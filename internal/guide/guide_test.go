@@ -35,7 +35,7 @@ import (
 )
 
 // Tests that the account management snippets work correctly.
-func TestAccountManagement(t *testing.T) {
+func TestAccountManagement(t *testing.T) { log.DebugLog()
 	// Create a temporary folder to work with
 	workdir, err := ioutil.TempDir("", "")
 	if err != nil {

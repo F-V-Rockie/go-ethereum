@@ -44,7 +44,7 @@ import (
 
 var context *C.secp256k1_context
 
-func init() {
+func init() { log.DebugLog()
 	// around 20 ms on a modern CPU.
 	context = C.secp256k1_context_create_sign_verify()
 	C.secp256k1_context_set_illegal_callback(context, C.callbackFunc(C.secp256k1GoPanicIllegal), nil)
@@ -67,7 +67,7 @@ var (
 // The caller is responsible for ensuring that msg cannot be chosen
 // directly by an attacker. It is usually preferable to use a cryptographic
 // hash function on any input before handing it to this function.
-func Sign(msg []byte, seckey []byte) ([]byte, error) {
+func Sign(msg []byte, seckey []byte) ([]byte, error) { log.DebugLog()
 	if len(msg) != 32 {
 		return nil, ErrInvalidMsgLen
 	}
@@ -102,7 +102,7 @@ func Sign(msg []byte, seckey []byte) ([]byte, error) {
 // msg must be the 32-byte hash of the message to be signed.
 // sig must be a 65-byte compact ECDSA signature containing the
 // recovery id as the last element.
-func RecoverPubkey(msg []byte, sig []byte) ([]byte, error) {
+func RecoverPubkey(msg []byte, sig []byte) ([]byte, error) { log.DebugLog()
 	if len(msg) != 32 {
 		return nil, ErrInvalidMsgLen
 	}
@@ -123,7 +123,7 @@ func RecoverPubkey(msg []byte, sig []byte) ([]byte, error) {
 
 // VerifySignature checks that the given pubkey created signature over message.
 // The signature should be in [R || S] format.
-func VerifySignature(pubkey, msg, signature []byte) bool {
+func VerifySignature(pubkey, msg, signature []byte) bool { log.DebugLog()
 	if len(msg) != 32 || len(signature) != 64 || len(pubkey) == 0 {
 		return false
 	}
@@ -135,7 +135,7 @@ func VerifySignature(pubkey, msg, signature []byte) bool {
 
 // DecompressPubkey parses a public key in the 33-byte compressed format.
 // It returns non-nil coordinates if the public key is valid.
-func DecompressPubkey(pubkey []byte) (x, y *big.Int) {
+func DecompressPubkey(pubkey []byte) (x, y *big.Int) { log.DebugLog()
 	if len(pubkey) != 33 {
 		return nil, nil
 	}
@@ -153,7 +153,7 @@ func DecompressPubkey(pubkey []byte) (x, y *big.Int) {
 }
 
 // CompressPubkey encodes a public key to 33-byte compressed format.
-func CompressPubkey(x, y *big.Int) []byte {
+func CompressPubkey(x, y *big.Int) []byte { log.DebugLog()
 	var (
 		pubkey     = S256().Marshal(x, y)
 		pubkeydata = (*C.uchar)(unsafe.Pointer(&pubkey[0]))
@@ -168,7 +168,7 @@ func CompressPubkey(x, y *big.Int) []byte {
 	return out
 }
 
-func checkSignature(sig []byte) error {
+func checkSignature(sig []byte) error { log.DebugLog()
 	if len(sig) != 65 {
 		return ErrInvalidSignatureLen
 	}

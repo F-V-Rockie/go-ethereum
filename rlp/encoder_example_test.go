@@ -27,7 +27,7 @@ type MyCoolType struct {
 }
 
 // EncodeRLP writes x as RLP list [a, b] that omits the Name field.
-func (x *MyCoolType) EncodeRLP(w io.Writer) (err error) {
+func (x *MyCoolType) EncodeRLP(w io.Writer) (err error) { log.DebugLog()
 	// Note: the receiver can be a nil pointer. This allows you to
 	// control the encoding of nil, but it also means that you have to
 	// check for a nil receiver.
@@ -39,7 +39,7 @@ func (x *MyCoolType) EncodeRLP(w io.Writer) (err error) {
 	return err
 }
 
-func ExampleEncoder() {
+func ExampleEncoder() { log.DebugLog()
 	var t *MyCoolType // t is nil pointer to MyCoolType
 	bytes, _ := EncodeToBytes(t)
 	fmt.Printf("%v → %X\n", t, bytes)

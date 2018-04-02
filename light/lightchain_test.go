@@ -36,7 +36,7 @@ var (
 )
 
 // makeHeaderChain creates a deterministic chain of headers rooted at parent.
-func makeHeaderChain(parent *types.Header, n int, db ethdb.Database, seed int) []*types.Header {
+func makeHeaderChain(parent *types.Header, n int, db ethdb.Database, seed int) []*types.Header { log.DebugLog()
 	blocks, _ := core.GenerateChain(params.TestChainConfig, types.NewBlockWithHeader(parent), ethash.NewFaker(), db, n, func(i int, b *core.BlockGen) {
 		b.SetCoinbase(common.Address{0: byte(seed), 19: byte(i)})
 	})
@@ -50,7 +50,7 @@ func makeHeaderChain(parent *types.Header, n int, db ethdb.Database, seed int) [
 // newCanonical creates a chain database, and injects a deterministic canonical
 // chain. Depending on the full flag, if creates either a full block chain or a
 // header only chain.
-func newCanonical(n int) (ethdb.Database, *LightChain, error) {
+func newCanonical(n int) (ethdb.Database, *LightChain, error) { log.DebugLog()
 	db, _ := ethdb.NewMemDatabase()
 	gspec := core.Genesis{Config: params.TestChainConfig}
 	genesis := gspec.MustCommit(db)
@@ -67,7 +67,7 @@ func newCanonical(n int) (ethdb.Database, *LightChain, error) {
 }
 
 // newTestLightChain creates a LightChain that doesn't validate anything.
-func newTestLightChain() *LightChain {
+func newTestLightChain() *LightChain { log.DebugLog()
 	db, _ := ethdb.NewMemDatabase()
 	gspec := &core.Genesis{
 		Difficulty: big.NewInt(1),
@@ -82,7 +82,7 @@ func newTestLightChain() *LightChain {
 }
 
 // Test fork of length N starting from block i
-func testFork(t *testing.T, LightChain *LightChain, i, n int, comparator func(td1, td2 *big.Int)) {
+func testFork(t *testing.T, LightChain *LightChain, i, n int, comparator func(td1, td2 *big.Int)) { log.DebugLog()
 	// Copy old chain up to #i into a new db
 	db, LightChain2, err := newCanonical(i)
 	if err != nil {
@@ -114,7 +114,7 @@ func testFork(t *testing.T, LightChain *LightChain, i, n int, comparator func(td
 
 // testHeaderChainImport tries to process a chain of header, writing them into
 // the database if successful.
-func testHeaderChainImport(chain []*types.Header, lightchain *LightChain) error {
+func testHeaderChainImport(chain []*types.Header, lightchain *LightChain) error { log.DebugLog()
 	for _, header := range chain {
 		// Try and validate the header
 		if err := lightchain.engine.VerifyHeader(lightchain.hc, header, true); err != nil {
@@ -131,7 +131,7 @@ func testHeaderChainImport(chain []*types.Header, lightchain *LightChain) error 
 
 // Tests that given a starting canonical chain of a given size, it can be extended
 // with various length chains.
-func TestExtendCanonicalHeaders(t *testing.T) {
+func TestExtendCanonicalHeaders(t *testing.T) { log.DebugLog()
 	length := 5
 
 	// Make first chain starting from genesis
@@ -154,7 +154,7 @@ func TestExtendCanonicalHeaders(t *testing.T) {
 
 // Tests that given a starting canonical chain of a given size, creating shorter
 // forks do not take canonical ownership.
-func TestShorterForkHeaders(t *testing.T) {
+func TestShorterForkHeaders(t *testing.T) { log.DebugLog()
 	length := 10
 
 	// Make first chain starting from genesis
@@ -179,7 +179,7 @@ func TestShorterForkHeaders(t *testing.T) {
 
 // Tests that given a starting canonical chain of a given size, creating longer
 // forks do take canonical ownership.
-func TestLongerForkHeaders(t *testing.T) {
+func TestLongerForkHeaders(t *testing.T) { log.DebugLog()
 	length := 10
 
 	// Make first chain starting from genesis
@@ -204,7 +204,7 @@ func TestLongerForkHeaders(t *testing.T) {
 
 // Tests that given a starting canonical chain of a given size, creating equal
 // forks do take canonical ownership.
-func TestEqualForkHeaders(t *testing.T) {
+func TestEqualForkHeaders(t *testing.T) { log.DebugLog()
 	length := 10
 
 	// Make first chain starting from genesis
@@ -228,7 +228,7 @@ func TestEqualForkHeaders(t *testing.T) {
 }
 
 // Tests that chains missing links do not get accepted by the processor.
-func TestBrokenHeaderChain(t *testing.T) {
+func TestBrokenHeaderChain(t *testing.T) { log.DebugLog()
 	// Make chain starting from genesis
 	db, LightChain, err := newCanonical(10)
 	if err != nil {
@@ -241,7 +241,7 @@ func TestBrokenHeaderChain(t *testing.T) {
 	}
 }
 
-func makeHeaderChainWithDiff(genesis *types.Block, d []int, seed byte) []*types.Header {
+func makeHeaderChainWithDiff(genesis *types.Block, d []int, seed byte) []*types.Header { log.DebugLog()
 	var chain []*types.Header
 	for i, difficulty := range d {
 		header := &types.Header{
@@ -267,27 +267,27 @@ type dummyOdr struct {
 	db ethdb.Database
 }
 
-func (odr *dummyOdr) Database() ethdb.Database {
+func (odr *dummyOdr) Database() ethdb.Database { log.DebugLog()
 	return odr.db
 }
 
-func (odr *dummyOdr) Retrieve(ctx context.Context, req OdrRequest) error {
+func (odr *dummyOdr) Retrieve(ctx context.Context, req OdrRequest) error { log.DebugLog()
 	return nil
 }
 
 // Tests that reorganizing a long difficult chain after a short easy one
 // overwrites the canonical numbers and links in the database.
-func TestReorgLongHeaders(t *testing.T) {
+func TestReorgLongHeaders(t *testing.T) { log.DebugLog()
 	testReorg(t, []int{1, 2, 4}, []int{1, 2, 3, 4}, 10)
 }
 
 // Tests that reorganizing a short difficult chain after a long easy one
 // overwrites the canonical numbers and links in the database.
-func TestReorgShortHeaders(t *testing.T) {
+func TestReorgShortHeaders(t *testing.T) { log.DebugLog()
 	testReorg(t, []int{1, 2, 3, 4}, []int{1, 10}, 11)
 }
 
-func testReorg(t *testing.T, first, second []int, td int64) {
+func testReorg(t *testing.T, first, second []int, td int64) { log.DebugLog()
 	bc := newTestLightChain()
 
 	// Insert an easy and a difficult chain afterwards
@@ -308,7 +308,7 @@ func testReorg(t *testing.T, first, second []int, td int64) {
 }
 
 // Tests that the insertion functions detect banned hashes.
-func TestBadHeaderHashes(t *testing.T) {
+func TestBadHeaderHashes(t *testing.T) { log.DebugLog()
 	bc := newTestLightChain()
 
 	// Create a chain, ban a hash and try to import
@@ -322,7 +322,7 @@ func TestBadHeaderHashes(t *testing.T) {
 
 // Tests that bad hashes are detected on boot, and the chan rolled back to a
 // good state prior to the bad hash.
-func TestReorgBadHeaderHashes(t *testing.T) {
+func TestReorgBadHeaderHashes(t *testing.T) { log.DebugLog()
 	bc := newTestLightChain()
 
 	// Create a chain, import and ban aferwards

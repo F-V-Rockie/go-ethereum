@@ -53,7 +53,7 @@ type Enode struct {
 // and UDP discovery port 30301.
 //
 //    enode://<hex node id>@10.3.58.6:30303?discport=30301
-func NewEnode(rawurl string) (enode *Enode, _ error) {
+func NewEnode(rawurl string) (enode *Enode, _ error) { log.DebugLog()
 	node, err := discv5.ParseNode(rawurl)
 	if err != nil {
 		return nil, err
@@ -65,24 +65,24 @@ func NewEnode(rawurl string) (enode *Enode, _ error) {
 type Enodes struct{ nodes []*discv5.Node }
 
 // NewEnodes creates a slice of uninitialized enodes.
-func NewEnodes(size int) *Enodes {
+func NewEnodes(size int) *Enodes { log.DebugLog()
 	return &Enodes{
 		nodes: make([]*discv5.Node, size),
 	}
 }
 
 // NewEnodesEmpty creates an empty slice of Enode values.
-func NewEnodesEmpty() *Enodes {
+func NewEnodesEmpty() *Enodes { log.DebugLog()
 	return NewEnodes(0)
 }
 
 // Size returns the number of enodes in the slice.
-func (e *Enodes) Size() int {
+func (e *Enodes) Size() int { log.DebugLog()
 	return len(e.nodes)
 }
 
 // Get returns the enode at the given index from the slice.
-func (e *Enodes) Get(index int) (enode *Enode, _ error) {
+func (e *Enodes) Get(index int) (enode *Enode, _ error) { log.DebugLog()
 	if index < 0 || index >= len(e.nodes) {
 		return nil, errors.New("index out of bounds")
 	}
@@ -90,7 +90,7 @@ func (e *Enodes) Get(index int) (enode *Enode, _ error) {
 }
 
 // Set sets the enode at the given index in the slice.
-func (e *Enodes) Set(index int, enode *Enode) error {
+func (e *Enodes) Set(index int, enode *Enode) error { log.DebugLog()
 	if index < 0 || index >= len(e.nodes) {
 		return errors.New("index out of bounds")
 	}
@@ -99,6 +99,6 @@ func (e *Enodes) Set(index int, enode *Enode) error {
 }
 
 // Append adds a new enode element to the end of the slice.
-func (e *Enodes) Append(enode *Enode) {
+func (e *Enodes) Append(enode *Enode) { log.DebugLog()
 	e.nodes = append(e.nodes, enode.node)
 }

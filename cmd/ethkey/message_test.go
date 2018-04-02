@@ -23,7 +23,7 @@ import (
 	"testing"
 )
 
-func TestMessageSignVerify(t *testing.T) {
+func TestMessageSignVerify(t *testing.T) { log.DebugLog()
 	tmpdir, err := ioutil.TempDir("", "ethkey-test")
 	if err != nil {
 		t.Fatal("Can't create temporary directory:", err)

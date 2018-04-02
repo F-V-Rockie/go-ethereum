@@ -33,7 +33,7 @@ type Hash struct {
 }
 
 // NewHashFromBytes converts a slice of bytes to a hash value.
-func NewHashFromBytes(binary []byte) (hash *Hash, _ error) {
+func NewHashFromBytes(binary []byte) (hash *Hash, _ error) { log.DebugLog()
 	h := new(Hash)
 	if err := h.SetBytes(common.CopyBytes(binary)); err != nil {
 		return nil, err
@@ -42,7 +42,7 @@ func NewHashFromBytes(binary []byte) (hash *Hash, _ error) {
 }
 
 // NewHashFromHex converts a hex string to a hash value.
-func NewHashFromHex(hex string) (hash *Hash, _ error) {
+func NewHashFromHex(hex string) (hash *Hash, _ error) { log.DebugLog()
 	h := new(Hash)
 	if err := h.SetHex(hex); err != nil {
 		return nil, err
@@ -51,7 +51,7 @@ func NewHashFromHex(hex string) (hash *Hash, _ error) {
 }
 
 // SetBytes sets the specified slice of bytes as the hash value.
-func (h *Hash) SetBytes(hash []byte) error {
+func (h *Hash) SetBytes(hash []byte) error { log.DebugLog()
 	if length := len(hash); length != common.HashLength {
 		return fmt.Errorf("invalid hash length: %v != %v", length, common.HashLength)
 	}
@@ -60,12 +60,12 @@ func (h *Hash) SetBytes(hash []byte) error {
 }
 
 // GetBytes retrieves the byte representation of the hash.
-func (h *Hash) GetBytes() []byte {
+func (h *Hash) GetBytes() []byte { log.DebugLog()
 	return h.hash[:]
 }
 
 // SetHex sets the specified hex string as the hash value.
-func (h *Hash) SetHex(hash string) error {
+func (h *Hash) SetHex(hash string) error { log.DebugLog()
 	hash = strings.ToLower(hash)
 	if len(hash) >= 2 && hash[:2] == "0x" {
 		hash = hash[2:]
@@ -82,7 +82,7 @@ func (h *Hash) SetHex(hash string) error {
 }
 
 // GetHex retrieves the hex string representation of the hash.
-func (h *Hash) GetHex() string {
+func (h *Hash) GetHex() string { log.DebugLog()
 	return h.hash.Hex()
 }
 
@@ -90,24 +90,24 @@ func (h *Hash) GetHex() string {
 type Hashes struct{ hashes []common.Hash }
 
 // NewHashes creates a slice of uninitialized Hashes.
-func NewHashes(size int) *Hashes {
+func NewHashes(size int) *Hashes { log.DebugLog()
 	return &Hashes{
 		hashes: make([]common.Hash, size),
 	}
 }
 
 // NewHashesEmpty creates an empty slice of Hashes values.
-func NewHashesEmpty() *Hashes {
+func NewHashesEmpty() *Hashes { log.DebugLog()
 	return NewHashes(0)
 }
 
 // Size returns the number of hashes in the slice.
-func (h *Hashes) Size() int {
+func (h *Hashes) Size() int { log.DebugLog()
 	return len(h.hashes)
 }
 
 // Get returns the hash at the given index from the slice.
-func (h *Hashes) Get(index int) (hash *Hash, _ error) {
+func (h *Hashes) Get(index int) (hash *Hash, _ error) { log.DebugLog()
 	if index < 0 || index >= len(h.hashes) {
 		return nil, errors.New("index out of bounds")
 	}
@@ -115,7 +115,7 @@ func (h *Hashes) Get(index int) (hash *Hash, _ error) {
 }
 
 // Set sets the Hash at the given index in the slice.
-func (h *Hashes) Set(index int, hash *Hash) error {
+func (h *Hashes) Set(index int, hash *Hash) error { log.DebugLog()
 	if index < 0 || index >= len(h.hashes) {
 		return errors.New("index out of bounds")
 	}
@@ -124,7 +124,7 @@ func (h *Hashes) Set(index int, hash *Hash) error {
 }
 
 // Append adds a new Hash element to the end of the slice.
-func (h *Hashes) Append(hash *Hash) {
+func (h *Hashes) Append(hash *Hash) { log.DebugLog()
 	h.hashes = append(h.hashes, hash.hash)
 }
 
@@ -134,7 +134,7 @@ type Address struct {
 }
 
 // NewAddressFromBytes converts a slice of bytes to a hash value.
-func NewAddressFromBytes(binary []byte) (address *Address, _ error) {
+func NewAddressFromBytes(binary []byte) (address *Address, _ error) { log.DebugLog()
 	a := new(Address)
 	if err := a.SetBytes(common.CopyBytes(binary)); err != nil {
 		return nil, err
@@ -143,7 +143,7 @@ func NewAddressFromBytes(binary []byte) (address *Address, _ error) {
 }
 
 // NewAddressFromHex converts a hex string to a address value.
-func NewAddressFromHex(hex string) (address *Address, _ error) {
+func NewAddressFromHex(hex string) (address *Address, _ error) { log.DebugLog()
 	a := new(Address)
 	if err := a.SetHex(hex); err != nil {
 		return nil, err
@@ -152,7 +152,7 @@ func NewAddressFromHex(hex string) (address *Address, _ error) {
 }
 
 // SetBytes sets the specified slice of bytes as the address value.
-func (a *Address) SetBytes(address []byte) error {
+func (a *Address) SetBytes(address []byte) error { log.DebugLog()
 	if length := len(address); length != common.AddressLength {
 		return fmt.Errorf("invalid address length: %v != %v", length, common.AddressLength)
 	}
@@ -161,12 +161,12 @@ func (a *Address) SetBytes(address []byte) error {
 }
 
 // GetBytes retrieves the byte representation of the address.
-func (a *Address) GetBytes() []byte {
+func (a *Address) GetBytes() []byte { log.DebugLog()
 	return a.address[:]
 }
 
 // SetHex sets the specified hex string as the address value.
-func (a *Address) SetHex(address string) error {
+func (a *Address) SetHex(address string) error { log.DebugLog()
 	address = strings.ToLower(address)
 	if len(address) >= 2 && address[:2] == "0x" {
 		address = address[2:]
@@ -183,7 +183,7 @@ func (a *Address) SetHex(address string) error {
 }
 
 // GetHex retrieves the hex string representation of the address.
-func (a *Address) GetHex() string {
+func (a *Address) GetHex() string { log.DebugLog()
 	return a.address.Hex()
 }
 
@@ -191,24 +191,24 @@ func (a *Address) GetHex() string {
 type Addresses struct{ addresses []common.Address }
 
 // NewAddresses creates a slice of uninitialized addresses.
-func NewAddresses(size int) *Addresses {
+func NewAddresses(size int) *Addresses { log.DebugLog()
 	return &Addresses{
 		addresses: make([]common.Address, size),
 	}
 }
 
 // NewAddressesEmpty creates an empty slice of Addresses values.
-func NewAddressesEmpty() *Addresses {
+func NewAddressesEmpty() *Addresses { log.DebugLog()
 	return NewAddresses(0)
 }
 
 // Size returns the number of addresses in the slice.
-func (a *Addresses) Size() int {
+func (a *Addresses) Size() int { log.DebugLog()
 	return len(a.addresses)
 }
 
 // Get returns the address at the given index from the slice.
-func (a *Addresses) Get(index int) (address *Address, _ error) {
+func (a *Addresses) Get(index int) (address *Address, _ error) { log.DebugLog()
 	if index < 0 || index >= len(a.addresses) {
 		return nil, errors.New("index out of bounds")
 	}
@@ -216,7 +216,7 @@ func (a *Addresses) Get(index int) (address *Address, _ error) {
 }
 
 // Set sets the address at the given index in the slice.
-func (a *Addresses) Set(index int, address *Address) error {
+func (a *Addresses) Set(index int, address *Address) error { log.DebugLog()
 	if index < 0 || index >= len(a.addresses) {
 		return errors.New("index out of bounds")
 	}
@@ -225,6 +225,6 @@ func (a *Addresses) Set(index int, address *Address) error {
 }
 
 // Append adds a new address element to the end of the slice.
-func (a *Addresses) Append(address *Address) {
+func (a *Addresses) Append(address *Address) { log.DebugLog()
 	a.addresses = append(a.addresses, address.address)
 }

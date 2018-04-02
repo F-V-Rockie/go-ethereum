@@ -55,7 +55,7 @@ type containerInfos struct {
 }
 
 // inspectContainer runs docker inspect against a running container
-func inspectContainer(client *sshClient, container string) (*containerInfos, error) {
+func inspectContainer(client *sshClient, container string) (*containerInfos, error) { log.DebugLog()
 	// Check whether there's a container running for the service
 	out, err := client.Run(fmt.Sprintf("docker inspect %s", container))
 	if err != nil {
@@ -109,7 +109,7 @@ func inspectContainer(client *sshClient, container string) (*containerInfos, err
 
 // tearDown connects to a remote machine via SSH and terminates docker containers
 // running with the specified name in the specified network.
-func tearDown(client *sshClient, network string, service string, purge bool) ([]byte, error) {
+func tearDown(client *sshClient, network string, service string, purge bool) ([]byte, error) { log.DebugLog()
 	// Tear down the running (or paused) container
 	out, err := client.Run(fmt.Sprintf("docker rm -f %s_%s_1", network, service))
 	if err != nil {
@@ -124,7 +124,7 @@ func tearDown(client *sshClient, network string, service string, purge bool) ([]
 
 // resolve retrieves the hostname a service is running on either by returning the
 // actual server name and port, or preferably an nginx virtual host if available.
-func resolve(client *sshClient, network string, service string, port int) (string, error) {
+func resolve(client *sshClient, network string, service string, port int) (string, error) { log.DebugLog()
 	// Inspect the service to get various configurations from it
 	infos, err := inspectContainer(client, fmt.Sprintf("%s_%s_1", network, service))
 	if err != nil {
@@ -141,7 +141,7 @@ func resolve(client *sshClient, network string, service string, port int) (strin
 }
 
 // checkPort tries to connect to a remote host on a given
-func checkPort(host string, port int) error {
+func checkPort(host string, port int) error { log.DebugLog()
 	log.Trace("Verifying remote TCP connectivity", "server", host, "port", port)
 	conn, err := net.DialTimeout("tcp", fmt.Sprintf("%s:%d", host, port), time.Second)
 	if err != nil {

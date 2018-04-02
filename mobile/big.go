@@ -31,34 +31,34 @@ type BigInt struct {
 }
 
 // NewBigInt allocates and returns a new BigInt set to x.
-func NewBigInt(x int64) *BigInt {
+func NewBigInt(x int64) *BigInt { log.DebugLog()
 	return &BigInt{big.NewInt(x)}
 }
 
 // GetBytes returns the absolute value of x as a big-endian byte slice.
-func (bi *BigInt) GetBytes() []byte {
+func (bi *BigInt) GetBytes() []byte { log.DebugLog()
 	return bi.bigint.Bytes()
 }
 
 // String returns the value of x as a formatted decimal string.
-func (bi *BigInt) String() string {
+func (bi *BigInt) String() string { log.DebugLog()
 	return bi.bigint.String()
 }
 
 // GetInt64 returns the int64 representation of x. If x cannot be represented in
 // an int64, the result is undefined.
-func (bi *BigInt) GetInt64() int64 {
+func (bi *BigInt) GetInt64() int64 { log.DebugLog()
 	return bi.bigint.Int64()
 }
 
 // SetBytes interprets buf as the bytes of a big-endian unsigned integer and sets
 // the big int to that value.
-func (bi *BigInt) SetBytes(buf []byte) {
+func (bi *BigInt) SetBytes(buf []byte) { log.DebugLog()
 	bi.bigint.SetBytes(common.CopyBytes(buf))
 }
 
 // SetInt64 sets the big int to x.
-func (bi *BigInt) SetInt64(x int64) {
+func (bi *BigInt) SetInt64(x int64) { log.DebugLog()
 	bi.bigint.SetInt64(x)
 }
 
@@ -68,7 +68,7 @@ func (bi *BigInt) SetInt64(x int64) {
 //	 0 if x == 0
 //	+1 if x >  0
 //
-func (bi *BigInt) Sign() int {
+func (bi *BigInt) Sign() int { log.DebugLog()
 	return bi.bigint.Sign()
 }
 
@@ -77,7 +77,7 @@ func (bi *BigInt) Sign() int {
 // The string prefix determines the actual conversion base. A prefix of "0x" or
 // "0X" selects base 16; the "0" prefix selects base 8, and a "0b" or "0B" prefix
 // selects base 2. Otherwise the selected base is 10.
-func (bi *BigInt) SetString(x string, base int) {
+func (bi *BigInt) SetString(x string, base int) { log.DebugLog()
 	bi.bigint.SetString(x, base)
 }
 
@@ -85,12 +85,12 @@ func (bi *BigInt) SetString(x string, base int) {
 type BigInts struct{ bigints []*big.Int }
 
 // Size returns the number of big ints in the slice.
-func (bi *BigInts) Size() int {
+func (bi *BigInts) Size() int { log.DebugLog()
 	return len(bi.bigints)
 }
 
 // Get returns the bigint at the given index from the slice.
-func (bi *BigInts) Get(index int) (bigint *BigInt, _ error) {
+func (bi *BigInts) Get(index int) (bigint *BigInt, _ error) { log.DebugLog()
 	if index < 0 || index >= len(bi.bigints) {
 		return nil, errors.New("index out of bounds")
 	}
@@ -98,7 +98,7 @@ func (bi *BigInts) Get(index int) (bigint *BigInt, _ error) {
 }
 
 // Set sets the big int at the given index in the slice.
-func (bi *BigInts) Set(index int, bigint *BigInt) error {
+func (bi *BigInts) Set(index int, bigint *BigInt) error { log.DebugLog()
 	if index < 0 || index >= len(bi.bigints) {
 		return errors.New("index out of bounds")
 	}
@@ -107,6 +107,6 @@ func (bi *BigInts) Set(index int, bigint *BigInt) error {
 }
 
 // GetString returns the value of x as a formatted string in some number base.
-func (bi *BigInt) GetString(base int) string {
+func (bi *BigInt) GetString(base int) string { log.DebugLog()
 	return bi.bigint.Text(base)
 }

@@ -26,7 +26,7 @@ import (
 
 // Tests that databases are correctly created persistent or ephemeral based on
 // the configured service context.
-func TestContextDatabases(t *testing.T) {
+func TestContextDatabases(t *testing.T) { log.DebugLog()
 	// Create a temporary folder and ensure no database is contained within
 	dir, err := ioutil.TempDir("", "")
 	if err != nil {
@@ -62,7 +62,7 @@ func TestContextDatabases(t *testing.T) {
 }
 
 // Tests that already constructed services can be retrieves by later ones.
-func TestContextServices(t *testing.T) {
+func TestContextServices(t *testing.T) { log.DebugLog()
 	stack, err := New(testNodeConfig())
 	if err != nil {
 		t.Fatalf("failed to create protocol stack: %v", err)

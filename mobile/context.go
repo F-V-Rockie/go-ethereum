@@ -34,7 +34,7 @@ type Context struct {
 // NewContext returns a non-nil, empty Context. It is never canceled, has no
 // values, and has no deadline. It is typically used by the main function,
 // initialization, and tests, and as the top-level Context for incoming requests.
-func NewContext() *Context {
+func NewContext() *Context { log.DebugLog()
 	return &Context{
 		context: context.Background(),
 	}
@@ -45,7 +45,7 @@ func NewContext() *Context {
 //
 // Canceling this context releases resources associated with it, so code should
 // call cancel as soon as the operations running in this Context complete.
-func (c *Context) WithCancel() *Context {
+func (c *Context) WithCancel() *Context { log.DebugLog()
 	child, cancel := context.WithCancel(c.context)
 	return &Context{
 		context: child,
@@ -58,7 +58,7 @@ func (c *Context) WithCancel() *Context {
 //
 // Canceling this context releases resources associated with it, so code should
 // call cancel as soon as the operations running in this Context complete.
-func (c *Context) WithDeadline(sec int64, nsec int64) *Context {
+func (c *Context) WithDeadline(sec int64, nsec int64) *Context { log.DebugLog()
 	child, cancel := context.WithDeadline(c.context, time.Unix(sec, nsec))
 	return &Context{
 		context: child,
@@ -71,7 +71,7 @@ func (c *Context) WithDeadline(sec int64, nsec int64) *Context {
 //
 // Canceling this context releases resources associated with it, so code should
 // call cancel as soon as the operations running in this Context complete.
-func (c *Context) WithTimeout(nsec int64) *Context {
+func (c *Context) WithTimeout(nsec int64) *Context { log.DebugLog()
 	child, cancel := context.WithTimeout(c.context, time.Duration(nsec))
 	return &Context{
 		context: child,

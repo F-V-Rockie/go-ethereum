@@ -37,13 +37,13 @@ const (
 // sorting in increasing order.
 type durationSlice []time.Duration
 
-func (s durationSlice) Len() int           { return len(s) }
-func (s durationSlice) Less(i, j int) bool { return s[i] < s[j] }
-func (s durationSlice) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }
+func (s durationSlice) Len() int           { log.DebugLog() return len(s) }
+func (s durationSlice) Less(i, j int) bool { log.DebugLog() return s[i] < s[j] }
+func (s durationSlice) Swap(i, j int)      { log.DebugLog() s[i], s[j] = s[j], s[i] }
 
 // checkClockDrift queries an NTP server for clock drifts and warns the user if
 // one large enough is detected.
-func checkClockDrift() {
+func checkClockDrift() { log.DebugLog()
 	drift, err := sntpDrift(ntpChecks)
 	if err != nil {
 		return
@@ -62,7 +62,7 @@ func checkClockDrift() {
 //
 // Note, it executes two extra measurements compared to the number of requested
 // ones to be able to discard the two extremes as outliers.
-func sntpDrift(measurements int) (time.Duration, error) {
+func sntpDrift(measurements int) (time.Duration, error) { log.DebugLog()
 	// Resolve the address of the NTP server
 	addr, err := net.ResolveUDPAddr("udp", ntpPool+":123")
 	if err != nil {

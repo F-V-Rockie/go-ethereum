@@ -78,7 +78,7 @@ type Disconnect struct {
 }
 
 // trigger sends messages from peers
-func (self *ProtocolSession) trigger(trig Trigger) error {
+func (self *ProtocolSession) trigger(trig Trigger) error { log.DebugLog()
 	simNode, ok := self.adapter.GetNode(trig.Peer)
 	if !ok {
 		return fmt.Errorf("trigger: peer %v does not exist (1- %v)", trig.Peer, len(self.IDs))
@@ -107,7 +107,7 @@ func (self *ProtocolSession) trigger(trig Trigger) error {
 }
 
 // expect checks an expectation of a message sent out by the pivot node
-func (self *ProtocolSession) expect(exps []Expect) error {
+func (self *ProtocolSession) expect(exps []Expect) error { log.DebugLog()
 	// construct a map of expectations for each node
 	peerExpects := make(map[discover.NodeID][]Expect)
 	for _, exp := range exps {
@@ -202,7 +202,7 @@ func (self *ProtocolSession) expect(exps []Expect) error {
 }
 
 // TestExchanges tests a series of exchanges against the session
-func (self *ProtocolSession) TestExchanges(exchanges ...Exchange) error {
+func (self *ProtocolSession) TestExchanges(exchanges ...Exchange) error { log.DebugLog()
 	for i, e := range exchanges {
 		if err := self.testExchange(e); err != nil {
 			return fmt.Errorf("exchange #%d %q: %v", i, e.Label, err)
@@ -214,7 +214,7 @@ func (self *ProtocolSession) TestExchanges(exchanges ...Exchange) error {
 
 // testExchange tests a single Exchange.
 // Default timeout value is 2 seconds.
-func (self *ProtocolSession) testExchange(e Exchange) error {
+func (self *ProtocolSession) testExchange(e Exchange) error { log.DebugLog()
 	errc := make(chan error)
 	done := make(chan struct{})
 	defer close(done)
@@ -250,7 +250,7 @@ func (self *ProtocolSession) testExchange(e Exchange) error {
 
 // TestDisconnected tests the disconnections given as arguments
 // the disconnect structs describe what disconnect error is expected on which peer
-func (self *ProtocolSession) TestDisconnected(disconnects ...*Disconnect) error {
+func (self *ProtocolSession) TestDisconnected(disconnects ...*Disconnect) error { log.DebugLog()
 	expects := make(map[discover.NodeID]error)
 	for _, disconnect := range disconnects {
 		expects[disconnect.Peer] = disconnect.Error

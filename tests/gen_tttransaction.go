@@ -14,7 +14,7 @@ import (
 
 var _ = (*ttTransactionMarshaling)(nil)
 
-func (t ttTransaction) MarshalJSON() ([]byte, error) {
+func (t ttTransaction) MarshalJSON() ([]byte, error) { log.DebugLog()
 	type ttTransaction struct {
 		Data     hexutil.Bytes         `gencodec:"required"`
 		GasLimit math.HexOrDecimal64   `gencodec:"required"`
@@ -39,7 +39,7 @@ func (t ttTransaction) MarshalJSON() ([]byte, error) {
 	return json.Marshal(&enc)
 }
 
-func (t *ttTransaction) UnmarshalJSON(input []byte) error {
+func (t *ttTransaction) UnmarshalJSON(input []byte) error { log.DebugLog()
 	type ttTransaction struct {
 		Data     *hexutil.Bytes        `gencodec:"required"`
 		GasLimit *math.HexOrDecimal64  `gencodec:"required"`

@@ -32,7 +32,7 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 )
 
-func TestTable_pingReplace(t *testing.T) {
+func TestTable_pingReplace(t *testing.T) { log.DebugLog()
 	run := func(newNodeResponding, lastInBucketResponding bool) {
 		name := fmt.Sprintf("newNodeResponding=%t/lastInBucketResponding=%t", newNodeResponding, lastInBucketResponding)
 		t.Run(name, func(t *testing.T) {
@@ -47,7 +47,7 @@ func TestTable_pingReplace(t *testing.T) {
 	run(false, false)
 }
 
-func testPingReplace(t *testing.T, newNodeIsResponding, lastInBucketIsResponding bool) {
+func testPingReplace(t *testing.T, newNodeIsResponding, lastInBucketIsResponding bool) { log.DebugLog()
 	transport := newPingRecorder()
 	tab, _ := newTable(transport, NodeID{}, &net.UDPAddr{}, "", nil)
 	defer tab.Close()
@@ -94,7 +94,7 @@ func testPingReplace(t *testing.T, newNodeIsResponding, lastInBucketIsResponding
 	}
 }
 
-func TestBucket_bumpNoDuplicates(t *testing.T) {
+func TestBucket_bumpNoDuplicates(t *testing.T) { log.DebugLog()
 	t.Parallel()
 	cfg := &quick.Config{
 		MaxCount: 1000,
@@ -137,7 +137,7 @@ func TestBucket_bumpNoDuplicates(t *testing.T) {
 }
 
 // This checks that the table-wide IP limit is applied correctly.
-func TestTable_IPLimit(t *testing.T) {
+func TestTable_IPLimit(t *testing.T) { log.DebugLog()
 	transport := newPingRecorder()
 	tab, _ := newTable(transport, NodeID{}, &net.UDPAddr{}, "", nil)
 	defer tab.Close()
@@ -153,7 +153,7 @@ func TestTable_IPLimit(t *testing.T) {
 }
 
 // This checks that the table-wide IP limit is applied correctly.
-func TestTable_BucketIPLimit(t *testing.T) {
+func TestTable_BucketIPLimit(t *testing.T) { log.DebugLog()
 	transport := newPingRecorder()
 	tab, _ := newTable(transport, NodeID{}, &net.UDPAddr{}, "", nil)
 	defer tab.Close()
@@ -172,7 +172,7 @@ func TestTable_BucketIPLimit(t *testing.T) {
 // fillBucket inserts nodes into the given bucket until
 // it is full. The node's IDs dont correspond to their
 // hashes.
-func fillBucket(tab *Table, n *Node) (last *Node) {
+func fillBucket(tab *Table, n *Node) (last *Node) { log.DebugLog()
 	ld := logdist(tab.self.sha, n.sha)
 	b := tab.bucket(n.sha)
 	for len(b.entries) < bucketSize {
@@ -183,7 +183,7 @@ func fillBucket(tab *Table, n *Node) (last *Node) {
 
 // nodeAtDistance creates a node for which logdist(base, n.sha) == ld.
 // The node's ID does not correspond to n.sha.
-func nodeAtDistance(base common.Hash, ld int) (n *Node) {
+func nodeAtDistance(base common.Hash, ld int) (n *Node) { log.DebugLog()
 	n = new(Node)
 	n.sha = hashAtDistance(base, ld)
 	n.IP = net.IP{byte(ld), 0, 2, byte(ld)}
@@ -196,21 +196,21 @@ type pingRecorder struct {
 	dead, pinged map[NodeID]bool
 }
 
-func newPingRecorder() *pingRecorder {
+func newPingRecorder() *pingRecorder { log.DebugLog()
 	return &pingRecorder{
 		dead:   make(map[NodeID]bool),
 		pinged: make(map[NodeID]bool),
 	}
 }
 
-func (t *pingRecorder) findnode(toid NodeID, toaddr *net.UDPAddr, target NodeID) ([]*Node, error) {
+func (t *pingRecorder) findnode(toid NodeID, toaddr *net.UDPAddr, target NodeID) ([]*Node, error) { log.DebugLog()
 	return nil, nil
 }
-func (t *pingRecorder) close() {}
-func (t *pingRecorder) waitping(from NodeID) error {
+func (t *pingRecorder) close() { log.DebugLog()}
+func (t *pingRecorder) waitping(from NodeID) error { log.DebugLog()
 	return nil // remote always pings
 }
-func (t *pingRecorder) ping(toid NodeID, toaddr *net.UDPAddr) error {
+func (t *pingRecorder) ping(toid NodeID, toaddr *net.UDPAddr) error { log.DebugLog()
 	t.mu.Lock()
 	defer t.mu.Unlock()
 
@@ -222,7 +222,7 @@ func (t *pingRecorder) ping(toid NodeID, toaddr *net.UDPAddr) error {
 	}
 }
 
-func TestTable_closest(t *testing.T) {
+func TestTable_closest(t *testing.T) { log.DebugLog()
 	t.Parallel()
 
 	test := func(test *closeTest) bool {
@@ -278,7 +278,7 @@ func TestTable_closest(t *testing.T) {
 	}
 }
 
-func TestTable_ReadRandomNodesGetAll(t *testing.T) {
+func TestTable_ReadRandomNodesGetAll(t *testing.T) { log.DebugLog()
 	cfg := &quick.Config{
 		MaxCount: 200,
 		Rand:     rand.New(rand.NewSource(time.Now().Unix())),
@@ -319,7 +319,7 @@ type closeTest struct {
 	N      int
 }
 
-func (*closeTest) Generate(rand *rand.Rand, size int) reflect.Value {
+func (*closeTest) Generate(rand *rand.Rand, size int) reflect.Value { log.DebugLog()
 	t := &closeTest{
 		Self:   gen(NodeID{}, rand).(NodeID),
 		Target: gen(common.Hash{}, rand).(common.Hash),
@@ -331,7 +331,7 @@ func (*closeTest) Generate(rand *rand.Rand, size int) reflect.Value {
 	return reflect.ValueOf(t)
 }
 
-func TestTable_Lookup(t *testing.T) {
+func TestTable_Lookup(t *testing.T) { log.DebugLog()
 	self := nodeAtDistance(common.Hash{}, 0)
 	tab, _ := newTable(lookupTestnet, self.ID, &net.UDPAddr{}, "", nil)
 	defer tab.Close()
@@ -562,7 +562,7 @@ type preminedTestnet struct {
 	dists     [hashBits + 1][]NodeID
 }
 
-func (tn *preminedTestnet) findnode(toid NodeID, toaddr *net.UDPAddr, target NodeID) ([]*Node, error) {
+func (tn *preminedTestnet) findnode(toid NodeID, toaddr *net.UDPAddr, target NodeID) ([]*Node, error) { log.DebugLog()
 	// current log distance is encoded in port number
 	// fmt.Println("findnode query at dist", toaddr.Port)
 	if toaddr.Port == 0 {
@@ -576,13 +576,13 @@ func (tn *preminedTestnet) findnode(toid NodeID, toaddr *net.UDPAddr, target Nod
 	return result, nil
 }
 
-func (*preminedTestnet) close()                                      {}
-func (*preminedTestnet) waitping(from NodeID) error                  { return nil }
-func (*preminedTestnet) ping(toid NodeID, toaddr *net.UDPAddr) error { return nil }
+func (*preminedTestnet) close()                                      { log.DebugLog()}
+func (*preminedTestnet) waitping(from NodeID) error                  { log.DebugLog() return nil }
+func (*preminedTestnet) ping(toid NodeID, toaddr *net.UDPAddr) error { log.DebugLog() return nil }
 
 // mine generates a testnet struct literal with nodes at
 // various distances to the given target.
-func (n *preminedTestnet) mine(target NodeID) {
+func (n *preminedTestnet) mine(target NodeID) { log.DebugLog()
 	n.target = target
 	n.targetSha = crypto.Keccak256Hash(n.target[:])
 	found := 0
@@ -615,7 +615,7 @@ func (n *preminedTestnet) mine(target NodeID) {
 	fmt.Println("}")
 }
 
-func hasDuplicates(slice []*Node) bool {
+func hasDuplicates(slice []*Node) bool { log.DebugLog()
 	seen := make(map[NodeID]bool)
 	for i, e := range slice {
 		if e == nil {
@@ -629,7 +629,7 @@ func hasDuplicates(slice []*Node) bool {
 	return false
 }
 
-func sortedByDistanceTo(distbase common.Hash, slice []*Node) bool {
+func sortedByDistanceTo(distbase common.Hash, slice []*Node) bool { log.DebugLog()
 	var last common.Hash
 	for i, e := range slice {
 		if i > 0 && distcmp(distbase, e.sha, last) < 0 {
@@ -640,7 +640,7 @@ func sortedByDistanceTo(distbase common.Hash, slice []*Node) bool {
 	return true
 }
 
-func contains(ns []*Node, id NodeID) bool {
+func contains(ns []*Node, id NodeID) bool { log.DebugLog()
 	for _, n := range ns {
 		if n.ID == id {
 			return true
@@ -651,7 +651,7 @@ func contains(ns []*Node, id NodeID) bool {
 
 // gen wraps quick.Value so it's easier to use.
 // it generates a random value of the given value's type.
-func gen(typ interface{}, rand *rand.Rand) interface{} {
+func gen(typ interface{}, rand *rand.Rand) interface{} { log.DebugLog()
 	v, ok := quick.Value(reflect.TypeOf(typ), rand)
 	if !ok {
 		panic(fmt.Sprintf("couldn't generate random value of type %T", typ))
@@ -659,7 +659,7 @@ func gen(typ interface{}, rand *rand.Rand) interface{} {
 	return v.Interface()
 }
 
-func newkey() *ecdsa.PrivateKey {
+func newkey() *ecdsa.PrivateKey { log.DebugLog()
 	key, err := crypto.GenerateKey()
 	if err != nil {
 		panic("couldn't generate key: " + err.Error())

@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func BenchmarkRuntimeMemStats(b *testing.B) {
+func BenchmarkRuntimeMemStats(b *testing.B) { log.DebugLog()
 	r := NewRegistry()
 	RegisterRuntimeMemStats(r)
 	b.ResetTimer()
@@ -15,7 +15,7 @@ func BenchmarkRuntimeMemStats(b *testing.B) {
 	}
 }
 
-func TestRuntimeMemStats(t *testing.T) {
+func TestRuntimeMemStats(t *testing.T) { log.DebugLog()
 	r := NewRegistry()
 	RegisterRuntimeMemStats(r)
 	CaptureRuntimeMemStatsOnce(r)
@@ -47,7 +47,7 @@ func TestRuntimeMemStats(t *testing.T) {
 	}
 }
 
-func TestRuntimeMemStatsNumThread(t *testing.T) {
+func TestRuntimeMemStatsNumThread(t *testing.T) { log.DebugLog()
 	r := NewRegistry()
 	RegisterRuntimeMemStats(r)
 	CaptureRuntimeMemStatsOnce(r)
@@ -57,7 +57,7 @@ func TestRuntimeMemStatsNumThread(t *testing.T) {
 	}
 }
 
-func TestRuntimeMemStatsBlocking(t *testing.T) {
+func TestRuntimeMemStatsBlocking(t *testing.T) { log.DebugLog()
 	if g := runtime.GOMAXPROCS(0); g < 2 {
 		t.Skipf("skipping TestRuntimeMemStatsBlocking with GOMAXPROCS=%d\n", g)
 	}
@@ -75,7 +75,7 @@ func TestRuntimeMemStatsBlocking(t *testing.T) {
 	t.Log("i++ during time.Sleep:", <-ch)
 }
 
-func testRuntimeMemStatsBlocking(ch chan int) {
+func testRuntimeMemStatsBlocking(ch chan int) { log.DebugLog()
 	i := 0
 	for {
 		select {

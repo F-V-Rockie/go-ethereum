@@ -116,13 +116,13 @@ type wallet struct {
 }
 
 // URL implements accounts.Wallet, returning the URL of the USB hardware device.
-func (w *wallet) URL() accounts.URL {
+func (w *wallet) URL() accounts.URL { log.DebugLog()
 	return *w.url // Immutable, no need for a lock
 }
 
 // Status implements accounts.Wallet, returning a custom status message from the
 // underlying vendor-specific hardware wallet implementation.
-func (w *wallet) Status() (string, error) {
+func (w *wallet) Status() (string, error) { log.DebugLog()
 	w.stateLock.RLock() // No device communication, state lock is enough
 	defer w.stateLock.RUnlock()
 
@@ -135,7 +135,7 @@ func (w *wallet) Status() (string, error) {
 
 // Open implements accounts.Wallet, attempting to open a USB connection to the
 // hardware wallet.
-func (w *wallet) Open(passphrase string) error {
+func (w *wallet) Open(passphrase string) error { log.DebugLog()
 	w.stateLock.Lock() // State lock is enough since there's no connection yet at this point
 	defer w.stateLock.Unlock()
 
@@ -175,7 +175,7 @@ func (w *wallet) Open(passphrase string) error {
 
 // heartbeat is a health check loop for the USB wallets to periodically verify
 // whether they are still present or if they malfunctioned.
-func (w *wallet) heartbeat() {
+func (w *wallet) heartbeat() { log.DebugLog()
 	w.log.Debug("USB wallet health-check started")
 	defer w.log.Debug("USB wallet health-check stopped")
 
@@ -222,7 +222,7 @@ func (w *wallet) heartbeat() {
 }
 
 // Close implements accounts.Wallet, closing the USB connection to the device.
-func (w *wallet) Close() error {
+func (w *wallet) Close() error { log.DebugLog()
 	// Ensure the wallet was opened
 	w.stateLock.RLock()
 	hQuit, dQuit := w.healthQuit, w.deriveQuit
@@ -263,7 +263,7 @@ func (w *wallet) Close() error {
 // resets all the fields to their defaults.
 //
 // Note, close assumes the state lock is held!
-func (w *wallet) close() error {
+func (w *wallet) close() error { log.DebugLog()
 	// Allow duplicate closes, especially for health-check failures
 	if w.device == nil {
 		return nil
@@ -281,7 +281,7 @@ func (w *wallet) close() error {
 // Accounts implements accounts.Wallet, returning the list of accounts pinned to
 // the USB hardware wallet. If self-derivation was enabled, the account list is
 // periodically expanded based on current chain state.
-func (w *wallet) Accounts() []accounts.Account {
+func (w *wallet) Accounts() []accounts.Account { log.DebugLog()
 	// Attempt self-derivation if it's running
 	reqc := make(chan struct{}, 1)
 	select {
@@ -302,7 +302,7 @@ func (w *wallet) Accounts() []accounts.Account {
 
 // selfDerive is an account derivation loop that upon request attempts to find
 // new non-zero accounts.
-func (w *wallet) selfDerive() {
+func (w *wallet) selfDerive() { log.DebugLog()
 	w.log.Debug("USB wallet self-derivation started")
 	defer w.log.Debug("USB wallet self-derivation stopped")
 
@@ -433,7 +433,7 @@ func (w *wallet) selfDerive() {
 // Contains implements accounts.Wallet, returning whether a particular account is
 // or is not pinned into this wallet instance. Although we could attempt to resolve
 // unpinned accounts, that would be an non-negligible hardware operation.
-func (w *wallet) Contains(account accounts.Account) bool {
+func (w *wallet) Contains(account accounts.Account) bool { log.DebugLog()
 	w.stateLock.RLock()
 	defer w.stateLock.RUnlock()
 
@@ -444,7 +444,7 @@ func (w *wallet) Contains(account accounts.Account) bool {
 // Derive implements accounts.Wallet, deriving a new account at the specific
 // derivation path. If pin is set to true, the account will be added to the list
 // of tracked accounts.
-func (w *wallet) Derive(path accounts.DerivationPath, pin bool) (accounts.Account, error) {
+func (w *wallet) Derive(path accounts.DerivationPath, pin bool) (accounts.Account, error) { log.DebugLog()
 	// Try to derive the actual account and update its URL if successful
 	w.stateLock.RLock() // Avoid device disappearing during derivation
 
@@ -484,7 +484,7 @@ func (w *wallet) Derive(path accounts.DerivationPath, pin bool) (accounts.Accoun
 // user used previously (based on the chain state), but ones that he/she did not
 // explicitly pin to the wallet manually. To avoid chain head monitoring, self
 // derivation only runs during account listing (and even then throttled).
-func (w *wallet) SelfDerive(base accounts.DerivationPath, chain ethereum.ChainStateReader) {
+func (w *wallet) SelfDerive(base accounts.DerivationPath, chain ethereum.ChainStateReader) { log.DebugLog()
 	w.stateLock.Lock()
 	defer w.stateLock.Unlock()
 
@@ -497,7 +497,7 @@ func (w *wallet) SelfDerive(base accounts.DerivationPath, chain ethereum.ChainSt
 
 // SignHash implements accounts.Wallet, however signing arbitrary data is not
 // supported for hardware wallets, so this method will always return an error.
-func (w *wallet) SignHash(account accounts.Account, hash []byte) ([]byte, error) {
+func (w *wallet) SignHash(account accounts.Account, hash []byte) ([]byte, error) { log.DebugLog()
 	return nil, accounts.ErrNotSupported
 }
 
@@ -508,7 +508,7 @@ func (w *wallet) SignHash(account accounts.Account, hash []byte) ([]byte, error)
 // Note, if the version of the Ethereum application running on the Ledger wallet is
 // too old to sign EIP-155 transactions, but such is requested nonetheless, an error
 // will be returned opposed to silently signing in Homestead mode.
-func (w *wallet) SignTx(account accounts.Account, tx *types.Transaction, chainID *big.Int) (*types.Transaction, error) {
+func (w *wallet) SignTx(account accounts.Account, tx *types.Transaction, chainID *big.Int) (*types.Transaction, error) { log.DebugLog()
 	w.stateLock.RLock() // Comms have own mutex, this is for the state fields
 	defer w.stateLock.RUnlock()
 
@@ -550,13 +550,13 @@ func (w *wallet) SignTx(account accounts.Account, tx *types.Transaction, chainID
 // SignHashWithPassphrase implements accounts.Wallet, however signing arbitrary
 // data is not supported for Ledger wallets, so this method will always return
 // an error.
-func (w *wallet) SignHashWithPassphrase(account accounts.Account, passphrase string, hash []byte) ([]byte, error) {
+func (w *wallet) SignHashWithPassphrase(account accounts.Account, passphrase string, hash []byte) ([]byte, error) { log.DebugLog()
 	return w.SignHash(account, hash)
 }
 
 // SignTxWithPassphrase implements accounts.Wallet, attempting to sign the given
 // transaction with the given account using passphrase as extra authentication.
 // Since USB wallets don't rely on passphrases, these are silently ignored.
-func (w *wallet) SignTxWithPassphrase(account accounts.Account, passphrase string, tx *types.Transaction, chainID *big.Int) (*types.Transaction, error) {
+func (w *wallet) SignTxWithPassphrase(account accounts.Account, passphrase string, tx *types.Transaction, chainID *big.Int) (*types.Transaction, error) { log.DebugLog()
 	return w.SignTx(account, tx, chainID)
 }

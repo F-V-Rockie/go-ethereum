@@ -74,20 +74,20 @@ type ReceivedMessage struct {
 	EnvelopeVersion uint64
 }
 
-func isMessageSigned(flags byte) bool {
+func isMessageSigned(flags byte) bool { log.DebugLog()
 	return (flags & signatureFlag) != 0
 }
 
-func (msg *ReceivedMessage) isSymmetricEncryption() bool {
+func (msg *ReceivedMessage) isSymmetricEncryption() bool { log.DebugLog()
 	return msg.SymKeyHash != common.Hash{}
 }
 
-func (msg *ReceivedMessage) isAsymmetricEncryption() bool {
+func (msg *ReceivedMessage) isAsymmetricEncryption() bool { log.DebugLog()
 	return msg.Dst != nil
 }
 
 // NewMessage creates and initializes a non-signed, non-encrypted Whisper message.
-func NewSentMessage(params *MessageParams) (*sentMessage, error) {
+func NewSentMessage(params *MessageParams) (*sentMessage, error) { log.DebugLog()
 	msg := sentMessage{}
 	msg.Raw = make([]byte, 1, len(params.Payload)+len(params.Padding)+signatureLength+padSizeLimit)
 	msg.Raw[0] = 0 // set all the flags to zero
@@ -100,7 +100,7 @@ func NewSentMessage(params *MessageParams) (*sentMessage, error) {
 }
 
 // getSizeOfLength returns the number of bytes necessary to encode the entire size padding (including these bytes)
-func getSizeOfLength(b []byte) (sz int, err error) {
+func getSizeOfLength(b []byte) (sz int, err error) { log.DebugLog()
 	sz = intSize(len(b))      // first iteration
 	sz = intSize(len(b) + sz) // second iteration
 	if sz > 3 {
@@ -110,7 +110,7 @@ func getSizeOfLength(b []byte) (sz int, err error) {
 }
 
 // sizeOfIntSize returns minimal number of bytes necessary to encode an integer value
-func intSize(i int) (s int) {
+func intSize(i int) (s int) { log.DebugLog()
 	for s = 1; i >= 256; s++ {
 		i /= 256
 	}
@@ -119,7 +119,7 @@ func intSize(i int) (s int) {
 
 // appendPadding appends the pseudorandom padding bytes and sets the padding flag.
 // The last byte contains the size of padding (thus, its size must not exceed 256).
-func (msg *sentMessage) appendPadding(params *MessageParams) error {
+func (msg *sentMessage) appendPadding(params *MessageParams) error { log.DebugLog()
 	rawSize := len(params.Payload) + 1
 	if params.Src != nil {
 		rawSize += signatureLength
@@ -164,7 +164,7 @@ func (msg *sentMessage) appendPadding(params *MessageParams) error {
 
 // sign calculates and sets the cryptographic signature for the message,
 // also setting the sign flag.
-func (msg *sentMessage) sign(key *ecdsa.PrivateKey) error {
+func (msg *sentMessage) sign(key *ecdsa.PrivateKey) error { log.DebugLog()
 	if isMessageSigned(msg.Raw[0]) {
 		// this should not happen, but no reason to panic
 		log.Error("failed to sign the message: already signed")
@@ -183,7 +183,7 @@ func (msg *sentMessage) sign(key *ecdsa.PrivateKey) error {
 }
 
 // encryptAsymmetric encrypts a message with a public key.
-func (msg *sentMessage) encryptAsymmetric(key *ecdsa.PublicKey) error {
+func (msg *sentMessage) encryptAsymmetric(key *ecdsa.PublicKey) error { log.DebugLog()
 	if !ValidatePublicKey(key) {
 		return errors.New("invalid public key provided for asymmetric encryption")
 	}
@@ -196,7 +196,7 @@ func (msg *sentMessage) encryptAsymmetric(key *ecdsa.PublicKey) error {
 
 // encryptSymmetric encrypts a message with a topic key, using AES-GCM-256.
 // nonce size should be 12 bytes (see cipher.gcmStandardNonceSize).
-func (msg *sentMessage) encryptSymmetric(key []byte) (nonce []byte, err error) {
+func (msg *sentMessage) encryptSymmetric(key []byte) (nonce []byte, err error) { log.DebugLog()
 	if !validateSymmetricKey(key) {
 		return nil, errors.New("invalid key provided for symmetric encryption")
 	}
@@ -224,7 +224,7 @@ func (msg *sentMessage) encryptSymmetric(key []byte) (nonce []byte, err error) {
 }
 
 // Wrap bundles the message into an Envelope to transmit over the network.
-func (msg *sentMessage) Wrap(options *MessageParams) (envelope *Envelope, err error) {
+func (msg *sentMessage) Wrap(options *MessageParams) (envelope *Envelope, err error) { log.DebugLog()
 	if options.TTL == 0 {
 		options.TTL = DefaultTTL
 	}
@@ -254,7 +254,7 @@ func (msg *sentMessage) Wrap(options *MessageParams) (envelope *Envelope, err er
 
 // decryptSymmetric decrypts a message with a topic key, using AES-GCM-256.
 // nonce size should be 12 bytes (see cipher.gcmStandardNonceSize).
-func (msg *ReceivedMessage) decryptSymmetric(key []byte, nonce []byte) error {
+func (msg *ReceivedMessage) decryptSymmetric(key []byte, nonce []byte) error { log.DebugLog()
 	block, err := aes.NewCipher(key)
 	if err != nil {
 		return err
@@ -276,7 +276,7 @@ func (msg *ReceivedMessage) decryptSymmetric(key []byte, nonce []byte) error {
 }
 
 // decryptAsymmetric decrypts an encrypted payload with a private key.
-func (msg *ReceivedMessage) decryptAsymmetric(key *ecdsa.PrivateKey) error {
+func (msg *ReceivedMessage) decryptAsymmetric(key *ecdsa.PrivateKey) error { log.DebugLog()
 	decrypted, err := ecies.ImportECDSA(key).Decrypt(msg.Raw, nil, nil)
 	if err == nil {
 		msg.Raw = decrypted
@@ -285,7 +285,7 @@ func (msg *ReceivedMessage) decryptAsymmetric(key *ecdsa.PrivateKey) error {
 }
 
 // Validate checks the validity and extracts the fields in case of success
-func (msg *ReceivedMessage) Validate() bool {
+func (msg *ReceivedMessage) Validate() bool { log.DebugLog()
 	end := len(msg.Raw)
 	if end < 1 {
 		return false
@@ -316,7 +316,7 @@ func (msg *ReceivedMessage) Validate() bool {
 // although we don't support sending messages with padding size
 // exceeding 255 bytes, such messages are perfectly valid, and
 // can be successfully decrypted.
-func (msg *ReceivedMessage) extractPadding(end int) (int, bool) {
+func (msg *ReceivedMessage) extractPadding(end int) (int, bool) { log.DebugLog()
 	paddingSize := 0
 	sz := int(msg.Raw[0] & paddingMask) // number of bytes indicating the entire size of padding (including these bytes)
 	// could be zero -- it means no padding
@@ -331,7 +331,7 @@ func (msg *ReceivedMessage) extractPadding(end int) (int, bool) {
 }
 
 // Recover retrieves the public key of the message signer.
-func (msg *ReceivedMessage) SigToPubKey() *ecdsa.PublicKey {
+func (msg *ReceivedMessage) SigToPubKey() *ecdsa.PublicKey { log.DebugLog()
 	defer func() { recover() }() // in case of invalid signature
 
 	pub, err := crypto.SigToPub(msg.hash(), msg.Signature)
@@ -343,7 +343,7 @@ func (msg *ReceivedMessage) SigToPubKey() *ecdsa.PublicKey {
 }
 
 // hash calculates the SHA3 checksum of the message flags, payload and padding.
-func (msg *ReceivedMessage) hash() []byte {
+func (msg *ReceivedMessage) hash() []byte { log.DebugLog()
 	if isMessageSigned(msg.Raw[0]) {
 		sz := len(msg.Raw) - signatureLength
 		return crypto.Keccak256(msg.Raw[:sz])

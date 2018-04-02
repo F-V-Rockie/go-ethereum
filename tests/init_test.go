@@ -42,7 +42,7 @@ var (
 	difficultyTestDir  = filepath.Join(baseDir, "BasicTests")
 )
 
-func readJson(reader io.Reader, value interface{}) error {
+func readJson(reader io.Reader, value interface{}) error { log.DebugLog()
 	data, err := ioutil.ReadAll(reader)
 	if err != nil {
 		return fmt.Errorf("error reading JSON file: %v", err)
@@ -57,7 +57,7 @@ func readJson(reader io.Reader, value interface{}) error {
 	return nil
 }
 
-func readJsonFile(fn string, value interface{}) error {
+func readJsonFile(fn string, value interface{}) error { log.DebugLog()
 	file, err := os.Open(fn)
 	if err != nil {
 		return err
@@ -72,7 +72,7 @@ func readJsonFile(fn string, value interface{}) error {
 }
 
 // findLine returns the line number for the given offset into data.
-func findLine(data []byte, offset int64) (line int) {
+func findLine(data []byte, offset int64) (line int) { log.DebugLog()
 	line = 1
 	for i, r := range string(data) {
 		if int64(i) >= offset {
@@ -104,17 +104,17 @@ type testFailure struct {
 }
 
 // skipShortMode skips tests matching when the -short flag is used.
-func (tm *testMatcher) skipShortMode(pattern string) {
+func (tm *testMatcher) skipShortMode(pattern string) { log.DebugLog()
 	tm.skipshortpat = append(tm.skipshortpat, regexp.MustCompile(pattern))
 }
 
 // skipLoad skips JSON loading of tests matching the pattern.
-func (tm *testMatcher) skipLoad(pattern string) {
+func (tm *testMatcher) skipLoad(pattern string) { log.DebugLog()
 	tm.skiploadpat = append(tm.skiploadpat, regexp.MustCompile(pattern))
 }
 
 // fails adds an expected failure for tests matching the pattern.
-func (tm *testMatcher) fails(pattern string, reason string) {
+func (tm *testMatcher) fails(pattern string, reason string) { log.DebugLog()
 	if reason == "" {
 		panic("empty fail reason")
 	}
@@ -122,12 +122,12 @@ func (tm *testMatcher) fails(pattern string, reason string) {
 }
 
 // config defines chain config for tests matching the pattern.
-func (tm *testMatcher) config(pattern string, cfg params.ChainConfig) {
+func (tm *testMatcher) config(pattern string, cfg params.ChainConfig) { log.DebugLog()
 	tm.configpat = append(tm.configpat, testConfig{regexp.MustCompile(pattern), cfg})
 }
 
 // findSkip matches name against test skip patterns.
-func (tm *testMatcher) findSkip(name string) (reason string, skipload bool) {
+func (tm *testMatcher) findSkip(name string) (reason string, skipload bool) { log.DebugLog()
 	if testing.Short() {
 		for _, re := range tm.skipshortpat {
 			if re.MatchString(name) {
@@ -144,7 +144,7 @@ func (tm *testMatcher) findSkip(name string) (reason string, skipload bool) {
 }
 
 // findConfig returns the chain config matching defined patterns.
-func (tm *testMatcher) findConfig(name string) *params.ChainConfig {
+func (tm *testMatcher) findConfig(name string) *params.ChainConfig { log.DebugLog()
 	// TODO(fjl): name can be derived from testing.T when min Go version is 1.8
 	for _, m := range tm.configpat {
 		if m.p.MatchString(name) {
@@ -155,7 +155,7 @@ func (tm *testMatcher) findConfig(name string) *params.ChainConfig {
 }
 
 // checkFailure checks whether a failure is expected.
-func (tm *testMatcher) checkFailure(t *testing.T, name string, err error) error {
+func (tm *testMatcher) checkFailure(t *testing.T, name string, err error) error { log.DebugLog()
 	// TODO(fjl): name can be derived from t when min Go version is 1.8
 	failReason := ""
 	for _, m := range tm.failpat {
@@ -180,7 +180,7 @@ func (tm *testMatcher) checkFailure(t *testing.T, name string, err error) error 
 //
 // runTest should be a function of type func(t *testing.T, name string, x <TestType>),
 // where TestType is the type of the test contained in test files.
-func (tm *testMatcher) walk(t *testing.T, dir string, runTest interface{}) {
+func (tm *testMatcher) walk(t *testing.T, dir string, runTest interface{}) { log.DebugLog()
 	// Walk the directory.
 	dirinfo, err := os.Stat(dir)
 	if os.IsNotExist(err) || !dirinfo.IsDir() {
@@ -205,7 +205,7 @@ func (tm *testMatcher) walk(t *testing.T, dir string, runTest interface{}) {
 	}
 }
 
-func (tm *testMatcher) runTestFile(t *testing.T, path, name string, runTest interface{}) {
+func (tm *testMatcher) runTestFile(t *testing.T, path, name string, runTest interface{}) { log.DebugLog()
 	if r, _ := tm.findSkip(name); r != "" {
 		t.Skip(r)
 	}
@@ -234,11 +234,11 @@ func (tm *testMatcher) runTestFile(t *testing.T, path, name string, runTest inte
 	}
 }
 
-func makeMapFromTestFunc(f interface{}) reflect.Value {
+func makeMapFromTestFunc(f interface{}) reflect.Value { log.DebugLog()
 	stringT := reflect.TypeOf("")
 	testingT := reflect.TypeOf((*testing.T)(nil))
 	ftyp := reflect.TypeOf(f)
-	if ftyp.Kind() != reflect.Func || ftyp.NumIn() != 3 || ftyp.NumOut() != 0 || ftyp.In(0) != testingT || ftyp.In(1) != stringT {
+	if ftyp.Kind() != reflect.func || ftyp.NumIn() != 3 || ftyp.NumOut() != 0 || ftyp.In(0) != testingT || ftyp.In(1) != stringT { log.DebugLog()
 		panic(fmt.Sprintf("bad test function type: want func(*testing.T, string, <TestType>), have %s", ftyp))
 	}
 	testType := ftyp.In(2)
@@ -246,7 +246,7 @@ func makeMapFromTestFunc(f interface{}) reflect.Value {
 	return mp.Elem()
 }
 
-func sortedMapKeys(m reflect.Value) []string {
+func sortedMapKeys(m reflect.Value) []string { log.DebugLog()
 	keys := make([]string, m.Len())
 	for i, k := range m.MapKeys() {
 		keys[i] = k.String()
@@ -255,7 +255,7 @@ func sortedMapKeys(m reflect.Value) []string {
 	return keys
 }
 
-func runTestFunc(runTest interface{}, t *testing.T, name string, m reflect.Value, key string) {
+func runTestFunc(runTest interface{}, t *testing.T, name string, m reflect.Value, key string) { log.DebugLog()
 	reflect.ValueOf(runTest).Call([]reflect.Value{
 		reflect.ValueOf(t),
 		reflect.ValueOf(name),

@@ -42,11 +42,11 @@ type ErrCorrupted struct {
 	Reason string
 }
 
-func (e *ErrCorrupted) Error() string {
+func (e *ErrCorrupted) Error() string { log.DebugLog()
 	return fmt.Sprintf("leveldb/table: corruption on %s (pos=%d): %s", e.Kind, e.Pos, e.Reason)
 }
 
-func max(x, y int) int {
+func max(x, y int) int { log.DebugLog()
 	if x > y {
 		return x
 	}
@@ -61,7 +61,7 @@ type block struct {
 	restartsOffset int
 }
 
-func (b *block) seek(cmp comparer.Comparer, rstart, rlimit int, key []byte) (index, offset int, err error) {
+func (b *block) seek(cmp comparer.Comparer, rstart, rlimit int, key []byte) (index, offset int, err error) { log.DebugLog()
 	index = sort.Search(b.restartsLen-rstart-(b.restartsLen-rlimit), func(i int) bool {
 		offset := int(binary.LittleEndian.Uint32(b.data[b.restartsOffset+4*(rstart+i):]))
 		offset++                                    // shared always zero, since this is a restart point
@@ -78,17 +78,17 @@ func (b *block) seek(cmp comparer.Comparer, rstart, rlimit int, key []byte) (ind
 	return
 }
 
-func (b *block) restartIndex(rstart, rlimit, offset int) int {
+func (b *block) restartIndex(rstart, rlimit, offset int) int { log.DebugLog()
 	return sort.Search(b.restartsLen-rstart-(b.restartsLen-rlimit), func(i int) bool {
 		return int(binary.LittleEndian.Uint32(b.data[b.restartsOffset+4*(rstart+i):])) > offset
 	}) + rstart - 1
 }
 
-func (b *block) restartOffset(index int) int {
+func (b *block) restartOffset(index int) int { log.DebugLog()
 	return int(binary.LittleEndian.Uint32(b.data[b.restartsOffset+4*index:]))
 }
 
-func (b *block) entry(offset int) (key, value []byte, nShared, n int, err error) {
+func (b *block) entry(offset int) (key, value []byte, nShared, n int, err error) { log.DebugLog()
 	if offset >= b.restartsOffset {
 		if offset != b.restartsOffset {
 			err = &ErrCorrupted{Reason: "entries offset not aligned"}
@@ -110,7 +110,7 @@ func (b *block) entry(offset int) (key, value []byte, nShared, n int, err error)
 	return
 }
 
-func (b *block) Release() {
+func (b *block) Release() { log.DebugLog()
 	b.bpool.Put(b.data)
 	b.bpool = nil
 	b.data = nil
@@ -151,7 +151,7 @@ type blockIter struct {
 	err error
 }
 
-func (i *blockIter) sErr(err error) {
+func (i *blockIter) sErr(err error) { log.DebugLog()
 	i.err = err
 	i.key = nil
 	i.value = nil
@@ -159,7 +159,7 @@ func (i *blockIter) sErr(err error) {
 	i.prevKeys = nil
 }
 
-func (i *blockIter) reset() {
+func (i *blockIter) reset() { log.DebugLog()
 	if i.dir == dirBackward {
 		i.prevNode = i.prevNode[:0]
 		i.prevKeys = i.prevKeys[:0]
@@ -171,7 +171,7 @@ func (i *blockIter) reset() {
 	i.value = nil
 }
 
-func (i *blockIter) isFirst() bool {
+func (i *blockIter) isFirst() bool { log.DebugLog()
 	switch i.dir {
 	case dirForward:
 		return i.prevOffset == i.offsetRealStart
@@ -181,7 +181,7 @@ func (i *blockIter) isFirst() bool {
 	return false
 }
 
-func (i *blockIter) isLast() bool {
+func (i *blockIter) isLast() bool { log.DebugLog()
 	switch i.dir {
 	case dirForward, dirBackward:
 		return i.offset == i.offsetLimit
@@ -189,7 +189,7 @@ func (i *blockIter) isLast() bool {
 	return false
 }
 
-func (i *blockIter) First() bool {
+func (i *blockIter) First() bool { log.DebugLog()
 	if i.err != nil {
 		return false
 	} else if i.dir == dirReleased {
@@ -205,7 +205,7 @@ func (i *blockIter) First() bool {
 	return i.Next()
 }
 
-func (i *blockIter) Last() bool {
+func (i *blockIter) Last() bool { log.DebugLog()
 	if i.err != nil {
 		return false
 	} else if i.dir == dirReleased {
@@ -221,7 +221,7 @@ func (i *blockIter) Last() bool {
 	return i.Prev()
 }
 
-func (i *blockIter) Seek(key []byte) bool {
+func (i *blockIter) Seek(key []byte) bool { log.DebugLog()
 	if i.err != nil {
 		return false
 	} else if i.dir == dirReleased {
@@ -247,7 +247,7 @@ func (i *blockIter) Seek(key []byte) bool {
 	return false
 }
 
-func (i *blockIter) Next() bool {
+func (i *blockIter) Next() bool { log.DebugLog()
 	if i.dir == dirEOI || i.err != nil {
 		return false
 	} else if i.dir == dirReleased {
@@ -300,7 +300,7 @@ func (i *blockIter) Next() bool {
 	return true
 }
 
-func (i *blockIter) Prev() bool {
+func (i *blockIter) Prev() bool { log.DebugLog()
 	if i.dir == dirSOI || i.err != nil {
 		return false
 	} else if i.dir == dirReleased {
@@ -401,21 +401,21 @@ func (i *blockIter) Prev() bool {
 	return true
 }
 
-func (i *blockIter) Key() []byte {
+func (i *blockIter) Key() []byte { log.DebugLog()
 	if i.err != nil || i.dir <= dirEOI {
 		return nil
 	}
 	return i.key
 }
 
-func (i *blockIter) Value() []byte {
+func (i *blockIter) Value() []byte { log.DebugLog()
 	if i.err != nil || i.dir <= dirEOI {
 		return nil
 	}
 	return i.value
 }
 
-func (i *blockIter) Release() {
+func (i *blockIter) Release() { log.DebugLog()
 	if i.dir != dirReleased {
 		i.tr = nil
 		i.block = nil
@@ -435,7 +435,7 @@ func (i *blockIter) Release() {
 	}
 }
 
-func (i *blockIter) SetReleaser(releaser util.Releaser) {
+func (i *blockIter) SetReleaser(releaser util.Releaser) { log.DebugLog()
 	if i.dir == dirReleased {
 		panic(util.ErrReleased)
 	}
@@ -445,11 +445,11 @@ func (i *blockIter) SetReleaser(releaser util.Releaser) {
 	i.releaser = releaser
 }
 
-func (i *blockIter) Valid() bool {
+func (i *blockIter) Valid() bool { log.DebugLog()
 	return i.err == nil && (i.dir == dirBackward || i.dir == dirForward)
 }
 
-func (i *blockIter) Error() error {
+func (i *blockIter) Error() error { log.DebugLog()
 	return i.err
 }
 
@@ -461,7 +461,7 @@ type filterBlock struct {
 	filtersNum int
 }
 
-func (b *filterBlock) contains(filter filter.Filter, offset uint64, key []byte) bool {
+func (b *filterBlock) contains(filter filter.Filter, offset uint64, key []byte) bool { log.DebugLog()
 	i := int(offset >> b.baseLg)
 	if i < b.filtersNum {
 		o := b.data[b.oOffset+i*4:]
@@ -476,7 +476,7 @@ func (b *filterBlock) contains(filter filter.Filter, offset uint64, key []byte) 
 	return true
 }
 
-func (b *filterBlock) Release() {
+func (b *filterBlock) Release() { log.DebugLog()
 	b.bpool.Put(b.data)
 	b.bpool = nil
 	b.data = nil
@@ -490,7 +490,7 @@ type indexIter struct {
 	fillCache bool
 }
 
-func (i *indexIter) Get() iterator.Iterator {
+func (i *indexIter) Get() iterator.Iterator { log.DebugLog()
 	value := i.Value()
 	if value == nil {
 		return nil
@@ -527,7 +527,7 @@ type Reader struct {
 	filterBlock               *filterBlock
 }
 
-func (r *Reader) blockKind(bh blockHandle) string {
+func (r *Reader) blockKind(bh blockHandle) string { log.DebugLog()
 	switch bh.offset {
 	case r.metaBH.offset:
 		return "meta-block"
@@ -541,15 +541,15 @@ func (r *Reader) blockKind(bh blockHandle) string {
 	return "data-block"
 }
 
-func (r *Reader) newErrCorrupted(pos, size int64, kind, reason string) error {
+func (r *Reader) newErrCorrupted(pos, size int64, kind, reason string) error { log.DebugLog()
 	return &errors.ErrCorrupted{Fd: r.fd, Err: &ErrCorrupted{Pos: pos, Size: size, Kind: kind, Reason: reason}}
 }
 
-func (r *Reader) newErrCorruptedBH(bh blockHandle, reason string) error {
+func (r *Reader) newErrCorruptedBH(bh blockHandle, reason string) error { log.DebugLog()
 	return r.newErrCorrupted(int64(bh.offset), int64(bh.length), r.blockKind(bh), reason)
 }
 
-func (r *Reader) fixErrCorruptedBH(bh blockHandle, err error) error {
+func (r *Reader) fixErrCorruptedBH(bh blockHandle, err error) error { log.DebugLog()
 	if cerr, ok := err.(*ErrCorrupted); ok {
 		cerr.Pos = int64(bh.offset)
 		cerr.Size = int64(bh.length)
@@ -559,7 +559,7 @@ func (r *Reader) fixErrCorruptedBH(bh blockHandle, err error) error {
 	return err
 }
 
-func (r *Reader) readRawBlock(bh blockHandle, verifyChecksum bool) ([]byte, error) {
+func (r *Reader) readRawBlock(bh blockHandle, verifyChecksum bool) ([]byte, error) { log.DebugLog()
 	data := r.bpool.Get(int(bh.length + blockTrailerLen))
 	if _, err := r.reader.ReadAt(data, int64(bh.offset)); err != nil && err != io.EOF {
 		return nil, err
@@ -599,7 +599,7 @@ func (r *Reader) readRawBlock(bh blockHandle, verifyChecksum bool) ([]byte, erro
 	return data, nil
 }
 
-func (r *Reader) readBlock(bh blockHandle, verifyChecksum bool) (*block, error) {
+func (r *Reader) readBlock(bh blockHandle, verifyChecksum bool) (*block, error) { log.DebugLog()
 	data, err := r.readRawBlock(bh, verifyChecksum)
 	if err != nil {
 		return nil, err
@@ -615,7 +615,7 @@ func (r *Reader) readBlock(bh blockHandle, verifyChecksum bool) (*block, error) 
 	return b, nil
 }
 
-func (r *Reader) readBlockCached(bh blockHandle, verifyChecksum, fillCache bool) (*block, util.Releaser, error) {
+func (r *Reader) readBlockCached(bh blockHandle, verifyChecksum, fillCache bool) (*block, util.Releaser, error) { log.DebugLog()
 	if r.cache != nil {
 		var (
 			err error
@@ -649,7 +649,7 @@ func (r *Reader) readBlockCached(bh blockHandle, verifyChecksum, fillCache bool)
 	return b, b, err
 }
 
-func (r *Reader) readFilterBlock(bh blockHandle) (*filterBlock, error) {
+func (r *Reader) readFilterBlock(bh blockHandle) (*filterBlock, error) { log.DebugLog()
 	data, err := r.readRawBlock(bh, true)
 	if err != nil {
 		return nil, err
@@ -673,7 +673,7 @@ func (r *Reader) readFilterBlock(bh blockHandle) (*filterBlock, error) {
 	return b, nil
 }
 
-func (r *Reader) readFilterBlockCached(bh blockHandle, fillCache bool) (*filterBlock, util.Releaser, error) {
+func (r *Reader) readFilterBlockCached(bh blockHandle, fillCache bool) (*filterBlock, util.Releaser, error) { log.DebugLog()
 	if r.cache != nil {
 		var (
 			err error
@@ -707,21 +707,21 @@ func (r *Reader) readFilterBlockCached(bh blockHandle, fillCache bool) (*filterB
 	return b, b, err
 }
 
-func (r *Reader) getIndexBlock(fillCache bool) (b *block, rel util.Releaser, err error) {
+func (r *Reader) getIndexBlock(fillCache bool) (b *block, rel util.Releaser, err error) { log.DebugLog()
 	if r.indexBlock == nil {
 		return r.readBlockCached(r.indexBH, true, fillCache)
 	}
 	return r.indexBlock, util.NoopReleaser{}, nil
 }
 
-func (r *Reader) getFilterBlock(fillCache bool) (*filterBlock, util.Releaser, error) {
+func (r *Reader) getFilterBlock(fillCache bool) (*filterBlock, util.Releaser, error) { log.DebugLog()
 	if r.filterBlock == nil {
 		return r.readFilterBlockCached(r.filterBH, fillCache)
 	}
 	return r.filterBlock, util.NoopReleaser{}, nil
 }
 
-func (r *Reader) newBlockIter(b *block, bReleaser util.Releaser, slice *util.Range, inclLimit bool) *blockIter {
+func (r *Reader) newBlockIter(b *block, bReleaser util.Releaser, slice *util.Range, inclLimit bool) *blockIter { log.DebugLog()
 	bi := &blockIter{
 		tr:            r,
 		block:         b,
@@ -761,7 +761,7 @@ func (r *Reader) newBlockIter(b *block, bReleaser util.Releaser, slice *util.Ran
 	return bi
 }
 
-func (r *Reader) getDataIter(dataBH blockHandle, slice *util.Range, verifyChecksum, fillCache bool) iterator.Iterator {
+func (r *Reader) getDataIter(dataBH blockHandle, slice *util.Range, verifyChecksum, fillCache bool) iterator.Iterator { log.DebugLog()
 	b, rel, err := r.readBlockCached(dataBH, verifyChecksum, fillCache)
 	if err != nil {
 		return iterator.NewEmptyIterator(err)
@@ -769,7 +769,7 @@ func (r *Reader) getDataIter(dataBH blockHandle, slice *util.Range, verifyChecks
 	return r.newBlockIter(b, rel, slice, false)
 }
 
-func (r *Reader) getDataIterErr(dataBH blockHandle, slice *util.Range, verifyChecksum, fillCache bool) iterator.Iterator {
+func (r *Reader) getDataIterErr(dataBH blockHandle, slice *util.Range, verifyChecksum, fillCache bool) iterator.Iterator { log.DebugLog()
 	r.mu.RLock()
 	defer r.mu.RUnlock()
 
@@ -791,7 +791,7 @@ func (r *Reader) getDataIterErr(dataBH blockHandle, slice *util.Range, verifyChe
 // after use.
 //
 // Also read Iterator documentation of the leveldb/iterator package.
-func (r *Reader) NewIterator(slice *util.Range, ro *opt.ReadOptions) iterator.Iterator {
+func (r *Reader) NewIterator(slice *util.Range, ro *opt.ReadOptions) iterator.Iterator { log.DebugLog()
 	r.mu.RLock()
 	defer r.mu.RUnlock()
 
@@ -813,7 +813,7 @@ func (r *Reader) NewIterator(slice *util.Range, ro *opt.ReadOptions) iterator.It
 	return iterator.NewIndexedIterator(index, opt.GetStrict(r.o, ro, opt.StrictReader))
 }
 
-func (r *Reader) find(key []byte, filtered bool, ro *opt.ReadOptions, noValue bool) (rkey, value []byte, err error) {
+func (r *Reader) find(key []byte, filtered bool, ro *opt.ReadOptions, noValue bool) (rkey, value []byte, err error) { log.DebugLog()
 	r.mu.RLock()
 	defer r.mu.RUnlock()
 
@@ -914,7 +914,7 @@ func (r *Reader) find(key []byte, filtered bool, ro *opt.ReadOptions, noValue bo
 // The caller may modify the contents of the returned slice as it is its
 // own copy.
 // It is safe to modify the contents of the argument after Find returns.
-func (r *Reader) Find(key []byte, filtered bool, ro *opt.ReadOptions) (rkey, value []byte, err error) {
+func (r *Reader) Find(key []byte, filtered bool, ro *opt.ReadOptions) (rkey, value []byte, err error) { log.DebugLog()
 	return r.find(key, filtered, ro, false)
 }
 
@@ -927,7 +927,7 @@ func (r *Reader) Find(key []byte, filtered bool, ro *opt.ReadOptions) (rkey, val
 // The caller may modify the contents of the returned slice as it is its
 // own copy.
 // It is safe to modify the contents of the argument after Find returns.
-func (r *Reader) FindKey(key []byte, filtered bool, ro *opt.ReadOptions) (rkey []byte, err error) {
+func (r *Reader) FindKey(key []byte, filtered bool, ro *opt.ReadOptions) (rkey []byte, err error) { log.DebugLog()
 	rkey, _, err = r.find(key, filtered, ro, true)
 	return
 }
@@ -938,7 +938,7 @@ func (r *Reader) FindKey(key []byte, filtered bool, ro *opt.ReadOptions) (rkey [
 // The caller may modify the contents of the returned slice as it is its
 // own copy.
 // It is safe to modify the contents of the argument after Find returns.
-func (r *Reader) Get(key []byte, ro *opt.ReadOptions) (value []byte, err error) {
+func (r *Reader) Get(key []byte, ro *opt.ReadOptions) (value []byte, err error) { log.DebugLog()
 	r.mu.RLock()
 	defer r.mu.RUnlock()
 
@@ -958,7 +958,7 @@ func (r *Reader) Get(key []byte, ro *opt.ReadOptions) (value []byte, err error) 
 // OffsetOf returns approximate offset for the given key.
 //
 // It is safe to modify the contents of the argument after Get returns.
-func (r *Reader) OffsetOf(key []byte) (offset int64, err error) {
+func (r *Reader) OffsetOf(key []byte) (offset int64, err error) { log.DebugLog()
 	r.mu.RLock()
 	defer r.mu.RUnlock()
 
@@ -993,7 +993,7 @@ func (r *Reader) OffsetOf(key []byte) (offset int64, err error) {
 
 // Release implements util.Releaser.
 // It also close the file if it is an io.Closer.
-func (r *Reader) Release() {
+func (r *Reader) Release() { log.DebugLog()
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
@@ -1018,7 +1018,7 @@ func (r *Reader) Release() {
 // The fi, cache and bpool is optional and can be nil.
 //
 // The returned table reader instance is safe for concurrent use.
-func NewReader(f io.ReaderAt, size int64, fd storage.FileDesc, cache *cache.NamespaceGetter, bpool *util.BufferPool, o *opt.Options) (*Reader, error) {
+func NewReader(f io.ReaderAt, size int64, fd storage.FileDesc, cache *cache.NamespaceGetter, bpool *util.BufferPool, o *opt.Options) (*Reader, error) { log.DebugLog()
 	if f == nil {
 		return nil, errors.New("leveldb/table: nil file")
 	}

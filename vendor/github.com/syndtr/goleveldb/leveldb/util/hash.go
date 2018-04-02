@@ -11,7 +11,7 @@ import (
 )
 
 // Hash return hash of the given data.
-func Hash(data []byte, seed uint32) uint32 {
+func Hash(data []byte, seed uint32) uint32 { log.DebugLog()
 	// Similar to murmur hash
 	const (
 		m = uint32(0xc6a4a793)

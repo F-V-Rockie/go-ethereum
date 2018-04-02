@@ -31,12 +31,12 @@ var seed int64
 // InitSingleTest should be called in the beginning of every
 // test, which uses RNG, in order to make the tests
 // reproduciblity independent of their sequence.
-func InitSingleTest() {
+func InitSingleTest() { log.DebugLog()
 	seed = time.Now().Unix()
 	mrand.Seed(seed)
 }
 
-func InitDebugTest(i int64) {
+func InitDebugTest(i int64) { log.DebugLog()
 	seed = i
 	mrand.Seed(seed)
 }
@@ -48,7 +48,7 @@ type FilterTestCase struct {
 	msgCnt int
 }
 
-func generateFilter(t *testing.T, symmetric bool) (*Filter, error) {
+func generateFilter(t *testing.T, symmetric bool) (*Filter, error) { log.DebugLog()
 	var f Filter
 	f.Messages = make(map[common.Hash]*ReceivedMessage)
 
@@ -83,7 +83,7 @@ func generateFilter(t *testing.T, symmetric bool) (*Filter, error) {
 	return &f, nil
 }
 
-func generateTestCases(t *testing.T, SizeTestFilters int) []FilterTestCase {
+func generateTestCases(t *testing.T, SizeTestFilters int) []FilterTestCase { log.DebugLog()
 	cases := make([]FilterTestCase, SizeTestFilters)
 	for i := 0; i < SizeTestFilters; i++ {
 		f, _ := generateFilter(t, true)
@@ -93,7 +93,7 @@ func generateTestCases(t *testing.T, SizeTestFilters int) []FilterTestCase {
 	return cases
 }
 
-func TestInstallFilters(t *testing.T) {
+func TestInstallFilters(t *testing.T) { log.DebugLog()
 	InitSingleTest()
 
 	const SizeTestFilters = 256
@@ -132,7 +132,7 @@ func TestInstallFilters(t *testing.T) {
 	}
 }
 
-func TestInstallSymKeyGeneratesHash(t *testing.T) {
+func TestInstallSymKeyGeneratesHash(t *testing.T) { log.DebugLog()
 	InitSingleTest()
 
 	w := New(&Config{})
@@ -159,7 +159,7 @@ func TestInstallSymKeyGeneratesHash(t *testing.T) {
 	}
 }
 
-func TestInstallIdenticalFilters(t *testing.T) {
+func TestInstallIdenticalFilters(t *testing.T) { log.DebugLog()
 	InitSingleTest()
 
 	w := New(&Config{})
@@ -229,7 +229,7 @@ func TestInstallIdenticalFilters(t *testing.T) {
 	}
 }
 
-func TestComparePubKey(t *testing.T) {
+func TestComparePubKey(t *testing.T) { log.DebugLog()
 	InitSingleTest()
 
 	key1, err := crypto.GenerateKey()
@@ -255,7 +255,7 @@ func TestComparePubKey(t *testing.T) {
 	}
 }
 
-func TestMatchEnvelope(t *testing.T) {
+func TestMatchEnvelope(t *testing.T) { log.DebugLog()
 	InitSingleTest()
 
 	fsym, err := generateFilter(t, true)
@@ -412,7 +412,7 @@ func TestMatchEnvelope(t *testing.T) {
 	}
 }
 
-func TestMatchMessageSym(t *testing.T) {
+func TestMatchMessageSym(t *testing.T) { log.DebugLog()
 	InitSingleTest()
 
 	params, err := generateMessageParams()
@@ -503,7 +503,7 @@ func TestMatchMessageSym(t *testing.T) {
 	}
 }
 
-func TestMatchMessageAsym(t *testing.T) {
+func TestMatchMessageAsym(t *testing.T) { log.DebugLog()
 	InitSingleTest()
 
 	f, err := generateFilter(t, false)
@@ -584,7 +584,7 @@ func TestMatchMessageAsym(t *testing.T) {
 	}
 }
 
-func cloneFilter(orig *Filter) *Filter {
+func cloneFilter(orig *Filter) *Filter { log.DebugLog()
 	var clone Filter
 	clone.Messages = make(map[common.Hash]*ReceivedMessage)
 	clone.Src = orig.Src
@@ -597,7 +597,7 @@ func cloneFilter(orig *Filter) *Filter {
 	return &clone
 }
 
-func generateCompatibeEnvelope(t *testing.T, f *Filter) *Envelope {
+func generateCompatibeEnvelope(t *testing.T, f *Filter) *Envelope { log.DebugLog()
 	params, err := generateMessageParams()
 	if err != nil {
 		t.Fatalf("failed generateMessageParams with seed %d: %s.", seed, err)
@@ -618,7 +618,7 @@ func generateCompatibeEnvelope(t *testing.T, f *Filter) *Envelope {
 	return env
 }
 
-func TestWatchers(t *testing.T) {
+func TestWatchers(t *testing.T) { log.DebugLog()
 	InitSingleTest()
 
 	const NumFilters = 16
@@ -773,7 +773,7 @@ func TestWatchers(t *testing.T) {
 	}
 }
 
-func TestVariableTopics(t *testing.T) {
+func TestVariableTopics(t *testing.T) { log.DebugLog()
 	InitSingleTest()
 
 	const lastTopicByte = 3
@@ -811,7 +811,7 @@ func TestVariableTopics(t *testing.T) {
 	}
 }
 
-func TestMatchSingleTopic_ReturnTrue(t *testing.T) {
+func TestMatchSingleTopic_ReturnTrue(t *testing.T) { log.DebugLog()
 	bt := []byte("test")
 	topic := BytesToTopic(bt)
 
@@ -820,7 +820,7 @@ func TestMatchSingleTopic_ReturnTrue(t *testing.T) {
 	}
 }
 
-func TestMatchSingleTopic_WithTail_ReturnTrue(t *testing.T) {
+func TestMatchSingleTopic_WithTail_ReturnTrue(t *testing.T) { log.DebugLog()
 	bt := []byte("test with tail")
 	topic := BytesToTopic([]byte("test"))
 
@@ -829,7 +829,7 @@ func TestMatchSingleTopic_WithTail_ReturnTrue(t *testing.T) {
 	}
 }
 
-func TestMatchSingleTopic_NotEquals_ReturnFalse(t *testing.T) {
+func TestMatchSingleTopic_NotEquals_ReturnFalse(t *testing.T) { log.DebugLog()
 	bt := []byte("tes")
 	topic := BytesToTopic(bt)
 
@@ -838,7 +838,7 @@ func TestMatchSingleTopic_NotEquals_ReturnFalse(t *testing.T) {
 	}
 }
 
-func TestMatchSingleTopic_InsufficientLength_ReturnFalse(t *testing.T) {
+func TestMatchSingleTopic_InsufficientLength_ReturnFalse(t *testing.T) { log.DebugLog()
 	bt := []byte("test")
 	topic := BytesToTopic([]byte("not_equal"))
 

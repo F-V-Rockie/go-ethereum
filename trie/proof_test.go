@@ -28,11 +28,11 @@ import (
 	"github.com/ethereum/go-ethereum/ethdb"
 )
 
-func init() {
+func init() { log.DebugLog()
 	mrand.Seed(time.Now().Unix())
 }
 
-func TestProof(t *testing.T) {
+func TestProof(t *testing.T) { log.DebugLog()
 	trie, vals := randomTrie(500)
 	root := trie.Hash()
 	for _, kv := range vals {
@@ -50,7 +50,7 @@ func TestProof(t *testing.T) {
 	}
 }
 
-func TestOneElementProof(t *testing.T) {
+func TestOneElementProof(t *testing.T) { log.DebugLog()
 	trie := new(Trie)
 	updateString(trie, "k", "v")
 	proofs, _ := ethdb.NewMemDatabase()
@@ -67,7 +67,7 @@ func TestOneElementProof(t *testing.T) {
 	}
 }
 
-func TestVerifyBadProof(t *testing.T) {
+func TestVerifyBadProof(t *testing.T) { log.DebugLog()
 	trie, vals := randomTrie(800)
 	root := trie.Hash()
 	for _, kv := range vals {
@@ -89,7 +89,7 @@ func TestVerifyBadProof(t *testing.T) {
 }
 
 // mutateByte changes one byte in b.
-func mutateByte(b []byte) {
+func mutateByte(b []byte) { log.DebugLog()
 	for r := mrand.Intn(len(b)); ; {
 		new := byte(mrand.Intn(255))
 		if new != b[r] {
@@ -99,7 +99,7 @@ func mutateByte(b []byte) {
 	}
 }
 
-func BenchmarkProve(b *testing.B) {
+func BenchmarkProve(b *testing.B) { log.DebugLog()
 	trie, vals := randomTrie(100)
 	var keys []string
 	for k := range vals {
@@ -116,7 +116,7 @@ func BenchmarkProve(b *testing.B) {
 	}
 }
 
-func BenchmarkVerifyProof(b *testing.B) {
+func BenchmarkVerifyProof(b *testing.B) { log.DebugLog()
 	trie, vals := randomTrie(100)
 	root := trie.Hash()
 	var keys []string
@@ -137,7 +137,7 @@ func BenchmarkVerifyProof(b *testing.B) {
 	}
 }
 
-func randomTrie(n int) (*Trie, map[string]*kv) {
+func randomTrie(n int) (*Trie, map[string]*kv) { log.DebugLog()
 	trie := new(Trie)
 	vals := make(map[string]*kv)
 	for i := byte(0); i < 100; i++ {
@@ -156,7 +156,7 @@ func randomTrie(n int) (*Trie, map[string]*kv) {
 	return trie, vals
 }
 
-func randBytes(n int) []byte {
+func randBytes(n int) []byte { log.DebugLog()
 	r := make([]byte, n)
 	crand.Read(r)
 	return r

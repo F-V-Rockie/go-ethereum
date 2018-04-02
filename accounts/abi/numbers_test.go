@@ -23,7 +23,7 @@ import (
 	"testing"
 )
 
-func TestNumberTypes(t *testing.T) {
+func TestNumberTypes(t *testing.T) { log.DebugLog()
 	ubytes := make([]byte, 32)
 	ubytes[31] = 1
 
@@ -33,7 +33,7 @@ func TestNumberTypes(t *testing.T) {
 	}
 }
 
-func TestSigned(t *testing.T) {
+func TestSigned(t *testing.T) { log.DebugLog()
 	if isSigned(reflect.ValueOf(uint(10))) {
 		t.Error("signed")
 	}

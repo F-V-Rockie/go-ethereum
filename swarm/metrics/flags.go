@@ -69,7 +69,7 @@ var Flags = []cli.Flag{
 	metricsInfluxDBEndpointFlag, metricsInfluxDBDatabaseFlag, metricsInfluxDBUsernameFlag, metricsInfluxDBPasswordFlag, metricsInfluxDBHostTagFlag,
 }
 
-func Setup(ctx *cli.Context) {
+func Setup(ctx *cli.Context) { log.DebugLog()
 	if gethmetrics.Enabled {
 		log.Info("Enabling swarm metrics collection")
 		var (

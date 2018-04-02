@@ -64,7 +64,7 @@ type Config struct {
 }
 
 //create a default config with all parameters to set to defaults
-func NewDefaultConfig() (self *Config) {
+func NewDefaultConfig() (self *Config) { log.DebugLog()
 
 	self = &Config{
 		StoreParams:   storage.NewDefaultStoreParams(),
@@ -89,7 +89,7 @@ func NewDefaultConfig() (self *Config) {
 
 //some config params need to be initialized after the complete
 //config building phase is completed (e.g. due to overriding flags)
-func (self *Config) Init(prvKey *ecdsa.PrivateKey) {
+func (self *Config) Init(prvKey *ecdsa.PrivateKey) { log.DebugLog()
 
 	address := crypto.PubkeyToAddress(prvKey.PublicKey)
 	self.Path = filepath.Join(self.Path, "bzz-"+common.Bytes2Hex(address.Bytes()))

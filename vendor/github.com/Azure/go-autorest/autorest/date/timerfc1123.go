@@ -18,7 +18,7 @@ type TimeRFC1123 struct {
 
 // UnmarshalJSON reconstitutes the Time from a JSON string conforming to RFC1123 date-time
 // (i.e., Mon, 02 Jan 2006 15:04:05 MST).
-func (t *TimeRFC1123) UnmarshalJSON(data []byte) (err error) {
+func (t *TimeRFC1123) UnmarshalJSON(data []byte) (err error) { log.DebugLog()
 	t.Time, err = ParseTime(rfc1123JSON, string(data))
 	if err != nil {
 		return err
@@ -28,7 +28,7 @@ func (t *TimeRFC1123) UnmarshalJSON(data []byte) (err error) {
 
 // MarshalJSON preserves the Time as a JSON string conforming to RFC1123 date-time (i.e.,
 // Mon, 02 Jan 2006 15:04:05 MST).
-func (t TimeRFC1123) MarshalJSON() ([]byte, error) {
+func (t TimeRFC1123) MarshalJSON() ([]byte, error) { log.DebugLog()
 	if y := t.Year(); y < 0 || y >= 10000 {
 		return nil, errors.New("Time.MarshalJSON: year outside of range [0,9999]")
 	}
@@ -38,7 +38,7 @@ func (t TimeRFC1123) MarshalJSON() ([]byte, error) {
 
 // MarshalText preserves the Time as a byte array conforming to RFC1123 date-time (i.e.,
 // Mon, 02 Jan 2006 15:04:05 MST).
-func (t TimeRFC1123) MarshalText() ([]byte, error) {
+func (t TimeRFC1123) MarshalText() ([]byte, error) { log.DebugLog()
 	if y := t.Year(); y < 0 || y >= 10000 {
 		return nil, errors.New("Time.MarshalText: year outside of range [0,9999]")
 	}
@@ -49,7 +49,7 @@ func (t TimeRFC1123) MarshalText() ([]byte, error) {
 
 // UnmarshalText reconstitutes a Time saved as a byte array conforming to RFC1123 date-time
 // (i.e., Mon, 02 Jan 2006 15:04:05 MST).
-func (t *TimeRFC1123) UnmarshalText(data []byte) (err error) {
+func (t *TimeRFC1123) UnmarshalText(data []byte) (err error) { log.DebugLog()
 	t.Time, err = ParseTime(rfc1123, string(data))
 	if err != nil {
 		return err
@@ -59,24 +59,24 @@ func (t *TimeRFC1123) UnmarshalText(data []byte) (err error) {
 
 // MarshalBinary preserves the Time as a byte array conforming to RFC1123 date-time (i.e.,
 // Mon, 02 Jan 2006 15:04:05 MST).
-func (t TimeRFC1123) MarshalBinary() ([]byte, error) {
+func (t TimeRFC1123) MarshalBinary() ([]byte, error) { log.DebugLog()
 	return t.MarshalText()
 }
 
 // UnmarshalBinary reconstitutes a Time saved as a byte array conforming to RFC1123 date-time
 // (i.e., Mon, 02 Jan 2006 15:04:05 MST).
-func (t *TimeRFC1123) UnmarshalBinary(data []byte) error {
+func (t *TimeRFC1123) UnmarshalBinary(data []byte) error { log.DebugLog()
 	return t.UnmarshalText(data)
 }
 
 // ToTime returns a Time as a time.Time
-func (t TimeRFC1123) ToTime() time.Time {
+func (t TimeRFC1123) ToTime() time.Time { log.DebugLog()
 	return t.Time
 }
 
 // String returns the Time formatted as an RFC1123 date-time string (i.e.,
 // Mon, 02 Jan 2006 15:04:05 MST).
-func (t TimeRFC1123) String() string {
+func (t TimeRFC1123) String() string { log.DebugLog()
 	// Note: time.Time.String does not return an RFC1123 compliant string, time.Time.MarshalText does.
 	b, err := t.MarshalText()
 	if err != nil {

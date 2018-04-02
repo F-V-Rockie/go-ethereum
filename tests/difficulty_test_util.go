@@ -47,7 +47,7 @@ type difficultyTestMarshaling struct {
 	CurrentBlockNumber math.HexOrDecimal64
 }
 
-func (test *DifficultyTest) Run(config *params.ChainConfig) error {
+func (test *DifficultyTest) Run(config *params.ChainConfig) error { log.DebugLog()
 	parentNumber := big.NewInt(int64(test.CurrentBlockNumber - 1))
 	parent := &types.Header{
 		Difficulty: test.ParentDifficulty,

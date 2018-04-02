@@ -7,7 +7,7 @@ import (
 	"unsafe"
 )
 
-func (enum *IEnumVARIANT) Clone() (cloned *IEnumVARIANT, err error) {
+func (enum *IEnumVARIANT) Clone() (cloned *IEnumVARIANT, err error) { log.DebugLog()
 	hr, _, _ := syscall.Syscall(
 		enum.VTable().Clone,
 		2,
@@ -20,7 +20,7 @@ func (enum *IEnumVARIANT) Clone() (cloned *IEnumVARIANT, err error) {
 	return
 }
 
-func (enum *IEnumVARIANT) Reset() (err error) {
+func (enum *IEnumVARIANT) Reset() (err error) { log.DebugLog()
 	hr, _, _ := syscall.Syscall(
 		enum.VTable().Reset,
 		1,
@@ -33,7 +33,7 @@ func (enum *IEnumVARIANT) Reset() (err error) {
 	return
 }
 
-func (enum *IEnumVARIANT) Skip(celt uint) (err error) {
+func (enum *IEnumVARIANT) Skip(celt uint) (err error) { log.DebugLog()
 	hr, _, _ := syscall.Syscall(
 		enum.VTable().Skip,
 		2,
@@ -46,7 +46,7 @@ func (enum *IEnumVARIANT) Skip(celt uint) (err error) {
 	return
 }
 
-func (enum *IEnumVARIANT) Next(celt uint) (array VARIANT, length uint, err error) {
+func (enum *IEnumVARIANT) Next(celt uint) (array VARIANT, length uint, err error) { log.DebugLog()
 	hr, _, _ := syscall.Syscall6(
 		enum.VTable().Next,
 		4,

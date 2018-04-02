@@ -35,7 +35,7 @@ var (
 	single  = flag.Bool("single", false, "print only the first element, discard the rest")
 )
 
-func init() {
+func init() { log.DebugLog()
 	flag.Usage = func() {
 		fmt.Fprintln(os.Stderr, "Usage:", os.Args[0], "[-noascii] [-hex <data>] [filename]")
 		flag.PrintDefaults()
@@ -45,7 +45,7 @@ If the filename is omitted, data is read from stdin.`)
 	}
 }
 
-func main() {
+func main() { log.DebugLog()
 	flag.Parse()
 
 	var r io.Reader
@@ -89,7 +89,7 @@ func main() {
 	}
 }
 
-func dump(s *rlp.Stream, depth int) error {
+func dump(s *rlp.Stream, depth int) error { log.DebugLog()
 	kind, size, err := s.Kind()
 	if err != nil {
 		return err
@@ -128,7 +128,7 @@ func dump(s *rlp.Stream, depth int) error {
 	return nil
 }
 
-func isASCII(b []byte) bool {
+func isASCII(b []byte) bool { log.DebugLog()
 	for _, c := range b {
 		if c < 32 || c > 126 {
 			return false
@@ -137,11 +137,11 @@ func isASCII(b []byte) bool {
 	return true
 }
 
-func ws(n int) string {
+func ws(n int) string { log.DebugLog()
 	return strings.Repeat("  ", n)
 }
 
-func die(args ...interface{}) {
+func die(args ...interface{}) { log.DebugLog()
 	fmt.Fprintln(os.Stderr, args...)
 	os.Exit(1)
 }

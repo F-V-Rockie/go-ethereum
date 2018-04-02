@@ -19,12 +19,12 @@ type PtraceRegsMips struct {
 }
 
 // PtraceGetRegsMips fetches the registers used by mips binaries.
-func PtraceGetRegsMips(pid int, regsout *PtraceRegsMips) error {
+func PtraceGetRegsMips(pid int, regsout *PtraceRegsMips) error { log.DebugLog()
 	return ptrace(PTRACE_GETREGS, pid, 0, uintptr(unsafe.Pointer(regsout)))
 }
 
 // PtraceSetRegsMips sets the registers used by mips binaries.
-func PtraceSetRegsMips(pid int, regs *PtraceRegsMips) error {
+func PtraceSetRegsMips(pid int, regs *PtraceRegsMips) error { log.DebugLog()
 	return ptrace(PTRACE_SETREGS, pid, 0, uintptr(unsafe.Pointer(regs)))
 }
 
@@ -40,11 +40,11 @@ type PtraceRegsMips64 struct {
 }
 
 // PtraceGetRegsMips64 fetches the registers used by mips64 binaries.
-func PtraceGetRegsMips64(pid int, regsout *PtraceRegsMips64) error {
+func PtraceGetRegsMips64(pid int, regsout *PtraceRegsMips64) error { log.DebugLog()
 	return ptrace(PTRACE_GETREGS, pid, 0, uintptr(unsafe.Pointer(regsout)))
 }
 
 // PtraceSetRegsMips64 sets the registers used by mips64 binaries.
-func PtraceSetRegsMips64(pid int, regs *PtraceRegsMips64) error {
+func PtraceSetRegsMips64(pid int, regs *PtraceRegsMips64) error { log.DebugLog()
 	return ptrace(PTRACE_SETREGS, pid, 0, uintptr(unsafe.Pointer(regs)))
 }

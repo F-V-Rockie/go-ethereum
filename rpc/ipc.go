@@ -26,12 +26,12 @@ import (
 
 // CreateIPCListener creates an listener, on Unix platforms this is a unix socket, on
 // Windows this is a named pipe
-func CreateIPCListener(endpoint string) (net.Listener, error) {
+func CreateIPCListener(endpoint string) (net.Listener, error) { log.DebugLog()
 	return ipcListen(endpoint)
 }
 
 // ServeListener accepts connections on l, serving JSON-RPC on them.
-func (srv *Server) ServeListener(l net.Listener) error {
+func (srv *Server) ServeListener(l net.Listener) error { log.DebugLog()
 	for {
 		conn, err := l.Accept()
 		if err != nil {
@@ -48,7 +48,7 @@ func (srv *Server) ServeListener(l net.Listener) error {
 //
 // The context is used for the initial connection establishment. It does not
 // affect subsequent interactions with the client.
-func DialIPC(ctx context.Context, endpoint string) (*Client, error) {
+func DialIPC(ctx context.Context, endpoint string) (*Client, error) { log.DebugLog()
 	return newClient(ctx, func(ctx context.Context) (net.Conn, error) {
 		return newIPCConnection(ctx, endpoint)
 	})

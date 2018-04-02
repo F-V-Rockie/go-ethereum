@@ -38,7 +38,7 @@ const (
 var ErrBufferExceeded = errors.New("max buffer exceeded")
 
 // String returns a string representation of the TokenType.
-func (t TokenType) String() string {
+func (t TokenType) String() string { log.DebugLog()
 	switch t {
 	case ErrorToken:
 		return "Error"
@@ -81,7 +81,7 @@ type Token struct {
 }
 
 // tagString returns a string representation of a tag Token's Data and Attr.
-func (t Token) tagString() string {
+func (t Token) tagString() string { log.DebugLog()
 	if len(t.Attr) == 0 {
 		return t.Data
 	}
@@ -97,7 +97,7 @@ func (t Token) tagString() string {
 }
 
 // String returns a string representation of the Token.
-func (t Token) String() string {
+func (t Token) String() string { log.DebugLog()
 	switch t.Type {
 	case ErrorToken:
 		return ""
@@ -185,7 +185,7 @@ type Tokenizer struct {
 // In practice, if using the tokenizer without caring whether MathML or SVG
 // CDATA is text or comments, such as tokenizing HTML to find all the anchor
 // text, it is acceptable to ignore this responsibility.
-func (z *Tokenizer) AllowCDATA(allowCDATA bool) {
+func (z *Tokenizer) AllowCDATA(allowCDATA bool) { log.DebugLog()
 	z.allowCDATA = allowCDATA
 }
 
@@ -213,13 +213,13 @@ func (z *Tokenizer) AllowCDATA(allowCDATA bool) {
 //
 // Note that this 'raw text' concept is different from the one offered by the
 // Tokenizer.Raw method.
-func (z *Tokenizer) NextIsNotRawText() {
+func (z *Tokenizer) NextIsNotRawText() { log.DebugLog()
 	z.rawTag = ""
 }
 
 // Err returns the error associated with the most recent ErrorToken token.
 // This is typically io.EOF, meaning the end of tokenization.
-func (z *Tokenizer) Err() error {
+func (z *Tokenizer) Err() error { log.DebugLog()
 	if z.tt != ErrorToken {
 		return nil
 	}
@@ -231,7 +231,7 @@ func (z *Tokenizer) Err() error {
 // slice that holds all the bytes read so far for the current token.
 // It sets z.err if the underlying reader returns an error.
 // Pre-condition: z.err == nil.
-func (z *Tokenizer) readByte() byte {
+func (z *Tokenizer) readByte() byte { log.DebugLog()
 	if z.raw.end >= len(z.buf) {
 		// Our buffer is exhausted and we have to read from z.r. Check if the
 		// previous read resulted in an error.
@@ -287,14 +287,14 @@ func (z *Tokenizer) readByte() byte {
 }
 
 // Buffered returns a slice containing data buffered but not yet tokenized.
-func (z *Tokenizer) Buffered() []byte {
+func (z *Tokenizer) Buffered() []byte { log.DebugLog()
 	return z.buf[z.raw.end:]
 }
 
 // readAtLeastOneByte wraps an io.Reader so that reading cannot return (0, nil).
 // It returns io.ErrNoProgress if the underlying r.Read method returns (0, nil)
 // too many times in succession.
-func readAtLeastOneByte(r io.Reader, b []byte) (int, error) {
+func readAtLeastOneByte(r io.Reader, b []byte) (int, error) { log.DebugLog()
 	for i := 0; i < 100; i++ {
 		n, err := r.Read(b)
 		if n != 0 || err != nil {
@@ -305,7 +305,7 @@ func readAtLeastOneByte(r io.Reader, b []byte) (int, error) {
 }
 
 // skipWhiteSpace skips past any white space.
-func (z *Tokenizer) skipWhiteSpace() {
+func (z *Tokenizer) skipWhiteSpace() { log.DebugLog()
 	if z.err != nil {
 		return
 	}
@@ -326,7 +326,7 @@ func (z *Tokenizer) skipWhiteSpace() {
 
 // readRawOrRCDATA reads until the next "</foo>", where "foo" is z.rawTag and
 // is typically something like "script" or "textarea".
-func (z *Tokenizer) readRawOrRCDATA() {
+func (z *Tokenizer) readRawOrRCDATA() { log.DebugLog()
 	if z.rawTag == "script" {
 		z.readScript()
 		z.textIsRaw = true
@@ -363,7 +363,7 @@ loop:
 // If it succeeds, it backs up the input position to reconsume the tag and
 // returns true. Otherwise it returns false. The opening "</" has already been
 // consumed.
-func (z *Tokenizer) readRawEndTag() bool {
+func (z *Tokenizer) readRawEndTag() bool { log.DebugLog()
 	for i := 0; i < len(z.rawTag); i++ {
 		c := z.readByte()
 		if z.err != nil {
@@ -390,7 +390,7 @@ func (z *Tokenizer) readRawEndTag() bool {
 
 // readScript reads until the next </script> tag, following the byzantine
 // rules for escaping/hiding the closing tag.
-func (z *Tokenizer) readScript() {
+func (z *Tokenizer) readScript() { log.DebugLog()
 	defer func() {
 		z.data.end = z.raw.end
 	}()
@@ -597,7 +597,7 @@ scriptDataDoubleEscapeEnd:
 
 // readComment reads the next comment token starting with "<!--". The opening
 // "<!--" has already been consumed.
-func (z *Tokenizer) readComment() {
+func (z *Tokenizer) readComment() { log.DebugLog()
 	z.data.start = z.raw.end
 	defer func() {
 		if z.data.end < z.data.start {
@@ -642,7 +642,7 @@ func (z *Tokenizer) readComment() {
 }
 
 // readUntilCloseAngle reads until the next ">".
-func (z *Tokenizer) readUntilCloseAngle() {
+func (z *Tokenizer) readUntilCloseAngle() { log.DebugLog()
 	z.data.start = z.raw.end
 	for {
 		c := z.readByte()
@@ -660,7 +660,7 @@ func (z *Tokenizer) readUntilCloseAngle() {
 // readMarkupDeclaration reads the next token starting with "<!". It might be
 // a "<!--comment-->", a "<!DOCTYPE foo>", a "<![CDATA[section]]>" or
 // "<!a bogus comment". The opening "<!" has already been consumed.
-func (z *Tokenizer) readMarkupDeclaration() TokenType {
+func (z *Tokenizer) readMarkupDeclaration() TokenType { log.DebugLog()
 	z.data.start = z.raw.end
 	var c [2]byte
 	for i := 0; i < 2; i++ {
@@ -689,7 +689,7 @@ func (z *Tokenizer) readMarkupDeclaration() TokenType {
 
 // readDoctype attempts to read a doctype declaration and returns true if
 // successful. The opening "<!" has already been consumed.
-func (z *Tokenizer) readDoctype() bool {
+func (z *Tokenizer) readDoctype() bool { log.DebugLog()
 	const s = "DOCTYPE"
 	for i := 0; i < len(s); i++ {
 		c := z.readByte()
@@ -714,7 +714,7 @@ func (z *Tokenizer) readDoctype() bool {
 
 // readCDATA attempts to read a CDATA section and returns true if
 // successful. The opening "<!" has already been consumed.
-func (z *Tokenizer) readCDATA() bool {
+func (z *Tokenizer) readCDATA() bool { log.DebugLog()
 	const s = "[CDATA["
 	for i := 0; i < len(s); i++ {
 		c := z.readByte()
@@ -753,7 +753,7 @@ func (z *Tokenizer) readCDATA() bool {
 
 // startTagIn returns whether the start tag in z.buf[z.data.start:z.data.end]
 // case-insensitively matches any element of ss.
-func (z *Tokenizer) startTagIn(ss ...string) bool {
+func (z *Tokenizer) startTagIn(ss ...string) bool { log.DebugLog()
 loop:
 	for _, s := range ss {
 		if z.data.end-z.data.start != len(s) {
@@ -775,7 +775,7 @@ loop:
 
 // readStartTag reads the next start tag token. The opening "<a" has already
 // been consumed, where 'a' means anything in [A-Za-z].
-func (z *Tokenizer) readStartTag() TokenType {
+func (z *Tokenizer) readStartTag() TokenType { log.DebugLog()
 	z.readTag(true)
 	if z.err != nil {
 		return ErrorToken
@@ -813,7 +813,7 @@ func (z *Tokenizer) readStartTag() TokenType {
 // attributes are saved in z.attr, otherwise z.attr is set to an empty slice.
 // The opening "<a" or "</a" has already been consumed, where 'a' means anything
 // in [A-Za-z].
-func (z *Tokenizer) readTag(saveAttr bool) {
+func (z *Tokenizer) readTag(saveAttr bool) { log.DebugLog()
 	z.attr = z.attr[:0]
 	z.nAttrReturned = 0
 	// Read the tag name and attribute key/value pairs.
@@ -842,7 +842,7 @@ func (z *Tokenizer) readTag(saveAttr bool) {
 // readTagName sets z.data to the "div" in "<div k=v>". The reader (z.raw.end)
 // is positioned such that the first byte of the tag name (the "d" in "<div")
 // has already been consumed.
-func (z *Tokenizer) readTagName() {
+func (z *Tokenizer) readTagName() { log.DebugLog()
 	z.data.start = z.raw.end - 1
 	for {
 		c := z.readByte()
@@ -864,7 +864,7 @@ func (z *Tokenizer) readTagName() {
 
 // readTagAttrKey sets z.pendingAttr[0] to the "k" in "<div k=v>".
 // Precondition: z.err == nil.
-func (z *Tokenizer) readTagAttrKey() {
+func (z *Tokenizer) readTagAttrKey() { log.DebugLog()
 	z.pendingAttr[0].start = z.raw.end
 	for {
 		c := z.readByte()
@@ -885,7 +885,7 @@ func (z *Tokenizer) readTagAttrKey() {
 }
 
 // readTagAttrVal sets z.pendingAttr[1] to the "v" in "<div k=v>".
-func (z *Tokenizer) readTagAttrVal() {
+func (z *Tokenizer) readTagAttrVal() { log.DebugLog()
 	z.pendingAttr[1].start = z.raw.end
 	z.pendingAttr[1].end = z.raw.end
 	if z.skipWhiteSpace(); z.err != nil {
@@ -947,7 +947,7 @@ func (z *Tokenizer) readTagAttrVal() {
 }
 
 // Next scans the next token and returns its type.
-func (z *Tokenizer) Next() TokenType {
+func (z *Tokenizer) Next() TokenType { log.DebugLog()
 	z.raw.start = z.raw.end
 	z.data.start = z.raw.end
 	z.data.end = z.raw.end
@@ -1067,13 +1067,13 @@ loop:
 
 // Raw returns the unmodified text of the current token. Calling Next, Token,
 // Text, TagName or TagAttr may change the contents of the returned slice.
-func (z *Tokenizer) Raw() []byte {
+func (z *Tokenizer) Raw() []byte { log.DebugLog()
 	return z.buf[z.raw.start:z.raw.end]
 }
 
 // convertNewlines converts "\r" and "\r\n" in s to "\n".
 // The conversion happens in place, but the resulting slice may be shorter.
-func convertNewlines(s []byte) []byte {
+func convertNewlines(s []byte) []byte { log.DebugLog()
 	for i, c := range s {
 		if c != '\r' {
 			continue
@@ -1110,7 +1110,7 @@ var (
 
 // Text returns the unescaped text of a text, comment or doctype token. The
 // contents of the returned slice may change on the next call to Next.
-func (z *Tokenizer) Text() []byte {
+func (z *Tokenizer) Text() []byte { log.DebugLog()
 	switch z.tt {
 	case TextToken, CommentToken, DoctypeToken:
 		s := z.buf[z.data.start:z.data.end]
@@ -1131,7 +1131,7 @@ func (z *Tokenizer) Text() []byte {
 // TagName returns the lower-cased name of a tag token (the `img` out of
 // `<IMG SRC="foo">`) and whether the tag has attributes.
 // The contents of the returned slice may change on the next call to Next.
-func (z *Tokenizer) TagName() (name []byte, hasAttr bool) {
+func (z *Tokenizer) TagName() (name []byte, hasAttr bool) { log.DebugLog()
 	if z.data.start < z.data.end {
 		switch z.tt {
 		case StartTagToken, EndTagToken, SelfClosingTagToken:
@@ -1147,7 +1147,7 @@ func (z *Tokenizer) TagName() (name []byte, hasAttr bool) {
 // TagAttr returns the lower-cased key and unescaped value of the next unparsed
 // attribute for the current tag token and whether there are more attributes.
 // The contents of the returned slices may change on the next call to Next.
-func (z *Tokenizer) TagAttr() (key, val []byte, moreAttr bool) {
+func (z *Tokenizer) TagAttr() (key, val []byte, moreAttr bool) { log.DebugLog()
 	if z.nAttrReturned < len(z.attr) {
 		switch z.tt {
 		case StartTagToken, SelfClosingTagToken:
@@ -1163,7 +1163,7 @@ func (z *Tokenizer) TagAttr() (key, val []byte, moreAttr bool) {
 
 // Token returns the next Token. The result's Data and Attr values remain valid
 // after subsequent Next calls.
-func (z *Tokenizer) Token() Token {
+func (z *Tokenizer) Token() Token { log.DebugLog()
 	t := Token{Type: z.tt}
 	switch z.tt {
 	case TextToken, CommentToken, DoctypeToken:
@@ -1186,13 +1186,13 @@ func (z *Tokenizer) Token() Token {
 
 // SetMaxBuf sets a limit on the amount of data buffered during tokenization.
 // A value of 0 means unlimited.
-func (z *Tokenizer) SetMaxBuf(n int) {
+func (z *Tokenizer) SetMaxBuf(n int) { log.DebugLog()
 	z.maxBuf = n
 }
 
 // NewTokenizer returns a new HTML Tokenizer for the given Reader.
 // The input is assumed to be UTF-8 encoded.
-func NewTokenizer(r io.Reader) *Tokenizer {
+func NewTokenizer(r io.Reader) *Tokenizer { log.DebugLog()
 	return NewTokenizerFragment(r, "")
 }
 
@@ -1204,7 +1204,7 @@ func NewTokenizer(r io.Reader) *Tokenizer {
 // for a <p> tag or a <script> tag.
 //
 // The input is assumed to be UTF-8 encoded.
-func NewTokenizerFragment(r io.Reader, contextTag string) *Tokenizer {
+func NewTokenizerFragment(r io.Reader, contextTag string) *Tokenizer { log.DebugLog()
 	z := &Tokenizer{
 		r:   r,
 		buf: make([]byte, 0, 4096),

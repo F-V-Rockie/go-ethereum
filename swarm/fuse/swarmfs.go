@@ -43,7 +43,7 @@ type SwarmFS struct {
 	swarmFsLock  *sync.RWMutex
 }
 
-func NewSwarmFS(api *api.Api) *SwarmFS {
+func NewSwarmFS(api *api.Api) *SwarmFS { log.DebugLog()
 	swarmfsLock.Do(func() {
 		swarmfs = &SwarmFS{
 			swarmApi:     api,
@@ -56,7 +56,7 @@ func NewSwarmFS(api *api.Api) *SwarmFS {
 }
 
 // Inode numbers need to be unique, they are used for caching inside fuse
-func NewInode() uint64 {
+func NewInode() uint64 { log.DebugLog()
 	inodeLock.Lock()
 	defer inodeLock.Unlock()
 	inode += 1

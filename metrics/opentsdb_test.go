@@ -5,12 +5,12 @@ import (
 	"time"
 )
 
-func ExampleOpenTSDB() {
+func ExampleOpenTSDB() { log.DebugLog()
 	addr, _ := net.ResolveTCPAddr("net", ":2003")
 	go OpenTSDB(DefaultRegistry, 1*time.Second, "some.prefix", addr)
 }
 
-func ExampleOpenTSDBWithConfig() {
+func ExampleOpenTSDBWithConfig() { log.DebugLog()
 	addr, _ := net.ResolveTCPAddr("net", ":2003")
 	go OpenTSDBWithConfig(OpenTSDBConfig{
 		Addr:          addr,

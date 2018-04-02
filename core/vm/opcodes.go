@@ -23,7 +23,7 @@ import (
 // OpCode is an EVM opcode
 type OpCode byte
 
-func (op OpCode) IsPush() bool {
+func (op OpCode) IsPush() bool { log.DebugLog()
 	switch op {
 	case PUSH1, PUSH2, PUSH3, PUSH4, PUSH5, PUSH6, PUSH7, PUSH8, PUSH9, PUSH10, PUSH11, PUSH12, PUSH13, PUSH14, PUSH15, PUSH16, PUSH17, PUSH18, PUSH19, PUSH20, PUSH21, PUSH22, PUSH23, PUSH24, PUSH25, PUSH26, PUSH27, PUSH28, PUSH29, PUSH30, PUSH31, PUSH32:
 		return true
@@ -31,7 +31,7 @@ func (op OpCode) IsPush() bool {
 	return false
 }
 
-func (op OpCode) IsStaticJump() bool {
+func (op OpCode) IsStaticJump() bool { log.DebugLog()
 	return op == JUMP
 }
 
@@ -375,7 +375,7 @@ var opCodeToString = map[OpCode]string{
 	SWAP: "SWAP",
 }
 
-func (o OpCode) String() string {
+func (o OpCode) String() string { log.DebugLog()
 	str := opCodeToString[o]
 	if len(str) == 0 {
 		return fmt.Sprintf("Missing opcode 0x%x", int(o))
@@ -524,6 +524,6 @@ var stringToOp = map[string]OpCode{
 	"SELFDESTRUCT":   SELFDESTRUCT,
 }
 
-func StringToOp(str string) OpCode {
+func StringToOp(str string) OpCode { log.DebugLog()
 	return stringToOp[str]
 }

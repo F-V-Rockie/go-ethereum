@@ -22,7 +22,7 @@ import (
 	"testing"
 )
 
-func TestCheckCompatible(t *testing.T) {
+func TestCheckCompatible(t *testing.T) { log.DebugLog()
 	type test struct {
 		stored, new *ChainConfig
 		head        uint64

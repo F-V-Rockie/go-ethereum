@@ -58,7 +58,7 @@ var (
 )
 
 // NewType creates a new reflection type of abi type given in t.
-func NewType(t string) (typ Type, err error) {
+func NewType(t string) (typ Type, err error) { log.DebugLog()
 	// check that array brackets are equal if they exist
 	if strings.Count(t, "[") != strings.Count(t, "]") {
 		return Type{}, fmt.Errorf("invalid arg type in abi")
@@ -166,11 +166,11 @@ func NewType(t string) (typ Type, err error) {
 }
 
 // String implements Stringer
-func (t Type) String() (out string) {
+func (t Type) String() (out string) { log.DebugLog()
 	return t.stringKind
 }
 
-func (t Type) pack(v reflect.Value) ([]byte, error) {
+func (t Type) pack(v reflect.Value) ([]byte, error) { log.DebugLog()
 	// dereference pointer first if it's a pointer
 	v = indirect(v)
 
@@ -199,6 +199,6 @@ func (t Type) pack(v reflect.Value) ([]byte, error) {
 
 // requireLengthPrefix returns whether the type requires any sort of length
 // prefixing.
-func (t Type) requiresLengthPrefix() bool {
+func (t Type) requiresLengthPrefix() bool { log.DebugLog()
 	return t.T == StringTy || t.T == BytesTy || t.T == SliceTy
 }

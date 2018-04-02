@@ -42,15 +42,15 @@ import (
     "log"
 )
 
-func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) { log.DebugLog()
     fmt.Fprint(w, "Welcome!\n")
 }
 
-func Hello(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func Hello(w http.ResponseWriter, r *http.Request, ps httprouter.Params) { log.DebugLog()
     fmt.Fprintf(w, "hello, %s!\n", ps.ByName("name"))
 }
 
-func main() {
+func main() { log.DebugLog()
     router := httprouter.New()
     router.GET("/", Index)
     router.GET("/hello/:name", Hello)
@@ -150,7 +150,7 @@ Define a router per host!
 type HostSwitch map[string]http.Handler
 
 // Implement the ServerHTTP method on our new type
-func (hs HostSwitch) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (hs HostSwitch) ServeHTTP(w http.ResponseWriter, r *http.Request) { log.DebugLog()
 	// Check if a http.Handler is registered for the given host.
 	// If yes, use it to handle the request.
 	if handler := hs[r.Host]; handler != nil {
@@ -161,7 +161,7 @@ func (hs HostSwitch) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func main() {
+func main() { log.DebugLog()
 	// Initialize a router as usual
 	router := httprouter.New()
 	router.GET("/", Index)
@@ -192,7 +192,7 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-func BasicAuth(h httprouter.Handle, requiredUser, requiredPassword string) httprouter.Handle {
+func BasicAuth(h httprouter.Handle, requiredUser, requiredPassword string) httprouter.Handle { log.DebugLog()
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		// Get the Basic Authentication credentials
 		user, password, hasAuth := r.BasicAuth()
@@ -208,15 +208,15 @@ func BasicAuth(h httprouter.Handle, requiredUser, requiredPassword string) httpr
 	}
 }
 
-func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) { log.DebugLog()
 	fmt.Fprint(w, "Not protected!\n")
 }
 
-func Protected(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+func Protected(w http.ResponseWriter, r *http.Request, _ httprouter.Params) { log.DebugLog()
 	fmt.Fprint(w, "Protected!\n")
 }
 
-func main() {
+func main() { log.DebugLog()
 	user := "gordon"
 	pass := "secret!"
 

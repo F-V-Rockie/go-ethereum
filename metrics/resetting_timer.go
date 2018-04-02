@@ -23,7 +23,7 @@ type ResettingTimer interface {
 
 // GetOrRegisterResettingTimer returns an existing ResettingTimer or constructs and registers a
 // new StandardResettingTimer.
-func GetOrRegisterResettingTimer(name string, r Registry) ResettingTimer {
+func GetOrRegisterResettingTimer(name string, r Registry) ResettingTimer { log.DebugLog()
 	if nil == r {
 		r = DefaultRegistry
 	}
@@ -31,7 +31,7 @@ func GetOrRegisterResettingTimer(name string, r Registry) ResettingTimer {
 }
 
 // NewRegisteredResettingTimer constructs and registers a new StandardResettingTimer.
-func NewRegisteredResettingTimer(name string, r Registry) ResettingTimer {
+func NewRegisteredResettingTimer(name string, r Registry) ResettingTimer { log.DebugLog()
 	c := NewResettingTimer()
 	if nil == r {
 		r = DefaultRegistry
@@ -41,7 +41,7 @@ func NewRegisteredResettingTimer(name string, r Registry) ResettingTimer {
 }
 
 // NewResettingTimer constructs a new StandardResettingTimer
-func NewResettingTimer() ResettingTimer {
+func NewResettingTimer() ResettingTimer { log.DebugLog()
 	if !Enabled {
 		return NilResettingTimer{}
 	}
@@ -55,29 +55,29 @@ type NilResettingTimer struct {
 }
 
 // Values is a no-op.
-func (NilResettingTimer) Values() []int64 { return nil }
+func (NilResettingTimer) Values() []int64 { log.DebugLog() return nil }
 
 // Snapshot is a no-op.
-func (NilResettingTimer) Snapshot() ResettingTimer { return NilResettingTimer{} }
+func (NilResettingTimer) Snapshot() ResettingTimer { log.DebugLog() return NilResettingTimer{} }
 
 // Time is a no-op.
-func (NilResettingTimer) Time(func()) {}
+func (NilResettingTimer) Time(func()) { log.DebugLog()}
 
 // Update is a no-op.
-func (NilResettingTimer) Update(time.Duration) {}
+func (NilResettingTimer) Update(time.Duration) { log.DebugLog()}
 
 // Percentiles panics.
-func (NilResettingTimer) Percentiles([]float64) []int64 {
+func (NilResettingTimer) Percentiles([]float64) []int64 { log.DebugLog()
 	panic("Percentiles called on a NilResettingTimer")
 }
 
 // Mean panics.
-func (NilResettingTimer) Mean() float64 {
+func (NilResettingTimer) Mean() float64 { log.DebugLog()
 	panic("Mean called on a NilResettingTimer")
 }
 
 // UpdateSince is a no-op.
-func (NilResettingTimer) UpdateSince(time.Time) {}
+func (NilResettingTimer) UpdateSince(time.Time) { log.DebugLog()}
 
 // StandardResettingTimer is the standard implementation of a ResettingTimer.
 // and Meter.
@@ -87,12 +87,12 @@ type StandardResettingTimer struct {
 }
 
 // Values returns a slice with all measurements.
-func (t *StandardResettingTimer) Values() []int64 {
+func (t *StandardResettingTimer) Values() []int64 { log.DebugLog()
 	return t.values
 }
 
 // Snapshot resets the timer and returns a read-only copy of its contents.
-func (t *StandardResettingTimer) Snapshot() ResettingTimer {
+func (t *StandardResettingTimer) Snapshot() ResettingTimer { log.DebugLog()
 	t.mutex.Lock()
 	defer t.mutex.Unlock()
 	currentValues := t.values
@@ -104,31 +104,31 @@ func (t *StandardResettingTimer) Snapshot() ResettingTimer {
 }
 
 // Percentiles panics.
-func (t *StandardResettingTimer) Percentiles([]float64) []int64 {
+func (t *StandardResettingTimer) Percentiles([]float64) []int64 { log.DebugLog()
 	panic("Percentiles called on a StandardResettingTimer")
 }
 
 // Mean panics.
-func (t *StandardResettingTimer) Mean() float64 {
+func (t *StandardResettingTimer) Mean() float64 { log.DebugLog()
 	panic("Mean called on a StandardResettingTimer")
 }
 
 // Record the duration of the execution of the given function.
-func (t *StandardResettingTimer) Time(f func()) {
+func (t *StandardResettingTimer) Time(f func()) { log.DebugLog()
 	ts := time.Now()
 	f()
 	t.Update(time.Since(ts))
 }
 
 // Record the duration of an event.
-func (t *StandardResettingTimer) Update(d time.Duration) {
+func (t *StandardResettingTimer) Update(d time.Duration) { log.DebugLog()
 	t.mutex.Lock()
 	defer t.mutex.Unlock()
 	t.values = append(t.values, int64(d))
 }
 
 // Record the duration of an event that started at a time and ends now.
-func (t *StandardResettingTimer) UpdateSince(ts time.Time) {
+func (t *StandardResettingTimer) UpdateSince(ts time.Time) { log.DebugLog()
 	t.mutex.Lock()
 	defer t.mutex.Unlock()
 	t.values = append(t.values, int64(time.Since(ts)))
@@ -143,37 +143,37 @@ type ResettingTimerSnapshot struct {
 }
 
 // Snapshot returns the snapshot.
-func (t *ResettingTimerSnapshot) Snapshot() ResettingTimer { return t }
+func (t *ResettingTimerSnapshot) Snapshot() ResettingTimer { log.DebugLog() return t }
 
 // Time panics.
-func (*ResettingTimerSnapshot) Time(func()) {
+func (*ResettingTimerSnapshot) Time(func()) { log.DebugLog()
 	panic("Time called on a ResettingTimerSnapshot")
 }
 
 // Update panics.
-func (*ResettingTimerSnapshot) Update(time.Duration) {
+func (*ResettingTimerSnapshot) Update(time.Duration) { log.DebugLog()
 	panic("Update called on a ResettingTimerSnapshot")
 }
 
 // UpdateSince panics.
-func (*ResettingTimerSnapshot) UpdateSince(time.Time) {
+func (*ResettingTimerSnapshot) UpdateSince(time.Time) { log.DebugLog()
 	panic("UpdateSince called on a ResettingTimerSnapshot")
 }
 
 // Values returns all values from snapshot.
-func (t *ResettingTimerSnapshot) Values() []int64 {
+func (t *ResettingTimerSnapshot) Values() []int64 { log.DebugLog()
 	return t.values
 }
 
 // Percentiles returns the boundaries for the input percentiles.
-func (t *ResettingTimerSnapshot) Percentiles(percentiles []float64) []int64 {
+func (t *ResettingTimerSnapshot) Percentiles(percentiles []float64) []int64 { log.DebugLog()
 	t.calc(percentiles)
 
 	return t.thresholdBoundaries
 }
 
 // Mean returns the mean of the snapshotted values
-func (t *ResettingTimerSnapshot) Mean() float64 {
+func (t *ResettingTimerSnapshot) Mean() float64 { log.DebugLog()
 	if !t.calculated {
 		t.calc([]float64{})
 	}
@@ -181,7 +181,7 @@ func (t *ResettingTimerSnapshot) Mean() float64 {
 	return t.mean
 }
 
-func (t *ResettingTimerSnapshot) calc(percentiles []float64) {
+func (t *ResettingTimerSnapshot) calc(percentiles []float64) { log.DebugLog()
 	sort.Sort(Int64Slice(t.values))
 
 	count := len(t.values)
@@ -232,6 +232,6 @@ func (t *ResettingTimerSnapshot) calc(percentiles []float64) {
 // Int64Slice attaches the methods of sort.Interface to []int64, sorting in increasing order.
 type Int64Slice []int64
 
-func (s Int64Slice) Len() int           { return len(s) }
-func (s Int64Slice) Less(i, j int) bool { return s[i] < s[j] }
-func (s Int64Slice) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }
+func (s Int64Slice) Len() int           { log.DebugLog() return len(s) }
+func (s Int64Slice) Less(i, j int) bool { log.DebugLog() return s[i] < s[j] }
+func (s Int64Slice) Swap(i, j int)      { log.DebugLog() s[i], s[j] = s[j], s[i] }

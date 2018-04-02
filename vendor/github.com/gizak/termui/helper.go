@@ -47,23 +47,23 @@ var (
 
 /* ----------------------- End ----------------------------- */
 
-func toTmAttr(x Attribute) tm.Attribute {
+func toTmAttr(x Attribute) tm.Attribute { log.DebugLog()
 	return tm.Attribute(x)
 }
 
-func str2runes(s string) []rune {
+func str2runes(s string) []rune { log.DebugLog()
 	return []rune(s)
 }
 
 // Here for backwards-compatibility.
-func trimStr2Runes(s string, w int) []rune {
+func trimStr2Runes(s string, w int) []rune { log.DebugLog()
 	return TrimStr2Runes(s, w)
 }
 
 // TrimStr2Runes trims string to w[-1 rune], appends …, and returns the runes
 // of that string if string is grather then n. If string is small then w,
 // return the runes.
-func TrimStr2Runes(s string, w int) []rune {
+func TrimStr2Runes(s string, w int) []rune { log.DebugLog()
 	if w <= 0 {
 		return []rune{}
 	}
@@ -77,7 +77,7 @@ func TrimStr2Runes(s string, w int) []rune {
 
 // TrimStrIfAppropriate trim string to "s[:-1] + …"
 // if string > width otherwise return string
-func TrimStrIfAppropriate(s string, w int) string {
+func TrimStrIfAppropriate(s string, w int) string { log.DebugLog()
 	if w <= 0 {
 		return ""
 	}
@@ -90,11 +90,11 @@ func TrimStrIfAppropriate(s string, w int) string {
 	return s
 }
 
-func strWidth(s string) int {
+func strWidth(s string) int { log.DebugLog()
 	return rw.StringWidth(s)
 }
 
-func charWidth(ch rune) int {
+func charWidth(ch rune) int { log.DebugLog()
 	return rw.RuneWidth(ch)
 }
 
@@ -103,7 +103,7 @@ var whiteSpaceRegex = regexp.MustCompile(`\s`)
 // StringToAttribute converts text to a termui attribute. You may specifiy more
 // then one attribute like that: "BLACK, BOLD, ...". All whitespaces
 // are ignored.
-func StringToAttribute(text string) Attribute {
+func StringToAttribute(text string) Attribute { log.DebugLog()
 	text = whiteSpaceRegex.ReplaceAllString(strings.ToLower(text), "")
 	attributes := strings.Split(text, ",")
 	result := Attribute(0)
@@ -155,7 +155,7 @@ func StringToAttribute(text string) Attribute {
 }
 
 // TextCells returns a coloured text cells []Cell
-func TextCells(s string, fg, bg Attribute) []Cell {
+func TextCells(s string, fg, bg Attribute) []Cell { log.DebugLog()
 	cs := make([]Cell, 0, len(s))
 
 	// sequence := MarkdownTextRendererFactory{}.TextRenderer(s).Render(fg, bg)
@@ -171,17 +171,17 @@ func TextCells(s string, fg, bg Attribute) []Cell {
 }
 
 // Width returns the actual screen space the cell takes (usually 1 or 2).
-func (c Cell) Width() int {
+func (c Cell) Width() int { log.DebugLog()
 	return charWidth(c.Ch)
 }
 
 // Copy return a copy of c
-func (c Cell) Copy() Cell {
+func (c Cell) Copy() Cell { log.DebugLog()
 	return c
 }
 
 // TrimTxCells trims the overflowed text cells sequence.
-func TrimTxCells(cs []Cell, w int) []Cell {
+func TrimTxCells(cs []Cell, w int) []Cell { log.DebugLog()
 	if len(cs) <= w {
 		return cs
 	}
@@ -189,7 +189,7 @@ func TrimTxCells(cs []Cell, w int) []Cell {
 }
 
 // DTrimTxCls trims the overflowed text cells sequence and append dots at the end.
-func DTrimTxCls(cs []Cell, w int) []Cell {
+func DTrimTxCls(cs []Cell, w int) []Cell { log.DebugLog()
 	l := len(cs)
 	if l <= 0 {
 		return []Cell{}
@@ -213,7 +213,7 @@ func DTrimTxCls(cs []Cell, w int) []Cell {
 	return rt
 }
 
-func CellsToStr(cs []Cell) string {
+func CellsToStr(cs []Cell) string { log.DebugLog()
 	str := ""
 	for _, c := range cs {
 		str += string(c.Ch)

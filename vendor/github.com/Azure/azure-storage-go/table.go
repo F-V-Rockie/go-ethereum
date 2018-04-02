@@ -34,9 +34,9 @@ type TableAccessPolicy struct {
 	CanDelete  bool
 }
 
-func pathForTable(table AzureTable) string { return fmt.Sprintf("%s", table) }
+func pathForTable(table AzureTable) string { log.DebugLog() return fmt.Sprintf("%s", table) }
 
-func (c *TableServiceClient) getStandardHeaders() map[string]string {
+func (c *TableServiceClient) getStandardHeaders() map[string]string { log.DebugLog()
 	return map[string]string{
 		"x-ms-version":   "2015-02-21",
 		"x-ms-date":      currentTimeRfc1123Formatted(),
@@ -49,7 +49,7 @@ func (c *TableServiceClient) getStandardHeaders() map[string]string {
 
 // QueryTables returns the tables created in the
 // *TableServiceClient storage account.
-func (c *TableServiceClient) QueryTables() ([]AzureTable, error) {
+func (c *TableServiceClient) QueryTables() ([]AzureTable, error) { log.DebugLog()
 	uri := c.client.getEndpoint(tableServiceName, tablesURIPath, url.Values{})
 
 	headers := c.getStandardHeaders()
@@ -87,7 +87,7 @@ func (c *TableServiceClient) QueryTables() ([]AzureTable, error) {
 // CreateTable creates the table given the specific
 // name. This function fails if the name is not compliant
 // with the specification or the tables already exists.
-func (c *TableServiceClient) CreateTable(table AzureTable) error {
+func (c *TableServiceClient) CreateTable(table AzureTable) error { log.DebugLog()
 	uri := c.client.getEndpoint(tableServiceName, tablesURIPath, url.Values{})
 
 	headers := c.getStandardHeaders()
@@ -119,7 +119,7 @@ func (c *TableServiceClient) CreateTable(table AzureTable) error {
 // name. This function fails if the table is not present.
 // Be advised: DeleteTable deletes all the entries
 // that may be present.
-func (c *TableServiceClient) DeleteTable(table AzureTable) error {
+func (c *TableServiceClient) DeleteTable(table AzureTable) error { log.DebugLog()
 	uri := c.client.getEndpoint(tableServiceName, tablesURIPath, url.Values{})
 	uri += fmt.Sprintf("('%s')", string(table))
 
@@ -142,7 +142,7 @@ func (c *TableServiceClient) DeleteTable(table AzureTable) error {
 }
 
 // SetTablePermissions sets up table ACL permissions as per REST details https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/Set-Table-ACL
-func (c *TableServiceClient) SetTablePermissions(table AzureTable, policies []TableAccessPolicy, timeout uint) (err error) {
+func (c *TableServiceClient) SetTablePermissions(table AzureTable, policies []TableAccessPolicy, timeout uint) (err error) { log.DebugLog()
 	params := url.Values{"comp": {"acl"}}
 
 	if timeout > 0 {
@@ -170,7 +170,7 @@ func (c *TableServiceClient) SetTablePermissions(table AzureTable, policies []Ta
 	return nil
 }
 
-func generateTableACLPayload(policies []TableAccessPolicy) (io.Reader, int, error) {
+func generateTableACLPayload(policies []TableAccessPolicy) (io.Reader, int, error) { log.DebugLog()
 	sil := SignedIdentifiers{
 		SignedIdentifiers: []SignedIdentifier{},
 	}
@@ -183,7 +183,7 @@ func generateTableACLPayload(policies []TableAccessPolicy) (io.Reader, int, erro
 }
 
 // GetTablePermissions gets the table ACL permissions, as per REST details https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/get-table-acl
-func (c *TableServiceClient) GetTablePermissions(table AzureTable, timeout int) (permissionResponse []TableAccessPolicy, err error) {
+func (c *TableServiceClient) GetTablePermissions(table AzureTable, timeout int) (permissionResponse []TableAccessPolicy, err error) { log.DebugLog()
 	params := url.Values{"comp": {"acl"}}
 
 	if timeout > 0 {
@@ -212,7 +212,7 @@ func (c *TableServiceClient) GetTablePermissions(table AzureTable, timeout int) 
 	return out, nil
 }
 
-func updateTableAccessPolicy(ap AccessPolicy) []TableAccessPolicy {
+func updateTableAccessPolicy(ap AccessPolicy) []TableAccessPolicy { log.DebugLog()
 	out := []TableAccessPolicy{}
 	for _, policy := range ap.SignedIdentifiersList.SignedIdentifiers {
 		tap := TableAccessPolicy{
@@ -230,7 +230,7 @@ func updateTableAccessPolicy(ap AccessPolicy) []TableAccessPolicy {
 	return out
 }
 
-func generateTablePermissions(tap *TableAccessPolicy) (permissions string) {
+func generateTablePermissions(tap *TableAccessPolicy) (permissions string) { log.DebugLog()
 	// generate the permissions string (raud).
 	// still want the end user API to have bool flags.
 	permissions = ""

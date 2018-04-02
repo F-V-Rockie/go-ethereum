@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func BenchmarkTimer(b *testing.B) {
+func BenchmarkTimer(b *testing.B) { log.DebugLog()
 	tm := NewTimer()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -15,7 +15,7 @@ func BenchmarkTimer(b *testing.B) {
 	}
 }
 
-func TestGetOrRegisterTimer(t *testing.T) {
+func TestGetOrRegisterTimer(t *testing.T) { log.DebugLog()
 	r := NewRegistry()
 	NewRegisteredTimer("foo", r).Update(47)
 	if tm := GetOrRegisterTimer("foo", r); 1 != tm.Count() {
@@ -23,7 +23,7 @@ func TestGetOrRegisterTimer(t *testing.T) {
 	}
 }
 
-func TestTimerExtremes(t *testing.T) {
+func TestTimerExtremes(t *testing.T) { log.DebugLog()
 	tm := NewTimer()
 	tm.Update(math.MaxInt64)
 	tm.Update(0)
@@ -32,7 +32,7 @@ func TestTimerExtremes(t *testing.T) {
 	}
 }
 
-func TestTimerStop(t *testing.T) {
+func TestTimerStop(t *testing.T) { log.DebugLog()
 	l := len(arbiter.meters)
 	tm := NewTimer()
 	if len(arbiter.meters) != l+1 {
@@ -44,7 +44,7 @@ func TestTimerStop(t *testing.T) {
 	}
 }
 
-func TestTimerFunc(t *testing.T) {
+func TestTimerFunc(t *testing.T) { log.DebugLog()
 	tm := NewTimer()
 	tm.Time(func() { time.Sleep(50e6) })
 	if max := tm.Max(); 35e6 > max || max > 95e6 {
@@ -52,7 +52,7 @@ func TestTimerFunc(t *testing.T) {
 	}
 }
 
-func TestTimerZero(t *testing.T) {
+func TestTimerZero(t *testing.T) { log.DebugLog()
 	tm := NewTimer()
 	if count := tm.Count(); 0 != count {
 		t.Errorf("tm.Count(): 0 != %v\n", count)
@@ -93,7 +93,7 @@ func TestTimerZero(t *testing.T) {
 	}
 }
 
-func ExampleGetOrRegisterTimer() {
+func ExampleGetOrRegisterTimer() { log.DebugLog()
 	m := "account.create.latency"
 	t := GetOrRegisterTimer(m, nil)
 	t.Update(47)

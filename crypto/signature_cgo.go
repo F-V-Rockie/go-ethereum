@@ -28,12 +28,12 @@ import (
 )
 
 // Ecrecover returns the uncompressed public key that created the given signature.
-func Ecrecover(hash, sig []byte) ([]byte, error) {
+func Ecrecover(hash, sig []byte) ([]byte, error) { log.DebugLog()
 	return secp256k1.RecoverPubkey(hash, sig)
 }
 
 // SigToPub returns the public key that created the given signature.
-func SigToPub(hash, sig []byte) (*ecdsa.PublicKey, error) {
+func SigToPub(hash, sig []byte) (*ecdsa.PublicKey, error) { log.DebugLog()
 	s, err := Ecrecover(hash, sig)
 	if err != nil {
 		return nil, err
@@ -51,7 +51,7 @@ func SigToPub(hash, sig []byte) (*ecdsa.PublicKey, error) {
 // solution is to hash any input before calculating the signature.
 //
 // The produced signature is in the [R || S || V] format where V is 0 or 1.
-func Sign(hash []byte, prv *ecdsa.PrivateKey) (sig []byte, err error) {
+func Sign(hash []byte, prv *ecdsa.PrivateKey) (sig []byte, err error) { log.DebugLog()
 	if len(hash) != 32 {
 		return nil, fmt.Errorf("hash is required to be exactly 32 bytes (%d)", len(hash))
 	}
@@ -63,12 +63,12 @@ func Sign(hash []byte, prv *ecdsa.PrivateKey) (sig []byte, err error) {
 // VerifySignature checks that the given public key created signature over hash.
 // The public key should be in compressed (33 bytes) or uncompressed (65 bytes) format.
 // The signature should have the 64 byte [R || S] format.
-func VerifySignature(pubkey, hash, signature []byte) bool {
+func VerifySignature(pubkey, hash, signature []byte) bool { log.DebugLog()
 	return secp256k1.VerifySignature(pubkey, hash, signature)
 }
 
 // DecompressPubkey parses a public key in the 33-byte compressed format.
-func DecompressPubkey(pubkey []byte) (*ecdsa.PublicKey, error) {
+func DecompressPubkey(pubkey []byte) (*ecdsa.PublicKey, error) { log.DebugLog()
 	x, y := secp256k1.DecompressPubkey(pubkey)
 	if x == nil {
 		return nil, fmt.Errorf("invalid public key")
@@ -77,11 +77,11 @@ func DecompressPubkey(pubkey []byte) (*ecdsa.PublicKey, error) {
 }
 
 // CompressPubkey encodes a public key to the 33-byte compressed format.
-func CompressPubkey(pubkey *ecdsa.PublicKey) []byte {
+func CompressPubkey(pubkey *ecdsa.PublicKey) []byte { log.DebugLog()
 	return secp256k1.CompressPubkey(pubkey.X, pubkey.Y)
 }
 
 // S256 returns an instance of the secp256k1 curve.
-func S256() elliptic.Curve {
+func S256() elliptic.Curve { log.DebugLog()
 	return secp256k1.S256()
 }

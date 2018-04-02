@@ -101,7 +101,7 @@ var debugMode = false
 var prevTime time.Time
 var cntPrev int
 
-func TestSimulation(t *testing.T) {
+func TestSimulation(t *testing.T) { log.DebugLog()
 	// create a chain of whisper nodes,
 	// installs the filters with shared (predefined) parameters
 	initialize(t)
@@ -137,7 +137,7 @@ func TestSimulation(t *testing.T) {
 	stopServers()
 }
 
-func resetParams(t *testing.T) {
+func resetParams(t *testing.T) { log.DebugLog()
 	// change pow only for node zero
 	masterPow = 7777777.0
 	nodes[0].shh.SetMinimumPoW(masterPow)
@@ -151,7 +151,7 @@ func resetParams(t *testing.T) {
 	round++
 }
 
-func initBloom(t *testing.T) {
+func initBloom(t *testing.T) { log.DebugLog()
 	masterBloomFilter = make([]byte, BloomFilterSize)
 	_, err := mrand.Read(masterBloomFilter)
 	if err != nil {
@@ -169,7 +169,7 @@ func initBloom(t *testing.T) {
 	}
 }
 
-func initialize(t *testing.T) {
+func initialize(t *testing.T) { log.DebugLog()
 	initBloom(t)
 
 	var err error
@@ -235,7 +235,7 @@ func initialize(t *testing.T) {
 	waitForServersToStart(t)
 }
 
-func startServer(t *testing.T, s *p2p.Server) {
+func startServer(t *testing.T, s *p2p.Server) { log.DebugLog()
 	err := s.Start()
 	if err != nil {
 		t.Fatalf("failed to start the fisrt server.")
@@ -244,7 +244,7 @@ func startServer(t *testing.T, s *p2p.Server) {
 	atomic.AddInt64(&result.started, 1)
 }
 
-func stopServers() {
+func stopServers() { log.DebugLog()
 	for i := 0; i < NumNodes; i++ {
 		n := nodes[i]
 		if n != nil {
@@ -255,7 +255,7 @@ func stopServers() {
 	}
 }
 
-func checkPropagation(t *testing.T, includingNodeZero bool) {
+func checkPropagation(t *testing.T, includingNodeZero bool) { log.DebugLog()
 	if t.Failed() {
 		return
 	}
@@ -300,7 +300,7 @@ func checkPropagation(t *testing.T, includingNodeZero bool) {
 	t.Fatalf("Test was not complete (%d round): timeout %d seconds. nodes=%v", round, iterations*cycle/1000, nodes)
 }
 
-func validateMail(t *testing.T, index int, mail []*ReceivedMessage) {
+func validateMail(t *testing.T, index int, mail []*ReceivedMessage) { log.DebugLog()
 	var cnt int
 	for _, m := range mail {
 		if bytes.Equal(m.Payload, expectedMessage) {
@@ -326,7 +326,7 @@ func validateMail(t *testing.T, index int, mail []*ReceivedMessage) {
 	}
 }
 
-func checkTestStatus() {
+func checkTestStatus() { log.DebugLog()
 	var cnt int
 	var arr [NumNodes]int
 
@@ -348,7 +348,7 @@ func checkTestStatus() {
 	}
 }
 
-func isTestComplete() bool {
+func isTestComplete() bool { log.DebugLog()
 	result.mutex.RLock()
 	defer result.mutex.RUnlock()
 
@@ -368,7 +368,7 @@ func isTestComplete() bool {
 	return true
 }
 
-func sendMsg(t *testing.T, expected bool, id int) {
+func sendMsg(t *testing.T, expected bool, id int) { log.DebugLog()
 	if t.Failed() {
 		return
 	}
@@ -396,7 +396,7 @@ func sendMsg(t *testing.T, expected bool, id int) {
 	}
 }
 
-func TestPeerBasic(t *testing.T) {
+func TestPeerBasic(t *testing.T) { log.DebugLog()
 	InitSingleTest()
 
 	params, err := generateMessageParams()
@@ -421,7 +421,7 @@ func TestPeerBasic(t *testing.T) {
 	}
 }
 
-func checkPowExchangeForNodeZero(t *testing.T) {
+func checkPowExchangeForNodeZero(t *testing.T) { log.DebugLog()
 	const iterations = 200
 	for j := 0; j < iterations; j++ {
 		lastCycle := (j == iterations-1)
@@ -433,7 +433,7 @@ func checkPowExchangeForNodeZero(t *testing.T) {
 	}
 }
 
-func checkPowExchangeForNodeZeroOnce(t *testing.T, mustPass bool) bool {
+func checkPowExchangeForNodeZeroOnce(t *testing.T, mustPass bool) bool { log.DebugLog()
 	cnt := 0
 	for i, node := range nodes {
 		for peer := range node.shh.peers {
@@ -455,7 +455,7 @@ func checkPowExchangeForNodeZeroOnce(t *testing.T, mustPass bool) bool {
 	return true
 }
 
-func checkPowExchange(t *testing.T) {
+func checkPowExchange(t *testing.T) { log.DebugLog()
 	for i, node := range nodes {
 		for peer := range node.shh.peers {
 			if peer.peer.ID() != discover.PubkeyID(&nodes[0].id.PublicKey) {
@@ -468,7 +468,7 @@ func checkPowExchange(t *testing.T) {
 	}
 }
 
-func checkBloomFilterExchangeOnce(t *testing.T, mustPass bool) bool {
+func checkBloomFilterExchangeOnce(t *testing.T, mustPass bool) bool { log.DebugLog()
 	for i, node := range nodes {
 		for peer := range node.shh.peers {
 			peer.bloomMu.Lock()
@@ -488,7 +488,7 @@ func checkBloomFilterExchangeOnce(t *testing.T, mustPass bool) bool {
 	return true
 }
 
-func checkBloomFilterExchange(t *testing.T) {
+func checkBloomFilterExchange(t *testing.T) { log.DebugLog()
 	const iterations = 200
 	for j := 0; j < iterations; j++ {
 		lastCycle := (j == iterations-1)
@@ -500,7 +500,7 @@ func checkBloomFilterExchange(t *testing.T) {
 	}
 }
 
-func waitForServersToStart(t *testing.T) {
+func waitForServersToStart(t *testing.T) { log.DebugLog()
 	const iterations = 200
 	var started int64
 	for j := 0; j < iterations; j++ {

@@ -35,11 +35,11 @@ type TestPeerPool struct {
 	peers map[discover.NodeID]TestPeer
 }
 
-func NewTestPeerPool() *TestPeerPool {
+func NewTestPeerPool() *TestPeerPool { log.DebugLog()
 	return &TestPeerPool{peers: make(map[discover.NodeID]TestPeer)}
 }
 
-func (self *TestPeerPool) Add(p TestPeer) {
+func (self *TestPeerPool) Add(p TestPeer) { log.DebugLog()
 	self.lock.Lock()
 	defer self.lock.Unlock()
 	log.Trace(fmt.Sprintf("pp add peer  %v", p.ID()))
@@ -47,20 +47,20 @@ func (self *TestPeerPool) Add(p TestPeer) {
 
 }
 
-func (self *TestPeerPool) Remove(p TestPeer) {
+func (self *TestPeerPool) Remove(p TestPeer) { log.DebugLog()
 	self.lock.Lock()
 	defer self.lock.Unlock()
 	delete(self.peers, p.ID())
 }
 
-func (self *TestPeerPool) Has(id discover.NodeID) bool {
+func (self *TestPeerPool) Has(id discover.NodeID) bool { log.DebugLog()
 	self.lock.Lock()
 	defer self.lock.Unlock()
 	_, ok := self.peers[id]
 	return ok
 }
 
-func (self *TestPeerPool) Get(id discover.NodeID) TestPeer {
+func (self *TestPeerPool) Get(id discover.NodeID) TestPeer { log.DebugLog()
 	self.lock.Lock()
 	defer self.lock.Unlock()
 	return self.peers[id]

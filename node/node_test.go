@@ -33,7 +33,7 @@ var (
 	testNodeKey, _ = crypto.GenerateKey()
 )
 
-func testNodeConfig() *Config {
+func testNodeConfig() *Config { log.DebugLog()
 	return &Config{
 		Name: "test node",
 		P2P:  p2p.Config{PrivateKey: testNodeKey},
@@ -41,7 +41,7 @@ func testNodeConfig() *Config {
 }
 
 // Tests that an empty protocol stack can be started, restarted and stopped.
-func TestNodeLifeCycle(t *testing.T) {
+func TestNodeLifeCycle(t *testing.T) { log.DebugLog()
 	stack, err := New(testNodeConfig())
 	if err != nil {
 		t.Fatalf("failed to create protocol stack: %v", err)
@@ -75,7 +75,7 @@ func TestNodeLifeCycle(t *testing.T) {
 }
 
 // Tests that if the data dir is already in use, an appropriate error is returned.
-func TestNodeUsedDataDir(t *testing.T) {
+func TestNodeUsedDataDir(t *testing.T) { log.DebugLog()
 	// Create a temporary folder to use as the data directory
 	dir, err := ioutil.TempDir("", "")
 	if err != nil {
@@ -104,7 +104,7 @@ func TestNodeUsedDataDir(t *testing.T) {
 }
 
 // Tests whether services can be registered and duplicates caught.
-func TestServiceRegistry(t *testing.T) {
+func TestServiceRegistry(t *testing.T) { log.DebugLog()
 	stack, err := New(testNodeConfig())
 	if err != nil {
 		t.Fatalf("failed to create protocol stack: %v", err)
@@ -136,7 +136,7 @@ func TestServiceRegistry(t *testing.T) {
 }
 
 // Tests that registered services get started and stopped correctly.
-func TestServiceLifeCycle(t *testing.T) {
+func TestServiceLifeCycle(t *testing.T) { log.DebugLog()
 	stack, err := New(testNodeConfig())
 	if err != nil {
 		t.Fatalf("failed to create protocol stack: %v", err)
@@ -186,7 +186,7 @@ func TestServiceLifeCycle(t *testing.T) {
 }
 
 // Tests that services are restarted cleanly as new instances.
-func TestServiceRestarts(t *testing.T) {
+func TestServiceRestarts(t *testing.T) { log.DebugLog()
 	stack, err := New(testNodeConfig())
 	if err != nil {
 		t.Fatalf("failed to create protocol stack: %v", err)
@@ -234,7 +234,7 @@ func TestServiceRestarts(t *testing.T) {
 
 // Tests that if a service fails to initialize itself, none of the other services
 // will be allowed to even start.
-func TestServiceConstructionAbortion(t *testing.T) {
+func TestServiceConstructionAbortion(t *testing.T) { log.DebugLog()
 	stack, err := New(testNodeConfig())
 	if err != nil {
 		t.Fatalf("failed to create protocol stack: %v", err)
@@ -281,7 +281,7 @@ func TestServiceConstructionAbortion(t *testing.T) {
 
 // Tests that if a service fails to start, all others started before it will be
 // shut down.
-func TestServiceStartupAbortion(t *testing.T) {
+func TestServiceStartupAbortion(t *testing.T) { log.DebugLog()
 	stack, err := New(testNodeConfig())
 	if err != nil {
 		t.Fatalf("failed to create protocol stack: %v", err)
@@ -334,7 +334,7 @@ func TestServiceStartupAbortion(t *testing.T) {
 
 // Tests that even if a registered service fails to shut down cleanly, it does
 // not influece the rest of the shutdown invocations.
-func TestServiceTerminationGuarantee(t *testing.T) {
+func TestServiceTerminationGuarantee(t *testing.T) { log.DebugLog()
 	stack, err := New(testNodeConfig())
 	if err != nil {
 		t.Fatalf("failed to create protocol stack: %v", err)
@@ -408,7 +408,7 @@ func TestServiceTerminationGuarantee(t *testing.T) {
 }
 
 // TestServiceRetrieval tests that individual services can be retrieved.
-func TestServiceRetrieval(t *testing.T) {
+func TestServiceRetrieval(t *testing.T) { log.DebugLog()
 	// Create a simple stack and register two service types
 	stack, err := New(testNodeConfig())
 	if err != nil {
@@ -444,7 +444,7 @@ func TestServiceRetrieval(t *testing.T) {
 }
 
 // Tests that all protocols defined by individual services get launched.
-func TestProtocolGather(t *testing.T) {
+func TestProtocolGather(t *testing.T) { log.DebugLog()
 	stack, err := New(testNodeConfig())
 	if err != nil {
 		t.Fatalf("failed to create protocol stack: %v", err)
@@ -500,7 +500,7 @@ func TestProtocolGather(t *testing.T) {
 }
 
 // Tests that all APIs defined by individual services get exposed.
-func TestAPIGather(t *testing.T) {
+func TestAPIGather(t *testing.T) { log.DebugLog()
 	stack, err := New(testNodeConfig())
 	if err != nil {
 		t.Fatalf("failed to create protocol stack: %v", err)

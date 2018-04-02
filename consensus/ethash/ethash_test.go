@@ -28,7 +28,7 @@ import (
 )
 
 // Tests that ethash works correctly in test mode.
-func TestTestMode(t *testing.T) {
+func TestTestMode(t *testing.T) { log.DebugLog()
 	head := &types.Header{Number: big.NewInt(1), Difficulty: big.NewInt(100)}
 
 	ethash := NewTester()
@@ -45,7 +45,7 @@ func TestTestMode(t *testing.T) {
 
 // This test checks that cache lru logic doesn't crash under load.
 // It reproduces https://github.com/ethereum/go-ethereum/issues/14943
-func TestCacheFileEvict(t *testing.T) {
+func TestCacheFileEvict(t *testing.T) { log.DebugLog()
 	tmpdir, err := ioutil.TempDir("", "ethash-test")
 	if err != nil {
 		t.Fatal(err)
@@ -63,7 +63,7 @@ func TestCacheFileEvict(t *testing.T) {
 	wg.Wait()
 }
 
-func verifyTest(wg *sync.WaitGroup, e *Ethash, workerIndex, epochs int) {
+func verifyTest(wg *sync.WaitGroup, e *Ethash, workerIndex, epochs int) { log.DebugLog()
 	defer wg.Done()
 
 	const wiggle = 4 * epochLength

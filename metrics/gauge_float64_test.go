@@ -2,7 +2,7 @@ package metrics
 
 import "testing"
 
-func BenchmarkGuageFloat64(b *testing.B) {
+func BenchmarkGuageFloat64(b *testing.B) { log.DebugLog()
 	g := NewGaugeFloat64()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -10,7 +10,7 @@ func BenchmarkGuageFloat64(b *testing.B) {
 	}
 }
 
-func TestGaugeFloat64(t *testing.T) {
+func TestGaugeFloat64(t *testing.T) { log.DebugLog()
 	g := NewGaugeFloat64()
 	g.Update(float64(47.0))
 	if v := g.Value(); float64(47.0) != v {
@@ -18,7 +18,7 @@ func TestGaugeFloat64(t *testing.T) {
 	}
 }
 
-func TestGaugeFloat64Snapshot(t *testing.T) {
+func TestGaugeFloat64Snapshot(t *testing.T) { log.DebugLog()
 	g := NewGaugeFloat64()
 	g.Update(float64(47.0))
 	snapshot := g.Snapshot()
@@ -28,7 +28,7 @@ func TestGaugeFloat64Snapshot(t *testing.T) {
 	}
 }
 
-func TestGetOrRegisterGaugeFloat64(t *testing.T) {
+func TestGetOrRegisterGaugeFloat64(t *testing.T) { log.DebugLog()
 	r := NewRegistry()
 	NewRegisteredGaugeFloat64("foo", r).Update(float64(47.0))
 	t.Logf("registry: %v", r)
@@ -37,7 +37,7 @@ func TestGetOrRegisterGaugeFloat64(t *testing.T) {
 	}
 }
 
-func TestFunctionalGaugeFloat64(t *testing.T) {
+func TestFunctionalGaugeFloat64(t *testing.T) { log.DebugLog()
 	var counter float64
 	fg := NewFunctionalGaugeFloat64(func() float64 {
 		counter++
@@ -50,7 +50,7 @@ func TestFunctionalGaugeFloat64(t *testing.T) {
 	}
 }
 
-func TestGetOrRegisterFunctionalGaugeFloat64(t *testing.T) {
+func TestGetOrRegisterFunctionalGaugeFloat64(t *testing.T) { log.DebugLog()
 	r := NewRegistry()
 	NewRegisteredFunctionalGaugeFloat64("foo", r, func() float64 { return 47 })
 	if g := GetOrRegisterGaugeFloat64("foo", r); 47 != g.Value() {

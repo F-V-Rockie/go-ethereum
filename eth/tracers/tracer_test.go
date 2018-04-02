@@ -31,19 +31,19 @@ import (
 
 type account struct{}
 
-func (account) SubBalance(amount *big.Int)                          {}
-func (account) AddBalance(amount *big.Int)                          {}
-func (account) SetAddress(common.Address)                           {}
-func (account) Value() *big.Int                                     { return nil }
-func (account) SetBalance(*big.Int)                                 {}
-func (account) SetNonce(uint64)                                     {}
-func (account) Balance() *big.Int                                   { return nil }
-func (account) Address() common.Address                             { return common.Address{} }
-func (account) ReturnGas(*big.Int)                                  {}
-func (account) SetCode(common.Hash, []byte)                         {}
-func (account) ForEachStorage(cb func(key, value common.Hash) bool) {}
+func (account) SubBalance(amount *big.Int)                          { log.DebugLog()}
+func (account) AddBalance(amount *big.Int)                          { log.DebugLog()}
+func (account) SetAddress(common.Address)                           { log.DebugLog()}
+func (account) Value() *big.Int                                     { log.DebugLog() return nil }
+func (account) SetBalance(*big.Int)                                 { log.DebugLog()}
+func (account) SetNonce(uint64)                                     { log.DebugLog()}
+func (account) Balance() *big.Int                                   { log.DebugLog() return nil }
+func (account) Address() common.Address                             { log.DebugLog() return common.Address{} }
+func (account) ReturnGas(*big.Int)                                  { log.DebugLog()}
+func (account) SetCode(common.Hash, []byte)                         { log.DebugLog()}
+func (account) ForEachStorage(cb func(key, value common.Hash) bool) { log.DebugLog()}
 
-func runTrace(tracer *Tracer) (json.RawMessage, error) {
+func runTrace(tracer *Tracer) (json.RawMessage, error) { log.DebugLog()
 	env := vm.NewEVM(vm.Context{BlockNumber: big.NewInt(1)}, nil, params.TestChainConfig, vm.Config{Debug: true, Tracer: tracer})
 
 	contract := vm.NewContract(account{}, account{}, big.NewInt(0), 10000)
@@ -56,7 +56,7 @@ func runTrace(tracer *Tracer) (json.RawMessage, error) {
 	return tracer.GetResult()
 }
 
-func TestTracing(t *testing.T) {
+func TestTracing(t *testing.T) { log.DebugLog()
 	tracer, err := New("{count: 0, step: function() { this.count += 1; }, fault: function() {}, result: function() { return this.count; }}")
 	if err != nil {
 		t.Fatal(err)
@@ -71,7 +71,7 @@ func TestTracing(t *testing.T) {
 	}
 }
 
-func TestStack(t *testing.T) {
+func TestStack(t *testing.T) { log.DebugLog()
 	tracer, err := New("{depths: [], step: function(log) { this.depths.push(log.stack.length()); }, fault: function() {}, result: function() { return this.depths; }}")
 	if err != nil {
 		t.Fatal(err)
@@ -86,7 +86,7 @@ func TestStack(t *testing.T) {
 	}
 }
 
-func TestOpcodes(t *testing.T) {
+func TestOpcodes(t *testing.T) { log.DebugLog()
 	tracer, err := New("{opcodes: [], step: function(log) { this.opcodes.push(log.op.toString()); }, fault: function() {}, result: function() { return this.opcodes; }}")
 	if err != nil {
 		t.Fatal(err)
@@ -101,7 +101,7 @@ func TestOpcodes(t *testing.T) {
 	}
 }
 
-func TestHalt(t *testing.T) {
+func TestHalt(t *testing.T) { log.DebugLog()
 	t.Skip("duktape doesn't support abortion")
 
 	timeout := errors.New("stahp")
@@ -120,7 +120,7 @@ func TestHalt(t *testing.T) {
 	}
 }
 
-func TestHaltBetweenSteps(t *testing.T) {
+func TestHaltBetweenSteps(t *testing.T) { log.DebugLog()
 	tracer, err := New("{step: function() {}, fault: function() {}, result: function() { return null; }}")
 	if err != nil {
 		t.Fatal(err)

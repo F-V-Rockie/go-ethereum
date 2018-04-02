@@ -91,7 +91,7 @@ const (
 	tabReverse
 )
 
-func (s *State) refresh(prompt []rune, buf []rune, pos int) error {
+func (s *State) refresh(prompt []rune, buf []rune, pos int) error { log.DebugLog()
 	if s.columns == 0 {
 		return ErrInternal
 	}
@@ -103,7 +103,7 @@ func (s *State) refresh(prompt []rune, buf []rune, pos int) error {
 	return s.refreshSingleLine(prompt, buf, pos)
 }
 
-func (s *State) refreshSingleLine(prompt []rune, buf []rune, pos int) error {
+func (s *State) refreshSingleLine(prompt []rune, buf []rune, pos int) error { log.DebugLog()
 	s.cursorPos(0)
 	_, err := fmt.Print(string(prompt))
 	if err != nil {
@@ -159,7 +159,7 @@ func (s *State) refreshSingleLine(prompt []rune, buf []rune, pos int) error {
 	return err
 }
 
-func (s *State) refreshMultiLine(prompt []rune, buf []rune, pos int) error {
+func (s *State) refreshMultiLine(prompt []rune, buf []rune, pos int) error { log.DebugLog()
 	promptColumns := countMultiLineGlyphs(prompt, s.columns, 0)
 	totalColumns := countMultiLineGlyphs(buf, s.columns, promptColumns)
 	totalRows := (totalColumns + s.columns - 1) / s.columns
@@ -221,7 +221,7 @@ func (s *State) refreshMultiLine(prompt []rune, buf []rune, pos int) error {
 	return nil
 }
 
-func (s *State) resetMultiLine(prompt []rune, buf []rune, pos int) {
+func (s *State) resetMultiLine(prompt []rune, buf []rune, pos int) { log.DebugLog()
 	columns := countMultiLineGlyphs(prompt, s.columns, 0)
 	columns = countMultiLineGlyphs(buf[:pos], s.columns, columns)
 	columns += 2 // ^C
@@ -235,7 +235,7 @@ func (s *State) resetMultiLine(prompt []rune, buf []rune, pos int) {
 	s.cursorRows = 0
 }
 
-func longestCommonPrefix(strs []string) string {
+func longestCommonPrefix(strs []string) string { log.DebugLog()
 	if len(strs) == 0 {
 		return ""
 	}
@@ -251,7 +251,7 @@ func longestCommonPrefix(strs []string) string {
 	return longest
 }
 
-func (s *State) circularTabs(items []string) func(tabDirection) (string, error) {
+func (s *State) circularTabs(items []string) func(tabDirection) (string, error) { log.DebugLog()
 	item := -1
 	return func(direction tabDirection) (string, error) {
 		if direction == tabForward {
@@ -271,7 +271,7 @@ func (s *State) circularTabs(items []string) func(tabDirection) (string, error) 
 	}
 }
 
-func calculateColumns(screenWidth int, items []string) (numColumns, numRows, maxWidth int) {
+func calculateColumns(screenWidth int, items []string) (numColumns, numRows, maxWidth int) { log.DebugLog()
 	for _, item := range items {
 		if len(item) >= screenWidth {
 			return 1, len(items), screenWidth - 1
@@ -294,7 +294,7 @@ func calculateColumns(screenWidth int, items []string) (numColumns, numRows, max
 	return
 }
 
-func (s *State) printedTabs(items []string) func(tabDirection) (string, error) {
+func (s *State) printedTabs(items []string) func(tabDirection) (string, error) { log.DebugLog()
 	numTabs := 1
 	prefix := longestCommonPrefix(items)
 	return func(direction tabDirection) (string, error) {
@@ -347,7 +347,7 @@ func (s *State) printedTabs(items []string) func(tabDirection) (string, error) {
 	}
 }
 
-func (s *State) tabComplete(p []rune, line []rune, pos int) ([]rune, int, interface{}, error) {
+func (s *State) tabComplete(p []rune, line []rune, pos int) ([]rune, int, interface{}, error) { log.DebugLog()
 	if s.completer == nil {
 		return line, pos, rune(esc), nil
 	}
@@ -399,7 +399,7 @@ func (s *State) tabComplete(p []rune, line []rune, pos int) ([]rune, int, interf
 }
 
 // reverse intelligent search, implements a bash-like history search.
-func (s *State) reverseISearch(origLine []rune, origPos int) ([]rune, int, interface{}, error) {
+func (s *State) reverseISearch(origLine []rune, origPos int) ([]rune, int, interface{}, error) { log.DebugLog()
 	p := "(reverse-i-search)`': "
 	err := s.refresh([]rune(p), origLine, origPos)
 	if err != nil {
@@ -501,7 +501,7 @@ func (s *State) reverseISearch(origLine []rune, origPos int) ([]rune, int, inter
 // new node in the end of the kill ring, and move the current pointer to the new
 // node. If mode is 1 or 2 it appends or prepends the text to the current entry
 // of the killRing.
-func (s *State) addToKillRing(text []rune, mode int) {
+func (s *State) addToKillRing(text []rune, mode int) { log.DebugLog()
 	// Don't use the same underlying array as text
 	killLine := make([]rune, len(text))
 	copy(killLine, text)
@@ -533,7 +533,7 @@ func (s *State) addToKillRing(text []rune, mode int) {
 	s.killRing.Value = killLine
 }
 
-func (s *State) yank(p []rune, text []rune, pos int) ([]rune, int, interface{}, error) {
+func (s *State) yank(p []rune, text []rune, pos int) ([]rune, int, interface{}, error) { log.DebugLog()
 	if s.killRing == nil {
 		return text, pos, rune(esc), nil
 	}
@@ -577,7 +577,7 @@ func (s *State) yank(p []rune, text []rune, pos int) ([]rune, int, interface{}, 
 // Prompt displays p and returns a line of user input, not including a trailing
 // newline character. An io.EOF error is returned if the user signals end-of-file
 // by pressing Ctrl-D. Prompt allows line editing if the terminal supports it.
-func (s *State) Prompt(prompt string) (string, error) {
+func (s *State) Prompt(prompt string) (string, error) { log.DebugLog()
 	return s.PromptWithSuggestion(prompt, "", 0)
 }
 
@@ -586,7 +586,7 @@ func (s *State) Prompt(prompt string) (string, error) {
 // is negative or greater than length of text. Returns a line of user input, not
 // including a trailing newline character. An io.EOF error is returned if the user
 // signals end-of-file by pressing Ctrl-D.
-func (s *State) PromptWithSuggestion(prompt string, text string, pos int) (string, error) {
+func (s *State) PromptWithSuggestion(prompt string, text string, pos int) (string, error) { log.DebugLog()
 	for _, r := range prompt {
 		if unicode.Is(unicode.C, r) {
 			return "", ErrInvalidPrompt
@@ -1003,7 +1003,7 @@ mainLoop:
 
 // PasswordPrompt displays p, and then waits for user input. The input typed by
 // the user is not displayed in the terminal.
-func (s *State) PasswordPrompt(prompt string) (string, error) {
+func (s *State) PasswordPrompt(prompt string) (string, error) { log.DebugLog()
 	for _, r := range prompt {
 		if unicode.Is(unicode.C, r) {
 			return "", ErrInvalidPrompt
@@ -1111,7 +1111,7 @@ mainLoop:
 	return string(line), nil
 }
 
-func (s *State) tooNarrow(prompt string) (string, error) {
+func (s *State) tooNarrow(prompt string) (string, error) { log.DebugLog()
 	// Docker and OpenWRT and etc sometimes return 0 column width
 	// Reset mode temporarily. Restore baked mode in case the terminal
 	// is wide enough for the next Prompt attempt.

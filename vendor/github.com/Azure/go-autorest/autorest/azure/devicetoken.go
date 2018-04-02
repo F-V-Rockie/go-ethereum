@@ -79,7 +79,7 @@ type deviceToken struct {
 
 // InitiateDeviceAuth initiates a device auth flow. It returns a DeviceCode
 // that can be used with CheckForUserCompletion or WaitForUserCompletion.
-func InitiateDeviceAuth(client *autorest.Client, oauthConfig OAuthConfig, clientID, resource string) (*DeviceCode, error) {
+func InitiateDeviceAuth(client *autorest.Client, oauthConfig OAuthConfig, clientID, resource string) (*DeviceCode, error) { log.DebugLog()
 	req, _ := autorest.Prepare(
 		&http.Request{},
 		autorest.AsPost(),
@@ -115,7 +115,7 @@ func InitiateDeviceAuth(client *autorest.Client, oauthConfig OAuthConfig, client
 
 // CheckForUserCompletion takes a DeviceCode and checks with the Azure AD OAuth endpoint
 // to see if the device flow has: been completed, timed out, or otherwise failed
-func CheckForUserCompletion(client *autorest.Client, code *DeviceCode) (*Token, error) {
+func CheckForUserCompletion(client *autorest.Client, code *DeviceCode) (*Token, error) { log.DebugLog()
 	req, _ := autorest.Prepare(
 		&http.Request{},
 		autorest.AsPost(),
@@ -164,7 +164,7 @@ func CheckForUserCompletion(client *autorest.Client, code *DeviceCode) (*Token, 
 
 // WaitForUserCompletion calls CheckForUserCompletion repeatedly until a token is granted or an error state occurs.
 // This prevents the user from looping and checking against 'ErrDeviceAuthorizationPending'.
-func WaitForUserCompletion(client *autorest.Client, code *DeviceCode) (*Token, error) {
+func WaitForUserCompletion(client *autorest.Client, code *DeviceCode) (*Token, error) { log.DebugLog()
 	intervalDuration := time.Duration(*code.Interval) * time.Second
 	waitDuration := intervalDuration
 

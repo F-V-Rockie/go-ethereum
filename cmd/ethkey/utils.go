@@ -31,7 +31,7 @@ import (
 // getPassPhrase obtains a passphrase given by the user.  It first checks the
 // --passphrase command line flag and ultimately prompts the user for a
 // passphrase.
-func getPassPhrase(ctx *cli.Context, confirmation bool) string {
+func getPassPhrase(ctx *cli.Context, confirmation bool) string { log.DebugLog()
 	// Look for the --passphrase flag.
 	passphraseFile := ctx.String(passphraseFlag.Name)
 	if passphraseFile != "" {
@@ -67,14 +67,14 @@ func getPassPhrase(ctx *cli.Context, confirmation bool) string {
 //   keccak256("\x19Ethereum Signed Message:\n"${message length}${message}).
 //
 // This gives context to the signed message and prevents signing of transactions.
-func signHash(data []byte) []byte {
+func signHash(data []byte) []byte { log.DebugLog()
 	msg := fmt.Sprintf("\x19Ethereum Signed Message:\n%d%s", len(data), data)
 	return crypto.Keccak256([]byte(msg))
 }
 
 // mustPrintJSON prints the JSON encoding of the given object and
 // exits the program with an error message when the marshaling fails.
-func mustPrintJSON(jsonObject interface{}) {
+func mustPrintJSON(jsonObject interface{}) { log.DebugLog()
 	str, err := json.MarshalIndent(jsonObject, "", "  ")
 	if err != nil {
 		utils.Fatalf("Failed to marshal JSON object: %v", err)

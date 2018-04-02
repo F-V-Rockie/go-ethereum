@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-func TestResettingTimer(t *testing.T) {
+func TestResettingTimer(t *testing.T) { log.DebugLog()
 	tests := []struct {
 		values   []int64
 		start    int

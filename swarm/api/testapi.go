@@ -25,22 +25,22 @@ type Control struct {
 	hive *network.Hive
 }
 
-func NewControl(api *Api, hive *network.Hive) *Control {
+func NewControl(api *Api, hive *network.Hive) *Control { log.DebugLog()
 	return &Control{api, hive}
 }
 
-func (self *Control) BlockNetworkRead(on bool) {
+func (self *Control) BlockNetworkRead(on bool) { log.DebugLog()
 	self.hive.BlockNetworkRead(on)
 }
 
-func (self *Control) SyncEnabled(on bool) {
+func (self *Control) SyncEnabled(on bool) { log.DebugLog()
 	self.hive.SyncEnabled(on)
 }
 
-func (self *Control) SwapEnabled(on bool) {
+func (self *Control) SwapEnabled(on bool) { log.DebugLog()
 	self.hive.SwapEnabled(on)
 }
 
-func (self *Control) Hive() string {
+func (self *Control) Hive() string { log.DebugLog()
 	return self.hive.String()
 }

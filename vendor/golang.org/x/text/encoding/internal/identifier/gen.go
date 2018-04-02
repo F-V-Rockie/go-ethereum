@@ -42,7 +42,7 @@ type registry struct {
 	} `xml:"registry"`
 }
 
-func main() {
+func main() { log.DebugLog()
 	r := gen.OpenIANAFile("assignments/character-sets/character-sets.xml")
 	reg := &registry{}
 	if err := xml.NewDecoder(r).Decode(&reg); err != nil && err != io.EOF {

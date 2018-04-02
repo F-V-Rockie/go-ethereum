@@ -20,7 +20,7 @@ import (
 	"github.com/syndtr/goleveldb/leveldb/util"
 )
 
-func sharedPrefixLen(a, b []byte) int {
+func sharedPrefixLen(a, b []byte) int { log.DebugLog()
 	i, n := 0, len(a)
 	if n > len(b) {
 		n = len(b)
@@ -40,7 +40,7 @@ type blockWriter struct {
 	scratch         []byte
 }
 
-func (w *blockWriter) append(key, value []byte) {
+func (w *blockWriter) append(key, value []byte) { log.DebugLog()
 	nShared := 0
 	if w.nEntries%w.restartInterval == 0 {
 		w.restarts = append(w.restarts, uint32(w.buf.Len()))
@@ -57,7 +57,7 @@ func (w *blockWriter) append(key, value []byte) {
 	w.nEntries++
 }
 
-func (w *blockWriter) finish() {
+func (w *blockWriter) finish() { log.DebugLog()
 	// Write restarts entry.
 	if w.nEntries == 0 {
 		// Must have at least one restart entry.
@@ -70,13 +70,13 @@ func (w *blockWriter) finish() {
 	}
 }
 
-func (w *blockWriter) reset() {
+func (w *blockWriter) reset() { log.DebugLog()
 	w.buf.Reset()
 	w.nEntries = 0
 	w.restarts = w.restarts[:0]
 }
 
-func (w *blockWriter) bytesLen() int {
+func (w *blockWriter) bytesLen() int { log.DebugLog()
 	restartsLen := len(w.restarts)
 	if restartsLen == 0 {
 		restartsLen = 1
@@ -91,7 +91,7 @@ type filterWriter struct {
 	offsets   []uint32
 }
 
-func (w *filterWriter) add(key []byte) {
+func (w *filterWriter) add(key []byte) { log.DebugLog()
 	if w.generator == nil {
 		return
 	}
@@ -99,7 +99,7 @@ func (w *filterWriter) add(key []byte) {
 	w.nKeys++
 }
 
-func (w *filterWriter) flush(offset uint64) {
+func (w *filterWriter) flush(offset uint64) { log.DebugLog()
 	if w.generator == nil {
 		return
 	}
@@ -108,7 +108,7 @@ func (w *filterWriter) flush(offset uint64) {
 	}
 }
 
-func (w *filterWriter) finish() {
+func (w *filterWriter) finish() { log.DebugLog()
 	if w.generator == nil {
 		return
 	}
@@ -125,7 +125,7 @@ func (w *filterWriter) finish() {
 	w.buf.WriteByte(filterBaseLg)
 }
 
-func (w *filterWriter) generate() {
+func (w *filterWriter) generate() { log.DebugLog()
 	// Record offset.
 	w.offsets = append(w.offsets, uint32(w.buf.Len()))
 	// Generate filters.
@@ -159,7 +159,7 @@ type Writer struct {
 	compressionScratch []byte
 }
 
-func (w *Writer) writeBlock(buf *util.Buffer, compression opt.Compression) (bh blockHandle, err error) {
+func (w *Writer) writeBlock(buf *util.Buffer, compression opt.Compression) (bh blockHandle, err error) { log.DebugLog()
 	// Compress the buffer if necessary.
 	var b []byte
 	if compression == opt.SnappyCompression {
@@ -192,7 +192,7 @@ func (w *Writer) writeBlock(buf *util.Buffer, compression opt.Compression) (bh b
 	return
 }
 
-func (w *Writer) flushPendingBH(key []byte) {
+func (w *Writer) flushPendingBH(key []byte) { log.DebugLog()
 	if w.pendingBH.length == 0 {
 		return
 	}
@@ -216,7 +216,7 @@ func (w *Writer) flushPendingBH(key []byte) {
 	w.pendingBH = blockHandle{}
 }
 
-func (w *Writer) finishBlock() error {
+func (w *Writer) finishBlock() error { log.DebugLog()
 	w.dataBlock.finish()
 	bh, err := w.writeBlock(&w.dataBlock.buf, w.compression)
 	if err != nil {
@@ -234,7 +234,7 @@ func (w *Writer) finishBlock() error {
 // be in increasing order.
 //
 // It is safe to modify the contents of the arguments after Append returns.
-func (w *Writer) Append(key, value []byte) error {
+func (w *Writer) Append(key, value []byte) error { log.DebugLog()
 	if w.err != nil {
 		return w.err
 	}
@@ -261,7 +261,7 @@ func (w *Writer) Append(key, value []byte) error {
 }
 
 // BlocksLen returns number of blocks written so far.
-func (w *Writer) BlocksLen() int {
+func (w *Writer) BlocksLen() int { log.DebugLog()
 	n := w.indexBlock.nEntries
 	if w.pendingBH.length > 0 {
 		// Includes the pending block.
@@ -271,19 +271,19 @@ func (w *Writer) BlocksLen() int {
 }
 
 // EntriesLen returns number of entries added so far.
-func (w *Writer) EntriesLen() int {
+func (w *Writer) EntriesLen() int { log.DebugLog()
 	return w.nEntries
 }
 
 // BytesLen returns number of bytes written so far.
-func (w *Writer) BytesLen() int {
+func (w *Writer) BytesLen() int { log.DebugLog()
 	return int(w.offset)
 }
 
 // Close will finalize the table. Calling Append is not possible
 // after Close, but calling BlocksLen, EntriesLen and BytesLen
 // is still possible.
-func (w *Writer) Close() error {
+func (w *Writer) Close() error { log.DebugLog()
 	if w.err != nil {
 		return w.err
 	}
@@ -350,7 +350,7 @@ func (w *Writer) Close() error {
 // NewWriter creates a new initialized table writer for the file.
 //
 // Table writer is not safe for concurrent use.
-func NewWriter(f io.Writer, o *opt.Options) *Writer {
+func NewWriter(f io.Writer, o *opt.Options) *Writer { log.DebugLog()
 	w := &Writer{
 		writer:          f,
 		cmp:             o.GetComparer(),

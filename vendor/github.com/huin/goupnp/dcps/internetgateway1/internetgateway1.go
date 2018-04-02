@@ -51,7 +51,7 @@ type LANHostConfigManagement1 struct {
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func NewLANHostConfigManagement1Clients() (clients []*LANHostConfigManagement1, errors []error, err error) {
+func NewLANHostConfigManagement1Clients() (clients []*LANHostConfigManagement1, errors []error, err error) { log.DebugLog()
 	var genericClients []goupnp.ServiceClient
 	if genericClients, errors, err = goupnp.NewServiceClients(URN_LANHostConfigManagement_1); err != nil {
 		return
@@ -66,7 +66,7 @@ func NewLANHostConfigManagement1Clients() (clients []*LANHostConfigManagement1, 
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered service URL.
-func NewLANHostConfigManagement1ClientsByURL(loc *url.URL) ([]*LANHostConfigManagement1, error) {
+func NewLANHostConfigManagement1ClientsByURL(loc *url.URL) ([]*LANHostConfigManagement1, error) { log.DebugLog()
 	genericClients, err := goupnp.NewServiceClientsByURL(loc, URN_LANHostConfigManagement_1)
 	if err != nil {
 		return nil, err
@@ -82,7 +82,7 @@ func NewLANHostConfigManagement1ClientsByURL(loc *url.URL) ([]*LANHostConfigMana
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered root device.
-func NewLANHostConfigManagement1ClientsFromRootDevice(rootDevice *goupnp.RootDevice, loc *url.URL) ([]*LANHostConfigManagement1, error) {
+func NewLANHostConfigManagement1ClientsFromRootDevice(rootDevice *goupnp.RootDevice, loc *url.URL) ([]*LANHostConfigManagement1, error) { log.DebugLog()
 	genericClients, err := goupnp.NewServiceClientsFromRootDevice(rootDevice, loc, URN_LANHostConfigManagement_1)
 	if err != nil {
 		return nil, err
@@ -90,7 +90,7 @@ func NewLANHostConfigManagement1ClientsFromRootDevice(rootDevice *goupnp.RootDev
 	return newLANHostConfigManagement1ClientsFromGenericClients(genericClients), nil
 }
 
-func newLANHostConfigManagement1ClientsFromGenericClients(genericClients []goupnp.ServiceClient) []*LANHostConfigManagement1 {
+func newLANHostConfigManagement1ClientsFromGenericClients(genericClients []goupnp.ServiceClient) []*LANHostConfigManagement1 { log.DebugLog()
 	clients := make([]*LANHostConfigManagement1, len(genericClients))
 	for i := range genericClients {
 		clients[i] = &LANHostConfigManagement1{genericClients[i]}
@@ -98,7 +98,7 @@ func newLANHostConfigManagement1ClientsFromGenericClients(genericClients []goupn
 	return clients
 }
 
-func (client *LANHostConfigManagement1) SetDHCPServerConfigurable(NewDHCPServerConfigurable bool) (err error) {
+func (client *LANHostConfigManagement1) SetDHCPServerConfigurable(NewDHCPServerConfigurable bool) (err error) { log.DebugLog()
 	// Request structure.
 	request := &struct {
 		NewDHCPServerConfigurable string
@@ -124,7 +124,7 @@ func (client *LANHostConfigManagement1) SetDHCPServerConfigurable(NewDHCPServerC
 	return
 }
 
-func (client *LANHostConfigManagement1) GetDHCPServerConfigurable() (NewDHCPServerConfigurable bool, err error) {
+func (client *LANHostConfigManagement1) GetDHCPServerConfigurable() (NewDHCPServerConfigurable bool, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -150,7 +150,7 @@ func (client *LANHostConfigManagement1) GetDHCPServerConfigurable() (NewDHCPServ
 	return
 }
 
-func (client *LANHostConfigManagement1) SetDHCPRelay(NewDHCPRelay bool) (err error) {
+func (client *LANHostConfigManagement1) SetDHCPRelay(NewDHCPRelay bool) (err error) { log.DebugLog()
 	// Request structure.
 	request := &struct {
 		NewDHCPRelay string
@@ -176,7 +176,7 @@ func (client *LANHostConfigManagement1) SetDHCPRelay(NewDHCPRelay bool) (err err
 	return
 }
 
-func (client *LANHostConfigManagement1) GetDHCPRelay() (NewDHCPRelay bool, err error) {
+func (client *LANHostConfigManagement1) GetDHCPRelay() (NewDHCPRelay bool, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -202,7 +202,7 @@ func (client *LANHostConfigManagement1) GetDHCPRelay() (NewDHCPRelay bool, err e
 	return
 }
 
-func (client *LANHostConfigManagement1) SetSubnetMask(NewSubnetMask string) (err error) {
+func (client *LANHostConfigManagement1) SetSubnetMask(NewSubnetMask string) (err error) { log.DebugLog()
 	// Request structure.
 	request := &struct {
 		NewSubnetMask string
@@ -228,7 +228,7 @@ func (client *LANHostConfigManagement1) SetSubnetMask(NewSubnetMask string) (err
 	return
 }
 
-func (client *LANHostConfigManagement1) GetSubnetMask() (NewSubnetMask string, err error) {
+func (client *LANHostConfigManagement1) GetSubnetMask() (NewSubnetMask string, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -254,7 +254,7 @@ func (client *LANHostConfigManagement1) GetSubnetMask() (NewSubnetMask string, e
 	return
 }
 
-func (client *LANHostConfigManagement1) SetIPRouter(NewIPRouters string) (err error) {
+func (client *LANHostConfigManagement1) SetIPRouter(NewIPRouters string) (err error) { log.DebugLog()
 	// Request structure.
 	request := &struct {
 		NewIPRouters string
@@ -280,7 +280,7 @@ func (client *LANHostConfigManagement1) SetIPRouter(NewIPRouters string) (err er
 	return
 }
 
-func (client *LANHostConfigManagement1) DeleteIPRouter(NewIPRouters string) (err error) {
+func (client *LANHostConfigManagement1) DeleteIPRouter(NewIPRouters string) (err error) { log.DebugLog()
 	// Request structure.
 	request := &struct {
 		NewIPRouters string
@@ -306,7 +306,7 @@ func (client *LANHostConfigManagement1) DeleteIPRouter(NewIPRouters string) (err
 	return
 }
 
-func (client *LANHostConfigManagement1) GetIPRoutersList() (NewIPRouters string, err error) {
+func (client *LANHostConfigManagement1) GetIPRoutersList() (NewIPRouters string, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -332,7 +332,7 @@ func (client *LANHostConfigManagement1) GetIPRoutersList() (NewIPRouters string,
 	return
 }
 
-func (client *LANHostConfigManagement1) SetDomainName(NewDomainName string) (err error) {
+func (client *LANHostConfigManagement1) SetDomainName(NewDomainName string) (err error) { log.DebugLog()
 	// Request structure.
 	request := &struct {
 		NewDomainName string
@@ -358,7 +358,7 @@ func (client *LANHostConfigManagement1) SetDomainName(NewDomainName string) (err
 	return
 }
 
-func (client *LANHostConfigManagement1) GetDomainName() (NewDomainName string, err error) {
+func (client *LANHostConfigManagement1) GetDomainName() (NewDomainName string, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -384,7 +384,7 @@ func (client *LANHostConfigManagement1) GetDomainName() (NewDomainName string, e
 	return
 }
 
-func (client *LANHostConfigManagement1) SetAddressRange(NewMinAddress string, NewMaxAddress string) (err error) {
+func (client *LANHostConfigManagement1) SetAddressRange(NewMinAddress string, NewMaxAddress string) (err error) { log.DebugLog()
 	// Request structure.
 	request := &struct {
 		NewMinAddress string
@@ -415,7 +415,7 @@ func (client *LANHostConfigManagement1) SetAddressRange(NewMinAddress string, Ne
 	return
 }
 
-func (client *LANHostConfigManagement1) GetAddressRange() (NewMinAddress string, NewMaxAddress string, err error) {
+func (client *LANHostConfigManagement1) GetAddressRange() (NewMinAddress string, NewMaxAddress string, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -446,7 +446,7 @@ func (client *LANHostConfigManagement1) GetAddressRange() (NewMinAddress string,
 	return
 }
 
-func (client *LANHostConfigManagement1) SetReservedAddress(NewReservedAddresses string) (err error) {
+func (client *LANHostConfigManagement1) SetReservedAddress(NewReservedAddresses string) (err error) { log.DebugLog()
 	// Request structure.
 	request := &struct {
 		NewReservedAddresses string
@@ -472,7 +472,7 @@ func (client *LANHostConfigManagement1) SetReservedAddress(NewReservedAddresses 
 	return
 }
 
-func (client *LANHostConfigManagement1) DeleteReservedAddress(NewReservedAddresses string) (err error) {
+func (client *LANHostConfigManagement1) DeleteReservedAddress(NewReservedAddresses string) (err error) { log.DebugLog()
 	// Request structure.
 	request := &struct {
 		NewReservedAddresses string
@@ -498,7 +498,7 @@ func (client *LANHostConfigManagement1) DeleteReservedAddress(NewReservedAddress
 	return
 }
 
-func (client *LANHostConfigManagement1) GetReservedAddresses() (NewReservedAddresses string, err error) {
+func (client *LANHostConfigManagement1) GetReservedAddresses() (NewReservedAddresses string, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -524,7 +524,7 @@ func (client *LANHostConfigManagement1) GetReservedAddresses() (NewReservedAddre
 	return
 }
 
-func (client *LANHostConfigManagement1) SetDNSServer(NewDNSServers string) (err error) {
+func (client *LANHostConfigManagement1) SetDNSServer(NewDNSServers string) (err error) { log.DebugLog()
 	// Request structure.
 	request := &struct {
 		NewDNSServers string
@@ -550,7 +550,7 @@ func (client *LANHostConfigManagement1) SetDNSServer(NewDNSServers string) (err 
 	return
 }
 
-func (client *LANHostConfigManagement1) DeleteDNSServer(NewDNSServers string) (err error) {
+func (client *LANHostConfigManagement1) DeleteDNSServer(NewDNSServers string) (err error) { log.DebugLog()
 	// Request structure.
 	request := &struct {
 		NewDNSServers string
@@ -576,7 +576,7 @@ func (client *LANHostConfigManagement1) DeleteDNSServer(NewDNSServers string) (e
 	return
 }
 
-func (client *LANHostConfigManagement1) GetDNSServers() (NewDNSServers string, err error) {
+func (client *LANHostConfigManagement1) GetDNSServers() (NewDNSServers string, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -615,7 +615,7 @@ type Layer3Forwarding1 struct {
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func NewLayer3Forwarding1Clients() (clients []*Layer3Forwarding1, errors []error, err error) {
+func NewLayer3Forwarding1Clients() (clients []*Layer3Forwarding1, errors []error, err error) { log.DebugLog()
 	var genericClients []goupnp.ServiceClient
 	if genericClients, errors, err = goupnp.NewServiceClients(URN_Layer3Forwarding_1); err != nil {
 		return
@@ -630,7 +630,7 @@ func NewLayer3Forwarding1Clients() (clients []*Layer3Forwarding1, errors []error
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered service URL.
-func NewLayer3Forwarding1ClientsByURL(loc *url.URL) ([]*Layer3Forwarding1, error) {
+func NewLayer3Forwarding1ClientsByURL(loc *url.URL) ([]*Layer3Forwarding1, error) { log.DebugLog()
 	genericClients, err := goupnp.NewServiceClientsByURL(loc, URN_Layer3Forwarding_1)
 	if err != nil {
 		return nil, err
@@ -646,7 +646,7 @@ func NewLayer3Forwarding1ClientsByURL(loc *url.URL) ([]*Layer3Forwarding1, error
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered root device.
-func NewLayer3Forwarding1ClientsFromRootDevice(rootDevice *goupnp.RootDevice, loc *url.URL) ([]*Layer3Forwarding1, error) {
+func NewLayer3Forwarding1ClientsFromRootDevice(rootDevice *goupnp.RootDevice, loc *url.URL) ([]*Layer3Forwarding1, error) { log.DebugLog()
 	genericClients, err := goupnp.NewServiceClientsFromRootDevice(rootDevice, loc, URN_Layer3Forwarding_1)
 	if err != nil {
 		return nil, err
@@ -654,7 +654,7 @@ func NewLayer3Forwarding1ClientsFromRootDevice(rootDevice *goupnp.RootDevice, lo
 	return newLayer3Forwarding1ClientsFromGenericClients(genericClients), nil
 }
 
-func newLayer3Forwarding1ClientsFromGenericClients(genericClients []goupnp.ServiceClient) []*Layer3Forwarding1 {
+func newLayer3Forwarding1ClientsFromGenericClients(genericClients []goupnp.ServiceClient) []*Layer3Forwarding1 { log.DebugLog()
 	clients := make([]*Layer3Forwarding1, len(genericClients))
 	for i := range genericClients {
 		clients[i] = &Layer3Forwarding1{genericClients[i]}
@@ -662,7 +662,7 @@ func newLayer3Forwarding1ClientsFromGenericClients(genericClients []goupnp.Servi
 	return clients
 }
 
-func (client *Layer3Forwarding1) SetDefaultConnectionService(NewDefaultConnectionService string) (err error) {
+func (client *Layer3Forwarding1) SetDefaultConnectionService(NewDefaultConnectionService string) (err error) { log.DebugLog()
 	// Request structure.
 	request := &struct {
 		NewDefaultConnectionService string
@@ -688,7 +688,7 @@ func (client *Layer3Forwarding1) SetDefaultConnectionService(NewDefaultConnectio
 	return
 }
 
-func (client *Layer3Forwarding1) GetDefaultConnectionService() (NewDefaultConnectionService string, err error) {
+func (client *Layer3Forwarding1) GetDefaultConnectionService() (NewDefaultConnectionService string, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -727,7 +727,7 @@ type WANCableLinkConfig1 struct {
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func NewWANCableLinkConfig1Clients() (clients []*WANCableLinkConfig1, errors []error, err error) {
+func NewWANCableLinkConfig1Clients() (clients []*WANCableLinkConfig1, errors []error, err error) { log.DebugLog()
 	var genericClients []goupnp.ServiceClient
 	if genericClients, errors, err = goupnp.NewServiceClients(URN_WANCableLinkConfig_1); err != nil {
 		return
@@ -742,7 +742,7 @@ func NewWANCableLinkConfig1Clients() (clients []*WANCableLinkConfig1, errors []e
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered service URL.
-func NewWANCableLinkConfig1ClientsByURL(loc *url.URL) ([]*WANCableLinkConfig1, error) {
+func NewWANCableLinkConfig1ClientsByURL(loc *url.URL) ([]*WANCableLinkConfig1, error) { log.DebugLog()
 	genericClients, err := goupnp.NewServiceClientsByURL(loc, URN_WANCableLinkConfig_1)
 	if err != nil {
 		return nil, err
@@ -758,7 +758,7 @@ func NewWANCableLinkConfig1ClientsByURL(loc *url.URL) ([]*WANCableLinkConfig1, e
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered root device.
-func NewWANCableLinkConfig1ClientsFromRootDevice(rootDevice *goupnp.RootDevice, loc *url.URL) ([]*WANCableLinkConfig1, error) {
+func NewWANCableLinkConfig1ClientsFromRootDevice(rootDevice *goupnp.RootDevice, loc *url.URL) ([]*WANCableLinkConfig1, error) { log.DebugLog()
 	genericClients, err := goupnp.NewServiceClientsFromRootDevice(rootDevice, loc, URN_WANCableLinkConfig_1)
 	if err != nil {
 		return nil, err
@@ -766,7 +766,7 @@ func NewWANCableLinkConfig1ClientsFromRootDevice(rootDevice *goupnp.RootDevice, 
 	return newWANCableLinkConfig1ClientsFromGenericClients(genericClients), nil
 }
 
-func newWANCableLinkConfig1ClientsFromGenericClients(genericClients []goupnp.ServiceClient) []*WANCableLinkConfig1 {
+func newWANCableLinkConfig1ClientsFromGenericClients(genericClients []goupnp.ServiceClient) []*WANCableLinkConfig1 { log.DebugLog()
 	clients := make([]*WANCableLinkConfig1, len(genericClients))
 	for i := range genericClients {
 		clients[i] = &WANCableLinkConfig1{genericClients[i]}
@@ -780,7 +780,7 @@ func newWANCableLinkConfig1ClientsFromGenericClients(genericClients []goupnp.Ser
 // * NewCableLinkConfigState: allowed values: notReady, dsSyncComplete, usParamAcquired, rangingComplete, ipComplete, todEstablished, paramTransferComplete, registrationComplete, operational, accessDenied
 //
 // * NewLinkType: allowed values: Ethernet
-func (client *WANCableLinkConfig1) GetCableLinkConfigInfo() (NewCableLinkConfigState string, NewLinkType string, err error) {
+func (client *WANCableLinkConfig1) GetCableLinkConfigInfo() (NewCableLinkConfigState string, NewLinkType string, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -811,7 +811,7 @@ func (client *WANCableLinkConfig1) GetCableLinkConfigInfo() (NewCableLinkConfigS
 	return
 }
 
-func (client *WANCableLinkConfig1) GetDownstreamFrequency() (NewDownstreamFrequency uint32, err error) {
+func (client *WANCableLinkConfig1) GetDownstreamFrequency() (NewDownstreamFrequency uint32, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -841,7 +841,7 @@ func (client *WANCableLinkConfig1) GetDownstreamFrequency() (NewDownstreamFreque
 // Return values:
 //
 // * NewDownstreamModulation: allowed values: 64QAM, 256QAM
-func (client *WANCableLinkConfig1) GetDownstreamModulation() (NewDownstreamModulation string, err error) {
+func (client *WANCableLinkConfig1) GetDownstreamModulation() (NewDownstreamModulation string, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -867,7 +867,7 @@ func (client *WANCableLinkConfig1) GetDownstreamModulation() (NewDownstreamModul
 	return
 }
 
-func (client *WANCableLinkConfig1) GetUpstreamFrequency() (NewUpstreamFrequency uint32, err error) {
+func (client *WANCableLinkConfig1) GetUpstreamFrequency() (NewUpstreamFrequency uint32, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -897,7 +897,7 @@ func (client *WANCableLinkConfig1) GetUpstreamFrequency() (NewUpstreamFrequency 
 // Return values:
 //
 // * NewUpstreamModulation: allowed values: QPSK, 16QAM
-func (client *WANCableLinkConfig1) GetUpstreamModulation() (NewUpstreamModulation string, err error) {
+func (client *WANCableLinkConfig1) GetUpstreamModulation() (NewUpstreamModulation string, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -923,7 +923,7 @@ func (client *WANCableLinkConfig1) GetUpstreamModulation() (NewUpstreamModulatio
 	return
 }
 
-func (client *WANCableLinkConfig1) GetUpstreamChannelID() (NewUpstreamChannelID uint32, err error) {
+func (client *WANCableLinkConfig1) GetUpstreamChannelID() (NewUpstreamChannelID uint32, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -949,7 +949,7 @@ func (client *WANCableLinkConfig1) GetUpstreamChannelID() (NewUpstreamChannelID 
 	return
 }
 
-func (client *WANCableLinkConfig1) GetUpstreamPowerLevel() (NewUpstreamPowerLevel uint32, err error) {
+func (client *WANCableLinkConfig1) GetUpstreamPowerLevel() (NewUpstreamPowerLevel uint32, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -975,7 +975,7 @@ func (client *WANCableLinkConfig1) GetUpstreamPowerLevel() (NewUpstreamPowerLeve
 	return
 }
 
-func (client *WANCableLinkConfig1) GetBPIEncryptionEnabled() (NewBPIEncryptionEnabled bool, err error) {
+func (client *WANCableLinkConfig1) GetBPIEncryptionEnabled() (NewBPIEncryptionEnabled bool, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -1001,7 +1001,7 @@ func (client *WANCableLinkConfig1) GetBPIEncryptionEnabled() (NewBPIEncryptionEn
 	return
 }
 
-func (client *WANCableLinkConfig1) GetConfigFile() (NewConfigFile string, err error) {
+func (client *WANCableLinkConfig1) GetConfigFile() (NewConfigFile string, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -1027,7 +1027,7 @@ func (client *WANCableLinkConfig1) GetConfigFile() (NewConfigFile string, err er
 	return
 }
 
-func (client *WANCableLinkConfig1) GetTFTPServer() (NewTFTPServer string, err error) {
+func (client *WANCableLinkConfig1) GetTFTPServer() (NewTFTPServer string, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -1066,7 +1066,7 @@ type WANCommonInterfaceConfig1 struct {
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func NewWANCommonInterfaceConfig1Clients() (clients []*WANCommonInterfaceConfig1, errors []error, err error) {
+func NewWANCommonInterfaceConfig1Clients() (clients []*WANCommonInterfaceConfig1, errors []error, err error) { log.DebugLog()
 	var genericClients []goupnp.ServiceClient
 	if genericClients, errors, err = goupnp.NewServiceClients(URN_WANCommonInterfaceConfig_1); err != nil {
 		return
@@ -1081,7 +1081,7 @@ func NewWANCommonInterfaceConfig1Clients() (clients []*WANCommonInterfaceConfig1
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered service URL.
-func NewWANCommonInterfaceConfig1ClientsByURL(loc *url.URL) ([]*WANCommonInterfaceConfig1, error) {
+func NewWANCommonInterfaceConfig1ClientsByURL(loc *url.URL) ([]*WANCommonInterfaceConfig1, error) { log.DebugLog()
 	genericClients, err := goupnp.NewServiceClientsByURL(loc, URN_WANCommonInterfaceConfig_1)
 	if err != nil {
 		return nil, err
@@ -1097,7 +1097,7 @@ func NewWANCommonInterfaceConfig1ClientsByURL(loc *url.URL) ([]*WANCommonInterfa
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered root device.
-func NewWANCommonInterfaceConfig1ClientsFromRootDevice(rootDevice *goupnp.RootDevice, loc *url.URL) ([]*WANCommonInterfaceConfig1, error) {
+func NewWANCommonInterfaceConfig1ClientsFromRootDevice(rootDevice *goupnp.RootDevice, loc *url.URL) ([]*WANCommonInterfaceConfig1, error) { log.DebugLog()
 	genericClients, err := goupnp.NewServiceClientsFromRootDevice(rootDevice, loc, URN_WANCommonInterfaceConfig_1)
 	if err != nil {
 		return nil, err
@@ -1105,7 +1105,7 @@ func NewWANCommonInterfaceConfig1ClientsFromRootDevice(rootDevice *goupnp.RootDe
 	return newWANCommonInterfaceConfig1ClientsFromGenericClients(genericClients), nil
 }
 
-func newWANCommonInterfaceConfig1ClientsFromGenericClients(genericClients []goupnp.ServiceClient) []*WANCommonInterfaceConfig1 {
+func newWANCommonInterfaceConfig1ClientsFromGenericClients(genericClients []goupnp.ServiceClient) []*WANCommonInterfaceConfig1 { log.DebugLog()
 	clients := make([]*WANCommonInterfaceConfig1, len(genericClients))
 	for i := range genericClients {
 		clients[i] = &WANCommonInterfaceConfig1{genericClients[i]}
@@ -1113,7 +1113,7 @@ func newWANCommonInterfaceConfig1ClientsFromGenericClients(genericClients []goup
 	return clients
 }
 
-func (client *WANCommonInterfaceConfig1) SetEnabledForInternet(NewEnabledForInternet bool) (err error) {
+func (client *WANCommonInterfaceConfig1) SetEnabledForInternet(NewEnabledForInternet bool) (err error) { log.DebugLog()
 	// Request structure.
 	request := &struct {
 		NewEnabledForInternet string
@@ -1139,7 +1139,7 @@ func (client *WANCommonInterfaceConfig1) SetEnabledForInternet(NewEnabledForInte
 	return
 }
 
-func (client *WANCommonInterfaceConfig1) GetEnabledForInternet() (NewEnabledForInternet bool, err error) {
+func (client *WANCommonInterfaceConfig1) GetEnabledForInternet() (NewEnabledForInternet bool, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -1171,7 +1171,7 @@ func (client *WANCommonInterfaceConfig1) GetEnabledForInternet() (NewEnabledForI
 // * NewWANAccessType: allowed values: DSL, POTS, Cable, Ethernet
 //
 // * NewPhysicalLinkStatus: allowed values: Up, Down
-func (client *WANCommonInterfaceConfig1) GetCommonLinkProperties() (NewWANAccessType string, NewLayer1UpstreamMaxBitRate uint32, NewLayer1DownstreamMaxBitRate uint32, NewPhysicalLinkStatus string, err error) {
+func (client *WANCommonInterfaceConfig1) GetCommonLinkProperties() (NewWANAccessType string, NewLayer1UpstreamMaxBitRate uint32, NewLayer1DownstreamMaxBitRate uint32, NewPhysicalLinkStatus string, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -1212,7 +1212,7 @@ func (client *WANCommonInterfaceConfig1) GetCommonLinkProperties() (NewWANAccess
 	return
 }
 
-func (client *WANCommonInterfaceConfig1) GetWANAccessProvider() (NewWANAccessProvider string, err error) {
+func (client *WANCommonInterfaceConfig1) GetWANAccessProvider() (NewWANAccessProvider string, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -1242,7 +1242,7 @@ func (client *WANCommonInterfaceConfig1) GetWANAccessProvider() (NewWANAccessPro
 // Return values:
 //
 // * NewMaximumActiveConnections: allowed value range: minimum=1, step=1
-func (client *WANCommonInterfaceConfig1) GetMaximumActiveConnections() (NewMaximumActiveConnections uint16, err error) {
+func (client *WANCommonInterfaceConfig1) GetMaximumActiveConnections() (NewMaximumActiveConnections uint16, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -1268,7 +1268,7 @@ func (client *WANCommonInterfaceConfig1) GetMaximumActiveConnections() (NewMaxim
 	return
 }
 
-func (client *WANCommonInterfaceConfig1) GetTotalBytesSent() (NewTotalBytesSent uint32, err error) {
+func (client *WANCommonInterfaceConfig1) GetTotalBytesSent() (NewTotalBytesSent uint32, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -1294,7 +1294,7 @@ func (client *WANCommonInterfaceConfig1) GetTotalBytesSent() (NewTotalBytesSent 
 	return
 }
 
-func (client *WANCommonInterfaceConfig1) GetTotalBytesReceived() (NewTotalBytesReceived uint32, err error) {
+func (client *WANCommonInterfaceConfig1) GetTotalBytesReceived() (NewTotalBytesReceived uint32, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -1320,7 +1320,7 @@ func (client *WANCommonInterfaceConfig1) GetTotalBytesReceived() (NewTotalBytesR
 	return
 }
 
-func (client *WANCommonInterfaceConfig1) GetTotalPacketsSent() (NewTotalPacketsSent uint32, err error) {
+func (client *WANCommonInterfaceConfig1) GetTotalPacketsSent() (NewTotalPacketsSent uint32, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -1346,7 +1346,7 @@ func (client *WANCommonInterfaceConfig1) GetTotalPacketsSent() (NewTotalPacketsS
 	return
 }
 
-func (client *WANCommonInterfaceConfig1) GetTotalPacketsReceived() (NewTotalPacketsReceived uint32, err error) {
+func (client *WANCommonInterfaceConfig1) GetTotalPacketsReceived() (NewTotalPacketsReceived uint32, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -1372,7 +1372,7 @@ func (client *WANCommonInterfaceConfig1) GetTotalPacketsReceived() (NewTotalPack
 	return
 }
 
-func (client *WANCommonInterfaceConfig1) GetActiveConnection(NewActiveConnectionIndex uint16) (NewActiveConnDeviceContainer string, NewActiveConnectionServiceID string, err error) {
+func (client *WANCommonInterfaceConfig1) GetActiveConnection(NewActiveConnectionIndex uint16) (NewActiveConnDeviceContainer string, NewActiveConnectionServiceID string, err error) { log.DebugLog()
 	// Request structure.
 	request := &struct {
 		NewActiveConnectionIndex string
@@ -1421,7 +1421,7 @@ type WANDSLLinkConfig1 struct {
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func NewWANDSLLinkConfig1Clients() (clients []*WANDSLLinkConfig1, errors []error, err error) {
+func NewWANDSLLinkConfig1Clients() (clients []*WANDSLLinkConfig1, errors []error, err error) { log.DebugLog()
 	var genericClients []goupnp.ServiceClient
 	if genericClients, errors, err = goupnp.NewServiceClients(URN_WANDSLLinkConfig_1); err != nil {
 		return
@@ -1436,7 +1436,7 @@ func NewWANDSLLinkConfig1Clients() (clients []*WANDSLLinkConfig1, errors []error
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered service URL.
-func NewWANDSLLinkConfig1ClientsByURL(loc *url.URL) ([]*WANDSLLinkConfig1, error) {
+func NewWANDSLLinkConfig1ClientsByURL(loc *url.URL) ([]*WANDSLLinkConfig1, error) { log.DebugLog()
 	genericClients, err := goupnp.NewServiceClientsByURL(loc, URN_WANDSLLinkConfig_1)
 	if err != nil {
 		return nil, err
@@ -1452,7 +1452,7 @@ func NewWANDSLLinkConfig1ClientsByURL(loc *url.URL) ([]*WANDSLLinkConfig1, error
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered root device.
-func NewWANDSLLinkConfig1ClientsFromRootDevice(rootDevice *goupnp.RootDevice, loc *url.URL) ([]*WANDSLLinkConfig1, error) {
+func NewWANDSLLinkConfig1ClientsFromRootDevice(rootDevice *goupnp.RootDevice, loc *url.URL) ([]*WANDSLLinkConfig1, error) { log.DebugLog()
 	genericClients, err := goupnp.NewServiceClientsFromRootDevice(rootDevice, loc, URN_WANDSLLinkConfig_1)
 	if err != nil {
 		return nil, err
@@ -1460,7 +1460,7 @@ func NewWANDSLLinkConfig1ClientsFromRootDevice(rootDevice *goupnp.RootDevice, lo
 	return newWANDSLLinkConfig1ClientsFromGenericClients(genericClients), nil
 }
 
-func newWANDSLLinkConfig1ClientsFromGenericClients(genericClients []goupnp.ServiceClient) []*WANDSLLinkConfig1 {
+func newWANDSLLinkConfig1ClientsFromGenericClients(genericClients []goupnp.ServiceClient) []*WANDSLLinkConfig1 { log.DebugLog()
 	clients := make([]*WANDSLLinkConfig1, len(genericClients))
 	for i := range genericClients {
 		clients[i] = &WANDSLLinkConfig1{genericClients[i]}
@@ -1468,7 +1468,7 @@ func newWANDSLLinkConfig1ClientsFromGenericClients(genericClients []goupnp.Servi
 	return clients
 }
 
-func (client *WANDSLLinkConfig1) SetDSLLinkType(NewLinkType string) (err error) {
+func (client *WANDSLLinkConfig1) SetDSLLinkType(NewLinkType string) (err error) { log.DebugLog()
 	// Request structure.
 	request := &struct {
 		NewLinkType string
@@ -1498,7 +1498,7 @@ func (client *WANDSLLinkConfig1) SetDSLLinkType(NewLinkType string) (err error) 
 // Return values:
 //
 // * NewLinkStatus: allowed values: Up, Down
-func (client *WANDSLLinkConfig1) GetDSLLinkInfo() (NewLinkType string, NewLinkStatus string, err error) {
+func (client *WANDSLLinkConfig1) GetDSLLinkInfo() (NewLinkType string, NewLinkStatus string, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -1529,7 +1529,7 @@ func (client *WANDSLLinkConfig1) GetDSLLinkInfo() (NewLinkType string, NewLinkSt
 	return
 }
 
-func (client *WANDSLLinkConfig1) GetAutoConfig() (NewAutoConfig bool, err error) {
+func (client *WANDSLLinkConfig1) GetAutoConfig() (NewAutoConfig bool, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -1555,7 +1555,7 @@ func (client *WANDSLLinkConfig1) GetAutoConfig() (NewAutoConfig bool, err error)
 	return
 }
 
-func (client *WANDSLLinkConfig1) GetModulationType() (NewModulationType string, err error) {
+func (client *WANDSLLinkConfig1) GetModulationType() (NewModulationType string, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -1581,7 +1581,7 @@ func (client *WANDSLLinkConfig1) GetModulationType() (NewModulationType string, 
 	return
 }
 
-func (client *WANDSLLinkConfig1) SetDestinationAddress(NewDestinationAddress string) (err error) {
+func (client *WANDSLLinkConfig1) SetDestinationAddress(NewDestinationAddress string) (err error) { log.DebugLog()
 	// Request structure.
 	request := &struct {
 		NewDestinationAddress string
@@ -1607,7 +1607,7 @@ func (client *WANDSLLinkConfig1) SetDestinationAddress(NewDestinationAddress str
 	return
 }
 
-func (client *WANDSLLinkConfig1) GetDestinationAddress() (NewDestinationAddress string, err error) {
+func (client *WANDSLLinkConfig1) GetDestinationAddress() (NewDestinationAddress string, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -1633,7 +1633,7 @@ func (client *WANDSLLinkConfig1) GetDestinationAddress() (NewDestinationAddress 
 	return
 }
 
-func (client *WANDSLLinkConfig1) SetATMEncapsulation(NewATMEncapsulation string) (err error) {
+func (client *WANDSLLinkConfig1) SetATMEncapsulation(NewATMEncapsulation string) (err error) { log.DebugLog()
 	// Request structure.
 	request := &struct {
 		NewATMEncapsulation string
@@ -1659,7 +1659,7 @@ func (client *WANDSLLinkConfig1) SetATMEncapsulation(NewATMEncapsulation string)
 	return
 }
 
-func (client *WANDSLLinkConfig1) GetATMEncapsulation() (NewATMEncapsulation string, err error) {
+func (client *WANDSLLinkConfig1) GetATMEncapsulation() (NewATMEncapsulation string, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -1685,7 +1685,7 @@ func (client *WANDSLLinkConfig1) GetATMEncapsulation() (NewATMEncapsulation stri
 	return
 }
 
-func (client *WANDSLLinkConfig1) SetFCSPreserved(NewFCSPreserved bool) (err error) {
+func (client *WANDSLLinkConfig1) SetFCSPreserved(NewFCSPreserved bool) (err error) { log.DebugLog()
 	// Request structure.
 	request := &struct {
 		NewFCSPreserved string
@@ -1711,7 +1711,7 @@ func (client *WANDSLLinkConfig1) SetFCSPreserved(NewFCSPreserved bool) (err erro
 	return
 }
 
-func (client *WANDSLLinkConfig1) GetFCSPreserved() (NewFCSPreserved bool, err error) {
+func (client *WANDSLLinkConfig1) GetFCSPreserved() (NewFCSPreserved bool, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -1750,7 +1750,7 @@ type WANEthernetLinkConfig1 struct {
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func NewWANEthernetLinkConfig1Clients() (clients []*WANEthernetLinkConfig1, errors []error, err error) {
+func NewWANEthernetLinkConfig1Clients() (clients []*WANEthernetLinkConfig1, errors []error, err error) { log.DebugLog()
 	var genericClients []goupnp.ServiceClient
 	if genericClients, errors, err = goupnp.NewServiceClients(URN_WANEthernetLinkConfig_1); err != nil {
 		return
@@ -1765,7 +1765,7 @@ func NewWANEthernetLinkConfig1Clients() (clients []*WANEthernetLinkConfig1, erro
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered service URL.
-func NewWANEthernetLinkConfig1ClientsByURL(loc *url.URL) ([]*WANEthernetLinkConfig1, error) {
+func NewWANEthernetLinkConfig1ClientsByURL(loc *url.URL) ([]*WANEthernetLinkConfig1, error) { log.DebugLog()
 	genericClients, err := goupnp.NewServiceClientsByURL(loc, URN_WANEthernetLinkConfig_1)
 	if err != nil {
 		return nil, err
@@ -1781,7 +1781,7 @@ func NewWANEthernetLinkConfig1ClientsByURL(loc *url.URL) ([]*WANEthernetLinkConf
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered root device.
-func NewWANEthernetLinkConfig1ClientsFromRootDevice(rootDevice *goupnp.RootDevice, loc *url.URL) ([]*WANEthernetLinkConfig1, error) {
+func NewWANEthernetLinkConfig1ClientsFromRootDevice(rootDevice *goupnp.RootDevice, loc *url.URL) ([]*WANEthernetLinkConfig1, error) { log.DebugLog()
 	genericClients, err := goupnp.NewServiceClientsFromRootDevice(rootDevice, loc, URN_WANEthernetLinkConfig_1)
 	if err != nil {
 		return nil, err
@@ -1789,7 +1789,7 @@ func NewWANEthernetLinkConfig1ClientsFromRootDevice(rootDevice *goupnp.RootDevic
 	return newWANEthernetLinkConfig1ClientsFromGenericClients(genericClients), nil
 }
 
-func newWANEthernetLinkConfig1ClientsFromGenericClients(genericClients []goupnp.ServiceClient) []*WANEthernetLinkConfig1 {
+func newWANEthernetLinkConfig1ClientsFromGenericClients(genericClients []goupnp.ServiceClient) []*WANEthernetLinkConfig1 { log.DebugLog()
 	clients := make([]*WANEthernetLinkConfig1, len(genericClients))
 	for i := range genericClients {
 		clients[i] = &WANEthernetLinkConfig1{genericClients[i]}
@@ -1801,7 +1801,7 @@ func newWANEthernetLinkConfig1ClientsFromGenericClients(genericClients []goupnp.
 // Return values:
 //
 // * NewEthernetLinkStatus: allowed values: Up, Down
-func (client *WANEthernetLinkConfig1) GetEthernetLinkStatus() (NewEthernetLinkStatus string, err error) {
+func (client *WANEthernetLinkConfig1) GetEthernetLinkStatus() (NewEthernetLinkStatus string, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -1840,7 +1840,7 @@ type WANIPConnection1 struct {
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func NewWANIPConnection1Clients() (clients []*WANIPConnection1, errors []error, err error) {
+func NewWANIPConnection1Clients() (clients []*WANIPConnection1, errors []error, err error) { log.DebugLog()
 	var genericClients []goupnp.ServiceClient
 	if genericClients, errors, err = goupnp.NewServiceClients(URN_WANIPConnection_1); err != nil {
 		return
@@ -1855,7 +1855,7 @@ func NewWANIPConnection1Clients() (clients []*WANIPConnection1, errors []error, 
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered service URL.
-func NewWANIPConnection1ClientsByURL(loc *url.URL) ([]*WANIPConnection1, error) {
+func NewWANIPConnection1ClientsByURL(loc *url.URL) ([]*WANIPConnection1, error) { log.DebugLog()
 	genericClients, err := goupnp.NewServiceClientsByURL(loc, URN_WANIPConnection_1)
 	if err != nil {
 		return nil, err
@@ -1871,7 +1871,7 @@ func NewWANIPConnection1ClientsByURL(loc *url.URL) ([]*WANIPConnection1, error) 
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered root device.
-func NewWANIPConnection1ClientsFromRootDevice(rootDevice *goupnp.RootDevice, loc *url.URL) ([]*WANIPConnection1, error) {
+func NewWANIPConnection1ClientsFromRootDevice(rootDevice *goupnp.RootDevice, loc *url.URL) ([]*WANIPConnection1, error) { log.DebugLog()
 	genericClients, err := goupnp.NewServiceClientsFromRootDevice(rootDevice, loc, URN_WANIPConnection_1)
 	if err != nil {
 		return nil, err
@@ -1879,7 +1879,7 @@ func NewWANIPConnection1ClientsFromRootDevice(rootDevice *goupnp.RootDevice, loc
 	return newWANIPConnection1ClientsFromGenericClients(genericClients), nil
 }
 
-func newWANIPConnection1ClientsFromGenericClients(genericClients []goupnp.ServiceClient) []*WANIPConnection1 {
+func newWANIPConnection1ClientsFromGenericClients(genericClients []goupnp.ServiceClient) []*WANIPConnection1 { log.DebugLog()
 	clients := make([]*WANIPConnection1, len(genericClients))
 	for i := range genericClients {
 		clients[i] = &WANIPConnection1{genericClients[i]}
@@ -1887,7 +1887,7 @@ func newWANIPConnection1ClientsFromGenericClients(genericClients []goupnp.Servic
 	return clients
 }
 
-func (client *WANIPConnection1) SetConnectionType(NewConnectionType string) (err error) {
+func (client *WANIPConnection1) SetConnectionType(NewConnectionType string) (err error) { log.DebugLog()
 	// Request structure.
 	request := &struct {
 		NewConnectionType string
@@ -1917,7 +1917,7 @@ func (client *WANIPConnection1) SetConnectionType(NewConnectionType string) (err
 // Return values:
 //
 // * NewPossibleConnectionTypes: allowed values: Unconfigured, IP_Routed, IP_Bridged
-func (client *WANIPConnection1) GetConnectionTypeInfo() (NewConnectionType string, NewPossibleConnectionTypes string, err error) {
+func (client *WANIPConnection1) GetConnectionTypeInfo() (NewConnectionType string, NewPossibleConnectionTypes string, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -1948,7 +1948,7 @@ func (client *WANIPConnection1) GetConnectionTypeInfo() (NewConnectionType strin
 	return
 }
 
-func (client *WANIPConnection1) RequestConnection() (err error) {
+func (client *WANIPConnection1) RequestConnection() (err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -1969,7 +1969,7 @@ func (client *WANIPConnection1) RequestConnection() (err error) {
 	return
 }
 
-func (client *WANIPConnection1) RequestTermination() (err error) {
+func (client *WANIPConnection1) RequestTermination() (err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -1990,7 +1990,7 @@ func (client *WANIPConnection1) RequestTermination() (err error) {
 	return
 }
 
-func (client *WANIPConnection1) ForceTermination() (err error) {
+func (client *WANIPConnection1) ForceTermination() (err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -2011,7 +2011,7 @@ func (client *WANIPConnection1) ForceTermination() (err error) {
 	return
 }
 
-func (client *WANIPConnection1) SetAutoDisconnectTime(NewAutoDisconnectTime uint32) (err error) {
+func (client *WANIPConnection1) SetAutoDisconnectTime(NewAutoDisconnectTime uint32) (err error) { log.DebugLog()
 	// Request structure.
 	request := &struct {
 		NewAutoDisconnectTime string
@@ -2037,7 +2037,7 @@ func (client *WANIPConnection1) SetAutoDisconnectTime(NewAutoDisconnectTime uint
 	return
 }
 
-func (client *WANIPConnection1) SetIdleDisconnectTime(NewIdleDisconnectTime uint32) (err error) {
+func (client *WANIPConnection1) SetIdleDisconnectTime(NewIdleDisconnectTime uint32) (err error) { log.DebugLog()
 	// Request structure.
 	request := &struct {
 		NewIdleDisconnectTime string
@@ -2063,7 +2063,7 @@ func (client *WANIPConnection1) SetIdleDisconnectTime(NewIdleDisconnectTime uint
 	return
 }
 
-func (client *WANIPConnection1) SetWarnDisconnectDelay(NewWarnDisconnectDelay uint32) (err error) {
+func (client *WANIPConnection1) SetWarnDisconnectDelay(NewWarnDisconnectDelay uint32) (err error) { log.DebugLog()
 	// Request structure.
 	request := &struct {
 		NewWarnDisconnectDelay string
@@ -2095,7 +2095,7 @@ func (client *WANIPConnection1) SetWarnDisconnectDelay(NewWarnDisconnectDelay ui
 // * NewConnectionStatus: allowed values: Unconfigured, Connected, Disconnected
 //
 // * NewLastConnectionError: allowed values: ERROR_NONE
-func (client *WANIPConnection1) GetStatusInfo() (NewConnectionStatus string, NewLastConnectionError string, NewUptime uint32, err error) {
+func (client *WANIPConnection1) GetStatusInfo() (NewConnectionStatus string, NewLastConnectionError string, NewUptime uint32, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -2131,7 +2131,7 @@ func (client *WANIPConnection1) GetStatusInfo() (NewConnectionStatus string, New
 	return
 }
 
-func (client *WANIPConnection1) GetAutoDisconnectTime() (NewAutoDisconnectTime uint32, err error) {
+func (client *WANIPConnection1) GetAutoDisconnectTime() (NewAutoDisconnectTime uint32, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -2157,7 +2157,7 @@ func (client *WANIPConnection1) GetAutoDisconnectTime() (NewAutoDisconnectTime u
 	return
 }
 
-func (client *WANIPConnection1) GetIdleDisconnectTime() (NewIdleDisconnectTime uint32, err error) {
+func (client *WANIPConnection1) GetIdleDisconnectTime() (NewIdleDisconnectTime uint32, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -2183,7 +2183,7 @@ func (client *WANIPConnection1) GetIdleDisconnectTime() (NewIdleDisconnectTime u
 	return
 }
 
-func (client *WANIPConnection1) GetWarnDisconnectDelay() (NewWarnDisconnectDelay uint32, err error) {
+func (client *WANIPConnection1) GetWarnDisconnectDelay() (NewWarnDisconnectDelay uint32, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -2209,7 +2209,7 @@ func (client *WANIPConnection1) GetWarnDisconnectDelay() (NewWarnDisconnectDelay
 	return
 }
 
-func (client *WANIPConnection1) GetNATRSIPStatus() (NewRSIPAvailable bool, NewNATEnabled bool, err error) {
+func (client *WANIPConnection1) GetNATRSIPStatus() (NewRSIPAvailable bool, NewNATEnabled bool, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -2244,7 +2244,7 @@ func (client *WANIPConnection1) GetNATRSIPStatus() (NewRSIPAvailable bool, NewNA
 // Return values:
 //
 // * NewProtocol: allowed values: TCP, UDP
-func (client *WANIPConnection1) GetGenericPortMappingEntry(NewPortMappingIndex uint16) (NewRemoteHost string, NewExternalPort uint16, NewProtocol string, NewInternalPort uint16, NewInternalClient string, NewEnabled bool, NewPortMappingDescription string, NewLeaseDuration uint32, err error) {
+func (client *WANIPConnection1) GetGenericPortMappingEntry(NewPortMappingIndex uint16) (NewRemoteHost string, NewExternalPort uint16, NewProtocol string, NewInternalPort uint16, NewInternalClient string, NewEnabled bool, NewPortMappingDescription string, NewLeaseDuration uint32, err error) { log.DebugLog()
 	// Request structure.
 	request := &struct {
 		NewPortMappingIndex string
@@ -2315,7 +2315,7 @@ func (client *WANIPConnection1) GetGenericPortMappingEntry(NewPortMappingIndex u
 //
 // * NewProtocol: allowed values: TCP, UDP
 
-func (client *WANIPConnection1) GetSpecificPortMappingEntry(NewRemoteHost string, NewExternalPort uint16, NewProtocol string) (NewInternalPort uint16, NewInternalClient string, NewEnabled bool, NewPortMappingDescription string, NewLeaseDuration uint32, err error) {
+func (client *WANIPConnection1) GetSpecificPortMappingEntry(NewRemoteHost string, NewExternalPort uint16, NewProtocol string) (NewInternalPort uint16, NewInternalClient string, NewEnabled bool, NewPortMappingDescription string, NewLeaseDuration uint32, err error) { log.DebugLog()
 	// Request structure.
 	request := &struct {
 		NewRemoteHost string
@@ -2381,7 +2381,7 @@ func (client *WANIPConnection1) GetSpecificPortMappingEntry(NewRemoteHost string
 //
 // * NewProtocol: allowed values: TCP, UDP
 
-func (client *WANIPConnection1) AddPortMapping(NewRemoteHost string, NewExternalPort uint16, NewProtocol string, NewInternalPort uint16, NewInternalClient string, NewEnabled bool, NewPortMappingDescription string, NewLeaseDuration uint32) (err error) {
+func (client *WANIPConnection1) AddPortMapping(NewRemoteHost string, NewExternalPort uint16, NewProtocol string, NewInternalPort uint16, NewInternalClient string, NewEnabled bool, NewPortMappingDescription string, NewLeaseDuration uint32) (err error) { log.DebugLog()
 	// Request structure.
 	request := &struct {
 		NewRemoteHost string
@@ -2447,7 +2447,7 @@ func (client *WANIPConnection1) AddPortMapping(NewRemoteHost string, NewExternal
 //
 // * NewProtocol: allowed values: TCP, UDP
 
-func (client *WANIPConnection1) DeletePortMapping(NewRemoteHost string, NewExternalPort uint16, NewProtocol string) (err error) {
+func (client *WANIPConnection1) DeletePortMapping(NewRemoteHost string, NewExternalPort uint16, NewProtocol string) (err error) { log.DebugLog()
 	// Request structure.
 	request := &struct {
 		NewRemoteHost string
@@ -2483,7 +2483,7 @@ func (client *WANIPConnection1) DeletePortMapping(NewRemoteHost string, NewExter
 	return
 }
 
-func (client *WANIPConnection1) GetExternalIPAddress() (NewExternalIPAddress string, err error) {
+func (client *WANIPConnection1) GetExternalIPAddress() (NewExternalIPAddress string, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -2522,7 +2522,7 @@ type WANPOTSLinkConfig1 struct {
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func NewWANPOTSLinkConfig1Clients() (clients []*WANPOTSLinkConfig1, errors []error, err error) {
+func NewWANPOTSLinkConfig1Clients() (clients []*WANPOTSLinkConfig1, errors []error, err error) { log.DebugLog()
 	var genericClients []goupnp.ServiceClient
 	if genericClients, errors, err = goupnp.NewServiceClients(URN_WANPOTSLinkConfig_1); err != nil {
 		return
@@ -2537,7 +2537,7 @@ func NewWANPOTSLinkConfig1Clients() (clients []*WANPOTSLinkConfig1, errors []err
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered service URL.
-func NewWANPOTSLinkConfig1ClientsByURL(loc *url.URL) ([]*WANPOTSLinkConfig1, error) {
+func NewWANPOTSLinkConfig1ClientsByURL(loc *url.URL) ([]*WANPOTSLinkConfig1, error) { log.DebugLog()
 	genericClients, err := goupnp.NewServiceClientsByURL(loc, URN_WANPOTSLinkConfig_1)
 	if err != nil {
 		return nil, err
@@ -2553,7 +2553,7 @@ func NewWANPOTSLinkConfig1ClientsByURL(loc *url.URL) ([]*WANPOTSLinkConfig1, err
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered root device.
-func NewWANPOTSLinkConfig1ClientsFromRootDevice(rootDevice *goupnp.RootDevice, loc *url.URL) ([]*WANPOTSLinkConfig1, error) {
+func NewWANPOTSLinkConfig1ClientsFromRootDevice(rootDevice *goupnp.RootDevice, loc *url.URL) ([]*WANPOTSLinkConfig1, error) { log.DebugLog()
 	genericClients, err := goupnp.NewServiceClientsFromRootDevice(rootDevice, loc, URN_WANPOTSLinkConfig_1)
 	if err != nil {
 		return nil, err
@@ -2561,7 +2561,7 @@ func NewWANPOTSLinkConfig1ClientsFromRootDevice(rootDevice *goupnp.RootDevice, l
 	return newWANPOTSLinkConfig1ClientsFromGenericClients(genericClients), nil
 }
 
-func newWANPOTSLinkConfig1ClientsFromGenericClients(genericClients []goupnp.ServiceClient) []*WANPOTSLinkConfig1 {
+func newWANPOTSLinkConfig1ClientsFromGenericClients(genericClients []goupnp.ServiceClient) []*WANPOTSLinkConfig1 { log.DebugLog()
 	clients := make([]*WANPOTSLinkConfig1, len(genericClients))
 	for i := range genericClients {
 		clients[i] = &WANPOTSLinkConfig1{genericClients[i]}
@@ -2574,7 +2574,7 @@ func newWANPOTSLinkConfig1ClientsFromGenericClients(genericClients []goupnp.Serv
 //
 // * NewLinkType: allowed values: PPP_Dialup
 
-func (client *WANPOTSLinkConfig1) SetISPInfo(NewISPPhoneNumber string, NewISPInfo string, NewLinkType string) (err error) {
+func (client *WANPOTSLinkConfig1) SetISPInfo(NewISPPhoneNumber string, NewISPInfo string, NewLinkType string) (err error) { log.DebugLog()
 	// Request structure.
 	request := &struct {
 		NewISPPhoneNumber string
@@ -2610,7 +2610,7 @@ func (client *WANPOTSLinkConfig1) SetISPInfo(NewISPPhoneNumber string, NewISPInf
 	return
 }
 
-func (client *WANPOTSLinkConfig1) SetCallRetryInfo(NewNumberOfRetries uint32, NewDelayBetweenRetries uint32) (err error) {
+func (client *WANPOTSLinkConfig1) SetCallRetryInfo(NewNumberOfRetries uint32, NewDelayBetweenRetries uint32) (err error) { log.DebugLog()
 	// Request structure.
 	request := &struct {
 		NewNumberOfRetries string
@@ -2645,7 +2645,7 @@ func (client *WANPOTSLinkConfig1) SetCallRetryInfo(NewNumberOfRetries uint32, Ne
 // Return values:
 //
 // * NewLinkType: allowed values: PPP_Dialup
-func (client *WANPOTSLinkConfig1) GetISPInfo() (NewISPPhoneNumber string, NewISPInfo string, NewLinkType string, err error) {
+func (client *WANPOTSLinkConfig1) GetISPInfo() (NewISPPhoneNumber string, NewISPInfo string, NewLinkType string, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -2681,7 +2681,7 @@ func (client *WANPOTSLinkConfig1) GetISPInfo() (NewISPPhoneNumber string, NewISP
 	return
 }
 
-func (client *WANPOTSLinkConfig1) GetCallRetryInfo() (NewNumberOfRetries uint32, NewDelayBetweenRetries uint32, err error) {
+func (client *WANPOTSLinkConfig1) GetCallRetryInfo() (NewNumberOfRetries uint32, NewDelayBetweenRetries uint32, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -2712,7 +2712,7 @@ func (client *WANPOTSLinkConfig1) GetCallRetryInfo() (NewNumberOfRetries uint32,
 	return
 }
 
-func (client *WANPOTSLinkConfig1) GetFclass() (NewFclass string, err error) {
+func (client *WANPOTSLinkConfig1) GetFclass() (NewFclass string, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -2738,7 +2738,7 @@ func (client *WANPOTSLinkConfig1) GetFclass() (NewFclass string, err error) {
 	return
 }
 
-func (client *WANPOTSLinkConfig1) GetDataModulationSupported() (NewDataModulationSupported string, err error) {
+func (client *WANPOTSLinkConfig1) GetDataModulationSupported() (NewDataModulationSupported string, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -2764,7 +2764,7 @@ func (client *WANPOTSLinkConfig1) GetDataModulationSupported() (NewDataModulatio
 	return
 }
 
-func (client *WANPOTSLinkConfig1) GetDataProtocol() (NewDataProtocol string, err error) {
+func (client *WANPOTSLinkConfig1) GetDataProtocol() (NewDataProtocol string, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -2790,7 +2790,7 @@ func (client *WANPOTSLinkConfig1) GetDataProtocol() (NewDataProtocol string, err
 	return
 }
 
-func (client *WANPOTSLinkConfig1) GetDataCompression() (NewDataCompression string, err error) {
+func (client *WANPOTSLinkConfig1) GetDataCompression() (NewDataCompression string, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -2816,7 +2816,7 @@ func (client *WANPOTSLinkConfig1) GetDataCompression() (NewDataCompression strin
 	return
 }
 
-func (client *WANPOTSLinkConfig1) GetPlusVTRCommandSupported() (NewPlusVTRCommandSupported bool, err error) {
+func (client *WANPOTSLinkConfig1) GetPlusVTRCommandSupported() (NewPlusVTRCommandSupported bool, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -2855,7 +2855,7 @@ type WANPPPConnection1 struct {
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func NewWANPPPConnection1Clients() (clients []*WANPPPConnection1, errors []error, err error) {
+func NewWANPPPConnection1Clients() (clients []*WANPPPConnection1, errors []error, err error) { log.DebugLog()
 	var genericClients []goupnp.ServiceClient
 	if genericClients, errors, err = goupnp.NewServiceClients(URN_WANPPPConnection_1); err != nil {
 		return
@@ -2870,7 +2870,7 @@ func NewWANPPPConnection1Clients() (clients []*WANPPPConnection1, errors []error
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered service URL.
-func NewWANPPPConnection1ClientsByURL(loc *url.URL) ([]*WANPPPConnection1, error) {
+func NewWANPPPConnection1ClientsByURL(loc *url.URL) ([]*WANPPPConnection1, error) { log.DebugLog()
 	genericClients, err := goupnp.NewServiceClientsByURL(loc, URN_WANPPPConnection_1)
 	if err != nil {
 		return nil, err
@@ -2886,7 +2886,7 @@ func NewWANPPPConnection1ClientsByURL(loc *url.URL) ([]*WANPPPConnection1, error
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered root device.
-func NewWANPPPConnection1ClientsFromRootDevice(rootDevice *goupnp.RootDevice, loc *url.URL) ([]*WANPPPConnection1, error) {
+func NewWANPPPConnection1ClientsFromRootDevice(rootDevice *goupnp.RootDevice, loc *url.URL) ([]*WANPPPConnection1, error) { log.DebugLog()
 	genericClients, err := goupnp.NewServiceClientsFromRootDevice(rootDevice, loc, URN_WANPPPConnection_1)
 	if err != nil {
 		return nil, err
@@ -2894,7 +2894,7 @@ func NewWANPPPConnection1ClientsFromRootDevice(rootDevice *goupnp.RootDevice, lo
 	return newWANPPPConnection1ClientsFromGenericClients(genericClients), nil
 }
 
-func newWANPPPConnection1ClientsFromGenericClients(genericClients []goupnp.ServiceClient) []*WANPPPConnection1 {
+func newWANPPPConnection1ClientsFromGenericClients(genericClients []goupnp.ServiceClient) []*WANPPPConnection1 { log.DebugLog()
 	clients := make([]*WANPPPConnection1, len(genericClients))
 	for i := range genericClients {
 		clients[i] = &WANPPPConnection1{genericClients[i]}
@@ -2902,7 +2902,7 @@ func newWANPPPConnection1ClientsFromGenericClients(genericClients []goupnp.Servi
 	return clients
 }
 
-func (client *WANPPPConnection1) SetConnectionType(NewConnectionType string) (err error) {
+func (client *WANPPPConnection1) SetConnectionType(NewConnectionType string) (err error) { log.DebugLog()
 	// Request structure.
 	request := &struct {
 		NewConnectionType string
@@ -2932,7 +2932,7 @@ func (client *WANPPPConnection1) SetConnectionType(NewConnectionType string) (er
 // Return values:
 //
 // * NewPossibleConnectionTypes: allowed values: Unconfigured, IP_Routed, DHCP_Spoofed, PPPoE_Bridged, PPTP_Relay, L2TP_Relay, PPPoE_Relay
-func (client *WANPPPConnection1) GetConnectionTypeInfo() (NewConnectionType string, NewPossibleConnectionTypes string, err error) {
+func (client *WANPPPConnection1) GetConnectionTypeInfo() (NewConnectionType string, NewPossibleConnectionTypes string, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -2963,7 +2963,7 @@ func (client *WANPPPConnection1) GetConnectionTypeInfo() (NewConnectionType stri
 	return
 }
 
-func (client *WANPPPConnection1) ConfigureConnection(NewUserName string, NewPassword string) (err error) {
+func (client *WANPPPConnection1) ConfigureConnection(NewUserName string, NewPassword string) (err error) { log.DebugLog()
 	// Request structure.
 	request := &struct {
 		NewUserName string
@@ -2994,7 +2994,7 @@ func (client *WANPPPConnection1) ConfigureConnection(NewUserName string, NewPass
 	return
 }
 
-func (client *WANPPPConnection1) RequestConnection() (err error) {
+func (client *WANPPPConnection1) RequestConnection() (err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -3015,7 +3015,7 @@ func (client *WANPPPConnection1) RequestConnection() (err error) {
 	return
 }
 
-func (client *WANPPPConnection1) RequestTermination() (err error) {
+func (client *WANPPPConnection1) RequestTermination() (err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -3036,7 +3036,7 @@ func (client *WANPPPConnection1) RequestTermination() (err error) {
 	return
 }
 
-func (client *WANPPPConnection1) ForceTermination() (err error) {
+func (client *WANPPPConnection1) ForceTermination() (err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -3057,7 +3057,7 @@ func (client *WANPPPConnection1) ForceTermination() (err error) {
 	return
 }
 
-func (client *WANPPPConnection1) SetAutoDisconnectTime(NewAutoDisconnectTime uint32) (err error) {
+func (client *WANPPPConnection1) SetAutoDisconnectTime(NewAutoDisconnectTime uint32) (err error) { log.DebugLog()
 	// Request structure.
 	request := &struct {
 		NewAutoDisconnectTime string
@@ -3083,7 +3083,7 @@ func (client *WANPPPConnection1) SetAutoDisconnectTime(NewAutoDisconnectTime uin
 	return
 }
 
-func (client *WANPPPConnection1) SetIdleDisconnectTime(NewIdleDisconnectTime uint32) (err error) {
+func (client *WANPPPConnection1) SetIdleDisconnectTime(NewIdleDisconnectTime uint32) (err error) { log.DebugLog()
 	// Request structure.
 	request := &struct {
 		NewIdleDisconnectTime string
@@ -3109,7 +3109,7 @@ func (client *WANPPPConnection1) SetIdleDisconnectTime(NewIdleDisconnectTime uin
 	return
 }
 
-func (client *WANPPPConnection1) SetWarnDisconnectDelay(NewWarnDisconnectDelay uint32) (err error) {
+func (client *WANPPPConnection1) SetWarnDisconnectDelay(NewWarnDisconnectDelay uint32) (err error) { log.DebugLog()
 	// Request structure.
 	request := &struct {
 		NewWarnDisconnectDelay string
@@ -3141,7 +3141,7 @@ func (client *WANPPPConnection1) SetWarnDisconnectDelay(NewWarnDisconnectDelay u
 // * NewConnectionStatus: allowed values: Unconfigured, Connected, Disconnected
 //
 // * NewLastConnectionError: allowed values: ERROR_NONE
-func (client *WANPPPConnection1) GetStatusInfo() (NewConnectionStatus string, NewLastConnectionError string, NewUptime uint32, err error) {
+func (client *WANPPPConnection1) GetStatusInfo() (NewConnectionStatus string, NewLastConnectionError string, NewUptime uint32, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -3177,7 +3177,7 @@ func (client *WANPPPConnection1) GetStatusInfo() (NewConnectionStatus string, Ne
 	return
 }
 
-func (client *WANPPPConnection1) GetLinkLayerMaxBitRates() (NewUpstreamMaxBitRate uint32, NewDownstreamMaxBitRate uint32, err error) {
+func (client *WANPPPConnection1) GetLinkLayerMaxBitRates() (NewUpstreamMaxBitRate uint32, NewDownstreamMaxBitRate uint32, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -3208,7 +3208,7 @@ func (client *WANPPPConnection1) GetLinkLayerMaxBitRates() (NewUpstreamMaxBitRat
 	return
 }
 
-func (client *WANPPPConnection1) GetPPPEncryptionProtocol() (NewPPPEncryptionProtocol string, err error) {
+func (client *WANPPPConnection1) GetPPPEncryptionProtocol() (NewPPPEncryptionProtocol string, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -3234,7 +3234,7 @@ func (client *WANPPPConnection1) GetPPPEncryptionProtocol() (NewPPPEncryptionPro
 	return
 }
 
-func (client *WANPPPConnection1) GetPPPCompressionProtocol() (NewPPPCompressionProtocol string, err error) {
+func (client *WANPPPConnection1) GetPPPCompressionProtocol() (NewPPPCompressionProtocol string, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -3260,7 +3260,7 @@ func (client *WANPPPConnection1) GetPPPCompressionProtocol() (NewPPPCompressionP
 	return
 }
 
-func (client *WANPPPConnection1) GetPPPAuthenticationProtocol() (NewPPPAuthenticationProtocol string, err error) {
+func (client *WANPPPConnection1) GetPPPAuthenticationProtocol() (NewPPPAuthenticationProtocol string, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -3286,7 +3286,7 @@ func (client *WANPPPConnection1) GetPPPAuthenticationProtocol() (NewPPPAuthentic
 	return
 }
 
-func (client *WANPPPConnection1) GetUserName() (NewUserName string, err error) {
+func (client *WANPPPConnection1) GetUserName() (NewUserName string, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -3312,7 +3312,7 @@ func (client *WANPPPConnection1) GetUserName() (NewUserName string, err error) {
 	return
 }
 
-func (client *WANPPPConnection1) GetPassword() (NewPassword string, err error) {
+func (client *WANPPPConnection1) GetPassword() (NewPassword string, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -3338,7 +3338,7 @@ func (client *WANPPPConnection1) GetPassword() (NewPassword string, err error) {
 	return
 }
 
-func (client *WANPPPConnection1) GetAutoDisconnectTime() (NewAutoDisconnectTime uint32, err error) {
+func (client *WANPPPConnection1) GetAutoDisconnectTime() (NewAutoDisconnectTime uint32, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -3364,7 +3364,7 @@ func (client *WANPPPConnection1) GetAutoDisconnectTime() (NewAutoDisconnectTime 
 	return
 }
 
-func (client *WANPPPConnection1) GetIdleDisconnectTime() (NewIdleDisconnectTime uint32, err error) {
+func (client *WANPPPConnection1) GetIdleDisconnectTime() (NewIdleDisconnectTime uint32, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -3390,7 +3390,7 @@ func (client *WANPPPConnection1) GetIdleDisconnectTime() (NewIdleDisconnectTime 
 	return
 }
 
-func (client *WANPPPConnection1) GetWarnDisconnectDelay() (NewWarnDisconnectDelay uint32, err error) {
+func (client *WANPPPConnection1) GetWarnDisconnectDelay() (NewWarnDisconnectDelay uint32, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -3416,7 +3416,7 @@ func (client *WANPPPConnection1) GetWarnDisconnectDelay() (NewWarnDisconnectDela
 	return
 }
 
-func (client *WANPPPConnection1) GetNATRSIPStatus() (NewRSIPAvailable bool, NewNATEnabled bool, err error) {
+func (client *WANPPPConnection1) GetNATRSIPStatus() (NewRSIPAvailable bool, NewNATEnabled bool, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -3451,7 +3451,7 @@ func (client *WANPPPConnection1) GetNATRSIPStatus() (NewRSIPAvailable bool, NewN
 // Return values:
 //
 // * NewProtocol: allowed values: TCP, UDP
-func (client *WANPPPConnection1) GetGenericPortMappingEntry(NewPortMappingIndex uint16) (NewRemoteHost string, NewExternalPort uint16, NewProtocol string, NewInternalPort uint16, NewInternalClient string, NewEnabled bool, NewPortMappingDescription string, NewLeaseDuration uint32, err error) {
+func (client *WANPPPConnection1) GetGenericPortMappingEntry(NewPortMappingIndex uint16) (NewRemoteHost string, NewExternalPort uint16, NewProtocol string, NewInternalPort uint16, NewInternalClient string, NewEnabled bool, NewPortMappingDescription string, NewLeaseDuration uint32, err error) { log.DebugLog()
 	// Request structure.
 	request := &struct {
 		NewPortMappingIndex string
@@ -3522,7 +3522,7 @@ func (client *WANPPPConnection1) GetGenericPortMappingEntry(NewPortMappingIndex 
 //
 // * NewProtocol: allowed values: TCP, UDP
 
-func (client *WANPPPConnection1) GetSpecificPortMappingEntry(NewRemoteHost string, NewExternalPort uint16, NewProtocol string) (NewInternalPort uint16, NewInternalClient string, NewEnabled bool, NewPortMappingDescription string, NewLeaseDuration uint32, err error) {
+func (client *WANPPPConnection1) GetSpecificPortMappingEntry(NewRemoteHost string, NewExternalPort uint16, NewProtocol string) (NewInternalPort uint16, NewInternalClient string, NewEnabled bool, NewPortMappingDescription string, NewLeaseDuration uint32, err error) { log.DebugLog()
 	// Request structure.
 	request := &struct {
 		NewRemoteHost string
@@ -3588,7 +3588,7 @@ func (client *WANPPPConnection1) GetSpecificPortMappingEntry(NewRemoteHost strin
 //
 // * NewProtocol: allowed values: TCP, UDP
 
-func (client *WANPPPConnection1) AddPortMapping(NewRemoteHost string, NewExternalPort uint16, NewProtocol string, NewInternalPort uint16, NewInternalClient string, NewEnabled bool, NewPortMappingDescription string, NewLeaseDuration uint32) (err error) {
+func (client *WANPPPConnection1) AddPortMapping(NewRemoteHost string, NewExternalPort uint16, NewProtocol string, NewInternalPort uint16, NewInternalClient string, NewEnabled bool, NewPortMappingDescription string, NewLeaseDuration uint32) (err error) { log.DebugLog()
 	// Request structure.
 	request := &struct {
 		NewRemoteHost string
@@ -3654,7 +3654,7 @@ func (client *WANPPPConnection1) AddPortMapping(NewRemoteHost string, NewExterna
 //
 // * NewProtocol: allowed values: TCP, UDP
 
-func (client *WANPPPConnection1) DeletePortMapping(NewRemoteHost string, NewExternalPort uint16, NewProtocol string) (err error) {
+func (client *WANPPPConnection1) DeletePortMapping(NewRemoteHost string, NewExternalPort uint16, NewProtocol string) (err error) { log.DebugLog()
 	// Request structure.
 	request := &struct {
 		NewRemoteHost string
@@ -3690,7 +3690,7 @@ func (client *WANPPPConnection1) DeletePortMapping(NewRemoteHost string, NewExte
 	return
 }
 
-func (client *WANPPPConnection1) GetExternalIPAddress() (NewExternalIPAddress string, err error) {
+func (client *WANPPPConnection1) GetExternalIPAddress() (NewExternalIPAddress string, err error) { log.DebugLog()
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.

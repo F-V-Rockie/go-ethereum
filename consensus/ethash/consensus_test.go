@@ -36,7 +36,7 @@ type diffTest struct {
 	CurrentDifficulty  *big.Int
 }
 
-func (d *diffTest) UnmarshalJSON(b []byte) (err error) {
+func (d *diffTest) UnmarshalJSON(b []byte) (err error) { log.DebugLog()
 	var ext struct {
 		ParentTimestamp    string
 		ParentDifficulty   string
@@ -57,7 +57,7 @@ func (d *diffTest) UnmarshalJSON(b []byte) (err error) {
 	return nil
 }
 
-func TestCalcDifficulty(t *testing.T) {
+func TestCalcDifficulty(t *testing.T) { log.DebugLog()
 	file, err := os.Open(filepath.Join("..", "..", "tests", "testdata", "BasicTests", "difficulty.json"))
 	if err != nil {
 		t.Skip(err)

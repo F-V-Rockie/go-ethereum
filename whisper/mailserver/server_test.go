@@ -43,13 +43,13 @@ type ServerTestParams struct {
 	key   *ecdsa.PrivateKey
 }
 
-func assert(statement bool, text string, t *testing.T) {
+func assert(statement bool, text string, t *testing.T) { log.DebugLog()
 	if !statement {
 		t.Fatal(text)
 	}
 }
 
-func TestDBKey(t *testing.T) {
+func TestDBKey(t *testing.T) { log.DebugLog()
 	var h common.Hash
 	i := uint32(time.Now().Unix())
 	k := NewDbKey(i, h)
@@ -58,7 +58,7 @@ func TestDBKey(t *testing.T) {
 	assert(byte(i/0x1000000) == k.raw[0], "big endian expected", t)
 }
 
-func generateEnvelope(t *testing.T) *whisper.Envelope {
+func generateEnvelope(t *testing.T) *whisper.Envelope { log.DebugLog()
 	h := crypto.Keccak256Hash([]byte("test sample data"))
 	params := &whisper.MessageParams{
 		KeySym:   h[:],
@@ -79,7 +79,7 @@ func generateEnvelope(t *testing.T) *whisper.Envelope {
 	return env
 }
 
-func TestMailServer(t *testing.T) {
+func TestMailServer(t *testing.T) { log.DebugLog()
 	const password = "password_for_this_test"
 	const dbPath = "whisper-server-test"
 
@@ -106,7 +106,7 @@ func TestMailServer(t *testing.T) {
 	deliverTest(t, &server, env)
 }
 
-func deliverTest(t *testing.T, server *WMailServer, env *whisper.Envelope) {
+func deliverTest(t *testing.T, server *WMailServer, env *whisper.Envelope) { log.DebugLog()
 	id, err := shh.NewKeyPair()
 	if err != nil {
 		t.Fatalf("failed to generate new key pair with seed %d: %s.", seed, err)
@@ -137,7 +137,7 @@ func deliverTest(t *testing.T, server *WMailServer, env *whisper.Envelope) {
 	singleRequest(t, server, env, p, false)
 }
 
-func singleRequest(t *testing.T, server *WMailServer, env *whisper.Envelope, p *ServerTestParams, expect bool) {
+func singleRequest(t *testing.T, server *WMailServer, env *whisper.Envelope, p *ServerTestParams, expect bool) { log.DebugLog()
 	request := createRequest(t, p)
 	src := crypto.FromECDSAPub(&p.key.PublicKey)
 	ok, lower, upper, bloom := server.validateRequest(src, request)
@@ -176,7 +176,7 @@ func singleRequest(t *testing.T, server *WMailServer, env *whisper.Envelope, p *
 	}
 }
 
-func createRequest(t *testing.T, p *ServerTestParams) *whisper.Envelope {
+func createRequest(t *testing.T, p *ServerTestParams) *whisper.Envelope { log.DebugLog()
 	bloom := whisper.TopicToBloom(p.topic)
 	data := make([]byte, 8)
 	binary.BigEndian.PutUint32(data, p.low)

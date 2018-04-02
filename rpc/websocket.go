@@ -55,7 +55,7 @@ var websocketJSONCodec = websocket.Codec{
 //
 // allowedOrigins should be a comma-separated list of allowed origin URLs.
 // To allow connections with any origin, pass "*".
-func (srv *Server) WebsocketHandler(allowedOrigins []string) http.Handler {
+func (srv *Server) WebsocketHandler(allowedOrigins []string) http.Handler { log.DebugLog()
 	return websocket.Server{
 		Handshake: wsHandshakeValidator(allowedOrigins),
 		Handler: func(conn *websocket.Conn) {
@@ -76,14 +76,14 @@ func (srv *Server) WebsocketHandler(allowedOrigins []string) http.Handler {
 // NewWSServer creates a new websocket RPC server around an API provider.
 //
 // Deprecated: use Server.WebsocketHandler
-func NewWSServer(allowedOrigins []string, srv *Server) *http.Server {
+func NewWSServer(allowedOrigins []string, srv *Server) *http.Server { log.DebugLog()
 	return &http.Server{Handler: srv.WebsocketHandler(allowedOrigins)}
 }
 
 // wsHandshakeValidator returns a handler that verifies the origin during the
 // websocket upgrade process. When a '*' is specified as an allowed origins all
 // connections are accepted.
-func wsHandshakeValidator(allowedOrigins []string) func(*websocket.Config, *http.Request) error {
+func wsHandshakeValidator(allowedOrigins []string) func(*websocket.Config, *http.Request) error { log.DebugLog()
 	origins := set.New()
 	allowAllOrigins := false
 
@@ -123,7 +123,7 @@ func wsHandshakeValidator(allowedOrigins []string) func(*websocket.Config, *http
 //
 // The context is used for the initial connection establishment. It does not
 // affect subsequent interactions with the client.
-func DialWebsocket(ctx context.Context, endpoint, origin string) (*Client, error) {
+func DialWebsocket(ctx context.Context, endpoint, origin string) (*Client, error) { log.DebugLog()
 	if origin == "" {
 		var err error
 		if origin, err = os.Hostname(); err != nil {
@@ -145,7 +145,7 @@ func DialWebsocket(ctx context.Context, endpoint, origin string) (*Client, error
 	})
 }
 
-func wsDialContext(ctx context.Context, config *websocket.Config) (*websocket.Conn, error) {
+func wsDialContext(ctx context.Context, config *websocket.Config) (*websocket.Conn, error) { log.DebugLog()
 	var conn net.Conn
 	var err error
 	switch config.Location.Scheme {
@@ -170,7 +170,7 @@ func wsDialContext(ctx context.Context, config *websocket.Config) (*websocket.Co
 
 var wsPortMap = map[string]string{"ws": "80", "wss": "443"}
 
-func wsDialAddress(location *url.URL) string {
+func wsDialAddress(location *url.URL) string { log.DebugLog()
 	if _, ok := wsPortMap[location.Scheme]; ok {
 		if _, _, err := net.SplitHostPort(location.Host); err != nil {
 			return net.JoinHostPort(location.Host, wsPortMap[location.Scheme])
@@ -179,12 +179,12 @@ func wsDialAddress(location *url.URL) string {
 	return location.Host
 }
 
-func dialContext(ctx context.Context, network, addr string) (net.Conn, error) {
+func dialContext(ctx context.Context, network, addr string) (net.Conn, error) { log.DebugLog()
 	d := &net.Dialer{KeepAlive: tcpKeepAliveInterval}
 	return d.DialContext(ctx, network, addr)
 }
 
-func contextDialer(ctx context.Context) *net.Dialer {
+func contextDialer(ctx context.Context) *net.Dialer { log.DebugLog()
 	dialer := &net.Dialer{Cancel: ctx.Done(), KeepAlive: tcpKeepAliveInterval}
 	if deadline, ok := ctx.Deadline(); ok {
 		dialer.Deadline = deadline

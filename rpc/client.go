@@ -87,19 +87,19 @@ type jsonrpcMessage struct {
 	Result  json.RawMessage `json:"result,omitempty"`
 }
 
-func (msg *jsonrpcMessage) isNotification() bool {
+func (msg *jsonrpcMessage) isNotification() bool { log.DebugLog()
 	return msg.ID == nil && msg.Method != ""
 }
 
-func (msg *jsonrpcMessage) isResponse() bool {
+func (msg *jsonrpcMessage) isResponse() bool { log.DebugLog()
 	return msg.hasValidID() && msg.Method == "" && len(msg.Params) == 0
 }
 
-func (msg *jsonrpcMessage) hasValidID() bool {
+func (msg *jsonrpcMessage) hasValidID() bool { log.DebugLog()
 	return len(msg.ID) > 0 && msg.ID[0] != '{' && msg.ID[0] != '['
 }
 
-func (msg *jsonrpcMessage) String() string {
+func (msg *jsonrpcMessage) String() string { log.DebugLog()
 	b, _ := json.Marshal(msg)
 	return string(b)
 }
@@ -134,7 +134,7 @@ type requestOp struct {
 	sub  *ClientSubscription  // only set for EthSubscribe requests
 }
 
-func (op *requestOp) wait(ctx context.Context) (*jsonrpcMessage, error) {
+func (op *requestOp) wait(ctx context.Context) (*jsonrpcMessage, error) { log.DebugLog()
 	select {
 	case <-ctx.Done():
 		return nil, ctx.Err()
@@ -153,7 +153,7 @@ func (op *requestOp) wait(ctx context.Context) (*jsonrpcMessage, error) {
 // For websocket connections, the origin is set to the local host name.
 //
 // The client reconnects automatically if the connection is lost.
-func Dial(rawurl string) (*Client, error) {
+func Dial(rawurl string) (*Client, error) { log.DebugLog()
 	return DialContext(context.Background(), rawurl)
 }
 
@@ -161,7 +161,7 @@ func Dial(rawurl string) (*Client, error) {
 //
 // The context is used to cancel or time out the initial connection establishment. It does
 // not affect subsequent interactions with the client.
-func DialContext(ctx context.Context, rawurl string) (*Client, error) {
+func DialContext(ctx context.Context, rawurl string) (*Client, error) { log.DebugLog()
 	u, err := url.Parse(rawurl)
 	if err != nil {
 		return nil, err
@@ -178,7 +178,7 @@ func DialContext(ctx context.Context, rawurl string) (*Client, error) {
 	}
 }
 
-func newClient(initctx context.Context, connectFunc func(context.Context) (net.Conn, error)) (*Client, error) {
+func newClient(initctx context.Context, connectFunc func(context.Context) (net.Conn, error)) (*Client, error) { log.DebugLog()
 	conn, err := connectFunc(initctx)
 	if err != nil {
 		return nil, err
@@ -205,14 +205,14 @@ func newClient(initctx context.Context, connectFunc func(context.Context) (net.C
 	return c, nil
 }
 
-func (c *Client) nextID() json.RawMessage {
+func (c *Client) nextID() json.RawMessage { log.DebugLog()
 	id := atomic.AddUint32(&c.idCounter, 1)
 	return []byte(strconv.FormatUint(uint64(id), 10))
 }
 
 // SupportedModules calls the rpc_modules method, retrieving the list of
 // APIs that are available on the server.
-func (c *Client) SupportedModules() (map[string]string, error) {
+func (c *Client) SupportedModules() (map[string]string, error) { log.DebugLog()
 	var result map[string]string
 	ctx, cancel := context.WithTimeout(context.Background(), subscribeTimeout)
 	defer cancel()
@@ -221,7 +221,7 @@ func (c *Client) SupportedModules() (map[string]string, error) {
 }
 
 // Close closes the client, aborting any in-flight requests.
-func (c *Client) Close() {
+func (c *Client) Close() { log.DebugLog()
 	if c.isHTTP {
 		return
 	}
@@ -237,7 +237,7 @@ func (c *Client) Close() {
 //
 // The result must be a pointer so that package json can unmarshal into it. You
 // can also pass nil, in which case the result is ignored.
-func (c *Client) Call(result interface{}, method string, args ...interface{}) error {
+func (c *Client) Call(result interface{}, method string, args ...interface{}) error { log.DebugLog()
 	ctx := context.Background()
 	return c.CallContext(ctx, result, method, args...)
 }
@@ -247,7 +247,7 @@ func (c *Client) Call(result interface{}, method string, args ...interface{}) er
 //
 // The result must be a pointer so that package json can unmarshal into it. You
 // can also pass nil, in which case the result is ignored.
-func (c *Client) CallContext(ctx context.Context, result interface{}, method string, args ...interface{}) error {
+func (c *Client) CallContext(ctx context.Context, result interface{}, method string, args ...interface{}) error { log.DebugLog()
 	msg, err := c.newMessage(method, args...)
 	if err != nil {
 		return err
@@ -283,7 +283,7 @@ func (c *Client) CallContext(ctx context.Context, result interface{}, method str
 // a request is reported through the Error field of the corresponding BatchElem.
 //
 // Note that batch calls may not be executed atomically on the server side.
-func (c *Client) BatchCall(b []BatchElem) error {
+func (c *Client) BatchCall(b []BatchElem) error { log.DebugLog()
 	ctx := context.Background()
 	return c.BatchCallContext(ctx, b)
 }
@@ -297,7 +297,7 @@ func (c *Client) BatchCall(b []BatchElem) error {
 // Error field of the corresponding BatchElem.
 //
 // Note that batch calls may not be executed atomically on the server side.
-func (c *Client) BatchCallContext(ctx context.Context, b []BatchElem) error {
+func (c *Client) BatchCallContext(ctx context.Context, b []BatchElem) error { log.DebugLog()
 	msgs := make([]*jsonrpcMessage, len(b))
 	op := &requestOp{
 		ids:  make([]json.RawMessage, len(b)),
@@ -350,12 +350,12 @@ func (c *Client) BatchCallContext(ctx context.Context, b []BatchElem) error {
 }
 
 // EthSubscribe registers a subscripion under the "eth" namespace.
-func (c *Client) EthSubscribe(ctx context.Context, channel interface{}, args ...interface{}) (*ClientSubscription, error) {
+func (c *Client) EthSubscribe(ctx context.Context, channel interface{}, args ...interface{}) (*ClientSubscription, error) { log.DebugLog()
 	return c.Subscribe(ctx, "eth", channel, args...)
 }
 
 // ShhSubscribe registers a subscripion under the "shh" namespace.
-func (c *Client) ShhSubscribe(ctx context.Context, channel interface{}, args ...interface{}) (*ClientSubscription, error) {
+func (c *Client) ShhSubscribe(ctx context.Context, channel interface{}, args ...interface{}) (*ClientSubscription, error) { log.DebugLog()
 	return c.Subscribe(ctx, "shh", channel, args...)
 }
 
@@ -371,7 +371,7 @@ func (c *Client) ShhSubscribe(ctx context.Context, channel interface{}, args ...
 // before considering the subscriber dead. The subscription Err channel will receive
 // ErrSubscriptionQueueOverflow. Use a sufficiently large buffer on the channel or ensure
 // that the channel usually has at least one reader to prevent this issue.
-func (c *Client) Subscribe(ctx context.Context, namespace string, channel interface{}, args ...interface{}) (*ClientSubscription, error) {
+func (c *Client) Subscribe(ctx context.Context, namespace string, channel interface{}, args ...interface{}) (*ClientSubscription, error) { log.DebugLog()
 	// Check type of channel first.
 	chanVal := reflect.ValueOf(channel)
 	if chanVal.Kind() != reflect.Chan || chanVal.Type().ChanDir()&reflect.SendDir == 0 {
@@ -405,7 +405,7 @@ func (c *Client) Subscribe(ctx context.Context, namespace string, channel interf
 	return op.sub, nil
 }
 
-func (c *Client) newMessage(method string, paramsIn ...interface{}) (*jsonrpcMessage, error) {
+func (c *Client) newMessage(method string, paramsIn ...interface{}) (*jsonrpcMessage, error) { log.DebugLog()
 	params, err := json.Marshal(paramsIn)
 	if err != nil {
 		return nil, err
@@ -415,7 +415,7 @@ func (c *Client) newMessage(method string, paramsIn ...interface{}) (*jsonrpcMes
 
 // send registers op with the dispatch loop, then sends msg on the connection.
 // if sending fails, op is deregistered.
-func (c *Client) send(ctx context.Context, op *requestOp, msg interface{}) error {
+func (c *Client) send(ctx context.Context, op *requestOp, msg interface{}) error { log.DebugLog()
 	select {
 	case c.requestOp <- op:
 		log.Trace("", "msg", log.Lazy{Fn: func() string {
@@ -433,7 +433,7 @@ func (c *Client) send(ctx context.Context, op *requestOp, msg interface{}) error
 	}
 }
 
-func (c *Client) write(ctx context.Context, msg interface{}) error {
+func (c *Client) write(ctx context.Context, msg interface{}) error { log.DebugLog()
 	deadline, ok := ctx.Deadline()
 	if !ok {
 		deadline = time.Now().Add(defaultWriteTimeout)
@@ -452,7 +452,7 @@ func (c *Client) write(ctx context.Context, msg interface{}) error {
 	return err
 }
 
-func (c *Client) reconnect(ctx context.Context) error {
+func (c *Client) reconnect(ctx context.Context) error { log.DebugLog()
 	newconn, err := c.connectFunc(ctx)
 	if err != nil {
 		log.Trace(fmt.Sprintf("reconnect failed: %v", err))
@@ -471,7 +471,7 @@ func (c *Client) reconnect(ctx context.Context) error {
 // dispatch is the main loop of the client.
 // It sends read messages to waiting calls to Call and BatchCall
 // and subscription notifications to registered subscriptions.
-func (c *Client) dispatch(conn net.Conn) {
+func (c *Client) dispatch(conn net.Conn) { log.DebugLog()
 	// Spawn the initial read loop.
 	go c.read(conn)
 
@@ -566,7 +566,7 @@ func (c *Client) dispatch(conn net.Conn) {
 }
 
 // closeRequestOps unblocks pending send ops and active subscriptions.
-func (c *Client) closeRequestOps(err error) {
+func (c *Client) closeRequestOps(err error) { log.DebugLog()
 	didClose := make(map[*requestOp]bool)
 
 	for id, op := range c.respWait {
@@ -585,7 +585,7 @@ func (c *Client) closeRequestOps(err error) {
 	}
 }
 
-func (c *Client) handleNotification(msg *jsonrpcMessage) {
+func (c *Client) handleNotification(msg *jsonrpcMessage) { log.DebugLog()
 	if !strings.HasSuffix(msg.Method, notificationMethodSuffix) {
 		log.Debug(fmt.Sprint("dropping non-subscription message: ", msg))
 		return
@@ -603,7 +603,7 @@ func (c *Client) handleNotification(msg *jsonrpcMessage) {
 	}
 }
 
-func (c *Client) handleResponse(msg *jsonrpcMessage) {
+func (c *Client) handleResponse(msg *jsonrpcMessage) { log.DebugLog()
 	op := c.respWait[string(msg.ID)]
 	if op == nil {
 		log.Debug(fmt.Sprintf("unsolicited response %v", msg))
@@ -631,7 +631,7 @@ func (c *Client) handleResponse(msg *jsonrpcMessage) {
 
 // Reading happens on a dedicated goroutine.
 
-func (c *Client) read(conn net.Conn) error {
+func (c *Client) read(conn net.Conn) error { log.DebugLog()
 	var (
 		buf json.RawMessage
 		dec = json.NewDecoder(conn)
@@ -677,7 +677,7 @@ type ClientSubscription struct {
 	err      chan error
 }
 
-func newClientSubscription(c *Client, namespace string, channel reflect.Value) *ClientSubscription {
+func newClientSubscription(c *Client, namespace string, channel reflect.Value) *ClientSubscription { log.DebugLog()
 	sub := &ClientSubscription{
 		client:    c,
 		namespace: namespace,
@@ -698,18 +698,18 @@ func newClientSubscription(c *Client, namespace string, channel reflect.Value) *
 // on the underlying client and no other error has occurred.
 //
 // The error channel is closed when Unsubscribe is called on the subscription.
-func (sub *ClientSubscription) Err() <-chan error {
+func (sub *ClientSubscription) Err() <-chan error { log.DebugLog()
 	return sub.err
 }
 
 // Unsubscribe unsubscribes the notification and closes the error channel.
 // It can safely be called more than once.
-func (sub *ClientSubscription) Unsubscribe() {
+func (sub *ClientSubscription) Unsubscribe() { log.DebugLog()
 	sub.quitWithError(nil, true)
 	sub.errOnce.Do(func() { close(sub.err) })
 }
 
-func (sub *ClientSubscription) quitWithError(err error, unsubscribeServer bool) {
+func (sub *ClientSubscription) quitWithError(err error, unsubscribeServer bool) { log.DebugLog()
 	sub.quitOnce.Do(func() {
 		// The dispatch loop won't be able to execute the unsubscribe call
 		// if it is blocked on deliver. Close sub.quit first because it
@@ -727,7 +727,7 @@ func (sub *ClientSubscription) quitWithError(err error, unsubscribeServer bool) 
 	})
 }
 
-func (sub *ClientSubscription) deliver(result json.RawMessage) (ok bool) {
+func (sub *ClientSubscription) deliver(result json.RawMessage) (ok bool) { log.DebugLog()
 	select {
 	case sub.in <- result:
 		return true
@@ -736,11 +736,11 @@ func (sub *ClientSubscription) deliver(result json.RawMessage) (ok bool) {
 	}
 }
 
-func (sub *ClientSubscription) start() {
+func (sub *ClientSubscription) start() { log.DebugLog()
 	sub.quitWithError(sub.forward())
 }
 
-func (sub *ClientSubscription) forward() (err error, unsubscribeServer bool) {
+func (sub *ClientSubscription) forward() (err error, unsubscribeServer bool) { log.DebugLog()
 	cases := []reflect.SelectCase{
 		{Dir: reflect.SelectRecv, Chan: reflect.ValueOf(sub.quit)},
 		{Dir: reflect.SelectRecv, Chan: reflect.ValueOf(sub.in)},
@@ -779,13 +779,13 @@ func (sub *ClientSubscription) forward() (err error, unsubscribeServer bool) {
 	}
 }
 
-func (sub *ClientSubscription) unmarshal(result json.RawMessage) (interface{}, error) {
+func (sub *ClientSubscription) unmarshal(result json.RawMessage) (interface{}, error) { log.DebugLog()
 	val := reflect.New(sub.etype)
 	err := json.Unmarshal(result, val.Interface())
 	return val.Elem().Interface(), err
 }
 
-func (sub *ClientSubscription) requestUnsubscribe() error {
+func (sub *ClientSubscription) requestUnsubscribe() error { log.DebugLog()
 	var result interface{}
 	return sub.client.Call(&result, sub.namespace+unsubscribeMethodSuffix, sub.subid)
 }

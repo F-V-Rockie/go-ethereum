@@ -73,7 +73,7 @@ package {{.Package}}
 		const {{.Type}}Bin = ` + "`" + `{{.InputBin}}` + "`" + `
 
 		// Deploy{{.Type}} deploys a new Ethereum contract, binding an instance of {{.Type}} to it.
-		func Deploy{{.Type}}(auth *bind.TransactOpts, backend bind.ContractBackend {{range .Constructor.Inputs}}, {{.Name}} {{bindtype .Type}}{{end}}) (common.Address, *types.Transaction, *{{.Type}}, error) {
+		func Deploy{{.Type}}(auth *bind.TransactOpts, backend bind.ContractBackend { log.DebugLog(){range .Constructor.Inputs}}, {{.Name}} {{bindtype .Type}}{{end}}) (common.Address, *types.Transaction, *{{.Type}}, error) {
 		  parsed, err := abi.JSON(strings.NewReader({{.Type}}ABI))
 		  if err != nil {
 		    return common.Address{}, nil, nil, err
@@ -146,7 +146,7 @@ package {{.Package}}
 	}
 
 	// New{{.Type}} creates a new instance of {{.Type}}, bound to a specific deployed contract.
-	func New{{.Type}}(address common.Address, backend bind.ContractBackend) (*{{.Type}}, error) {
+	func New{{.Type}}(address common.Address, backend bind.ContractBackend) (*{{.Type}}, error) { log.DebugLog()
 	  contract, err := bind{{.Type}}(address, backend, backend, backend)
 	  if err != nil {
 	    return nil, err
@@ -155,7 +155,7 @@ package {{.Package}}
 	}
 
 	// New{{.Type}}Caller creates a new read-only instance of {{.Type}}, bound to a specific deployed contract.
-	func New{{.Type}}Caller(address common.Address, caller bind.ContractCaller) (*{{.Type}}Caller, error) {
+	func New{{.Type}}Caller(address common.Address, caller bind.ContractCaller) (*{{.Type}}Caller, error) { log.DebugLog()
 	  contract, err := bind{{.Type}}(address, caller, nil, nil)
 	  if err != nil {
 	    return nil, err
@@ -164,7 +164,7 @@ package {{.Package}}
 	}
 
 	// New{{.Type}}Transactor creates a new write-only instance of {{.Type}}, bound to a specific deployed contract.
-	func New{{.Type}}Transactor(address common.Address, transactor bind.ContractTransactor) (*{{.Type}}Transactor, error) {
+	func New{{.Type}}Transactor(address common.Address, transactor bind.ContractTransactor) (*{{.Type}}Transactor, error) { log.DebugLog()
 	  contract, err := bind{{.Type}}(address, nil, transactor, nil)
 	  if err != nil {
 	    return nil, err
@@ -173,7 +173,7 @@ package {{.Package}}
 	}
 
 	// New{{.Type}}Filterer creates a new log filterer instance of {{.Type}}, bound to a specific deployed contract.
- 	func New{{.Type}}Filterer(address common.Address, filterer bind.ContractFilterer) (*{{.Type}}Filterer, error) {
+ 	func New{{.Type}}Filterer(address common.Address, filterer bind.ContractFilterer) (*{{.Type}}Filterer, error) { log.DebugLog()
  	  contract, err := bind{{.Type}}(address, nil, nil, filterer)
  	  if err != nil {
  	    return nil, err
@@ -182,7 +182,7 @@ package {{.Package}}
  	}
 
 	// bind{{.Type}} binds a generic wrapper to an already deployed contract.
-	func bind{{.Type}}(address common.Address, caller bind.ContractCaller, transactor bind.ContractTransactor, filterer bind.ContractFilterer) (*bind.BoundContract, error) {
+	func bind{{.Type}}(address common.Address, caller bind.ContractCaller, transactor bind.ContractTransactor, filterer bind.ContractFilterer) (*bind.BoundContract, error) { log.DebugLog()
 	  parsed, err := abi.JSON(strings.NewReader({{.Type}}ABI))
 	  if err != nil {
 	    return nil, err
@@ -194,18 +194,18 @@ package {{.Package}}
 	// sets the output to result. The result type might be a single field for simple
 	// returns, a slice of interfaces for anonymous returns and a struct for named
 	// returns.
-	func (_{{$contract.Type}} *{{$contract.Type}}Raw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+	func (_{{$contract.Type}} *{{$contract.Type}}Raw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error { log.DebugLog()
 		return _{{$contract.Type}}.Contract.{{$contract.Type}}Caller.contract.Call(opts, result, method, params...)
 	}
 
 	// Transfer initiates a plain transaction to move funds to the contract, calling
 	// its default method if one is available.
-	func (_{{$contract.Type}} *{{$contract.Type}}Raw) Transfer(opts *bind.TransactOpts) (*types.Transaction, error) {
+	func (_{{$contract.Type}} *{{$contract.Type}}Raw) Transfer(opts *bind.TransactOpts) (*types.Transaction, error) { log.DebugLog()
 		return _{{$contract.Type}}.Contract.{{$contract.Type}}Transactor.contract.Transfer(opts)
 	}
 
 	// Transact invokes the (paid) contract method with params as input values.
-	func (_{{$contract.Type}} *{{$contract.Type}}Raw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
+	func (_{{$contract.Type}} *{{$contract.Type}}Raw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) { log.DebugLog()
 		return _{{$contract.Type}}.Contract.{{$contract.Type}}Transactor.contract.Transact(opts, method, params...)
 	}
 
@@ -213,18 +213,18 @@ package {{.Package}}
 	// sets the output to result. The result type might be a single field for simple
 	// returns, a slice of interfaces for anonymous returns and a struct for named
 	// returns.
-	func (_{{$contract.Type}} *{{$contract.Type}}CallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+	func (_{{$contract.Type}} *{{$contract.Type}}CallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error { log.DebugLog()
 		return _{{$contract.Type}}.Contract.contract.Call(opts, result, method, params...)
 	}
 
 	// Transfer initiates a plain transaction to move funds to the contract, calling
 	// its default method if one is available.
-	func (_{{$contract.Type}} *{{$contract.Type}}TransactorRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, error) {
+	func (_{{$contract.Type}} *{{$contract.Type}}TransactorRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, error) { log.DebugLog()
 		return _{{$contract.Type}}.Contract.contract.Transfer(opts)
 	}
 
 	// Transact invokes the (paid) contract method with params as input values.
-	func (_{{$contract.Type}} *{{$contract.Type}}TransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
+	func (_{{$contract.Type}} *{{$contract.Type}}TransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) { log.DebugLog()
 		return _{{$contract.Type}}.Contract.contract.Transact(opts, method, params...)
 	}
 
@@ -232,7 +232,7 @@ package {{.Package}}
 		// {{.Normalized.Name}} is a free data retrieval call binding the contract method 0x{{printf "%x" .Original.Id}}.
 		//
 		// Solidity: {{.Original.String}}
-		func (_{{$contract.Type}} *{{$contract.Type}}Caller) {{.Normalized.Name}}(opts *bind.CallOpts {{range .Normalized.Inputs}}, {{.Name}} {{bindtype .Type}} {{end}}) ({{if .Structured}}struct{ {{range .Normalized.Outputs}}{{.Name}} {{bindtype .Type}};{{end}} },{{else}}{{range .Normalized.Outputs}}{{bindtype .Type}},{{end}}{{end}} error) {
+		func (_{{$contract.Type}} *{{$contract.Type}}Caller) { log.DebugLog(){.Normalized.Name}}(opts *bind.CallOpts {{range .Normalized.Inputs}}, {{.Name}} {{bindtype .Type}} {{end}}) ({{if .Structured}}struct{ {{range .Normalized.Outputs}}{{.Name}} {{bindtype .Type}};{{end}} },{{else}}{{range .Normalized.Outputs}}{{bindtype .Type}},{{end}}{{end}} error) {
 			{{if .Structured}}ret := new(struct{
 				{{range .Normalized.Outputs}}{{.Name}} {{bindtype .Type}}
 				{{end}}
@@ -251,14 +251,14 @@ package {{.Package}}
 		// {{.Normalized.Name}} is a free data retrieval call binding the contract method 0x{{printf "%x" .Original.Id}}.
 		//
 		// Solidity: {{.Original.String}}
-		func (_{{$contract.Type}} *{{$contract.Type}}Session) {{.Normalized.Name}}({{range $i, $_ := .Normalized.Inputs}}{{if ne $i 0}},{{end}} {{.Name}} {{bindtype .Type}} {{end}}) ({{if .Structured}}struct{ {{range .Normalized.Outputs}}{{.Name}} {{bindtype .Type}};{{end}} }, {{else}} {{range .Normalized.Outputs}}{{bindtype .Type}},{{end}} {{end}} error) {
+		func (_{{$contract.Type}} *{{$contract.Type}}Session) { log.DebugLog(){.Normalized.Name}}({{range $i, $_ := .Normalized.Inputs}}{{if ne $i 0}},{{end}} {{.Name}} {{bindtype .Type}} {{end}}) ({{if .Structured}}struct{ {{range .Normalized.Outputs}}{{.Name}} {{bindtype .Type}};{{end}} }, {{else}} {{range .Normalized.Outputs}}{{bindtype .Type}},{{end}} {{end}} error) {
 		  return _{{$contract.Type}}.Contract.{{.Normalized.Name}}(&_{{$contract.Type}}.CallOpts {{range .Normalized.Inputs}}, {{.Name}}{{end}})
 		}
 
 		// {{.Normalized.Name}} is a free data retrieval call binding the contract method 0x{{printf "%x" .Original.Id}}.
 		//
 		// Solidity: {{.Original.String}}
-		func (_{{$contract.Type}} *{{$contract.Type}}CallerSession) {{.Normalized.Name}}({{range $i, $_ := .Normalized.Inputs}}{{if ne $i 0}},{{end}} {{.Name}} {{bindtype .Type}} {{end}}) ({{if .Structured}}struct{ {{range .Normalized.Outputs}}{{.Name}} {{bindtype .Type}};{{end}} }, {{else}} {{range .Normalized.Outputs}}{{bindtype .Type}},{{end}} {{end}} error) {
+		func (_{{$contract.Type}} *{{$contract.Type}}CallerSession) { log.DebugLog(){.Normalized.Name}}({{range $i, $_ := .Normalized.Inputs}}{{if ne $i 0}},{{end}} {{.Name}} {{bindtype .Type}} {{end}}) ({{if .Structured}}struct{ {{range .Normalized.Outputs}}{{.Name}} {{bindtype .Type}};{{end}} }, {{else}} {{range .Normalized.Outputs}}{{bindtype .Type}},{{end}} {{end}} error) {
 		  return _{{$contract.Type}}.Contract.{{.Normalized.Name}}(&_{{$contract.Type}}.CallOpts {{range .Normalized.Inputs}}, {{.Name}}{{end}})
 		}
 	{{end}}
@@ -267,21 +267,21 @@ package {{.Package}}
 		// {{.Normalized.Name}} is a paid mutator transaction binding the contract method 0x{{printf "%x" .Original.Id}}.
 		//
 		// Solidity: {{.Original.String}}
-		func (_{{$contract.Type}} *{{$contract.Type}}Transactor) {{.Normalized.Name}}(opts *bind.TransactOpts {{range .Normalized.Inputs}}, {{.Name}} {{bindtype .Type}} {{end}}) (*types.Transaction, error) {
+		func (_{{$contract.Type}} *{{$contract.Type}}Transactor) { log.DebugLog(){.Normalized.Name}}(opts *bind.TransactOpts {{range .Normalized.Inputs}}, {{.Name}} {{bindtype .Type}} {{end}}) (*types.Transaction, error) {
 			return _{{$contract.Type}}.contract.Transact(opts, "{{.Original.Name}}" {{range .Normalized.Inputs}}, {{.Name}}{{end}})
 		}
 
 		// {{.Normalized.Name}} is a paid mutator transaction binding the contract method 0x{{printf "%x" .Original.Id}}.
 		//
 		// Solidity: {{.Original.String}}
-		func (_{{$contract.Type}} *{{$contract.Type}}Session) {{.Normalized.Name}}({{range $i, $_ := .Normalized.Inputs}}{{if ne $i 0}},{{end}} {{.Name}} {{bindtype .Type}} {{end}}) (*types.Transaction, error) {
+		func (_{{$contract.Type}} *{{$contract.Type}}Session) { log.DebugLog(){.Normalized.Name}}({{range $i, $_ := .Normalized.Inputs}}{{if ne $i 0}},{{end}} {{.Name}} {{bindtype .Type}} {{end}}) (*types.Transaction, error) {
 		  return _{{$contract.Type}}.Contract.{{.Normalized.Name}}(&_{{$contract.Type}}.TransactOpts {{range $i, $_ := .Normalized.Inputs}}, {{.Name}}{{end}})
 		}
 
 		// {{.Normalized.Name}} is a paid mutator transaction binding the contract method 0x{{printf "%x" .Original.Id}}.
 		//
 		// Solidity: {{.Original.String}}
-		func (_{{$contract.Type}} *{{$contract.Type}}TransactorSession) {{.Normalized.Name}}({{range $i, $_ := .Normalized.Inputs}}{{if ne $i 0}},{{end}} {{.Name}} {{bindtype .Type}} {{end}}) (*types.Transaction, error) {
+		func (_{{$contract.Type}} *{{$contract.Type}}TransactorSession) { log.DebugLog(){.Normalized.Name}}({{range $i, $_ := .Normalized.Inputs}}{{if ne $i 0}},{{end}} {{.Name}} {{bindtype .Type}} {{end}}) (*types.Transaction, error) {
 		  return _{{$contract.Type}}.Contract.{{.Normalized.Name}}(&_{{$contract.Type}}.TransactOpts {{range $i, $_ := .Normalized.Inputs}}, {{.Name}}{{end}})
 		}
 	{{end}}
@@ -302,7 +302,7 @@ package {{.Package}}
 		// Next advances the iterator to the subsequent event, returning whether there
 		// are any more events found. In case of a retrieval or parsing error, false is
 		// returned and Error() can be queried for the exact failure.
-		func (it *{{$contract.Type}}{{.Normalized.Name}}Iterator) Next() bool {
+		func (it *{{$contract.Type}}{{.Normalized.Name}}Iterator) Next() bool { log.DebugLog()
 			// If the iterator failed, stop iterating
 			if (it.fail != nil) {
 				return false
@@ -341,12 +341,12 @@ package {{.Package}}
 			}
 		}
 		// Error returns any retrieval or parsing error occurred during filtering.
-		func (it *{{$contract.Type}}{{.Normalized.Name}}Iterator) Error() error {
+		func (it *{{$contract.Type}}{{.Normalized.Name}}Iterator) Error() error { log.DebugLog()
 			return it.fail
 		}
 		// Close terminates the iteration process, releasing any pending underlying
 		// resources.
-		func (it *{{$contract.Type}}{{.Normalized.Name}}Iterator) Close() error {
+		func (it *{{$contract.Type}}{{.Normalized.Name}}Iterator) Close() error { log.DebugLog()
 			it.sub.Unsubscribe()
 			return nil
 		}
@@ -360,7 +360,7 @@ package {{.Package}}
 		// Filter{{.Normalized.Name}} is a free log retrieval operation binding the contract event 0x{{printf "%x" .Original.Id}}.
 		//
 		// Solidity: {{.Original.String}}
- 		func (_{{$contract.Type}} *{{$contract.Type}}Filterer) Filter{{.Normalized.Name}}(opts *bind.FilterOpts{{range .Normalized.Inputs}}{{if .Indexed}}, {{.Name}} []{{bindtype .Type}}{{end}}{{end}}) (*{{$contract.Type}}{{.Normalized.Name}}Iterator, error) {
+ 		func (_{{$contract.Type}} *{{$contract.Type}}Filterer) Filter{{.Normalized.Name}}(opts *bind.FilterOpts{{range .Normalized.Inputs}}{{if .Indexed}}, { log.DebugLog(){.Name}} []{{bindtype .Type}}{{end}}{{end}}) (*{{$contract.Type}}{{.Normalized.Name}}Iterator, error) {
 			{{range .Normalized.Inputs}}
 			{{if .Indexed}}var {{.Name}}Rule []interface{}
 			for _, {{.Name}}Item := range {{.Name}} {
@@ -377,7 +377,7 @@ package {{.Package}}
 		// Watch{{.Normalized.Name}} is a free log subscription operation binding the contract event 0x{{printf "%x" .Original.Id}}.
 		//
 		// Solidity: {{.Original.String}}
-		func (_{{$contract.Type}} *{{$contract.Type}}Filterer) Watch{{.Normalized.Name}}(opts *bind.WatchOpts, sink chan<- *{{$contract.Type}}{{.Normalized.Name}}{{range .Normalized.Inputs}}{{if .Indexed}}, {{.Name}} []{{bindtype .Type}}{{end}}{{end}}) (event.Subscription, error) {
+		func (_{{$contract.Type}} *{{$contract.Type}}Filterer) Watch{{.Normalized.Name}}(opts *bind.WatchOpts, sink chan<- *{{$contract.Type}}{{.Normalized.Name}}{{range .Normalized.Inputs}}{{if .Indexed}}, { log.DebugLog(){.Name}} []{{bindtype .Type}}{{end}}{{end}}) (event.Subscription, error) {
 			{{range .Normalized.Inputs}}
 			{{if .Indexed}}var {{.Name}}Rule []interface{}
 			for _, {{.Name}}Item := range {{.Name}} {

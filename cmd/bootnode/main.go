@@ -33,7 +33,7 @@ import (
 	"github.com/ethereum/go-ethereum/p2p/netutil"
 )
 
-func main() {
+func main() { log.DebugLog()
 	var (
 		listenAddr  = flag.String("addr", ":30301", "listen address")
 		genKey      = flag.String("genkey", "", "generate a node key")

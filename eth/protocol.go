@@ -78,7 +78,7 @@ const (
 	ErrSuspendedPeer
 )
 
-func (e errCode) String() string {
+func (e errCode) String() string { log.DebugLog()
 	return errorToString[int(e)]
 }
 
@@ -139,7 +139,7 @@ type hashOrNumber struct {
 
 // EncodeRLP is a specialized encoder for hashOrNumber to encode only one of the
 // two contained union fields.
-func (hn *hashOrNumber) EncodeRLP(w io.Writer) error {
+func (hn *hashOrNumber) EncodeRLP(w io.Writer) error { log.DebugLog()
 	if hn.Hash == (common.Hash{}) {
 		return rlp.Encode(w, hn.Number)
 	}
@@ -151,7 +151,7 @@ func (hn *hashOrNumber) EncodeRLP(w io.Writer) error {
 
 // DecodeRLP is a specialized decoder for hashOrNumber to decode the contents
 // into either a block hash or a block number.
-func (hn *hashOrNumber) DecodeRLP(s *rlp.Stream) error {
+func (hn *hashOrNumber) DecodeRLP(s *rlp.Stream) error { log.DebugLog()
 	_, size, _ := s.Kind()
 	origin, err := s.Raw()
 	if err == nil {

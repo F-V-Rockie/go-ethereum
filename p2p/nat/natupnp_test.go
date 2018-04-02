@@ -28,7 +28,7 @@ import (
 	"github.com/huin/goupnp/httpu"
 )
 
-func TestUPNP_DDWRT(t *testing.T) {
+func TestUPNP_DDWRT(t *testing.T) { log.DebugLog()
 	if runtime.GOOS == "windows" {
 		t.Skipf("disabled to avoid firewall prompt")
 	}
@@ -195,7 +195,7 @@ type fakeIGD struct {
 }
 
 // httpu.Handler
-func (dev *fakeIGD) ServeMessage(r *http.Request) {
+func (dev *fakeIGD) ServeMessage(r *http.Request) { log.DebugLog()
 	dev.t.Logf(`HTTPU request %s %s`, r.Method, r.RequestURI)
 	conn, err := net.Dial("udp4", r.RemoteAddr)
 	if err != nil {
@@ -207,7 +207,7 @@ func (dev *fakeIGD) ServeMessage(r *http.Request) {
 }
 
 // http.Handler
-func (dev *fakeIGD) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (dev *fakeIGD) ServeHTTP(w http.ResponseWriter, r *http.Request) { log.DebugLog()
 	if resp, ok := dev.httpResps[r.Method+" "+r.RequestURI]; ok {
 		dev.t.Logf(`HTTP request "%s %s" --> %d`, r.Method, r.RequestURI, 200)
 		io.WriteString(w, dev.replaceListenAddr(resp))
@@ -217,11 +217,11 @@ func (dev *fakeIGD) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (dev *fakeIGD) replaceListenAddr(resp string) string {
+func (dev *fakeIGD) replaceListenAddr(resp string) string { log.DebugLog()
 	return strings.Replace(resp, "{{listenAddr}}", dev.listener.Addr().String(), -1)
 }
 
-func (dev *fakeIGD) listen() (err error) {
+func (dev *fakeIGD) listen() (err error) { log.DebugLog()
 	if dev.listener, err = net.Listen("tcp", "127.0.0.1:0"); err != nil {
 		return err
 	}
@@ -233,12 +233,12 @@ func (dev *fakeIGD) listen() (err error) {
 	return nil
 }
 
-func (dev *fakeIGD) serve() {
+func (dev *fakeIGD) serve() { log.DebugLog()
 	go httpu.Serve(dev.mcastListener, dev)
 	go http.Serve(dev.listener, dev)
 }
 
-func (dev *fakeIGD) close() {
+func (dev *fakeIGD) close() { log.DebugLog()
 	dev.mcastListener.Close()
 	dev.listener.Close()
 }

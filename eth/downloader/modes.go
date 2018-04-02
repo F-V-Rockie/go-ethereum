@@ -27,12 +27,12 @@ const (
 	LightSync                 // Download only the headers and terminate afterwards
 )
 
-func (mode SyncMode) IsValid() bool {
+func (mode SyncMode) IsValid() bool { log.DebugLog()
 	return mode >= FullSync && mode <= LightSync
 }
 
 // String implements the stringer interface.
-func (mode SyncMode) String() string {
+func (mode SyncMode) String() string { log.DebugLog()
 	switch mode {
 	case FullSync:
 		return "full"
@@ -45,7 +45,7 @@ func (mode SyncMode) String() string {
 	}
 }
 
-func (mode SyncMode) MarshalText() ([]byte, error) {
+func (mode SyncMode) MarshalText() ([]byte, error) { log.DebugLog()
 	switch mode {
 	case FullSync:
 		return []byte("full"), nil
@@ -58,7 +58,7 @@ func (mode SyncMode) MarshalText() ([]byte, error) {
 	}
 }
 
-func (mode *SyncMode) UnmarshalText(text []byte) error {
+func (mode *SyncMode) UnmarshalText(text []byte) error { log.DebugLog()
 	switch string(text) {
 	case "full":
 		*mode = FullSync

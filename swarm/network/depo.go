@@ -44,7 +44,7 @@ type Depo struct {
 	netStore   storage.ChunkStore
 }
 
-func NewDepo(hash storage.SwarmHasher, localStore, remoteStore storage.ChunkStore) *Depo {
+func NewDepo(hash storage.SwarmHasher, localStore, remoteStore storage.ChunkStore) *Depo { log.DebugLog()
 	return &Depo{
 		hashfunc:   hash,
 		localStore: localStore,
@@ -58,7 +58,7 @@ func NewDepo(hash storage.SwarmHasher, localStore, remoteStore storage.ChunkStor
 // * back immediately as a deliveryRequest message
 // * empty message just pings back for more (is this needed?)
 // * strict signed sync states may be needed.
-func (self *Depo) HandleUnsyncedKeysMsg(req *unsyncedKeysMsgData, p *peer) error {
+func (self *Depo) HandleUnsyncedKeysMsg(req *unsyncedKeysMsgData, p *peer) error { log.DebugLog()
 	unsynced := req.Unsynced
 	var missing []*syncRequest
 	var chunk *storage.Chunk
@@ -88,7 +88,7 @@ func (self *Depo) HandleUnsyncedKeysMsg(req *unsyncedKeysMsgData, p *peer) error
 // (remote peer is free to reprioritize)
 // * the message implies remote peer wants more, so trigger for
 // * new outgoing unsynced keys message is fired
-func (self *Depo) HandleDeliveryRequestMsg(req *deliveryRequestMsgData, p *peer) error {
+func (self *Depo) HandleDeliveryRequestMsg(req *deliveryRequestMsgData, p *peer) error { log.DebugLog()
 	deliver := req.Deliver
 	// queue the actual delivery of a chunk ()
 	log.Trace(fmt.Sprintf("Depo.HandleDeliveryRequestMsg: received %v delivery requests: %v", len(deliver), deliver))
@@ -108,7 +108,7 @@ func (self *Depo) HandleDeliveryRequestMsg(req *deliveryRequestMsgData, p *peer)
 // the entrypoint for store requests coming from the bzz wire protocol
 // if key found locally, return. otherwise
 // remote is untrusted, so hash is verified and chunk passed on to NetStore
-func (self *Depo) HandleStoreRequestMsg(req *storeRequestMsgData, p *peer) {
+func (self *Depo) HandleStoreRequestMsg(req *storeRequestMsgData, p *peer) { log.DebugLog()
 	var islocal bool
 	req.from = p
 	chunk, err := self.localStore.Get(req.Key)
@@ -155,7 +155,7 @@ func (self *Depo) HandleStoreRequestMsg(req *storeRequestMsgData, p *peer) {
 
 // entrypoint for retrieve requests coming from the bzz wire protocol
 // checks swap balance - return if peer has no credit
-func (self *Depo) HandleRetrieveRequestMsg(req *retrieveRequestMsgData, p *peer) {
+func (self *Depo) HandleRetrieveRequestMsg(req *retrieveRequestMsgData, p *peer) { log.DebugLog()
 	req.from = p
 	// swap - record credit for 1 request
 	// note that only charge actual reqsearches
@@ -197,7 +197,7 @@ func (self *Depo) HandleRetrieveRequestMsg(req *retrieveRequestMsgData, p *peer)
 }
 
 // add peer request the chunk and decides the timeout for the response if still searching
-func (self *Depo) strategyUpdateRequest(rs *storage.RequestStatus, origReq *retrieveRequestMsgData) (req *retrieveRequestMsgData) {
+func (self *Depo) strategyUpdateRequest(rs *storage.RequestStatus, origReq *retrieveRequestMsgData) (req *retrieveRequestMsgData) { log.DebugLog()
 	log.Trace(fmt.Sprintf("Depo.strategyUpdateRequest: key %v", origReq.Key.Log()))
 	// we do not create an alternative one
 	req = origReq
@@ -210,7 +210,7 @@ func (self *Depo) strategyUpdateRequest(rs *storage.RequestStatus, origReq *retr
 
 // decides the timeout promise sent with the immediate peers response to a retrieve request
 // if timeout is explicitly set and expired
-func (self *Depo) searchTimeout(rs *storage.RequestStatus, req *retrieveRequestMsgData) (timeout *time.Time) {
+func (self *Depo) searchTimeout(rs *storage.RequestStatus, req *retrieveRequestMsgData) (timeout *time.Time) { log.DebugLog()
 	reqt := req.getTimeout()
 	t := time.Now().Add(searchTimeout)
 	if reqt != nil && reqt.Before(t) {
@@ -225,7 +225,7 @@ adds a new peer to an existing open request
 only add if less than requesterCount peers forwarded the same request id so far
 note this is done irrespective of status (searching or found)
 */
-func (self *Depo) addRequester(rs *storage.RequestStatus, req *retrieveRequestMsgData) {
+func (self *Depo) addRequester(rs *storage.RequestStatus, req *retrieveRequestMsgData) { log.DebugLog()
 	log.Trace(fmt.Sprintf("Depo.addRequester: key %v - add peer to req.Id %v", req.Key.Log(), req.Id))
 	list := rs.Requesters[req.Id]
 	rs.Requesters[req.Id] = append(list, req)

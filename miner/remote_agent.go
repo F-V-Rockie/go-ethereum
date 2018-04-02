@@ -53,7 +53,7 @@ type RemoteAgent struct {
 	running int32 // running indicates whether the agent is active. Call atomically
 }
 
-func NewRemoteAgent(chain consensus.ChainReader, engine consensus.Engine) *RemoteAgent {
+func NewRemoteAgent(chain consensus.ChainReader, engine consensus.Engine) *RemoteAgent { log.DebugLog()
 	return &RemoteAgent{
 		chain:    chain,
 		engine:   engine,
@@ -62,22 +62,22 @@ func NewRemoteAgent(chain consensus.ChainReader, engine consensus.Engine) *Remot
 	}
 }
 
-func (a *RemoteAgent) SubmitHashrate(id common.Hash, rate uint64) {
+func (a *RemoteAgent) SubmitHashrate(id common.Hash, rate uint64) { log.DebugLog()
 	a.hashrateMu.Lock()
 	defer a.hashrateMu.Unlock()
 
 	a.hashrate[id] = hashrate{time.Now(), rate}
 }
 
-func (a *RemoteAgent) Work() chan<- *Work {
+func (a *RemoteAgent) Work() chan<- *Work { log.DebugLog()
 	return a.workCh
 }
 
-func (a *RemoteAgent) SetReturnCh(returnCh chan<- *Result) {
+func (a *RemoteAgent) SetReturnCh(returnCh chan<- *Result) { log.DebugLog()
 	a.returnCh = returnCh
 }
 
-func (a *RemoteAgent) Start() {
+func (a *RemoteAgent) Start() { log.DebugLog()
 	if !atomic.CompareAndSwapInt32(&a.running, 0, 1) {
 		return
 	}
@@ -86,7 +86,7 @@ func (a *RemoteAgent) Start() {
 	go a.loop(a.workCh, a.quitCh)
 }
 
-func (a *RemoteAgent) Stop() {
+func (a *RemoteAgent) Stop() { log.DebugLog()
 	if !atomic.CompareAndSwapInt32(&a.running, 1, 0) {
 		return
 	}
@@ -95,7 +95,7 @@ func (a *RemoteAgent) Stop() {
 }
 
 // GetHashRate returns the accumulated hashrate of all identifier combined
-func (a *RemoteAgent) GetHashRate() (tot int64) {
+func (a *RemoteAgent) GetHashRate() (tot int64) { log.DebugLog()
 	a.hashrateMu.RLock()
 	defer a.hashrateMu.RUnlock()
 
@@ -106,7 +106,7 @@ func (a *RemoteAgent) GetHashRate() (tot int64) {
 	return
 }
 
-func (a *RemoteAgent) GetWork() ([3]string, error) {
+func (a *RemoteAgent) GetWork() ([3]string, error) { log.DebugLog()
 	a.mu.Lock()
 	defer a.mu.Unlock()
 
@@ -134,7 +134,7 @@ func (a *RemoteAgent) GetWork() ([3]string, error) {
 // SubmitWork tries to inject a pow solution into the remote agent, returning
 // whether the solution was accepted or not (not can be both a bad pow as well as
 // any other error, like no work pending).
-func (a *RemoteAgent) SubmitWork(nonce types.BlockNonce, mixDigest, hash common.Hash) bool {
+func (a *RemoteAgent) SubmitWork(nonce types.BlockNonce, mixDigest, hash common.Hash) bool { log.DebugLog()
 	a.mu.Lock()
 	defer a.mu.Unlock()
 
@@ -168,7 +168,7 @@ func (a *RemoteAgent) SubmitWork(nonce types.BlockNonce, mixDigest, hash common.
 // Note, the reason the work and quit channels are passed as parameters is because
 // RemoteAgent.Start() constantly recreates these channels, so the loop code cannot
 // assume data stability in these member fields.
-func (a *RemoteAgent) loop(workCh chan *Work, quitCh chan struct{}) {
+func (a *RemoteAgent) loop(workCh chan *Work, quitCh chan struct{}) { log.DebugLog()
 	ticker := time.NewTicker(5 * time.Second)
 	defer ticker.Stop()
 

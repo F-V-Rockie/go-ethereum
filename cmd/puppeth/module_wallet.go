@@ -80,7 +80,7 @@ services:
 // deployWallet deploys a new web wallet container to a remote machine via SSH,
 // docker and docker-compose. If an instance with the specified network name
 // already exists there, it will be overwritten!
-func deployWallet(client *sshClient, network string, bootnodes []string, config *walletInfos, nocache bool) ([]byte, error) {
+func deployWallet(client *sshClient, network string, bootnodes []string, config *walletInfos, nocache bool) ([]byte, error) { log.DebugLog()
 	// Generate the content to upload to the server
 	workdir := fmt.Sprintf("%d", rand.Int63())
 	files := make(map[string][]byte)
@@ -140,7 +140,7 @@ type walletInfos struct {
 
 // Report converts the typed struct into a plain string->string map, containing
 // most - but not all - fields for reporting to the user.
-func (info *walletInfos) Report() map[string]string {
+func (info *walletInfos) Report() map[string]string { log.DebugLog()
 	report := map[string]string{
 		"Data directory":         info.datadir,
 		"Ethstats username":      info.ethstats,
@@ -154,7 +154,7 @@ func (info *walletInfos) Report() map[string]string {
 
 // checkWallet does a health-check against web wallet server to verify whether
 // it's running, and if yes, whether it's responsive.
-func checkWallet(client *sshClient, network string) (*walletInfos, error) {
+func checkWallet(client *sshClient, network string) (*walletInfos, error) { log.DebugLog()
 	// Inspect a possible web wallet container on the host
 	infos, err := inspectContainer(client, fmt.Sprintf("%s_wallet_1", network))
 	if err != nil {

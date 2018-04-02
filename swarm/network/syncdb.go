@@ -58,7 +58,7 @@ type syncDb struct {
 // priority is used in the index key
 // uses a buffer and a leveldb for persistent storage
 // bufferSize, dbBatchSize are config parameters
-func newSyncDb(db *storage.LDBDatabase, key storage.Key, priority uint, bufferSize, dbBatchSize uint, deliver func(interface{}, chan bool) bool) *syncDb {
+func newSyncDb(db *storage.LDBDatabase, key storage.Key, priority uint, bufferSize, dbBatchSize uint, deliver func(interface{}, chan bool) bool) *syncDb { log.DebugLog()
 	start := make([]byte, 42)
 	start[1] = byte(priorities - priority)
 	copy(start[2:34], key)
@@ -108,7 +108,7 @@ It is automatically started when syncdb is initialised.
 
 It saves the buffer to db upon receiving quit signal. syncDb#stop()
 */
-func (self *syncDb) bufferRead(deliver func(interface{}, chan bool) bool) {
+func (self *syncDb) bufferRead(deliver func(interface{}, chan bool) bool) { log.DebugLog()
 	var buffer, db chan interface{} // channels representing the two read modes
 	var more bool
 	var req interface{}
@@ -233,7 +233,7 @@ LOOP:
 }
 
 // writes the batch to the db and returns a new batch object
-func (self *syncDb) writeSyncBatch(batch *leveldb.Batch) *leveldb.Batch {
+func (self *syncDb) writeSyncBatch(batch *leveldb.Batch) *leveldb.Batch { log.DebugLog()
 	err := self.db.Write(batch)
 	if err != nil {
 		log.Warn(fmt.Sprintf("syncDb[%v/%v] saving batch to db failed: %v", self.key.Log(), self.priority, err))
@@ -247,7 +247,7 @@ type syncDbEntry struct {
 	key, val []byte
 }
 
-func (self syncDbEntry) String() string {
+func (self syncDbEntry) String() string { log.DebugLog()
 	return fmt.Sprintf("key: %x, value: %x", self.key, self.val)
 }
 
@@ -272,7 +272,7 @@ dbRead needs a boolean to indicate if on first round all the historical
 record is synced. Second argument to indicate current db counter
 The third is the function to apply
 */
-func (self *syncDb) dbRead(useBatches bool, counter uint64, fun func(interface{}, chan bool) bool) {
+func (self *syncDb) dbRead(useBatches bool, counter uint64, fun func(interface{}, chan bool) bool) { log.DebugLog()
 	key := make([]byte, 42)
 	copy(key, self.start)
 	binary.BigEndian.PutUint64(key[34:], counter)
@@ -343,7 +343,7 @@ func (self *syncDb) dbRead(useBatches bool, counter uint64, fun func(interface{}
 }
 
 //
-func (self *syncDb) stop() {
+func (self *syncDb) stop() { log.DebugLog()
 	close(self.quit)
 	<-self.done
 }
@@ -351,7 +351,7 @@ func (self *syncDb) stop() {
 // calculate a dbkey for the request, for the db to work
 // see syncdb for db key structure
 // polimorphic: accepted types, see syncer#addRequest
-func (self *syncDb) newSyncDbEntry(req interface{}, counter uint64) (entry *syncDbEntry, err error) {
+func (self *syncDb) newSyncDbEntry(req interface{}, counter uint64) (entry *syncDbEntry, err error) { log.DebugLog()
 	var key storage.Key
 	var chunk *storage.Chunk
 	var id uint64

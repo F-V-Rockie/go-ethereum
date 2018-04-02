@@ -47,14 +47,14 @@ type state struct {
 }
 
 // BlockSize returns the rate of sponge underlying this hash function.
-func (d *state) BlockSize() int { return d.rate }
+func (d *state) BlockSize() int { log.DebugLog() return d.rate }
 
 // Size returns the output size of the hash function in bytes.
-func (d *state) Size() int { return d.outputLen }
+func (d *state) Size() int { log.DebugLog() return d.outputLen }
 
 // Reset clears the internal state by zeroing the sponge state and
 // the byte buffer, and setting Sponge.state to absorbing.
-func (d *state) Reset() {
+func (d *state) Reset() { log.DebugLog()
 	// Zero the permutation's state.
 	for i := range d.a {
 		d.a[i] = 0
@@ -63,7 +63,7 @@ func (d *state) Reset() {
 	d.buf = d.storage[:0]
 }
 
-func (d *state) clone() *state {
+func (d *state) clone() *state { log.DebugLog()
 	ret := *d
 	if ret.state == spongeAbsorbing {
 		ret.buf = ret.storage[:len(ret.buf)]
@@ -76,7 +76,7 @@ func (d *state) clone() *state {
 
 // permute applies the KeccakF-1600 permutation. It handles
 // any input-output buffering.
-func (d *state) permute() {
+func (d *state) permute() { log.DebugLog()
 	switch d.state {
 	case spongeAbsorbing:
 		// If we're absorbing, we need to xor the input into the state
@@ -95,7 +95,7 @@ func (d *state) permute() {
 
 // pads appends the domain separation bits in dsbyte, applies
 // the multi-bitrate 10..1 padding rule, and permutes the state.
-func (d *state) padAndPermute(dsbyte byte) {
+func (d *state) padAndPermute(dsbyte byte) { log.DebugLog()
 	if d.buf == nil {
 		d.buf = d.storage[:0]
 	}
@@ -122,7 +122,7 @@ func (d *state) padAndPermute(dsbyte byte) {
 
 // Write absorbs more data into the hash's state. It produces an error
 // if more data is written to the ShakeHash after writing
-func (d *state) Write(p []byte) (written int, err error) {
+func (d *state) Write(p []byte) (written int, err error) { log.DebugLog()
 	if d.state != spongeAbsorbing {
 		panic("sha3: write to sponge after read")
 	}
@@ -157,7 +157,7 @@ func (d *state) Write(p []byte) (written int, err error) {
 }
 
 // Read squeezes an arbitrary number of bytes from the sponge.
-func (d *state) Read(out []byte) (n int, err error) {
+func (d *state) Read(out []byte) (n int, err error) { log.DebugLog()
 	// If we're still absorbing, pad and apply the permutation.
 	if d.state == spongeAbsorbing {
 		d.padAndPermute(d.dsbyte)
@@ -182,7 +182,7 @@ func (d *state) Read(out []byte) (n int, err error) {
 
 // Sum applies padding to the hash state and then squeezes out the desired
 // number of output bytes.
-func (d *state) Sum(in []byte) []byte {
+func (d *state) Sum(in []byte) []byte { log.DebugLog()
 	// Make a copy of the original hash so that caller can keep writing
 	// and summing.
 	dup := d.clone()

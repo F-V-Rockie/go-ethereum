@@ -25,7 +25,7 @@ import (
 // This test checks that autodisc doesn't hang and returns
 // consistent results when multiple goroutines call its methods
 // concurrently.
-func TestAutoDiscRace(t *testing.T) {
+func TestAutoDiscRace(t *testing.T) { log.DebugLog()
 	ad := startautodisc("thing", func() Interface {
 		time.Sleep(500 * time.Millisecond)
 		return extIP{33, 44, 55, 66}

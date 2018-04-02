@@ -12,7 +12,7 @@ import (
 
 var _ = (*stTransactionMarshaling)(nil)
 
-func (s stTransaction) MarshalJSON() ([]byte, error) {
+func (s stTransaction) MarshalJSON() ([]byte, error) { log.DebugLog()
 	type stTransaction struct {
 		GasPrice   *math.HexOrDecimal256 `json:"gasPrice"`
 		Nonce      math.HexOrDecimal64   `json:"nonce"`
@@ -38,7 +38,7 @@ func (s stTransaction) MarshalJSON() ([]byte, error) {
 	return json.Marshal(&enc)
 }
 
-func (s *stTransaction) UnmarshalJSON(input []byte) error {
+func (s *stTransaction) UnmarshalJSON(input []byte) error { log.DebugLog()
 	type stTransaction struct {
 		GasPrice   *math.HexOrDecimal256 `json:"gasPrice"`
 		Nonce      *math.HexOrDecimal64  `json:"nonce"`

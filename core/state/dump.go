@@ -39,7 +39,7 @@ type Dump struct {
 	Accounts map[string]DumpAccount `json:"accounts"`
 }
 
-func (self *StateDB) RawDump() Dump {
+func (self *StateDB) RawDump() Dump { log.DebugLog()
 	dump := Dump{
 		Root:     fmt.Sprintf("%x", self.trie.Hash()),
 		Accounts: make(map[string]DumpAccount),
@@ -71,7 +71,7 @@ func (self *StateDB) RawDump() Dump {
 	return dump
 }
 
-func (self *StateDB) Dump() []byte {
+func (self *StateDB) Dump() []byte { log.DebugLog()
 	json, err := json.MarshalIndent(self.RawDump(), "", "    ")
 	if err != nil {
 		fmt.Println("dump err", err)

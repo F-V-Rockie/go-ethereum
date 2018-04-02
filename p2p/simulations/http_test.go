@@ -51,7 +51,7 @@ type testService struct {
 	state atomic.Value
 }
 
-func newTestService(ctx *adapters.ServiceContext) (node.Service, error) {
+func newTestService(ctx *adapters.ServiceContext) (node.Service, error) { log.DebugLog()
 	svc := &testService{
 		id:    ctx.Config.ID,
 		peers: make(map[discover.NodeID]*testPeer),
@@ -65,7 +65,7 @@ type testPeer struct {
 	dumReady  chan struct{}
 }
 
-func (t *testService) peer(id discover.NodeID) *testPeer {
+func (t *testService) peer(id discover.NodeID) *testPeer { log.DebugLog()
 	t.peersMtx.Lock()
 	defer t.peersMtx.Unlock()
 	if peer, ok := t.peers[id]; ok {
@@ -79,7 +79,7 @@ func (t *testService) peer(id discover.NodeID) *testPeer {
 	return peer
 }
 
-func (t *testService) Protocols() []p2p.Protocol {
+func (t *testService) Protocols() []p2p.Protocol { log.DebugLog()
 	return []p2p.Protocol{
 		{
 			Name:    "test",
@@ -102,7 +102,7 @@ func (t *testService) Protocols() []p2p.Protocol {
 	}
 }
 
-func (t *testService) APIs() []rpc.API {
+func (t *testService) APIs() []rpc.API { log.DebugLog()
 	return []rpc.API{{
 		Namespace: "test",
 		Version:   "1.0",
@@ -113,17 +113,17 @@ func (t *testService) APIs() []rpc.API {
 	}}
 }
 
-func (t *testService) Start(server *p2p.Server) error {
+func (t *testService) Start(server *p2p.Server) error { log.DebugLog()
 	return nil
 }
 
-func (t *testService) Stop() error {
+func (t *testService) Stop() error { log.DebugLog()
 	return nil
 }
 
 // handshake performs a peer handshake by sending and expecting an empty
 // message with the given code
-func (t *testService) handshake(rw p2p.MsgReadWriter, code uint64) error {
+func (t *testService) handshake(rw p2p.MsgReadWriter, code uint64) error { log.DebugLog()
 	errc := make(chan error, 2)
 	go func() { errc <- p2p.Send(rw, code, struct{}{}) }()
 	go func() { errc <- p2p.ExpectMsg(rw, code, struct{}{}) }()
@@ -135,7 +135,7 @@ func (t *testService) handshake(rw p2p.MsgReadWriter, code uint64) error {
 	return nil
 }
 
-func (t *testService) RunTest(p *p2p.Peer, rw p2p.MsgReadWriter) error {
+func (t *testService) RunTest(p *p2p.Peer, rw p2p.MsgReadWriter) error { log.DebugLog()
 	peer := t.peer(p.ID())
 
 	// perform three handshakes with three different message codes,
@@ -166,7 +166,7 @@ func (t *testService) RunTest(p *p2p.Peer, rw p2p.MsgReadWriter) error {
 	}
 }
 
-func (t *testService) RunDum(p *p2p.Peer, rw p2p.MsgReadWriter) error {
+func (t *testService) RunDum(p *p2p.Peer, rw p2p.MsgReadWriter) error { log.DebugLog()
 	peer := t.peer(p.ID())
 
 	// wait for the test protocol to perform its handshake
@@ -188,7 +188,7 @@ func (t *testService) RunDum(p *p2p.Peer, rw p2p.MsgReadWriter) error {
 		}
 	}
 }
-func (t *testService) RunPrb(p *p2p.Peer, rw p2p.MsgReadWriter) error {
+func (t *testService) RunPrb(p *p2p.Peer, rw p2p.MsgReadWriter) error { log.DebugLog()
 	peer := t.peer(p.ID())
 
 	// wait for the dum protocol to perform its handshake
@@ -208,7 +208,7 @@ func (t *testService) RunPrb(p *p2p.Peer, rw p2p.MsgReadWriter) error {
 	}
 }
 
-func (t *testService) Snapshot() ([]byte, error) {
+func (t *testService) Snapshot() ([]byte, error) { log.DebugLog()
 	return t.state.Load().([]byte), nil
 }
 
@@ -224,28 +224,28 @@ type TestAPI struct {
 	feed      event.Feed
 }
 
-func (t *TestAPI) PeerCount() int64 {
+func (t *TestAPI) PeerCount() int64 { log.DebugLog()
 	return atomic.LoadInt64(t.peerCount)
 }
 
-func (t *TestAPI) Get() int64 {
+func (t *TestAPI) Get() int64 { log.DebugLog()
 	return atomic.LoadInt64(&t.counter)
 }
 
-func (t *TestAPI) Add(delta int64) {
+func (t *TestAPI) Add(delta int64) { log.DebugLog()
 	atomic.AddInt64(&t.counter, delta)
 	t.feed.Send(delta)
 }
 
-func (t *TestAPI) GetState() []byte {
+func (t *TestAPI) GetState() []byte { log.DebugLog()
 	return t.state.Load().([]byte)
 }
 
-func (t *TestAPI) SetState(state []byte) {
+func (t *TestAPI) SetState(state []byte) { log.DebugLog()
 	t.state.Store(state)
 }
 
-func (t *TestAPI) Events(ctx context.Context) (*rpc.Subscription, error) {
+func (t *TestAPI) Events(ctx context.Context) (*rpc.Subscription, error) { log.DebugLog()
 	notifier, supported := rpc.NotifierFromContext(ctx)
 	if !supported {
 		return nil, rpc.ErrNotificationsUnsupported
@@ -279,7 +279,7 @@ var testServices = adapters.Services{
 	"test": newTestService,
 }
 
-func testHTTPServer(t *testing.T) (*Network, *httptest.Server) {
+func testHTTPServer(t *testing.T) (*Network, *httptest.Server) { log.DebugLog()
 	adapter := adapters.NewSimAdapter(testServices)
 	network := NewNetwork(adapter, &NetworkConfig{
 		DefaultService: "test",
@@ -289,7 +289,7 @@ func testHTTPServer(t *testing.T) (*Network, *httptest.Server) {
 
 // TestHTTPNetwork tests interacting with a simulation network using the HTTP
 // API
-func TestHTTPNetwork(t *testing.T) {
+func TestHTTPNetwork(t *testing.T) { log.DebugLog()
 	// start the server
 	network, s := testHTTPServer(t)
 	defer s.Close()
@@ -343,7 +343,7 @@ func TestHTTPNetwork(t *testing.T) {
 	)
 }
 
-func startTestNetwork(t *testing.T, client *Client) []string {
+func startTestNetwork(t *testing.T, client *Client) []string { log.DebugLog()
 	// create two nodes
 	nodeCount := 2
 	nodeIDs := make([]string, nodeCount)
@@ -404,7 +404,7 @@ type expectEvents struct {
 	sub    event.Subscription
 }
 
-func (t *expectEvents) nodeEvent(id string, up bool) *Event {
+func (t *expectEvents) nodeEvent(id string, up bool) *Event { log.DebugLog()
 	return &Event{
 		Type: EventTypeNode,
 		Node: &Node{
@@ -416,7 +416,7 @@ func (t *expectEvents) nodeEvent(id string, up bool) *Event {
 	}
 }
 
-func (t *expectEvents) connEvent(one, other string, up bool) *Event {
+func (t *expectEvents) connEvent(one, other string, up bool) *Event { log.DebugLog()
 	return &Event{
 		Type: EventTypeConn,
 		Conn: &Conn{
@@ -427,7 +427,7 @@ func (t *expectEvents) connEvent(one, other string, up bool) *Event {
 	}
 }
 
-func (t *expectEvents) expectMsgs(expected map[MsgFilter]int) {
+func (t *expectEvents) expectMsgs(expected map[MsgFilter]int) { log.DebugLog()
 	actual := make(map[MsgFilter]int)
 	timeout := time.After(10 * time.Second)
 loop:
@@ -463,7 +463,7 @@ loop:
 	}
 }
 
-func (t *expectEvents) expect(events ...*Event) {
+func (t *expectEvents) expect(events ...*Event) { log.DebugLog()
 	timeout := time.After(10 * time.Second)
 	i := 0
 	for {
@@ -520,7 +520,7 @@ func (t *expectEvents) expect(events ...*Event) {
 }
 
 // TestHTTPNodeRPC tests calling RPC methods on nodes via the HTTP API
-func TestHTTPNodeRPC(t *testing.T) {
+func TestHTTPNodeRPC(t *testing.T) { log.DebugLog()
 	// start the server
 	_, s := testHTTPServer(t)
 	defer s.Close()
@@ -579,7 +579,7 @@ func TestHTTPNodeRPC(t *testing.T) {
 }
 
 // TestHTTPSnapshot tests creating and loading network snapshots
-func TestHTTPSnapshot(t *testing.T) {
+func TestHTTPSnapshot(t *testing.T) { log.DebugLog()
 	// start the server
 	_, s := testHTTPServer(t)
 	defer s.Close()
@@ -703,7 +703,7 @@ func TestHTTPSnapshot(t *testing.T) {
 
 // TestMsgFilterPassMultiple tests streaming message events using a filter
 // with multiple protocols
-func TestMsgFilterPassMultiple(t *testing.T) {
+func TestMsgFilterPassMultiple(t *testing.T) { log.DebugLog()
 	// start the server
 	_, s := testHTTPServer(t)
 	defer s.Close()
@@ -733,7 +733,7 @@ func TestMsgFilterPassMultiple(t *testing.T) {
 
 // TestMsgFilterPassWildcard tests streaming message events using a filter
 // with a code wildcard
-func TestMsgFilterPassWildcard(t *testing.T) {
+func TestMsgFilterPassWildcard(t *testing.T) { log.DebugLog()
 	// start the server
 	_, s := testHTTPServer(t)
 	defer s.Close()
@@ -765,7 +765,7 @@ func TestMsgFilterPassWildcard(t *testing.T) {
 
 // TestMsgFilterPassSingle tests streaming message events using a filter
 // with a single protocol and code
-func TestMsgFilterPassSingle(t *testing.T) {
+func TestMsgFilterPassSingle(t *testing.T) { log.DebugLog()
 	// start the server
 	_, s := testHTTPServer(t)
 	defer s.Close()
@@ -794,7 +794,7 @@ func TestMsgFilterPassSingle(t *testing.T) {
 
 // TestMsgFilterPassSingle tests streaming message events using an invalid
 // filter
-func TestMsgFilterFailBadParams(t *testing.T) {
+func TestMsgFilterFailBadParams(t *testing.T) { log.DebugLog()
 	// start the server
 	_, s := testHTTPServer(t)
 	defer s.Close()

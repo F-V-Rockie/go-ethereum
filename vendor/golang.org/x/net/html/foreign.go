@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-func adjustAttributeNames(aa []Attribute, nameMap map[string]string) {
+func adjustAttributeNames(aa []Attribute, nameMap map[string]string) { log.DebugLog()
 	for i := range aa {
 		if newName, ok := nameMap[aa[i].Key]; ok {
 			aa[i].Key = newName
@@ -16,7 +16,7 @@ func adjustAttributeNames(aa []Attribute, nameMap map[string]string) {
 	}
 }
 
-func adjustForeignAttributes(aa []Attribute) {
+func adjustForeignAttributes(aa []Attribute) { log.DebugLog()
 	for i, a := range aa {
 		if a.Key == "" || a.Key[0] != 'x' {
 			continue
@@ -31,7 +31,7 @@ func adjustForeignAttributes(aa []Attribute) {
 	}
 }
 
-func htmlIntegrationPoint(n *Node) bool {
+func htmlIntegrationPoint(n *Node) bool { log.DebugLog()
 	if n.Type != ElementNode {
 		return false
 	}
@@ -56,7 +56,7 @@ func htmlIntegrationPoint(n *Node) bool {
 	return false
 }
 
-func mathMLTextIntegrationPoint(n *Node) bool {
+func mathMLTextIntegrationPoint(n *Node) bool { log.DebugLog()
 	if n.Namespace != "math" {
 		return false
 	}

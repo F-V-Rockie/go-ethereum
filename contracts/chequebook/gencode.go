@@ -39,7 +39,7 @@ var (
 	}
 )
 
-func main() {
+func main() { log.DebugLog()
 	backend := backends.NewSimulatedBackend(testAlloc)
 	auth := bind.NewKeyedTransactor(testKey)
 

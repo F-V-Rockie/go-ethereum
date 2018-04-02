@@ -40,7 +40,7 @@ var (
 )
 
 // Keccak256 calculates and returns the Keccak256 hash of the input data.
-func Keccak256(data ...[]byte) []byte {
+func Keccak256(data ...[]byte) []byte { log.DebugLog()
 	d := sha3.NewKeccak256()
 	for _, b := range data {
 		d.Write(b)
@@ -50,7 +50,7 @@ func Keccak256(data ...[]byte) []byte {
 
 // Keccak256Hash calculates and returns the Keccak256 hash of the input data,
 // converting it to an internal Hash data structure.
-func Keccak256Hash(data ...[]byte) (h common.Hash) {
+func Keccak256Hash(data ...[]byte) (h common.Hash) { log.DebugLog()
 	d := sha3.NewKeccak256()
 	for _, b := range data {
 		d.Write(b)
@@ -60,7 +60,7 @@ func Keccak256Hash(data ...[]byte) (h common.Hash) {
 }
 
 // Keccak512 calculates and returns the Keccak512 hash of the input data.
-func Keccak512(data ...[]byte) []byte {
+func Keccak512(data ...[]byte) []byte { log.DebugLog()
 	d := sha3.NewKeccak512()
 	for _, b := range data {
 		d.Write(b)
@@ -69,20 +69,20 @@ func Keccak512(data ...[]byte) []byte {
 }
 
 // Creates an ethereum address given the bytes and the nonce
-func CreateAddress(b common.Address, nonce uint64) common.Address {
+func CreateAddress(b common.Address, nonce uint64) common.Address { log.DebugLog()
 	data, _ := rlp.EncodeToBytes([]interface{}{b, nonce})
 	return common.BytesToAddress(Keccak256(data)[12:])
 }
 
 // ToECDSA creates a private key with the given D value.
-func ToECDSA(d []byte) (*ecdsa.PrivateKey, error) {
+func ToECDSA(d []byte) (*ecdsa.PrivateKey, error) { log.DebugLog()
 	return toECDSA(d, true)
 }
 
 // ToECDSAUnsafe blindly converts a binary blob to a private key. It should almost
 // never be used unless you are sure the input is valid and want to avoid hitting
 // errors due to bad origin encoding (0 prefixes cut off).
-func ToECDSAUnsafe(d []byte) *ecdsa.PrivateKey {
+func ToECDSAUnsafe(d []byte) *ecdsa.PrivateKey { log.DebugLog()
 	priv, _ := toECDSA(d, false)
 	return priv
 }
@@ -90,7 +90,7 @@ func ToECDSAUnsafe(d []byte) *ecdsa.PrivateKey {
 // toECDSA creates a private key with the given D value. The strict parameter
 // controls whether the key's length should be enforced at the curve size or
 // it can also accept legacy encodings (0 prefixes).
-func toECDSA(d []byte, strict bool) (*ecdsa.PrivateKey, error) {
+func toECDSA(d []byte, strict bool) (*ecdsa.PrivateKey, error) { log.DebugLog()
 	priv := new(ecdsa.PrivateKey)
 	priv.PublicKey.Curve = S256()
 	if strict && 8*len(d) != priv.Params().BitSize {
@@ -115,14 +115,14 @@ func toECDSA(d []byte, strict bool) (*ecdsa.PrivateKey, error) {
 }
 
 // FromECDSA exports a private key into a binary dump.
-func FromECDSA(priv *ecdsa.PrivateKey) []byte {
+func FromECDSA(priv *ecdsa.PrivateKey) []byte { log.DebugLog()
 	if priv == nil {
 		return nil
 	}
 	return math.PaddedBigBytes(priv.D, priv.Params().BitSize/8)
 }
 
-func ToECDSAPub(pub []byte) *ecdsa.PublicKey {
+func ToECDSAPub(pub []byte) *ecdsa.PublicKey { log.DebugLog()
 	if len(pub) == 0 {
 		return nil
 	}
@@ -130,7 +130,7 @@ func ToECDSAPub(pub []byte) *ecdsa.PublicKey {
 	return &ecdsa.PublicKey{Curve: S256(), X: x, Y: y}
 }
 
-func FromECDSAPub(pub *ecdsa.PublicKey) []byte {
+func FromECDSAPub(pub *ecdsa.PublicKey) []byte { log.DebugLog()
 	if pub == nil || pub.X == nil || pub.Y == nil {
 		return nil
 	}
@@ -138,7 +138,7 @@ func FromECDSAPub(pub *ecdsa.PublicKey) []byte {
 }
 
 // HexToECDSA parses a secp256k1 private key.
-func HexToECDSA(hexkey string) (*ecdsa.PrivateKey, error) {
+func HexToECDSA(hexkey string) (*ecdsa.PrivateKey, error) { log.DebugLog()
 	b, err := hex.DecodeString(hexkey)
 	if err != nil {
 		return nil, errors.New("invalid hex string")
@@ -147,7 +147,7 @@ func HexToECDSA(hexkey string) (*ecdsa.PrivateKey, error) {
 }
 
 // LoadECDSA loads a secp256k1 private key from the given file.
-func LoadECDSA(file string) (*ecdsa.PrivateKey, error) {
+func LoadECDSA(file string) (*ecdsa.PrivateKey, error) { log.DebugLog()
 	buf := make([]byte, 64)
 	fd, err := os.Open(file)
 	if err != nil {
@@ -167,18 +167,18 @@ func LoadECDSA(file string) (*ecdsa.PrivateKey, error) {
 
 // SaveECDSA saves a secp256k1 private key to the given file with
 // restrictive permissions. The key data is saved hex-encoded.
-func SaveECDSA(file string, key *ecdsa.PrivateKey) error {
+func SaveECDSA(file string, key *ecdsa.PrivateKey) error { log.DebugLog()
 	k := hex.EncodeToString(FromECDSA(key))
 	return ioutil.WriteFile(file, []byte(k), 0600)
 }
 
-func GenerateKey() (*ecdsa.PrivateKey, error) {
+func GenerateKey() (*ecdsa.PrivateKey, error) { log.DebugLog()
 	return ecdsa.GenerateKey(S256(), rand.Reader)
 }
 
 // ValidateSignatureValues verifies whether the signature values are valid with
 // the given chain rules. The v value is assumed to be either 0 or 1.
-func ValidateSignatureValues(v byte, r, s *big.Int, homestead bool) bool {
+func ValidateSignatureValues(v byte, r, s *big.Int, homestead bool) bool { log.DebugLog()
 	if r.Cmp(common.Big1) < 0 || s.Cmp(common.Big1) < 0 {
 		return false
 	}
@@ -191,12 +191,12 @@ func ValidateSignatureValues(v byte, r, s *big.Int, homestead bool) bool {
 	return r.Cmp(secp256k1_N) < 0 && s.Cmp(secp256k1_N) < 0 && (v == 0 || v == 1)
 }
 
-func PubkeyToAddress(p ecdsa.PublicKey) common.Address {
+func PubkeyToAddress(p ecdsa.PublicKey) common.Address { log.DebugLog()
 	pubBytes := FromECDSAPub(&p)
 	return common.BytesToAddress(Keccak256(pubBytes[1:])[12:])
 }
 
-func zeroBytes(bytes []byte) {
+func zeroBytes(bytes []byte) { log.DebugLog()
 	for i := range bytes {
 		bytes[i] = 0
 	}

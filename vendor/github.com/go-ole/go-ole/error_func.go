@@ -3,6 +3,6 @@
 package ole
 
 // errstr converts error code to string.
-func errstr(errno int) string {
+func errstr(errno int) string { log.DebugLog()
 	return ""
 }

@@ -14,7 +14,7 @@ var falseLiteral = &_nodeLiteral{value: toValue_bool(false)}
 var nullLiteral = &_nodeLiteral{value: nullValue}
 var emptyStatement = &_nodeEmptyStatement{}
 
-func (cmpl *_compiler) parseExpression(in ast.Expression) _nodeExpression {
+func (cmpl *_compiler) parseExpression(in ast.Expression) _nodeExpression { log.DebugLog()
 	if in == nil {
 		return nil
 	}
@@ -196,7 +196,7 @@ func (cmpl *_compiler) parseExpression(in ast.Expression) _nodeExpression {
 	panic(fmt.Errorf("Here be dragons: cmpl.parseExpression(%T)", in))
 }
 
-func (cmpl *_compiler) parseStatement(in ast.Statement) _nodeStatement {
+func (cmpl *_compiler) parseStatement(in ast.Statement) _nodeStatement { log.DebugLog()
 	if in == nil {
 		return nil
 	}
@@ -359,14 +359,14 @@ func (cmpl *_compiler) parseStatement(in ast.Statement) _nodeStatement {
 	panic(fmt.Errorf("Here be dragons: cmpl.parseStatement(%T)", in))
 }
 
-func cmpl_parse(in *ast.Program) *_nodeProgram {
+func cmpl_parse(in *ast.Program) *_nodeProgram { log.DebugLog()
 	cmpl := _compiler{
 		program: in,
 	}
 	return cmpl.parse()
 }
 
-func (cmpl *_compiler) _parse(in *ast.Program) *_nodeProgram {
+func (cmpl *_compiler) _parse(in *ast.Program) *_nodeProgram { log.DebugLog()
 	out := &_nodeProgram{
 		body: make([]_nodeStatement, len(in.Body)),
 		file: in.File,
@@ -615,42 +615,42 @@ type (
 
 // _expressionNode
 
-func (*_nodeArrayLiteral) _expressionNode()          {}
-func (*_nodeAssignExpression) _expressionNode()      {}
-func (*_nodeBinaryExpression) _expressionNode()      {}
-func (*_nodeBracketExpression) _expressionNode()     {}
-func (*_nodeCallExpression) _expressionNode()        {}
-func (*_nodeConditionalExpression) _expressionNode() {}
-func (*_nodeDotExpression) _expressionNode()         {}
-func (*_nodeFunctionLiteral) _expressionNode()       {}
-func (*_nodeIdentifier) _expressionNode()            {}
-func (*_nodeLiteral) _expressionNode()               {}
-func (*_nodeNewExpression) _expressionNode()         {}
-func (*_nodeObjectLiteral) _expressionNode()         {}
-func (*_nodeRegExpLiteral) _expressionNode()         {}
-func (*_nodeSequenceExpression) _expressionNode()    {}
-func (*_nodeThisExpression) _expressionNode()        {}
-func (*_nodeUnaryExpression) _expressionNode()       {}
-func (*_nodeVariableExpression) _expressionNode()    {}
+func (*_nodeArrayLiteral) _expressionNode()          { log.DebugLog()}
+func (*_nodeAssignExpression) _expressionNode()      { log.DebugLog()}
+func (*_nodeBinaryExpression) _expressionNode()      { log.DebugLog()}
+func (*_nodeBracketExpression) _expressionNode()     { log.DebugLog()}
+func (*_nodeCallExpression) _expressionNode()        { log.DebugLog()}
+func (*_nodeConditionalExpression) _expressionNode() { log.DebugLog()}
+func (*_nodeDotExpression) _expressionNode()         { log.DebugLog()}
+func (*_nodeFunctionLiteral) _expressionNode()       { log.DebugLog()}
+func (*_nodeIdentifier) _expressionNode()            { log.DebugLog()}
+func (*_nodeLiteral) _expressionNode()               { log.DebugLog()}
+func (*_nodeNewExpression) _expressionNode()         { log.DebugLog()}
+func (*_nodeObjectLiteral) _expressionNode()         { log.DebugLog()}
+func (*_nodeRegExpLiteral) _expressionNode()         { log.DebugLog()}
+func (*_nodeSequenceExpression) _expressionNode()    { log.DebugLog()}
+func (*_nodeThisExpression) _expressionNode()        { log.DebugLog()}
+func (*_nodeUnaryExpression) _expressionNode()       { log.DebugLog()}
+func (*_nodeVariableExpression) _expressionNode()    { log.DebugLog()}
 
 // _statementNode
 
-func (*_nodeBlockStatement) _statementNode()      {}
-func (*_nodeBranchStatement) _statementNode()     {}
-func (*_nodeCaseStatement) _statementNode()       {}
-func (*_nodeCatchStatement) _statementNode()      {}
-func (*_nodeDebuggerStatement) _statementNode()   {}
-func (*_nodeDoWhileStatement) _statementNode()    {}
-func (*_nodeEmptyStatement) _statementNode()      {}
-func (*_nodeExpressionStatement) _statementNode() {}
-func (*_nodeForInStatement) _statementNode()      {}
-func (*_nodeForStatement) _statementNode()        {}
-func (*_nodeIfStatement) _statementNode()         {}
-func (*_nodeLabelledStatement) _statementNode()   {}
-func (*_nodeReturnStatement) _statementNode()     {}
-func (*_nodeSwitchStatement) _statementNode()     {}
-func (*_nodeThrowStatement) _statementNode()      {}
-func (*_nodeTryStatement) _statementNode()        {}
-func (*_nodeVariableStatement) _statementNode()   {}
-func (*_nodeWhileStatement) _statementNode()      {}
-func (*_nodeWithStatement) _statementNode()       {}
+func (*_nodeBlockStatement) _statementNode()      { log.DebugLog()}
+func (*_nodeBranchStatement) _statementNode()     { log.DebugLog()}
+func (*_nodeCaseStatement) _statementNode()       { log.DebugLog()}
+func (*_nodeCatchStatement) _statementNode()      { log.DebugLog()}
+func (*_nodeDebuggerStatement) _statementNode()   { log.DebugLog()}
+func (*_nodeDoWhileStatement) _statementNode()    { log.DebugLog()}
+func (*_nodeEmptyStatement) _statementNode()      { log.DebugLog()}
+func (*_nodeExpressionStatement) _statementNode() { log.DebugLog()}
+func (*_nodeForInStatement) _statementNode()      { log.DebugLog()}
+func (*_nodeForStatement) _statementNode()        { log.DebugLog()}
+func (*_nodeIfStatement) _statementNode()         { log.DebugLog()}
+func (*_nodeLabelledStatement) _statementNode()   { log.DebugLog()}
+func (*_nodeReturnStatement) _statementNode()     { log.DebugLog()}
+func (*_nodeSwitchStatement) _statementNode()     { log.DebugLog()}
+func (*_nodeThrowStatement) _statementNode()      { log.DebugLog()}
+func (*_nodeTryStatement) _statementNode()        { log.DebugLog()}
+func (*_nodeVariableStatement) _statementNode()   { log.DebugLog()}
+func (*_nodeWhileStatement) _statementNode()      { log.DebugLog()}
+func (*_nodeWithStatement) _statementNode()       { log.DebugLog()}

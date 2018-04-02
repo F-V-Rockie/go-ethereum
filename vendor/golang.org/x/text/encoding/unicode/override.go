@@ -24,7 +24,7 @@ import (
 // Using BOMOverride is mostly intended for use cases where the first characters
 // of a fallback encoding are known to not be a BOM, for example, for valid HTML
 // and most encodings.
-func BOMOverride(fallback transform.Transformer) transform.Transformer {
+func BOMOverride(fallback transform.Transformer) transform.Transformer { log.DebugLog()
 	// TODO: possibly allow a variadic argument of unicode encodings to allow
 	// specifying details of which fallbacks are supported as well as
 	// specifying the details of the implementations. This would also allow for
@@ -37,7 +37,7 @@ type bomOverride struct {
 	current  transform.Transformer
 }
 
-func (d *bomOverride) Reset() {
+func (d *bomOverride) Reset() { log.DebugLog()
 	d.current = nil
 	d.fallback.Reset()
 }
@@ -51,7 +51,7 @@ var (
 
 const utf8BOM = "\ufeff"
 
-func (d *bomOverride) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) {
+func (d *bomOverride) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) { log.DebugLog()
 	if d.current != nil {
 		return d.current.Transform(dst, src, atEOF)
 	}

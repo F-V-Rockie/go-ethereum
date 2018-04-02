@@ -19,7 +19,7 @@ type LineError struct {
 	Err         error
 }
 
-func (err *LineError) Error() string {
+func (err *LineError) Error() string { log.DebugLog()
 	field := ""
 	if err.StructField != "" {
 		field = "(" + err.StructField + ") "
@@ -27,7 +27,7 @@ func (err *LineError) Error() string {
 	return fmt.Sprintf("line %d: %s%v", err.Line, field, err.Err)
 }
 
-func lineError(line int, err error) error {
+func lineError(line int, err error) error { log.DebugLog()
 	if err == nil {
 		return nil
 	}
@@ -37,7 +37,7 @@ func lineError(line int, err error) error {
 	return &LineError{Line: line, Err: err}
 }
 
-func lineErrorField(line int, field string, err error) error {
+func lineErrorField(line int, field string, err error) error { log.DebugLog()
 	if lerr, ok := err.(*LineError); ok {
 		return lerr
 	} else if err != nil {
@@ -51,11 +51,11 @@ type overflowError struct {
 	v    string
 }
 
-func (err *overflowError) Error() string {
+func (err *overflowError) Error() string { log.DebugLog()
 	return fmt.Sprintf("value %s is out of range for %v", err.v, err.kind)
 }
 
-func convertNumError(kind reflect.Kind, err error) error {
+func convertNumError(kind reflect.Kind, err error) error { log.DebugLog()
 	if numerr, ok := err.(*strconv.NumError); ok && numerr.Err == strconv.ErrRange {
 		return &overflowError{kind, numerr.Num}
 	}
@@ -66,7 +66,7 @@ type invalidUnmarshalError struct {
 	typ reflect.Type
 }
 
-func (err *invalidUnmarshalError) Error() string {
+func (err *invalidUnmarshalError) Error() string { log.DebugLog()
 	if err.typ == nil {
 		return "toml: Unmarshal(nil)"
 	}
@@ -82,7 +82,7 @@ type unmarshalTypeError struct {
 	typ  reflect.Type
 }
 
-func (err *unmarshalTypeError) Error() string {
+func (err *unmarshalTypeError) Error() string { log.DebugLog()
 	msg := fmt.Sprintf("cannot unmarshal TOML %s into %s", err.what, err.typ)
 	if err.want != "" {
 		msg += " (need " + err.want + ")"
@@ -94,7 +94,7 @@ type marshalNilError struct {
 	typ reflect.Type
 }
 
-func (err *marshalNilError) Error() string {
+func (err *marshalNilError) Error() string { log.DebugLog()
 	return fmt.Sprintf("toml: cannot marshal nil %s", err.typ)
 }
 
@@ -102,6 +102,6 @@ type marshalTableError struct {
 	typ reflect.Type
 }
 
-func (err *marshalTableError) Error() string {
+func (err *marshalTableError) Error() string { log.DebugLog()
 	return fmt.Sprintf("toml: cannot marshal %s as table, want struct or map type", err.typ)
 }

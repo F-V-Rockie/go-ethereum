@@ -53,7 +53,7 @@ type Filters struct {
 }
 
 // NewFilters returns a newly created filter collection
-func NewFilters(w *Whisper) *Filters {
+func NewFilters(w *Whisper) *Filters { log.DebugLog()
 	return &Filters{
 		watchers:         make(map[string]*Filter),
 		topicMatcher:     make(map[TopicType]map[*Filter]struct{}),
@@ -63,7 +63,7 @@ func NewFilters(w *Whisper) *Filters {
 }
 
 // Install will add a new filter to the filter collection
-func (fs *Filters) Install(watcher *Filter) (string, error) {
+func (fs *Filters) Install(watcher *Filter) (string, error) { log.DebugLog()
 	if watcher.KeySym != nil && watcher.KeyAsym != nil {
 		return "", fmt.Errorf("filters must choose between symmetric and asymmetric keys")
 	}
@@ -96,7 +96,7 @@ func (fs *Filters) Install(watcher *Filter) (string, error) {
 
 // Uninstall will remove a filter whose id has been specified from
 // the filter collection
-func (fs *Filters) Uninstall(id string) bool {
+func (fs *Filters) Uninstall(id string) bool { log.DebugLog()
 	fs.mutex.Lock()
 	defer fs.mutex.Unlock()
 	if fs.watchers[id] != nil {
@@ -110,7 +110,7 @@ func (fs *Filters) Uninstall(id string) bool {
 // addTopicMatcher adds a filter to the topic matchers.
 // If the filter's Topics array is empty, it will be tried on every topic.
 // Otherwise, it will be tried on the topics specified.
-func (fs *Filters) addTopicMatcher(watcher *Filter) {
+func (fs *Filters) addTopicMatcher(watcher *Filter) { log.DebugLog()
 	if len(watcher.Topics) == 0 {
 		fs.allTopicsMatcher[watcher] = struct{}{}
 	} else {
@@ -125,7 +125,7 @@ func (fs *Filters) addTopicMatcher(watcher *Filter) {
 }
 
 // removeFromTopicMatchers removes a filter from the topic matchers
-func (fs *Filters) removeFromTopicMatchers(watcher *Filter) {
+func (fs *Filters) removeFromTopicMatchers(watcher *Filter) { log.DebugLog()
 	delete(fs.allTopicsMatcher, watcher)
 	for _, topic := range watcher.Topics {
 		delete(fs.topicMatcher[BytesToTopic(topic)], watcher)
@@ -134,7 +134,7 @@ func (fs *Filters) removeFromTopicMatchers(watcher *Filter) {
 
 // getWatchersByTopic returns a slice containing the filters that
 // match a specific topic
-func (fs *Filters) getWatchersByTopic(topic TopicType) []*Filter {
+func (fs *Filters) getWatchersByTopic(topic TopicType) []*Filter { log.DebugLog()
 	res := make([]*Filter, 0, len(fs.allTopicsMatcher))
 	for watcher := range fs.allTopicsMatcher {
 		res = append(res, watcher)
@@ -146,7 +146,7 @@ func (fs *Filters) getWatchersByTopic(topic TopicType) []*Filter {
 }
 
 // Get returns a filter from the collection with a specific ID
-func (fs *Filters) Get(id string) *Filter {
+func (fs *Filters) Get(id string) *Filter { log.DebugLog()
 	fs.mutex.RLock()
 	defer fs.mutex.RUnlock()
 	return fs.watchers[id]
@@ -154,7 +154,7 @@ func (fs *Filters) Get(id string) *Filter {
 
 // NotifyWatchers notifies any filter that has declared interest
 // for the envelope's topic.
-func (fs *Filters) NotifyWatchers(env *Envelope, p2pMessage bool) {
+func (fs *Filters) NotifyWatchers(env *Envelope, p2pMessage bool) { log.DebugLog()
 	var msg *ReceivedMessage
 
 	fs.mutex.RLock()
@@ -191,17 +191,17 @@ func (fs *Filters) NotifyWatchers(env *Envelope, p2pMessage bool) {
 	}
 }
 
-func (f *Filter) expectsAsymmetricEncryption() bool {
+func (f *Filter) expectsAsymmetricEncryption() bool { log.DebugLog()
 	return f.KeyAsym != nil
 }
 
-func (f *Filter) expectsSymmetricEncryption() bool {
+func (f *Filter) expectsSymmetricEncryption() bool { log.DebugLog()
 	return f.KeySym != nil
 }
 
 // Trigger adds a yet-unknown message to the filter's list of
 // received messages.
-func (f *Filter) Trigger(msg *ReceivedMessage) {
+func (f *Filter) Trigger(msg *ReceivedMessage) { log.DebugLog()
 	f.mutex.Lock()
 	defer f.mutex.Unlock()
 
@@ -212,7 +212,7 @@ func (f *Filter) Trigger(msg *ReceivedMessage) {
 
 // Retrieve will return the list of all received messages associated
 // to a filter.
-func (f *Filter) Retrieve() (all []*ReceivedMessage) {
+func (f *Filter) Retrieve() (all []*ReceivedMessage) { log.DebugLog()
 	f.mutex.Lock()
 	defer f.mutex.Unlock()
 
@@ -229,7 +229,7 @@ func (f *Filter) Retrieve() (all []*ReceivedMessage) {
 // message (i.e. a Message that has already been handled by
 // MatchEnvelope when checked by a previous filter).
 // Topics are not checked here, since this is done by topic matchers.
-func (f *Filter) MatchMessage(msg *ReceivedMessage) bool {
+func (f *Filter) MatchMessage(msg *ReceivedMessage) bool { log.DebugLog()
 	if f.PoW > 0 && msg.PoW < f.PoW {
 		return false
 	}
@@ -246,11 +246,11 @@ func (f *Filter) MatchMessage(msg *ReceivedMessage) bool {
 // it returns `true`, client code is expected to attempt decrypting
 // the message and subsequently call MatchMessage.
 // Topics are not checked here, since this is done by topic matchers.
-func (f *Filter) MatchEnvelope(envelope *Envelope) bool {
+func (f *Filter) MatchEnvelope(envelope *Envelope) bool { log.DebugLog()
 	return f.PoW <= 0 || envelope.pow >= f.PoW
 }
 
-func matchSingleTopic(topic TopicType, bt []byte) bool {
+func matchSingleTopic(topic TopicType, bt []byte) bool { log.DebugLog()
 	if len(bt) > TopicLength {
 		bt = bt[:TopicLength]
 	}
@@ -268,7 +268,7 @@ func matchSingleTopic(topic TopicType, bt []byte) bool {
 }
 
 // IsPubKeyEqual checks that two public keys are equal
-func IsPubKeyEqual(a, b *ecdsa.PublicKey) bool {
+func IsPubKeyEqual(a, b *ecdsa.PublicKey) bool { log.DebugLog()
 	if !ValidatePublicKey(a) {
 		return false
 	} else if !ValidatePublicKey(b) {

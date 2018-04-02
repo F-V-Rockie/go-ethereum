@@ -1,6 +1,6 @@
 package bn256
 
-func lineFunctionAdd(r, p *twistPoint, q *curvePoint, r2 *gfP2) (a, b, c *gfP2, rOut *twistPoint) {
+func lineFunctionAdd(r, p *twistPoint, q *curvePoint, r2 *gfP2) (a, b, c *gfP2, rOut *twistPoint) { log.DebugLog()
 	// See the mixed addition algorithm from "Faster Computation of the
 	// Tate Pairing", http://arxiv.org/pdf/0904.0854v3.pdf
 	B := (&gfP2{}).Mul(&p.x, &r.t)
@@ -49,7 +49,7 @@ func lineFunctionAdd(r, p *twistPoint, q *curvePoint, r2 *gfP2) (a, b, c *gfP2, 
 	return
 }
 
-func lineFunctionDouble(r *twistPoint, q *curvePoint) (a, b, c *gfP2, rOut *twistPoint) {
+func lineFunctionDouble(r *twistPoint, q *curvePoint) (a, b, c *gfP2, rOut *twistPoint) { log.DebugLog()
 	// See the doubling algorithm for a=0 from "Faster Computation of the
 	// Tate Pairing", http://arxiv.org/pdf/0904.0854v3.pdf
 	A := (&gfP2{}).Square(&r.x)
@@ -91,7 +91,7 @@ func lineFunctionDouble(r *twistPoint, q *curvePoint) (a, b, c *gfP2, rOut *twis
 	return
 }
 
-func mulLine(ret *gfP12, a, b, c *gfP2) {
+func mulLine(ret *gfP12, a, b, c *gfP2) { log.DebugLog()
 	a2 := &gfP6{}
 	a2.y.Set(a)
 	a2.z.Set(b)
@@ -119,7 +119,7 @@ var sixuPlus2NAF = []int8{0, 0, 0, 1, 0, 1, 0, -1, 0, 0, 1, -1, 0, 0, 1, 0,
 
 // miller implements the Miller loop for calculating the Optimal Ate pairing.
 // See algorithm 1 from http://cryptojedi.org/papers/dclxvi-20100714.pdf
-func miller(q *twistPoint, p *curvePoint) *gfP12 {
+func miller(q *twistPoint, p *curvePoint) *gfP12 { log.DebugLog()
 	ret := (&gfP12{}).SetOne()
 
 	aAffine := &twistPoint{}
@@ -209,7 +209,7 @@ func miller(q *twistPoint, p *curvePoint) *gfP12 {
 // finalExponentiation computes the (p¹²-1)/Order-th power of an element of
 // GF(p¹²) to obtain an element of GT (steps 13-15 of algorithm 1 from
 // http://cryptojedi.org/papers/dclxvi-20100714.pdf)
-func finalExponentiation(in *gfP12) *gfP12 {
+func finalExponentiation(in *gfP12) *gfP12 { log.DebugLog()
 	t1 := &gfP12{}
 
 	// This is the p^6-Frobenius
@@ -260,7 +260,7 @@ func finalExponentiation(in *gfP12) *gfP12 {
 	return t0
 }
 
-func optimalAte(a *twistPoint, b *curvePoint) *gfP12 {
+func optimalAte(a *twistPoint, b *curvePoint) *gfP12 { log.DebugLog()
 	e := miller(a, b)
 	ret := finalExponentiation(e)
 

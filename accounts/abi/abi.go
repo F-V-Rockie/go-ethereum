@@ -33,7 +33,7 @@ type ABI struct {
 }
 
 // JSON returns a parsed ABI interface and error if it failed.
-func JSON(reader io.Reader) (ABI, error) {
+func JSON(reader io.Reader) (ABI, error) { log.DebugLog()
 	dec := json.NewDecoder(reader)
 
 	var abi ABI
@@ -49,7 +49,7 @@ func JSON(reader io.Reader) (ABI, error) {
 // of 4 bytes and arguments are all 32 bytes.
 // Method ids are created from the first 4 bytes of the hash of the
 // methods string signature. (signature = baz(uint32,string32))
-func (abi ABI) Pack(name string, args ...interface{}) ([]byte, error) {
+func (abi ABI) Pack(name string, args ...interface{}) ([]byte, error) { log.DebugLog()
 	// Fetch the ABI of the requested method
 	if name == "" {
 		// constructor
@@ -74,7 +74,7 @@ func (abi ABI) Pack(name string, args ...interface{}) ([]byte, error) {
 }
 
 // Unpack output in v according to the abi specification
-func (abi ABI) Unpack(v interface{}, name string, output []byte) (err error) {
+func (abi ABI) Unpack(v interface{}, name string, output []byte) (err error) { log.DebugLog()
 	if len(output) == 0 {
 		return fmt.Errorf("abi: unmarshalling empty output")
 	}
@@ -92,7 +92,7 @@ func (abi ABI) Unpack(v interface{}, name string, output []byte) (err error) {
 }
 
 // UnmarshalJSON implements json.Unmarshaler interface
-func (abi *ABI) UnmarshalJSON(data []byte) error {
+func (abi *ABI) UnmarshalJSON(data []byte) error { log.DebugLog()
 	var fields []struct {
 		Type      string
 		Name      string
@@ -136,7 +136,7 @@ func (abi *ABI) UnmarshalJSON(data []byte) error {
 
 // MethodById looks up a method by the 4-byte id
 // returns nil if none found
-func (abi *ABI) MethodById(sigdata []byte) (*Method, error) {
+func (abi *ABI) MethodById(sigdata []byte) (*Method, error) { log.DebugLog()
 	for _, method := range abi.Methods {
 		if bytes.Equal(method.Id(), sigdata[:4]) {
 			return &method, nil

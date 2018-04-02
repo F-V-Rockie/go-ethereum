@@ -10,7 +10,7 @@ import (
 
 // Output each metric in the given registry to syslog periodically using
 // the given syslogger.
-func Syslog(r Registry, d time.Duration, w *syslog.Writer) {
+func Syslog(r Registry, d time.Duration, w *syslog.Writer) { log.DebugLog()
 	for range time.Tick(d) {
 		r.Each(func(name string, i interface{}) {
 			switch metric := i.(type) {

@@ -43,7 +43,7 @@ type RLPTest struct {
 }
 
 // Run executes the test.
-func (t *RLPTest) Run() error {
+func (t *RLPTest) Run() error { log.DebugLog()
 	outb, err := hex.DecodeString(t.Out)
 	if err != nil {
 		return fmt.Errorf("invalid hex in Out")
@@ -68,7 +68,7 @@ func (t *RLPTest) Run() error {
 	return checkDecodeFromJSON(s, in)
 }
 
-func checkDecodeInterface(b []byte, isValid bool) error {
+func checkDecodeInterface(b []byte, isValid bool) error { log.DebugLog()
 	err := rlp.DecodeBytes(b, new(interface{}))
 	switch {
 	case isValid && err != nil:
@@ -80,7 +80,7 @@ func checkDecodeInterface(b []byte, isValid bool) error {
 }
 
 // translateJSON makes test json values encodable with RLP.
-func translateJSON(v interface{}) interface{} {
+func translateJSON(v interface{}) interface{} { log.DebugLog()
 	switch v := v.(type) {
 	case float64:
 		return uint64(v)
@@ -108,7 +108,7 @@ func translateJSON(v interface{}) interface{} {
 // Stream by invoking decoding operations (Uint, Big, List, ...) based
 // on the type of each value. The value decoded from the RLP stream
 // must match the JSON value.
-func checkDecodeFromJSON(s *rlp.Stream, exp interface{}) error {
+func checkDecodeFromJSON(s *rlp.Stream, exp interface{}) error { log.DebugLog()
 	switch exp := exp.(type) {
 	case uint64:
 		i, err := s.Uint()
@@ -152,7 +152,7 @@ func checkDecodeFromJSON(s *rlp.Stream, exp interface{}) error {
 	return nil
 }
 
-func addStack(op string, val interface{}, err error) error {
+func addStack(op string, val interface{}, err error) error { log.DebugLog()
 	lines := strings.Split(err.Error(), "\n")
 	lines = append(lines, fmt.Sprintf("\t%s: %v", op, val))
 	return errors.New(strings.Join(lines, "\n"))

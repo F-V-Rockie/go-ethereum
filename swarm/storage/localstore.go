@@ -35,7 +35,7 @@ type LocalStore struct {
 }
 
 // This constructor uses MemStore and DbStore as components
-func NewLocalStore(hash SwarmHasher, params *StoreParams) (*LocalStore, error) {
+func NewLocalStore(hash SwarmHasher, params *StoreParams) (*LocalStore, error) { log.DebugLog()
 	dbStore, err := NewDbStore(params.ChunkDbPath, hash, params.DbCapacity, params.Radius)
 	if err != nil {
 		return nil, err
@@ -46,17 +46,17 @@ func NewLocalStore(hash SwarmHasher, params *StoreParams) (*LocalStore, error) {
 	}, nil
 }
 
-func (self *LocalStore) CacheCounter() uint64 {
+func (self *LocalStore) CacheCounter() uint64 { log.DebugLog()
 	return uint64(self.memStore.(*MemStore).Counter())
 }
 
-func (self *LocalStore) DbCounter() uint64 {
+func (self *LocalStore) DbCounter() uint64 { log.DebugLog()
 	return self.DbStore.(*DbStore).Counter()
 }
 
 // LocalStore is itself a chunk store
 // unsafe, in that the data is not integrity checked
-func (self *LocalStore) Put(chunk *Chunk) {
+func (self *LocalStore) Put(chunk *Chunk) { log.DebugLog()
 	chunk.dbStored = make(chan bool)
 	self.memStore.Put(chunk)
 	if chunk.wg != nil {
@@ -75,7 +75,7 @@ func (self *LocalStore) Put(chunk *Chunk) {
 // This method is blocking until the chunk is retrieved
 // so additional timeout may be needed to wrap this call if
 // ChunkStores are remote and can have long latency
-func (self *LocalStore) Get(key Key) (chunk *Chunk, err error) {
+func (self *LocalStore) Get(key Key) (chunk *Chunk, err error) { log.DebugLog()
 	chunk, err = self.memStore.Get(key)
 	if err == nil {
 		return
@@ -90,4 +90,4 @@ func (self *LocalStore) Get(key Key) (chunk *Chunk, err error) {
 }
 
 // Close local store
-func (self *LocalStore) Close() {}
+func (self *LocalStore) Close() { log.DebugLog()}

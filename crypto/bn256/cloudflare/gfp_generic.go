@@ -2,7 +2,7 @@
 
 package bn256
 
-func gfpCarry(a *gfP, head uint64) {
+func gfpCarry(a *gfP, head uint64) { log.DebugLog()
 	b := &gfP{}
 
 	var carry uint64
@@ -23,7 +23,7 @@ func gfpCarry(a *gfP, head uint64) {
 	}
 }
 
-func gfpNeg(c, a *gfP) {
+func gfpNeg(c, a *gfP) { log.DebugLog()
 	var carry uint64
 	for i, pi := range p2 {
 		ai := a[i]
@@ -34,7 +34,7 @@ func gfpNeg(c, a *gfP) {
 	gfpCarry(c, 0)
 }
 
-func gfpAdd(c, a, b *gfP) {
+func gfpAdd(c, a, b *gfP) { log.DebugLog()
 	var carry uint64
 	for i, ai := range a {
 		bi := b[i]
@@ -45,7 +45,7 @@ func gfpAdd(c, a, b *gfP) {
 	gfpCarry(c, carry)
 }
 
-func gfpSub(c, a, b *gfP) {
+func gfpSub(c, a, b *gfP) { log.DebugLog()
 	t := &gfP{}
 
 	var carry uint64
@@ -66,7 +66,7 @@ func gfpSub(c, a, b *gfP) {
 	gfpCarry(c, carry)
 }
 
-func mul(a, b [4]uint64) [8]uint64 {
+func mul(a, b [4]uint64) [8]uint64 { log.DebugLog()
 	const (
 		mask16 uint64 = 0x0000ffff
 		mask32 uint64 = 0xffffffff
@@ -109,7 +109,7 @@ func mul(a, b [4]uint64) [8]uint64 {
 	return [8]uint64{buff[0], buff[4], buff[8], buff[12], buff[16], buff[20], buff[24], buff[28]}
 }
 
-func halfMul(a, b [4]uint64) [4]uint64 {
+func halfMul(a, b [4]uint64) [4]uint64 { log.DebugLog()
 	const (
 		mask16 uint64 = 0x0000ffff
 		mask32 uint64 = 0xffffffff
@@ -155,7 +155,7 @@ func halfMul(a, b [4]uint64) [4]uint64 {
 	return [4]uint64{buff[0], buff[4], buff[8], buff[12]}
 }
 
-func gfpMul(c, a, b *gfP) {
+func gfpMul(c, a, b *gfP) { log.DebugLog()
 	T := mul(*a, *b)
 	m := halfMul([4]uint64{T[0], T[1], T[2], T[3]}, np)
 	t := mul([4]uint64{m[0], m[1], m[2], m[3]}, p2)

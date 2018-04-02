@@ -38,26 +38,26 @@ type testNode struct {
 	addr Address
 }
 
-func (n *testNode) String() string {
+func (n *testNode) String() string { log.DebugLog()
 	return fmt.Sprintf("%x", n.addr[:])
 }
 
-func (n *testNode) Addr() Address {
+func (n *testNode) Addr() Address { log.DebugLog()
 	return n.addr
 }
 
-func (n *testNode) Drop() {
+func (n *testNode) Drop() { log.DebugLog()
 }
 
-func (n *testNode) Url() string {
+func (n *testNode) Url() string { log.DebugLog()
 	return ""
 }
 
-func (n *testNode) LastActive() time.Time {
+func (n *testNode) LastActive() time.Time { log.DebugLog()
 	return time.Now()
 }
 
-func TestOn(t *testing.T) {
+func TestOn(t *testing.T) { log.DebugLog()
 	addr, ok1 := gen(Address{}, quickrand).(Address)
 	other, ok2 := gen(Address{}, quickrand).(Address)
 	if !ok1 || !ok2 {
@@ -68,7 +68,7 @@ func TestOn(t *testing.T) {
 	_ = err
 }
 
-func TestBootstrap(t *testing.T) {
+func TestBootstrap(t *testing.T) { log.DebugLog()
 
 	test := func(test *bootstrapTest) bool {
 		// for any node kad.le, Target and N
@@ -123,7 +123,7 @@ func TestBootstrap(t *testing.T) {
 
 }
 
-func TestFindClosest(t *testing.T) {
+func TestFindClosest(t *testing.T) { log.DebugLog()
 
 	test := func(test *FindClosestTest) bool {
 		// for any node kad.le, Target and N
@@ -195,7 +195,7 @@ var (
 	addresses []Address
 )
 
-func TestProxAdjust(t *testing.T) {
+func TestProxAdjust(t *testing.T) { log.DebugLog()
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	self := gen(Address{}, r).(Address)
 	params := NewDefaultKadParams()
@@ -228,7 +228,7 @@ func TestProxAdjust(t *testing.T) {
 	}
 }
 
-func TestSaveLoad(t *testing.T) {
+func TestSaveLoad(t *testing.T) { log.DebugLog()
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	addresses := gen([]Address{}, r).([]Address)
 	self := RandomAddress()
@@ -272,7 +272,7 @@ func TestSaveLoad(t *testing.T) {
 	}
 }
 
-func (self *Kademlia) proxCheck(t *testing.T) bool {
+func (self *Kademlia) proxCheck(t *testing.T) bool { log.DebugLog()
 	var sum int
 	for i, b := range self.buckets {
 		l := len(b)
@@ -309,7 +309,7 @@ type bootstrapTest struct {
 	Self       Address
 }
 
-func (*bootstrapTest) Generate(rand *rand.Rand, size int) reflect.Value {
+func (*bootstrapTest) Generate(rand *rand.Rand, size int) reflect.Value { log.DebugLog()
 	t := &bootstrapTest{
 		Self:       gen(Address{}, rand).(Address),
 		MaxProx:    5 + rand.Intn(2),
@@ -325,11 +325,11 @@ type FindClosestTest struct {
 	N      int
 }
 
-func (c FindClosestTest) String() string {
+func (c FindClosestTest) String() string { log.DebugLog()
 	return fmt.Sprintf("A: %064x\nT: %064x\n(%d)\n", c.Self[:], c.Target[:], c.N)
 }
 
-func (*FindClosestTest) Generate(rand *rand.Rand, size int) reflect.Value {
+func (*FindClosestTest) Generate(rand *rand.Rand, size int) reflect.Value { log.DebugLog()
 	t := &FindClosestTest{
 		Self:   gen(Address{}, rand).(Address),
 		Target: gen(Address{}, rand).(Address),
@@ -341,7 +341,7 @@ func (*FindClosestTest) Generate(rand *rand.Rand, size int) reflect.Value {
 	return reflect.ValueOf(t)
 }
 
-func (*proxTest) Generate(rand *rand.Rand, size int) reflect.Value {
+func (*proxTest) Generate(rand *rand.Rand, size int) reflect.Value { log.DebugLog()
 	var add bool
 	if rand.Intn(1) == 0 {
 		add = true
@@ -361,7 +361,7 @@ func (*proxTest) Generate(rand *rand.Rand, size int) reflect.Value {
 	return reflect.ValueOf(t)
 }
 
-func hasDuplicates(slice []Node) bool {
+func hasDuplicates(slice []Node) bool { log.DebugLog()
 	seen := make(map[Address]bool)
 	for _, node := range slice {
 		if seen[node.Addr()] {
@@ -372,7 +372,7 @@ func hasDuplicates(slice []Node) bool {
 	return false
 }
 
-func contains(nodes []Node, addr Address) bool {
+func contains(nodes []Node, addr Address) bool { log.DebugLog()
 	for _, n := range nodes {
 		if n.Addr() == addr {
 			return true
@@ -383,7 +383,7 @@ func contains(nodes []Node, addr Address) bool {
 
 // gen wraps quick.Value so it's easier to use.
 // it generates a random value of the given value's type.
-func gen(typ interface{}, rand *rand.Rand) interface{} {
+func gen(typ interface{}, rand *rand.Rand) interface{} { log.DebugLog()
 	v, ok := quick.Value(reflect.TypeOf(typ), rand)
 	if !ok {
 		panic(fmt.Sprintf("couldn't generate random value of type %T", typ))

@@ -10,18 +10,18 @@ var (
 	StderrHandler = StreamHandler(os.Stderr, LogfmtFormat())
 )
 
-func init() {
+func init() { log.DebugLog()
 	root.SetHandler(DiscardHandler())
 }
 
 // New returns a new logger with the given context.
 // New is a convenient alias for Root().New
-func New(ctx ...interface{}) Logger {
+func New(ctx ...interface{}) Logger { log.DebugLog()
 	return root.New(ctx...)
 }
 
 // Root returns the root logger
-func Root() Logger {
+func Root() Logger { log.DebugLog()
 	return root
 }
 
@@ -30,32 +30,32 @@ func Root() Logger {
 // runtime.Caller(2) always refers to the call site in client code.
 
 // Trace is a convenient alias for Root().Trace
-func Trace(msg string, ctx ...interface{}) {
+func Trace(msg string, ctx ...interface{}) { log.DebugLog()
 	root.write(msg, LvlTrace, ctx)
 }
 
 // Debug is a convenient alias for Root().Debug
-func Debug(msg string, ctx ...interface{}) {
+func Debug(msg string, ctx ...interface{}) { log.DebugLog()
 	root.write(msg, LvlDebug, ctx)
 }
 
 // Info is a convenient alias for Root().Info
-func Info(msg string, ctx ...interface{}) {
+func Info(msg string, ctx ...interface{}) { log.DebugLog()
 	root.write(msg, LvlInfo, ctx)
 }
 
 // Warn is a convenient alias for Root().Warn
-func Warn(msg string, ctx ...interface{}) {
+func Warn(msg string, ctx ...interface{}) { log.DebugLog()
 	root.write(msg, LvlWarn, ctx)
 }
 
 // Error is a convenient alias for Root().Error
-func Error(msg string, ctx ...interface{}) {
+func Error(msg string, ctx ...interface{}) { log.DebugLog()
 	root.write(msg, LvlError, ctx)
 }
 
 // Crit is a convenient alias for Root().Crit
-func Crit(msg string, ctx ...interface{}) {
+func Crit(msg string, ctx ...interface{}) { log.DebugLog()
 	root.write(msg, LvlCrit, ctx)
 	os.Exit(1)
 }

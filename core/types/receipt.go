@@ -83,7 +83,7 @@ type receiptStorageRLP struct {
 }
 
 // NewReceipt creates a barebone transaction receipt, copying the init fields.
-func NewReceipt(root []byte, failed bool, cumulativeGasUsed uint64) *Receipt {
+func NewReceipt(root []byte, failed bool, cumulativeGasUsed uint64) *Receipt { log.DebugLog()
 	r := &Receipt{PostState: common.CopyBytes(root), CumulativeGasUsed: cumulativeGasUsed}
 	if failed {
 		r.Status = ReceiptStatusFailed
@@ -95,13 +95,13 @@ func NewReceipt(root []byte, failed bool, cumulativeGasUsed uint64) *Receipt {
 
 // EncodeRLP implements rlp.Encoder, and flattens the consensus fields of a receipt
 // into an RLP stream. If no post state is present, byzantium fork is assumed.
-func (r *Receipt) EncodeRLP(w io.Writer) error {
+func (r *Receipt) EncodeRLP(w io.Writer) error { log.DebugLog()
 	return rlp.Encode(w, &receiptRLP{r.statusEncoding(), r.CumulativeGasUsed, r.Bloom, r.Logs})
 }
 
 // DecodeRLP implements rlp.Decoder, and loads the consensus fields of a receipt
 // from an RLP stream.
-func (r *Receipt) DecodeRLP(s *rlp.Stream) error {
+func (r *Receipt) DecodeRLP(s *rlp.Stream) error { log.DebugLog()
 	var dec receiptRLP
 	if err := s.Decode(&dec); err != nil {
 		return err
@@ -113,7 +113,7 @@ func (r *Receipt) DecodeRLP(s *rlp.Stream) error {
 	return nil
 }
 
-func (r *Receipt) setStatus(postStateOrStatus []byte) error {
+func (r *Receipt) setStatus(postStateOrStatus []byte) error { log.DebugLog()
 	switch {
 	case bytes.Equal(postStateOrStatus, receiptStatusSuccessfulRLP):
 		r.Status = ReceiptStatusSuccessful
@@ -127,7 +127,7 @@ func (r *Receipt) setStatus(postStateOrStatus []byte) error {
 	return nil
 }
 
-func (r *Receipt) statusEncoding() []byte {
+func (r *Receipt) statusEncoding() []byte { log.DebugLog()
 	if len(r.PostState) == 0 {
 		if r.Status == ReceiptStatusFailed {
 			return receiptStatusFailedRLP
@@ -139,7 +139,7 @@ func (r *Receipt) statusEncoding() []byte {
 
 // Size returns the approximate memory used by all internal contents. It is used
 // to approximate and limit the memory consumption of various caches.
-func (r *Receipt) Size() common.StorageSize {
+func (r *Receipt) Size() common.StorageSize { log.DebugLog()
 	size := common.StorageSize(unsafe.Sizeof(*r)) + common.StorageSize(len(r.PostState))
 
 	size += common.StorageSize(len(r.Logs)) * common.StorageSize(unsafe.Sizeof(Log{}))
@@ -150,7 +150,7 @@ func (r *Receipt) Size() common.StorageSize {
 }
 
 // String implements the Stringer interface.
-func (r *Receipt) String() string {
+func (r *Receipt) String() string { log.DebugLog()
 	if len(r.PostState) == 0 {
 		return fmt.Sprintf("receipt{status=%d cgas=%v bloom=%x logs=%v}", r.Status, r.CumulativeGasUsed, r.Bloom, r.Logs)
 	}
@@ -163,7 +163,7 @@ type ReceiptForStorage Receipt
 
 // EncodeRLP implements rlp.Encoder, and flattens all content fields of a receipt
 // into an RLP stream.
-func (r *ReceiptForStorage) EncodeRLP(w io.Writer) error {
+func (r *ReceiptForStorage) EncodeRLP(w io.Writer) error { log.DebugLog()
 	enc := &receiptStorageRLP{
 		PostStateOrStatus: (*Receipt)(r).statusEncoding(),
 		CumulativeGasUsed: r.CumulativeGasUsed,
@@ -181,7 +181,7 @@ func (r *ReceiptForStorage) EncodeRLP(w io.Writer) error {
 
 // DecodeRLP implements rlp.Decoder, and loads both consensus and implementation
 // fields of a receipt from an RLP stream.
-func (r *ReceiptForStorage) DecodeRLP(s *rlp.Stream) error {
+func (r *ReceiptForStorage) DecodeRLP(s *rlp.Stream) error { log.DebugLog()
 	var dec receiptStorageRLP
 	if err := s.Decode(&dec); err != nil {
 		return err
@@ -204,10 +204,10 @@ func (r *ReceiptForStorage) DecodeRLP(s *rlp.Stream) error {
 type Receipts []*Receipt
 
 // Len returns the number of receipts in this list.
-func (r Receipts) Len() int { return len(r) }
+func (r Receipts) Len() int { log.DebugLog() return len(r) }
 
 // GetRlp returns the RLP encoding of one receipt from the list.
-func (r Receipts) GetRlp(i int) []byte {
+func (r Receipts) GetRlp(i int) []byte { log.DebugLog()
 	bytes, err := rlp.EncodeToBytes(r[i])
 	if err != nil {
 		panic(err)

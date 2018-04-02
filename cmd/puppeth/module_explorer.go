@@ -99,7 +99,7 @@ services:
 // deployExplorer deploys a new block explorer container to a remote machine via
 // SSH, docker and docker-compose. If an instance with the specified network name
 // already exists there, it will be overwritten!
-func deployExplorer(client *sshClient, network string, chainspec []byte, config *explorerInfos, nocache bool) ([]byte, error) {
+func deployExplorer(client *sshClient, network string, chainspec []byte, config *explorerInfos, nocache bool) ([]byte, error) { log.DebugLog()
 	// Generate the content to upload to the server
 	workdir := fmt.Sprintf("%d", rand.Int63())
 	files := make(map[string][]byte)
@@ -157,7 +157,7 @@ type explorerInfos struct {
 
 // Report converts the typed struct into a plain string->string map, containing
 // most - but not all - fields for reporting to the user.
-func (info *explorerInfos) Report() map[string]string {
+func (info *explorerInfos) Report() map[string]string { log.DebugLog()
 	report := map[string]string{
 		"Data directory":         info.datadir,
 		"Node listener port ":    strconv.Itoa(info.nodePort),
@@ -170,7 +170,7 @@ func (info *explorerInfos) Report() map[string]string {
 
 // checkExplorer does a health-check against an block explorer server to verify
 // whether it's running, and if yes, whether it's responsive.
-func checkExplorer(client *sshClient, network string) (*explorerInfos, error) {
+func checkExplorer(client *sshClient, network string) (*explorerInfos, error) { log.DebugLog()
 	// Inspect a possible block explorer container on the host
 	infos, err := inspectContainer(client, fmt.Sprintf("%s_explorer_1", network))
 	if err != nil {

@@ -30,7 +30,7 @@ import (
 	"github.com/ethereum/go-ethereum/p2p/discover"
 )
 
-func TestMocker(t *testing.T) {
+func TestMocker(t *testing.T) { log.DebugLog()
 	//start the simulation HTTP server
 	_, s := testHTTPServer(t)
 	defer s.Close()

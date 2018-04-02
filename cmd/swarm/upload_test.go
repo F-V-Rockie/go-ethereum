@@ -26,7 +26,7 @@ import (
 
 // TestCLISwarmUp tests that running 'swarm up' makes the resulting file
 // available from all nodes via the HTTP API
-func TestCLISwarmUp(t *testing.T) {
+func TestCLISwarmUp(t *testing.T) { log.DebugLog()
 	// start 3 node cluster
 	t.Log("starting 3 node cluster")
 	cluster := newTestCluster(t, 3)
@@ -57,13 +57,13 @@ func TestCLISwarmUp(t *testing.T) {
 	}
 }
 
-func assertNil(t *testing.T, err error) {
+func assertNil(t *testing.T, err error) { log.DebugLog()
 	if err != nil {
 		t.Fatal(err)
 	}
 }
 
-func assertHTTPResponse(t *testing.T, res *http.Response, expectedStatus int, expectedBody string) {
+func assertHTTPResponse(t *testing.T, res *http.Response, expectedStatus int, expectedBody string) { log.DebugLog()
 	defer res.Body.Close()
 	if res.StatusCode != expectedStatus {
 		t.Fatalf("expected HTTP status %d, got %s", expectedStatus, res.Status)

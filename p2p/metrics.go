@@ -40,7 +40,7 @@ type meteredConn struct {
 // newMeteredConn creates a new metered connection, also bumping the ingress or
 // egress connection meter. If the metrics system is disabled, this function
 // returns the original object.
-func newMeteredConn(conn net.Conn, ingress bool) net.Conn {
+func newMeteredConn(conn net.Conn, ingress bool) net.Conn { log.DebugLog()
 	// Short circuit if metrics are disabled
 	if !metrics.Enabled {
 		return conn
@@ -56,7 +56,7 @@ func newMeteredConn(conn net.Conn, ingress bool) net.Conn {
 
 // Read delegates a network read to the underlying connection, bumping the ingress
 // traffic meter along the way.
-func (c *meteredConn) Read(b []byte) (n int, err error) {
+func (c *meteredConn) Read(b []byte) (n int, err error) { log.DebugLog()
 	n, err = c.TCPConn.Read(b)
 	ingressTrafficMeter.Mark(int64(n))
 	return
@@ -64,7 +64,7 @@ func (c *meteredConn) Read(b []byte) (n int, err error) {
 
 // Write delegates a network write to the underlying connection, bumping the
 // egress traffic meter along the way.
-func (c *meteredConn) Write(b []byte) (n int, err error) {
+func (c *meteredConn) Write(b []byte) (n int, err error) { log.DebugLog()
 	n, err = c.TCPConn.Write(b)
 	egressTrafficMeter.Mark(int64(n))
 	return

@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func BenchmarkGuage(b *testing.B) {
+func BenchmarkGuage(b *testing.B) { log.DebugLog()
 	g := NewGauge()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -13,7 +13,7 @@ func BenchmarkGuage(b *testing.B) {
 	}
 }
 
-func TestGauge(t *testing.T) {
+func TestGauge(t *testing.T) { log.DebugLog()
 	g := NewGauge()
 	g.Update(int64(47))
 	if v := g.Value(); 47 != v {
@@ -21,7 +21,7 @@ func TestGauge(t *testing.T) {
 	}
 }
 
-func TestGaugeSnapshot(t *testing.T) {
+func TestGaugeSnapshot(t *testing.T) { log.DebugLog()
 	g := NewGauge()
 	g.Update(int64(47))
 	snapshot := g.Snapshot()
@@ -31,7 +31,7 @@ func TestGaugeSnapshot(t *testing.T) {
 	}
 }
 
-func TestGetOrRegisterGauge(t *testing.T) {
+func TestGetOrRegisterGauge(t *testing.T) { log.DebugLog()
 	r := NewRegistry()
 	NewRegisteredGauge("foo", r).Update(47)
 	if g := GetOrRegisterGauge("foo", r); 47 != g.Value() {
@@ -39,7 +39,7 @@ func TestGetOrRegisterGauge(t *testing.T) {
 	}
 }
 
-func TestFunctionalGauge(t *testing.T) {
+func TestFunctionalGauge(t *testing.T) { log.DebugLog()
 	var counter int64
 	fg := NewFunctionalGauge(func() int64 {
 		counter++
@@ -52,7 +52,7 @@ func TestFunctionalGauge(t *testing.T) {
 	}
 }
 
-func TestGetOrRegisterFunctionalGauge(t *testing.T) {
+func TestGetOrRegisterFunctionalGauge(t *testing.T) { log.DebugLog()
 	r := NewRegistry()
 	NewRegisteredFunctionalGauge("foo", r, func() int64 { return 47 })
 	if g := GetOrRegisterGauge("foo", r); 47 != g.Value() {
@@ -60,7 +60,7 @@ func TestGetOrRegisterFunctionalGauge(t *testing.T) {
 	}
 }
 
-func ExampleGetOrRegisterGauge() {
+func ExampleGetOrRegisterGauge() { log.DebugLog()
 	m := "server.bytes_sent"
 	g := GetOrRegisterGauge(m, nil)
 	g.Update(47)

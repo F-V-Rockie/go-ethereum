@@ -31,13 +31,13 @@ var emptyCodeHash = crypto.Keccak256(nil)
 
 type Code []byte
 
-func (self Code) String() string {
+func (self Code) String() string { log.DebugLog()
 	return string(self) //strings.Join(Disassemble(self), " ")
 }
 
 type Storage map[common.Hash]common.Hash
 
-func (self Storage) String() (str string) {
+func (self Storage) String() (str string) { log.DebugLog()
 	for key, value := range self {
 		str += fmt.Sprintf("%X : %X\n", key, value)
 	}
@@ -45,7 +45,7 @@ func (self Storage) String() (str string) {
 	return
 }
 
-func (self Storage) Copy() Storage {
+func (self Storage) Copy() Storage { log.DebugLog()
 	cpy := make(Storage)
 	for key, value := range self {
 		cpy[key] = value
@@ -92,7 +92,7 @@ type stateObject struct {
 }
 
 // empty returns whether the account is considered empty.
-func (s *stateObject) empty() bool {
+func (s *stateObject) empty() bool { log.DebugLog()
 	return s.data.Nonce == 0 && s.data.Balance.Sign() == 0 && bytes.Equal(s.data.CodeHash, emptyCodeHash)
 }
 
@@ -106,7 +106,7 @@ type Account struct {
 }
 
 // newObject creates a state object.
-func newObject(db *StateDB, address common.Address, data Account, onDirty func(addr common.Address)) *stateObject {
+func newObject(db *StateDB, address common.Address, data Account, onDirty func(addr common.Address)) *stateObject { log.DebugLog()
 	if data.Balance == nil {
 		data.Balance = new(big.Int)
 	}
@@ -125,18 +125,18 @@ func newObject(db *StateDB, address common.Address, data Account, onDirty func(a
 }
 
 // EncodeRLP implements rlp.Encoder.
-func (c *stateObject) EncodeRLP(w io.Writer) error {
+func (c *stateObject) EncodeRLP(w io.Writer) error { log.DebugLog()
 	return rlp.Encode(w, c.data)
 }
 
 // setError remembers the first non-nil error it is called with.
-func (self *stateObject) setError(err error) {
+func (self *stateObject) setError(err error) { log.DebugLog()
 	if self.dbErr == nil {
 		self.dbErr = err
 	}
 }
 
-func (self *stateObject) markSuicided() {
+func (self *stateObject) markSuicided() { log.DebugLog()
 	self.suicided = true
 	if self.onDirty != nil {
 		self.onDirty(self.Address())
@@ -144,7 +144,7 @@ func (self *stateObject) markSuicided() {
 	}
 }
 
-func (c *stateObject) touch() {
+func (c *stateObject) touch() { log.DebugLog()
 	c.db.journal = append(c.db.journal, touchChange{
 		account:   &c.address,
 		prev:      c.touched,
@@ -157,7 +157,7 @@ func (c *stateObject) touch() {
 	c.touched = true
 }
 
-func (c *stateObject) getTrie(db Database) Trie {
+func (c *stateObject) getTrie(db Database) Trie { log.DebugLog()
 	if c.trie == nil {
 		var err error
 		c.trie, err = db.OpenStorageTrie(c.addrHash, c.data.Root)
@@ -170,7 +170,7 @@ func (c *stateObject) getTrie(db Database) Trie {
 }
 
 // GetState returns a value in account storage.
-func (self *stateObject) GetState(db Database, key common.Hash) common.Hash {
+func (self *stateObject) GetState(db Database, key common.Hash) common.Hash { log.DebugLog()
 	value, exists := self.cachedStorage[key]
 	if exists {
 		return value
@@ -195,7 +195,7 @@ func (self *stateObject) GetState(db Database, key common.Hash) common.Hash {
 }
 
 // SetState updates a value in account storage.
-func (self *stateObject) SetState(db Database, key, value common.Hash) {
+func (self *stateObject) SetState(db Database, key, value common.Hash) { log.DebugLog()
 	self.db.journal = append(self.db.journal, storageChange{
 		account:  &self.address,
 		key:      key,
@@ -204,7 +204,7 @@ func (self *stateObject) SetState(db Database, key, value common.Hash) {
 	self.setState(key, value)
 }
 
-func (self *stateObject) setState(key, value common.Hash) {
+func (self *stateObject) setState(key, value common.Hash) { log.DebugLog()
 	self.cachedStorage[key] = value
 	self.dirtyStorage[key] = value
 
@@ -215,7 +215,7 @@ func (self *stateObject) setState(key, value common.Hash) {
 }
 
 // updateTrie writes cached storage modifications into the object's storage trie.
-func (self *stateObject) updateTrie(db Database) Trie {
+func (self *stateObject) updateTrie(db Database) Trie { log.DebugLog()
 	tr := self.getTrie(db)
 	for key, value := range self.dirtyStorage {
 		delete(self.dirtyStorage, key)
@@ -231,14 +231,14 @@ func (self *stateObject) updateTrie(db Database) Trie {
 }
 
 // UpdateRoot sets the trie root to the current root hash of
-func (self *stateObject) updateRoot(db Database) {
+func (self *stateObject) updateRoot(db Database) { log.DebugLog()
 	self.updateTrie(db)
 	self.data.Root = self.trie.Hash()
 }
 
 // CommitTrie the storage trie of the object to dwb.
 // This updates the trie root.
-func (self *stateObject) CommitTrie(db Database) error {
+func (self *stateObject) CommitTrie(db Database) error { log.DebugLog()
 	self.updateTrie(db)
 	if self.dbErr != nil {
 		return self.dbErr
@@ -252,7 +252,7 @@ func (self *stateObject) CommitTrie(db Database) error {
 
 // AddBalance removes amount from c's balance.
 // It is used to add funds to the destination account of a transfer.
-func (c *stateObject) AddBalance(amount *big.Int) {
+func (c *stateObject) AddBalance(amount *big.Int) { log.DebugLog()
 	// EIP158: We must check emptiness for the objects such that the account
 	// clearing (0,0,0 objects) can take effect.
 	if amount.Sign() == 0 {
@@ -267,14 +267,14 @@ func (c *stateObject) AddBalance(amount *big.Int) {
 
 // SubBalance removes amount from c's balance.
 // It is used to remove funds from the origin account of a transfer.
-func (c *stateObject) SubBalance(amount *big.Int) {
+func (c *stateObject) SubBalance(amount *big.Int) { log.DebugLog()
 	if amount.Sign() == 0 {
 		return
 	}
 	c.SetBalance(new(big.Int).Sub(c.Balance(), amount))
 }
 
-func (self *stateObject) SetBalance(amount *big.Int) {
+func (self *stateObject) SetBalance(amount *big.Int) { log.DebugLog()
 	self.db.journal = append(self.db.journal, balanceChange{
 		account: &self.address,
 		prev:    new(big.Int).Set(self.data.Balance),
@@ -282,7 +282,7 @@ func (self *stateObject) SetBalance(amount *big.Int) {
 	self.setBalance(amount)
 }
 
-func (self *stateObject) setBalance(amount *big.Int) {
+func (self *stateObject) setBalance(amount *big.Int) { log.DebugLog()
 	self.data.Balance = amount
 	if self.onDirty != nil {
 		self.onDirty(self.Address())
@@ -291,9 +291,9 @@ func (self *stateObject) setBalance(amount *big.Int) {
 }
 
 // Return the gas back to the origin. Used by the Virtual machine or Closures
-func (c *stateObject) ReturnGas(gas *big.Int) {}
+func (c *stateObject) ReturnGas(gas *big.Int) { log.DebugLog()}
 
-func (self *stateObject) deepCopy(db *StateDB, onDirty func(addr common.Address)) *stateObject {
+func (self *stateObject) deepCopy(db *StateDB, onDirty func(addr common.Address)) *stateObject { log.DebugLog()
 	stateObject := newObject(db, self.address, self.data, onDirty)
 	if self.trie != nil {
 		stateObject.trie = db.db.CopyTrie(self.trie)
@@ -312,12 +312,12 @@ func (self *stateObject) deepCopy(db *StateDB, onDirty func(addr common.Address)
 //
 
 // Returns the address of the contract/account
-func (c *stateObject) Address() common.Address {
+func (c *stateObject) Address() common.Address { log.DebugLog()
 	return c.address
 }
 
 // Code returns the contract code associated with this object, if any.
-func (self *stateObject) Code(db Database) []byte {
+func (self *stateObject) Code(db Database) []byte { log.DebugLog()
 	if self.code != nil {
 		return self.code
 	}
@@ -332,7 +332,7 @@ func (self *stateObject) Code(db Database) []byte {
 	return code
 }
 
-func (self *stateObject) SetCode(codeHash common.Hash, code []byte) {
+func (self *stateObject) SetCode(codeHash common.Hash, code []byte) { log.DebugLog()
 	prevcode := self.Code(self.db.db)
 	self.db.journal = append(self.db.journal, codeChange{
 		account:  &self.address,
@@ -342,7 +342,7 @@ func (self *stateObject) SetCode(codeHash common.Hash, code []byte) {
 	self.setCode(codeHash, code)
 }
 
-func (self *stateObject) setCode(codeHash common.Hash, code []byte) {
+func (self *stateObject) setCode(codeHash common.Hash, code []byte) { log.DebugLog()
 	self.code = code
 	self.data.CodeHash = codeHash[:]
 	self.dirtyCode = true
@@ -352,7 +352,7 @@ func (self *stateObject) setCode(codeHash common.Hash, code []byte) {
 	}
 }
 
-func (self *stateObject) SetNonce(nonce uint64) {
+func (self *stateObject) SetNonce(nonce uint64) { log.DebugLog()
 	self.db.journal = append(self.db.journal, nonceChange{
 		account: &self.address,
 		prev:    self.data.Nonce,
@@ -360,7 +360,7 @@ func (self *stateObject) SetNonce(nonce uint64) {
 	self.setNonce(nonce)
 }
 
-func (self *stateObject) setNonce(nonce uint64) {
+func (self *stateObject) setNonce(nonce uint64) { log.DebugLog()
 	self.data.Nonce = nonce
 	if self.onDirty != nil {
 		self.onDirty(self.Address())
@@ -368,21 +368,21 @@ func (self *stateObject) setNonce(nonce uint64) {
 	}
 }
 
-func (self *stateObject) CodeHash() []byte {
+func (self *stateObject) CodeHash() []byte { log.DebugLog()
 	return self.data.CodeHash
 }
 
-func (self *stateObject) Balance() *big.Int {
+func (self *stateObject) Balance() *big.Int { log.DebugLog()
 	return self.data.Balance
 }
 
-func (self *stateObject) Nonce() uint64 {
+func (self *stateObject) Nonce() uint64 { log.DebugLog()
 	return self.data.Nonce
 }
 
 // Never called, but must be present to allow stateObject to be used
 // as a vm.Account interface that also satisfies the vm.ContractRef
 // interface. Interfaces are awesome.
-func (self *stateObject) Value() *big.Int {
+func (self *stateObject) Value() *big.Int { log.DebugLog()
 	panic("Value on stateObject should never be called")
 }

@@ -45,14 +45,14 @@ type Filters struct {
 	mutex    sync.RWMutex
 }
 
-func NewFilters(w *Whisper) *Filters {
+func NewFilters(w *Whisper) *Filters { log.DebugLog()
 	return &Filters{
 		watchers: make(map[string]*Filter),
 		whisper:  w,
 	}
 }
 
-func (fs *Filters) Install(watcher *Filter) (string, error) {
+func (fs *Filters) Install(watcher *Filter) (string, error) { log.DebugLog()
 	if watcher.Messages == nil {
 		watcher.Messages = make(map[common.Hash]*ReceivedMessage)
 	}
@@ -77,7 +77,7 @@ func (fs *Filters) Install(watcher *Filter) (string, error) {
 	return id, err
 }
 
-func (fs *Filters) Uninstall(id string) bool {
+func (fs *Filters) Uninstall(id string) bool { log.DebugLog()
 	fs.mutex.Lock()
 	defer fs.mutex.Unlock()
 	if fs.watchers[id] != nil {
@@ -87,13 +87,13 @@ func (fs *Filters) Uninstall(id string) bool {
 	return false
 }
 
-func (fs *Filters) Get(id string) *Filter {
+func (fs *Filters) Get(id string) *Filter { log.DebugLog()
 	fs.mutex.RLock()
 	defer fs.mutex.RUnlock()
 	return fs.watchers[id]
 }
 
-func (fs *Filters) NotifyWatchers(env *Envelope, p2pMessage bool) {
+func (fs *Filters) NotifyWatchers(env *Envelope, p2pMessage bool) { log.DebugLog()
 	var msg *ReceivedMessage
 
 	fs.mutex.RLock()
@@ -131,7 +131,7 @@ func (fs *Filters) NotifyWatchers(env *Envelope, p2pMessage bool) {
 	}
 }
 
-func (f *Filter) processEnvelope(env *Envelope) *ReceivedMessage {
+func (f *Filter) processEnvelope(env *Envelope) *ReceivedMessage { log.DebugLog()
 	if f.MatchEnvelope(env) {
 		msg := env.Open(f)
 		if msg != nil {
@@ -145,15 +145,15 @@ func (f *Filter) processEnvelope(env *Envelope) *ReceivedMessage {
 	return nil
 }
 
-func (f *Filter) expectsAsymmetricEncryption() bool {
+func (f *Filter) expectsAsymmetricEncryption() bool { log.DebugLog()
 	return f.KeyAsym != nil
 }
 
-func (f *Filter) expectsSymmetricEncryption() bool {
+func (f *Filter) expectsSymmetricEncryption() bool { log.DebugLog()
 	return f.KeySym != nil
 }
 
-func (f *Filter) Trigger(msg *ReceivedMessage) {
+func (f *Filter) Trigger(msg *ReceivedMessage) { log.DebugLog()
 	f.mutex.Lock()
 	defer f.mutex.Unlock()
 
@@ -162,7 +162,7 @@ func (f *Filter) Trigger(msg *ReceivedMessage) {
 	}
 }
 
-func (f *Filter) Retrieve() (all []*ReceivedMessage) {
+func (f *Filter) Retrieve() (all []*ReceivedMessage) { log.DebugLog()
 	f.mutex.Lock()
 	defer f.mutex.Unlock()
 
@@ -175,7 +175,7 @@ func (f *Filter) Retrieve() (all []*ReceivedMessage) {
 	return all
 }
 
-func (f *Filter) MatchMessage(msg *ReceivedMessage) bool {
+func (f *Filter) MatchMessage(msg *ReceivedMessage) bool { log.DebugLog()
 	if f.PoW > 0 && msg.PoW < f.PoW {
 		return false
 	}
@@ -188,7 +188,7 @@ func (f *Filter) MatchMessage(msg *ReceivedMessage) bool {
 	return false
 }
 
-func (f *Filter) MatchEnvelope(envelope *Envelope) bool {
+func (f *Filter) MatchEnvelope(envelope *Envelope) bool { log.DebugLog()
 	if f.PoW > 0 && envelope.pow < f.PoW {
 		return false
 	}
@@ -201,7 +201,7 @@ func (f *Filter) MatchEnvelope(envelope *Envelope) bool {
 	return false
 }
 
-func (f *Filter) MatchTopic(topic TopicType) bool {
+func (f *Filter) MatchTopic(topic TopicType) bool { log.DebugLog()
 	if len(f.Topics) == 0 {
 		// any topic matches
 		return true
@@ -215,7 +215,7 @@ func (f *Filter) MatchTopic(topic TopicType) bool {
 	return false
 }
 
-func matchSingleTopic(topic TopicType, bt []byte) bool {
+func matchSingleTopic(topic TopicType, bt []byte) bool { log.DebugLog()
 	if len(bt) > TopicLength {
 		bt = bt[:TopicLength]
 	}
@@ -232,7 +232,7 @@ func matchSingleTopic(topic TopicType, bt []byte) bool {
 	return true
 }
 
-func IsPubKeyEqual(a, b *ecdsa.PublicKey) bool {
+func IsPubKeyEqual(a, b *ecdsa.PublicKey) bool { log.DebugLog()
 	if !ValidatePublicKey(a) {
 		return false
 	} else if !ValidatePublicKey(b) {

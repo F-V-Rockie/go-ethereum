@@ -20,12 +20,12 @@ func nanotime() int64
 // constant rate, unlike time.Now() from the Go standard library, which may
 // slow down, speed up, jump forward or backward, due to NTP activity or leap
 // seconds.
-func Now() uint64 {
+func Now() uint64 { log.DebugLog()
 	return uint64(nanotime())
 }
 
 // Since returns the amount of time that has elapsed since t. t should be
 // the result of a call to Now() on the same machine.
-func Since(t uint64) time.Duration {
+func Since(t uint64) time.Duration { log.DebugLog()
 	return time.Duration(Now() - t)
 }

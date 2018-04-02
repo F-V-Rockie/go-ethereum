@@ -11,7 +11,7 @@ import (
 var _ = (*messageOverride)(nil)
 
 // MarshalJSON marshals type Message to a json string
-func (m Message) MarshalJSON() ([]byte, error) {
+func (m Message) MarshalJSON() ([]byte, error) { log.DebugLog()
 	type Message struct {
 		Sig       hexutil.Bytes `json:"sig,omitempty"`
 		TTL       uint32        `json:"ttl"`
@@ -37,7 +37,7 @@ func (m Message) MarshalJSON() ([]byte, error) {
 }
 
 // UnmarshalJSON unmarshals type Message to a json string
-func (m *Message) UnmarshalJSON(input []byte) error {
+func (m *Message) UnmarshalJSON(input []byte) error { log.DebugLog()
 	type Message struct {
 		Sig       *hexutil.Bytes `json:"sig,omitempty"`
 		TTL       *uint32        `json:"ttl"`

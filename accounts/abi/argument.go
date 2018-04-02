@@ -34,7 +34,7 @@ type Argument struct {
 type Arguments []Argument
 
 // UnmarshalJSON implements json.Unmarshaler interface
-func (argument *Argument) UnmarshalJSON(data []byte) error {
+func (argument *Argument) UnmarshalJSON(data []byte) error { log.DebugLog()
 	var extarg struct {
 		Name    string
 		Type    string
@@ -57,7 +57,7 @@ func (argument *Argument) UnmarshalJSON(data []byte) error {
 
 // LengthNonIndexed returns the number of arguments when not counting 'indexed' ones. Only events
 // can ever have 'indexed' arguments, it should always be false on arguments for method input/output
-func (arguments Arguments) LengthNonIndexed() int {
+func (arguments Arguments) LengthNonIndexed() int { log.DebugLog()
 	out := 0
 	for _, arg := range arguments {
 		if !arg.Indexed {
@@ -68,7 +68,7 @@ func (arguments Arguments) LengthNonIndexed() int {
 }
 
 // NonIndexed returns the arguments with indexed arguments filtered out
-func (arguments Arguments) NonIndexed() Arguments {
+func (arguments Arguments) NonIndexed() Arguments { log.DebugLog()
 	var ret []Argument
 	for _, arg := range arguments {
 		if !arg.Indexed {
@@ -79,12 +79,12 @@ func (arguments Arguments) NonIndexed() Arguments {
 }
 
 // isTuple returns true for non-atomic constructs, like (uint,uint) or uint[]
-func (arguments Arguments) isTuple() bool {
+func (arguments Arguments) isTuple() bool { log.DebugLog()
 	return len(arguments) > 1
 }
 
 // Unpack performs the operation hexdata -> Go format
-func (arguments Arguments) Unpack(v interface{}, data []byte) error {
+func (arguments Arguments) Unpack(v interface{}, data []byte) error { log.DebugLog()
 
 	// make sure the passed value is arguments pointer
 	if reflect.Ptr != reflect.ValueOf(v).Kind() {
@@ -100,7 +100,7 @@ func (arguments Arguments) Unpack(v interface{}, data []byte) error {
 	return arguments.unpackAtomic(v, marshalledValues)
 }
 
-func (arguments Arguments) unpackTuple(v interface{}, marshalledValues []interface{}) error {
+func (arguments Arguments) unpackTuple(v interface{}, marshalledValues []interface{}) error { log.DebugLog()
 
 	var (
 		value = reflect.ValueOf(v).Elem()
@@ -147,7 +147,7 @@ func (arguments Arguments) unpackTuple(v interface{}, marshalledValues []interfa
 }
 
 // unpackAtomic unpacks ( hexdata -> go ) a single value
-func (arguments Arguments) unpackAtomic(v interface{}, marshalledValues []interface{}) error {
+func (arguments Arguments) unpackAtomic(v interface{}, marshalledValues []interface{}) error { log.DebugLog()
 	if len(marshalledValues) != 1 {
 		return fmt.Errorf("abi: wrong length, expected single value, got %d", len(marshalledValues))
 	}
@@ -170,7 +170,7 @@ func (arguments Arguments) unpackAtomic(v interface{}, marshalledValues []interf
 
 // Computes the full size of an array;
 // i.e. counting nested arrays, which count towards size for unpacking.
-func getArraySize(arr *Type) int {
+func getArraySize(arr *Type) int { log.DebugLog()
 	size := arr.Size
 	// Arrays can be nested, with each element being the same size
 	arr = arr.Elem
@@ -186,7 +186,7 @@ func getArraySize(arr *Type) int {
 // UnpackValues can be used to unpack ABI-encoded hexdata according to the ABI-specification,
 // without supplying a struct to unpack into. Instead, this method returns a list containing the
 // values. An atomic argument will be a list with one element.
-func (arguments Arguments) UnpackValues(data []byte) ([]interface{}, error) {
+func (arguments Arguments) UnpackValues(data []byte) ([]interface{}, error) { log.DebugLog()
 	retval := make([]interface{}, 0, arguments.LengthNonIndexed())
 	virtualArgs := 0
 	for index, arg := range arguments.NonIndexed() {
@@ -214,12 +214,12 @@ func (arguments Arguments) UnpackValues(data []byte) ([]interface{}, error) {
 
 // PackValues performs the operation Go format -> Hexdata
 // It is the semantic opposite of UnpackValues
-func (arguments Arguments) PackValues(args []interface{}) ([]byte, error) {
+func (arguments Arguments) PackValues(args []interface{}) ([]byte, error) { log.DebugLog()
 	return arguments.Pack(args...)
 }
 
 // Pack performs the operation Go format -> Hexdata
-func (arguments Arguments) Pack(args ...interface{}) ([]byte, error) {
+func (arguments Arguments) Pack(args ...interface{}) ([]byte, error) { log.DebugLog()
 	// Make sure arguments match up and pack them
 	abiArgs := arguments
 	if len(args) != len(abiArgs) {
@@ -268,7 +268,7 @@ func (arguments Arguments) Pack(args ...interface{}) ([]byte, error) {
 
 // capitalise makes the first character of a string upper case, also removing any
 // prefixing underscores from the variable names.
-func capitalise(input string) string {
+func capitalise(input string) string { log.DebugLog()
 	for len(input) > 0 && input[0] == '_' {
 		input = input[1:]
 	}
@@ -279,7 +279,7 @@ func capitalise(input string) string {
 }
 
 //unpackStruct extracts each argument into its corresponding struct field
-func unpackStruct(value, reflectValue reflect.Value, arg Argument) error {
+func unpackStruct(value, reflectValue reflect.Value, arg Argument) error { log.DebugLog()
 	name := capitalise(arg.Name)
 	typ := value.Type()
 	for j := 0; j < typ.NumField(); j++ {

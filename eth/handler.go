@@ -59,7 +59,7 @@ var (
 // not compatible (low protocol version restrictions and high requirements).
 var errIncompatibleConfig = errors.New("incompatible configuration")
 
-func errResp(code errCode, format string, v ...interface{}) error {
+func errResp(code errCode, format string, v ...interface{}) error { log.DebugLog()
 	return fmt.Errorf("%v - %v", code, fmt.Sprintf(format, v...))
 }
 
@@ -98,7 +98,7 @@ type ProtocolManager struct {
 
 // NewProtocolManager returns a new ethereum sub protocol manager. The Ethereum sub protocol manages peers capable
 // with the ethereum network.
-func NewProtocolManager(config *params.ChainConfig, mode downloader.SyncMode, networkId uint64, mux *event.TypeMux, txpool txPool, engine consensus.Engine, blockchain *core.BlockChain, chaindb ethdb.Database) (*ProtocolManager, error) {
+func NewProtocolManager(config *params.ChainConfig, mode downloader.SyncMode, networkId uint64, mux *event.TypeMux, txpool txPool, engine consensus.Engine, blockchain *core.BlockChain, chaindb ethdb.Database) (*ProtocolManager, error) { log.DebugLog()
 	// Create the protocol manager with the base fields
 	manager := &ProtocolManager{
 		networkId:   networkId,
@@ -181,7 +181,7 @@ func NewProtocolManager(config *params.ChainConfig, mode downloader.SyncMode, ne
 	return manager, nil
 }
 
-func (pm *ProtocolManager) removePeer(id string) {
+func (pm *ProtocolManager) removePeer(id string) { log.DebugLog()
 	// Short circuit if the peer was already removed
 	peer := pm.peers.Peer(id)
 	if peer == nil {
@@ -200,7 +200,7 @@ func (pm *ProtocolManager) removePeer(id string) {
 	}
 }
 
-func (pm *ProtocolManager) Start(maxPeers int) {
+func (pm *ProtocolManager) Start(maxPeers int) { log.DebugLog()
 	pm.maxPeers = maxPeers
 
 	// broadcast transactions
@@ -217,7 +217,7 @@ func (pm *ProtocolManager) Start(maxPeers int) {
 	go pm.txsyncLoop()
 }
 
-func (pm *ProtocolManager) Stop() {
+func (pm *ProtocolManager) Stop() { log.DebugLog()
 	log.Info("Stopping Ethereum protocol")
 
 	pm.txSub.Unsubscribe()         // quits txBroadcastLoop
@@ -242,13 +242,13 @@ func (pm *ProtocolManager) Stop() {
 	log.Info("Ethereum protocol stopped")
 }
 
-func (pm *ProtocolManager) newPeer(pv int, p *p2p.Peer, rw p2p.MsgReadWriter) *peer {
+func (pm *ProtocolManager) newPeer(pv int, p *p2p.Peer, rw p2p.MsgReadWriter) *peer { log.DebugLog()
 	return newPeer(pv, p, newMeteredMsgWriter(rw))
 }
 
 // handle is the callback invoked to manage the life cycle of an eth peer. When
 // this function terminates, the peer is disconnected.
-func (pm *ProtocolManager) handle(p *peer) error {
+func (pm *ProtocolManager) handle(p *peer) error { log.DebugLog()
 	// Ignore maxPeers if this is a trusted peer
 	if pm.peers.Len() >= pm.maxPeers && !p.Peer.Info().Network.Trusted {
 		return p2p.DiscTooManyPeers
@@ -315,7 +315,7 @@ func (pm *ProtocolManager) handle(p *peer) error {
 
 // handleMsg is invoked whenever an inbound message is received from a remote
 // peer. The remote connection is torn down upon returning any error.
-func (pm *ProtocolManager) handleMsg(p *peer) error {
+func (pm *ProtocolManager) handleMsg(p *peer) error { log.DebugLog()
 	// Read the next message from the remote peer, and ensure it's fully consumed
 	msg, err := p.rw.ReadMsg()
 	if err != nil {
@@ -681,7 +681,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 
 // BroadcastBlock will either propagate a block to a subset of it's peers, or
 // will only announce it's availability (depending what's requested).
-func (pm *ProtocolManager) BroadcastBlock(block *types.Block, propagate bool) {
+func (pm *ProtocolManager) BroadcastBlock(block *types.Block, propagate bool) { log.DebugLog()
 	hash := block.Hash()
 	peers := pm.peers.PeersWithoutBlock(hash)
 
@@ -714,7 +714,7 @@ func (pm *ProtocolManager) BroadcastBlock(block *types.Block, propagate bool) {
 
 // BroadcastTx will propagate a transaction to all peers which are not known to
 // already have the given transaction.
-func (pm *ProtocolManager) BroadcastTx(hash common.Hash, tx *types.Transaction) {
+func (pm *ProtocolManager) BroadcastTx(hash common.Hash, tx *types.Transaction) { log.DebugLog()
 	// Broadcast transaction to a batch of peers not knowing about it
 	peers := pm.peers.PeersWithoutTx(hash)
 	//FIXME include this again: peers = peers[:int(math.Sqrt(float64(len(peers))))]
@@ -725,7 +725,7 @@ func (pm *ProtocolManager) BroadcastTx(hash common.Hash, tx *types.Transaction) 
 }
 
 // Mined broadcast loop
-func (self *ProtocolManager) minedBroadcastLoop() {
+func (self *ProtocolManager) minedBroadcastLoop() { log.DebugLog()
 	// automatically stops if unsubscribe
 	for obj := range self.minedBlockSub.Chan() {
 		switch ev := obj.Data.(type) {
@@ -736,7 +736,7 @@ func (self *ProtocolManager) minedBroadcastLoop() {
 	}
 }
 
-func (self *ProtocolManager) txBroadcastLoop() {
+func (self *ProtocolManager) txBroadcastLoop() { log.DebugLog()
 	for {
 		select {
 		case event := <-self.txCh:
@@ -760,7 +760,7 @@ type NodeInfo struct {
 }
 
 // NodeInfo retrieves some protocol metadata about the running host node.
-func (self *ProtocolManager) NodeInfo() *NodeInfo {
+func (self *ProtocolManager) NodeInfo() *NodeInfo { log.DebugLog()
 	currentBlock := self.blockchain.CurrentBlock()
 	return &NodeInfo{
 		Network:    self.networkId,

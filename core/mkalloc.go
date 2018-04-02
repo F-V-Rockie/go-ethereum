@@ -42,11 +42,11 @@ type allocItem struct{ Addr, Balance *big.Int }
 
 type allocList []allocItem
 
-func (a allocList) Len() int           { return len(a) }
-func (a allocList) Less(i, j int) bool { return a[i].Addr.Cmp(a[j].Addr) < 0 }
-func (a allocList) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a allocList) Len() int           { log.DebugLog() return len(a) }
+func (a allocList) Less(i, j int) bool { log.DebugLog() return a[i].Addr.Cmp(a[j].Addr) < 0 }
+func (a allocList) Swap(i, j int)      { log.DebugLog() a[i], a[j] = a[j], a[i] }
 
-func makelist(g *core.Genesis) allocList {
+func makelist(g *core.Genesis) allocList { log.DebugLog()
 	a := make(allocList, 0, len(g.Alloc))
 	for addr, account := range g.Alloc {
 		if len(account.Storage) > 0 || len(account.Code) > 0 || account.Nonce != 0 {
@@ -58,7 +58,7 @@ func makelist(g *core.Genesis) allocList {
 	return a
 }
 
-func makealloc(g *core.Genesis) string {
+func makealloc(g *core.Genesis) string { log.DebugLog()
 	a := makelist(g)
 	data, err := rlp.EncodeToBytes(a)
 	if err != nil {
@@ -67,7 +67,7 @@ func makealloc(g *core.Genesis) string {
 	return strconv.QuoteToASCII(string(data))
 }
 
-func main() {
+func main() { log.DebugLog()
 	if len(os.Args) != 2 {
 		fmt.Fprintln(os.Stderr, "Usage: mkalloc genesis.json")
 		os.Exit(1)

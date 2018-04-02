@@ -11,7 +11,7 @@ import (
 	"syscall"
 )
 
-func handleFusermountStderr(errCh chan<- error) func(line string) (ignore bool) {
+func handleFusermountStderr(errCh chan<- error) func(line string) (ignore bool) { log.DebugLog()
 	return func(line string) (ignore bool) {
 		if line == `fusermount: failed to open /etc/fuse.conf: Permission denied` {
 			// Silence this particular message, it occurs way too
@@ -46,7 +46,7 @@ func handleFusermountStderr(errCh chan<- error) func(line string) (ignore bool) 
 
 // isBoringFusermountError returns whether the Wait error is
 // uninteresting; exit status 1 is.
-func isBoringFusermountError(err error) bool {
+func isBoringFusermountError(err error) bool { log.DebugLog()
 	if err, ok := err.(*exec.ExitError); ok && err.Exited() {
 		if status, ok := err.Sys().(syscall.WaitStatus); ok && status.ExitStatus() == 1 {
 			return true
@@ -55,7 +55,7 @@ func isBoringFusermountError(err error) bool {
 	return false
 }
 
-func mount(dir string, conf *mountConfig, ready chan<- struct{}, errp *error) (fusefd *os.File, err error) {
+func mount(dir string, conf *mountConfig, ready chan<- struct{}, errp *error) (fusefd *os.File, err error) { log.DebugLog()
 	// linux mount is never delayed
 	close(ready)
 

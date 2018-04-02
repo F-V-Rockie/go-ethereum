@@ -94,7 +94,7 @@ var Flags = []cli.Flag{
 
 var glogger *log.GlogHandler
 
-func init() {
+func init() { log.DebugLog()
 	usecolor := term.IsTty(os.Stderr.Fd()) && os.Getenv("TERM") != "dumb"
 	output := io.Writer(os.Stderr)
 	if usecolor {
@@ -105,7 +105,7 @@ func init() {
 
 // Setup initializes profiling and logging based on the CLI flags.
 // It should be called as early as possible in the program.
-func Setup(ctx *cli.Context) error {
+func Setup(ctx *cli.Context) error { log.DebugLog()
 	// logging
 	log.PrintOrigins(ctx.GlobalBool(debugFlag.Name))
 	glogger.Verbosity(log.Lvl(ctx.GlobalInt(verbosityFlag.Name)))
@@ -146,7 +146,7 @@ func Setup(ctx *cli.Context) error {
 
 // Exit stops all running profiles, flushing their output to the
 // respective file.
-func Exit() {
+func Exit() { log.DebugLog()
 	Handler.StopCPUProfile()
 	Handler.StopGoTrace()
 }

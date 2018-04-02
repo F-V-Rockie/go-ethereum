@@ -12,7 +12,7 @@ import (
 )
 
 // Global
-func builtinGlobal_eval(call FunctionCall) Value {
+func builtinGlobal_eval(call FunctionCall) Value { log.DebugLog()
 	src := call.Argument(0)
 	if !src.IsString() {
 		return src
@@ -31,12 +31,12 @@ func builtinGlobal_eval(call FunctionCall) Value {
 	return returnValue
 }
 
-func builtinGlobal_isNaN(call FunctionCall) Value {
+func builtinGlobal_isNaN(call FunctionCall) Value { log.DebugLog()
 	value := call.Argument(0).float64()
 	return toValue_bool(math.IsNaN(value))
 }
 
-func builtinGlobal_isFinite(call FunctionCall) Value {
+func builtinGlobal_isFinite(call FunctionCall) Value { log.DebugLog()
 	value := call.Argument(0).float64()
 	return toValue_bool(!math.IsNaN(value) && !math.IsInf(value, 0))
 }
@@ -57,7 +57,7 @@ var parseInt_alphabetTable = func() []string {
 	return table
 }()
 
-func digitValue(chr rune) int {
+func digitValue(chr rune) int { log.DebugLog()
 	switch {
 	case '0' <= chr && chr <= '9':
 		return int(chr - '0')
@@ -69,7 +69,7 @@ func digitValue(chr rune) int {
 	return 36 // Larger than any legal digit value
 }
 
-func builtinGlobal_parseInt(call FunctionCall) Value {
+func builtinGlobal_parseInt(call FunctionCall) Value { log.DebugLog()
 	input := strings.Trim(call.Argument(0).string(), builtinString_trim_whitespace)
 	if len(input) == 0 {
 		return NaNValue()
@@ -151,7 +151,7 @@ func builtinGlobal_parseInt(call FunctionCall) Value {
 var parseFloat_matchBadSpecial = regexp.MustCompile(`[\+\-]?(?:[Ii]nf$|infinity)`)
 var parseFloat_matchValid = regexp.MustCompile(`[0-9eE\+\-\.]|Infinity`)
 
-func builtinGlobal_parseFloat(call FunctionCall) Value {
+func builtinGlobal_parseFloat(call FunctionCall) Value { log.DebugLog()
 	// Caveat emptor: This implementation does NOT match the specification
 	input := strings.Trim(call.Argument(0).string(), builtinString_trim_whitespace)
 
@@ -179,7 +179,7 @@ func builtinGlobal_parseFloat(call FunctionCall) Value {
 
 // encodeURI/decodeURI
 
-func _builtinGlobal_encodeURI(call FunctionCall, escape *regexp.Regexp) Value {
+func _builtinGlobal_encodeURI(call FunctionCall, escape *regexp.Regexp) Value { log.DebugLog()
 	value := call.Argument(0)
 	var input []uint16
 	switch vl := value.value.(type) {
@@ -231,20 +231,20 @@ func _builtinGlobal_encodeURI(call FunctionCall, escape *regexp.Regexp) Value {
 
 var encodeURI_Regexp = regexp.MustCompile(`([^~!@#$&*()=:/,;?+'])`)
 
-func builtinGlobal_encodeURI(call FunctionCall) Value {
+func builtinGlobal_encodeURI(call FunctionCall) Value { log.DebugLog()
 	return _builtinGlobal_encodeURI(call, encodeURI_Regexp)
 }
 
 var encodeURIComponent_Regexp = regexp.MustCompile(`([^~!*()'])`)
 
-func builtinGlobal_encodeURIComponent(call FunctionCall) Value {
+func builtinGlobal_encodeURIComponent(call FunctionCall) Value { log.DebugLog()
 	return _builtinGlobal_encodeURI(call, encodeURIComponent_Regexp)
 }
 
 // 3B/2F/3F/3A/40/26/3D/2B/24/2C/23
 var decodeURI_guard = regexp.MustCompile(`(?i)(?:%)(3B|2F|3F|3A|40|26|3D|2B|24|2C|23)`)
 
-func _decodeURI(input string, reserve bool) (string, bool) {
+func _decodeURI(input string, reserve bool) (string, bool) { log.DebugLog()
 	if reserve {
 		input = decodeURI_guard.ReplaceAllString(input, "%25$1")
 	}
@@ -256,7 +256,7 @@ func _decodeURI(input string, reserve bool) (string, bool) {
 	return output, false
 }
 
-func builtinGlobal_decodeURI(call FunctionCall) Value {
+func builtinGlobal_decodeURI(call FunctionCall) Value { log.DebugLog()
 	output, err := _decodeURI(call.Argument(0).string(), true)
 	if err {
 		panic(call.runtime.panicURIError("URI malformed"))
@@ -264,7 +264,7 @@ func builtinGlobal_decodeURI(call FunctionCall) Value {
 	return toValue_string(output)
 }
 
-func builtinGlobal_decodeURIComponent(call FunctionCall) Value {
+func builtinGlobal_decodeURIComponent(call FunctionCall) Value { log.DebugLog()
 	output, err := _decodeURI(call.Argument(0).string(), false)
 	if err {
 		panic(call.runtime.panicURIError("URI malformed"))
@@ -274,7 +274,7 @@ func builtinGlobal_decodeURIComponent(call FunctionCall) Value {
 
 // escape/unescape
 
-func builtin_shouldEscape(chr byte) bool {
+func builtin_shouldEscape(chr byte) bool { log.DebugLog()
 	if 'A' <= chr && chr <= 'Z' || 'a' <= chr && chr <= 'z' || '0' <= chr && chr <= '9' {
 		return false
 	}
@@ -283,7 +283,7 @@ func builtin_shouldEscape(chr byte) bool {
 
 const escapeBase16 = "0123456789ABCDEF"
 
-func builtin_escape(input string) string {
+func builtin_escape(input string) string { log.DebugLog()
 	output := make([]byte, 0, len(input))
 	length := len(input)
 	for index := 0; index < length; {
@@ -313,7 +313,7 @@ func builtin_escape(input string) string {
 	return string(output)
 }
 
-func builtin_unescape(input string) string {
+func builtin_unescape(input string) string { log.DebugLog()
 	output := make([]rune, 0, len(input))
 	length := len(input)
 	for index := 0; index < length; {
@@ -345,10 +345,10 @@ func builtin_unescape(input string) string {
 	return string(output)
 }
 
-func builtinGlobal_escape(call FunctionCall) Value {
+func builtinGlobal_escape(call FunctionCall) Value { log.DebugLog()
 	return toValue_string(builtin_escape(call.Argument(0).string()))
 }
 
-func builtinGlobal_unescape(call FunctionCall) Value {
+func builtinGlobal_unescape(call FunctionCall) Value { log.DebugLog()
 	return toValue_string(builtin_unescape(call.Argument(0).string()))
 }

@@ -120,7 +120,7 @@ type serverPool struct {
 }
 
 // newServerPool creates a new serverPool instance
-func newServerPool(db ethdb.Database, quit chan struct{}, wg *sync.WaitGroup) *serverPool {
+func newServerPool(db ethdb.Database, quit chan struct{}, wg *sync.WaitGroup) *serverPool { log.DebugLog()
 	pool := &serverPool{
 		db:           db,
 		quit:         quit,
@@ -138,7 +138,7 @@ func newServerPool(db ethdb.Database, quit chan struct{}, wg *sync.WaitGroup) *s
 	return pool
 }
 
-func (pool *serverPool) start(server *p2p.Server, topic discv5.Topic) {
+func (pool *serverPool) start(server *p2p.Server, topic discv5.Topic) { log.DebugLog()
 	pool.server = server
 	pool.topic = topic
 	pool.dbKey = append([]byte("serverPool/"), []byte(topic)...)
@@ -161,7 +161,7 @@ func (pool *serverPool) start(server *p2p.Server, topic discv5.Topic) {
 // Otherwise, the connection should be rejected.
 // Note that whenever a connection has been accepted and a pool entry has been returned,
 // disconnect should also always be called.
-func (pool *serverPool) connect(p *peer, ip net.IP, port uint16) *poolEntry {
+func (pool *serverPool) connect(p *peer, ip net.IP, port uint16) *poolEntry { log.DebugLog()
 	pool.lock.Lock()
 	defer pool.lock.Unlock()
 	entry := pool.entries[p.ID()]
@@ -189,7 +189,7 @@ func (pool *serverPool) connect(p *peer, ip net.IP, port uint16) *poolEntry {
 }
 
 // registered should be called after a successful handshake
-func (pool *serverPool) registered(entry *poolEntry) {
+func (pool *serverPool) registered(entry *poolEntry) { log.DebugLog()
 	log.Debug("Registered new entry", "enode", entry.id)
 	pool.lock.Lock()
 	defer pool.lock.Unlock()
@@ -207,7 +207,7 @@ func (pool *serverPool) registered(entry *poolEntry) {
 // disconnect should be called when ending a connection. Service quality statistics
 // can be updated optionally (not updated if no registration happened, in this case
 // only connection statistics are updated, just like in case of timeout)
-func (pool *serverPool) disconnect(entry *poolEntry) {
+func (pool *serverPool) disconnect(entry *poolEntry) { log.DebugLog()
 	log.Debug("Disconnected old entry", "enode", entry.id)
 	pool.lock.Lock()
 	defer pool.lock.Unlock()
@@ -255,7 +255,7 @@ type poolStatAdjust struct {
 }
 
 // adjustBlockDelay adjusts the block announce delay statistics of a node
-func (pool *serverPool) adjustBlockDelay(entry *poolEntry, time time.Duration) {
+func (pool *serverPool) adjustBlockDelay(entry *poolEntry, time time.Duration) { log.DebugLog()
 	if entry == nil {
 		return
 	}
@@ -263,7 +263,7 @@ func (pool *serverPool) adjustBlockDelay(entry *poolEntry, time time.Duration) {
 }
 
 // adjustResponseTime adjusts the request response time statistics of a node
-func (pool *serverPool) adjustResponseTime(entry *poolEntry, time time.Duration, timeout bool) {
+func (pool *serverPool) adjustResponseTime(entry *poolEntry, time time.Duration, timeout bool) { log.DebugLog()
 	if entry == nil {
 		return
 	}
@@ -275,7 +275,7 @@ func (pool *serverPool) adjustResponseTime(entry *poolEntry, time time.Duration,
 }
 
 // eventLoop handles pool events and mutex locking for all internal functions
-func (pool *serverPool) eventLoop() {
+func (pool *serverPool) eventLoop() { log.DebugLog()
 	lookupCnt := 0
 	var convTime mclock.AbsTime
 	if pool.discSetPeriod != nil {
@@ -344,7 +344,7 @@ func (pool *serverPool) eventLoop() {
 	}
 }
 
-func (pool *serverPool) findOrNewNode(id discover.NodeID, ip net.IP, port uint16) *poolEntry {
+func (pool *serverPool) findOrNewNode(id discover.NodeID, ip net.IP, port uint16) *poolEntry { log.DebugLog()
 	now := mclock.Now()
 	entry := pool.entries[id]
 	if entry == nil {
@@ -381,7 +381,7 @@ func (pool *serverPool) findOrNewNode(id discover.NodeID, ip net.IP, port uint16
 }
 
 // loadNodes loads known nodes and their statistics from the database
-func (pool *serverPool) loadNodes() {
+func (pool *serverPool) loadNodes() { log.DebugLog()
 	enc, err := pool.db.Get(pool.dbKey)
 	if err != nil {
 		return
@@ -406,7 +406,7 @@ func (pool *serverPool) loadNodes() {
 
 // saveNodes saves known nodes and their statistics into the database. Nodes are
 // ordered from least to most recently connected.
-func (pool *serverPool) saveNodes() {
+func (pool *serverPool) saveNodes() { log.DebugLog()
 	list := make([]*poolEntry, len(pool.knownQueue.queue))
 	for i := range list {
 		list[i] = pool.knownQueue.fetchOldest()
@@ -420,7 +420,7 @@ func (pool *serverPool) saveNodes() {
 // removeEntry removes a pool entry when the entry count limit is reached.
 // Note that it is called by the new/known queues from which the entry has already
 // been removed so removing it from the queues is not necessary.
-func (pool *serverPool) removeEntry(entry *poolEntry) {
+func (pool *serverPool) removeEntry(entry *poolEntry) { log.DebugLog()
 	pool.newSelect.remove((*discoveredEntry)(entry))
 	pool.knownSelect.remove((*knownEntry)(entry))
 	entry.removed = true
@@ -428,7 +428,7 @@ func (pool *serverPool) removeEntry(entry *poolEntry) {
 }
 
 // setRetryDial starts the timer which will enable dialing a certain node again
-func (pool *serverPool) setRetryDial(entry *poolEntry) {
+func (pool *serverPool) setRetryDial(entry *poolEntry) { log.DebugLog()
 	delay := longRetryDelay
 	if entry.shortRetry > 0 {
 		entry.shortRetry--
@@ -450,7 +450,7 @@ func (pool *serverPool) setRetryDial(entry *poolEntry) {
 
 // updateCheckDial is called when an entry can potentially be dialed again. It updates
 // its selection weights and checks if new dials can/should be made.
-func (pool *serverPool) updateCheckDial(entry *poolEntry) {
+func (pool *serverPool) updateCheckDial(entry *poolEntry) { log.DebugLog()
 	pool.newSelect.update((*discoveredEntry)(entry))
 	pool.knownSelect.update((*knownEntry)(entry))
 	pool.checkDial()
@@ -458,7 +458,7 @@ func (pool *serverPool) updateCheckDial(entry *poolEntry) {
 
 // checkDial checks if new dials can/should be made. It tries to select servers both
 // based on good statistics and recent discovery.
-func (pool *serverPool) checkDial() {
+func (pool *serverPool) checkDial() { log.DebugLog()
 	fillWithKnownSelects := !pool.fastDiscover
 	for pool.knownSelected < targetKnownSelect {
 		entry := pool.knownSelect.choose()
@@ -490,7 +490,7 @@ func (pool *serverPool) checkDial() {
 }
 
 // dial initiates a new connection
-func (pool *serverPool) dial(entry *poolEntry, knownSelected bool) {
+func (pool *serverPool) dial(entry *poolEntry, knownSelected bool) { log.DebugLog()
 	if pool.server == nil || entry.state != psNotConnected {
 		return
 	}
@@ -519,7 +519,7 @@ func (pool *serverPool) dial(entry *poolEntry, knownSelected bool) {
 
 // checkDialTimeout checks if the node is still in dialed state and if so, resets it
 // and adjusts connection statistics accordingly.
-func (pool *serverPool) checkDialTimeout(entry *poolEntry) {
+func (pool *serverPool) checkDialTimeout(entry *poolEntry) { log.DebugLog()
 	if entry.state != psDialed {
 		return
 	}
@@ -563,11 +563,11 @@ type poolEntry struct {
 	shortRetry   int
 }
 
-func (e *poolEntry) EncodeRLP(w io.Writer) error {
+func (e *poolEntry) EncodeRLP(w io.Writer) error { log.DebugLog()
 	return rlp.Encode(w, []interface{}{e.id, e.lastConnected.ip, e.lastConnected.port, e.lastConnected.fails, &e.connectStats, &e.delayStats, &e.responseStats, &e.timeoutStats})
 }
 
-func (e *poolEntry) DecodeRLP(s *rlp.Stream) error {
+func (e *poolEntry) DecodeRLP(s *rlp.Stream) error { log.DebugLog()
 	var entry struct {
 		ID                         discover.NodeID
 		IP                         net.IP
@@ -598,7 +598,7 @@ func (e *poolEntry) DecodeRLP(s *rlp.Stream) error {
 type discoveredEntry poolEntry
 
 // Weight calculates random selection weight for newly discovered entries
-func (e *discoveredEntry) Weight() int64 {
+func (e *discoveredEntry) Weight() int64 { log.DebugLog()
 	if e.state != psNotConnected || e.delayedRetry {
 		return 0
 	}
@@ -614,7 +614,7 @@ func (e *discoveredEntry) Weight() int64 {
 type knownEntry poolEntry
 
 // Weight calculates random selection weight for known entries
-func (e *knownEntry) Weight() int64 {
+func (e *knownEntry) Weight() int64 { log.DebugLog()
 	if e.state != psNotConnected || !e.known || e.delayedRetry {
 		return 0
 	}
@@ -632,12 +632,12 @@ type poolEntryAddress struct {
 	fails    uint           // connection failures since last successful connection (persistent)
 }
 
-func (a *poolEntryAddress) Weight() int64 {
+func (a *poolEntryAddress) Weight() int64 { log.DebugLog()
 	t := time.Duration(mclock.Now() - a.lastSeen)
 	return int64(1000000*math.Exp(-float64(t)/float64(discoverExpireConst)-float64(a.fails)*addrFailDropLn)) + 1
 }
 
-func (a *poolEntryAddress) strKey() string {
+func (a *poolEntryAddress) strKey() string { log.DebugLog()
 	return a.ip.String() + ":" + strconv.Itoa(int(a.port))
 }
 
@@ -651,7 +651,7 @@ type poolStats struct {
 }
 
 // init initializes stats with a long term sum/update count pair retrieved from the database
-func (s *poolStats) init(sum, weight float64) {
+func (s *poolStats) init(sum, weight float64) { log.DebugLog()
 	s.sum = sum
 	s.weight = weight
 	var avg float64
@@ -664,7 +664,7 @@ func (s *poolStats) init(sum, weight float64) {
 }
 
 // recalc recalculates recent value return-to-mean and long term average
-func (s *poolStats) recalc() {
+func (s *poolStats) recalc() { log.DebugLog()
 	now := mclock.Now()
 	s.recent = s.avg + (s.recent-s.avg)*math.Exp(-float64(now-s.lastRecalc)/float64(pstatReturnToMeanTC))
 	if s.sum == 0 {
@@ -680,23 +680,23 @@ func (s *poolStats) recalc() {
 }
 
 // add updates the stats with a new value
-func (s *poolStats) add(value, weight float64) {
+func (s *poolStats) add(value, weight float64) { log.DebugLog()
 	s.weight += weight
 	s.sum += value * weight
 	s.recalc()
 }
 
 // recentAvg returns the short-term adjusted average
-func (s *poolStats) recentAvg() float64 {
+func (s *poolStats) recentAvg() float64 { log.DebugLog()
 	s.recalc()
 	return s.recent
 }
 
-func (s *poolStats) EncodeRLP(w io.Writer) error {
+func (s *poolStats) EncodeRLP(w io.Writer) error { log.DebugLog()
 	return rlp.Encode(w, []interface{}{math.Float64bits(s.sum), math.Float64bits(s.weight)})
 }
 
-func (s *poolStats) DecodeRLP(st *rlp.Stream) error {
+func (s *poolStats) DecodeRLP(st *rlp.Stream) error { log.DebugLog()
 	var stats struct {
 		SumUint, WeightUint uint64
 	}
@@ -716,12 +716,12 @@ type poolEntryQueue struct {
 }
 
 // newPoolEntryQueue returns a new poolEntryQueue
-func newPoolEntryQueue(maxCnt int, removeFromPool func(*poolEntry)) poolEntryQueue {
+func newPoolEntryQueue(maxCnt int, removeFromPool func(*poolEntry)) poolEntryQueue { log.DebugLog()
 	return poolEntryQueue{queue: make(map[int]*poolEntry), maxCnt: maxCnt, removeFromPool: removeFromPool}
 }
 
 // fetchOldest returns and removes the least recently accessed entry
-func (q *poolEntryQueue) fetchOldest() *poolEntry {
+func (q *poolEntryQueue) fetchOldest() *poolEntry { log.DebugLog()
 	if len(q.queue) == 0 {
 		return nil
 	}
@@ -736,7 +736,7 @@ func (q *poolEntryQueue) fetchOldest() *poolEntry {
 }
 
 // remove removes an entry from the queue
-func (q *poolEntryQueue) remove(entry *poolEntry) {
+func (q *poolEntryQueue) remove(entry *poolEntry) { log.DebugLog()
 	if q.queue[entry.queueIdx] == entry {
 		delete(q.queue, entry.queueIdx)
 	}
@@ -744,7 +744,7 @@ func (q *poolEntryQueue) remove(entry *poolEntry) {
 
 // setLatest adds or updates a recently accessed entry. It also checks if an old entry
 // needs to be removed and removes it from the parent pool too with a callback function.
-func (q *poolEntryQueue) setLatest(entry *poolEntry) {
+func (q *poolEntryQueue) setLatest(entry *poolEntry) { log.DebugLog()
 	if q.queue[entry.queueIdx] == entry {
 		delete(q.queue, entry.queueIdx)
 	} else {

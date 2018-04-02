@@ -28,7 +28,7 @@ import (
 	"testing"
 )
 
-func TestStreamKind(t *testing.T) {
+func TestStreamKind(t *testing.T) { log.DebugLog()
 	tests := []struct {
 		input    string
 		wantKind Kind
@@ -65,7 +65,7 @@ func TestStreamKind(t *testing.T) {
 	}
 }
 
-func TestNewListStream(t *testing.T) {
+func TestNewListStream(t *testing.T) { log.DebugLog()
 	ls := NewListStream(bytes.NewReader(unhex("0101010101")), 3)
 	if k, size, err := ls.Kind(); k != List || size != 3 || err != nil {
 		t.Errorf("Kind() returned (%v, %d, %v), expected (List, 3, nil)", k, size, err)
@@ -83,7 +83,7 @@ func TestNewListStream(t *testing.T) {
 	}
 }
 
-func TestStreamErrors(t *testing.T) {
+func TestStreamErrors(t *testing.T) { log.DebugLog()
 	withoutInputLimit := func(b []byte) *Stream {
 		return NewStream(newPlainReader(b), 0)
 	}
@@ -226,7 +226,7 @@ testfor:
 	}
 }
 
-func TestStreamList(t *testing.T) {
+func TestStreamList(t *testing.T) { log.DebugLog()
 	s := NewStream(bytes.NewReader(unhex("C80102030405060708")), 0)
 
 	len, err := s.List()
@@ -255,7 +255,7 @@ func TestStreamList(t *testing.T) {
 	}
 }
 
-func TestStreamRaw(t *testing.T) {
+func TestStreamRaw(t *testing.T) { log.DebugLog()
 	tests := []struct {
 		input  string
 		output string
@@ -284,7 +284,7 @@ func TestStreamRaw(t *testing.T) {
 	}
 }
 
-func TestDecodeErrors(t *testing.T) {
+func TestDecodeErrors(t *testing.T) { log.DebugLog()
 	r := bytes.NewReader(nil)
 
 	if err := Decode(r, nil); err != errDecodeIntoNil {
@@ -557,9 +557,9 @@ var decodeTests = []decodeTest{
 	},
 }
 
-func uintp(i uint) *uint { return &i }
+func uintp(i uint) *uint { log.DebugLog() return &i }
 
-func runTests(t *testing.T, decode func([]byte, interface{}) error) {
+func runTests(t *testing.T, decode func([]byte, interface{}) error) { log.DebugLog()
 	for i, test := range decodeTests {
 		input, err := hex.DecodeString(test.input)
 		if err != nil {
@@ -585,7 +585,7 @@ func runTests(t *testing.T, decode func([]byte, interface{}) error) {
 	}
 }
 
-func TestDecodeWithByteReader(t *testing.T) {
+func TestDecodeWithByteReader(t *testing.T) { log.DebugLog()
 	runTests(t, func(input []byte, into interface{}) error {
 		return Decode(bytes.NewReader(input), into)
 	})
@@ -597,11 +597,11 @@ func TestDecodeWithByteReader(t *testing.T) {
 // behaves on a non-buffered input stream.
 type plainReader []byte
 
-func newPlainReader(b []byte) io.Reader {
+func newPlainReader(b []byte) io.Reader { log.DebugLog()
 	return (*plainReader)(&b)
 }
 
-func (r *plainReader) Read(buf []byte) (n int, err error) {
+func (r *plainReader) Read(buf []byte) (n int, err error) { log.DebugLog()
 	if len(*r) == 0 {
 		return 0, io.EOF
 	}
@@ -610,13 +610,13 @@ func (r *plainReader) Read(buf []byte) (n int, err error) {
 	return n, nil
 }
 
-func TestDecodeWithNonByteReader(t *testing.T) {
+func TestDecodeWithNonByteReader(t *testing.T) { log.DebugLog()
 	runTests(t, func(input []byte, into interface{}) error {
 		return Decode(newPlainReader(input), into)
 	})
 }
 
-func TestDecodeStreamReset(t *testing.T) {
+func TestDecodeStreamReset(t *testing.T) { log.DebugLog()
 	s := NewStream(nil, 0)
 	runTests(t, func(input []byte, into interface{}) error {
 		s.Reset(bytes.NewReader(input), 0)
@@ -626,7 +626,7 @@ func TestDecodeStreamReset(t *testing.T) {
 
 type testDecoder struct{ called bool }
 
-func (t *testDecoder) DecodeRLP(s *Stream) error {
+func (t *testDecoder) DecodeRLP(s *Stream) error { log.DebugLog()
 	if _, err := s.Uint(); err != nil {
 		return err
 	}
@@ -634,7 +634,7 @@ func (t *testDecoder) DecodeRLP(s *Stream) error {
 	return nil
 }
 
-func TestDecodeDecoder(t *testing.T) {
+func TestDecodeDecoder(t *testing.T) { log.DebugLog()
 	var s struct {
 		T1 testDecoder
 		T2 *testDecoder
@@ -663,19 +663,19 @@ func TestDecodeDecoder(t *testing.T) {
 
 type byteDecoder byte
 
-func (bd *byteDecoder) DecodeRLP(s *Stream) error {
+func (bd *byteDecoder) DecodeRLP(s *Stream) error { log.DebugLog()
 	_, err := s.Uint()
 	*bd = 255
 	return err
 }
 
-func (bd byteDecoder) called() bool {
+func (bd byteDecoder) called() bool { log.DebugLog()
 	return bd == 255
 }
 
 // This test verifies that the byte slice/byte array logic
 // does not kick in for element types implementing Decoder.
-func TestDecoderInByteSlice(t *testing.T) {
+func TestDecoderInByteSlice(t *testing.T) { log.DebugLog()
 	var slice []byteDecoder
 	if err := Decode(bytes.NewReader(unhex("C101")), &slice); err != nil {
 		t.Errorf("unexpected Decode error %v", err)
@@ -691,7 +691,7 @@ func TestDecoderInByteSlice(t *testing.T) {
 	}
 }
 
-func ExampleDecode() {
+func ExampleDecode() { log.DebugLog()
 	input, _ := hex.DecodeString("C90A1486666F6F626172")
 
 	type example struct {
@@ -711,7 +711,7 @@ func ExampleDecode() {
 	// Decoded value: rlp.example{A:0xa, B:0x14, private:0x0, String:"foobar"}
 }
 
-func ExampleDecode_structTagNil() {
+func ExampleDecode_structTagNil() { log.DebugLog()
 	// In this example, we'll use the "nil" struct tag to change
 	// how a pointer-typed field is decoded. The input contains an RLP
 	// list of one element, an empty string.
@@ -738,7 +738,7 @@ func ExampleDecode_structTagNil() {
 	// with nil tag: String = <nil>
 }
 
-func ExampleStream() {
+func ExampleStream() { log.DebugLog()
 	input, _ := hex.DecodeString("C90A1486666F6F626172")
 	s := NewStream(bytes.NewReader(input), 0)
 
@@ -768,7 +768,7 @@ func ExampleStream() {
 	// [102 111 111 98 97 114] <nil>
 }
 
-func BenchmarkDecode(b *testing.B) {
+func BenchmarkDecode(b *testing.B) { log.DebugLog()
 	enc := encodeTestSlice(90000)
 	b.SetBytes(int64(len(enc)))
 	b.ReportAllocs()
@@ -783,7 +783,7 @@ func BenchmarkDecode(b *testing.B) {
 	}
 }
 
-func BenchmarkDecodeIntSliceReuse(b *testing.B) {
+func BenchmarkDecodeIntSliceReuse(b *testing.B) { log.DebugLog()
 	enc := encodeTestSlice(100000)
 	b.SetBytes(int64(len(enc)))
 	b.ReportAllocs()
@@ -798,7 +798,7 @@ func BenchmarkDecodeIntSliceReuse(b *testing.B) {
 	}
 }
 
-func encodeTestSlice(n uint) []byte {
+func encodeTestSlice(n uint) []byte { log.DebugLog()
 	s := make([]uint, n)
 	for i := uint(0); i < n; i++ {
 		s[i] = i
@@ -810,7 +810,7 @@ func encodeTestSlice(n uint) []byte {
 	return b
 }
 
-func unhex(str string) []byte {
+func unhex(str string) []byte { log.DebugLog()
 	b, err := hex.DecodeString(strings.Replace(str, " ", "", -1))
 	if err != nil {
 		panic(fmt.Sprintf("invalid hex string: %q", str))

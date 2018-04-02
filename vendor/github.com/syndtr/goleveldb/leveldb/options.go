@@ -11,7 +11,7 @@ import (
 	"github.com/syndtr/goleveldb/leveldb/opt"
 )
 
-func dupOptions(o *opt.Options) *opt.Options {
+func dupOptions(o *opt.Options) *opt.Options { log.DebugLog()
 	newo := &opt.Options{}
 	if o != nil {
 		*newo = *o
@@ -22,7 +22,7 @@ func dupOptions(o *opt.Options) *opt.Options {
 	return newo
 }
 
-func (s *session) setOptions(o *opt.Options) {
+func (s *session) setOptions(o *opt.Options) { log.DebugLog()
 	no := dupOptions(o)
 	// Alternative filters.
 	if filters := o.GetAltFilters(); len(filters) > 0 {
@@ -55,7 +55,7 @@ type cachedOptions struct {
 	compactionTotalSize   []int64
 }
 
-func (co *cachedOptions) cache() {
+func (co *cachedOptions) cache() { log.DebugLog()
 	co.compactionExpandLimit = make([]int, optCachedLevel)
 	co.compactionGPOverlaps = make([]int, optCachedLevel)
 	co.compactionSourceLimit = make([]int, optCachedLevel)
@@ -71,35 +71,35 @@ func (co *cachedOptions) cache() {
 	}
 }
 
-func (co *cachedOptions) GetCompactionExpandLimit(level int) int {
+func (co *cachedOptions) GetCompactionExpandLimit(level int) int { log.DebugLog()
 	if level < optCachedLevel {
 		return co.compactionExpandLimit[level]
 	}
 	return co.Options.GetCompactionExpandLimit(level)
 }
 
-func (co *cachedOptions) GetCompactionGPOverlaps(level int) int {
+func (co *cachedOptions) GetCompactionGPOverlaps(level int) int { log.DebugLog()
 	if level < optCachedLevel {
 		return co.compactionGPOverlaps[level]
 	}
 	return co.Options.GetCompactionGPOverlaps(level)
 }
 
-func (co *cachedOptions) GetCompactionSourceLimit(level int) int {
+func (co *cachedOptions) GetCompactionSourceLimit(level int) int { log.DebugLog()
 	if level < optCachedLevel {
 		return co.compactionSourceLimit[level]
 	}
 	return co.Options.GetCompactionSourceLimit(level)
 }
 
-func (co *cachedOptions) GetCompactionTableSize(level int) int {
+func (co *cachedOptions) GetCompactionTableSize(level int) int { log.DebugLog()
 	if level < optCachedLevel {
 		return co.compactionTableSize[level]
 	}
 	return co.Options.GetCompactionTableSize(level)
 }
 
-func (co *cachedOptions) GetCompactionTotalSize(level int) int64 {
+func (co *cachedOptions) GetCompactionTotalSize(level int) int64 { log.DebugLog()
 	if level < optCachedLevel {
 		return co.compactionTotalSize[level]
 	}

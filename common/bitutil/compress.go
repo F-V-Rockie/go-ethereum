@@ -57,7 +57,7 @@ var (
 // CompressBytes compresses the input byte slice according to the sparse bitset
 // representation algorithm. If the result is bigger than the original input, no
 // compression is done.
-func CompressBytes(data []byte) []byte {
+func CompressBytes(data []byte) []byte { log.DebugLog()
 	if out := bitsetEncodeBytes(data); len(out) < len(data) {
 		return out
 	}
@@ -68,7 +68,7 @@ func CompressBytes(data []byte) []byte {
 
 // bitsetEncodeBytes compresses the input byte slice according to the sparse
 // bitset representation algorithm.
-func bitsetEncodeBytes(data []byte) []byte {
+func bitsetEncodeBytes(data []byte) []byte { log.DebugLog()
 	// Empty slices get compressed to nil
 	if len(data) == 0 {
 		return nil
@@ -99,7 +99,7 @@ func bitsetEncodeBytes(data []byte) []byte {
 // DecompressBytes decompresses data with a known target size. If the input data
 // matches the size of the target, it means no compression was done in the first
 // place.
-func DecompressBytes(data []byte, target int) ([]byte, error) {
+func DecompressBytes(data []byte, target int) ([]byte, error) { log.DebugLog()
 	if len(data) > target {
 		return nil, errExceededTarget
 	}
@@ -112,7 +112,7 @@ func DecompressBytes(data []byte, target int) ([]byte, error) {
 }
 
 // bitsetDecodeBytes decompresses data with a known target size.
-func bitsetDecodeBytes(data []byte, target int) ([]byte, error) {
+func bitsetDecodeBytes(data []byte, target int) ([]byte, error) { log.DebugLog()
 	out, size, err := bitsetDecodePartialBytes(data, target)
 	if err != nil {
 		return nil, err
@@ -127,7 +127,7 @@ func bitsetDecodeBytes(data []byte, target int) ([]byte, error) {
 // not enforce consuming all the input bytes. In addition to the decompressed
 // output, the function returns the length of compressed input data corresponding
 // to the output as the input slice may be longer.
-func bitsetDecodePartialBytes(data []byte, target int) ([]byte, int, error) {
+func bitsetDecodePartialBytes(data []byte, target int) ([]byte, int, error) { log.DebugLog()
 	// Sanity check 0 targets to avoid infinite recursion
 	if target == 0 {
 		return nil, 0, nil

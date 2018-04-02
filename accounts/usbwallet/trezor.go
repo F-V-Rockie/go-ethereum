@@ -57,7 +57,7 @@ type trezorDriver struct {
 }
 
 // newTrezorDriver creates a new instance of a Trezor USB protocol driver.
-func newTrezorDriver(logger log.Logger) driver {
+func newTrezorDriver(logger log.Logger) driver { log.DebugLog()
 	return &trezorDriver{
 		log: logger,
 	}
@@ -65,7 +65,7 @@ func newTrezorDriver(logger log.Logger) driver {
 
 // Status implements accounts.Wallet, always whether the Trezor is opened, closed
 // or whether the Ethereum app was not started on it.
-func (w *trezorDriver) Status() (string, error) {
+func (w *trezorDriver) Status() (string, error) { log.DebugLog()
 	if w.failure != nil {
 		return fmt.Sprintf("Failed: %v", w.failure), w.failure
 	}
@@ -87,7 +87,7 @@ func (w *trezorDriver) Status() (string, error) {
 //  * The second phase is to unlock access to the Trezor, which is done by the
 //    user actually providing a passphrase mapping a keyboard keypad to the pin
 //    number of the user (shuffled according to the pinpad displayed).
-func (w *trezorDriver) Open(device io.ReadWriter, passphrase string) error {
+func (w *trezorDriver) Open(device io.ReadWriter, passphrase string) error { log.DebugLog()
 	w.device, w.failure = device, nil
 
 	// If phase 1 is requested, init the connection and wait for user callback
@@ -129,14 +129,14 @@ func (w *trezorDriver) Open(device io.ReadWriter, passphrase string) error {
 
 // Close implements usbwallet.driver, cleaning up and metadata maintained within
 // the Trezor driver.
-func (w *trezorDriver) Close() error {
+func (w *trezorDriver) Close() error { log.DebugLog()
 	w.version, w.label, w.pinwait = [3]uint32{}, "", false
 	return nil
 }
 
 // Heartbeat implements usbwallet.driver, performing a sanity check against the
 // Trezor to see if it's still online.
-func (w *trezorDriver) Heartbeat() error {
+func (w *trezorDriver) Heartbeat() error { log.DebugLog()
 	if _, err := w.trezorExchange(&trezor.Ping{}, new(trezor.Success)); err != nil {
 		w.failure = err
 		return err
@@ -146,13 +146,13 @@ func (w *trezorDriver) Heartbeat() error {
 
 // Derive implements usbwallet.driver, sending a derivation request to the Trezor
 // and returning the Ethereum address located on that derivation path.
-func (w *trezorDriver) Derive(path accounts.DerivationPath) (common.Address, error) {
+func (w *trezorDriver) Derive(path accounts.DerivationPath) (common.Address, error) { log.DebugLog()
 	return w.trezorDerive(path)
 }
 
 // SignTx implements usbwallet.driver, sending the transaction to the Trezor and
 // waiting for the user to confirm or deny the transaction.
-func (w *trezorDriver) SignTx(path accounts.DerivationPath, tx *types.Transaction, chainID *big.Int) (common.Address, *types.Transaction, error) {
+func (w *trezorDriver) SignTx(path accounts.DerivationPath, tx *types.Transaction, chainID *big.Int) (common.Address, *types.Transaction, error) { log.DebugLog()
 	if w.device == nil {
 		return common.Address{}, nil, accounts.ErrWalletClosed
 	}
@@ -161,7 +161,7 @@ func (w *trezorDriver) SignTx(path accounts.DerivationPath, tx *types.Transactio
 
 // trezorDerive sends a derivation request to the Trezor device and returns the
 // Ethereum address located on that path.
-func (w *trezorDriver) trezorDerive(derivationPath []uint32) (common.Address, error) {
+func (w *trezorDriver) trezorDerive(derivationPath []uint32) (common.Address, error) { log.DebugLog()
 	address := new(trezor.EthereumAddress)
 	if _, err := w.trezorExchange(&trezor.EthereumGetAddress{AddressN: derivationPath}, address); err != nil {
 		return common.Address{}, err
@@ -171,7 +171,7 @@ func (w *trezorDriver) trezorDerive(derivationPath []uint32) (common.Address, er
 
 // trezorSign sends the transaction to the Trezor wallet, and waits for the user
 // to confirm or deny the transaction.
-func (w *trezorDriver) trezorSign(derivationPath []uint32, tx *types.Transaction, chainID *big.Int) (common.Address, *types.Transaction, error) {
+func (w *trezorDriver) trezorSign(derivationPath []uint32, tx *types.Transaction, chainID *big.Int) (common.Address, *types.Transaction, error) { log.DebugLog()
 	// Create the transaction initiation message
 	data := tx.Data()
 	length := uint32(len(data))
@@ -238,7 +238,7 @@ func (w *trezorDriver) trezorSign(derivationPath []uint32, tx *types.Transaction
 // trezorExchange performs a data exchange with the Trezor wallet, sending it a
 // message and retrieving the response. If multiple responses are possible, the
 // method will also return the index of the destination object used.
-func (w *trezorDriver) trezorExchange(req proto.Message, results ...proto.Message) (int, error) {
+func (w *trezorDriver) trezorExchange(req proto.Message, results ...proto.Message) (int, error) { log.DebugLog()
 	// Construct the original message payload to chunk up
 	data, err := proto.Marshal(req)
 	if err != nil {

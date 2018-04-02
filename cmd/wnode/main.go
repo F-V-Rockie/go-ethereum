@@ -106,14 +106,14 @@ var (
 	argSaveDir = flag.String("savedir", "", "directory where all incoming messages will be saved as files")
 )
 
-func main() {
+func main() { log.DebugLog()
 	processArgs()
 	initialize()
 	run()
 	shutdown()
 }
 
-func processArgs() {
+func processArgs() { log.DebugLog()
 	flag.Parse()
 
 	if len(*argIDFile) > 0 {
@@ -159,7 +159,7 @@ func processArgs() {
 	}
 }
 
-func echo() {
+func echo() { log.DebugLog()
 	fmt.Printf("ttl = %d \n", *argTTL)
 	fmt.Printf("workTime = %d \n", *argWorkTime)
 	fmt.Printf("pow = %f \n", *argPoW)
@@ -171,7 +171,7 @@ func echo() {
 	fmt.Printf("boot = %s \n", *argEnode)
 }
 
-func initialize() {
+func initialize() { log.DebugLog()
 	log.Root().SetHandler(log.LvlFilterHandler(log.Lvl(*argVerbosity), log.StreamHandler(os.Stderr, log.TerminalFormat(false))))
 
 	done = make(chan struct{})
@@ -289,7 +289,7 @@ func initialize() {
 	}
 }
 
-func startServer() error {
+func startServer() error { log.DebugLog()
 	err := server.Start()
 	if err != nil {
 		fmt.Printf("Failed to start Whisper peer: %s.", err)
@@ -319,11 +319,11 @@ func startServer() error {
 	return nil
 }
 
-func isKeyValid(k *ecdsa.PublicKey) bool {
+func isKeyValid(k *ecdsa.PublicKey) bool { log.DebugLog()
 	return k.X != nil && k.Y != nil
 }
 
-func configureNode() {
+func configureNode() { log.DebugLog()
 	var err error
 	var p2pAccept bool
 
@@ -405,14 +405,14 @@ func configureNode() {
 	}
 }
 
-func generateTopic(password []byte) {
+func generateTopic(password []byte) { log.DebugLog()
 	x := pbkdf2.Key(password, password, 4096, 128, sha512.New)
 	for i := 0; i < len(x); i++ {
 		topic[i%whisper.TopicLength] ^= x[i]
 	}
 }
 
-func waitForConnection(timeout bool) {
+func waitForConnection(timeout bool) { log.DebugLog()
 	var cnt int
 	var connected bool
 	for !connected {
@@ -429,7 +429,7 @@ func waitForConnection(timeout bool) {
 	fmt.Println("Connected to peer.")
 }
 
-func run() {
+func run() { log.DebugLog()
 	err := startServer()
 	if err != nil {
 		return
@@ -453,12 +453,12 @@ func run() {
 	}
 }
 
-func shutdown() {
+func shutdown() { log.DebugLog()
 	close(done)
 	mailServer.Close()
 }
 
-func sendLoop() {
+func sendLoop() { log.DebugLog()
 	for {
 		s := scanLine("")
 		if s == quitCommand {
@@ -476,7 +476,7 @@ func sendLoop() {
 	}
 }
 
-func sendFilesLoop() {
+func sendFilesLoop() { log.DebugLog()
 	for {
 		s := scanLine("")
 		if s == quitCommand {
@@ -499,7 +499,7 @@ func sendFilesLoop() {
 	}
 }
 
-func fileReaderLoop() {
+func fileReaderLoop() { log.DebugLog()
 	watcher1 := shh.GetFilter(symFilterID)
 	watcher2 := shh.GetFilter(asymFilterID)
 	if watcher1 == nil && watcher2 == nil {
@@ -531,7 +531,7 @@ func fileReaderLoop() {
 	}
 }
 
-func scanLine(prompt string) string {
+func scanLine(prompt string) string { log.DebugLog()
 	if len(prompt) > 0 {
 		fmt.Print(prompt)
 	}
@@ -543,12 +543,12 @@ func scanLine(prompt string) string {
 	return txt
 }
 
-func scanLineA(prompt string) *string {
+func scanLineA(prompt string) *string { log.DebugLog()
 	s := scanLine(prompt)
 	return &s
 }
 
-func scanUint(prompt string) uint32 {
+func scanUint(prompt string) uint32 { log.DebugLog()
 	s := scanLine(prompt)
 	i, err := strconv.Atoi(s)
 	if err != nil {
@@ -557,7 +557,7 @@ func scanUint(prompt string) uint32 {
 	return uint32(i)
 }
 
-func sendMsg(payload []byte) common.Hash {
+func sendMsg(payload []byte) common.Hash { log.DebugLog()
 	params := whisper.MessageParams{
 		Src:      asymKey,
 		Dst:      pub,
@@ -589,7 +589,7 @@ func sendMsg(payload []byte) common.Hash {
 	return envelope.Hash()
 }
 
-func messageLoop() {
+func messageLoop() { log.DebugLog()
 	sf := shh.GetFilter(symFilterID)
 	if sf == nil {
 		utils.Fatalf("symmetric filter is not installed")
@@ -628,7 +628,7 @@ func messageLoop() {
 	}
 }
 
-func printMessageInfo(msg *whisper.ReceivedMessage) {
+func printMessageInfo(msg *whisper.ReceivedMessage) { log.DebugLog()
 	timestamp := fmt.Sprintf("%d", msg.Sent) // unix timestamp for diagnostics
 	text := string(msg.Payload)
 
@@ -644,7 +644,7 @@ func printMessageInfo(msg *whisper.ReceivedMessage) {
 	}
 }
 
-func writeMessageToFile(dir string, msg *whisper.ReceivedMessage, show bool) {
+func writeMessageToFile(dir string, msg *whisper.ReceivedMessage, show bool) { log.DebugLog()
 	if len(dir) == 0 {
 		return
 	}
@@ -678,7 +678,7 @@ func writeMessageToFile(dir string, msg *whisper.ReceivedMessage, show bool) {
 	}
 }
 
-func requestExpiredMessagesLoop() {
+func requestExpiredMessagesLoop() { log.DebugLog()
 	var key, peerID, bloom []byte
 	var timeLow, timeUpp uint32
 	var t string
@@ -749,7 +749,7 @@ func requestExpiredMessagesLoop() {
 	}
 }
 
-func extractIDFromEnode(s string) []byte {
+func extractIDFromEnode(s string) []byte { log.DebugLog()
 	n, err := discover.ParseNode(s)
 	if err != nil {
 		utils.Fatalf("Failed to parse enode: %s", err)
@@ -762,7 +762,7 @@ func extractIDFromEnode(s string) []byte {
 // it does so deterministically within every session.
 // despite additional bits, it will match on average
 // 32000 times less messages than full node's bloom filter.
-func obfuscateBloom(bloom []byte) {
+func obfuscateBloom(bloom []byte) { log.DebugLog()
 	const half = entropySize / 2
 	for i := 0; i < half; i++ {
 		x := int(entropy[i])

@@ -45,7 +45,7 @@ var (
 // the returned hash chain is ordered head->parent. In addition, every 3rd block
 // contains a transaction and every 5th an uncle to allow testing correct block
 // reassembly.
-func makeChain(n int, seed byte, parent *types.Block) ([]common.Hash, map[common.Hash]*types.Block) {
+func makeChain(n int, seed byte, parent *types.Block) ([]common.Hash, map[common.Hash]*types.Block) { log.DebugLog()
 	blocks, _ := core.GenerateChain(params.TestChainConfig, parent, ethash.NewFaker(), testdb, n, func(i int, block *core.BlockGen) {
 		block.SetCoinbase(common.Address{seed})
 
@@ -86,7 +86,7 @@ type fetcherTester struct {
 }
 
 // newTester creates a new fetcher test mocker.
-func newTester() *fetcherTester {
+func newTester() *fetcherTester { log.DebugLog()
 	tester := &fetcherTester{
 		hashes: []common.Hash{genesis.Hash()},
 		blocks: map[common.Hash]*types.Block{genesis.Hash(): genesis},
@@ -99,7 +99,7 @@ func newTester() *fetcherTester {
 }
 
 // getBlock retrieves a block from the tester's block chain.
-func (f *fetcherTester) getBlock(hash common.Hash) *types.Block {
+func (f *fetcherTester) getBlock(hash common.Hash) *types.Block { log.DebugLog()
 	f.lock.RLock()
 	defer f.lock.RUnlock()
 
@@ -107,16 +107,16 @@ func (f *fetcherTester) getBlock(hash common.Hash) *types.Block {
 }
 
 // verifyHeader is a nop placeholder for the block header verification.
-func (f *fetcherTester) verifyHeader(header *types.Header) error {
+func (f *fetcherTester) verifyHeader(header *types.Header) error { log.DebugLog()
 	return nil
 }
 
 // broadcastBlock is a nop placeholder for the block broadcasting.
-func (f *fetcherTester) broadcastBlock(block *types.Block, propagate bool) {
+func (f *fetcherTester) broadcastBlock(block *types.Block, propagate bool) { log.DebugLog()
 }
 
 // chainHeight retrieves the current height (block number) of the chain.
-func (f *fetcherTester) chainHeight() uint64 {
+func (f *fetcherTester) chainHeight() uint64 { log.DebugLog()
 	f.lock.RLock()
 	defer f.lock.RUnlock()
 
@@ -124,7 +124,7 @@ func (f *fetcherTester) chainHeight() uint64 {
 }
 
 // insertChain injects a new blocks into the simulated chain.
-func (f *fetcherTester) insertChain(blocks types.Blocks) (int, error) {
+func (f *fetcherTester) insertChain(blocks types.Blocks) (int, error) { log.DebugLog()
 	f.lock.Lock()
 	defer f.lock.Unlock()
 
@@ -146,7 +146,7 @@ func (f *fetcherTester) insertChain(blocks types.Blocks) (int, error) {
 
 // dropPeer is an emulator for the peer removal, simply accumulating the various
 // peers dropped by the fetcher.
-func (f *fetcherTester) dropPeer(peer string) {
+func (f *fetcherTester) dropPeer(peer string) { log.DebugLog()
 	f.lock.Lock()
 	defer f.lock.Unlock()
 
@@ -154,7 +154,7 @@ func (f *fetcherTester) dropPeer(peer string) {
 }
 
 // makeHeaderFetcher retrieves a block header fetcher associated with a simulated peer.
-func (f *fetcherTester) makeHeaderFetcher(peer string, blocks map[common.Hash]*types.Block, drift time.Duration) headerRequesterFn {
+func (f *fetcherTester) makeHeaderFetcher(peer string, blocks map[common.Hash]*types.Block, drift time.Duration) headerRequesterFn { log.DebugLog()
 	closure := make(map[common.Hash]*types.Block)
 	for hash, block := range blocks {
 		closure[hash] = block
@@ -174,7 +174,7 @@ func (f *fetcherTester) makeHeaderFetcher(peer string, blocks map[common.Hash]*t
 }
 
 // makeBodyFetcher retrieves a block body fetcher associated with a simulated peer.
-func (f *fetcherTester) makeBodyFetcher(peer string, blocks map[common.Hash]*types.Block, drift time.Duration) bodyRequesterFn {
+func (f *fetcherTester) makeBodyFetcher(peer string, blocks map[common.Hash]*types.Block, drift time.Duration) bodyRequesterFn { log.DebugLog()
 	closure := make(map[common.Hash]*types.Block)
 	for hash, block := range blocks {
 		closure[hash] = block
@@ -199,7 +199,7 @@ func (f *fetcherTester) makeBodyFetcher(peer string, blocks map[common.Hash]*typ
 }
 
 // verifyFetchingEvent verifies that one single event arrive on an fetching channel.
-func verifyFetchingEvent(t *testing.T, fetching chan []common.Hash, arrive bool) {
+func verifyFetchingEvent(t *testing.T, fetching chan []common.Hash, arrive bool) { log.DebugLog()
 	if arrive {
 		select {
 		case <-fetching:
@@ -216,7 +216,7 @@ func verifyFetchingEvent(t *testing.T, fetching chan []common.Hash, arrive bool)
 }
 
 // verifyCompletingEvent verifies that one single event arrive on an completing channel.
-func verifyCompletingEvent(t *testing.T, completing chan []common.Hash, arrive bool) {
+func verifyCompletingEvent(t *testing.T, completing chan []common.Hash, arrive bool) { log.DebugLog()
 	if arrive {
 		select {
 		case <-completing:
@@ -233,7 +233,7 @@ func verifyCompletingEvent(t *testing.T, completing chan []common.Hash, arrive b
 }
 
 // verifyImportEvent verifies that one single event arrive on an import channel.
-func verifyImportEvent(t *testing.T, imported chan *types.Block, arrive bool) {
+func verifyImportEvent(t *testing.T, imported chan *types.Block, arrive bool) { log.DebugLog()
 	if arrive {
 		select {
 		case <-imported:
@@ -251,7 +251,7 @@ func verifyImportEvent(t *testing.T, imported chan *types.Block, arrive bool) {
 
 // verifyImportCount verifies that exactly count number of events arrive on an
 // import hook channel.
-func verifyImportCount(t *testing.T, imported chan *types.Block, count int) {
+func verifyImportCount(t *testing.T, imported chan *types.Block, count int) { log.DebugLog()
 	for i := 0; i < count; i++ {
 		select {
 		case <-imported:
@@ -263,7 +263,7 @@ func verifyImportCount(t *testing.T, imported chan *types.Block, count int) {
 }
 
 // verifyImportDone verifies that no more events are arriving on an import channel.
-func verifyImportDone(t *testing.T, imported chan *types.Block) {
+func verifyImportDone(t *testing.T, imported chan *types.Block) { log.DebugLog()
 	select {
 	case <-imported:
 		t.Fatalf("extra block imported")
@@ -273,11 +273,11 @@ func verifyImportDone(t *testing.T, imported chan *types.Block) {
 
 // Tests that a fetcher accepts block announcements and initiates retrievals for
 // them, successfully importing into the local chain.
-func TestSequentialAnnouncements62(t *testing.T) { testSequentialAnnouncements(t, 62) }
-func TestSequentialAnnouncements63(t *testing.T) { testSequentialAnnouncements(t, 63) }
-func TestSequentialAnnouncements64(t *testing.T) { testSequentialAnnouncements(t, 64) }
+func TestSequentialAnnouncements62(t *testing.T) { log.DebugLog() testSequentialAnnouncements(t, 62) }
+func TestSequentialAnnouncements63(t *testing.T) { log.DebugLog() testSequentialAnnouncements(t, 63) }
+func TestSequentialAnnouncements64(t *testing.T) { log.DebugLog() testSequentialAnnouncements(t, 64) }
 
-func testSequentialAnnouncements(t *testing.T, protocol int) {
+func testSequentialAnnouncements(t *testing.T, protocol int) { log.DebugLog()
 	// Create a chain of blocks to import
 	targetBlocks := 4 * hashLimit
 	hashes, blocks := makeChain(targetBlocks, 0, genesis)
@@ -299,11 +299,11 @@ func testSequentialAnnouncements(t *testing.T, protocol int) {
 
 // Tests that if blocks are announced by multiple peers (or even the same buggy
 // peer), they will only get downloaded at most once.
-func TestConcurrentAnnouncements62(t *testing.T) { testConcurrentAnnouncements(t, 62) }
-func TestConcurrentAnnouncements63(t *testing.T) { testConcurrentAnnouncements(t, 63) }
-func TestConcurrentAnnouncements64(t *testing.T) { testConcurrentAnnouncements(t, 64) }
+func TestConcurrentAnnouncements62(t *testing.T) { log.DebugLog() testConcurrentAnnouncements(t, 62) }
+func TestConcurrentAnnouncements63(t *testing.T) { log.DebugLog() testConcurrentAnnouncements(t, 63) }
+func TestConcurrentAnnouncements64(t *testing.T) { log.DebugLog() testConcurrentAnnouncements(t, 64) }
 
-func testConcurrentAnnouncements(t *testing.T, protocol int) {
+func testConcurrentAnnouncements(t *testing.T, protocol int) { log.DebugLog()
 	// Create a chain of blocks to import
 	targetBlocks := 4 * hashLimit
 	hashes, blocks := makeChain(targetBlocks, 0, genesis)
@@ -344,11 +344,11 @@ func testConcurrentAnnouncements(t *testing.T, protocol int) {
 
 // Tests that announcements arriving while a previous is being fetched still
 // results in a valid import.
-func TestOverlappingAnnouncements62(t *testing.T) { testOverlappingAnnouncements(t, 62) }
-func TestOverlappingAnnouncements63(t *testing.T) { testOverlappingAnnouncements(t, 63) }
-func TestOverlappingAnnouncements64(t *testing.T) { testOverlappingAnnouncements(t, 64) }
+func TestOverlappingAnnouncements62(t *testing.T) { log.DebugLog() testOverlappingAnnouncements(t, 62) }
+func TestOverlappingAnnouncements63(t *testing.T) { log.DebugLog() testOverlappingAnnouncements(t, 63) }
+func TestOverlappingAnnouncements64(t *testing.T) { log.DebugLog() testOverlappingAnnouncements(t, 64) }
 
-func testOverlappingAnnouncements(t *testing.T, protocol int) {
+func testOverlappingAnnouncements(t *testing.T, protocol int) { log.DebugLog()
 	// Create a chain of blocks to import
 	targetBlocks := 4 * hashLimit
 	hashes, blocks := makeChain(targetBlocks, 0, genesis)
@@ -378,11 +378,11 @@ func testOverlappingAnnouncements(t *testing.T, protocol int) {
 }
 
 // Tests that announces already being retrieved will not be duplicated.
-func TestPendingDeduplication62(t *testing.T) { testPendingDeduplication(t, 62) }
-func TestPendingDeduplication63(t *testing.T) { testPendingDeduplication(t, 63) }
-func TestPendingDeduplication64(t *testing.T) { testPendingDeduplication(t, 64) }
+func TestPendingDeduplication62(t *testing.T) { log.DebugLog() testPendingDeduplication(t, 62) }
+func TestPendingDeduplication63(t *testing.T) { log.DebugLog() testPendingDeduplication(t, 63) }
+func TestPendingDeduplication64(t *testing.T) { log.DebugLog() testPendingDeduplication(t, 64) }
 
-func testPendingDeduplication(t *testing.T, protocol int) {
+func testPendingDeduplication(t *testing.T, protocol int) { log.DebugLog()
 	// Create a hash and corresponding block
 	hashes, blocks := makeChain(1, 0, genesis)
 
@@ -421,11 +421,11 @@ func testPendingDeduplication(t *testing.T, protocol int) {
 
 // Tests that announcements retrieved in a random order are cached and eventually
 // imported when all the gaps are filled in.
-func TestRandomArrivalImport62(t *testing.T) { testRandomArrivalImport(t, 62) }
-func TestRandomArrivalImport63(t *testing.T) { testRandomArrivalImport(t, 63) }
-func TestRandomArrivalImport64(t *testing.T) { testRandomArrivalImport(t, 64) }
+func TestRandomArrivalImport62(t *testing.T) { log.DebugLog() testRandomArrivalImport(t, 62) }
+func TestRandomArrivalImport63(t *testing.T) { log.DebugLog() testRandomArrivalImport(t, 63) }
+func TestRandomArrivalImport64(t *testing.T) { log.DebugLog() testRandomArrivalImport(t, 64) }
 
-func testRandomArrivalImport(t *testing.T, protocol int) {
+func testRandomArrivalImport(t *testing.T, protocol int) { log.DebugLog()
 	// Create a chain of blocks to import, and choose one to delay
 	targetBlocks := maxQueueDist
 	hashes, blocks := makeChain(targetBlocks, 0, genesis)
@@ -452,11 +452,11 @@ func testRandomArrivalImport(t *testing.T, protocol int) {
 
 // Tests that direct block enqueues (due to block propagation vs. hash announce)
 // are correctly schedule, filling and import queue gaps.
-func TestQueueGapFill62(t *testing.T) { testQueueGapFill(t, 62) }
-func TestQueueGapFill63(t *testing.T) { testQueueGapFill(t, 63) }
-func TestQueueGapFill64(t *testing.T) { testQueueGapFill(t, 64) }
+func TestQueueGapFill62(t *testing.T) { log.DebugLog() testQueueGapFill(t, 62) }
+func TestQueueGapFill63(t *testing.T) { log.DebugLog() testQueueGapFill(t, 63) }
+func TestQueueGapFill64(t *testing.T) { log.DebugLog() testQueueGapFill(t, 64) }
 
-func testQueueGapFill(t *testing.T, protocol int) {
+func testQueueGapFill(t *testing.T, protocol int) { log.DebugLog()
 	// Create a chain of blocks to import, and choose one to not announce at all
 	targetBlocks := maxQueueDist
 	hashes, blocks := makeChain(targetBlocks, 0, genesis)
@@ -483,11 +483,11 @@ func testQueueGapFill(t *testing.T, protocol int) {
 
 // Tests that blocks arriving from various sources (multiple propagations, hash
 // announces, etc) do not get scheduled for import multiple times.
-func TestImportDeduplication62(t *testing.T) { testImportDeduplication(t, 62) }
-func TestImportDeduplication63(t *testing.T) { testImportDeduplication(t, 63) }
-func TestImportDeduplication64(t *testing.T) { testImportDeduplication(t, 64) }
+func TestImportDeduplication62(t *testing.T) { log.DebugLog() testImportDeduplication(t, 62) }
+func TestImportDeduplication63(t *testing.T) { log.DebugLog() testImportDeduplication(t, 63) }
+func TestImportDeduplication64(t *testing.T) { log.DebugLog() testImportDeduplication(t, 64) }
 
-func testImportDeduplication(t *testing.T, protocol int) {
+func testImportDeduplication(t *testing.T, protocol int) { log.DebugLog()
 	// Create two blocks to import (one for duplication, the other for stalling)
 	hashes, blocks := makeChain(2, 0, genesis)
 
@@ -526,7 +526,7 @@ func testImportDeduplication(t *testing.T, protocol int) {
 
 // Tests that blocks with numbers much lower or higher than out current head get
 // discarded to prevent wasting resources on useless blocks from faulty peers.
-func TestDistantPropagationDiscarding(t *testing.T) {
+func TestDistantPropagationDiscarding(t *testing.T) { log.DebugLog()
 	// Create a long chain to import and define the discard boundaries
 	hashes, blocks := makeChain(3*maxQueueDist, 0, genesis)
 	head := hashes[len(hashes)/2]
@@ -558,11 +558,11 @@ func TestDistantPropagationDiscarding(t *testing.T) {
 // Tests that announcements with numbers much lower or higher than out current
 // head get discarded to prevent wasting resources on useless blocks from faulty
 // peers.
-func TestDistantAnnouncementDiscarding62(t *testing.T) { testDistantAnnouncementDiscarding(t, 62) }
-func TestDistantAnnouncementDiscarding63(t *testing.T) { testDistantAnnouncementDiscarding(t, 63) }
-func TestDistantAnnouncementDiscarding64(t *testing.T) { testDistantAnnouncementDiscarding(t, 64) }
+func TestDistantAnnouncementDiscarding62(t *testing.T) { log.DebugLog() testDistantAnnouncementDiscarding(t, 62) }
+func TestDistantAnnouncementDiscarding63(t *testing.T) { log.DebugLog() testDistantAnnouncementDiscarding(t, 63) }
+func TestDistantAnnouncementDiscarding64(t *testing.T) { log.DebugLog() testDistantAnnouncementDiscarding(t, 64) }
 
-func testDistantAnnouncementDiscarding(t *testing.T, protocol int) {
+func testDistantAnnouncementDiscarding(t *testing.T, protocol int) { log.DebugLog()
 	// Create a long chain to import and define the discard boundaries
 	hashes, blocks := makeChain(3*maxQueueDist, 0, genesis)
 	head := hashes[len(hashes)/2]
@@ -601,11 +601,11 @@ func testDistantAnnouncementDiscarding(t *testing.T, protocol int) {
 
 // Tests that peers announcing blocks with invalid numbers (i.e. not matching
 // the headers provided afterwards) get dropped as malicious.
-func TestInvalidNumberAnnouncement62(t *testing.T) { testInvalidNumberAnnouncement(t, 62) }
-func TestInvalidNumberAnnouncement63(t *testing.T) { testInvalidNumberAnnouncement(t, 63) }
-func TestInvalidNumberAnnouncement64(t *testing.T) { testInvalidNumberAnnouncement(t, 64) }
+func TestInvalidNumberAnnouncement62(t *testing.T) { log.DebugLog() testInvalidNumberAnnouncement(t, 62) }
+func TestInvalidNumberAnnouncement63(t *testing.T) { log.DebugLog() testInvalidNumberAnnouncement(t, 63) }
+func TestInvalidNumberAnnouncement64(t *testing.T) { log.DebugLog() testInvalidNumberAnnouncement(t, 64) }
 
-func testInvalidNumberAnnouncement(t *testing.T, protocol int) {
+func testInvalidNumberAnnouncement(t *testing.T, protocol int) { log.DebugLog()
 	// Create a single block to import and check numbers against
 	hashes, blocks := makeChain(1, 0, genesis)
 
@@ -646,11 +646,11 @@ func testInvalidNumberAnnouncement(t *testing.T, protocol int) {
 
 // Tests that if a block is empty (i.e. header only), no body request should be
 // made, and instead the header should be assembled into a whole block in itself.
-func TestEmptyBlockShortCircuit62(t *testing.T) { testEmptyBlockShortCircuit(t, 62) }
-func TestEmptyBlockShortCircuit63(t *testing.T) { testEmptyBlockShortCircuit(t, 63) }
-func TestEmptyBlockShortCircuit64(t *testing.T) { testEmptyBlockShortCircuit(t, 64) }
+func TestEmptyBlockShortCircuit62(t *testing.T) { log.DebugLog() testEmptyBlockShortCircuit(t, 62) }
+func TestEmptyBlockShortCircuit63(t *testing.T) { log.DebugLog() testEmptyBlockShortCircuit(t, 63) }
+func TestEmptyBlockShortCircuit64(t *testing.T) { log.DebugLog() testEmptyBlockShortCircuit(t, 64) }
 
-func testEmptyBlockShortCircuit(t *testing.T, protocol int) {
+func testEmptyBlockShortCircuit(t *testing.T, protocol int) { log.DebugLog()
 	// Create a chain of blocks to import
 	hashes, blocks := makeChain(32, 0, genesis)
 
@@ -687,11 +687,11 @@ func testEmptyBlockShortCircuit(t *testing.T, protocol int) {
 // Tests that a peer is unable to use unbounded memory with sending infinite
 // block announcements to a node, but that even in the face of such an attack,
 // the fetcher remains operational.
-func TestHashMemoryExhaustionAttack62(t *testing.T) { testHashMemoryExhaustionAttack(t, 62) }
-func TestHashMemoryExhaustionAttack63(t *testing.T) { testHashMemoryExhaustionAttack(t, 63) }
-func TestHashMemoryExhaustionAttack64(t *testing.T) { testHashMemoryExhaustionAttack(t, 64) }
+func TestHashMemoryExhaustionAttack62(t *testing.T) { log.DebugLog() testHashMemoryExhaustionAttack(t, 62) }
+func TestHashMemoryExhaustionAttack63(t *testing.T) { log.DebugLog() testHashMemoryExhaustionAttack(t, 63) }
+func TestHashMemoryExhaustionAttack64(t *testing.T) { log.DebugLog() testHashMemoryExhaustionAttack(t, 64) }
 
-func testHashMemoryExhaustionAttack(t *testing.T, protocol int) {
+func testHashMemoryExhaustionAttack(t *testing.T, protocol int) { log.DebugLog()
 	// Create a tester with instrumented import hooks
 	tester := newTester()
 
@@ -738,7 +738,7 @@ func testHashMemoryExhaustionAttack(t *testing.T, protocol int) {
 // Tests that blocks sent to the fetcher (either through propagation or via hash
 // announces and retrievals) don't pile up indefinitely, exhausting available
 // system memory.
-func TestBlockMemoryExhaustionAttack(t *testing.T) {
+func TestBlockMemoryExhaustionAttack(t *testing.T) { log.DebugLog()
 	// Create a tester with instrumented import hooks
 	tester := newTester()
 

@@ -10,18 +10,18 @@ package unix
 
 import "syscall"
 
-func Getenv(key string) (value string, found bool) {
+func Getenv(key string) (value string, found bool) { log.DebugLog()
 	return syscall.Getenv(key)
 }
 
-func Setenv(key, value string) error {
+func Setenv(key, value string) error { log.DebugLog()
 	return syscall.Setenv(key, value)
 }
 
-func Clearenv() {
+func Clearenv() { log.DebugLog()
 	syscall.Clearenv()
 }
 
-func Environ() []string {
+func Environ() []string { log.DebugLog()
 	return syscall.Environ()
 }

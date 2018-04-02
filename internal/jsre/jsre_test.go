@@ -32,7 +32,7 @@ type msg struct {
 	Msg string
 }
 
-func (no *testNativeObjectBinding) TestMethod(call otto.FunctionCall) otto.Value {
+func (no *testNativeObjectBinding) TestMethod(call otto.FunctionCall) otto.Value { log.DebugLog()
 	m, err := call.Argument(0).ToString()
 	if err != nil {
 		return otto.UndefinedValue()
@@ -41,7 +41,7 @@ func (no *testNativeObjectBinding) TestMethod(call otto.FunctionCall) otto.Value
 	return v
 }
 
-func newWithTestJS(t *testing.T, testjs string) (*JSRE, string) {
+func newWithTestJS(t *testing.T, testjs string) (*JSRE, string) { log.DebugLog()
 	dir, err := ioutil.TempDir("", "jsre-test")
 	if err != nil {
 		t.Fatal("cannot create temporary directory:", err)
@@ -54,7 +54,7 @@ func newWithTestJS(t *testing.T, testjs string) (*JSRE, string) {
 	return New(dir, os.Stdout), dir
 }
 
-func TestExec(t *testing.T) {
+func TestExec(t *testing.T) { log.DebugLog()
 	jsre, dir := newWithTestJS(t, `msg = "testMsg"`)
 	defer os.RemoveAll(dir)
 
@@ -77,7 +77,7 @@ func TestExec(t *testing.T) {
 	jsre.Stop(false)
 }
 
-func TestNatto(t *testing.T) {
+func TestNatto(t *testing.T) { log.DebugLog()
 	jsre, dir := newWithTestJS(t, `setTimeout(function(){msg = "testMsg"}, 1);`)
 	defer os.RemoveAll(dir)
 
@@ -101,7 +101,7 @@ func TestNatto(t *testing.T) {
 	jsre.Stop(false)
 }
 
-func TestBind(t *testing.T) {
+func TestBind(t *testing.T) { log.DebugLog()
 	jsre := New("", os.Stdout)
 	defer jsre.Stop(false)
 
@@ -113,7 +113,7 @@ func TestBind(t *testing.T) {
 	}
 }
 
-func TestLoadScript(t *testing.T) {
+func TestLoadScript(t *testing.T) { log.DebugLog()
 	jsre, dir := newWithTestJS(t, `msg = "testMsg"`)
 	defer os.RemoveAll(dir)
 

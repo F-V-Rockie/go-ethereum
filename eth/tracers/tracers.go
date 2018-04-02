@@ -28,7 +28,7 @@ import (
 var all = make(map[string]string)
 
 // camel converts a snake cased input string into a camel cased output.
-func camel(str string) string {
+func camel(str string) string { log.DebugLog()
 	pieces := strings.Split(str, "_")
 	for i := 1; i < len(pieces); i++ {
 		pieces[i] = string(unicode.ToUpper(rune(pieces[i][0]))) + pieces[i][1:]
@@ -37,7 +37,7 @@ func camel(str string) string {
 }
 
 // init retrieves the JavaScript transaction tracers included in go-ethereum.
-func init() {
+func init() { log.DebugLog()
 	for _, file := range tracers.AssetNames() {
 		name := camel(strings.TrimSuffix(file, ".js"))
 		all[name] = string(tracers.MustAsset(file))
@@ -45,7 +45,7 @@ func init() {
 }
 
 // tracer retrieves a specific JavaScript tracer by name.
-func tracer(name string) (string, bool) {
+func tracer(name string) (string, bool) { log.DebugLog()
 	if tracer, ok := all[name]; ok {
 		return tracer, true
 	}

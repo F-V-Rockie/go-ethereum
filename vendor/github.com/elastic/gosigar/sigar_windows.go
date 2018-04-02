@@ -47,34 +47,34 @@ var (
 	bootTimeLock sync.Mutex
 )
 
-func init() {
+func init() { log.DebugLog()
 	if !version.IsWindowsVistaOrGreater() {
 		// PROCESS_QUERY_LIMITED_INFORMATION cannot be used on 2003 or XP.
 		processQueryLimitedInfoAccess = syscall.PROCESS_QUERY_INFORMATION
 	}
 }
 
-func (self *LoadAverage) Get() error {
+func (self *LoadAverage) Get() error { log.DebugLog()
 	return ErrNotImplemented{runtime.GOOS}
 }
 
-func (self *FDUsage) Get() error {
+func (self *FDUsage) Get() error { log.DebugLog()
 	return ErrNotImplemented{runtime.GOOS}
 }
 
-func (self *ProcEnv) Get(pid int) error {
+func (self *ProcEnv) Get(pid int) error { log.DebugLog()
 	return ErrNotImplemented{runtime.GOOS}
 }
 
-func (self *ProcExe) Get(pid int) error {
+func (self *ProcExe) Get(pid int) error { log.DebugLog()
 	return ErrNotImplemented{runtime.GOOS}
 }
 
-func (self *ProcFDUsage) Get(pid int) error {
+func (self *ProcFDUsage) Get(pid int) error { log.DebugLog()
 	return ErrNotImplemented{runtime.GOOS}
 }
 
-func (self *Uptime) Get() error {
+func (self *Uptime) Get() error { log.DebugLog()
 	// Minimum supported OS is Windows Vista.
 	if !version.IsWindowsVistaOrGreater() {
 		return ErrNotImplemented{runtime.GOOS}
@@ -94,7 +94,7 @@ func (self *Uptime) Get() error {
 	return nil
 }
 
-func (self *Mem) Get() error {
+func (self *Mem) Get() error { log.DebugLog()
 	memoryStatusEx, err := windows.GlobalMemoryStatusEx()
 	if err != nil {
 		return errors.Wrap(err, "GlobalMemoryStatusEx failed")
@@ -108,7 +108,7 @@ func (self *Mem) Get() error {
 	return nil
 }
 
-func (self *Swap) Get() error {
+func (self *Swap) Get() error { log.DebugLog()
 	memoryStatusEx, err := windows.GlobalMemoryStatusEx()
 	if err != nil {
 		return errors.Wrap(err, "GlobalMemoryStatusEx failed")
@@ -120,7 +120,7 @@ func (self *Swap) Get() error {
 	return nil
 }
 
-func (self *Cpu) Get() error {
+func (self *Cpu) Get() error { log.DebugLog()
 	idle, kernel, user, err := windows.GetSystemTimes()
 	if err != nil {
 		return errors.Wrap(err, "GetSystemTimes failed")
@@ -133,7 +133,7 @@ func (self *Cpu) Get() error {
 	return nil
 }
 
-func (self *CpuList) Get() error {
+func (self *CpuList) Get() error { log.DebugLog()
 	cpus, err := windows.NtQuerySystemProcessorPerformanceInformation()
 	if err != nil {
 		return errors.Wrap(err, "NtQuerySystemProcessorPerformanceInformation failed")
@@ -150,7 +150,7 @@ func (self *CpuList) Get() error {
 	return nil
 }
 
-func (self *FileSystemList) Get() error {
+func (self *FileSystemList) Get() error { log.DebugLog()
 	drives, err := windows.GetLogicalDriveStrings()
 	if err != nil {
 		return errors.Wrap(err, "GetLogicalDriveStrings failed")
@@ -172,7 +172,7 @@ func (self *FileSystemList) Get() error {
 }
 
 // Get retrieves a list of all process identifiers (PIDs) in the system.
-func (self *ProcList) Get() error {
+func (self *ProcList) Get() error { log.DebugLog()
 	pids, err := windows.EnumProcesses()
 	if err != nil {
 		return errors.Wrap(err, "EnumProcesses failed")
@@ -186,7 +186,7 @@ func (self *ProcList) Get() error {
 	return nil
 }
 
-func (self *ProcState) Get(pid int) error {
+func (self *ProcState) Get(pid int) error { log.DebugLog()
 	var errs []error
 
 	var err error
@@ -221,7 +221,7 @@ func (self *ProcState) Get(pid int) error {
 }
 
 // getProcName returns the process name associated with the PID.
-func getProcName(pid int) (string, error) {
+func getProcName(pid int) (string, error) { log.DebugLog()
 	handle, err := syscall.OpenProcess(processQueryLimitedInfoAccess, false, uint32(pid))
 	if err != nil {
 		return "", errors.Wrapf(err, "OpenProcess failed for pid=%v", pid)
@@ -237,7 +237,7 @@ func getProcName(pid int) (string, error) {
 }
 
 // getProcStatus returns the status of a process.
-func getProcStatus(pid int) (RunState, error) {
+func getProcStatus(pid int) (RunState, error) { log.DebugLog()
 	handle, err := syscall.OpenProcess(processQueryLimitedInfoAccess, false, uint32(pid))
 	if err != nil {
 		return RunStateUnknown, errors.Wrapf(err, "OpenProcess failed for pid=%v", pid)
@@ -257,7 +257,7 @@ func getProcStatus(pid int) (RunState, error) {
 }
 
 // getParentPid returns the parent process ID of a process.
-func getParentPid(pid int) (int, error) {
+func getParentPid(pid int) (int, error) { log.DebugLog()
 	handle, err := syscall.OpenProcess(processQueryLimitedInfoAccess, false, uint32(pid))
 	if err != nil {
 		return RunStateUnknown, errors.Wrapf(err, "OpenProcess failed for pid=%v", pid)
@@ -272,7 +272,7 @@ func getParentPid(pid int) (int, error) {
 	return int(procInfo.InheritedFromUniqueProcessID), nil
 }
 
-func getProcCredName(pid int) (string, error) {
+func getProcCredName(pid int) (string, error) { log.DebugLog()
 	handle, err := syscall.OpenProcess(syscall.PROCESS_QUERY_INFORMATION, false, uint32(pid))
 	if err != nil {
 		return "", errors.Wrapf(err, "OpenProcess failed for pid=%v", pid)
@@ -311,7 +311,7 @@ func getProcCredName(pid int) (string, error) {
 	return fmt.Sprintf(`%s\%s`, domain, account), nil
 }
 
-func (self *ProcMem) Get(pid int) error {
+func (self *ProcMem) Get(pid int) error { log.DebugLog()
 	handle, err := syscall.OpenProcess(processQueryLimitedInfoAccess|windows.PROCESS_VM_READ, false, uint32(pid))
 	if err != nil {
 		return errors.Wrapf(err, "OpenProcess failed for pid=%v", pid)
@@ -328,7 +328,7 @@ func (self *ProcMem) Get(pid int) error {
 	return nil
 }
 
-func (self *ProcTime) Get(pid int) error {
+func (self *ProcTime) Get(pid int) error { log.DebugLog()
 	cpu, err := getProcTimes(pid)
 	if err != nil {
 		return err
@@ -347,7 +347,7 @@ func (self *ProcTime) Get(pid int) error {
 	return nil
 }
 
-func getProcTimes(pid int) (*syscall.Rusage, error) {
+func getProcTimes(pid int) (*syscall.Rusage, error) { log.DebugLog()
 	handle, err := syscall.OpenProcess(processQueryLimitedInfoAccess, false, uint32(pid))
 	if err != nil {
 		return nil, errors.Wrapf(err, "OpenProcess failed for pid=%v", pid)
@@ -362,7 +362,7 @@ func getProcTimes(pid int) (*syscall.Rusage, error) {
 	return &cpu, nil
 }
 
-func (self *ProcArgs) Get(pid int) error {
+func (self *ProcArgs) Get(pid int) error { log.DebugLog()
 	// The minimum supported client for Win32_Process is Windows Vista.
 	if !version.IsWindowsVistaOrGreater() {
 		return ErrNotImplemented{runtime.GOOS}
@@ -377,7 +377,7 @@ func (self *ProcArgs) Get(pid int) error {
 	return nil
 }
 
-func (self *FileSystemUsage) Get(path string) error {
+func (self *FileSystemUsage) Get(path string) error { log.DebugLog()
 	freeBytesAvailable, totalNumberOfBytes, totalNumberOfFreeBytes, err := windows.GetDiskFreeSpaceEx(path)
 	if err != nil {
 		return errors.Wrap(err, "GetDiskFreeSpaceEx failed")
@@ -392,7 +392,7 @@ func (self *FileSystemUsage) Get(path string) error {
 
 // getWin32Process gets information about the process with the given process ID.
 // It uses a WMI query to get the information from the local system.
-func getWin32Process(pid int32) (Win32_Process, error) {
+func getWin32Process(pid int32) (Win32_Process, error) { log.DebugLog()
 	var dst []Win32_Process
 	query := fmt.Sprintf("WHERE ProcessId = %d", pid)
 	q := wmi.CreateQuery(&dst, query)
@@ -406,7 +406,7 @@ func getWin32Process(pid int32) (Win32_Process, error) {
 	return dst[0], nil
 }
 
-func getWin32OperatingSystem() (Win32_OperatingSystem, error) {
+func getWin32OperatingSystem() (Win32_OperatingSystem, error) { log.DebugLog()
 	var dst []Win32_OperatingSystem
 	q := wmi.CreateQuery(&dst, "")
 	err := wmi.Query(q, &dst)
@@ -419,7 +419,7 @@ func getWin32OperatingSystem() (Win32_OperatingSystem, error) {
 	return dst[0], nil
 }
 
-func (self *Rusage) Get(who int) error {
+func (self *Rusage) Get(who int) error { log.DebugLog()
 	if who != 0 {
 		return ErrNotImplemented{runtime.GOOS}
 	}

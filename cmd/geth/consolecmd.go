@@ -75,7 +75,7 @@ JavaScript API. See https://github.com/ethereum/go-ethereum/wiki/JavaScript-Cons
 
 // localConsole starts a new geth node, attaching a JavaScript console to it at the
 // same time.
-func localConsole(ctx *cli.Context) error {
+func localConsole(ctx *cli.Context) error { log.DebugLog()
 	// Create and start the node based on the CLI flags
 	node := makeFullNode(ctx)
 	startNode(ctx, node)
@@ -113,7 +113,7 @@ func localConsole(ctx *cli.Context) error {
 
 // remoteConsole will connect to a remote geth instance, attaching a JavaScript
 // console to it.
-func remoteConsole(ctx *cli.Context) error {
+func remoteConsole(ctx *cli.Context) error { log.DebugLog()
 	// Attach to a remotely running geth instance and start the JavaScript console
 	endpoint := ctx.Args().First()
 	if endpoint == "" {
@@ -162,7 +162,7 @@ func remoteConsole(ctx *cli.Context) error {
 // dialRPC returns a RPC client which connects to the given endpoint.
 // The check for empty endpoint implements the defaulting logic
 // for "geth attach" and "geth monitor" with no argument.
-func dialRPC(endpoint string) (*rpc.Client, error) {
+func dialRPC(endpoint string) (*rpc.Client, error) { log.DebugLog()
 	if endpoint == "" {
 		endpoint = node.DefaultIPCEndpoint(clientIdentifier)
 	} else if strings.HasPrefix(endpoint, "rpc:") || strings.HasPrefix(endpoint, "ipc:") {
@@ -176,7 +176,7 @@ func dialRPC(endpoint string) (*rpc.Client, error) {
 // ephemeralConsole starts a new geth node, attaches an ephemeral JavaScript
 // console to it, executes each of the files specified as arguments and tears
 // everything down.
-func ephemeralConsole(ctx *cli.Context) error {
+func ephemeralConsole(ctx *cli.Context) error { log.DebugLog()
 	// Create and start the node based on the CLI flags
 	node := makeFullNode(ctx)
 	startNode(ctx, node)

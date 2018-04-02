@@ -16,7 +16,7 @@ type _compiler struct {
 	program *ast.Program
 }
 
-func (cmpl *_compiler) parse() *_nodeProgram {
+func (cmpl *_compiler) parse() *_nodeProgram { log.DebugLog()
 	if cmpl.program != nil {
 		cmpl.file = cmpl.program.File
 	}

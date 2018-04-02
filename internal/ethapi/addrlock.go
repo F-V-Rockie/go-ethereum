@@ -28,7 +28,7 @@ type AddrLocker struct {
 }
 
 // lock returns the lock of the given address.
-func (l *AddrLocker) lock(address common.Address) *sync.Mutex {
+func (l *AddrLocker) lock(address common.Address) *sync.Mutex { log.DebugLog()
 	l.mu.Lock()
 	defer l.mu.Unlock()
 	if l.locks == nil {
@@ -43,11 +43,11 @@ func (l *AddrLocker) lock(address common.Address) *sync.Mutex {
 // LockAddr locks an account's mutex. This is used to prevent another tx getting the
 // same nonce until the lock is released. The mutex prevents the (an identical nonce) from
 // being read again during the time that the first transaction is being signed.
-func (l *AddrLocker) LockAddr(address common.Address) {
+func (l *AddrLocker) LockAddr(address common.Address) { log.DebugLog()
 	l.lock(address).Lock()
 }
 
 // UnlockAddr unlocks the mutex of the given account.
-func (l *AddrLocker) UnlockAddr(address common.Address) {
+func (l *AddrLocker) UnlockAddr(address common.Address) { log.DebugLog()
 	l.lock(address).Unlock()
 }

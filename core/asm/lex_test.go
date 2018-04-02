@@ -21,7 +21,7 @@ import (
 	"testing"
 )
 
-func lexAll(src string) []token {
+func lexAll(src string) []token { log.DebugLog()
 	ch := Lex("test.asm", []byte(src), false)
 
 	var tokens []token
@@ -31,7 +31,7 @@ func lexAll(src string) []token {
 	return tokens
 }
 
-func TestLexer(t *testing.T) {
+func TestLexer(t *testing.T) { log.DebugLog()
 	tests := []struct {
 		input  string
 		tokens []token

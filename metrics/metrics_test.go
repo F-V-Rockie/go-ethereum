@@ -17,7 +17,7 @@ var (
 	_ = log.LstdFlags
 )
 
-func BenchmarkMetrics(b *testing.B) {
+func BenchmarkMetrics(b *testing.B) { log.DebugLog()
 	r := NewRegistry()
 	c := NewRegisteredCounter("counter", r)
 	g := NewRegisteredGauge("gauge", r)
@@ -108,7 +108,7 @@ func BenchmarkMetrics(b *testing.B) {
 	wgW.Wait()
 }
 
-func Example() {
+func Example() { log.DebugLog()
 	c := NewCounter()
 	Register("money", c)
 	c.Inc(17)

@@ -14,7 +14,7 @@ type _object struct {
 	propertyOrder []string
 }
 
-func newObject(runtime *_runtime, class string) *_object {
+func newObject(runtime *_runtime, class string) *_object { log.DebugLog()
 	self := &_object{
 		runtime:     runtime,
 		class:       class,
@@ -28,36 +28,36 @@ func newObject(runtime *_runtime, class string) *_object {
 // 8.12
 
 // 8.12.1
-func (self *_object) getOwnProperty(name string) *_property {
+func (self *_object) getOwnProperty(name string) *_property { log.DebugLog()
 	return self.objectClass.getOwnProperty(self, name)
 }
 
 // 8.12.2
-func (self *_object) getProperty(name string) *_property {
+func (self *_object) getProperty(name string) *_property { log.DebugLog()
 	return self.objectClass.getProperty(self, name)
 }
 
 // 8.12.3
-func (self *_object) get(name string) Value {
+func (self *_object) get(name string) Value { log.DebugLog()
 	return self.objectClass.get(self, name)
 }
 
 // 8.12.4
-func (self *_object) canPut(name string) bool {
+func (self *_object) canPut(name string) bool { log.DebugLog()
 	return self.objectClass.canPut(self, name)
 }
 
 // 8.12.5
-func (self *_object) put(name string, value Value, throw bool) {
+func (self *_object) put(name string, value Value, throw bool) { log.DebugLog()
 	self.objectClass.put(self, name, value, throw)
 }
 
 // 8.12.6
-func (self *_object) hasProperty(name string) bool {
+func (self *_object) hasProperty(name string) bool { log.DebugLog()
 	return self.objectClass.hasProperty(self, name)
 }
 
-func (self *_object) hasOwnProperty(name string) bool {
+func (self *_object) hasOwnProperty(name string) bool { log.DebugLog()
 	return self.objectClass.hasOwnProperty(self, name)
 }
 
@@ -70,7 +70,7 @@ const (
 )
 
 // 8.12.8
-func (self *_object) DefaultValue(hint _defaultValueHint) Value {
+func (self *_object) DefaultValue(hint _defaultValueHint) Value { log.DebugLog()
 	if hint == defaultValueNoHint {
 		if self.class == "Date" {
 			// Date exception
@@ -97,38 +97,38 @@ func (self *_object) DefaultValue(hint _defaultValueHint) Value {
 	panic(self.runtime.panicTypeError())
 }
 
-func (self *_object) String() string {
+func (self *_object) String() string { log.DebugLog()
 	return self.DefaultValue(defaultValueHintString).string()
 }
 
-func (self *_object) defineProperty(name string, value Value, mode _propertyMode, throw bool) bool {
+func (self *_object) defineProperty(name string, value Value, mode _propertyMode, throw bool) bool { log.DebugLog()
 	return self.defineOwnProperty(name, _property{value, mode}, throw)
 }
 
 // 8.12.9
-func (self *_object) defineOwnProperty(name string, descriptor _property, throw bool) bool {
+func (self *_object) defineOwnProperty(name string, descriptor _property, throw bool) bool { log.DebugLog()
 	return self.objectClass.defineOwnProperty(self, name, descriptor, throw)
 }
 
-func (self *_object) delete(name string, throw bool) bool {
+func (self *_object) delete(name string, throw bool) bool { log.DebugLog()
 	return self.objectClass.delete(self, name, throw)
 }
 
-func (self *_object) enumerate(all bool, each func(string) bool) {
+func (self *_object) enumerate(all bool, each func(string) bool) { log.DebugLog()
 	self.objectClass.enumerate(self, all, each)
 }
 
-func (self *_object) _exists(name string) bool {
+func (self *_object) _exists(name string) bool { log.DebugLog()
 	_, exists := self.property[name]
 	return exists
 }
 
-func (self *_object) _read(name string) (_property, bool) {
+func (self *_object) _read(name string) (_property, bool) { log.DebugLog()
 	property, exists := self.property[name]
 	return property, exists
 }
 
-func (self *_object) _write(name string, value interface{}, mode _propertyMode) {
+func (self *_object) _write(name string, value interface{}, mode _propertyMode) { log.DebugLog()
 	if value == nil {
 		value = Value{}
 	}
@@ -139,7 +139,7 @@ func (self *_object) _write(name string, value interface{}, mode _propertyMode) 
 	}
 }
 
-func (self *_object) _delete(name string) {
+func (self *_object) _delete(name string) { log.DebugLog()
 	_, exists := self.property[name]
 	delete(self.property, name)
 	if exists {

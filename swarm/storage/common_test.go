@@ -34,7 +34,7 @@ type brokenLimitedReader struct {
 	size  int
 }
 
-func brokenLimitReader(data io.Reader, size int, errAt int) *brokenLimitedReader {
+func brokenLimitReader(data io.Reader, size int, errAt int) *brokenLimitedReader { log.DebugLog()
 	return &brokenLimitedReader{
 		lr:    data,
 		errAt: errAt,
@@ -42,11 +42,11 @@ func brokenLimitReader(data io.Reader, size int, errAt int) *brokenLimitedReader
 	}
 }
 
-func testDataReader(l int) (r io.Reader) {
+func testDataReader(l int) (r io.Reader) { log.DebugLog()
 	return io.LimitReader(rand.Reader, int64(l))
 }
 
-func (self *brokenLimitedReader) Read(buf []byte) (int, error) {
+func (self *brokenLimitedReader) Read(buf []byte) (int, error) { log.DebugLog()
 	if self.off+len(buf) > self.errAt {
 		return 0, fmt.Errorf("Broken reader")
 	}
@@ -54,7 +54,7 @@ func (self *brokenLimitedReader) Read(buf []byte) (int, error) {
 	return self.lr.Read(buf)
 }
 
-func testDataReaderAndSlice(l int) (r io.Reader, slice []byte) {
+func testDataReaderAndSlice(l int) (r io.Reader, slice []byte) { log.DebugLog()
 	slice = make([]byte, l)
 	if _, err := rand.Read(slice); err != nil {
 		panic("rand error")
@@ -63,7 +63,7 @@ func testDataReaderAndSlice(l int) (r io.Reader, slice []byte) {
 	return
 }
 
-func testStore(m ChunkStore, l int64, branches int64, t *testing.T) {
+func testStore(m ChunkStore, l int64, branches int64, t *testing.T) { log.DebugLog()
 
 	chunkC := make(chan *Chunk)
 	go func() {

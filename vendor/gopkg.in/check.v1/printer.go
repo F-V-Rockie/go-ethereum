@@ -9,7 +9,7 @@ import (
 	"os"
 )
 
-func indent(s, with string) (r string) {
+func indent(s, with string) (r string) { log.DebugLog()
 	eol := true
 	for i := 0; i != len(s); i++ {
 		c := s[i]
@@ -26,7 +26,7 @@ func indent(s, with string) (r string) {
 	return s
 }
 
-func printLine(filename string, line int) (string, error) {
+func printLine(filename string, line int) (string, error) { log.DebugLog()
 	fset := token.NewFileSet()
 	file, err := os.Open(filename)
 	if err != nil {
@@ -57,7 +57,7 @@ type linePrinter struct {
 	stmt   ast.Stmt
 }
 
-func (lp *linePrinter) emit() bool {
+func (lp *linePrinter) emit() bool { log.DebugLog()
 	if lp.stmt != nil {
 		lp.trim(lp.stmt)
 		lp.printWithComments(lp.stmt)
@@ -67,7 +67,7 @@ func (lp *linePrinter) emit() bool {
 	return false
 }
 
-func (lp *linePrinter) printWithComments(n ast.Node) {
+func (lp *linePrinter) printWithComments(n ast.Node) { log.DebugLog()
 	nfirst := lp.fset.Position(n.Pos()).Line
 	nlast := lp.fset.Position(n.End()).Line
 	for _, g := range lp.fnode.Comments {
@@ -90,7 +90,7 @@ func (lp *linePrinter) printWithComments(n ast.Node) {
 	lp.config.Fprint(&lp.output, lp.fset, node)
 }
 
-func (lp *linePrinter) Visit(n ast.Node) (w ast.Visitor) {
+func (lp *linePrinter) Visit(n ast.Node) (w ast.Visitor) { log.DebugLog()
 	if n == nil {
 		if lp.output.Len() == 0 {
 			lp.emit()
@@ -114,7 +114,7 @@ func (lp *linePrinter) Visit(n ast.Node) (w ast.Visitor) {
 	return nil
 }
 
-func (lp *linePrinter) trim(n ast.Node) bool {
+func (lp *linePrinter) trim(n ast.Node) bool { log.DebugLog()
 	stmt, ok := n.(ast.Stmt)
 	if !ok {
 		return true
@@ -140,7 +140,7 @@ func (lp *linePrinter) trim(n ast.Node) bool {
 	return true
 }
 
-func (lp *linePrinter) trimBlock(stmt *ast.BlockStmt) *ast.BlockStmt {
+func (lp *linePrinter) trimBlock(stmt *ast.BlockStmt) *ast.BlockStmt { log.DebugLog()
 	if !lp.trim(stmt) {
 		return lp.emptyBlock(stmt)
 	}
@@ -148,7 +148,7 @@ func (lp *linePrinter) trimBlock(stmt *ast.BlockStmt) *ast.BlockStmt {
 	return stmt
 }
 
-func (lp *linePrinter) trimList(stmts []ast.Stmt) []ast.Stmt {
+func (lp *linePrinter) trimList(stmts []ast.Stmt) []ast.Stmt { log.DebugLog()
 	for i := 0; i != len(stmts); i++ {
 		if !lp.trim(stmts[i]) {
 			stmts[i] = lp.emptyStmt(stmts[i])
@@ -158,11 +158,11 @@ func (lp *linePrinter) trimList(stmts []ast.Stmt) []ast.Stmt {
 	return stmts
 }
 
-func (lp *linePrinter) emptyStmt(n ast.Node) *ast.ExprStmt {
+func (lp *linePrinter) emptyStmt(n ast.Node) *ast.ExprStmt { log.DebugLog()
 	return &ast.ExprStmt{&ast.Ellipsis{n.Pos(), nil}}
 }
 
-func (lp *linePrinter) emptyBlock(n ast.Node) *ast.BlockStmt {
+func (lp *linePrinter) emptyBlock(n ast.Node) *ast.BlockStmt { log.DebugLog()
 	p := n.Pos()
 	return &ast.BlockStmt{p, []ast.Stmt{lp.emptyStmt(n)}, p}
 }

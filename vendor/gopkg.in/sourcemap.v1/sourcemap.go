@@ -37,7 +37,7 @@ type mappings struct {
 	values []mapping
 }
 
-func parseMappings(s string) ([]mapping, error) {
+func parseMappings(s string) ([]mapping, error) { log.DebugLog()
 	rd := strings.NewReader(s)
 	m := &mappings{
 		rd:  rd,
@@ -53,7 +53,7 @@ func parseMappings(s string) ([]mapping, error) {
 	return m.values, nil
 }
 
-func (m *mappings) parse() error {
+func (m *mappings) parse() error { log.DebugLog()
 	next := parseGenCol
 	for {
 		c, err := m.rd.ReadByte()
@@ -90,7 +90,7 @@ func (m *mappings) parse() error {
 	}
 }
 
-func parseGenCol(m *mappings) (fn, error) {
+func parseGenCol(m *mappings) (fn, error) { log.DebugLog()
 	n, err := m.dec.Decode()
 	if err != nil {
 		return nil, err
@@ -99,7 +99,7 @@ func parseGenCol(m *mappings) (fn, error) {
 	return parseSourcesInd, nil
 }
 
-func parseSourcesInd(m *mappings) (fn, error) {
+func parseSourcesInd(m *mappings) (fn, error) { log.DebugLog()
 	n, err := m.dec.Decode()
 	if err != nil {
 		return nil, err
@@ -108,7 +108,7 @@ func parseSourcesInd(m *mappings) (fn, error) {
 	return parseSourceLine, nil
 }
 
-func parseSourceLine(m *mappings) (fn, error) {
+func parseSourceLine(m *mappings) (fn, error) { log.DebugLog()
 	n, err := m.dec.Decode()
 	if err != nil {
 		return nil, err
@@ -117,7 +117,7 @@ func parseSourceLine(m *mappings) (fn, error) {
 	return parseSourceCol, nil
 }
 
-func parseSourceCol(m *mappings) (fn, error) {
+func parseSourceCol(m *mappings) (fn, error) { log.DebugLog()
 	n, err := m.dec.Decode()
 	if err != nil {
 		return nil, err
@@ -126,7 +126,7 @@ func parseSourceCol(m *mappings) (fn, error) {
 	return parseNamesInd, nil
 }
 
-func parseNamesInd(m *mappings) (fn, error) {
+func parseNamesInd(m *mappings) (fn, error) { log.DebugLog()
 	n, err := m.dec.Decode()
 	if err != nil {
 		return nil, err
@@ -136,7 +136,7 @@ func parseNamesInd(m *mappings) (fn, error) {
 	return parseGenCol, nil
 }
 
-func (m *mappings) pushValue() {
+func (m *mappings) pushValue() { log.DebugLog()
 	if m.value.sourceLine == 1 && m.value.sourceCol == 0 {
 		return
 	}

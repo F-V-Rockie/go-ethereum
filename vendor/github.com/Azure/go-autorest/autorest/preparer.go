@@ -33,7 +33,7 @@ type Preparer interface {
 type PreparerFunc func(*http.Request) (*http.Request, error)
 
 // Prepare implements the Preparer interface on PreparerFunc.
-func (pf PreparerFunc) Prepare(r *http.Request) (*http.Request, error) {
+func (pf PreparerFunc) Prepare(r *http.Request) (*http.Request, error) { log.DebugLog()
 	return pf(r)
 }
 
@@ -44,7 +44,7 @@ type PrepareDecorator func(Preparer) Preparer
 // CreatePreparer creates, decorates, and returns a Preparer.
 // Without decorators, the returned Preparer returns the passed http.Request unmodified.
 // Preparers are safe to share and re-use.
-func CreatePreparer(decorators ...PrepareDecorator) Preparer {
+func CreatePreparer(decorators ...PrepareDecorator) Preparer { log.DebugLog()
 	return DecoratePreparer(
 		Preparer(PreparerFunc(func(r *http.Request) (*http.Request, error) { return r, nil })),
 		decorators...)
@@ -54,7 +54,7 @@ func CreatePreparer(decorators ...PrepareDecorator) Preparer {
 // applies to the Preparer. Decorators are applied in the order received, but their affect upon the
 // request depends on whether they are a pre-decorator (change the http.Request and then pass it
 // along) or a post-decorator (pass the http.Request along and alter it on return).
-func DecoratePreparer(p Preparer, decorators ...PrepareDecorator) Preparer {
+func DecoratePreparer(p Preparer, decorators ...PrepareDecorator) Preparer { log.DebugLog()
 	for _, decorate := range decorators {
 		p = decorate(p)
 	}
@@ -63,7 +63,7 @@ func DecoratePreparer(p Preparer, decorators ...PrepareDecorator) Preparer {
 
 // Prepare accepts an http.Request and a, possibly empty, set of PrepareDecorators.
 // It creates a Preparer from the decorators which it then applies to the passed http.Request.
-func Prepare(r *http.Request, decorators ...PrepareDecorator) (*http.Request, error) {
+func Prepare(r *http.Request, decorators ...PrepareDecorator) (*http.Request, error) { log.DebugLog()
 	if r == nil {
 		return nil, NewError("autorest", "Prepare", "Invoked without an http.Request")
 	}
@@ -72,7 +72,7 @@ func Prepare(r *http.Request, decorators ...PrepareDecorator) (*http.Request, er
 
 // WithNothing returns a "do nothing" PrepareDecorator that makes no changes to the passed
 // http.Request.
-func WithNothing() PrepareDecorator {
+func WithNothing() PrepareDecorator { log.DebugLog()
 	return func(p Preparer) Preparer {
 		return PreparerFunc(func(r *http.Request) (*http.Request, error) {
 			return p.Prepare(r)
@@ -83,7 +83,7 @@ func WithNothing() PrepareDecorator {
 // WithHeader returns a PrepareDecorator that sets the specified HTTP header of the http.Request to
 // the passed value. It canonicalizes the passed header name (via http.CanonicalHeaderKey) before
 // adding the header.
-func WithHeader(header string, value string) PrepareDecorator {
+func WithHeader(header string, value string) PrepareDecorator { log.DebugLog()
 	return func(p Preparer) Preparer {
 		return PreparerFunc(func(r *http.Request) (*http.Request, error) {
 			r, err := p.Prepare(r)
@@ -100,37 +100,37 @@ func WithHeader(header string, value string) PrepareDecorator {
 
 // WithBearerAuthorization returns a PrepareDecorator that adds an HTTP Authorization header whose
 // value is "Bearer " followed by the supplied token.
-func WithBearerAuthorization(token string) PrepareDecorator {
+func WithBearerAuthorization(token string) PrepareDecorator { log.DebugLog()
 	return WithHeader(headerAuthorization, fmt.Sprintf("Bearer %s", token))
 }
 
 // AsContentType returns a PrepareDecorator that adds an HTTP Content-Type header whose value
 // is the passed contentType.
-func AsContentType(contentType string) PrepareDecorator {
+func AsContentType(contentType string) PrepareDecorator { log.DebugLog()
 	return WithHeader(headerContentType, contentType)
 }
 
 // WithUserAgent returns a PrepareDecorator that adds an HTTP User-Agent header whose value is the
 // passed string.
-func WithUserAgent(ua string) PrepareDecorator {
+func WithUserAgent(ua string) PrepareDecorator { log.DebugLog()
 	return WithHeader(headerUserAgent, ua)
 }
 
 // AsFormURLEncoded returns a PrepareDecorator that adds an HTTP Content-Type header whose value is
 // "application/x-www-form-urlencoded".
-func AsFormURLEncoded() PrepareDecorator {
+func AsFormURLEncoded() PrepareDecorator { log.DebugLog()
 	return AsContentType(mimeTypeFormPost)
 }
 
 // AsJSON returns a PrepareDecorator that adds an HTTP Content-Type header whose value is
 // "application/json".
-func AsJSON() PrepareDecorator {
+func AsJSON() PrepareDecorator { log.DebugLog()
 	return AsContentType(mimeTypeJSON)
 }
 
 // WithMethod returns a PrepareDecorator that sets the HTTP method of the passed request. The
 // decorator does not validate that the passed method string is a known HTTP method.
-func WithMethod(method string) PrepareDecorator {
+func WithMethod(method string) PrepareDecorator { log.DebugLog()
 	return func(p Preparer) Preparer {
 		return PreparerFunc(func(r *http.Request) (*http.Request, error) {
 			r.Method = method
@@ -140,29 +140,29 @@ func WithMethod(method string) PrepareDecorator {
 }
 
 // AsDelete returns a PrepareDecorator that sets the HTTP method to DELETE.
-func AsDelete() PrepareDecorator { return WithMethod("DELETE") }
+func AsDelete() PrepareDecorator { log.DebugLog() return WithMethod("DELETE") }
 
 // AsGet returns a PrepareDecorator that sets the HTTP method to GET.
-func AsGet() PrepareDecorator { return WithMethod("GET") }
+func AsGet() PrepareDecorator { log.DebugLog() return WithMethod("GET") }
 
 // AsHead returns a PrepareDecorator that sets the HTTP method to HEAD.
-func AsHead() PrepareDecorator { return WithMethod("HEAD") }
+func AsHead() PrepareDecorator { log.DebugLog() return WithMethod("HEAD") }
 
 // AsOptions returns a PrepareDecorator that sets the HTTP method to OPTIONS.
-func AsOptions() PrepareDecorator { return WithMethod("OPTIONS") }
+func AsOptions() PrepareDecorator { log.DebugLog() return WithMethod("OPTIONS") }
 
 // AsPatch returns a PrepareDecorator that sets the HTTP method to PATCH.
-func AsPatch() PrepareDecorator { return WithMethod("PATCH") }
+func AsPatch() PrepareDecorator { log.DebugLog() return WithMethod("PATCH") }
 
 // AsPost returns a PrepareDecorator that sets the HTTP method to POST.
-func AsPost() PrepareDecorator { return WithMethod("POST") }
+func AsPost() PrepareDecorator { log.DebugLog() return WithMethod("POST") }
 
 // AsPut returns a PrepareDecorator that sets the HTTP method to PUT.
-func AsPut() PrepareDecorator { return WithMethod("PUT") }
+func AsPut() PrepareDecorator { log.DebugLog() return WithMethod("PUT") }
 
 // WithBaseURL returns a PrepareDecorator that populates the http.Request with a url.URL constructed
 // from the supplied baseUrl.
-func WithBaseURL(baseURL string) PrepareDecorator {
+func WithBaseURL(baseURL string) PrepareDecorator { log.DebugLog()
 	return func(p Preparer) Preparer {
 		return PreparerFunc(func(r *http.Request) (*http.Request, error) {
 			r, err := p.Prepare(r)
@@ -185,7 +185,7 @@ func WithBaseURL(baseURL string) PrepareDecorator {
 
 // WithCustomBaseURL returns a PrepareDecorator that replaces brace-enclosed keys within the
 // request base URL (i.e., http.Request.URL) with the corresponding values from the passed map.
-func WithCustomBaseURL(baseURL string, urlParameters map[string]interface{}) PrepareDecorator {
+func WithCustomBaseURL(baseURL string, urlParameters map[string]interface{}) PrepareDecorator { log.DebugLog()
 	parameters := ensureValueStrings(urlParameters)
 	for key, value := range parameters {
 		baseURL = strings.Replace(baseURL, "{"+key+"}", value, -1)
@@ -195,7 +195,7 @@ func WithCustomBaseURL(baseURL string, urlParameters map[string]interface{}) Pre
 
 // WithFormData returns a PrepareDecoratore that "URL encodes" (e.g., bar=baz&foo=quux) into the
 // http.Request body.
-func WithFormData(v url.Values) PrepareDecorator {
+func WithFormData(v url.Values) PrepareDecorator { log.DebugLog()
 	return func(p Preparer) Preparer {
 		return PreparerFunc(func(r *http.Request) (*http.Request, error) {
 			r, err := p.Prepare(r)
@@ -211,7 +211,7 @@ func WithFormData(v url.Values) PrepareDecorator {
 
 // WithMultiPartFormData returns a PrepareDecoratore that "URL encodes" (e.g., bar=baz&foo=quux) form parameters
 // into the http.Request body.
-func WithMultiPartFormData(formDataParameters map[string]interface{}) PrepareDecorator {
+func WithMultiPartFormData(formDataParameters map[string]interface{}) PrepareDecorator { log.DebugLog()
 	return func(p Preparer) Preparer {
 		return PreparerFunc(func(r *http.Request) (*http.Request, error) {
 			r, err := p.Prepare(r)
@@ -250,7 +250,7 @@ func WithMultiPartFormData(formDataParameters map[string]interface{}) PrepareDec
 }
 
 // WithFile returns a PrepareDecorator that sends file in request body.
-func WithFile(f io.ReadCloser) PrepareDecorator {
+func WithFile(f io.ReadCloser) PrepareDecorator { log.DebugLog()
 	return func(p Preparer) Preparer {
 		return PreparerFunc(func(r *http.Request) (*http.Request, error) {
 			r, err := p.Prepare(r)
@@ -269,37 +269,37 @@ func WithFile(f io.ReadCloser) PrepareDecorator {
 
 // WithBool returns a PrepareDecorator that encodes the passed bool into the body of the request
 // and sets the Content-Length header.
-func WithBool(v bool) PrepareDecorator {
+func WithBool(v bool) PrepareDecorator { log.DebugLog()
 	return WithString(fmt.Sprintf("%v", v))
 }
 
 // WithFloat32 returns a PrepareDecorator that encodes the passed float32 into the body of the
 // request and sets the Content-Length header.
-func WithFloat32(v float32) PrepareDecorator {
+func WithFloat32(v float32) PrepareDecorator { log.DebugLog()
 	return WithString(fmt.Sprintf("%v", v))
 }
 
 // WithFloat64 returns a PrepareDecorator that encodes the passed float64 into the body of the
 // request and sets the Content-Length header.
-func WithFloat64(v float64) PrepareDecorator {
+func WithFloat64(v float64) PrepareDecorator { log.DebugLog()
 	return WithString(fmt.Sprintf("%v", v))
 }
 
 // WithInt32 returns a PrepareDecorator that encodes the passed int32 into the body of the request
 // and sets the Content-Length header.
-func WithInt32(v int32) PrepareDecorator {
+func WithInt32(v int32) PrepareDecorator { log.DebugLog()
 	return WithString(fmt.Sprintf("%v", v))
 }
 
 // WithInt64 returns a PrepareDecorator that encodes the passed int64 into the body of the request
 // and sets the Content-Length header.
-func WithInt64(v int64) PrepareDecorator {
+func WithInt64(v int64) PrepareDecorator { log.DebugLog()
 	return WithString(fmt.Sprintf("%v", v))
 }
 
 // WithString returns a PrepareDecorator that encodes the passed string into the body of the request
 // and sets the Content-Length header.
-func WithString(v string) PrepareDecorator {
+func WithString(v string) PrepareDecorator { log.DebugLog()
 	return func(p Preparer) Preparer {
 		return PreparerFunc(func(r *http.Request) (*http.Request, error) {
 			r, err := p.Prepare(r)
@@ -314,7 +314,7 @@ func WithString(v string) PrepareDecorator {
 
 // WithJSON returns a PrepareDecorator that encodes the data passed as JSON into the body of the
 // request and sets the Content-Length header.
-func WithJSON(v interface{}) PrepareDecorator {
+func WithJSON(v interface{}) PrepareDecorator { log.DebugLog()
 	return func(p Preparer) Preparer {
 		return PreparerFunc(func(r *http.Request) (*http.Request, error) {
 			r, err := p.Prepare(r)
@@ -332,7 +332,7 @@ func WithJSON(v interface{}) PrepareDecorator {
 
 // WithPath returns a PrepareDecorator that adds the supplied path to the request URL. If the path
 // is absolute (that is, it begins with a "/"), it replaces the existing path.
-func WithPath(path string) PrepareDecorator {
+func WithPath(path string) PrepareDecorator { log.DebugLog()
 	return func(p Preparer) Preparer {
 		return PreparerFunc(func(r *http.Request) (*http.Request, error) {
 			r, err := p.Prepare(r)
@@ -352,7 +352,7 @@ func WithPath(path string) PrepareDecorator {
 // WithEscapedPathParameters returns a PrepareDecorator that replaces brace-enclosed keys within the
 // request path (i.e., http.Request.URL.Path) with the corresponding values from the passed map. The
 // values will be escaped (aka URL encoded) before insertion into the path.
-func WithEscapedPathParameters(path string, pathParameters map[string]interface{}) PrepareDecorator {
+func WithEscapedPathParameters(path string, pathParameters map[string]interface{}) PrepareDecorator { log.DebugLog()
 	parameters := escapeValueStrings(ensureValueStrings(pathParameters))
 	return func(p Preparer) Preparer {
 		return PreparerFunc(func(r *http.Request) (*http.Request, error) {
@@ -375,7 +375,7 @@ func WithEscapedPathParameters(path string, pathParameters map[string]interface{
 
 // WithPathParameters returns a PrepareDecorator that replaces brace-enclosed keys within the
 // request path (i.e., http.Request.URL.Path) with the corresponding values from the passed map.
-func WithPathParameters(path string, pathParameters map[string]interface{}) PrepareDecorator {
+func WithPathParameters(path string, pathParameters map[string]interface{}) PrepareDecorator { log.DebugLog()
 	parameters := ensureValueStrings(pathParameters)
 	return func(p Preparer) Preparer {
 		return PreparerFunc(func(r *http.Request) (*http.Request, error) {
@@ -397,7 +397,7 @@ func WithPathParameters(path string, pathParameters map[string]interface{}) Prep
 	}
 }
 
-func parseURL(u *url.URL, path string) (*url.URL, error) {
+func parseURL(u *url.URL, path string) (*url.URL, error) { log.DebugLog()
 	p := strings.TrimRight(u.String(), "/")
 	if !strings.HasPrefix(path, "/") {
 		path = "/" + path
@@ -407,7 +407,7 @@ func parseURL(u *url.URL, path string) (*url.URL, error) {
 
 // WithQueryParameters returns a PrepareDecorators that encodes and applies the query parameters
 // given in the supplied map (i.e., key=value).
-func WithQueryParameters(queryParameters map[string]interface{}) PrepareDecorator {
+func WithQueryParameters(queryParameters map[string]interface{}) PrepareDecorator { log.DebugLog()
 	parameters := ensureValueStrings(queryParameters)
 	return func(p Preparer) Preparer {
 		return PreparerFunc(func(r *http.Request) (*http.Request, error) {
@@ -438,6 +438,6 @@ type Authorizer interface {
 type NullAuthorizer struct{}
 
 // WithAuthorization returns a PrepareDecorator that does nothing.
-func (na NullAuthorizer) WithAuthorization() PrepareDecorator {
+func (na NullAuthorizer) WithAuthorization() PrepareDecorator { log.DebugLog()
 	return WithNothing()
 }

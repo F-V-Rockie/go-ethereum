@@ -29,12 +29,12 @@ import (
 // Tests that the scheduler can deduplicate and forward retrieval requests to
 // underlying fetchers and serve responses back, irrelevant of the concurrency
 // of the requesting clients or serving data fetchers.
-func TestSchedulerSingleClientSingleFetcher(t *testing.T) { testScheduler(t, 1, 1, 5000) }
-func TestSchedulerSingleClientMultiFetcher(t *testing.T)  { testScheduler(t, 1, 10, 5000) }
-func TestSchedulerMultiClientSingleFetcher(t *testing.T)  { testScheduler(t, 10, 1, 5000) }
-func TestSchedulerMultiClientMultiFetcher(t *testing.T)   { testScheduler(t, 10, 10, 5000) }
+func TestSchedulerSingleClientSingleFetcher(t *testing.T) { log.DebugLog() testScheduler(t, 1, 1, 5000) }
+func TestSchedulerSingleClientMultiFetcher(t *testing.T)  { log.DebugLog() testScheduler(t, 1, 10, 5000) }
+func TestSchedulerMultiClientSingleFetcher(t *testing.T)  { log.DebugLog() testScheduler(t, 10, 1, 5000) }
+func TestSchedulerMultiClientMultiFetcher(t *testing.T)   { log.DebugLog() testScheduler(t, 10, 10, 5000) }
 
-func testScheduler(t *testing.T, clients int, fetchers int, requests int) {
+func testScheduler(t *testing.T, clients int, fetchers int, requests int) { log.DebugLog()
 	f := newScheduler(0)
 
 	// Create a batch of handler goroutines that respond to bloom bit requests and

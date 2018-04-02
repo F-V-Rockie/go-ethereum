@@ -61,7 +61,7 @@ a hash prefix subtree containing subtrees or one storage entry (but never both)
   (access[] is a binary tree inside the multi-bit leveled hash tree)
 */
 
-func NewMemStore(d *DbStore, capacity uint) (m *MemStore) {
+func NewMemStore(d *DbStore, capacity uint) (m *MemStore) { log.DebugLog()
 	m = &MemStore{}
 	m.memtree = newMemTree(memTreeFLW, nil, 0)
 	m.dbStore = d
@@ -82,7 +82,7 @@ type memTree struct {
 	access       []uint64
 }
 
-func newMemTree(b uint, parent *memTree, pidx uint) (node *memTree) {
+func newMemTree(b uint, parent *memTree, pidx uint) (node *memTree) { log.DebugLog()
 	node = new(memTree)
 	node.bits = b
 	node.width = 1 << b
@@ -97,7 +97,7 @@ func newMemTree(b uint, parent *memTree, pidx uint) (node *memTree) {
 	return node
 }
 
-func (node *memTree) updateAccess(a uint64) {
+func (node *memTree) updateAccess(a uint64) { log.DebugLog()
 	aidx := uint(0)
 	var aa uint64
 	oa := node.access[0]
@@ -127,7 +127,7 @@ func (node *memTree) updateAccess(a uint64) {
 	}
 }
 
-func (s *MemStore) setCapacity(c uint) {
+func (s *MemStore) setCapacity(c uint) { log.DebugLog()
 	s.lock.Lock()
 	defer s.lock.Unlock()
 
@@ -137,12 +137,12 @@ func (s *MemStore) setCapacity(c uint) {
 	s.capacity = c
 }
 
-func (s *MemStore) Counter() uint {
+func (s *MemStore) Counter() uint { log.DebugLog()
 	return s.entryCnt
 }
 
 // entry (not its copy) is going to be in MemStore
-func (s *MemStore) Put(entry *Chunk) {
+func (s *MemStore) Put(entry *Chunk) { log.DebugLog()
 	if s.capacity == 0 {
 		return
 	}
@@ -217,7 +217,7 @@ func (s *MemStore) Put(entry *Chunk) {
 	s.entryCnt++
 }
 
-func (s *MemStore) Get(hash Key) (chunk *Chunk, err error) {
+func (s *MemStore) Get(hash Key) (chunk *Chunk, err error) { log.DebugLog()
 	s.lock.Lock()
 	defer s.lock.Unlock()
 
@@ -251,7 +251,7 @@ func (s *MemStore) Get(hash Key) (chunk *Chunk, err error) {
 	return
 }
 
-func (s *MemStore) removeOldest() {
+func (s *MemStore) removeOldest() { log.DebugLog()
 	node := s.memtree
 
 	for node.entry == nil {
@@ -331,4 +331,4 @@ func (s *MemStore) removeOldest() {
 }
 
 // Close memstore
-func (s *MemStore) Close() {}
+func (s *MemStore) Close() { log.DebugLog()}

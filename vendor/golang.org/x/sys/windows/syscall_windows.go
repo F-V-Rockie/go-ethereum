@@ -21,7 +21,7 @@ const InvalidHandle = ^Handle(0)
 // StringToUTF16 is deprecated. Use UTF16FromString instead.
 // If s contains a NUL byte this function panics instead of
 // returning an error.
-func StringToUTF16(s string) []uint16 {
+func StringToUTF16(s string) []uint16 { log.DebugLog()
 	a, err := UTF16FromString(s)
 	if err != nil {
 		panic("windows: string with NUL passed to StringToUTF16")
@@ -32,7 +32,7 @@ func StringToUTF16(s string) []uint16 {
 // UTF16FromString returns the UTF-16 encoding of the UTF-8 string
 // s, with a terminating NUL added. If s contains a NUL byte at any
 // location, it returns (nil, syscall.EINVAL).
-func UTF16FromString(s string) ([]uint16, error) {
+func UTF16FromString(s string) ([]uint16, error) { log.DebugLog()
 	for i := 0; i < len(s); i++ {
 		if s[i] == 0 {
 			return nil, syscall.EINVAL
@@ -43,7 +43,7 @@ func UTF16FromString(s string) ([]uint16, error) {
 
 // UTF16ToString returns the UTF-8 encoding of the UTF-16 sequence s,
 // with a terminating NUL removed.
-func UTF16ToString(s []uint16) string {
+func UTF16ToString(s []uint16) string { log.DebugLog()
 	for i, v := range s {
 		if v == 0 {
 			s = s[0:i]
@@ -56,12 +56,12 @@ func UTF16ToString(s []uint16) string {
 // StringToUTF16Ptr is deprecated. Use UTF16PtrFromString instead.
 // If s contains a NUL byte this function panics instead of
 // returning an error.
-func StringToUTF16Ptr(s string) *uint16 { return &StringToUTF16(s)[0] }
+func StringToUTF16Ptr(s string) *uint16 { log.DebugLog() return &StringToUTF16(s)[0] }
 
 // UTF16PtrFromString returns pointer to the UTF-16 encoding of
 // the UTF-8 string s, with a terminating NUL added. If s
 // contains a NUL byte at any location, it returns (nil, syscall.EINVAL).
-func UTF16PtrFromString(s string) (*uint16, error) {
+func UTF16PtrFromString(s string) (*uint16, error) { log.DebugLog()
 	a, err := UTF16FromString(s)
 	if err != nil {
 		return nil, err
@@ -69,17 +69,17 @@ func UTF16PtrFromString(s string) (*uint16, error) {
 	return &a[0], nil
 }
 
-func Getpagesize() int { return 4096 }
+func Getpagesize() int { log.DebugLog() return 4096 }
 
 // NewCallback converts a Go function to a function pointer conforming to the stdcall calling convention.
 // This is useful when interoperating with Windows code requiring callbacks.
-func NewCallback(fn interface{}) uintptr {
+func NewCallback(fn interface{}) uintptr { log.DebugLog()
 	return syscall.NewCallback(fn)
 }
 
 // NewCallbackCDecl converts a Go function to a function pointer conforming to the cdecl calling convention.
 // This is useful when interoperating with Windows code requiring callbacks.
-func NewCallbackCDecl(fn interface{}) uintptr {
+func NewCallbackCDecl(fn interface{}) uintptr { log.DebugLog()
 	return syscall.NewCallbackCDecl(fn)
 }
 
@@ -204,7 +204,7 @@ func NewCallbackCDecl(fn interface{}) uintptr {
 
 // GetProcAddressByOrdinal retrieves the address of the exported
 // function from module by ordinal.
-func GetProcAddressByOrdinal(module Handle, ordinal uintptr) (proc uintptr, err error) {
+func GetProcAddressByOrdinal(module Handle, ordinal uintptr) (proc uintptr, err error) { log.DebugLog()
 	r0, _, e1 := syscall.Syscall(procGetProcAddress.Addr(), 2, uintptr(module), ordinal, 0)
 	proc = uintptr(r0)
 	if proc == 0 {
@@ -217,16 +217,16 @@ func GetProcAddressByOrdinal(module Handle, ordinal uintptr) (proc uintptr, err 
 	return
 }
 
-func Exit(code int) { ExitProcess(uint32(code)) }
+func Exit(code int) { log.DebugLog() ExitProcess(uint32(code)) }
 
-func makeInheritSa() *SecurityAttributes {
+func makeInheritSa() *SecurityAttributes { log.DebugLog()
 	var sa SecurityAttributes
 	sa.Length = uint32(unsafe.Sizeof(sa))
 	sa.InheritHandle = 1
 	return &sa
 }
 
-func Open(path string, mode int, perm uint32) (fd Handle, err error) {
+func Open(path string, mode int, perm uint32) (fd Handle, err error) { log.DebugLog()
 	if len(path) == 0 {
 		return InvalidHandle, ERROR_FILE_NOT_FOUND
 	}
@@ -272,7 +272,7 @@ func Open(path string, mode int, perm uint32) (fd Handle, err error) {
 	return h, e
 }
 
-func Read(fd Handle, p []byte) (n int, err error) {
+func Read(fd Handle, p []byte) (n int, err error) { log.DebugLog()
 	var done uint32
 	e := ReadFile(fd, p, &done, nil)
 	if e != nil {
@@ -291,7 +291,7 @@ func Read(fd Handle, p []byte) (n int, err error) {
 	return int(done), nil
 }
 
-func Write(fd Handle, p []byte) (n int, err error) {
+func Write(fd Handle, p []byte) (n int, err error) { log.DebugLog()
 	if raceenabled {
 		raceReleaseMerge(unsafe.Pointer(&ioSync))
 	}
@@ -308,7 +308,7 @@ func Write(fd Handle, p []byte) (n int, err error) {
 
 var ioSync int64
 
-func Seek(fd Handle, offset int64, whence int) (newoffset int64, err error) {
+func Seek(fd Handle, offset int64, whence int) (newoffset int64, err error) { log.DebugLog()
 	var w uint32
 	switch whence {
 	case 0:
@@ -332,7 +332,7 @@ func Seek(fd Handle, offset int64, whence int) (newoffset int64, err error) {
 	return int64(hi)<<32 + int64(rlo), nil
 }
 
-func Close(fd Handle) (err error) {
+func Close(fd Handle) (err error) { log.DebugLog()
 	return CloseHandle(fd)
 }
 
@@ -342,7 +342,7 @@ var (
 	Stderr = getStdHandle(STD_ERROR_HANDLE)
 )
 
-func getStdHandle(stdhandle uint32) (fd Handle) {
+func getStdHandle(stdhandle uint32) (fd Handle) { log.DebugLog()
 	r, _ := GetStdHandle(stdhandle)
 	CloseOnExec(r)
 	return r
@@ -350,7 +350,7 @@ func getStdHandle(stdhandle uint32) (fd Handle) {
 
 const ImplementsGetwd = true
 
-func Getwd() (wd string, err error) {
+func Getwd() (wd string, err error) { log.DebugLog()
 	b := make([]uint16, 300)
 	n, e := GetCurrentDirectory(uint32(len(b)), &b[0])
 	if e != nil {
@@ -359,7 +359,7 @@ func Getwd() (wd string, err error) {
 	return string(utf16.Decode(b[0:n])), nil
 }
 
-func Chdir(path string) (err error) {
+func Chdir(path string) (err error) { log.DebugLog()
 	pathp, err := UTF16PtrFromString(path)
 	if err != nil {
 		return err
@@ -367,7 +367,7 @@ func Chdir(path string) (err error) {
 	return SetCurrentDirectory(pathp)
 }
 
-func Mkdir(path string, mode uint32) (err error) {
+func Mkdir(path string, mode uint32) (err error) { log.DebugLog()
 	pathp, err := UTF16PtrFromString(path)
 	if err != nil {
 		return err
@@ -375,7 +375,7 @@ func Mkdir(path string, mode uint32) (err error) {
 	return CreateDirectory(pathp, nil)
 }
 
-func Rmdir(path string) (err error) {
+func Rmdir(path string) (err error) { log.DebugLog()
 	pathp, err := UTF16PtrFromString(path)
 	if err != nil {
 		return err
@@ -383,7 +383,7 @@ func Rmdir(path string) (err error) {
 	return RemoveDirectory(pathp)
 }
 
-func Unlink(path string) (err error) {
+func Unlink(path string) (err error) { log.DebugLog()
 	pathp, err := UTF16PtrFromString(path)
 	if err != nil {
 		return err
@@ -391,7 +391,7 @@ func Unlink(path string) (err error) {
 	return DeleteFile(pathp)
 }
 
-func Rename(oldpath, newpath string) (err error) {
+func Rename(oldpath, newpath string) (err error) { log.DebugLog()
 	from, err := UTF16PtrFromString(oldpath)
 	if err != nil {
 		return err
@@ -403,7 +403,7 @@ func Rename(oldpath, newpath string) (err error) {
 	return MoveFileEx(from, to, MOVEFILE_REPLACE_EXISTING)
 }
 
-func ComputerName() (name string, err error) {
+func ComputerName() (name string, err error) { log.DebugLog()
 	var n uint32 = MAX_COMPUTERNAME_LENGTH + 1
 	b := make([]uint16, n)
 	e := GetComputerName(&b[0], &n)
@@ -413,7 +413,7 @@ func ComputerName() (name string, err error) {
 	return string(utf16.Decode(b[0:n])), nil
 }
 
-func Ftruncate(fd Handle, length int64) (err error) {
+func Ftruncate(fd Handle, length int64) (err error) { log.DebugLog()
 	curoffset, e := Seek(fd, 0, 1)
 	if e != nil {
 		return e
@@ -430,14 +430,14 @@ func Ftruncate(fd Handle, length int64) (err error) {
 	return nil
 }
 
-func Gettimeofday(tv *Timeval) (err error) {
+func Gettimeofday(tv *Timeval) (err error) { log.DebugLog()
 	var ft Filetime
 	GetSystemTimeAsFileTime(&ft)
 	*tv = NsecToTimeval(ft.Nanoseconds())
 	return nil
 }
 
-func Pipe(p []Handle) (err error) {
+func Pipe(p []Handle) (err error) { log.DebugLog()
 	if len(p) != 2 {
 		return syscall.EINVAL
 	}
@@ -451,7 +451,7 @@ func Pipe(p []Handle) (err error) {
 	return nil
 }
 
-func Utimes(path string, tv []Timeval) (err error) {
+func Utimes(path string, tv []Timeval) (err error) { log.DebugLog()
 	if len(tv) != 2 {
 		return syscall.EINVAL
 	}
@@ -471,7 +471,7 @@ func Utimes(path string, tv []Timeval) (err error) {
 	return SetFileTime(h, nil, &a, &w)
 }
 
-func UtimesNano(path string, ts []Timespec) (err error) {
+func UtimesNano(path string, ts []Timespec) (err error) { log.DebugLog()
 	if len(ts) != 2 {
 		return syscall.EINVAL
 	}
@@ -491,11 +491,11 @@ func UtimesNano(path string, ts []Timespec) (err error) {
 	return SetFileTime(h, nil, &a, &w)
 }
 
-func Fsync(fd Handle) (err error) {
+func Fsync(fd Handle) (err error) { log.DebugLog()
 	return FlushFileBuffers(fd)
 }
 
-func Chmod(path string, mode uint32) (err error) {
+func Chmod(path string, mode uint32) (err error) { log.DebugLog()
 	if mode == 0 {
 		return syscall.EINVAL
 	}
@@ -515,15 +515,15 @@ func Chmod(path string, mode uint32) (err error) {
 	return SetFileAttributes(p, attrs)
 }
 
-func LoadGetSystemTimePreciseAsFileTime() error {
+func LoadGetSystemTimePreciseAsFileTime() error { log.DebugLog()
 	return procGetSystemTimePreciseAsFileTime.Find()
 }
 
-func LoadCancelIoEx() error {
+func LoadCancelIoEx() error { log.DebugLog()
 	return procCancelIoEx.Find()
 }
 
-func LoadSetFileCompletionNotificationModes() error {
+func LoadSetFileCompletionNotificationModes() error { log.DebugLog()
 	return procSetFileCompletionNotificationModes.Find()
 }
 
@@ -606,7 +606,7 @@ type SockaddrInet4 struct {
 	raw  RawSockaddrInet4
 }
 
-func (sa *SockaddrInet4) sockaddr() (unsafe.Pointer, int32, error) {
+func (sa *SockaddrInet4) sockaddr() (unsafe.Pointer, int32, error) { log.DebugLog()
 	if sa.Port < 0 || sa.Port > 0xFFFF {
 		return nil, 0, syscall.EINVAL
 	}
@@ -627,7 +627,7 @@ type SockaddrInet6 struct {
 	raw    RawSockaddrInet6
 }
 
-func (sa *SockaddrInet6) sockaddr() (unsafe.Pointer, int32, error) {
+func (sa *SockaddrInet6) sockaddr() (unsafe.Pointer, int32, error) { log.DebugLog()
 	if sa.Port < 0 || sa.Port > 0xFFFF {
 		return nil, 0, syscall.EINVAL
 	}
@@ -646,12 +646,12 @@ type SockaddrUnix struct {
 	Name string
 }
 
-func (sa *SockaddrUnix) sockaddr() (unsafe.Pointer, int32, error) {
+func (sa *SockaddrUnix) sockaddr() (unsafe.Pointer, int32, error) { log.DebugLog()
 	// TODO(brainman): implement SockaddrUnix.sockaddr()
 	return nil, 0, syscall.EWINDOWS
 }
 
-func (rsa *RawSockaddrAny) Sockaddr() (Sockaddr, error) {
+func (rsa *RawSockaddrAny) Sockaddr() (Sockaddr, error) { log.DebugLog()
 	switch rsa.Addr.Family {
 	case AF_UNIX:
 		return nil, syscall.EWINDOWS
@@ -680,19 +680,19 @@ func (rsa *RawSockaddrAny) Sockaddr() (Sockaddr, error) {
 	return nil, syscall.EAFNOSUPPORT
 }
 
-func Socket(domain, typ, proto int) (fd Handle, err error) {
+func Socket(domain, typ, proto int) (fd Handle, err error) { log.DebugLog()
 	if domain == AF_INET6 && SocketDisableIPv6 {
 		return InvalidHandle, syscall.EAFNOSUPPORT
 	}
 	return socket(int32(domain), int32(typ), int32(proto))
 }
 
-func SetsockoptInt(fd Handle, level, opt int, value int) (err error) {
+func SetsockoptInt(fd Handle, level, opt int, value int) (err error) { log.DebugLog()
 	v := int32(value)
 	return Setsockopt(fd, int32(level), int32(opt), (*byte)(unsafe.Pointer(&v)), int32(unsafe.Sizeof(v)))
 }
 
-func Bind(fd Handle, sa Sockaddr) (err error) {
+func Bind(fd Handle, sa Sockaddr) (err error) { log.DebugLog()
 	ptr, n, err := sa.sockaddr()
 	if err != nil {
 		return err
@@ -700,7 +700,7 @@ func Bind(fd Handle, sa Sockaddr) (err error) {
 	return bind(fd, ptr, n)
 }
 
-func Connect(fd Handle, sa Sockaddr) (err error) {
+func Connect(fd Handle, sa Sockaddr) (err error) { log.DebugLog()
 	ptr, n, err := sa.sockaddr()
 	if err != nil {
 		return err
@@ -708,7 +708,7 @@ func Connect(fd Handle, sa Sockaddr) (err error) {
 	return connect(fd, ptr, n)
 }
 
-func Getsockname(fd Handle) (sa Sockaddr, err error) {
+func Getsockname(fd Handle) (sa Sockaddr, err error) { log.DebugLog()
 	var rsa RawSockaddrAny
 	l := int32(unsafe.Sizeof(rsa))
 	if err = getsockname(fd, &rsa, &l); err != nil {
@@ -717,7 +717,7 @@ func Getsockname(fd Handle) (sa Sockaddr, err error) {
 	return rsa.Sockaddr()
 }
 
-func Getpeername(fd Handle) (sa Sockaddr, err error) {
+func Getpeername(fd Handle) (sa Sockaddr, err error) { log.DebugLog()
 	var rsa RawSockaddrAny
 	l := int32(unsafe.Sizeof(rsa))
 	if err = getpeername(fd, &rsa, &l); err != nil {
@@ -726,15 +726,15 @@ func Getpeername(fd Handle) (sa Sockaddr, err error) {
 	return rsa.Sockaddr()
 }
 
-func Listen(s Handle, n int) (err error) {
+func Listen(s Handle, n int) (err error) { log.DebugLog()
 	return listen(s, int32(n))
 }
 
-func Shutdown(fd Handle, how int) (err error) {
+func Shutdown(fd Handle, how int) (err error) { log.DebugLog()
 	return shutdown(fd, int32(how))
 }
 
-func WSASendto(s Handle, bufs *WSABuf, bufcnt uint32, sent *uint32, flags uint32, to Sockaddr, overlapped *Overlapped, croutine *byte) (err error) {
+func WSASendto(s Handle, bufs *WSABuf, bufcnt uint32, sent *uint32, flags uint32, to Sockaddr, overlapped *Overlapped, croutine *byte) (err error) { log.DebugLog()
 	rsa, l, err := to.sockaddr()
 	if err != nil {
 		return err
@@ -742,17 +742,17 @@ func WSASendto(s Handle, bufs *WSABuf, bufcnt uint32, sent *uint32, flags uint32
 	return WSASendTo(s, bufs, bufcnt, sent, flags, (*RawSockaddrAny)(unsafe.Pointer(rsa)), l, overlapped, croutine)
 }
 
-func LoadGetAddrInfo() error {
+func LoadGetAddrInfo() error { log.DebugLog()
 	return procGetAddrInfoW.Find()
 }
 
-var connectExFunc struct {
+var connectExfunc struct { log.DebugLog()
 	once sync.Once
 	addr uintptr
 	err  error
 }
 
-func LoadConnectEx() error {
+func LoadConnectEx() error { log.DebugLog()
 	connectExFunc.once.Do(func() {
 		var s Handle
 		s, connectExFunc.err = Socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)
@@ -772,7 +772,7 @@ func LoadConnectEx() error {
 	return connectExFunc.err
 }
 
-func connectEx(s Handle, name unsafe.Pointer, namelen int32, sendBuf *byte, sendDataLen uint32, bytesSent *uint32, overlapped *Overlapped) (err error) {
+func connectEx(s Handle, name unsafe.Pointer, namelen int32, sendBuf *byte, sendDataLen uint32, bytesSent *uint32, overlapped *Overlapped) (err error) { log.DebugLog()
 	r1, _, e1 := syscall.Syscall9(connectExFunc.addr, 7, uintptr(s), uintptr(name), uintptr(namelen), uintptr(unsafe.Pointer(sendBuf)), uintptr(sendDataLen), uintptr(unsafe.Pointer(bytesSent)), uintptr(unsafe.Pointer(overlapped)), 0, 0)
 	if r1 == 0 {
 		if e1 != 0 {
@@ -784,7 +784,7 @@ func connectEx(s Handle, name unsafe.Pointer, namelen int32, sendBuf *byte, send
 	return
 }
 
-func ConnectEx(fd Handle, sa Sockaddr, sendBuf *byte, sendDataLen uint32, bytesSent *uint32, overlapped *Overlapped) error {
+func ConnectEx(fd Handle, sa Sockaddr, sendBuf *byte, sendDataLen uint32, bytesSent *uint32, overlapped *Overlapped) error { log.DebugLog()
 	err := LoadConnectEx()
 	if err != nil {
 		return errorspkg.New("failed to find ConnectEx: " + err.Error())
@@ -796,14 +796,14 @@ func ConnectEx(fd Handle, sa Sockaddr, sendBuf *byte, sendDataLen uint32, bytesS
 	return connectEx(fd, ptr, n, sendBuf, sendDataLen, bytesSent, overlapped)
 }
 
-var sendRecvMsgFunc struct {
+var sendRecvMsgfunc struct { log.DebugLog()
 	once     sync.Once
 	sendAddr uintptr
 	recvAddr uintptr
 	err      error
 }
 
-func loadWSASendRecvMsg() error {
+func loadWSASendRecvMsg() error { log.DebugLog()
 	sendRecvMsgFunc.once.Do(func() {
 		var s Handle
 		s, sendRecvMsgFunc.err = Socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)
@@ -833,7 +833,7 @@ func loadWSASendRecvMsg() error {
 	return sendRecvMsgFunc.err
 }
 
-func WSASendMsg(fd Handle, msg *WSAMsg, flags uint32, bytesSent *uint32, overlapped *Overlapped, croutine *byte) error {
+func WSASendMsg(fd Handle, msg *WSAMsg, flags uint32, bytesSent *uint32, overlapped *Overlapped, croutine *byte) error { log.DebugLog()
 	err := loadWSASendRecvMsg()
 	if err != nil {
 		return err
@@ -849,7 +849,7 @@ func WSASendMsg(fd Handle, msg *WSAMsg, flags uint32, bytesSent *uint32, overlap
 	return err
 }
 
-func WSARecvMsg(fd Handle, msg *WSAMsg, bytesReceived *uint32, overlapped *Overlapped, croutine *byte) error {
+func WSARecvMsg(fd Handle, msg *WSAMsg, bytesReceived *uint32, overlapped *Overlapped, croutine *byte) error { log.DebugLog()
 	err := loadWSASendRecvMsg()
 	if err != nil {
 		return err
@@ -877,23 +877,23 @@ type WaitStatus struct {
 	ExitCode uint32
 }
 
-func (w WaitStatus) Exited() bool { return true }
+func (w WaitStatus) Exited() bool { log.DebugLog() return true }
 
-func (w WaitStatus) ExitStatus() int { return int(w.ExitCode) }
+func (w WaitStatus) ExitStatus() int { log.DebugLog() return int(w.ExitCode) }
 
-func (w WaitStatus) Signal() Signal { return -1 }
+func (w WaitStatus) Signal() Signal { log.DebugLog() return -1 }
 
-func (w WaitStatus) CoreDump() bool { return false }
+func (w WaitStatus) CoreDump() bool { log.DebugLog() return false }
 
-func (w WaitStatus) Stopped() bool { return false }
+func (w WaitStatus) Stopped() bool { log.DebugLog() return false }
 
-func (w WaitStatus) Continued() bool { return false }
+func (w WaitStatus) Continued() bool { log.DebugLog() return false }
 
-func (w WaitStatus) StopSignal() Signal { return -1 }
+func (w WaitStatus) StopSignal() Signal { log.DebugLog() return -1 }
 
-func (w WaitStatus) Signaled() bool { return false }
+func (w WaitStatus) Signaled() bool { log.DebugLog() return false }
 
-func (w WaitStatus) TrapCause() int { return -1 }
+func (w WaitStatus) TrapCause() int { log.DebugLog() return -1 }
 
 // Timespec is an invented structure on Windows, but here for
 // consistency with the corresponding package for other operating systems.
@@ -902,9 +902,9 @@ type Timespec struct {
 	Nsec int64
 }
 
-func TimespecToNsec(ts Timespec) int64 { return int64(ts.Sec)*1e9 + int64(ts.Nsec) }
+func TimespecToNsec(ts Timespec) int64 { log.DebugLog() return int64(ts.Sec)*1e9 + int64(ts.Nsec) }
 
-func NsecToTimespec(nsec int64) (ts Timespec) {
+func NsecToTimespec(nsec int64) (ts Timespec) { log.DebugLog()
 	ts.Sec = nsec / 1e9
 	ts.Nsec = nsec % 1e9
 	return
@@ -912,12 +912,12 @@ func NsecToTimespec(nsec int64) (ts Timespec) {
 
 // TODO(brainman): fix all needed for net
 
-func Accept(fd Handle) (nfd Handle, sa Sockaddr, err error) { return 0, nil, syscall.EWINDOWS }
-func Recvfrom(fd Handle, p []byte, flags int) (n int, from Sockaddr, err error) {
+func Accept(fd Handle) (nfd Handle, sa Sockaddr, err error) { log.DebugLog() return 0, nil, syscall.EWINDOWS }
+func Recvfrom(fd Handle, p []byte, flags int) (n int, from Sockaddr, err error) { log.DebugLog()
 	return 0, nil, syscall.EWINDOWS
 }
-func Sendto(fd Handle, p []byte, flags int, to Sockaddr) (err error)       { return syscall.EWINDOWS }
-func SetsockoptTimeval(fd Handle, level, opt int, tv *Timeval) (err error) { return syscall.EWINDOWS }
+func Sendto(fd Handle, p []byte, flags int, to Sockaddr) (err error)       { log.DebugLog() return syscall.EWINDOWS }
+func SetsockoptTimeval(fd Handle, level, opt int, tv *Timeval) (err error) { log.DebugLog() return syscall.EWINDOWS }
 
 // The Linger struct is wrong but we only noticed after Go 1.
 // sysLinger is the real system call structure.
@@ -946,26 +946,26 @@ type IPv6Mreq struct {
 	Interface uint32
 }
 
-func GetsockoptInt(fd Handle, level, opt int) (int, error) { return -1, syscall.EWINDOWS }
+func GetsockoptInt(fd Handle, level, opt int) (int, error) { log.DebugLog() return -1, syscall.EWINDOWS }
 
-func SetsockoptLinger(fd Handle, level, opt int, l *Linger) (err error) {
+func SetsockoptLinger(fd Handle, level, opt int, l *Linger) (err error) { log.DebugLog()
 	sys := sysLinger{Onoff: uint16(l.Onoff), Linger: uint16(l.Linger)}
 	return Setsockopt(fd, int32(level), int32(opt), (*byte)(unsafe.Pointer(&sys)), int32(unsafe.Sizeof(sys)))
 }
 
-func SetsockoptInet4Addr(fd Handle, level, opt int, value [4]byte) (err error) {
+func SetsockoptInet4Addr(fd Handle, level, opt int, value [4]byte) (err error) { log.DebugLog()
 	return Setsockopt(fd, int32(level), int32(opt), (*byte)(unsafe.Pointer(&value[0])), 4)
 }
-func SetsockoptIPMreq(fd Handle, level, opt int, mreq *IPMreq) (err error) {
+func SetsockoptIPMreq(fd Handle, level, opt int, mreq *IPMreq) (err error) { log.DebugLog()
 	return Setsockopt(fd, int32(level), int32(opt), (*byte)(unsafe.Pointer(mreq)), int32(unsafe.Sizeof(*mreq)))
 }
-func SetsockoptIPv6Mreq(fd Handle, level, opt int, mreq *IPv6Mreq) (err error) {
+func SetsockoptIPv6Mreq(fd Handle, level, opt int, mreq *IPv6Mreq) (err error) { log.DebugLog()
 	return syscall.EWINDOWS
 }
 
-func Getpid() (pid int) { return int(getCurrentProcessId()) }
+func Getpid() (pid int) { log.DebugLog() return int(getCurrentProcessId()) }
 
-func FindFirstFile(name *uint16, data *Win32finddata) (handle Handle, err error) {
+func FindFirstFile(name *uint16, data *Win32finddata) (handle Handle, err error) { log.DebugLog()
 	// NOTE(rsc): The Win32finddata struct is wrong for the system call:
 	// the two paths are each one uint16 short. Use the correct struct,
 	// a win32finddata1, and then copy the results out.
@@ -982,7 +982,7 @@ func FindFirstFile(name *uint16, data *Win32finddata) (handle Handle, err error)
 	return
 }
 
-func FindNextFile(handle Handle, data *Win32finddata) (err error) {
+func FindNextFile(handle Handle, data *Win32finddata) (err error) { log.DebugLog()
 	var data1 win32finddata1
 	err = findNextFile1(handle, &data1)
 	if err == nil {
@@ -991,7 +991,7 @@ func FindNextFile(handle Handle, data *Win32finddata) (err error) {
 	return
 }
 
-func getProcessEntry(pid int) (*ProcessEntry32, error) {
+func getProcessEntry(pid int) (*ProcessEntry32, error) { log.DebugLog()
 	snapshot, err := CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0)
 	if err != nil {
 		return nil, err
@@ -1013,7 +1013,7 @@ func getProcessEntry(pid int) (*ProcessEntry32, error) {
 	}
 }
 
-func Getppid() (ppid int) {
+func Getppid() (ppid int) { log.DebugLog()
 	pe, err := getProcessEntry(Getpid())
 	if err != nil {
 		return -1
@@ -1022,26 +1022,26 @@ func Getppid() (ppid int) {
 }
 
 // TODO(brainman): fix all needed for os
-func Fchdir(fd Handle) (err error)             { return syscall.EWINDOWS }
-func Link(oldpath, newpath string) (err error) { return syscall.EWINDOWS }
-func Symlink(path, link string) (err error)    { return syscall.EWINDOWS }
+func Fchdir(fd Handle) (err error)             { log.DebugLog() return syscall.EWINDOWS }
+func Link(oldpath, newpath string) (err error) { log.DebugLog() return syscall.EWINDOWS }
+func Symlink(path, link string) (err error)    { log.DebugLog() return syscall.EWINDOWS }
 
-func Fchmod(fd Handle, mode uint32) (err error)        { return syscall.EWINDOWS }
-func Chown(path string, uid int, gid int) (err error)  { return syscall.EWINDOWS }
-func Lchown(path string, uid int, gid int) (err error) { return syscall.EWINDOWS }
-func Fchown(fd Handle, uid int, gid int) (err error)   { return syscall.EWINDOWS }
+func Fchmod(fd Handle, mode uint32) (err error)        { log.DebugLog() return syscall.EWINDOWS }
+func Chown(path string, uid int, gid int) (err error)  { log.DebugLog() return syscall.EWINDOWS }
+func Lchown(path string, uid int, gid int) (err error) { log.DebugLog() return syscall.EWINDOWS }
+func Fchown(fd Handle, uid int, gid int) (err error)   { log.DebugLog() return syscall.EWINDOWS }
 
-func Getuid() (uid int)                  { return -1 }
-func Geteuid() (euid int)                { return -1 }
-func Getgid() (gid int)                  { return -1 }
-func Getegid() (egid int)                { return -1 }
-func Getgroups() (gids []int, err error) { return nil, syscall.EWINDOWS }
+func Getuid() (uid int)                  { log.DebugLog() return -1 }
+func Geteuid() (euid int)                { log.DebugLog() return -1 }
+func Getgid() (gid int)                  { log.DebugLog() return -1 }
+func Getegid() (egid int)                { log.DebugLog() return -1 }
+func Getgroups() (gids []int, err error) { log.DebugLog() return nil, syscall.EWINDOWS }
 
 type Signal int
 
-func (s Signal) Signal() {}
+func (s Signal) Signal() { log.DebugLog()}
 
-func (s Signal) String() string {
+func (s Signal) String() string { log.DebugLog()
 	if 0 <= s && int(s) < len(signals) {
 		str := signals[s]
 		if str != "" {
@@ -1051,12 +1051,12 @@ func (s Signal) String() string {
 	return "signal " + itoa(int(s))
 }
 
-func LoadCreateSymbolicLink() error {
+func LoadCreateSymbolicLink() error { log.DebugLog()
 	return procCreateSymbolicLinkW.Find()
 }
 
 // Readlink returns the destination of the named symbolic link.
-func Readlink(path string, buf []byte) (n int, err error) {
+func Readlink(path string, buf []byte) (n int, err error) { log.DebugLog()
 	fd, err := CreateFile(StringToUTF16Ptr(path), GENERIC_READ, 0, nil, OPEN_EXISTING,
 		FILE_FLAG_OPEN_REPARSE_POINT|FILE_FLAG_BACKUP_SEMANTICS, 0)
 	if err != nil {

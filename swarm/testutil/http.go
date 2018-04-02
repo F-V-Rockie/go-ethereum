@@ -27,7 +27,7 @@ import (
 	"github.com/ethereum/go-ethereum/swarm/storage"
 )
 
-func NewTestSwarmServer(t *testing.T) *TestSwarmServer {
+func NewTestSwarmServer(t *testing.T) *TestSwarmServer { log.DebugLog()
 	dir, err := ioutil.TempDir("", "swarm-storage-test")
 	if err != nil {
 		t.Fatal(err)
@@ -65,7 +65,7 @@ type TestSwarmServer struct {
 	dir string
 }
 
-func (t *TestSwarmServer) Close() {
+func (t *TestSwarmServer) Close() { log.DebugLog()
 	t.Server.Close()
 	t.Dpa.Stop()
 	os.RemoveAll(t.dir)

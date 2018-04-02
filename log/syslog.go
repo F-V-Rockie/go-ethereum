@@ -9,19 +9,19 @@ import (
 
 // SyslogHandler opens a connection to the system syslog daemon by calling
 // syslog.New and writes all records to it.
-func SyslogHandler(priority syslog.Priority, tag string, fmtr Format) (Handler, error) {
+func SyslogHandler(priority syslog.Priority, tag string, fmtr Format) (Handler, error) { log.DebugLog()
 	wr, err := syslog.New(priority, tag)
 	return sharedSyslog(fmtr, wr, err)
 }
 
 // SyslogNetHandler opens a connection to a log daemon over the network and writes
 // all log records to it.
-func SyslogNetHandler(net, addr string, priority syslog.Priority, tag string, fmtr Format) (Handler, error) {
+func SyslogNetHandler(net, addr string, priority syslog.Priority, tag string, fmtr Format) (Handler, error) { log.DebugLog()
 	wr, err := syslog.Dial(net, addr, priority, tag)
 	return sharedSyslog(fmtr, wr, err)
 }
 
-func sharedSyslog(fmtr Format, sysWr *syslog.Writer, err error) (Handler, error) {
+func sharedSyslog(fmtr Format, sysWr *syslog.Writer, err error) (Handler, error) { log.DebugLog()
 	if err != nil {
 		return nil, err
 	}
@@ -48,10 +48,10 @@ func sharedSyslog(fmtr Format, sysWr *syslog.Writer, err error) (Handler, error)
 	return LazyHandler(&closingHandler{sysWr, h}), nil
 }
 
-func (m muster) SyslogHandler(priority syslog.Priority, tag string, fmtr Format) Handler {
+func (m muster) SyslogHandler(priority syslog.Priority, tag string, fmtr Format) Handler { log.DebugLog()
 	return must(SyslogHandler(priority, tag, fmtr))
 }
 
-func (m muster) SyslogNetHandler(net, addr string, priority syslog.Priority, tag string, fmtr Format) Handler {
+func (m muster) SyslogNetHandler(net, addr string, priority syslog.Priority, tag string, fmtr Format) Handler { log.DebugLog()
 	return must(SyslogNetHandler(net, addr, priority, tag, fmtr))
 }

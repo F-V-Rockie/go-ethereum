@@ -31,7 +31,7 @@ type queryRequest struct {
 }
 
 // InitializeSWbemServices will return a new SWbemServices object that can be used to query WMI
-func InitializeSWbemServices(c *Client, connectServerArgs ...interface{}) (*SWbemServices, error) {
+func InitializeSWbemServices(c *Client, connectServerArgs ...interface{}) (*SWbemServices, error) { log.DebugLog()
 	//fmt.Println("InitializeSWbemServices: Starting")
 	//TODO: implement connectServerArgs as optional argument for init with connectServer call
 	s := new(SWbemServices)
@@ -49,7 +49,7 @@ func InitializeSWbemServices(c *Client, connectServerArgs ...interface{}) (*SWbe
 }
 
 // Close will clear and release all of the SWbemServices resources
-func (s *SWbemServices) Close() error {
+func (s *SWbemServices) Close() error { log.DebugLog()
 	s.lQueryorClose.Lock()
 	if s == nil || s.sWbemLocatorIDispatch == nil {
 		s.lQueryorClose.Unlock()
@@ -73,7 +73,7 @@ func (s *SWbemServices) Close() error {
 	return result
 }
 
-func (s *SWbemServices) process(initError chan error) {
+func (s *SWbemServices) process(initError chan error) { log.DebugLog()
 	//fmt.Println("process: starting background thread initialization")
 	//All OLE/WMI calls must happen on the same initialized thead, so lock this goroutine
 	runtime.LockOSThread()
@@ -138,7 +138,7 @@ func (s *SWbemServices) process(initError chan error) {
 // By default, the local machine and default namespace are used. These can be
 // changed using connectServerArgs. See
 // http://msdn.microsoft.com/en-us/library/aa393720.aspx for details.
-func (s *SWbemServices) Query(query string, dst interface{}, connectServerArgs ...interface{}) error {
+func (s *SWbemServices) Query(query string, dst interface{}, connectServerArgs ...interface{}) error { log.DebugLog()
 	s.lQueryorClose.Lock()
 	if s == nil || s.sWbemLocatorIDispatch == nil {
 		s.lQueryorClose.Unlock()
@@ -167,7 +167,7 @@ func (s *SWbemServices) Query(query string, dst interface{}, connectServerArgs .
 	return nil
 }
 
-func (s *SWbemServices) queryBackground(q *queryRequest) error {
+func (s *SWbemServices) queryBackground(q *queryRequest) error { log.DebugLog()
 	if s == nil || s.sWbemLocatorIDispatch == nil {
 		return fmt.Errorf("SWbemServices is not Initialized")
 	}

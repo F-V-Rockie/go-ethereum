@@ -34,23 +34,23 @@ type NotificationTestService struct {
 	unblockHangSubscription chan struct{}
 }
 
-func (s *NotificationTestService) Echo(i int) int {
+func (s *NotificationTestService) Echo(i int) int { log.DebugLog()
 	return i
 }
 
-func (s *NotificationTestService) wasUnsubCallbackCalled() bool {
+func (s *NotificationTestService) wasUnsubCallbackCalled() bool { log.DebugLog()
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	return s.unsubscribed
 }
 
-func (s *NotificationTestService) Unsubscribe(subid string) {
+func (s *NotificationTestService) Unsubscribe(subid string) { log.DebugLog()
 	s.mu.Lock()
 	s.unsubscribed = true
 	s.mu.Unlock()
 }
 
-func (s *NotificationTestService) SomeSubscription(ctx context.Context, n, val int) (*Subscription, error) {
+func (s *NotificationTestService) SomeSubscription(ctx context.Context, n, val int) (*Subscription, error) { log.DebugLog()
 	notifier, supported := NotifierFromContext(ctx)
 	if !supported {
 		return nil, ErrNotificationsUnsupported
@@ -89,7 +89,7 @@ func (s *NotificationTestService) SomeSubscription(ctx context.Context, n, val i
 
 // HangSubscription blocks on s.unblockHangSubscription before
 // sending anything.
-func (s *NotificationTestService) HangSubscription(ctx context.Context, val int) (*Subscription, error) {
+func (s *NotificationTestService) HangSubscription(ctx context.Context, val int) (*Subscription, error) { log.DebugLog()
 	notifier, supported := NotifierFromContext(ctx)
 	if !supported {
 		return nil, ErrNotificationsUnsupported
@@ -105,7 +105,7 @@ func (s *NotificationTestService) HangSubscription(ctx context.Context, val int)
 	return subscription, nil
 }
 
-func TestNotifications(t *testing.T) {
+func TestNotifications(t *testing.T) { log.DebugLog()
 	server := NewServer()
 	service := &NotificationTestService{}
 
@@ -225,7 +225,7 @@ func waitForMessages(t *testing.T, in *json.Decoder, successes chan<- jsonSucces
 
 // TestSubscriptionMultipleNamespaces ensures that subscriptions can exists
 // for multiple different namespaces.
-func TestSubscriptionMultipleNamespaces(t *testing.T) {
+func TestSubscriptionMultipleNamespaces(t *testing.T) { log.DebugLog()
 	var (
 		namespaces             = []string{"eth", "shh", "bzz"}
 		server                 = NewServer()

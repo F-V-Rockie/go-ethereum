@@ -21,7 +21,7 @@ import (
 	"testing"
 )
 
-func TestParseURI(t *testing.T) {
+func TestParseURI(t *testing.T) { log.DebugLog()
 	type test struct {
 		uri                       string
 		expectURI                 *URI

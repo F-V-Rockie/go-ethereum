@@ -29,7 +29,7 @@ type keyStorePlain struct {
 	keysDirPath string
 }
 
-func (ks keyStorePlain) GetKey(addr common.Address, filename, auth string) (*Key, error) {
+func (ks keyStorePlain) GetKey(addr common.Address, filename, auth string) (*Key, error) { log.DebugLog()
 	fd, err := os.Open(filename)
 	if err != nil {
 		return nil, err
@@ -45,7 +45,7 @@ func (ks keyStorePlain) GetKey(addr common.Address, filename, auth string) (*Key
 	return key, nil
 }
 
-func (ks keyStorePlain) StoreKey(filename string, key *Key, auth string) error {
+func (ks keyStorePlain) StoreKey(filename string, key *Key, auth string) error { log.DebugLog()
 	content, err := json.Marshal(key)
 	if err != nil {
 		return err
@@ -53,7 +53,7 @@ func (ks keyStorePlain) StoreKey(filename string, key *Key, auth string) error {
 	return writeKeyFile(filename, content)
 }
 
-func (ks keyStorePlain) JoinPath(filename string) string {
+func (ks keyStorePlain) JoinPath(filename string) string { log.DebugLog()
 	if filepath.IsAbs(filename) {
 		return filename
 	} else {

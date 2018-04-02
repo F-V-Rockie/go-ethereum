@@ -73,7 +73,7 @@ type LineChart struct {
 }
 
 // NewLineChart returns a new LineChart with current theme.
-func NewLineChart() *LineChart {
+func NewLineChart() *LineChart { log.DebugLog()
 	lc := &LineChart{Block: *NewBlock()}
 	lc.AxesColor = ThemeAttr("linechart.axes.fg")
 	lc.LineColor = ThemeAttr("linechart.line.fg")
@@ -88,7 +88,7 @@ func NewLineChart() *LineChart {
 
 // one cell contains two data points
 // so the capicity is 2x as dot-mode
-func (lc *LineChart) renderBraille() Buffer {
+func (lc *LineChart) renderBraille() Buffer { log.DebugLog()
 	buf := NewBuffer()
 
 	// return: b -> which cell should the point be in
@@ -133,7 +133,7 @@ func (lc *LineChart) renderBraille() Buffer {
 	return buf
 }
 
-func (lc *LineChart) renderDot() Buffer {
+func (lc *LineChart) renderDot() Buffer { log.DebugLog()
 	buf := NewBuffer()
 	for i := 0; i < len(lc.Data) && i < lc.axisXWidth; i++ {
 		c := Cell{
@@ -149,7 +149,7 @@ func (lc *LineChart) renderDot() Buffer {
 	return buf
 }
 
-func (lc *LineChart) calcLabelX() {
+func (lc *LineChart) calcLabelX() { log.DebugLog()
 	lc.labelX = [][]rune{}
 
 	for i, l := 0, 0; i < len(lc.DataLabels) && l < lc.axisXWidth; i++ {
@@ -180,7 +180,7 @@ func (lc *LineChart) calcLabelX() {
 	}
 }
 
-func shortenFloatVal(x float64) string {
+func shortenFloatVal(x float64) string { log.DebugLog()
 	s := fmt.Sprintf("%.2f", x)
 	if len(s)-3 > 3 {
 		s = fmt.Sprintf("%.2e", x)
@@ -192,7 +192,7 @@ func shortenFloatVal(x float64) string {
 	return s
 }
 
-func (lc *LineChart) calcLabelY() {
+func (lc *LineChart) calcLabelY() { log.DebugLog()
 	span := lc.topValue - lc.bottomValue
 	lc.scale = span / float64(lc.axisYHeight)
 
@@ -210,7 +210,7 @@ func (lc *LineChart) calcLabelY() {
 	lc.labelYSpace = maxLen
 }
 
-func (lc *LineChart) calcLayout() {
+func (lc *LineChart) calcLayout() { log.DebugLog()
 	// set datalabels if it is not provided
 	if (lc.DataLabels == nil || len(lc.DataLabels) == 0) || lc.autoLabels {
 		lc.autoLabels = true
@@ -263,7 +263,7 @@ func (lc *LineChart) calcLayout() {
 	lc.drawingY = lc.innerArea.Min.Y
 }
 
-func (lc *LineChart) plotAxes() Buffer {
+func (lc *LineChart) plotAxes() Buffer { log.DebugLog()
 	buf := NewBuffer()
 
 	origY := lc.innerArea.Min.Y + lc.innerArea.Dy() - 2
@@ -312,7 +312,7 @@ func (lc *LineChart) plotAxes() Buffer {
 }
 
 // Buffer implements Bufferer interface.
-func (lc *LineChart) Buffer() Buffer {
+func (lc *LineChart) Buffer() Buffer { log.DebugLog()
 	buf := lc.Block.Buffer()
 
 	if lc.Data == nil || len(lc.Data) == 0 {

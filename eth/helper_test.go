@@ -49,7 +49,7 @@ var (
 // newTestProtocolManager creates a new protocol manager for testing purposes,
 // with the given number of blocks already known, and potential notification
 // channels for different events.
-func newTestProtocolManager(mode downloader.SyncMode, blocks int, generator func(int, *core.BlockGen), newtx chan<- []*types.Transaction) (*ProtocolManager, *ethdb.MemDatabase, error) {
+func newTestProtocolManager(mode downloader.SyncMode, blocks int, generator func(int, *core.BlockGen), newtx chan<- []*types.Transaction) (*ProtocolManager, *ethdb.MemDatabase, error) { log.DebugLog()
 	var (
 		evmux  = new(event.TypeMux)
 		engine = ethash.NewFaker()
@@ -78,7 +78,7 @@ func newTestProtocolManager(mode downloader.SyncMode, blocks int, generator func
 // with the given number of blocks already known, and potential notification
 // channels for different events. In case of an error, the constructor force-
 // fails the test.
-func newTestProtocolManagerMust(t *testing.T, mode downloader.SyncMode, blocks int, generator func(int, *core.BlockGen), newtx chan<- []*types.Transaction) (*ProtocolManager, *ethdb.MemDatabase) {
+func newTestProtocolManagerMust(t *testing.T, mode downloader.SyncMode, blocks int, generator func(int, *core.BlockGen), newtx chan<- []*types.Transaction) (*ProtocolManager, *ethdb.MemDatabase) { log.DebugLog()
 	pm, db, err := newTestProtocolManager(mode, blocks, generator, newtx)
 	if err != nil {
 		t.Fatalf("Failed to create protocol manager: %v", err)
@@ -97,7 +97,7 @@ type testTxPool struct {
 
 // AddRemotes appends a batch of transactions to the pool, and notifies any
 // listeners if the addition channel is non nil
-func (p *testTxPool) AddRemotes(txs []*types.Transaction) []error {
+func (p *testTxPool) AddRemotes(txs []*types.Transaction) []error { log.DebugLog()
 	p.lock.Lock()
 	defer p.lock.Unlock()
 
@@ -109,7 +109,7 @@ func (p *testTxPool) AddRemotes(txs []*types.Transaction) []error {
 }
 
 // Pending returns all the transactions known to the pool
-func (p *testTxPool) Pending() (map[common.Address]types.Transactions, error) {
+func (p *testTxPool) Pending() (map[common.Address]types.Transactions, error) { log.DebugLog()
 	p.lock.RLock()
 	defer p.lock.RUnlock()
 
@@ -124,12 +124,12 @@ func (p *testTxPool) Pending() (map[common.Address]types.Transactions, error) {
 	return batches, nil
 }
 
-func (p *testTxPool) SubscribeTxPreEvent(ch chan<- core.TxPreEvent) event.Subscription {
+func (p *testTxPool) SubscribeTxPreEvent(ch chan<- core.TxPreEvent) event.Subscription { log.DebugLog()
 	return p.txFeed.Subscribe(ch)
 }
 
 // newTestTransaction create a new dummy transaction.
-func newTestTransaction(from *ecdsa.PrivateKey, nonce uint64, datasize int) *types.Transaction {
+func newTestTransaction(from *ecdsa.PrivateKey, nonce uint64, datasize int) *types.Transaction { log.DebugLog()
 	tx := types.NewTransaction(nonce, common.Address{}, big.NewInt(0), 100000, big.NewInt(0), make([]byte, datasize))
 	tx, _ = types.SignTx(tx, types.HomesteadSigner{}, from)
 	return tx
@@ -143,7 +143,7 @@ type testPeer struct {
 }
 
 // newTestPeer creates a new peer registered at the given protocol manager.
-func newTestPeer(name string, version int, pm *ProtocolManager, shake bool) (*testPeer, <-chan error) {
+func newTestPeer(name string, version int, pm *ProtocolManager, shake bool) (*testPeer, <-chan error) { log.DebugLog()
 	// Create a message pipe to communicate through
 	app, net := p2p.MsgPipe()
 
@@ -178,7 +178,7 @@ func newTestPeer(name string, version int, pm *ProtocolManager, shake bool) (*te
 
 // handshake simulates a trivial handshake that expects the same state from the
 // remote side as we are simulating locally.
-func (p *testPeer) handshake(t *testing.T, td *big.Int, head common.Hash, genesis common.Hash) {
+func (p *testPeer) handshake(t *testing.T, td *big.Int, head common.Hash, genesis common.Hash) { log.DebugLog()
 	msg := &statusData{
 		ProtocolVersion: uint32(p.version),
 		NetworkId:       DefaultConfig.NetworkId,
@@ -196,6 +196,6 @@ func (p *testPeer) handshake(t *testing.T, td *big.Int, head common.Hash, genesi
 
 // close terminates the local side of the peer, notifying the remote protocol
 // manager of termination.
-func (p *testPeer) close() {
+func (p *testPeer) close() { log.DebugLog()
 	p.app.Close()
 }

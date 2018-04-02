@@ -32,7 +32,7 @@ import (
 	"github.com/docker/docker/pkg/reexec"
 )
 
-func TestDumpConfig(t *testing.T) {
+func TestDumpConfig(t *testing.T) { log.DebugLog()
 	swarm := runSwarm(t, "dumpconfig")
 	defaultConf := api.NewDefaultConfig()
 	out, err := tomlSettings.Marshal(&defaultConf)
@@ -43,7 +43,7 @@ func TestDumpConfig(t *testing.T) {
 	swarm.ExpectExit()
 }
 
-func TestFailsSwapEnabledNoSwapApi(t *testing.T) {
+func TestFailsSwapEnabledNoSwapApi(t *testing.T) { log.DebugLog()
 	flags := []string{
 		fmt.Sprintf("--%s", SwarmNetworkIdFlag.Name), "42",
 		fmt.Sprintf("--%s", SwarmPortFlag.Name), "54545",
@@ -55,7 +55,7 @@ func TestFailsSwapEnabledNoSwapApi(t *testing.T) {
 	swarm.ExpectExit()
 }
 
-func TestFailsNoBzzAccount(t *testing.T) {
+func TestFailsNoBzzAccount(t *testing.T) { log.DebugLog()
 	flags := []string{
 		fmt.Sprintf("--%s", SwarmNetworkIdFlag.Name), "42",
 		fmt.Sprintf("--%s", SwarmPortFlag.Name), "54545",
@@ -66,7 +66,7 @@ func TestFailsNoBzzAccount(t *testing.T) {
 	swarm.ExpectExit()
 }
 
-func TestCmdLineOverrides(t *testing.T) {
+func TestCmdLineOverrides(t *testing.T) { log.DebugLog()
 	dir, err := ioutil.TempDir("", "bzztest")
 	if err != nil {
 		t.Fatal(err)
@@ -135,7 +135,7 @@ func TestCmdLineOverrides(t *testing.T) {
 	node.Shutdown()
 }
 
-func TestFileOverrides(t *testing.T) {
+func TestFileOverrides(t *testing.T) { log.DebugLog()
 
 	// assign ports
 	httpPort, err := assignTCPPort()
@@ -246,7 +246,7 @@ func TestFileOverrides(t *testing.T) {
 	node.Shutdown()
 }
 
-func TestEnvVars(t *testing.T) {
+func TestEnvVars(t *testing.T) { log.DebugLog()
 	// assign ports
 	httpPort, err := assignTCPPort()
 	if err != nil {
@@ -342,7 +342,7 @@ func TestEnvVars(t *testing.T) {
 	cmd.Process.Kill()
 }
 
-func TestCmdLineOverridesFile(t *testing.T) {
+func TestCmdLineOverridesFile(t *testing.T) { log.DebugLog()
 
 	// assign ports
 	httpPort, err := assignTCPPort()
@@ -458,7 +458,7 @@ func TestCmdLineOverridesFile(t *testing.T) {
 	node.Shutdown()
 }
 
-func TestValidateConfig(t *testing.T) {
+func TestValidateConfig(t *testing.T) { log.DebugLog()
 	for _, c := range []struct {
 		cfg *api.Config
 		err string

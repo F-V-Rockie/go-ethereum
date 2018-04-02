@@ -10,14 +10,14 @@ const (
 	terminationCharacter = '#'
 )
 
-func mustDoubleArray(da *doubleArray, err error) *doubleArray {
+func mustDoubleArray(da *doubleArray, err error) *doubleArray { log.DebugLog()
 	if err != nil {
 		panic(err)
 	}
 	return da
 }
 
-func (da *doubleArray) Build(keys []string) error {
+func (da *doubleArray) Build(keys []string) error { log.DebugLog()
 	records := makeRecords(keys)
 	if err := da.build(records, 1, 0, make(map[int]struct{})); err != nil {
 		return err
@@ -30,7 +30,7 @@ type doubleArray struct {
 	node []int
 }
 
-func newDoubleArray(keys []string) (*doubleArray, error) {
+func newDoubleArray(keys []string) (*doubleArray, error) { log.DebugLog()
 	da := &doubleArray{
 		bc:   []baseCheck{0},
 		node: []int{-1}, // A start index is adjusting to 1 because 0 will be used as a mark of non-existent node.
@@ -49,27 +49,27 @@ func newDoubleArray(keys []string) (*doubleArray, error) {
 // 32                    10  8         0
 type baseCheck uint32
 
-func (bc baseCheck) Base() int {
+func (bc baseCheck) Base() int { log.DebugLog()
 	return int(bc >> 10)
 }
 
-func (bc *baseCheck) SetBase(base int) {
+func (bc *baseCheck) SetBase(base int) { log.DebugLog()
 	*bc |= baseCheck(base) << 10
 }
 
-func (bc baseCheck) Check() byte {
+func (bc baseCheck) Check() byte { log.DebugLog()
 	return byte(bc)
 }
 
-func (bc *baseCheck) SetCheck(check byte) {
+func (bc *baseCheck) SetCheck(check byte) { log.DebugLog()
 	*bc |= baseCheck(check)
 }
 
-func (bc baseCheck) IsEmpty() bool {
+func (bc baseCheck) IsEmpty() bool { log.DebugLog()
 	return bc&0xfffffcff == 0
 }
 
-func (da *doubleArray) Lookup(path string) (length int) {
+func (da *doubleArray) Lookup(path string) (length int) { log.DebugLog()
 	idx := 1
 	tmpIdx := idx
 	for i := 0; i < len(path); i++ {
@@ -86,7 +86,7 @@ func (da *doubleArray) Lookup(path string) (length int) {
 	return -1
 }
 
-func (da *doubleArray) LookupByBytes(path []byte) (length int) {
+func (da *doubleArray) LookupByBytes(path []byte) (length int) { log.DebugLog()
 	idx := 1
 	tmpIdx := idx
 	for i := 0; i < len(path); i++ {
@@ -103,7 +103,7 @@ func (da *doubleArray) LookupByBytes(path []byte) (length int) {
 	return -1
 }
 
-func (da *doubleArray) build(srcs []record, idx, depth int, usedBase map[int]struct{}) error {
+func (da *doubleArray) build(srcs []record, idx, depth int, usedBase map[int]struct{}) error { log.DebugLog()
 	sort.Stable(recordSlice(srcs))
 	base, siblings, leaf, err := da.arrange(srcs, idx, depth, usedBase)
 	if err != nil {
@@ -124,15 +124,15 @@ func (da *doubleArray) build(srcs []record, idx, depth int, usedBase map[int]str
 	return nil
 }
 
-func (da *doubleArray) setBase(i, base int) {
+func (da *doubleArray) setBase(i, base int) { log.DebugLog()
 	da.bc[i].SetBase(base)
 }
 
-func (da *doubleArray) setCheck(i int, check byte) {
+func (da *doubleArray) setCheck(i int, check byte) { log.DebugLog()
 	da.bc[i].SetCheck(check)
 }
 
-func (da *doubleArray) findEmptyIndex(start int) int {
+func (da *doubleArray) findEmptyIndex(start int) int { log.DebugLog()
 	i := start
 	for ; i < len(da.bc); i++ {
 		if da.bc[i].IsEmpty() {
@@ -143,7 +143,7 @@ func (da *doubleArray) findEmptyIndex(start int) int {
 }
 
 // findBase returns good BASE.
-func (da *doubleArray) findBase(siblings []sibling, start int, usedBase map[int]struct{}) (base int) {
+func (da *doubleArray) findBase(siblings []sibling, start int, usedBase map[int]struct{}) (base int) { log.DebugLog()
 	for idx, firstChar := start+1, siblings[0].c; ; idx = da.findEmptyIndex(idx + 1) {
 		base = da.nextIndex(idx, firstChar)
 		if _, used := usedBase[base]; used {
@@ -167,7 +167,7 @@ func (da *doubleArray) findBase(siblings []sibling, start int, usedBase map[int]
 	return base
 }
 
-func (da *doubleArray) arrange(records []record, idx, depth int, usedBase map[int]struct{}) (base int, siblings []sibling, leaf *record, err error) {
+func (da *doubleArray) arrange(records []record, idx, depth int, usedBase map[int]struct{}) (base int, siblings []sibling, leaf *record, err error) { log.DebugLog()
 	siblings, leaf, err = makeSiblings(records, depth)
 	if err != nil {
 		return -1, nil, nil, err
@@ -186,11 +186,11 @@ type sibling struct {
 	c     byte
 }
 
-func (da *doubleArray) nextIndex(base int, c byte) int {
+func (da *doubleArray) nextIndex(base int, c byte) int { log.DebugLog()
 	return base ^ int(c)
 }
 
-func makeSiblings(records []record, depth int) (sib []sibling, leaf *record, err error) {
+func makeSiblings(records []record, depth int) (sib []sibling, leaf *record, err error) { log.DebugLog()
 	var (
 		pc byte
 		n  int
@@ -227,7 +227,7 @@ type record struct {
 	value int
 }
 
-func makeRecords(srcs []string) (records []record) {
+func makeRecords(srcs []string) (records []record) { log.DebugLog()
 	termChar := string(terminationCharacter)
 	for _, s := range srcs {
 		records = append(records, record{
@@ -240,14 +240,14 @@ func makeRecords(srcs []string) (records []record) {
 
 type recordSlice []record
 
-func (rs recordSlice) Len() int {
+func (rs recordSlice) Len() int { log.DebugLog()
 	return len(rs)
 }
 
-func (rs recordSlice) Less(i, j int) bool {
+func (rs recordSlice) Less(i, j int) bool { log.DebugLog()
 	return rs[i].key < rs[j].key
 }
 
-func (rs recordSlice) Swap(i, j int) {
+func (rs recordSlice) Swap(i, j int) { log.DebugLog()
 	rs[i], rs[j] = rs[j], rs[i]
 }

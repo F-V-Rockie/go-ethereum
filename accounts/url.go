@@ -41,7 +41,7 @@ type URL struct {
 }
 
 // parseURL converts a user supplied URL into the accounts specific structure.
-func parseURL(url string) (URL, error) {
+func parseURL(url string) (URL, error) { log.DebugLog()
 	parts := strings.Split(url, "://")
 	if len(parts) != 2 || parts[0] == "" {
 		return URL{}, errors.New("protocol scheme missing")
@@ -53,7 +53,7 @@ func parseURL(url string) (URL, error) {
 }
 
 // String implements the stringer interface.
-func (u URL) String() string {
+func (u URL) String() string { log.DebugLog()
 	if u.Scheme != "" {
 		return fmt.Sprintf("%s://%s", u.Scheme, u.Path)
 	}
@@ -61,7 +61,7 @@ func (u URL) String() string {
 }
 
 // TerminalString implements the log.TerminalStringer interface.
-func (u URL) TerminalString() string {
+func (u URL) TerminalString() string { log.DebugLog()
 	url := u.String()
 	if len(url) > 32 {
 		return url[:31] + "…"
@@ -70,7 +70,7 @@ func (u URL) TerminalString() string {
 }
 
 // MarshalJSON implements the json.Marshaller interface.
-func (u URL) MarshalJSON() ([]byte, error) {
+func (u URL) MarshalJSON() ([]byte, error) { log.DebugLog()
 	return json.Marshal(u.String())
 }
 
@@ -80,7 +80,7 @@ func (u URL) MarshalJSON() ([]byte, error) {
 //    0 if x == y
 //   +1 if x >  y
 //
-func (u URL) Cmp(url URL) int {
+func (u URL) Cmp(url URL) int { log.DebugLog()
 	if u.Scheme == url.Scheme {
 		return strings.Compare(u.Path, url.Path)
 	}

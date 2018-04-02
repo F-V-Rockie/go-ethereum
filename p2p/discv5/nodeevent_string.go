@@ -14,7 +14,7 @@ var (
 	_nodeEvent_index_1 = [...]uint8{0, 11, 22, 39}
 )
 
-func (i nodeEvent) String() string {
+func (i nodeEvent) String() string { log.DebugLog()
 	switch {
 	case 0 <= i && i <= 8:
 		return _nodeEvent_name_0[_nodeEvent_index_0[i]:_nodeEvent_index_0[i+1]]

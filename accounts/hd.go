@@ -64,7 +64,7 @@ type DerivationPath []uint32
 // Full derivation paths need to start with the `m/` prefix, relative derivation
 // paths (which will get appended to the default root path) must not have prefixes
 // in front of the first element. Whitespace is ignored.
-func ParseDerivationPath(path string) (DerivationPath, error) {
+func ParseDerivationPath(path string) (DerivationPath, error) { log.DebugLog()
 	var result DerivationPath
 
 	// Handle absolute or relative paths
@@ -118,7 +118,7 @@ func ParseDerivationPath(path string) (DerivationPath, error) {
 
 // String implements the stringer interface, converting a binary derivation path
 // to its canonical representation.
-func (path DerivationPath) String() string {
+func (path DerivationPath) String() string { log.DebugLog()
 	result := "m"
 	for _, component := range path {
 		var hardened bool

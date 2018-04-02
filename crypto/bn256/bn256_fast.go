@@ -30,6 +30,6 @@ type G1 = bn256.G1
 type G2 = bn256.G2
 
 // PairingCheck calculates the Optimal Ate pairing for a set of points.
-func PairingCheck(a []*G1, b []*G2) bool {
+func PairingCheck(a []*G1, b []*G2) bool { log.DebugLog()
 	return bn256.PairingCheck(a, b)
 }

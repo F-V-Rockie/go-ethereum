@@ -42,7 +42,7 @@ type SimAdapter struct {
 // NewSimAdapter creates a SimAdapter which is capable of running in-memory
 // simulation nodes running any of the given services (the services to run on a
 // particular node are passed to the NewNode function in the NodeConfig)
-func NewSimAdapter(services map[string]ServiceFunc) *SimAdapter {
+func NewSimAdapter(services map[string]ServiceFunc) *SimAdapter { log.DebugLog()
 	return &SimAdapter{
 		nodes:    make(map[discover.NodeID]*SimNode),
 		services: services,
@@ -50,12 +50,12 @@ func NewSimAdapter(services map[string]ServiceFunc) *SimAdapter {
 }
 
 // Name returns the name of the adapter for logging purposes
-func (s *SimAdapter) Name() string {
+func (s *SimAdapter) Name() string { log.DebugLog()
 	return "sim-adapter"
 }
 
 // NewNode returns a new SimNode using the given config
-func (s *SimAdapter) NewNode(config *NodeConfig) (Node, error) {
+func (s *SimAdapter) NewNode(config *NodeConfig) (Node, error) { log.DebugLog()
 	s.mtx.Lock()
 	defer s.mtx.Unlock()
 
@@ -103,7 +103,7 @@ func (s *SimAdapter) NewNode(config *NodeConfig) (Node, error) {
 
 // Dial implements the p2p.NodeDialer interface by connecting to the node using
 // an in-memory net.Pipe connection
-func (s *SimAdapter) Dial(dest *discover.Node) (conn net.Conn, err error) {
+func (s *SimAdapter) Dial(dest *discover.Node) (conn net.Conn, err error) { log.DebugLog()
 	node, ok := s.GetNode(dest.ID)
 	if !ok {
 		return nil, fmt.Errorf("unknown node: %s", dest.ID)
@@ -119,7 +119,7 @@ func (s *SimAdapter) Dial(dest *discover.Node) (conn net.Conn, err error) {
 
 // DialRPC implements the RPCDialer interface by creating an in-memory RPC
 // client of the given node
-func (s *SimAdapter) DialRPC(id discover.NodeID) (*rpc.Client, error) {
+func (s *SimAdapter) DialRPC(id discover.NodeID) (*rpc.Client, error) { log.DebugLog()
 	node, ok := s.GetNode(id)
 	if !ok {
 		return nil, fmt.Errorf("unknown node: %s", id)
@@ -132,7 +132,7 @@ func (s *SimAdapter) DialRPC(id discover.NodeID) (*rpc.Client, error) {
 }
 
 // GetNode returns the node with the given ID if it exists
-func (s *SimAdapter) GetNode(id discover.NodeID) (*SimNode, bool) {
+func (s *SimAdapter) GetNode(id discover.NodeID) (*SimNode, bool) { log.DebugLog()
 	s.mtx.RLock()
 	defer s.mtx.RUnlock()
 	node, ok := s.nodes[id]
@@ -154,18 +154,18 @@ type SimNode struct {
 }
 
 // Addr returns the node's discovery address
-func (self *SimNode) Addr() []byte {
+func (self *SimNode) Addr() []byte { log.DebugLog()
 	return []byte(self.Node().String())
 }
 
 // Node returns a discover.Node representing the SimNode
-func (self *SimNode) Node() *discover.Node {
+func (self *SimNode) Node() *discover.Node { log.DebugLog()
 	return discover.NewNode(self.ID, net.IP{127, 0, 0, 1}, 30303, 30303)
 }
 
 // Client returns an rpc.Client which can be used to communicate with the
 // underlying services (it is set once the node has started)
-func (self *SimNode) Client() (*rpc.Client, error) {
+func (self *SimNode) Client() (*rpc.Client, error) { log.DebugLog()
 	self.lock.RLock()
 	defer self.lock.RUnlock()
 	if self.client == nil {
@@ -176,7 +176,7 @@ func (self *SimNode) Client() (*rpc.Client, error) {
 
 // ServeRPC serves RPC requests over the given connection by creating an
 // in-memory client to the node's RPC server
-func (self *SimNode) ServeRPC(conn net.Conn) error {
+func (self *SimNode) ServeRPC(conn net.Conn) error { log.DebugLog()
 	handler, err := self.node.RPCHandler()
 	if err != nil {
 		return err
@@ -187,7 +187,7 @@ func (self *SimNode) ServeRPC(conn net.Conn) error {
 
 // Snapshots creates snapshots of the services by calling the
 // simulation_snapshot RPC method
-func (self *SimNode) Snapshots() (map[string][]byte, error) {
+func (self *SimNode) Snapshots() (map[string][]byte, error) { log.DebugLog()
 	self.lock.RLock()
 	services := make(map[string]node.Service, len(self.running))
 	for name, service := range self.running {
@@ -213,7 +213,7 @@ func (self *SimNode) Snapshots() (map[string][]byte, error) {
 }
 
 // Start registers the services and starts the underlying devp2p node
-func (self *SimNode) Start(snapshots map[string][]byte) error {
+func (self *SimNode) Start(snapshots map[string][]byte) error { log.DebugLog()
 	newService := func(name string) func(ctx *node.ServiceContext) (node.Service, error) {
 		return func(nodeCtx *node.ServiceContext) (node.Service, error) {
 			ctx := &ServiceContext{
@@ -267,7 +267,7 @@ func (self *SimNode) Start(snapshots map[string][]byte) error {
 }
 
 // Stop closes the RPC client and stops the underlying devp2p node
-func (self *SimNode) Stop() error {
+func (self *SimNode) Stop() error { log.DebugLog()
 	self.lock.Lock()
 	if self.client != nil {
 		self.client.Close()
@@ -278,7 +278,7 @@ func (self *SimNode) Stop() error {
 }
 
 // Services returns a copy of the underlying services
-func (self *SimNode) Services() []node.Service {
+func (self *SimNode) Services() []node.Service { log.DebugLog()
 	self.lock.RLock()
 	defer self.lock.RUnlock()
 	services := make([]node.Service, 0, len(self.running))
@@ -289,13 +289,13 @@ func (self *SimNode) Services() []node.Service {
 }
 
 // Server returns the underlying p2p.Server
-func (self *SimNode) Server() *p2p.Server {
+func (self *SimNode) Server() *p2p.Server { log.DebugLog()
 	return self.node.Server()
 }
 
 // SubscribeEvents subscribes the given channel to peer events from the
 // underlying p2p.Server
-func (self *SimNode) SubscribeEvents(ch chan *p2p.PeerEvent) event.Subscription {
+func (self *SimNode) SubscribeEvents(ch chan *p2p.PeerEvent) event.Subscription { log.DebugLog()
 	srv := self.Server()
 	if srv == nil {
 		panic("node not running")
@@ -304,7 +304,7 @@ func (self *SimNode) SubscribeEvents(ch chan *p2p.PeerEvent) event.Subscription 
 }
 
 // NodeInfo returns information about the node
-func (self *SimNode) NodeInfo() *p2p.NodeInfo {
+func (self *SimNode) NodeInfo() *p2p.NodeInfo { log.DebugLog()
 	server := self.Server()
 	if server == nil {
 		return &p2p.NodeInfo{

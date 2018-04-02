@@ -82,7 +82,7 @@ var daoGenesisForkBlock = big.NewInt(314)
 
 // TestDAOForkBlockNewChain tests that the DAO hard-fork number and the nodes support/opposition is correctly
 // set in the database after various initialization procedures and invocations.
-func TestDAOForkBlockNewChain(t *testing.T) {
+func TestDAOForkBlockNewChain(t *testing.T) { log.DebugLog()
 	for i, arg := range []struct {
 		genesis     string
 		expectBlock *big.Int
@@ -101,7 +101,7 @@ func TestDAOForkBlockNewChain(t *testing.T) {
 	}
 }
 
-func testDAOForkBlockNewChain(t *testing.T, test int, genesis string, expectBlock *big.Int, expectVote bool) {
+func testDAOForkBlockNewChain(t *testing.T, test int, genesis string, expectBlock *big.Int, expectVote bool) { log.DebugLog()
 	// Create a temporary data directory to use and inspect later
 	datadir := tmpdir(t)
 	defer os.RemoveAll(datadir)

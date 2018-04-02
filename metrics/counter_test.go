@@ -2,7 +2,7 @@ package metrics
 
 import "testing"
 
-func BenchmarkCounter(b *testing.B) {
+func BenchmarkCounter(b *testing.B) { log.DebugLog()
 	c := NewCounter()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -10,7 +10,7 @@ func BenchmarkCounter(b *testing.B) {
 	}
 }
 
-func TestCounterClear(t *testing.T) {
+func TestCounterClear(t *testing.T) { log.DebugLog()
 	c := NewCounter()
 	c.Inc(1)
 	c.Clear()
@@ -19,7 +19,7 @@ func TestCounterClear(t *testing.T) {
 	}
 }
 
-func TestCounterDec1(t *testing.T) {
+func TestCounterDec1(t *testing.T) { log.DebugLog()
 	c := NewCounter()
 	c.Dec(1)
 	if count := c.Count(); -1 != count {
@@ -27,7 +27,7 @@ func TestCounterDec1(t *testing.T) {
 	}
 }
 
-func TestCounterDec2(t *testing.T) {
+func TestCounterDec2(t *testing.T) { log.DebugLog()
 	c := NewCounter()
 	c.Dec(2)
 	if count := c.Count(); -2 != count {
@@ -35,7 +35,7 @@ func TestCounterDec2(t *testing.T) {
 	}
 }
 
-func TestCounterInc1(t *testing.T) {
+func TestCounterInc1(t *testing.T) { log.DebugLog()
 	c := NewCounter()
 	c.Inc(1)
 	if count := c.Count(); 1 != count {
@@ -43,7 +43,7 @@ func TestCounterInc1(t *testing.T) {
 	}
 }
 
-func TestCounterInc2(t *testing.T) {
+func TestCounterInc2(t *testing.T) { log.DebugLog()
 	c := NewCounter()
 	c.Inc(2)
 	if count := c.Count(); 2 != count {
@@ -51,7 +51,7 @@ func TestCounterInc2(t *testing.T) {
 	}
 }
 
-func TestCounterSnapshot(t *testing.T) {
+func TestCounterSnapshot(t *testing.T) { log.DebugLog()
 	c := NewCounter()
 	c.Inc(1)
 	snapshot := c.Snapshot()
@@ -61,14 +61,14 @@ func TestCounterSnapshot(t *testing.T) {
 	}
 }
 
-func TestCounterZero(t *testing.T) {
+func TestCounterZero(t *testing.T) { log.DebugLog()
 	c := NewCounter()
 	if count := c.Count(); 0 != count {
 		t.Errorf("c.Count(): 0 != %v\n", count)
 	}
 }
 
-func TestGetOrRegisterCounter(t *testing.T) {
+func TestGetOrRegisterCounter(t *testing.T) { log.DebugLog()
 	r := NewRegistry()
 	NewRegisteredCounter("foo", r).Inc(47)
 	if c := GetOrRegisterCounter("foo", r); 47 != c.Count() {

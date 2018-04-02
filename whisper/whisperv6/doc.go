@@ -81,7 +81,7 @@ const (
 
 type unknownVersionError uint64
 
-func (e unknownVersionError) Error() string {
+func (e unknownVersionError) Error() string { log.DebugLog()
 	return fmt.Sprintf("invalid envelope version %d", uint64(e))
 }
 

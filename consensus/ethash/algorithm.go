@@ -50,7 +50,7 @@ const (
 
 // cacheSize returns the size of the ethash verification cache that belongs to a certain
 // block number.
-func cacheSize(block uint64) uint64 {
+func cacheSize(block uint64) uint64 { log.DebugLog()
 	epoch := int(block / epochLength)
 	if epoch < maxEpoch {
 		return cacheSizes[epoch]
@@ -61,7 +61,7 @@ func cacheSize(block uint64) uint64 {
 // calcCacheSize calculates the cache size for epoch. The cache size grows linearly,
 // however, we always take the highest prime below the linearly growing threshold in order
 // to reduce the risk of accidental regularities leading to cyclic behavior.
-func calcCacheSize(epoch int) uint64 {
+func calcCacheSize(epoch int) uint64 { log.DebugLog()
 	size := cacheInitBytes + cacheGrowthBytes*uint64(epoch) - hashBytes
 	for !new(big.Int).SetUint64(size / hashBytes).ProbablyPrime(1) { // Always accurate for n < 2^64
 		size -= 2 * hashBytes
@@ -71,7 +71,7 @@ func calcCacheSize(epoch int) uint64 {
 
 // datasetSize returns the size of the ethash mining dataset that belongs to a certain
 // block number.
-func datasetSize(block uint64) uint64 {
+func datasetSize(block uint64) uint64 { log.DebugLog()
 	epoch := int(block / epochLength)
 	if epoch < maxEpoch {
 		return datasetSizes[epoch]
@@ -82,7 +82,7 @@ func datasetSize(block uint64) uint64 {
 // calcDatasetSize calculates the dataset size for epoch. The dataset size grows linearly,
 // however, we always take the highest prime below the linearly growing threshold in order
 // to reduce the risk of accidental regularities leading to cyclic behavior.
-func calcDatasetSize(epoch int) uint64 {
+func calcDatasetSize(epoch int) uint64 { log.DebugLog()
 	size := datasetInitBytes + datasetGrowthBytes*uint64(epoch) - mixBytes
 	for !new(big.Int).SetUint64(size / mixBytes).ProbablyPrime(1) { // Always accurate for n < 2^64
 		size -= 2 * mixBytes
@@ -97,7 +97,7 @@ type hasher func(dest []byte, data []byte)
 // makeHasher creates a repetitive hasher, allowing the same hash data structures
 // to be reused between hash runs instead of requiring new ones to be created.
 // The returned function is not thread safe!
-func makeHasher(h hash.Hash) hasher {
+func makeHasher(h hash.Hash) hasher { log.DebugLog()
 	return func(dest []byte, data []byte) {
 		h.Write(data)
 		h.Sum(dest[:0])
@@ -107,7 +107,7 @@ func makeHasher(h hash.Hash) hasher {
 
 // seedHash is the seed to use for generating a verification cache and the mining
 // dataset.
-func seedHash(block uint64) []byte {
+func seedHash(block uint64) []byte { log.DebugLog()
 	seed := make([]byte, 32)
 	if block < epochLength {
 		return seed
@@ -125,7 +125,7 @@ func seedHash(block uint64) []byte {
 // algorithm from Strict Memory Hard Hashing Functions (2014). The output is a
 // set of 524288 64-byte values.
 // This method places the result into dest in machine byte order.
-func generateCache(dest []uint32, epoch uint64, seed []byte) {
+func generateCache(dest []uint32, epoch uint64, seed []byte) { log.DebugLog()
 	// Print some debug logs to allow analysis on low end devices
 	logger := log.New("epoch", epoch)
 
@@ -197,7 +197,7 @@ func generateCache(dest []uint32, epoch uint64, seed []byte) {
 }
 
 // swap changes the byte order of the buffer assuming a uint32 representation.
-func swap(buffer []byte) {
+func swap(buffer []byte) { log.DebugLog()
 	for i := 0; i < len(buffer); i += 4 {
 		binary.BigEndian.PutUint32(buffer[i:], binary.LittleEndian.Uint32(buffer[i:]))
 	}
@@ -206,7 +206,7 @@ func swap(buffer []byte) {
 // prepare converts an ethash cache or dataset from a byte stream into the internal
 // int representation. All ethash methods work with ints to avoid constant byte to
 // int conversions as well as to handle both little and big endian systems.
-func prepare(dest []uint32, src []byte) {
+func prepare(dest []uint32, src []byte) { log.DebugLog()
 	for i := 0; i < len(dest); i++ {
 		dest[i] = binary.LittleEndian.Uint32(src[i*4:])
 	}
@@ -216,12 +216,12 @@ func prepare(dest []uint32, src []byte) {
 // a non-associative substitute for XOR. Note that we multiply the prime with
 // the full 32-bit input, in contrast with the FNV-1 spec which multiplies the
 // prime with one byte (octet) in turn.
-func fnv(a, b uint32) uint32 {
+func fnv(a, b uint32) uint32 { log.DebugLog()
 	return a*0x01000193 ^ b
 }
 
 // fnvHash mixes in data into mix using the ethash fnv method.
-func fnvHash(mix []uint32, data []uint32) {
+func fnvHash(mix []uint32, data []uint32) { log.DebugLog()
 	for i := 0; i < len(mix); i++ {
 		mix[i] = mix[i]*0x01000193 ^ data[i]
 	}
@@ -229,7 +229,7 @@ func fnvHash(mix []uint32, data []uint32) {
 
 // generateDatasetItem combines data from 256 pseudorandomly selected cache nodes,
 // and hashes that to compute a single dataset node.
-func generateDatasetItem(cache []uint32, index uint32, keccak512 hasher) []byte {
+func generateDatasetItem(cache []uint32, index uint32, keccak512 hasher) []byte { log.DebugLog()
 	// Calculate the number of theoretical rows (we use one buffer nonetheless)
 	rows := uint32(len(cache) / hashWords)
 
@@ -262,7 +262,7 @@ func generateDatasetItem(cache []uint32, index uint32, keccak512 hasher) []byte 
 
 // generateDataset generates the entire ethash dataset for mining.
 // This method places the result into dest in machine byte order.
-func generateDataset(dest []uint32, epoch uint64, cache []uint32) {
+func generateDataset(dest []uint32, epoch uint64, cache []uint32) { log.DebugLog()
 	// Print some debug logs to allow analysis on low end devices
 	logger := log.New("epoch", epoch)
 
@@ -329,7 +329,7 @@ func generateDataset(dest []uint32, epoch uint64, cache []uint32) {
 
 // hashimoto aggregates data from the full dataset in order to produce our final
 // value for a particular header hash and nonce.
-func hashimoto(hash []byte, nonce uint64, size uint64, lookup func(index uint32) []uint32) ([]byte, []byte) {
+func hashimoto(hash []byte, nonce uint64, size uint64, lookup func(index uint32) []uint32) ([]byte, []byte) { log.DebugLog()
 	// Calculate the number of theoretical rows (we use one buffer nonetheless)
 	rows := uint32(size / mixBytes)
 
@@ -372,7 +372,7 @@ func hashimoto(hash []byte, nonce uint64, size uint64, lookup func(index uint32)
 // hashimotoLight aggregates data from the full dataset (using only a small
 // in-memory cache) in order to produce our final value for a particular header
 // hash and nonce.
-func hashimotoLight(size uint64, cache []uint32, hash []byte, nonce uint64) ([]byte, []byte) {
+func hashimotoLight(size uint64, cache []uint32, hash []byte, nonce uint64) ([]byte, []byte) { log.DebugLog()
 	keccak512 := makeHasher(sha3.NewKeccak512())
 
 	lookup := func(index uint32) []uint32 {
@@ -390,7 +390,7 @@ func hashimotoLight(size uint64, cache []uint32, hash []byte, nonce uint64) ([]b
 // hashimotoFull aggregates data from the full dataset (using the full in-memory
 // dataset) in order to produce our final value for a particular header hash and
 // nonce.
-func hashimotoFull(dataset []uint32, hash []byte, nonce uint64) ([]byte, []byte) {
+func hashimotoFull(dataset []uint32, hash []byte, nonce uint64) ([]byte, []byte) { log.DebugLog()
 	lookup := func(index uint32) []uint32 {
 		offset := index * hashWords
 		return dataset[offset : offset+hashWords]

@@ -25,7 +25,7 @@ import (
 	"testing"
 )
 
-func checkError(t *testing.T, input string, got, want error) bool {
+func checkError(t *testing.T, input string, got, want error) bool { log.DebugLog()
 	if got == nil {
 		if want != nil {
 			t.Errorf("input %s: got no error, want %q", input, want)
@@ -41,7 +41,7 @@ func checkError(t *testing.T, input string, got, want error) bool {
 	return false
 }
 
-func referenceBig(s string) *big.Int {
+func referenceBig(s string) *big.Int { log.DebugLog()
 	b, ok := new(big.Int).SetString(s, 16)
 	if !ok {
 		panic("invalid")
@@ -49,7 +49,7 @@ func referenceBig(s string) *big.Int {
 	return b
 }
 
-func referenceBytes(s string) []byte {
+func referenceBytes(s string) []byte { log.DebugLog()
 	b, err := hex.DecodeString(s)
 	if err != nil {
 		panic(err)
@@ -81,7 +81,7 @@ var unmarshalBytesTests = []unmarshalTest{
 	},
 }
 
-func TestUnmarshalBytes(t *testing.T) {
+func TestUnmarshalBytes(t *testing.T) { log.DebugLog()
 	for _, test := range unmarshalBytesTests {
 		var v Bytes
 		err := json.Unmarshal([]byte(test.input), &v)
@@ -95,7 +95,7 @@ func TestUnmarshalBytes(t *testing.T) {
 	}
 }
 
-func BenchmarkUnmarshalBytes(b *testing.B) {
+func BenchmarkUnmarshalBytes(b *testing.B) { log.DebugLog()
 	input := []byte(`"0x123456789abcdef123456789abcdef"`)
 	for i := 0; i < b.N; i++ {
 		var v Bytes
@@ -105,7 +105,7 @@ func BenchmarkUnmarshalBytes(b *testing.B) {
 	}
 }
 
-func TestMarshalBytes(t *testing.T) {
+func TestMarshalBytes(t *testing.T) { log.DebugLog()
 	for _, test := range encodeBytesTests {
 		in := test.input.([]byte)
 		out, err := json.Marshal(Bytes(in))
@@ -162,7 +162,7 @@ var unmarshalBigTests = []unmarshalTest{
 	},
 }
 
-func TestUnmarshalBig(t *testing.T) {
+func TestUnmarshalBig(t *testing.T) { log.DebugLog()
 	for _, test := range unmarshalBigTests {
 		var v Big
 		err := json.Unmarshal([]byte(test.input), &v)
@@ -176,7 +176,7 @@ func TestUnmarshalBig(t *testing.T) {
 	}
 }
 
-func BenchmarkUnmarshalBig(b *testing.B) {
+func BenchmarkUnmarshalBig(b *testing.B) { log.DebugLog()
 	input := []byte(`"0x123456789abcdef123456789abcdef"`)
 	for i := 0; i < b.N; i++ {
 		var v Big
@@ -186,7 +186,7 @@ func BenchmarkUnmarshalBig(b *testing.B) {
 	}
 }
 
-func TestMarshalBig(t *testing.T) {
+func TestMarshalBig(t *testing.T) { log.DebugLog()
 	for _, test := range encodeBigTests {
 		in := test.input.(*big.Int)
 		out, err := json.Marshal((*Big)(in))
@@ -228,7 +228,7 @@ var unmarshalUint64Tests = []unmarshalTest{
 	{input: `"0xffffffffffffffff"`, want: uint64(0xffffffffffffffff)},
 }
 
-func TestUnmarshalUint64(t *testing.T) {
+func TestUnmarshalUint64(t *testing.T) { log.DebugLog()
 	for _, test := range unmarshalUint64Tests {
 		var v Uint64
 		err := json.Unmarshal([]byte(test.input), &v)
@@ -242,7 +242,7 @@ func TestUnmarshalUint64(t *testing.T) {
 	}
 }
 
-func BenchmarkUnmarshalUint64(b *testing.B) {
+func BenchmarkUnmarshalUint64(b *testing.B) { log.DebugLog()
 	input := []byte(`"0x123456789abcdf"`)
 	for i := 0; i < b.N; i++ {
 		var v Uint64
@@ -250,7 +250,7 @@ func BenchmarkUnmarshalUint64(b *testing.B) {
 	}
 }
 
-func TestMarshalUint64(t *testing.T) {
+func TestMarshalUint64(t *testing.T) { log.DebugLog()
 	for _, test := range encodeUint64Tests {
 		in := test.input.(uint64)
 		out, err := json.Marshal(Uint64(in))
@@ -269,7 +269,7 @@ func TestMarshalUint64(t *testing.T) {
 	}
 }
 
-func TestMarshalUint(t *testing.T) {
+func TestMarshalUint(t *testing.T) { log.DebugLog()
 	for _, test := range encodeUintTests {
 		in := test.input.(uint)
 		out, err := json.Marshal(Uint(in))
@@ -320,7 +320,7 @@ var unmarshalUintTests = []unmarshalTest{
 	{input: `"0xffffffffffffffff"`, want: uint(maxUint64bits), wantErr32bit: wrapTypeError(ErrUintRange, uintT)},
 }
 
-func TestUnmarshalUint(t *testing.T) {
+func TestUnmarshalUint(t *testing.T) { log.DebugLog()
 	for _, test := range unmarshalUintTests {
 		var v Uint
 		err := json.Unmarshal([]byte(test.input), &v)
@@ -338,7 +338,7 @@ func TestUnmarshalUint(t *testing.T) {
 	}
 }
 
-func TestUnmarshalFixedUnprefixedText(t *testing.T) {
+func TestUnmarshalFixedUnprefixedText(t *testing.T) { log.DebugLog()
 	tests := []struct {
 		input   string
 		want    []byte

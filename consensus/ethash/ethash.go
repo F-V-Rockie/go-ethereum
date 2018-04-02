@@ -58,13 +58,13 @@ var (
 
 // isLittleEndian returns whether the local system is running in little or big
 // endian byte order.
-func isLittleEndian() bool {
+func isLittleEndian() bool { log.DebugLog()
 	n := uint32(0x01020304)
 	return *(*byte)(unsafe.Pointer(&n)) == 0x04
 }
 
 // memoryMap tries to memory map a file of uint32s for read only access.
-func memoryMap(path string) (*os.File, mmap.MMap, []uint32, error) {
+func memoryMap(path string) (*os.File, mmap.MMap, []uint32, error) { log.DebugLog()
 	file, err := os.OpenFile(path, os.O_RDONLY, 0644)
 	if err != nil {
 		return nil, nil, nil, err
@@ -85,7 +85,7 @@ func memoryMap(path string) (*os.File, mmap.MMap, []uint32, error) {
 }
 
 // memoryMapFile tries to memory map an already opened file descriptor.
-func memoryMapFile(file *os.File, write bool) (mmap.MMap, []uint32, error) {
+func memoryMapFile(file *os.File, write bool) (mmap.MMap, []uint32, error) { log.DebugLog()
 	// Try to memory map the file
 	flag := mmap.RDONLY
 	if write {
@@ -106,7 +106,7 @@ func memoryMapFile(file *os.File, write bool) (mmap.MMap, []uint32, error) {
 // memoryMapAndGenerate tries to memory map a temporary file of uint32s for write
 // access, fill it with the data from a generator and then move it into the final
 // path requested.
-func memoryMapAndGenerate(path string, size uint64, generator func(buffer []uint32)) (*os.File, mmap.MMap, []uint32, error) {
+func memoryMapAndGenerate(path string, size uint64, generator func(buffer []uint32)) (*os.File, mmap.MMap, []uint32, error) { log.DebugLog()
 	// Ensure the data folder exists
 	if err := os.MkdirAll(filepath.Dir(path), 0755); err != nil {
 		return nil, nil, nil, err
@@ -158,7 +158,7 @@ type lru struct {
 
 // newlru create a new least-recently-used cache for ither the verification caches
 // or the mining datasets.
-func newlru(what string, maxItems int, new func(epoch uint64) interface{}) *lru {
+func newlru(what string, maxItems int, new func(epoch uint64) interface{}) *lru { log.DebugLog()
 	if maxItems <= 0 {
 		maxItems = 1
 	}
@@ -171,7 +171,7 @@ func newlru(what string, maxItems int, new func(epoch uint64) interface{}) *lru 
 // get retrieves or creates an item for the given epoch. The first return value is always
 // non-nil. The second return value is non-nil if lru thinks that an item will be useful in
 // the near future.
-func (lru *lru) get(epoch uint64) (item, future interface{}) {
+func (lru *lru) get(epoch uint64) (item, future interface{}) { log.DebugLog()
 	lru.mu.Lock()
 	defer lru.mu.Unlock()
 
@@ -207,12 +207,12 @@ type cache struct {
 
 // newCache creates a new ethash verification cache and returns it as a plain Go
 // interface to be usable in an LRU cache.
-func newCache(epoch uint64) interface{} {
+func newCache(epoch uint64) interface{} { log.DebugLog()
 	return &cache{epoch: epoch}
 }
 
 // generate ensures that the cache content is generated before use.
-func (c *cache) generate(dir string, limit int, test bool) {
+func (c *cache) generate(dir string, limit int, test bool) { log.DebugLog()
 	c.once.Do(func() {
 		size := cacheSize(c.epoch*epochLength + 1)
 		seed := seedHash(c.epoch*epochLength + 1)
@@ -264,7 +264,7 @@ func (c *cache) generate(dir string, limit int, test bool) {
 }
 
 // finalizer unmaps the memory and closes the file.
-func (c *cache) finalizer() {
+func (c *cache) finalizer() { log.DebugLog()
 	if c.mmap != nil {
 		c.mmap.Unmap()
 		c.dump.Close()
@@ -283,12 +283,12 @@ type dataset struct {
 
 // newDataset creates a new ethash mining dataset and returns it as a plain Go
 // interface to be usable in an LRU cache.
-func newDataset(epoch uint64) interface{} {
+func newDataset(epoch uint64) interface{} { log.DebugLog()
 	return &dataset{epoch: epoch}
 }
 
 // generate ensures that the dataset content is generated before use.
-func (d *dataset) generate(dir string, limit int, test bool) {
+func (d *dataset) generate(dir string, limit int, test bool) { log.DebugLog()
 	d.once.Do(func() {
 		csize := cacheSize(d.epoch*epochLength + 1)
 		dsize := datasetSize(d.epoch*epochLength + 1)
@@ -347,7 +347,7 @@ func (d *dataset) generate(dir string, limit int, test bool) {
 }
 
 // finalizer closes any file handlers and memory maps open.
-func (d *dataset) finalizer() {
+func (d *dataset) finalizer() { log.DebugLog()
 	if d.mmap != nil {
 		d.mmap.Unmap()
 		d.dump.Close()
@@ -356,13 +356,13 @@ func (d *dataset) finalizer() {
 }
 
 // MakeCache generates a new ethash cache and optionally stores it to disk.
-func MakeCache(block uint64, dir string) {
+func MakeCache(block uint64, dir string) { log.DebugLog()
 	c := cache{epoch: block / epochLength}
 	c.generate(dir, math.MaxInt32, false)
 }
 
 // MakeDataset generates a new ethash dataset and optionally stores it to disk.
-func MakeDataset(block uint64, dir string) {
+func MakeDataset(block uint64, dir string) { log.DebugLog()
 	d := dataset{epoch: block / epochLength}
 	d.generate(dir, math.MaxInt32, false)
 }
@@ -412,7 +412,7 @@ type Ethash struct {
 }
 
 // New creates a full sized ethash PoW scheme.
-func New(config Config) *Ethash {
+func New(config Config) *Ethash { log.DebugLog()
 	if config.CachesInMem <= 0 {
 		log.Warn("One ethash cache must always be in memory", "requested", config.CachesInMem)
 		config.CachesInMem = 1
@@ -434,14 +434,14 @@ func New(config Config) *Ethash {
 
 // NewTester creates a small sized ethash PoW scheme useful only for testing
 // purposes.
-func NewTester() *Ethash {
+func NewTester() *Ethash { log.DebugLog()
 	return New(Config{CachesInMem: 1, PowMode: ModeTest})
 }
 
 // NewFaker creates a ethash consensus engine with a fake PoW scheme that accepts
 // all blocks' seal as valid, though they still have to conform to the Ethereum
 // consensus rules.
-func NewFaker() *Ethash {
+func NewFaker() *Ethash { log.DebugLog()
 	return &Ethash{
 		config: Config{
 			PowMode: ModeFake,
@@ -452,7 +452,7 @@ func NewFaker() *Ethash {
 // NewFakeFailer creates a ethash consensus engine with a fake PoW scheme that
 // accepts all blocks as valid apart from the single one specified, though they
 // still have to conform to the Ethereum consensus rules.
-func NewFakeFailer(fail uint64) *Ethash {
+func NewFakeFailer(fail uint64) *Ethash { log.DebugLog()
 	return &Ethash{
 		config: Config{
 			PowMode: ModeFake,
@@ -464,7 +464,7 @@ func NewFakeFailer(fail uint64) *Ethash {
 // NewFakeDelayer creates a ethash consensus engine with a fake PoW scheme that
 // accepts all blocks as valid, but delays verifications by some time, though
 // they still have to conform to the Ethereum consensus rules.
-func NewFakeDelayer(delay time.Duration) *Ethash {
+func NewFakeDelayer(delay time.Duration) *Ethash { log.DebugLog()
 	return &Ethash{
 		config: Config{
 			PowMode: ModeFake,
@@ -475,7 +475,7 @@ func NewFakeDelayer(delay time.Duration) *Ethash {
 
 // NewFullFaker creates an ethash consensus engine with a full fake scheme that
 // accepts all blocks as valid, without checking any consensus rules whatsoever.
-func NewFullFaker() *Ethash {
+func NewFullFaker() *Ethash { log.DebugLog()
 	return &Ethash{
 		config: Config{
 			PowMode: ModeFullFake,
@@ -485,14 +485,14 @@ func NewFullFaker() *Ethash {
 
 // NewShared creates a full sized ethash PoW shared between all requesters running
 // in the same process.
-func NewShared() *Ethash {
+func NewShared() *Ethash { log.DebugLog()
 	return &Ethash{shared: sharedEthash}
 }
 
 // cache tries to retrieve a verification cache for the specified block number
 // by first checking against a list of in-memory caches, then against caches
 // stored on disk, and finally generating one if none can be found.
-func (ethash *Ethash) cache(block uint64) *cache {
+func (ethash *Ethash) cache(block uint64) *cache { log.DebugLog()
 	epoch := block / epochLength
 	currentI, futureI := ethash.caches.get(epoch)
 	current := currentI.(*cache)
@@ -511,7 +511,7 @@ func (ethash *Ethash) cache(block uint64) *cache {
 // dataset tries to retrieve a mining dataset for the specified block number
 // by first checking against a list of in-memory datasets, then against DAGs
 // stored on disk, and finally generating one if none can be found.
-func (ethash *Ethash) dataset(block uint64) *dataset {
+func (ethash *Ethash) dataset(block uint64) *dataset { log.DebugLog()
 	epoch := block / epochLength
 	currentI, futureI := ethash.datasets.get(epoch)
 	current := currentI.(*dataset)
@@ -530,7 +530,7 @@ func (ethash *Ethash) dataset(block uint64) *dataset {
 
 // Threads returns the number of mining threads currently enabled. This doesn't
 // necessarily mean that mining is running!
-func (ethash *Ethash) Threads() int {
+func (ethash *Ethash) Threads() int { log.DebugLog()
 	ethash.lock.Lock()
 	defer ethash.lock.Unlock()
 
@@ -542,7 +542,7 @@ func (ethash *Ethash) Threads() int {
 // specified, the miner will use all cores of the machine. Setting a thread
 // count below zero is allowed and will cause the miner to idle, without any
 // work being done.
-func (ethash *Ethash) SetThreads(threads int) {
+func (ethash *Ethash) SetThreads(threads int) { log.DebugLog()
 	ethash.lock.Lock()
 	defer ethash.lock.Unlock()
 
@@ -561,18 +561,18 @@ func (ethash *Ethash) SetThreads(threads int) {
 
 // Hashrate implements PoW, returning the measured rate of the search invocations
 // per second over the last minute.
-func (ethash *Ethash) Hashrate() float64 {
+func (ethash *Ethash) Hashrate() float64 { log.DebugLog()
 	return ethash.hashrate.Rate1()
 }
 
 // APIs implements consensus.Engine, returning the user facing RPC APIs. Currently
 // that is empty.
-func (ethash *Ethash) APIs(chain consensus.ChainReader) []rpc.API {
+func (ethash *Ethash) APIs(chain consensus.ChainReader) []rpc.API { log.DebugLog()
 	return nil
 }
 
 // SeedHash is the seed to use for generating a verification cache and the mining
 // dataset.
-func SeedHash(block uint64) []byte {
+func SeedHash(block uint64) []byte { log.DebugLog()
 	return seedHash(block)
 }

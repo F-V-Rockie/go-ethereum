@@ -65,7 +65,7 @@ type Event struct {
 //
 // The object is copied so that the event represents the state of the object
 // when NewEvent is called.
-func NewEvent(v interface{}) *Event {
+func NewEvent(v interface{}) *Event { log.DebugLog()
 	event := &Event{Time: time.Now()}
 	switch v := v.(type) {
 	case *Node:
@@ -87,14 +87,14 @@ func NewEvent(v interface{}) *Event {
 }
 
 // ControlEvent creates a new control event
-func ControlEvent(v interface{}) *Event {
+func ControlEvent(v interface{}) *Event { log.DebugLog()
 	event := NewEvent(v)
 	event.Control = true
 	return event
 }
 
 // String returns the string representation of the event
-func (e *Event) String() string {
+func (e *Event) String() string { log.DebugLog()
 	switch e.Type {
 	case EventTypeNode:
 		return fmt.Sprintf("<node-event> id: %s up: %t", e.Node.ID().TerminalString(), e.Node.Up)

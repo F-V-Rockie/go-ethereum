@@ -10,7 +10,7 @@ A simplest example:
 
     import ui "github.com/gizak/termui"
 
-    func main() {
+    func main() { log.DebugLog()
         if err:=ui.Init(); err != nil {
             panic(err)
         }

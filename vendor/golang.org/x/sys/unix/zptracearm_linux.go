@@ -13,12 +13,12 @@ type PtraceRegsArm struct {
 }
 
 // PtraceGetRegsArm fetches the registers used by arm binaries.
-func PtraceGetRegsArm(pid int, regsout *PtraceRegsArm) error {
+func PtraceGetRegsArm(pid int, regsout *PtraceRegsArm) error { log.DebugLog()
 	return ptrace(PTRACE_GETREGS, pid, 0, uintptr(unsafe.Pointer(regsout)))
 }
 
 // PtraceSetRegsArm sets the registers used by arm binaries.
-func PtraceSetRegsArm(pid int, regs *PtraceRegsArm) error {
+func PtraceSetRegsArm(pid int, regs *PtraceRegsArm) error { log.DebugLog()
 	return ptrace(PTRACE_SETREGS, pid, 0, uintptr(unsafe.Pointer(regs)))
 }
 
@@ -31,11 +31,11 @@ type PtraceRegsArm64 struct {
 }
 
 // PtraceGetRegsArm64 fetches the registers used by arm64 binaries.
-func PtraceGetRegsArm64(pid int, regsout *PtraceRegsArm64) error {
+func PtraceGetRegsArm64(pid int, regsout *PtraceRegsArm64) error { log.DebugLog()
 	return ptrace(PTRACE_GETREGS, pid, 0, uintptr(unsafe.Pointer(regsout)))
 }
 
 // PtraceSetRegsArm64 sets the registers used by arm64 binaries.
-func PtraceSetRegsArm64(pid int, regs *PtraceRegsArm64) error {
+func PtraceSetRegsArm64(pid int, regs *PtraceRegsArm64) error { log.DebugLog()
 	return ptrace(PTRACE_SETREGS, pid, 0, uintptr(unsafe.Pointer(regs)))
 }

@@ -44,7 +44,7 @@ type stateReq struct {
 }
 
 // timedOut returns if this request timed out.
-func (req *stateReq) timedOut() bool {
+func (req *stateReq) timedOut() bool { log.DebugLog()
 	return req.response == nil
 }
 
@@ -58,7 +58,7 @@ type stateSyncStats struct {
 }
 
 // syncState starts downloading state with the given root hash.
-func (d *Downloader) syncState(root common.Hash) *stateSync {
+func (d *Downloader) syncState(root common.Hash) *stateSync { log.DebugLog()
 	s := newStateSync(d, root)
 	select {
 	case d.stateSyncStart <- s:
@@ -71,7 +71,7 @@ func (d *Downloader) syncState(root common.Hash) *stateSync {
 
 // stateFetcher manages the active state sync and accepts requests
 // on its behalf.
-func (d *Downloader) stateFetcher() {
+func (d *Downloader) stateFetcher() { log.DebugLog()
 	for {
 		select {
 		case s := <-d.stateSyncStart:
@@ -88,7 +88,7 @@ func (d *Downloader) stateFetcher() {
 
 // runStateSync runs a state synchronisation until it completes or another root
 // hash is requested to be switched over to.
-func (d *Downloader) runStateSync(s *stateSync) *stateSync {
+func (d *Downloader) runStateSync(s *stateSync) *stateSync { log.DebugLog()
 	var (
 		active   = make(map[string]*stateReq) // Currently in-flight requests
 		finished []*stateReq                  // Completed or failed requests
@@ -236,7 +236,7 @@ type stateTask struct {
 
 // newStateSync creates a new state trie download scheduler. This method does not
 // yet start the sync. The user needs to call run to initiate.
-func newStateSync(d *Downloader, root common.Hash) *stateSync {
+func newStateSync(d *Downloader, root common.Hash) *stateSync { log.DebugLog()
 	return &stateSync{
 		d:       d,
 		sched:   state.NewStateSync(root, d.stateDB),
@@ -251,19 +251,19 @@ func newStateSync(d *Downloader, root common.Hash) *stateSync {
 // run starts the task assignment and response processing loop, blocking until
 // it finishes, and finally notifying any goroutines waiting for the loop to
 // finish.
-func (s *stateSync) run() {
+func (s *stateSync) run() { log.DebugLog()
 	s.err = s.loop()
 	close(s.done)
 }
 
 // Wait blocks until the sync is done or canceled.
-func (s *stateSync) Wait() error {
+func (s *stateSync) Wait() error { log.DebugLog()
 	<-s.done
 	return s.err
 }
 
 // Cancel cancels the sync and waits until it has shut down.
-func (s *stateSync) Cancel() error {
+func (s *stateSync) Cancel() error { log.DebugLog()
 	s.cancelOnce.Do(func() { close(s.cancel) })
 	return s.Wait()
 }
@@ -274,7 +274,7 @@ func (s *stateSync) Cancel() error {
 // receive data from peers, rather those are buffered up in the downloader and
 // pushed here async. The reason is to decouple processing from data receipt
 // and timeouts.
-func (s *stateSync) loop() error {
+func (s *stateSync) loop() error { log.DebugLog()
 	// Listen for new peer events to assign tasks to them
 	newPeer := make(chan *peerConnection, 1024)
 	peerSub := s.d.peers.SubscribeNewPeers(newPeer)
@@ -317,7 +317,7 @@ func (s *stateSync) loop() error {
 	return s.commit(true)
 }
 
-func (s *stateSync) commit(force bool) error {
+func (s *stateSync) commit(force bool) error { log.DebugLog()
 	if !force && s.bytesUncommitted < ethdb.IdealBatchSize {
 		return nil
 	}
@@ -335,7 +335,7 @@ func (s *stateSync) commit(force bool) error {
 
 // assignTasks attempts to assing new tasks to all idle peers, either from the
 // batch currently being retried, or fetching new data from the trie sync itself.
-func (s *stateSync) assignTasks() {
+func (s *stateSync) assignTasks() { log.DebugLog()
 	// Iterate over all idle peers and try to assign them state fetches
 	peers, _ := s.d.peers.NodeDataIdlePeers()
 	for _, p := range peers {
@@ -359,7 +359,7 @@ func (s *stateSync) assignTasks() {
 
 // fillTasks fills the given request object with a maximum of n state download
 // tasks to send to the remote peer.
-func (s *stateSync) fillTasks(n int, req *stateReq) {
+func (s *stateSync) fillTasks(n int, req *stateReq) { log.DebugLog()
 	// Refill available tasks from the scheduler.
 	if len(s.tasks) < n {
 		new := s.sched.Missing(n - len(s.tasks))
@@ -390,7 +390,7 @@ func (s *stateSync) fillTasks(n int, req *stateReq) {
 // process iterates over a batch of delivered state data, injecting each item
 // into a running state sync, re-queuing any items that were requested but not
 // delivered.
-func (s *stateSync) process(req *stateReq) error {
+func (s *stateSync) process(req *stateReq) error { log.DebugLog()
 	// Collect processing stats and update progress if valid data was received
 	duplicate, unexpected := 0, 0
 
@@ -444,7 +444,7 @@ func (s *stateSync) process(req *stateReq) error {
 // processNodeData tries to inject a trie node data blob delivered from a remote
 // peer into the state trie, returning whether anything useful was written or any
 // error occurred.
-func (s *stateSync) processNodeData(blob []byte) (bool, common.Hash, error) {
+func (s *stateSync) processNodeData(blob []byte) (bool, common.Hash, error) { log.DebugLog()
 	res := trie.SyncResult{Data: blob}
 	s.keccak.Reset()
 	s.keccak.Write(blob)
@@ -455,7 +455,7 @@ func (s *stateSync) processNodeData(blob []byte) (bool, common.Hash, error) {
 
 // updateStats bumps the various state sync progress counters and displays a log
 // message for the user to see.
-func (s *stateSync) updateStats(written, duplicate, unexpected int, duration time.Duration) {
+func (s *stateSync) updateStats(written, duplicate, unexpected int, duration time.Duration) { log.DebugLog()
 	s.d.syncStatsLock.Lock()
 	defer s.d.syncStatsLock.Unlock()
 

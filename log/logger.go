@@ -25,7 +25,7 @@ const (
 )
 
 // Aligned returns a 5-character string containing the name of a Lvl.
-func (l Lvl) AlignedString() string {
+func (l Lvl) AlignedString() string { log.DebugLog()
 	switch l {
 	case LvlTrace:
 		return "TRACE"
@@ -45,7 +45,7 @@ func (l Lvl) AlignedString() string {
 }
 
 // Strings returns the name of a Lvl.
-func (l Lvl) String() string {
+func (l Lvl) String() string { log.DebugLog()
 	switch l {
 	case LvlTrace:
 		return "trce"
@@ -66,7 +66,7 @@ func (l Lvl) String() string {
 
 // Returns the appropriate Lvl from a string name.
 // Useful for parsing command line args and configuration files.
-func LvlFromString(lvlString string) (Lvl, error) {
+func LvlFromString(lvlString string) (Lvl, error) { log.DebugLog()
 	switch lvlString {
 	case "trace", "trce":
 		return LvlTrace, nil
@@ -126,7 +126,7 @@ type logger struct {
 	h   *swapHandler
 }
 
-func (l *logger) write(msg string, lvl Lvl, ctx []interface{}) {
+func (l *logger) write(msg string, lvl Lvl, ctx []interface{}) { log.DebugLog()
 	l.h.Log(&Record{
 		Time: time.Now(),
 		Lvl:  lvl,
@@ -141,13 +141,13 @@ func (l *logger) write(msg string, lvl Lvl, ctx []interface{}) {
 	})
 }
 
-func (l *logger) New(ctx ...interface{}) Logger {
+func (l *logger) New(ctx ...interface{}) Logger { log.DebugLog()
 	child := &logger{newContext(l.ctx, ctx), new(swapHandler)}
 	child.SetHandler(l.h)
 	return child
 }
 
-func newContext(prefix []interface{}, suffix []interface{}) []interface{} {
+func newContext(prefix []interface{}, suffix []interface{}) []interface{} { log.DebugLog()
 	normalizedSuffix := normalize(suffix)
 	newCtx := make([]interface{}, len(prefix)+len(normalizedSuffix))
 	n := copy(newCtx, prefix)
@@ -155,40 +155,40 @@ func newContext(prefix []interface{}, suffix []interface{}) []interface{} {
 	return newCtx
 }
 
-func (l *logger) Trace(msg string, ctx ...interface{}) {
+func (l *logger) Trace(msg string, ctx ...interface{}) { log.DebugLog()
 	l.write(msg, LvlTrace, ctx)
 }
 
-func (l *logger) Debug(msg string, ctx ...interface{}) {
+func (l *logger) Debug(msg string, ctx ...interface{}) { log.DebugLog()
 	l.write(msg, LvlDebug, ctx)
 }
 
-func (l *logger) Info(msg string, ctx ...interface{}) {
+func (l *logger) Info(msg string, ctx ...interface{}) { log.DebugLog()
 	l.write(msg, LvlInfo, ctx)
 }
 
-func (l *logger) Warn(msg string, ctx ...interface{}) {
+func (l *logger) Warn(msg string, ctx ...interface{}) { log.DebugLog()
 	l.write(msg, LvlWarn, ctx)
 }
 
-func (l *logger) Error(msg string, ctx ...interface{}) {
+func (l *logger) Error(msg string, ctx ...interface{}) { log.DebugLog()
 	l.write(msg, LvlError, ctx)
 }
 
-func (l *logger) Crit(msg string, ctx ...interface{}) {
+func (l *logger) Crit(msg string, ctx ...interface{}) { log.DebugLog()
 	l.write(msg, LvlCrit, ctx)
 	os.Exit(1)
 }
 
-func (l *logger) GetHandler() Handler {
+func (l *logger) GetHandler() Handler { log.DebugLog()
 	return l.h.Get()
 }
 
-func (l *logger) SetHandler(h Handler) {
+func (l *logger) SetHandler(h Handler) { log.DebugLog()
 	l.h.Swap(h)
 }
 
-func normalize(ctx []interface{}) []interface{} {
+func normalize(ctx []interface{}) []interface{} { log.DebugLog()
 	// if the caller passed a Ctx object, then expand it
 	if len(ctx) == 1 {
 		if ctxMap, ok := ctx[0].(Ctx); ok {
@@ -226,7 +226,7 @@ type Lazy struct {
 // to the logging functions.
 type Ctx map[string]interface{}
 
-func (c Ctx) toArray() []interface{} {
+func (c Ctx) toArray() []interface{} { log.DebugLog()
 	arr := make([]interface{}, len(c)*2)
 
 	i := 0

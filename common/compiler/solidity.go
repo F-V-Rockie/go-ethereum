@@ -62,7 +62,7 @@ type solcOutput struct {
 	Version string
 }
 
-func (s *Solidity) makeArgs() []string {
+func (s *Solidity) makeArgs() []string { log.DebugLog()
 	p := []string{
 		"--combined-json", "bin,abi,userdoc,devdoc",
 		"--optimize", // code optimizer switched on
@@ -74,7 +74,7 @@ func (s *Solidity) makeArgs() []string {
 }
 
 // SolidityVersion runs solc and parses its version output.
-func SolidityVersion(solc string) (*Solidity, error) {
+func SolidityVersion(solc string) (*Solidity, error) { log.DebugLog()
 	if solc == "" {
 		solc = "solc"
 	}
@@ -103,7 +103,7 @@ func SolidityVersion(solc string) (*Solidity, error) {
 }
 
 // CompileSolidityString builds and returns all the contracts contained within a source string.
-func CompileSolidityString(solc, source string) (map[string]*Contract, error) {
+func CompileSolidityString(solc, source string) (map[string]*Contract, error) { log.DebugLog()
 	if len(source) == 0 {
 		return nil, errors.New("solc: empty source string")
 	}
@@ -118,7 +118,7 @@ func CompileSolidityString(solc, source string) (map[string]*Contract, error) {
 }
 
 // CompileSolidity compiles all given Solidity source files.
-func CompileSolidity(solc string, sourcefiles ...string) (map[string]*Contract, error) {
+func CompileSolidity(solc string, sourcefiles ...string) (map[string]*Contract, error) { log.DebugLog()
 	if len(sourcefiles) == 0 {
 		return nil, errors.New("solc: no source files")
 	}
@@ -135,7 +135,7 @@ func CompileSolidity(solc string, sourcefiles ...string) (map[string]*Contract, 
 	return s.run(cmd, source)
 }
 
-func (s *Solidity) run(cmd *exec.Cmd, source string) (map[string]*Contract, error) {
+func (s *Solidity) run(cmd *exec.Cmd, source string) (map[string]*Contract, error) { log.DebugLog()
 	var stderr, stdout bytes.Buffer
 	cmd.Stderr = &stderr
 	cmd.Stdout = &stdout
@@ -181,7 +181,7 @@ func (s *Solidity) run(cmd *exec.Cmd, source string) (map[string]*Contract, erro
 	return contracts, nil
 }
 
-func slurpFiles(files []string) (string, error) {
+func slurpFiles(files []string) (string, error) { log.DebugLog()
 	var concat bytes.Buffer
 	for _, file := range files {
 		content, err := ioutil.ReadFile(file)

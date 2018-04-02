@@ -27,7 +27,7 @@ import (
 	"github.com/ethereum/go-ethereum/log"
 )
 
-func externalUnmount(mountPoint string) error {
+func externalUnmount(mountPoint string) error { log.DebugLog()
 	ctx, cancel := context.WithTimeout(context.Background(), unmountTimeout)
 	defer cancel()
 
@@ -46,7 +46,7 @@ func externalUnmount(mountPoint string) error {
 	}
 }
 
-func addFileToSwarm(sf *SwarmFile, content []byte, size int) error {
+func addFileToSwarm(sf *SwarmFile, content []byte, size int) error { log.DebugLog()
 	fkey, mhash, err := sf.mountInfo.swarmApi.AddFile(sf.mountInfo.LatestManifest, sf.path, sf.name, content, true)
 	if err != nil {
 		return err
@@ -65,7 +65,7 @@ func addFileToSwarm(sf *SwarmFile, content []byte, size int) error {
 	return nil
 }
 
-func removeFileFromSwarm(sf *SwarmFile) error {
+func removeFileFromSwarm(sf *SwarmFile) error { log.DebugLog()
 	mkey, err := sf.mountInfo.swarmApi.RemoveFile(sf.mountInfo.LatestManifest, sf.path, sf.name, true)
 	if err != nil {
 		return err
@@ -79,7 +79,7 @@ func removeFileFromSwarm(sf *SwarmFile) error {
 	return nil
 }
 
-func removeDirectoryFromSwarm(sd *SwarmDir) error {
+func removeDirectoryFromSwarm(sd *SwarmDir) error { log.DebugLog()
 	if len(sd.directories) == 0 && len(sd.files) == 0 {
 		return nil
 	}
@@ -101,7 +101,7 @@ func removeDirectoryFromSwarm(sd *SwarmDir) error {
 	return nil
 }
 
-func appendToExistingFileInSwarm(sf *SwarmFile, content []byte, offset int64, length int64) error {
+func appendToExistingFileInSwarm(sf *SwarmFile, content []byte, offset int64, length int64) error { log.DebugLog()
 	fkey, mhash, err := sf.mountInfo.swarmApi.AppendFile(sf.mountInfo.LatestManifest, sf.path, sf.name, sf.fileSize, content, sf.key, offset, length, true)
 	if err != nil {
 		return err

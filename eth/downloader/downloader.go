@@ -197,7 +197,7 @@ type BlockChain interface {
 }
 
 // New creates a new downloader to fetch hashes and blocks from remote peers.
-func New(mode SyncMode, stateDb ethdb.Database, mux *event.TypeMux, chain BlockChain, lightchain LightChain, dropPeer peerDropFn) *Downloader {
+func New(mode SyncMode, stateDb ethdb.Database, mux *event.TypeMux, chain BlockChain, lightchain LightChain, dropPeer peerDropFn) *Downloader { log.DebugLog()
 	if lightchain == nil {
 		lightchain = chain
 	}
@@ -239,7 +239,7 @@ func New(mode SyncMode, stateDb ethdb.Database, mux *event.TypeMux, chain BlockC
 // In addition, during the state download phase of fast synchronisation the number
 // of processed and the total number of known states are also returned. Otherwise
 // these are zero.
-func (d *Downloader) Progress() ethereum.SyncProgress {
+func (d *Downloader) Progress() ethereum.SyncProgress { log.DebugLog()
 	// Lock the current stats and return the progress
 	d.syncStatsLock.RLock()
 	defer d.syncStatsLock.RUnlock()
@@ -263,13 +263,13 @@ func (d *Downloader) Progress() ethereum.SyncProgress {
 }
 
 // Synchronising returns whether the downloader is currently retrieving blocks.
-func (d *Downloader) Synchronising() bool {
+func (d *Downloader) Synchronising() bool { log.DebugLog()
 	return atomic.LoadInt32(&d.synchronising) > 0
 }
 
 // RegisterPeer injects a new download peer into the set of block source to be
 // used for fetching hashes and blocks from.
-func (d *Downloader) RegisterPeer(id string, version int, peer Peer) error {
+func (d *Downloader) RegisterPeer(id string, version int, peer Peer) error { log.DebugLog()
 	logger := log.New("peer", id)
 	logger.Trace("Registering sync peer")
 	if err := d.peers.Register(newPeerConnection(id, version, peer, logger)); err != nil {
@@ -282,14 +282,14 @@ func (d *Downloader) RegisterPeer(id string, version int, peer Peer) error {
 }
 
 // RegisterLightPeer injects a light client peer, wrapping it so it appears as a regular peer.
-func (d *Downloader) RegisterLightPeer(id string, version int, peer LightPeer) error {
+func (d *Downloader) RegisterLightPeer(id string, version int, peer LightPeer) error { log.DebugLog()
 	return d.RegisterPeer(id, version, &lightPeerWrapper{peer})
 }
 
 // UnregisterPeer remove a peer from the known list, preventing any action from
 // the specified peer. An effort is also made to return any pending fetches into
 // the queue.
-func (d *Downloader) UnregisterPeer(id string) error {
+func (d *Downloader) UnregisterPeer(id string) error { log.DebugLog()
 	// Unregister the peer from the active peer set and revoke any fetch tasks
 	logger := log.New("peer", id)
 	logger.Trace("Unregistering sync peer")
@@ -312,7 +312,7 @@ func (d *Downloader) UnregisterPeer(id string) error {
 
 // Synchronise tries to sync up our local block chain with a remote peer, both
 // adding various sanity checks as well as wrapping it with various log entries.
-func (d *Downloader) Synchronise(id string, head common.Hash, td *big.Int, mode SyncMode) error {
+func (d *Downloader) Synchronise(id string, head common.Hash, td *big.Int, mode SyncMode) error { log.DebugLog()
 	err := d.synchronise(id, head, td, mode)
 	switch err {
 	case nil:
@@ -338,7 +338,7 @@ func (d *Downloader) Synchronise(id string, head common.Hash, td *big.Int, mode 
 // synchronise will select the peer and use it for synchronising. If an empty string is given
 // it will use the best peer possible and synchronize if its TD is higher than our own. If any of the
 // checks fail an error will be returned. This method is synchronous
-func (d *Downloader) synchronise(id string, hash common.Hash, td *big.Int, mode SyncMode) error {
+func (d *Downloader) synchronise(id string, hash common.Hash, td *big.Int, mode SyncMode) error { log.DebugLog()
 	// Mock out the synchronisation if testing
 	if d.synchroniseMock != nil {
 		return d.synchroniseMock(id, hash)
@@ -400,7 +400,7 @@ func (d *Downloader) synchronise(id string, hash common.Hash, td *big.Int, mode 
 
 // syncWithPeer starts a block synchronization based on the hash chain from the
 // specified peer and head hash.
-func (d *Downloader) syncWithPeer(p *peerConnection, hash common.Hash, td *big.Int) (err error) {
+func (d *Downloader) syncWithPeer(p *peerConnection, hash common.Hash, td *big.Int) (err error) { log.DebugLog()
 	d.mux.Post(StartEvent{})
 	defer func() {
 		// reset on error
@@ -475,7 +475,7 @@ func (d *Downloader) syncWithPeer(p *peerConnection, hash common.Hash, td *big.I
 
 // spawnSync runs d.process and all given fetcher functions to completion in
 // separate goroutines, returning the first error that appears.
-func (d *Downloader) spawnSync(fetchers []func() error) error {
+func (d *Downloader) spawnSync(fetchers []func() error) error { log.DebugLog()
 	var wg sync.WaitGroup
 	errc := make(chan error, len(fetchers))
 	wg.Add(len(fetchers))
@@ -504,7 +504,7 @@ func (d *Downloader) spawnSync(fetchers []func() error) error {
 
 // Cancel cancels all of the operations and resets the queue. It returns true
 // if the cancel operation was completed.
-func (d *Downloader) Cancel() {
+func (d *Downloader) Cancel() { log.DebugLog()
 	// Close the current cancel channel
 	d.cancelLock.Lock()
 	if d.cancelCh != nil {
@@ -520,7 +520,7 @@ func (d *Downloader) Cancel() {
 
 // Terminate interrupts the downloader, canceling all pending operations.
 // The downloader cannot be reused after calling Terminate.
-func (d *Downloader) Terminate() {
+func (d *Downloader) Terminate() { log.DebugLog()
 	// Close the termination channel (make sure double close is allowed)
 	d.quitLock.Lock()
 	select {
@@ -536,7 +536,7 @@ func (d *Downloader) Terminate() {
 
 // fetchHeight retrieves the head header of the remote peer to aid in estimating
 // the total time a pending synchronisation would take.
-func (d *Downloader) fetchHeight(p *peerConnection) (*types.Header, error) {
+func (d *Downloader) fetchHeight(p *peerConnection) (*types.Header, error) { log.DebugLog()
 	p.log.Debug("Retrieving remote chain height")
 
 	// Request the advertised remote head block and wait for the response
@@ -582,7 +582,7 @@ func (d *Downloader) fetchHeight(p *peerConnection) (*types.Header, error) {
 // on the correct chain, checking the top N links should already get us a match.
 // In the rare scenario when we ended up on a long reorganisation (i.e. none of
 // the head links match), we do a binary search to find the common ancestor.
-func (d *Downloader) findAncestor(p *peerConnection, height uint64) (uint64, error) {
+func (d *Downloader) findAncestor(p *peerConnection, height uint64) (uint64, error) { log.DebugLog()
 	// Figure out the valid ancestor range to prevent rewrite attacks
 	floor, ceil := int64(-1), d.lightchain.CurrentHeader().Number.Uint64()
 
@@ -754,7 +754,7 @@ func (d *Downloader) findAncestor(p *peerConnection, height uint64) (uint64, err
 // other peers are only accepted if they map cleanly to the skeleton. If no one
 // can fill in the skeleton - not even the origin peer - it's assumed invalid and
 // the origin is dropped.
-func (d *Downloader) fetchHeaders(p *peerConnection, from uint64, pivot uint64) error {
+func (d *Downloader) fetchHeaders(p *peerConnection, from uint64, pivot uint64) error { log.DebugLog()
 	p.log.Debug("Directing header downloads", "origin", from)
 	defer p.log.Debug("Header download terminated")
 
@@ -886,7 +886,7 @@ func (d *Downloader) fetchHeaders(p *peerConnection, from uint64, pivot uint64) 
 //
 // The method returs the entire filled skeleton and also the number of headers
 // already forwarded for processing.
-func (d *Downloader) fillHeaderSkeleton(from uint64, skeleton []*types.Header) ([]*types.Header, int, error) {
+func (d *Downloader) fillHeaderSkeleton(from uint64, skeleton []*types.Header) ([]*types.Header, int, error) { log.DebugLog()
 	log.Debug("Filling up skeleton", "from", from)
 	d.queue.ScheduleSkeleton(from, skeleton)
 
@@ -917,7 +917,7 @@ func (d *Downloader) fillHeaderSkeleton(from uint64, skeleton []*types.Header) (
 // fetchBodies iteratively downloads the scheduled block bodies, taking any
 // available peers, reserving a chunk of blocks for each, waiting for delivery
 // and also periodically checking for timeouts.
-func (d *Downloader) fetchBodies(from uint64) error {
+func (d *Downloader) fetchBodies(from uint64) error { log.DebugLog()
 	log.Debug("Downloading block bodies", "origin", from)
 
 	var (
@@ -941,7 +941,7 @@ func (d *Downloader) fetchBodies(from uint64) error {
 // fetchReceipts iteratively downloads the scheduled block receipts, taking any
 // available peers, reserving a chunk of receipts for each, waiting for delivery
 // and also periodically checking for timeouts.
-func (d *Downloader) fetchReceipts(from uint64) error {
+func (d *Downloader) fetchReceipts(from uint64) error { log.DebugLog()
 	log.Debug("Downloading transaction receipts", "origin", from)
 
 	var (
@@ -1150,7 +1150,7 @@ func (d *Downloader) fetchParts(errCancel error, deliveryCh chan dataPack, deliv
 // processHeaders takes batches of retrieved headers from an input channel and
 // keeps processing and scheduling them into the header chain and downloader's
 // queue until the stream ends or a failure occurs.
-func (d *Downloader) processHeaders(origin uint64, pivot uint64, td *big.Int) error {
+func (d *Downloader) processHeaders(origin uint64, pivot uint64, td *big.Int) error { log.DebugLog()
 	// Keep a count of uncertain headers to roll back
 	rollback := []*types.Header{}
 	defer func() {
@@ -1316,7 +1316,7 @@ func (d *Downloader) processHeaders(origin uint64, pivot uint64, td *big.Int) er
 }
 
 // processFullSyncContent takes fetch results from the queue and imports them into the chain.
-func (d *Downloader) processFullSyncContent() error {
+func (d *Downloader) processFullSyncContent() error { log.DebugLog()
 	for {
 		results := d.queue.Results(true)
 		if len(results) == 0 {
@@ -1331,7 +1331,7 @@ func (d *Downloader) processFullSyncContent() error {
 	}
 }
 
-func (d *Downloader) importBlockResults(results []*fetchResult) error {
+func (d *Downloader) importBlockResults(results []*fetchResult) error { log.DebugLog()
 	// Check for any early termination requests
 	if len(results) == 0 {
 		return nil
@@ -1360,7 +1360,7 @@ func (d *Downloader) importBlockResults(results []*fetchResult) error {
 
 // processFastSyncContent takes fetch results from the queue and writes them to the
 // database. It also controls the synchronisation of state nodes of the pivot block.
-func (d *Downloader) processFastSyncContent(latest *types.Header) error {
+func (d *Downloader) processFastSyncContent(latest *types.Header) error { log.DebugLog()
 	// Start syncing state of the reported head block. This should get us most of
 	// the state of the pivot block.
 	stateSync := d.syncState(latest.Root)
@@ -1453,7 +1453,7 @@ func (d *Downloader) processFastSyncContent(latest *types.Header) error {
 	}
 }
 
-func splitAroundPivot(pivot uint64, results []*fetchResult) (p *fetchResult, before, after []*fetchResult) {
+func splitAroundPivot(pivot uint64, results []*fetchResult) (p *fetchResult, before, after []*fetchResult) { log.DebugLog()
 	for _, result := range results {
 		num := result.Header.Number.Uint64()
 		switch {
@@ -1468,7 +1468,7 @@ func splitAroundPivot(pivot uint64, results []*fetchResult) (p *fetchResult, bef
 	return p, before, after
 }
 
-func (d *Downloader) commitFastSyncData(results []*fetchResult, stateSync *stateSync) error {
+func (d *Downloader) commitFastSyncData(results []*fetchResult, stateSync *stateSync) error { log.DebugLog()
 	// Check for any early termination requests
 	if len(results) == 0 {
 		return nil
@@ -1501,7 +1501,7 @@ func (d *Downloader) commitFastSyncData(results []*fetchResult, stateSync *state
 	return nil
 }
 
-func (d *Downloader) commitPivotBlock(result *fetchResult) error {
+func (d *Downloader) commitPivotBlock(result *fetchResult) error { log.DebugLog()
 	block := types.NewBlockWithHeader(result.Header).WithBody(result.Transactions, result.Uncles)
 	log.Debug("Committing fast sync pivot as new head", "number", block.Number(), "hash", block.Hash())
 	if _, err := d.blockchain.InsertReceiptChain([]*types.Block{block}, []types.Receipts{result.Receipts}); err != nil {
@@ -1516,27 +1516,27 @@ func (d *Downloader) commitPivotBlock(result *fetchResult) error {
 
 // DeliverHeaders injects a new batch of block headers received from a remote
 // node into the download schedule.
-func (d *Downloader) DeliverHeaders(id string, headers []*types.Header) (err error) {
+func (d *Downloader) DeliverHeaders(id string, headers []*types.Header) (err error) { log.DebugLog()
 	return d.deliver(id, d.headerCh, &headerPack{id, headers}, headerInMeter, headerDropMeter)
 }
 
 // DeliverBodies injects a new batch of block bodies received from a remote node.
-func (d *Downloader) DeliverBodies(id string, transactions [][]*types.Transaction, uncles [][]*types.Header) (err error) {
+func (d *Downloader) DeliverBodies(id string, transactions [][]*types.Transaction, uncles [][]*types.Header) (err error) { log.DebugLog()
 	return d.deliver(id, d.bodyCh, &bodyPack{id, transactions, uncles}, bodyInMeter, bodyDropMeter)
 }
 
 // DeliverReceipts injects a new batch of receipts received from a remote node.
-func (d *Downloader) DeliverReceipts(id string, receipts [][]*types.Receipt) (err error) {
+func (d *Downloader) DeliverReceipts(id string, receipts [][]*types.Receipt) (err error) { log.DebugLog()
 	return d.deliver(id, d.receiptCh, &receiptPack{id, receipts}, receiptInMeter, receiptDropMeter)
 }
 
 // DeliverNodeData injects a new batch of node state data received from a remote node.
-func (d *Downloader) DeliverNodeData(id string, data [][]byte) (err error) {
+func (d *Downloader) DeliverNodeData(id string, data [][]byte) (err error) { log.DebugLog()
 	return d.deliver(id, d.stateCh, &statePack{id, data}, stateInMeter, stateDropMeter)
 }
 
 // deliver injects a new batch of data received from a remote node.
-func (d *Downloader) deliver(id string, destCh chan dataPack, packet dataPack, inMeter, dropMeter metrics.Meter) (err error) {
+func (d *Downloader) deliver(id string, destCh chan dataPack, packet dataPack, inMeter, dropMeter metrics.Meter) (err error) { log.DebugLog()
 	// Update the delivery metrics for both good and failed deliveries
 	inMeter.Mark(int64(packet.Items()))
 	defer func() {
@@ -1561,7 +1561,7 @@ func (d *Downloader) deliver(id string, destCh chan dataPack, packet dataPack, i
 
 // qosTuner is the quality of service tuning loop that occasionally gathers the
 // peer latency statistics and updates the estimated request round trip time.
-func (d *Downloader) qosTuner() {
+func (d *Downloader) qosTuner() { log.DebugLog()
 	for {
 		// Retrieve the current median RTT and integrate into the previoust target RTT
 		rtt := time.Duration((1-qosTuningImpact)*float64(atomic.LoadUint64(&d.rttEstimate)) + qosTuningImpact*float64(d.peers.medianRTT()))
@@ -1584,7 +1584,7 @@ func (d *Downloader) qosTuner() {
 
 // qosReduceConfidence is meant to be called when a new peer joins the downloader's
 // peer set, needing to reduce the confidence we have in out QoS estimates.
-func (d *Downloader) qosReduceConfidence() {
+func (d *Downloader) qosReduceConfidence() { log.DebugLog()
 	// If we have a single peer, confidence is always 1
 	peers := uint64(d.peers.Len())
 	if peers == 0 {
@@ -1616,13 +1616,13 @@ func (d *Downloader) qosReduceConfidence() {
 // Note, the returned RTT is .9 of the actually estimated RTT. The reason is that
 // the downloader tries to adapt queries to the RTT, so multiple RTT values can
 // be adapted to, but smaller ones are preffered (stabler download stream).
-func (d *Downloader) requestRTT() time.Duration {
+func (d *Downloader) requestRTT() time.Duration { log.DebugLog()
 	return time.Duration(atomic.LoadUint64(&d.rttEstimate)) * 9 / 10
 }
 
 // requestTTL returns the current timeout allowance for a single download request
 // to finish under.
-func (d *Downloader) requestTTL() time.Duration {
+func (d *Downloader) requestTTL() time.Duration { log.DebugLog()
 	var (
 		rtt  = time.Duration(atomic.LoadUint64(&d.rttEstimate))
 		conf = float64(atomic.LoadUint64(&d.rttConfidence)) / 1000000.0

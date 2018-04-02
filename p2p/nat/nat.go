@@ -59,7 +59,7 @@ type Interface interface {
 //     "upnp"               uses the Universal Plug and Play protocol
 //     "pmp"                uses NAT-PMP with an auto-detected gateway address
 //     "pmp:192.168.0.1"    uses NAT-PMP with the given gateway address
-func Parse(spec string) (Interface, error) {
+func Parse(spec string) (Interface, error) { log.DebugLog()
 	var (
 		parts = strings.SplitN(spec, ":", 2)
 		mech  = strings.ToLower(parts[0])
@@ -97,7 +97,7 @@ const (
 
 // Map adds a port mapping on m and keeps it alive until c is closed.
 // This function is typically invoked in its own goroutine.
-func Map(m Interface, c chan struct{}, protocol string, extport, intport int, name string) {
+func Map(m Interface, c chan struct{}, protocol string, extport, intport int, name string) { log.DebugLog()
 	log := log.New("proto", protocol, "extport", extport, "intport", intport, "interface", m)
 	refresh := time.NewTimer(mapUpdateInterval)
 	defer func() {
@@ -129,7 +129,7 @@ func Map(m Interface, c chan struct{}, protocol string, extport, intport int, na
 // ExtIP assumes that the local machine is reachable on the given
 // external IP address, and that any required ports were mapped manually.
 // Mapping operations will not return an error but won't actually do anything.
-func ExtIP(ip net.IP) Interface {
+func ExtIP(ip net.IP) Interface { log.DebugLog()
 	if ip == nil {
 		panic("IP must not be nil")
 	}
@@ -138,16 +138,16 @@ func ExtIP(ip net.IP) Interface {
 
 type extIP net.IP
 
-func (n extIP) ExternalIP() (net.IP, error) { return net.IP(n), nil }
-func (n extIP) String() string              { return fmt.Sprintf("ExtIP(%v)", net.IP(n)) }
+func (n extIP) ExternalIP() (net.IP, error) { log.DebugLog() return net.IP(n), nil }
+func (n extIP) String() string              { log.DebugLog() return fmt.Sprintf("ExtIP(%v)", net.IP(n)) }
 
 // These do nothing.
-func (extIP) AddMapping(string, int, int, string, time.Duration) error { return nil }
-func (extIP) DeleteMapping(string, int, int) error                     { return nil }
+func (extIP) AddMapping(string, int, int, string, time.Duration) error { log.DebugLog() return nil }
+func (extIP) DeleteMapping(string, int, int) error                     { log.DebugLog() return nil }
 
 // Any returns a port mapper that tries to discover any supported
 // mechanism on the local network.
-func Any() Interface {
+func Any() Interface { log.DebugLog()
 	// TODO: attempt to discover whether the local machine has an
 	// Internet-class address. Return ExtIP in this case.
 	return startautodisc("UPnP or NAT-PMP", func() Interface {
@@ -165,14 +165,14 @@ func Any() Interface {
 
 // UPnP returns a port mapper that uses UPnP. It will attempt to
 // discover the address of your router using UDP broadcasts.
-func UPnP() Interface {
+func UPnP() Interface { log.DebugLog()
 	return startautodisc("UPnP", discoverUPnP)
 }
 
 // PMP returns a port mapper that uses NAT-PMP. The provided gateway
 // address should be the IP of your router. If the given gateway
 // address is nil, PMP will attempt to auto-discover the router.
-func PMP(gateway net.IP) Interface {
+func PMP(gateway net.IP) Interface { log.DebugLog()
 	if gateway != nil {
 		return &pmp{gw: gateway, c: natpmp.NewClient(gateway)}
 	}
@@ -195,33 +195,33 @@ type autodisc struct {
 	found Interface
 }
 
-func startautodisc(what string, doit func() Interface) Interface {
+func startautodisc(what string, doit func() Interface) Interface { log.DebugLog()
 	// TODO: monitor network configuration and rerun doit when it changes.
 	return &autodisc{what: what, doit: doit}
 }
 
-func (n *autodisc) AddMapping(protocol string, extport, intport int, name string, lifetime time.Duration) error {
+func (n *autodisc) AddMapping(protocol string, extport, intport int, name string, lifetime time.Duration) error { log.DebugLog()
 	if err := n.wait(); err != nil {
 		return err
 	}
 	return n.found.AddMapping(protocol, extport, intport, name, lifetime)
 }
 
-func (n *autodisc) DeleteMapping(protocol string, extport, intport int) error {
+func (n *autodisc) DeleteMapping(protocol string, extport, intport int) error { log.DebugLog()
 	if err := n.wait(); err != nil {
 		return err
 	}
 	return n.found.DeleteMapping(protocol, extport, intport)
 }
 
-func (n *autodisc) ExternalIP() (net.IP, error) {
+func (n *autodisc) ExternalIP() (net.IP, error) { log.DebugLog()
 	if err := n.wait(); err != nil {
 		return nil, err
 	}
 	return n.found.ExternalIP()
 }
 
-func (n *autodisc) String() string {
+func (n *autodisc) String() string { log.DebugLog()
 	n.mu.Lock()
 	defer n.mu.Unlock()
 	if n.found == nil {
@@ -232,7 +232,7 @@ func (n *autodisc) String() string {
 }
 
 // wait blocks until auto-discovery has been performed.
-func (n *autodisc) wait() error {
+func (n *autodisc) wait() error { log.DebugLog()
 	n.once.Do(func() {
 		n.mu.Lock()
 		n.found = n.doit()

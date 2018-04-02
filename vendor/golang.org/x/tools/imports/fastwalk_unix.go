@@ -20,7 +20,7 @@ const blockSize = 8 << 10
 // value used to represent a syscall.DT_UNKNOWN Dirent.Type.
 const unknownFileMode os.FileMode = os.ModeNamedPipe | os.ModeSocket | os.ModeDevice
 
-func readDir(dirName string, fn func(dirName, entName string, typ os.FileMode) error) error {
+func readDir(dirName string, fn func(dirName, entName string, typ os.FileMode) error) error { log.DebugLog()
 	fd, err := syscall.Open(dirName, 0, 0)
 	if err != nil {
 		return err
@@ -67,7 +67,7 @@ func readDir(dirName string, fn func(dirName, entName string, typ os.FileMode) e
 	}
 }
 
-func parseDirEnt(buf []byte) (consumed int, name string, typ os.FileMode) {
+func parseDirEnt(buf []byte) (consumed int, name string, typ os.FileMode) { log.DebugLog()
 	// golang.org/issue/15653
 	dirent := (*syscall.Dirent)(unsafe.Pointer(&buf[0]))
 	if v := unsafe.Offsetof(dirent.Reclen) + unsafe.Sizeof(dirent.Reclen); uintptr(len(buf)) < v {

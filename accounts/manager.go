@@ -40,7 +40,7 @@ type Manager struct {
 
 // NewManager creates a generic account manager to sign transaction via various
 // supported backends.
-func NewManager(backends ...Backend) *Manager {
+func NewManager(backends ...Backend) *Manager { log.DebugLog()
 	// Retrieve the initial list of wallets from the backends and sort by URL
 	var wallets []Wallet
 	for _, backend := range backends {
@@ -71,7 +71,7 @@ func NewManager(backends ...Backend) *Manager {
 }
 
 // Close terminates the account manager's internal notification processes.
-func (am *Manager) Close() error {
+func (am *Manager) Close() error { log.DebugLog()
 	errc := make(chan error)
 	am.quit <- errc
 	return <-errc
@@ -79,7 +79,7 @@ func (am *Manager) Close() error {
 
 // update is the wallet event loop listening for notifications from the backends
 // and updating the cache of wallets.
-func (am *Manager) update() {
+func (am *Manager) update() { log.DebugLog()
 	// Close all subscriptions when the manager terminates
 	defer func() {
 		am.lock.Lock()
@@ -116,12 +116,12 @@ func (am *Manager) update() {
 }
 
 // Backends retrieves the backend(s) with the given type from the account manager.
-func (am *Manager) Backends(kind reflect.Type) []Backend {
+func (am *Manager) Backends(kind reflect.Type) []Backend { log.DebugLog()
 	return am.backends[kind]
 }
 
 // Wallets returns all signer accounts registered under this account manager.
-func (am *Manager) Wallets() []Wallet {
+func (am *Manager) Wallets() []Wallet { log.DebugLog()
 	am.lock.RLock()
 	defer am.lock.RUnlock()
 
@@ -131,7 +131,7 @@ func (am *Manager) Wallets() []Wallet {
 }
 
 // Wallet retrieves the wallet associated with a particular URL.
-func (am *Manager) Wallet(url string) (Wallet, error) {
+func (am *Manager) Wallet(url string) (Wallet, error) { log.DebugLog()
 	am.lock.RLock()
 	defer am.lock.RUnlock()
 
@@ -150,7 +150,7 @@ func (am *Manager) Wallet(url string) (Wallet, error) {
 // Find attempts to locate the wallet corresponding to a specific account. Since
 // accounts can be dynamically added to and removed from wallets, this method has
 // a linear runtime in the number of wallets.
-func (am *Manager) Find(account Account) (Wallet, error) {
+func (am *Manager) Find(account Account) (Wallet, error) { log.DebugLog()
 	am.lock.RLock()
 	defer am.lock.RUnlock()
 
@@ -164,7 +164,7 @@ func (am *Manager) Find(account Account) (Wallet, error) {
 
 // Subscribe creates an async subscription to receive notifications when the
 // manager detects the arrival or departure of a wallet from any of its backends.
-func (am *Manager) Subscribe(sink chan<- WalletEvent) event.Subscription {
+func (am *Manager) Subscribe(sink chan<- WalletEvent) event.Subscription { log.DebugLog()
 	return am.feed.Subscribe(sink)
 }
 
@@ -172,7 +172,7 @@ func (am *Manager) Subscribe(sink chan<- WalletEvent) event.Subscription {
 // origin list is preserved by inserting new wallets at the correct position.
 //
 // The original slice is assumed to be already sorted by URL.
-func merge(slice []Wallet, wallets ...Wallet) []Wallet {
+func merge(slice []Wallet, wallets ...Wallet) []Wallet { log.DebugLog()
 	for _, wallet := range wallets {
 		n := sort.Search(len(slice), func(i int) bool { return slice[i].URL().Cmp(wallet.URL()) >= 0 })
 		if n == len(slice) {
@@ -186,7 +186,7 @@ func merge(slice []Wallet, wallets ...Wallet) []Wallet {
 
 // drop is the couterpart of merge, which looks up wallets from within the sorted
 // cache and removes the ones specified.
-func drop(slice []Wallet, wallets ...Wallet) []Wallet {
+func drop(slice []Wallet, wallets ...Wallet) []Wallet { log.DebugLog()
 	for _, wallet := range wallets {
 		n := sort.Search(len(slice), func(i int) bool { return slice[i].URL().Cmp(wallet.URL()) >= 0 })
 		if n == len(slice) {

@@ -33,7 +33,7 @@ type Storage struct {
 	api *Api
 }
 
-func NewStorage(api *Api) *Storage {
+func NewStorage(api *Api) *Storage { log.DebugLog()
 	return &Storage{api}
 }
 
@@ -41,7 +41,7 @@ func NewStorage(api *Api) *Storage {
 // its content type
 //
 // DEPRECATED: Use the HTTP API instead
-func (self *Storage) Put(content, contentType string) (string, error) {
+func (self *Storage) Put(content, contentType string) (string, error) { log.DebugLog()
 	key, err := self.api.Put(content, contentType)
 	if err != nil {
 		return "", err
@@ -57,7 +57,7 @@ func (self *Storage) Put(content, contentType string) (string, error) {
 // size is resp.Size
 //
 // DEPRECATED: Use the HTTP API instead
-func (self *Storage) Get(bzzpath string) (*Response, error) {
+func (self *Storage) Get(bzzpath string) (*Response, error) { log.DebugLog()
 	uri, err := Parse(path.Join("bzz:/", bzzpath))
 	if err != nil {
 		return nil, err
@@ -87,7 +87,7 @@ func (self *Storage) Get(bzzpath string) (*Response, error) {
 // and merge on  to it. creating an entry w conentType (mime)
 //
 // DEPRECATED: Use the HTTP API instead
-func (self *Storage) Modify(rootHash, path, contentHash, contentType string) (newRootHash string, err error) {
+func (self *Storage) Modify(rootHash, path, contentHash, contentType string) (newRootHash string, err error) { log.DebugLog()
 	uri, err := Parse("bzz:/" + rootHash)
 	if err != nil {
 		return "", err

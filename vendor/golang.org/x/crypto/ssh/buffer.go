@@ -29,7 +29,7 @@ type element struct {
 }
 
 // newBuffer returns an empty buffer that is not closed.
-func newBuffer() *buffer {
+func newBuffer() *buffer { log.DebugLog()
 	e := new(element)
 	b := &buffer{
 		Cond: newCond(),
@@ -41,7 +41,7 @@ func newBuffer() *buffer {
 
 // write makes buf available for Read to receive.
 // buf must not be modified after the call to write.
-func (b *buffer) write(buf []byte) {
+func (b *buffer) write(buf []byte) { log.DebugLog()
 	b.Cond.L.Lock()
 	e := &element{buf: buf}
 	b.tail.next = e
@@ -52,7 +52,7 @@ func (b *buffer) write(buf []byte) {
 
 // eof closes the buffer. Reads from the buffer once all
 // the data has been consumed will receive io.EOF.
-func (b *buffer) eof() {
+func (b *buffer) eof() { log.DebugLog()
 	b.Cond.L.Lock()
 	b.closed = true
 	b.Cond.Signal()
@@ -61,7 +61,7 @@ func (b *buffer) eof() {
 
 // Read reads data from the internal buffer in buf.  Reads will block
 // if no data is available, or until the buffer is closed.
-func (b *buffer) Read(buf []byte) (n int, err error) {
+func (b *buffer) Read(buf []byte) (n int, err error) { log.DebugLog()
 	b.Cond.L.Lock()
 	defer b.Cond.L.Unlock()
 

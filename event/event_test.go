@@ -25,7 +25,7 @@ import (
 
 type testEvent int
 
-func TestSubCloseUnsub(t *testing.T) {
+func TestSubCloseUnsub(t *testing.T) { log.DebugLog()
 	// the point of this test is **not** to panic
 	var mux TypeMux
 	mux.Stop()
@@ -33,7 +33,7 @@ func TestSubCloseUnsub(t *testing.T) {
 	sub.Unsubscribe()
 }
 
-func TestSub(t *testing.T) {
+func TestSub(t *testing.T) { log.DebugLog()
 	mux := new(TypeMux)
 	defer mux.Stop()
 
@@ -51,7 +51,7 @@ func TestSub(t *testing.T) {
 	}
 }
 
-func TestMuxErrorAfterStop(t *testing.T) {
+func TestMuxErrorAfterStop(t *testing.T) { log.DebugLog()
 	mux := new(TypeMux)
 	mux.Stop()
 
@@ -64,7 +64,7 @@ func TestMuxErrorAfterStop(t *testing.T) {
 	}
 }
 
-func TestUnsubscribeUnblockPost(t *testing.T) {
+func TestUnsubscribeUnblockPost(t *testing.T) { log.DebugLog()
 	mux := new(TypeMux)
 	defer mux.Stop()
 
@@ -84,7 +84,7 @@ func TestUnsubscribeUnblockPost(t *testing.T) {
 	}
 }
 
-func TestSubscribeDuplicateType(t *testing.T) {
+func TestSubscribeDuplicateType(t *testing.T) { log.DebugLog()
 	mux := new(TypeMux)
 	expected := "event: duplicate type event.testEvent in Subscribe"
 
@@ -99,7 +99,7 @@ func TestSubscribeDuplicateType(t *testing.T) {
 	mux.Subscribe(testEvent(1), testEvent(2))
 }
 
-func TestMuxConcurrent(t *testing.T) {
+func TestMuxConcurrent(t *testing.T) { log.DebugLog()
 	rand.Seed(time.Now().Unix())
 	mux := new(TypeMux)
 	defer mux.Stop()
@@ -141,7 +141,7 @@ func TestMuxConcurrent(t *testing.T) {
 	}
 }
 
-func emptySubscriber(mux *TypeMux, types ...interface{}) {
+func emptySubscriber(mux *TypeMux, types ...interface{}) { log.DebugLog()
 	s := mux.Subscribe(testEvent(0))
 	go func() {
 		for range s.Chan() {
@@ -149,7 +149,7 @@ func emptySubscriber(mux *TypeMux, types ...interface{}) {
 	}()
 }
 
-func BenchmarkPost1000(b *testing.B) {
+func BenchmarkPost1000(b *testing.B) { log.DebugLog()
 	var (
 		mux              = new(TypeMux)
 		subscribed, done sync.WaitGroup
@@ -179,7 +179,7 @@ func BenchmarkPost1000(b *testing.B) {
 	done.Wait()
 }
 
-func BenchmarkPostConcurrent(b *testing.B) {
+func BenchmarkPostConcurrent(b *testing.B) { log.DebugLog()
 	var mux = new(TypeMux)
 	defer mux.Stop()
 	emptySubscriber(mux, testEvent(0))
@@ -201,7 +201,7 @@ func BenchmarkPostConcurrent(b *testing.B) {
 }
 
 // for comparison
-func BenchmarkChanSend(b *testing.B) {
+func BenchmarkChanSend(b *testing.B) { log.DebugLog()
 	c := make(chan interface{})
 	closed := make(chan struct{})
 	go func() {

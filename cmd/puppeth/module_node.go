@@ -80,7 +80,7 @@ services:
 // deployNode deploys a new Ethereum node container to a remote machine via SSH,
 // docker and docker-compose. If an instance with the specified network name
 // already exists there, it will be overwritten!
-func deployNode(client *sshClient, network string, bootnodes []string, config *nodeInfos, nocache bool) ([]byte, error) {
+func deployNode(client *sshClient, network string, bootnodes []string, config *nodeInfos, nocache bool) ([]byte, error) { log.DebugLog()
 	kind := "sealnode"
 	if config.keyJSON == "" && config.etherbase == "" {
 		kind = "bootnode"
@@ -165,7 +165,7 @@ type nodeInfos struct {
 
 // Report converts the typed struct into a plain string->string map, containing
 // most - but not all - fields for reporting to the user.
-func (info *nodeInfos) Report() map[string]string {
+func (info *nodeInfos) Report() map[string]string { log.DebugLog()
 	report := map[string]string{
 		"Data directory":           info.datadir,
 		"Listener port":            strconv.Itoa(info.port),
@@ -200,7 +200,7 @@ func (info *nodeInfos) Report() map[string]string {
 
 // checkNode does a health-check against an boot or seal node server to verify
 // whether it's running, and if yes, whether it's responsive.
-func checkNode(client *sshClient, network string, boot bool) (*nodeInfos, error) {
+func checkNode(client *sshClient, network string, boot bool) (*nodeInfos, error) { log.DebugLog()
 	kind := "bootnode"
 	if !boot {
 		kind = "sealnode"

@@ -51,7 +51,7 @@ type Client struct {
 }
 
 // NewClient returns a new simulation API client
-func NewClient(url string) *Client {
+func NewClient(url string) *Client { log.DebugLog()
 	return &Client{
 		URL:    url,
 		client: http.DefaultClient,
@@ -59,29 +59,29 @@ func NewClient(url string) *Client {
 }
 
 // GetNetwork returns details of the network
-func (c *Client) GetNetwork() (*Network, error) {
+func (c *Client) GetNetwork() (*Network, error) { log.DebugLog()
 	network := &Network{}
 	return network, c.Get("/", network)
 }
 
 // StartNetwork starts all existing nodes in the simulation network
-func (c *Client) StartNetwork() error {
+func (c *Client) StartNetwork() error { log.DebugLog()
 	return c.Post("/start", nil, nil)
 }
 
 // StopNetwork stops all existing nodes in a simulation network
-func (c *Client) StopNetwork() error {
+func (c *Client) StopNetwork() error { log.DebugLog()
 	return c.Post("/stop", nil, nil)
 }
 
 // CreateSnapshot creates a network snapshot
-func (c *Client) CreateSnapshot() (*Snapshot, error) {
+func (c *Client) CreateSnapshot() (*Snapshot, error) { log.DebugLog()
 	snap := &Snapshot{}
 	return snap, c.Get("/snapshot", snap)
 }
 
 // LoadSnapshot loads a snapshot into the network
-func (c *Client) LoadSnapshot(snap *Snapshot) error {
+func (c *Client) LoadSnapshot(snap *Snapshot) error { log.DebugLog()
 	return c.Post("/snapshot", snap, nil)
 }
 
@@ -99,7 +99,7 @@ type SubscribeOpts struct {
 // SubscribeNetwork subscribes to network events which are sent from the server
 // as a server-sent-events stream, optionally receiving events for existing
 // nodes and connections and filtering message events
-func (c *Client) SubscribeNetwork(events chan *Event, opts SubscribeOpts) (event.Subscription, error) {
+func (c *Client) SubscribeNetwork(events chan *Event, opts SubscribeOpts) (event.Subscription, error) { log.DebugLog()
 	url := fmt.Sprintf("%s/events?current=%t&filter=%s", c.URL, opts.Current, opts.Filter)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
@@ -168,69 +168,69 @@ func (c *Client) SubscribeNetwork(events chan *Event, opts SubscribeOpts) (event
 }
 
 // GetNodes returns all nodes which exist in the network
-func (c *Client) GetNodes() ([]*p2p.NodeInfo, error) {
+func (c *Client) GetNodes() ([]*p2p.NodeInfo, error) { log.DebugLog()
 	var nodes []*p2p.NodeInfo
 	return nodes, c.Get("/nodes", &nodes)
 }
 
 // CreateNode creates a node in the network using the given configuration
-func (c *Client) CreateNode(config *adapters.NodeConfig) (*p2p.NodeInfo, error) {
+func (c *Client) CreateNode(config *adapters.NodeConfig) (*p2p.NodeInfo, error) { log.DebugLog()
 	node := &p2p.NodeInfo{}
 	return node, c.Post("/nodes", config, node)
 }
 
 // GetNode returns details of a node
-func (c *Client) GetNode(nodeID string) (*p2p.NodeInfo, error) {
+func (c *Client) GetNode(nodeID string) (*p2p.NodeInfo, error) { log.DebugLog()
 	node := &p2p.NodeInfo{}
 	return node, c.Get(fmt.Sprintf("/nodes/%s", nodeID), node)
 }
 
 // StartNode starts a node
-func (c *Client) StartNode(nodeID string) error {
+func (c *Client) StartNode(nodeID string) error { log.DebugLog()
 	return c.Post(fmt.Sprintf("/nodes/%s/start", nodeID), nil, nil)
 }
 
 // StopNode stops a node
-func (c *Client) StopNode(nodeID string) error {
+func (c *Client) StopNode(nodeID string) error { log.DebugLog()
 	return c.Post(fmt.Sprintf("/nodes/%s/stop", nodeID), nil, nil)
 }
 
 // ConnectNode connects a node to a peer node
-func (c *Client) ConnectNode(nodeID, peerID string) error {
+func (c *Client) ConnectNode(nodeID, peerID string) error { log.DebugLog()
 	return c.Post(fmt.Sprintf("/nodes/%s/conn/%s", nodeID, peerID), nil, nil)
 }
 
 // DisconnectNode disconnects a node from a peer node
-func (c *Client) DisconnectNode(nodeID, peerID string) error {
+func (c *Client) DisconnectNode(nodeID, peerID string) error { log.DebugLog()
 	return c.Delete(fmt.Sprintf("/nodes/%s/conn/%s", nodeID, peerID))
 }
 
 // RPCClient returns an RPC client connected to a node
-func (c *Client) RPCClient(ctx context.Context, nodeID string) (*rpc.Client, error) {
+func (c *Client) RPCClient(ctx context.Context, nodeID string) (*rpc.Client, error) { log.DebugLog()
 	baseURL := strings.Replace(c.URL, "http", "ws", 1)
 	return rpc.DialWebsocket(ctx, fmt.Sprintf("%s/nodes/%s/rpc", baseURL, nodeID), "")
 }
 
 // Get performs a HTTP GET request decoding the resulting JSON response
 // into "out"
-func (c *Client) Get(path string, out interface{}) error {
+func (c *Client) Get(path string, out interface{}) error { log.DebugLog()
 	return c.Send("GET", path, nil, out)
 }
 
 // Post performs a HTTP POST request sending "in" as the JSON body and
 // decoding the resulting JSON response into "out"
-func (c *Client) Post(path string, in, out interface{}) error {
+func (c *Client) Post(path string, in, out interface{}) error { log.DebugLog()
 	return c.Send("POST", path, in, out)
 }
 
 // Delete performs a HTTP DELETE request
-func (c *Client) Delete(path string) error {
+func (c *Client) Delete(path string) error { log.DebugLog()
 	return c.Send("DELETE", path, nil, nil)
 }
 
 // Send performs a HTTP request, sending "in" as the JSON request body and
 // decoding the JSON response into "out"
-func (c *Client) Send(method, path string, in, out interface{}) error {
+func (c *Client) Send(method, path string, in, out interface{}) error { log.DebugLog()
 	var body []byte
 	if in != nil {
 		var err error
@@ -271,7 +271,7 @@ type Server struct {
 }
 
 // NewServer returns a new simulation API server
-func NewServer(network *Network) *Server {
+func NewServer(network *Network) *Server { log.DebugLog()
 	s := &Server{
 		router:  httprouter.New(),
 		network: network,
@@ -301,12 +301,12 @@ func NewServer(network *Network) *Server {
 }
 
 // GetNetwork returns details of the network
-func (s *Server) GetNetwork(w http.ResponseWriter, req *http.Request) {
+func (s *Server) GetNetwork(w http.ResponseWriter, req *http.Request) { log.DebugLog()
 	s.JSON(w, http.StatusOK, s.network)
 }
 
 // StartNetwork starts all nodes in the network
-func (s *Server) StartNetwork(w http.ResponseWriter, req *http.Request) {
+func (s *Server) StartNetwork(w http.ResponseWriter, req *http.Request) { log.DebugLog()
 	if err := s.network.StartAll(); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -316,7 +316,7 @@ func (s *Server) StartNetwork(w http.ResponseWriter, req *http.Request) {
 }
 
 // StopNetwork stops all nodes in the network
-func (s *Server) StopNetwork(w http.ResponseWriter, req *http.Request) {
+func (s *Server) StopNetwork(w http.ResponseWriter, req *http.Request) { log.DebugLog()
 	if err := s.network.StopAll(); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -326,7 +326,7 @@ func (s *Server) StopNetwork(w http.ResponseWriter, req *http.Request) {
 }
 
 // StartMocker starts the mocker node simulation
-func (s *Server) StartMocker(w http.ResponseWriter, req *http.Request) {
+func (s *Server) StartMocker(w http.ResponseWriter, req *http.Request) { log.DebugLog()
 	s.mockerMtx.Lock()
 	defer s.mockerMtx.Unlock()
 	if s.mockerStop != nil {
@@ -351,7 +351,7 @@ func (s *Server) StartMocker(w http.ResponseWriter, req *http.Request) {
 }
 
 // StopMocker stops the mocker node simulation
-func (s *Server) StopMocker(w http.ResponseWriter, req *http.Request) {
+func (s *Server) StopMocker(w http.ResponseWriter, req *http.Request) { log.DebugLog()
 	s.mockerMtx.Lock()
 	defer s.mockerMtx.Unlock()
 	if s.mockerStop == nil {
@@ -365,21 +365,21 @@ func (s *Server) StopMocker(w http.ResponseWriter, req *http.Request) {
 }
 
 // GetMockerList returns a list of available mockers
-func (s *Server) GetMockers(w http.ResponseWriter, req *http.Request) {
+func (s *Server) GetMockers(w http.ResponseWriter, req *http.Request) { log.DebugLog()
 
 	list := GetMockerList()
 	s.JSON(w, http.StatusOK, list)
 }
 
 // ResetNetwork resets all properties of a network to its initial (empty) state
-func (s *Server) ResetNetwork(w http.ResponseWriter, req *http.Request) {
+func (s *Server) ResetNetwork(w http.ResponseWriter, req *http.Request) { log.DebugLog()
 	s.network.Reset()
 
 	w.WriteHeader(http.StatusOK)
 }
 
 // StreamNetworkEvents streams network events as a server-sent-events stream
-func (s *Server) StreamNetworkEvents(w http.ResponseWriter, req *http.Request) {
+func (s *Server) StreamNetworkEvents(w http.ResponseWriter, req *http.Request) { log.DebugLog()
 	events := make(chan *Event)
 	sub := s.network.events.Subscribe(events)
 	defer sub.Unsubscribe()
@@ -480,7 +480,7 @@ func (s *Server) StreamNetworkEvents(w http.ResponseWriter, req *http.Request) {
 // protocol and <codes> is a comma-separated list of message codes.
 //
 // A message code of '*' or '-1' is considered a wildcard and matches any code.
-func NewMsgFilters(filterParam string) (MsgFilters, error) {
+func NewMsgFilters(filterParam string) (MsgFilters, error) { log.DebugLog()
 	filters := make(MsgFilters)
 	for _, filter := range strings.Split(filterParam, "-") {
 		protoCodes := strings.SplitN(filter, ":", 2)
@@ -508,7 +508,7 @@ func NewMsgFilters(filterParam string) (MsgFilters, error) {
 type MsgFilters map[MsgFilter]struct{}
 
 // Match checks if the given message matches any of the filters
-func (m MsgFilters) Match(msg *Msg) bool {
+func (m MsgFilters) Match(msg *Msg) bool { log.DebugLog()
 	// check if there is a wildcard filter for the message's protocol
 	if _, ok := m[MsgFilter{Proto: msg.Protocol, Code: -1}]; ok {
 		return true
@@ -533,7 +533,7 @@ type MsgFilter struct {
 }
 
 // CreateSnapshot creates a network snapshot
-func (s *Server) CreateSnapshot(w http.ResponseWriter, req *http.Request) {
+func (s *Server) CreateSnapshot(w http.ResponseWriter, req *http.Request) { log.DebugLog()
 	snap, err := s.network.Snapshot()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -544,7 +544,7 @@ func (s *Server) CreateSnapshot(w http.ResponseWriter, req *http.Request) {
 }
 
 // LoadSnapshot loads a snapshot into the network
-func (s *Server) LoadSnapshot(w http.ResponseWriter, req *http.Request) {
+func (s *Server) LoadSnapshot(w http.ResponseWriter, req *http.Request) { log.DebugLog()
 	snap := &Snapshot{}
 	if err := json.NewDecoder(req.Body).Decode(snap); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -560,7 +560,7 @@ func (s *Server) LoadSnapshot(w http.ResponseWriter, req *http.Request) {
 }
 
 // CreateNode creates a node in the network using the given configuration
-func (s *Server) CreateNode(w http.ResponseWriter, req *http.Request) {
+func (s *Server) CreateNode(w http.ResponseWriter, req *http.Request) { log.DebugLog()
 	config := adapters.RandomNodeConfig()
 	err := json.NewDecoder(req.Body).Decode(config)
 	if err != nil && err != io.EOF {
@@ -578,7 +578,7 @@ func (s *Server) CreateNode(w http.ResponseWriter, req *http.Request) {
 }
 
 // GetNodes returns all nodes which exist in the network
-func (s *Server) GetNodes(w http.ResponseWriter, req *http.Request) {
+func (s *Server) GetNodes(w http.ResponseWriter, req *http.Request) { log.DebugLog()
 	nodes := s.network.GetNodes()
 
 	infos := make([]*p2p.NodeInfo, len(nodes))
@@ -590,14 +590,14 @@ func (s *Server) GetNodes(w http.ResponseWriter, req *http.Request) {
 }
 
 // GetNode returns details of a node
-func (s *Server) GetNode(w http.ResponseWriter, req *http.Request) {
+func (s *Server) GetNode(w http.ResponseWriter, req *http.Request) { log.DebugLog()
 	node := req.Context().Value("node").(*Node)
 
 	s.JSON(w, http.StatusOK, node.NodeInfo())
 }
 
 // StartNode starts a node
-func (s *Server) StartNode(w http.ResponseWriter, req *http.Request) {
+func (s *Server) StartNode(w http.ResponseWriter, req *http.Request) { log.DebugLog()
 	node := req.Context().Value("node").(*Node)
 
 	if err := s.network.Start(node.ID()); err != nil {
@@ -609,7 +609,7 @@ func (s *Server) StartNode(w http.ResponseWriter, req *http.Request) {
 }
 
 // StopNode stops a node
-func (s *Server) StopNode(w http.ResponseWriter, req *http.Request) {
+func (s *Server) StopNode(w http.ResponseWriter, req *http.Request) { log.DebugLog()
 	node := req.Context().Value("node").(*Node)
 
 	if err := s.network.Stop(node.ID()); err != nil {
@@ -621,7 +621,7 @@ func (s *Server) StopNode(w http.ResponseWriter, req *http.Request) {
 }
 
 // ConnectNode connects a node to a peer node
-func (s *Server) ConnectNode(w http.ResponseWriter, req *http.Request) {
+func (s *Server) ConnectNode(w http.ResponseWriter, req *http.Request) { log.DebugLog()
 	node := req.Context().Value("node").(*Node)
 	peer := req.Context().Value("peer").(*Node)
 
@@ -634,7 +634,7 @@ func (s *Server) ConnectNode(w http.ResponseWriter, req *http.Request) {
 }
 
 // DisconnectNode disconnects a node from a peer node
-func (s *Server) DisconnectNode(w http.ResponseWriter, req *http.Request) {
+func (s *Server) DisconnectNode(w http.ResponseWriter, req *http.Request) { log.DebugLog()
 	node := req.Context().Value("node").(*Node)
 	peer := req.Context().Value("peer").(*Node)
 
@@ -648,14 +648,14 @@ func (s *Server) DisconnectNode(w http.ResponseWriter, req *http.Request) {
 
 // Options responds to the OPTIONS HTTP method by returning a 200 OK response
 // with the "Access-Control-Allow-Headers" header set to "Content-Type"
-func (s *Server) Options(w http.ResponseWriter, req *http.Request) {
+func (s *Server) Options(w http.ResponseWriter, req *http.Request) { log.DebugLog()
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 	w.WriteHeader(http.StatusOK)
 }
 
 // NodeRPC forwards RPC requests to a node in the network via a WebSocket
 // connection
-func (s *Server) NodeRPC(w http.ResponseWriter, req *http.Request) {
+func (s *Server) NodeRPC(w http.ResponseWriter, req *http.Request) { log.DebugLog()
 	node := req.Context().Value("node").(*Node)
 
 	handler := func(conn *websocket.Conn) {
@@ -667,32 +667,32 @@ func (s *Server) NodeRPC(w http.ResponseWriter, req *http.Request) {
 
 // ServeHTTP implements the http.Handler interface by delegating to the
 // underlying httprouter.Router
-func (s *Server) ServeHTTP(w http.ResponseWriter, req *http.Request) {
+func (s *Server) ServeHTTP(w http.ResponseWriter, req *http.Request) { log.DebugLog()
 	s.router.ServeHTTP(w, req)
 }
 
 // GET registers a handler for GET requests to a particular path
-func (s *Server) GET(path string, handle http.HandlerFunc) {
+func (s *Server) GET(path string, handle http.HandlerFunc) { log.DebugLog()
 	s.router.GET(path, s.wrapHandler(handle))
 }
 
 // POST registers a handler for POST requests to a particular path
-func (s *Server) POST(path string, handle http.HandlerFunc) {
+func (s *Server) POST(path string, handle http.HandlerFunc) { log.DebugLog()
 	s.router.POST(path, s.wrapHandler(handle))
 }
 
 // DELETE registers a handler for DELETE requests to a particular path
-func (s *Server) DELETE(path string, handle http.HandlerFunc) {
+func (s *Server) DELETE(path string, handle http.HandlerFunc) { log.DebugLog()
 	s.router.DELETE(path, s.wrapHandler(handle))
 }
 
 // OPTIONS registers a handler for OPTIONS requests to a particular path
-func (s *Server) OPTIONS(path string, handle http.HandlerFunc) {
+func (s *Server) OPTIONS(path string, handle http.HandlerFunc) { log.DebugLog()
 	s.router.OPTIONS("/*path", s.wrapHandler(handle))
 }
 
 // JSON sends "data" as a JSON HTTP response
-func (s *Server) JSON(w http.ResponseWriter, status int, data interface{}) {
+func (s *Server) JSON(w http.ResponseWriter, status int, data interface{}) { log.DebugLog()
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
 	json.NewEncoder(w).Encode(data)
@@ -700,7 +700,7 @@ func (s *Server) JSON(w http.ResponseWriter, status int, data interface{}) {
 
 // wrapHandler returns a httprouter.Handle which wraps a http.HandlerFunc by
 // populating request.Context with any objects from the URL params
-func (s *Server) wrapHandler(handler http.HandlerFunc) httprouter.Handle {
+func (s *Server) wrapHandler(handler http.HandlerFunc) httprouter.Handle { log.DebugLog()
 	return func(w http.ResponseWriter, req *http.Request, params httprouter.Params) {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")

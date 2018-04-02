@@ -67,7 +67,7 @@ type evalReq struct {
 }
 
 // runtime must be stopped with Stop() after use and cannot be used after stopping
-func New(assetPath string, output io.Writer) *JSRE {
+func New(assetPath string, output io.Writer) *JSRE { log.DebugLog()
 	re := &JSRE{
 		assetPath:     assetPath,
 		output:        output,
@@ -82,7 +82,7 @@ func New(assetPath string, output io.Writer) *JSRE {
 }
 
 // randomSource returns a pseudo random value generator.
-func randomSource() *rand.Rand {
+func randomSource() *rand.Rand { log.DebugLog()
 	bytes := make([]byte, 8)
 	seed := time.Now().UnixNano()
 	if _, err := crand.Read(bytes); err == nil {
@@ -102,7 +102,7 @@ func randomSource() *rand.Rand {
 // call the functions of the otto vm directly to circumvent the queue. These
 // functions should be used if and only if running a routine that was already
 // called from JS through an RPC call.
-func (self *JSRE) runEventLoop() {
+func (self *JSRE) runEventLoop() { log.DebugLog()
 	defer close(self.closed)
 
 	vm := otto.New()
@@ -223,7 +223,7 @@ loop:
 }
 
 // Do executes the given function on the JS event loop.
-func (self *JSRE) Do(fn func(*otto.Otto)) {
+func (self *JSRE) Do(fn func(*otto.Otto)) { log.DebugLog()
 	done := make(chan bool)
 	req := &evalReq{fn, done}
 	self.evalQueue <- req
@@ -231,7 +231,7 @@ func (self *JSRE) Do(fn func(*otto.Otto)) {
 }
 
 // stops the event loop before exit, optionally waits for all timers to expire
-func (self *JSRE) Stop(waitForCallbacks bool) {
+func (self *JSRE) Stop(waitForCallbacks bool) { log.DebugLog()
 	select {
 	case <-self.closed:
 	case self.stopEventLoop <- waitForCallbacks:
@@ -241,7 +241,7 @@ func (self *JSRE) Stop(waitForCallbacks bool) {
 
 // Exec(file) loads and runs the contents of a file
 // if a relative path is given, the jsre's assetPath is used
-func (self *JSRE) Exec(file string) error {
+func (self *JSRE) Exec(file string) error { log.DebugLog()
 	code, err := ioutil.ReadFile(common.AbsolutePath(self.assetPath, file))
 	if err != nil {
 		return err
@@ -259,30 +259,30 @@ func (self *JSRE) Exec(file string) error {
 
 // Bind assigns value v to a variable in the JS environment
 // This method is deprecated, use Set.
-func (self *JSRE) Bind(name string, v interface{}) error {
+func (self *JSRE) Bind(name string, v interface{}) error { log.DebugLog()
 	return self.Set(name, v)
 }
 
 // Run runs a piece of JS code.
-func (self *JSRE) Run(code string) (v otto.Value, err error) {
+func (self *JSRE) Run(code string) (v otto.Value, err error) { log.DebugLog()
 	self.Do(func(vm *otto.Otto) { v, err = vm.Run(code) })
 	return v, err
 }
 
 // Get returns the value of a variable in the JS environment.
-func (self *JSRE) Get(ns string) (v otto.Value, err error) {
+func (self *JSRE) Get(ns string) (v otto.Value, err error) { log.DebugLog()
 	self.Do(func(vm *otto.Otto) { v, err = vm.Get(ns) })
 	return v, err
 }
 
 // Set assigns value v to a variable in the JS environment.
-func (self *JSRE) Set(ns string, v interface{}) (err error) {
+func (self *JSRE) Set(ns string, v interface{}) (err error) { log.DebugLog()
 	self.Do(func(vm *otto.Otto) { err = vm.Set(ns, v) })
 	return err
 }
 
 // loadScript executes a JS script from inside the currently executing JS code.
-func (self *JSRE) loadScript(call otto.FunctionCall) otto.Value {
+func (self *JSRE) loadScript(call otto.FunctionCall) otto.Value { log.DebugLog()
 	file, err := call.Argument(0).ToString()
 	if err != nil {
 		// TODO: throw exception
@@ -305,7 +305,7 @@ func (self *JSRE) loadScript(call otto.FunctionCall) otto.Value {
 
 // Evaluate executes code and pretty prints the result to the specified output
 // stream.
-func (self *JSRE) Evaluate(code string, w io.Writer) error {
+func (self *JSRE) Evaluate(code string, w io.Writer) error { log.DebugLog()
 	var fail error
 
 	self.Do(func(vm *otto.Otto) {
@@ -321,12 +321,12 @@ func (self *JSRE) Evaluate(code string, w io.Writer) error {
 }
 
 // Compile compiles and then runs a piece of JS code.
-func (self *JSRE) Compile(filename string, src interface{}) (err error) {
+func (self *JSRE) Compile(filename string, src interface{}) (err error) { log.DebugLog()
 	self.Do(func(vm *otto.Otto) { _, err = compileAndRun(vm, filename, src) })
 	return err
 }
 
-func compileAndRun(vm *otto.Otto, filename string, src interface{}) (otto.Value, error) {
+func compileAndRun(vm *otto.Otto, filename string, src interface{}) (otto.Value, error) { log.DebugLog()
 	script, err := vm.Compile(filename, src)
 	if err != nil {
 		return otto.Value{}, err

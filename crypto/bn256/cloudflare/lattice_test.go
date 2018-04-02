@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestLatticeReduceCurve(t *testing.T) {
+func TestLatticeReduceCurve(t *testing.T) { log.DebugLog()
 	k, _ := rand.Int(rand.Reader, Order)
 	ks := curveLattice.decompose(k)
 
@@ -17,7 +17,7 @@ func TestLatticeReduceCurve(t *testing.T) {
 	}
 }
 
-func TestLatticeReduceTarget(t *testing.T) {
+func TestLatticeReduceTarget(t *testing.T) { log.DebugLog()
 	k, _ := rand.Int(rand.Reader, Order)
 	ks := targetLattice.decompose(k)
 

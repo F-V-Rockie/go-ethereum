@@ -26,7 +26,7 @@ import (
 	"time"
 )
 
-func TestRoundTripper(t *testing.T) {
+func TestRoundTripper(t *testing.T) { log.DebugLog()
 	serveMux := http.NewServeMux()
 	serveMux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "GET" {

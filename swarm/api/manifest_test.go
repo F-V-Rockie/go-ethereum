@@ -28,7 +28,7 @@ import (
 	"github.com/ethereum/go-ethereum/swarm/storage"
 )
 
-func manifest(paths ...string) (manifestReader storage.LazySectionReader) {
+func manifest(paths ...string) (manifestReader storage.LazySectionReader) { log.DebugLog()
 	var entries []string
 	for _, path := range paths {
 		entry := fmt.Sprintf(`{"path":"%s"}`, path)
@@ -40,7 +40,7 @@ func manifest(paths ...string) (manifestReader storage.LazySectionReader) {
 	}
 }
 
-func testGetEntry(t *testing.T, path, match string, multiple bool, paths ...string) *manifestTrie {
+func testGetEntry(t *testing.T, path, match string, multiple bool, paths ...string) *manifestTrie { log.DebugLog()
 	quitC := make(chan bool)
 	trie, err := readManifest(manifest(paths...), nil, nil, quitC)
 	if err != nil {
@@ -50,7 +50,7 @@ func testGetEntry(t *testing.T, path, match string, multiple bool, paths ...stri
 	return trie
 }
 
-func checkEntry(t *testing.T, path, match string, multiple bool, trie *manifestTrie) {
+func checkEntry(t *testing.T, path, match string, multiple bool, trie *manifestTrie) { log.DebugLog()
 	entry, fullpath := trie.getEntry(path)
 	if match == "-" && entry != nil {
 		t.Errorf("expected no match for '%s', got '%s'", path, fullpath)
@@ -69,7 +69,7 @@ func checkEntry(t *testing.T, path, match string, multiple bool, trie *manifestT
 	}
 }
 
-func TestGetEntry(t *testing.T) {
+func TestGetEntry(t *testing.T) { log.DebugLog()
 	// file system manifest always contains regularized paths
 	testGetEntry(t, "a", "a", false, "a")
 	testGetEntry(t, "b", "-", false, "a")
@@ -94,7 +94,7 @@ func TestGetEntry(t *testing.T) {
 	testGetEntry(t, "//a//b//", "a/b", false, "a", "a/b", "a/bb", "a/b/c")
 }
 
-func TestExactMatch(t *testing.T) {
+func TestExactMatch(t *testing.T) { log.DebugLog()
 	quitC := make(chan bool)
 	mf := manifest("shouldBeExactMatch.css", "shouldBeExactMatch.css.map")
 	trie, err := readManifest(mf, nil, nil, quitC)
@@ -110,14 +110,14 @@ func TestExactMatch(t *testing.T) {
 	}
 }
 
-func TestDeleteEntry(t *testing.T) {
+func TestDeleteEntry(t *testing.T) { log.DebugLog()
 
 }
 
 // TestAddFileWithManifestPath tests that adding an entry at a path which
 // already exists as a manifest just adds the entry to the manifest rather
 // than replacing the manifest with the entry
-func TestAddFileWithManifestPath(t *testing.T) {
+func TestAddFileWithManifestPath(t *testing.T) { log.DebugLog()
 	// create a manifest containing "ab" and "ac"
 	manifest, _ := json.Marshal(&Manifest{
 		Entries: []ManifestEntry{

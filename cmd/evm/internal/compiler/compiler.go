@@ -23,7 +23,7 @@ import (
 	"github.com/ethereum/go-ethereum/core/asm"
 )
 
-func Compile(fn string, src []byte, debug bool) (string, error) {
+func Compile(fn string, src []byte, debug bool) (string, error) { log.DebugLog()
 	compiler := asm.NewCompiler(debug)
 	compiler.Feed(asm.Lex(fn, src, debug))
 

@@ -42,7 +42,7 @@ var (
 )
 
 // Reduce some of the parameters to make the tester faster.
-func init() {
+func init() { log.DebugLog()
 	MaxForkAncestry = uint64(10000)
 	blockCacheItems = 1024
 	fsHeaderContCheck = 500 * time.Millisecond
@@ -74,7 +74,7 @@ type downloadTester struct {
 }
 
 // newTester creates a new downloader test mocker.
-func newTester() *downloadTester {
+func newTester() *downloadTester { log.DebugLog()
 	testdb, _ := ethdb.NewMemDatabase()
 	genesis := core.GenesisBlockForTesting(testdb, testAddress, big.NewInt(1000000000))
 
@@ -105,7 +105,7 @@ func newTester() *downloadTester {
 // the returned hash chain is ordered head->parent. In addition, every 3rd block
 // contains a transaction and every 5th an uncle to allow testing correct block
 // reassembly.
-func (dl *downloadTester) makeChain(n int, seed byte, parent *types.Block, parentReceipts types.Receipts, heavy bool) ([]common.Hash, map[common.Hash]*types.Header, map[common.Hash]*types.Block, map[common.Hash]types.Receipts) {
+func (dl *downloadTester) makeChain(n int, seed byte, parent *types.Block, parentReceipts types.Receipts, heavy bool) ([]common.Hash, map[common.Hash]*types.Header, map[common.Hash]*types.Block, map[common.Hash]types.Receipts) { log.DebugLog()
 	// Generate the block chain
 	blocks, receipts := core.GenerateChain(params.TestChainConfig, parent, ethash.NewFaker(), dl.peerDb, n, func(i int, block *core.BlockGen) {
 		block.SetCoinbase(common.Address{seed})
@@ -155,7 +155,7 @@ func (dl *downloadTester) makeChain(n int, seed byte, parent *types.Block, paren
 
 // makeChainFork creates two chains of length n, such that h1[:f] and
 // h2[:f] are different but have a common suffix of length n-f.
-func (dl *downloadTester) makeChainFork(n, f int, parent *types.Block, parentReceipts types.Receipts, balanced bool) ([]common.Hash, []common.Hash, map[common.Hash]*types.Header, map[common.Hash]*types.Header, map[common.Hash]*types.Block, map[common.Hash]*types.Block, map[common.Hash]types.Receipts, map[common.Hash]types.Receipts) {
+func (dl *downloadTester) makeChainFork(n, f int, parent *types.Block, parentReceipts types.Receipts, balanced bool) ([]common.Hash, []common.Hash, map[common.Hash]*types.Header, map[common.Hash]*types.Header, map[common.Hash]*types.Block, map[common.Hash]*types.Block, map[common.Hash]types.Receipts, map[common.Hash]types.Receipts) { log.DebugLog()
 	// Create the common suffix
 	hashes, headers, blocks, receipts := dl.makeChain(n-f, 0, parent, parentReceipts, false)
 
@@ -187,12 +187,12 @@ func (dl *downloadTester) makeChainFork(n, f int, parent *types.Block, parentRec
 
 // terminate aborts any operations on the embedded downloader and releases all
 // held resources.
-func (dl *downloadTester) terminate() {
+func (dl *downloadTester) terminate() { log.DebugLog()
 	dl.downloader.Terminate()
 }
 
 // sync starts synchronizing with a remote peer, blocking until it completes.
-func (dl *downloadTester) sync(id string, td *big.Int, mode SyncMode) error {
+func (dl *downloadTester) sync(id string, td *big.Int, mode SyncMode) error { log.DebugLog()
 	dl.lock.RLock()
 	hash := dl.peerHashes[id][0]
 	// If no particular TD was requested, load from the peer's blockchain
@@ -217,17 +217,17 @@ func (dl *downloadTester) sync(id string, td *big.Int, mode SyncMode) error {
 }
 
 // HasHeader checks if a header is present in the testers canonical chain.
-func (dl *downloadTester) HasHeader(hash common.Hash, number uint64) bool {
+func (dl *downloadTester) HasHeader(hash common.Hash, number uint64) bool { log.DebugLog()
 	return dl.GetHeaderByHash(hash) != nil
 }
 
 // HasBlock checks if a block is present in the testers canonical chain.
-func (dl *downloadTester) HasBlock(hash common.Hash, number uint64) bool {
+func (dl *downloadTester) HasBlock(hash common.Hash, number uint64) bool { log.DebugLog()
 	return dl.GetBlockByHash(hash) != nil
 }
 
 // GetHeader retrieves a header from the testers canonical chain.
-func (dl *downloadTester) GetHeaderByHash(hash common.Hash) *types.Header {
+func (dl *downloadTester) GetHeaderByHash(hash common.Hash) *types.Header { log.DebugLog()
 	dl.lock.RLock()
 	defer dl.lock.RUnlock()
 
@@ -235,7 +235,7 @@ func (dl *downloadTester) GetHeaderByHash(hash common.Hash) *types.Header {
 }
 
 // GetBlock retrieves a block from the testers canonical chain.
-func (dl *downloadTester) GetBlockByHash(hash common.Hash) *types.Block {
+func (dl *downloadTester) GetBlockByHash(hash common.Hash) *types.Block { log.DebugLog()
 	dl.lock.RLock()
 	defer dl.lock.RUnlock()
 
@@ -243,7 +243,7 @@ func (dl *downloadTester) GetBlockByHash(hash common.Hash) *types.Block {
 }
 
 // CurrentHeader retrieves the current head header from the canonical chain.
-func (dl *downloadTester) CurrentHeader() *types.Header {
+func (dl *downloadTester) CurrentHeader() *types.Header { log.DebugLog()
 	dl.lock.RLock()
 	defer dl.lock.RUnlock()
 
@@ -256,7 +256,7 @@ func (dl *downloadTester) CurrentHeader() *types.Header {
 }
 
 // CurrentBlock retrieves the current head block from the canonical chain.
-func (dl *downloadTester) CurrentBlock() *types.Block {
+func (dl *downloadTester) CurrentBlock() *types.Block { log.DebugLog()
 	dl.lock.RLock()
 	defer dl.lock.RUnlock()
 
@@ -271,7 +271,7 @@ func (dl *downloadTester) CurrentBlock() *types.Block {
 }
 
 // CurrentFastBlock retrieves the current head fast-sync block from the canonical chain.
-func (dl *downloadTester) CurrentFastBlock() *types.Block {
+func (dl *downloadTester) CurrentFastBlock() *types.Block { log.DebugLog()
 	dl.lock.RLock()
 	defer dl.lock.RUnlock()
 
@@ -284,7 +284,7 @@ func (dl *downloadTester) CurrentFastBlock() *types.Block {
 }
 
 // FastSyncCommitHead manually sets the head block to a given hash.
-func (dl *downloadTester) FastSyncCommitHead(hash common.Hash) error {
+func (dl *downloadTester) FastSyncCommitHead(hash common.Hash) error { log.DebugLog()
 	// For now only check that the state trie is correct
 	if block := dl.GetBlockByHash(hash); block != nil {
 		_, err := trie.NewSecure(block.Root(), trie.NewDatabase(dl.stateDb), 0)
@@ -294,7 +294,7 @@ func (dl *downloadTester) FastSyncCommitHead(hash common.Hash) error {
 }
 
 // GetTd retrieves the block's total difficulty from the canonical chain.
-func (dl *downloadTester) GetTd(hash common.Hash, number uint64) *big.Int {
+func (dl *downloadTester) GetTd(hash common.Hash, number uint64) *big.Int { log.DebugLog()
 	dl.lock.RLock()
 	defer dl.lock.RUnlock()
 
@@ -302,7 +302,7 @@ func (dl *downloadTester) GetTd(hash common.Hash, number uint64) *big.Int {
 }
 
 // InsertHeaderChain injects a new batch of headers into the simulated chain.
-func (dl *downloadTester) InsertHeaderChain(headers []*types.Header, checkFreq int) (int, error) {
+func (dl *downloadTester) InsertHeaderChain(headers []*types.Header, checkFreq int) (int, error) { log.DebugLog()
 	dl.lock.Lock()
 	defer dl.lock.Unlock()
 
@@ -331,7 +331,7 @@ func (dl *downloadTester) InsertHeaderChain(headers []*types.Header, checkFreq i
 }
 
 // InsertChain injects a new batch of blocks into the simulated chain.
-func (dl *downloadTester) InsertChain(blocks types.Blocks) (int, error) {
+func (dl *downloadTester) InsertChain(blocks types.Blocks) (int, error) { log.DebugLog()
 	dl.lock.Lock()
 	defer dl.lock.Unlock()
 
@@ -353,7 +353,7 @@ func (dl *downloadTester) InsertChain(blocks types.Blocks) (int, error) {
 }
 
 // InsertReceiptChain injects a new batch of receipts into the simulated chain.
-func (dl *downloadTester) InsertReceiptChain(blocks types.Blocks, receipts []types.Receipts) (int, error) {
+func (dl *downloadTester) InsertReceiptChain(blocks types.Blocks, receipts []types.Receipts) (int, error) { log.DebugLog()
 	dl.lock.Lock()
 	defer dl.lock.Unlock()
 
@@ -371,7 +371,7 @@ func (dl *downloadTester) InsertReceiptChain(blocks types.Blocks, receipts []typ
 }
 
 // Rollback removes some recently added elements from the chain.
-func (dl *downloadTester) Rollback(hashes []common.Hash) {
+func (dl *downloadTester) Rollback(hashes []common.Hash) { log.DebugLog()
 	dl.lock.Lock()
 	defer dl.lock.Unlock()
 
@@ -387,14 +387,14 @@ func (dl *downloadTester) Rollback(hashes []common.Hash) {
 }
 
 // newPeer registers a new block download source into the downloader.
-func (dl *downloadTester) newPeer(id string, version int, hashes []common.Hash, headers map[common.Hash]*types.Header, blocks map[common.Hash]*types.Block, receipts map[common.Hash]types.Receipts) error {
+func (dl *downloadTester) newPeer(id string, version int, hashes []common.Hash, headers map[common.Hash]*types.Header, blocks map[common.Hash]*types.Block, receipts map[common.Hash]types.Receipts) error { log.DebugLog()
 	return dl.newSlowPeer(id, version, hashes, headers, blocks, receipts, 0)
 }
 
 // newSlowPeer registers a new block download source into the downloader, with a
 // specific delay time on processing the network packets sent to it, simulating
 // potentially slow network IO.
-func (dl *downloadTester) newSlowPeer(id string, version int, hashes []common.Hash, headers map[common.Hash]*types.Header, blocks map[common.Hash]*types.Block, receipts map[common.Hash]types.Receipts, delay time.Duration) error {
+func (dl *downloadTester) newSlowPeer(id string, version int, hashes []common.Hash, headers map[common.Hash]*types.Header, blocks map[common.Hash]*types.Block, receipts map[common.Hash]types.Receipts, delay time.Duration) error { log.DebugLog()
 	dl.lock.Lock()
 	defer dl.lock.Unlock()
 
@@ -444,7 +444,7 @@ func (dl *downloadTester) newSlowPeer(id string, version int, hashes []common.Ha
 }
 
 // dropPeer simulates a hard peer removal from the connection pool.
-func (dl *downloadTester) dropPeer(id string) {
+func (dl *downloadTester) dropPeer(id string) { log.DebugLog()
 	dl.lock.Lock()
 	defer dl.lock.Unlock()
 
@@ -464,7 +464,7 @@ type downloadTesterPeer struct {
 }
 
 // setDelay is a thread safe setter for the network delay value.
-func (dlp *downloadTesterPeer) setDelay(delay time.Duration) {
+func (dlp *downloadTesterPeer) setDelay(delay time.Duration) { log.DebugLog()
 	dlp.lock.Lock()
 	defer dlp.lock.Unlock()
 
@@ -472,7 +472,7 @@ func (dlp *downloadTesterPeer) setDelay(delay time.Duration) {
 }
 
 // waitDelay is a thread safe way to sleep for the configured time.
-func (dlp *downloadTesterPeer) waitDelay() {
+func (dlp *downloadTesterPeer) waitDelay() { log.DebugLog()
 	dlp.lock.RLock()
 	delay := dlp.delay
 	dlp.lock.RUnlock()
@@ -482,7 +482,7 @@ func (dlp *downloadTesterPeer) waitDelay() {
 
 // Head constructs a function to retrieve a peer's current head hash
 // and total difficulty.
-func (dlp *downloadTesterPeer) Head() (common.Hash, *big.Int) {
+func (dlp *downloadTesterPeer) Head() (common.Hash, *big.Int) { log.DebugLog()
 	dlp.dl.lock.RLock()
 	defer dlp.dl.lock.RUnlock()
 
@@ -492,7 +492,7 @@ func (dlp *downloadTesterPeer) Head() (common.Hash, *big.Int) {
 // RequestHeadersByHash constructs a GetBlockHeaders function based on a hashed
 // origin; associated with a particular peer in the download tester. The returned
 // function can be used to retrieve batches of headers from the particular peer.
-func (dlp *downloadTesterPeer) RequestHeadersByHash(origin common.Hash, amount int, skip int, reverse bool) error {
+func (dlp *downloadTesterPeer) RequestHeadersByHash(origin common.Hash, amount int, skip int, reverse bool) error { log.DebugLog()
 	// Find the canonical number of the hash
 	dlp.dl.lock.RLock()
 	number := uint64(0)
@@ -511,7 +511,7 @@ func (dlp *downloadTesterPeer) RequestHeadersByHash(origin common.Hash, amount i
 // RequestHeadersByNumber constructs a GetBlockHeaders function based on a numbered
 // origin; associated with a particular peer in the download tester. The returned
 // function can be used to retrieve batches of headers from the particular peer.
-func (dlp *downloadTesterPeer) RequestHeadersByNumber(origin uint64, amount int, skip int, reverse bool) error {
+func (dlp *downloadTesterPeer) RequestHeadersByNumber(origin uint64, amount int, skip int, reverse bool) error { log.DebugLog()
 	dlp.waitDelay()
 
 	dlp.dl.lock.RLock()
@@ -537,7 +537,7 @@ func (dlp *downloadTesterPeer) RequestHeadersByNumber(origin uint64, amount int,
 // RequestBodies constructs a getBlockBodies method associated with a particular
 // peer in the download tester. The returned function can be used to retrieve
 // batches of block bodies from the particularly requested peer.
-func (dlp *downloadTesterPeer) RequestBodies(hashes []common.Hash) error {
+func (dlp *downloadTesterPeer) RequestBodies(hashes []common.Hash) error { log.DebugLog()
 	dlp.waitDelay()
 
 	dlp.dl.lock.RLock()
@@ -562,7 +562,7 @@ func (dlp *downloadTesterPeer) RequestBodies(hashes []common.Hash) error {
 // RequestReceipts constructs a getReceipts method associated with a particular
 // peer in the download tester. The returned function can be used to retrieve
 // batches of block receipts from the particularly requested peer.
-func (dlp *downloadTesterPeer) RequestReceipts(hashes []common.Hash) error {
+func (dlp *downloadTesterPeer) RequestReceipts(hashes []common.Hash) error { log.DebugLog()
 	dlp.waitDelay()
 
 	dlp.dl.lock.RLock()
@@ -584,7 +584,7 @@ func (dlp *downloadTesterPeer) RequestReceipts(hashes []common.Hash) error {
 // RequestNodeData constructs a getNodeData method associated with a particular
 // peer in the download tester. The returned function can be used to retrieve
 // batches of node state data from the particularly requested peer.
-func (dlp *downloadTesterPeer) RequestNodeData(hashes []common.Hash) error {
+func (dlp *downloadTesterPeer) RequestNodeData(hashes []common.Hash) error { log.DebugLog()
 	dlp.waitDelay()
 
 	dlp.dl.lock.RLock()
@@ -605,13 +605,13 @@ func (dlp *downloadTesterPeer) RequestNodeData(hashes []common.Hash) error {
 
 // assertOwnChain checks if the local chain contains the correct number of items
 // of the various chain components.
-func assertOwnChain(t *testing.T, tester *downloadTester, length int) {
+func assertOwnChain(t *testing.T, tester *downloadTester, length int) { log.DebugLog()
 	assertOwnForkedChain(t, tester, 1, []int{length})
 }
 
 // assertOwnForkedChain checks if the local forked chain contains the correct
 // number of items of the various chain components.
-func assertOwnForkedChain(t *testing.T, tester *downloadTester, common int, lengths []int) {
+func assertOwnForkedChain(t *testing.T, tester *downloadTester, common int, lengths []int) { log.DebugLog()
 	// Initialize the counters for the first fork
 	headers, blocks, receipts := lengths[0], lengths[0], lengths[0]-fsMinFullBlocks
 
@@ -659,14 +659,14 @@ func assertOwnForkedChain(t *testing.T, tester *downloadTester, common int, leng
 // Tests that simple synchronization against a canonical chain works correctly.
 // In this test common ancestor lookup should be short circuited and not require
 // binary searching.
-func TestCanonicalSynchronisation62(t *testing.T)      { testCanonicalSynchronisation(t, 62, FullSync) }
-func TestCanonicalSynchronisation63Full(t *testing.T)  { testCanonicalSynchronisation(t, 63, FullSync) }
-func TestCanonicalSynchronisation63Fast(t *testing.T)  { testCanonicalSynchronisation(t, 63, FastSync) }
-func TestCanonicalSynchronisation64Full(t *testing.T)  { testCanonicalSynchronisation(t, 64, FullSync) }
-func TestCanonicalSynchronisation64Fast(t *testing.T)  { testCanonicalSynchronisation(t, 64, FastSync) }
-func TestCanonicalSynchronisation64Light(t *testing.T) { testCanonicalSynchronisation(t, 64, LightSync) }
+func TestCanonicalSynchronisation62(t *testing.T)      { log.DebugLog() testCanonicalSynchronisation(t, 62, FullSync) }
+func TestCanonicalSynchronisation63Full(t *testing.T)  { log.DebugLog() testCanonicalSynchronisation(t, 63, FullSync) }
+func TestCanonicalSynchronisation63Fast(t *testing.T)  { log.DebugLog() testCanonicalSynchronisation(t, 63, FastSync) }
+func TestCanonicalSynchronisation64Full(t *testing.T)  { log.DebugLog() testCanonicalSynchronisation(t, 64, FullSync) }
+func TestCanonicalSynchronisation64Fast(t *testing.T)  { log.DebugLog() testCanonicalSynchronisation(t, 64, FastSync) }
+func TestCanonicalSynchronisation64Light(t *testing.T) { log.DebugLog() testCanonicalSynchronisation(t, 64, LightSync) }
 
-func testCanonicalSynchronisation(t *testing.T, protocol int, mode SyncMode) {
+func testCanonicalSynchronisation(t *testing.T, protocol int, mode SyncMode) { log.DebugLog()
 	t.Parallel()
 
 	tester := newTester()
@@ -687,13 +687,13 @@ func testCanonicalSynchronisation(t *testing.T, protocol int, mode SyncMode) {
 
 // Tests that if a large batch of blocks are being downloaded, it is throttled
 // until the cached blocks are retrieved.
-func TestThrottling62(t *testing.T)     { testThrottling(t, 62, FullSync) }
-func TestThrottling63Full(t *testing.T) { testThrottling(t, 63, FullSync) }
-func TestThrottling63Fast(t *testing.T) { testThrottling(t, 63, FastSync) }
-func TestThrottling64Full(t *testing.T) { testThrottling(t, 64, FullSync) }
-func TestThrottling64Fast(t *testing.T) { testThrottling(t, 64, FastSync) }
+func TestThrottling62(t *testing.T)     { log.DebugLog() testThrottling(t, 62, FullSync) }
+func TestThrottling63Full(t *testing.T) { log.DebugLog() testThrottling(t, 63, FullSync) }
+func TestThrottling63Fast(t *testing.T) { log.DebugLog() testThrottling(t, 63, FastSync) }
+func TestThrottling64Full(t *testing.T) { log.DebugLog() testThrottling(t, 64, FullSync) }
+func TestThrottling64Fast(t *testing.T) { log.DebugLog() testThrottling(t, 64, FastSync) }
 
-func testThrottling(t *testing.T, protocol int, mode SyncMode) {
+func testThrottling(t *testing.T, protocol int, mode SyncMode) { log.DebugLog()
 	t.Parallel()
 	tester := newTester()
 	defer tester.terminate()
@@ -773,14 +773,14 @@ func testThrottling(t *testing.T, protocol int, mode SyncMode) {
 // Tests that simple synchronization against a forked chain works correctly. In
 // this test common ancestor lookup should *not* be short circuited, and a full
 // binary search should be executed.
-func TestForkedSync62(t *testing.T)      { testForkedSync(t, 62, FullSync) }
-func TestForkedSync63Full(t *testing.T)  { testForkedSync(t, 63, FullSync) }
-func TestForkedSync63Fast(t *testing.T)  { testForkedSync(t, 63, FastSync) }
-func TestForkedSync64Full(t *testing.T)  { testForkedSync(t, 64, FullSync) }
-func TestForkedSync64Fast(t *testing.T)  { testForkedSync(t, 64, FastSync) }
-func TestForkedSync64Light(t *testing.T) { testForkedSync(t, 64, LightSync) }
+func TestForkedSync62(t *testing.T)      { log.DebugLog() testForkedSync(t, 62, FullSync) }
+func TestForkedSync63Full(t *testing.T)  { log.DebugLog() testForkedSync(t, 63, FullSync) }
+func TestForkedSync63Fast(t *testing.T)  { log.DebugLog() testForkedSync(t, 63, FastSync) }
+func TestForkedSync64Full(t *testing.T)  { log.DebugLog() testForkedSync(t, 64, FullSync) }
+func TestForkedSync64Fast(t *testing.T)  { log.DebugLog() testForkedSync(t, 64, FastSync) }
+func TestForkedSync64Light(t *testing.T) { log.DebugLog() testForkedSync(t, 64, LightSync) }
 
-func testForkedSync(t *testing.T, protocol int, mode SyncMode) {
+func testForkedSync(t *testing.T, protocol int, mode SyncMode) { log.DebugLog()
 	t.Parallel()
 
 	tester := newTester()
@@ -808,14 +808,14 @@ func testForkedSync(t *testing.T, protocol int, mode SyncMode) {
 
 // Tests that synchronising against a much shorter but much heavyer fork works
 // corrently and is not dropped.
-func TestHeavyForkedSync62(t *testing.T)      { testHeavyForkedSync(t, 62, FullSync) }
-func TestHeavyForkedSync63Full(t *testing.T)  { testHeavyForkedSync(t, 63, FullSync) }
-func TestHeavyForkedSync63Fast(t *testing.T)  { testHeavyForkedSync(t, 63, FastSync) }
-func TestHeavyForkedSync64Full(t *testing.T)  { testHeavyForkedSync(t, 64, FullSync) }
-func TestHeavyForkedSync64Fast(t *testing.T)  { testHeavyForkedSync(t, 64, FastSync) }
-func TestHeavyForkedSync64Light(t *testing.T) { testHeavyForkedSync(t, 64, LightSync) }
+func TestHeavyForkedSync62(t *testing.T)      { log.DebugLog() testHeavyForkedSync(t, 62, FullSync) }
+func TestHeavyForkedSync63Full(t *testing.T)  { log.DebugLog() testHeavyForkedSync(t, 63, FullSync) }
+func TestHeavyForkedSync63Fast(t *testing.T)  { log.DebugLog() testHeavyForkedSync(t, 63, FastSync) }
+func TestHeavyForkedSync64Full(t *testing.T)  { log.DebugLog() testHeavyForkedSync(t, 64, FullSync) }
+func TestHeavyForkedSync64Fast(t *testing.T)  { log.DebugLog() testHeavyForkedSync(t, 64, FastSync) }
+func TestHeavyForkedSync64Light(t *testing.T) { log.DebugLog() testHeavyForkedSync(t, 64, LightSync) }
 
-func testHeavyForkedSync(t *testing.T, protocol int, mode SyncMode) {
+func testHeavyForkedSync(t *testing.T, protocol int, mode SyncMode) { log.DebugLog()
 	t.Parallel()
 
 	tester := newTester()
@@ -844,14 +844,14 @@ func testHeavyForkedSync(t *testing.T, protocol int, mode SyncMode) {
 // Tests that chain forks are contained within a certain interval of the current
 // chain head, ensuring that malicious peers cannot waste resources by feeding
 // long dead chains.
-func TestBoundedForkedSync62(t *testing.T)      { testBoundedForkedSync(t, 62, FullSync) }
-func TestBoundedForkedSync63Full(t *testing.T)  { testBoundedForkedSync(t, 63, FullSync) }
-func TestBoundedForkedSync63Fast(t *testing.T)  { testBoundedForkedSync(t, 63, FastSync) }
-func TestBoundedForkedSync64Full(t *testing.T)  { testBoundedForkedSync(t, 64, FullSync) }
-func TestBoundedForkedSync64Fast(t *testing.T)  { testBoundedForkedSync(t, 64, FastSync) }
-func TestBoundedForkedSync64Light(t *testing.T) { testBoundedForkedSync(t, 64, LightSync) }
+func TestBoundedForkedSync62(t *testing.T)      { log.DebugLog() testBoundedForkedSync(t, 62, FullSync) }
+func TestBoundedForkedSync63Full(t *testing.T)  { log.DebugLog() testBoundedForkedSync(t, 63, FullSync) }
+func TestBoundedForkedSync63Fast(t *testing.T)  { log.DebugLog() testBoundedForkedSync(t, 63, FastSync) }
+func TestBoundedForkedSync64Full(t *testing.T)  { log.DebugLog() testBoundedForkedSync(t, 64, FullSync) }
+func TestBoundedForkedSync64Fast(t *testing.T)  { log.DebugLog() testBoundedForkedSync(t, 64, FastSync) }
+func TestBoundedForkedSync64Light(t *testing.T) { log.DebugLog() testBoundedForkedSync(t, 64, LightSync) }
 
-func testBoundedForkedSync(t *testing.T, protocol int, mode SyncMode) {
+func testBoundedForkedSync(t *testing.T, protocol int, mode SyncMode) { log.DebugLog()
 	t.Parallel()
 
 	tester := newTester()
@@ -879,14 +879,14 @@ func testBoundedForkedSync(t *testing.T, protocol int, mode SyncMode) {
 // Tests that chain forks are contained within a certain interval of the current
 // chain head for short but heavy forks too. These are a bit special because they
 // take different ancestor lookup paths.
-func TestBoundedHeavyForkedSync62(t *testing.T)      { testBoundedHeavyForkedSync(t, 62, FullSync) }
-func TestBoundedHeavyForkedSync63Full(t *testing.T)  { testBoundedHeavyForkedSync(t, 63, FullSync) }
-func TestBoundedHeavyForkedSync63Fast(t *testing.T)  { testBoundedHeavyForkedSync(t, 63, FastSync) }
-func TestBoundedHeavyForkedSync64Full(t *testing.T)  { testBoundedHeavyForkedSync(t, 64, FullSync) }
-func TestBoundedHeavyForkedSync64Fast(t *testing.T)  { testBoundedHeavyForkedSync(t, 64, FastSync) }
-func TestBoundedHeavyForkedSync64Light(t *testing.T) { testBoundedHeavyForkedSync(t, 64, LightSync) }
+func TestBoundedHeavyForkedSync62(t *testing.T)      { log.DebugLog() testBoundedHeavyForkedSync(t, 62, FullSync) }
+func TestBoundedHeavyForkedSync63Full(t *testing.T)  { log.DebugLog() testBoundedHeavyForkedSync(t, 63, FullSync) }
+func TestBoundedHeavyForkedSync63Fast(t *testing.T)  { log.DebugLog() testBoundedHeavyForkedSync(t, 63, FastSync) }
+func TestBoundedHeavyForkedSync64Full(t *testing.T)  { log.DebugLog() testBoundedHeavyForkedSync(t, 64, FullSync) }
+func TestBoundedHeavyForkedSync64Fast(t *testing.T)  { log.DebugLog() testBoundedHeavyForkedSync(t, 64, FastSync) }
+func TestBoundedHeavyForkedSync64Light(t *testing.T) { log.DebugLog() testBoundedHeavyForkedSync(t, 64, LightSync) }
 
-func testBoundedHeavyForkedSync(t *testing.T, protocol int, mode SyncMode) {
+func testBoundedHeavyForkedSync(t *testing.T, protocol int, mode SyncMode) { log.DebugLog()
 	t.Parallel()
 
 	tester := newTester()
@@ -913,7 +913,7 @@ func testBoundedHeavyForkedSync(t *testing.T, protocol int, mode SyncMode) {
 
 // Tests that an inactive downloader will not accept incoming block headers and
 // bodies.
-func TestInactiveDownloader62(t *testing.T) {
+func TestInactiveDownloader62(t *testing.T) { log.DebugLog()
 	t.Parallel()
 
 	tester := newTester()
@@ -930,7 +930,7 @@ func TestInactiveDownloader62(t *testing.T) {
 
 // Tests that an inactive downloader will not accept incoming block headers,
 // bodies and receipts.
-func TestInactiveDownloader63(t *testing.T) {
+func TestInactiveDownloader63(t *testing.T) { log.DebugLog()
 	t.Parallel()
 
 	tester := newTester()
@@ -949,14 +949,14 @@ func TestInactiveDownloader63(t *testing.T) {
 }
 
 // Tests that a canceled download wipes all previously accumulated state.
-func TestCancel62(t *testing.T)      { testCancel(t, 62, FullSync) }
-func TestCancel63Full(t *testing.T)  { testCancel(t, 63, FullSync) }
-func TestCancel63Fast(t *testing.T)  { testCancel(t, 63, FastSync) }
-func TestCancel64Full(t *testing.T)  { testCancel(t, 64, FullSync) }
-func TestCancel64Fast(t *testing.T)  { testCancel(t, 64, FastSync) }
-func TestCancel64Light(t *testing.T) { testCancel(t, 64, LightSync) }
+func TestCancel62(t *testing.T)      { log.DebugLog() testCancel(t, 62, FullSync) }
+func TestCancel63Full(t *testing.T)  { log.DebugLog() testCancel(t, 63, FullSync) }
+func TestCancel63Fast(t *testing.T)  { log.DebugLog() testCancel(t, 63, FastSync) }
+func TestCancel64Full(t *testing.T)  { log.DebugLog() testCancel(t, 64, FullSync) }
+func TestCancel64Fast(t *testing.T)  { log.DebugLog() testCancel(t, 64, FastSync) }
+func TestCancel64Light(t *testing.T) { log.DebugLog() testCancel(t, 64, LightSync) }
 
-func testCancel(t *testing.T, protocol int, mode SyncMode) {
+func testCancel(t *testing.T, protocol int, mode SyncMode) { log.DebugLog()
 	t.Parallel()
 
 	tester := newTester()
@@ -990,14 +990,14 @@ func testCancel(t *testing.T, protocol int, mode SyncMode) {
 }
 
 // Tests that synchronisation from multiple peers works as intended (multi thread sanity test).
-func TestMultiSynchronisation62(t *testing.T)      { testMultiSynchronisation(t, 62, FullSync) }
-func TestMultiSynchronisation63Full(t *testing.T)  { testMultiSynchronisation(t, 63, FullSync) }
-func TestMultiSynchronisation63Fast(t *testing.T)  { testMultiSynchronisation(t, 63, FastSync) }
-func TestMultiSynchronisation64Full(t *testing.T)  { testMultiSynchronisation(t, 64, FullSync) }
-func TestMultiSynchronisation64Fast(t *testing.T)  { testMultiSynchronisation(t, 64, FastSync) }
-func TestMultiSynchronisation64Light(t *testing.T) { testMultiSynchronisation(t, 64, LightSync) }
+func TestMultiSynchronisation62(t *testing.T)      { log.DebugLog() testMultiSynchronisation(t, 62, FullSync) }
+func TestMultiSynchronisation63Full(t *testing.T)  { log.DebugLog() testMultiSynchronisation(t, 63, FullSync) }
+func TestMultiSynchronisation63Fast(t *testing.T)  { log.DebugLog() testMultiSynchronisation(t, 63, FastSync) }
+func TestMultiSynchronisation64Full(t *testing.T)  { log.DebugLog() testMultiSynchronisation(t, 64, FullSync) }
+func TestMultiSynchronisation64Fast(t *testing.T)  { log.DebugLog() testMultiSynchronisation(t, 64, FastSync) }
+func TestMultiSynchronisation64Light(t *testing.T) { log.DebugLog() testMultiSynchronisation(t, 64, LightSync) }
 
-func testMultiSynchronisation(t *testing.T, protocol int, mode SyncMode) {
+func testMultiSynchronisation(t *testing.T, protocol int, mode SyncMode) { log.DebugLog()
 	t.Parallel()
 
 	tester := newTester()
@@ -1020,14 +1020,14 @@ func testMultiSynchronisation(t *testing.T, protocol int, mode SyncMode) {
 
 // Tests that synchronisations behave well in multi-version protocol environments
 // and not wreak havoc on other nodes in the network.
-func TestMultiProtoSynchronisation62(t *testing.T)      { testMultiProtoSync(t, 62, FullSync) }
-func TestMultiProtoSynchronisation63Full(t *testing.T)  { testMultiProtoSync(t, 63, FullSync) }
-func TestMultiProtoSynchronisation63Fast(t *testing.T)  { testMultiProtoSync(t, 63, FastSync) }
-func TestMultiProtoSynchronisation64Full(t *testing.T)  { testMultiProtoSync(t, 64, FullSync) }
-func TestMultiProtoSynchronisation64Fast(t *testing.T)  { testMultiProtoSync(t, 64, FastSync) }
-func TestMultiProtoSynchronisation64Light(t *testing.T) { testMultiProtoSync(t, 64, LightSync) }
+func TestMultiProtoSynchronisation62(t *testing.T)      { log.DebugLog() testMultiProtoSync(t, 62, FullSync) }
+func TestMultiProtoSynchronisation63Full(t *testing.T)  { log.DebugLog() testMultiProtoSync(t, 63, FullSync) }
+func TestMultiProtoSynchronisation63Fast(t *testing.T)  { log.DebugLog() testMultiProtoSync(t, 63, FastSync) }
+func TestMultiProtoSynchronisation64Full(t *testing.T)  { log.DebugLog() testMultiProtoSync(t, 64, FullSync) }
+func TestMultiProtoSynchronisation64Fast(t *testing.T)  { log.DebugLog() testMultiProtoSync(t, 64, FastSync) }
+func TestMultiProtoSynchronisation64Light(t *testing.T) { log.DebugLog() testMultiProtoSync(t, 64, LightSync) }
 
-func testMultiProtoSync(t *testing.T, protocol int, mode SyncMode) {
+func testMultiProtoSync(t *testing.T, protocol int, mode SyncMode) { log.DebugLog()
 	t.Parallel()
 
 	tester := newTester()
@@ -1059,14 +1059,14 @@ func testMultiProtoSync(t *testing.T, protocol int, mode SyncMode) {
 
 // Tests that if a block is empty (e.g. header only), no body request should be
 // made, and instead the header should be assembled into a whole block in itself.
-func TestEmptyShortCircuit62(t *testing.T)      { testEmptyShortCircuit(t, 62, FullSync) }
-func TestEmptyShortCircuit63Full(t *testing.T)  { testEmptyShortCircuit(t, 63, FullSync) }
-func TestEmptyShortCircuit63Fast(t *testing.T)  { testEmptyShortCircuit(t, 63, FastSync) }
-func TestEmptyShortCircuit64Full(t *testing.T)  { testEmptyShortCircuit(t, 64, FullSync) }
-func TestEmptyShortCircuit64Fast(t *testing.T)  { testEmptyShortCircuit(t, 64, FastSync) }
-func TestEmptyShortCircuit64Light(t *testing.T) { testEmptyShortCircuit(t, 64, LightSync) }
+func TestEmptyShortCircuit62(t *testing.T)      { log.DebugLog() testEmptyShortCircuit(t, 62, FullSync) }
+func TestEmptyShortCircuit63Full(t *testing.T)  { log.DebugLog() testEmptyShortCircuit(t, 63, FullSync) }
+func TestEmptyShortCircuit63Fast(t *testing.T)  { log.DebugLog() testEmptyShortCircuit(t, 63, FastSync) }
+func TestEmptyShortCircuit64Full(t *testing.T)  { log.DebugLog() testEmptyShortCircuit(t, 64, FullSync) }
+func TestEmptyShortCircuit64Fast(t *testing.T)  { log.DebugLog() testEmptyShortCircuit(t, 64, FastSync) }
+func TestEmptyShortCircuit64Light(t *testing.T) { log.DebugLog() testEmptyShortCircuit(t, 64, LightSync) }
 
-func testEmptyShortCircuit(t *testing.T, protocol int, mode SyncMode) {
+func testEmptyShortCircuit(t *testing.T, protocol int, mode SyncMode) { log.DebugLog()
 	t.Parallel()
 
 	tester := newTester()
@@ -1114,14 +1114,14 @@ func testEmptyShortCircuit(t *testing.T, protocol int, mode SyncMode) {
 
 // Tests that headers are enqueued continuously, preventing malicious nodes from
 // stalling the downloader by feeding gapped header chains.
-func TestMissingHeaderAttack62(t *testing.T)      { testMissingHeaderAttack(t, 62, FullSync) }
-func TestMissingHeaderAttack63Full(t *testing.T)  { testMissingHeaderAttack(t, 63, FullSync) }
-func TestMissingHeaderAttack63Fast(t *testing.T)  { testMissingHeaderAttack(t, 63, FastSync) }
-func TestMissingHeaderAttack64Full(t *testing.T)  { testMissingHeaderAttack(t, 64, FullSync) }
-func TestMissingHeaderAttack64Fast(t *testing.T)  { testMissingHeaderAttack(t, 64, FastSync) }
-func TestMissingHeaderAttack64Light(t *testing.T) { testMissingHeaderAttack(t, 64, LightSync) }
+func TestMissingHeaderAttack62(t *testing.T)      { log.DebugLog() testMissingHeaderAttack(t, 62, FullSync) }
+func TestMissingHeaderAttack63Full(t *testing.T)  { log.DebugLog() testMissingHeaderAttack(t, 63, FullSync) }
+func TestMissingHeaderAttack63Fast(t *testing.T)  { log.DebugLog() testMissingHeaderAttack(t, 63, FastSync) }
+func TestMissingHeaderAttack64Full(t *testing.T)  { log.DebugLog() testMissingHeaderAttack(t, 64, FullSync) }
+func TestMissingHeaderAttack64Fast(t *testing.T)  { log.DebugLog() testMissingHeaderAttack(t, 64, FastSync) }
+func TestMissingHeaderAttack64Light(t *testing.T) { log.DebugLog() testMissingHeaderAttack(t, 64, LightSync) }
 
-func testMissingHeaderAttack(t *testing.T, protocol int, mode SyncMode) {
+func testMissingHeaderAttack(t *testing.T, protocol int, mode SyncMode) { log.DebugLog()
 	t.Parallel()
 
 	tester := newTester()
@@ -1149,14 +1149,14 @@ func testMissingHeaderAttack(t *testing.T, protocol int, mode SyncMode) {
 
 // Tests that if requested headers are shifted (i.e. first is missing), the queue
 // detects the invalid numbering.
-func TestShiftedHeaderAttack62(t *testing.T)      { testShiftedHeaderAttack(t, 62, FullSync) }
-func TestShiftedHeaderAttack63Full(t *testing.T)  { testShiftedHeaderAttack(t, 63, FullSync) }
-func TestShiftedHeaderAttack63Fast(t *testing.T)  { testShiftedHeaderAttack(t, 63, FastSync) }
-func TestShiftedHeaderAttack64Full(t *testing.T)  { testShiftedHeaderAttack(t, 64, FullSync) }
-func TestShiftedHeaderAttack64Fast(t *testing.T)  { testShiftedHeaderAttack(t, 64, FastSync) }
-func TestShiftedHeaderAttack64Light(t *testing.T) { testShiftedHeaderAttack(t, 64, LightSync) }
+func TestShiftedHeaderAttack62(t *testing.T)      { log.DebugLog() testShiftedHeaderAttack(t, 62, FullSync) }
+func TestShiftedHeaderAttack63Full(t *testing.T)  { log.DebugLog() testShiftedHeaderAttack(t, 63, FullSync) }
+func TestShiftedHeaderAttack63Fast(t *testing.T)  { log.DebugLog() testShiftedHeaderAttack(t, 63, FastSync) }
+func TestShiftedHeaderAttack64Full(t *testing.T)  { log.DebugLog() testShiftedHeaderAttack(t, 64, FullSync) }
+func TestShiftedHeaderAttack64Fast(t *testing.T)  { log.DebugLog() testShiftedHeaderAttack(t, 64, FastSync) }
+func TestShiftedHeaderAttack64Light(t *testing.T) { log.DebugLog() testShiftedHeaderAttack(t, 64, LightSync) }
 
-func testShiftedHeaderAttack(t *testing.T, protocol int, mode SyncMode) {
+func testShiftedHeaderAttack(t *testing.T, protocol int, mode SyncMode) { log.DebugLog()
 	t.Parallel()
 
 	tester := newTester()
@@ -1186,11 +1186,11 @@ func testShiftedHeaderAttack(t *testing.T, protocol int, mode SyncMode) {
 // Tests that upon detecting an invalid header, the recent ones are rolled back
 // for various failure scenarios. Afterwards a full sync is attempted to make
 // sure no state was corrupted.
-func TestInvalidHeaderRollback63Fast(t *testing.T)  { testInvalidHeaderRollback(t, 63, FastSync) }
-func TestInvalidHeaderRollback64Fast(t *testing.T)  { testInvalidHeaderRollback(t, 64, FastSync) }
-func TestInvalidHeaderRollback64Light(t *testing.T) { testInvalidHeaderRollback(t, 64, LightSync) }
+func TestInvalidHeaderRollback63Fast(t *testing.T)  { log.DebugLog() testInvalidHeaderRollback(t, 63, FastSync) }
+func TestInvalidHeaderRollback64Fast(t *testing.T)  { log.DebugLog() testInvalidHeaderRollback(t, 64, FastSync) }
+func TestInvalidHeaderRollback64Light(t *testing.T) { log.DebugLog() testInvalidHeaderRollback(t, 64, LightSync) }
 
-func testInvalidHeaderRollback(t *testing.T, protocol int, mode SyncMode) {
+func testInvalidHeaderRollback(t *testing.T, protocol int, mode SyncMode) { log.DebugLog()
 	t.Parallel()
 
 	tester := newTester()
@@ -1275,14 +1275,14 @@ func testInvalidHeaderRollback(t *testing.T, protocol int, mode SyncMode) {
 
 // Tests that a peer advertising an high TD doesn't get to stall the downloader
 // afterwards by not sending any useful hashes.
-func TestHighTDStarvationAttack62(t *testing.T)      { testHighTDStarvationAttack(t, 62, FullSync) }
-func TestHighTDStarvationAttack63Full(t *testing.T)  { testHighTDStarvationAttack(t, 63, FullSync) }
-func TestHighTDStarvationAttack63Fast(t *testing.T)  { testHighTDStarvationAttack(t, 63, FastSync) }
-func TestHighTDStarvationAttack64Full(t *testing.T)  { testHighTDStarvationAttack(t, 64, FullSync) }
-func TestHighTDStarvationAttack64Fast(t *testing.T)  { testHighTDStarvationAttack(t, 64, FastSync) }
-func TestHighTDStarvationAttack64Light(t *testing.T) { testHighTDStarvationAttack(t, 64, LightSync) }
+func TestHighTDStarvationAttack62(t *testing.T)      { log.DebugLog() testHighTDStarvationAttack(t, 62, FullSync) }
+func TestHighTDStarvationAttack63Full(t *testing.T)  { log.DebugLog() testHighTDStarvationAttack(t, 63, FullSync) }
+func TestHighTDStarvationAttack63Fast(t *testing.T)  { log.DebugLog() testHighTDStarvationAttack(t, 63, FastSync) }
+func TestHighTDStarvationAttack64Full(t *testing.T)  { log.DebugLog() testHighTDStarvationAttack(t, 64, FullSync) }
+func TestHighTDStarvationAttack64Fast(t *testing.T)  { log.DebugLog() testHighTDStarvationAttack(t, 64, FastSync) }
+func TestHighTDStarvationAttack64Light(t *testing.T) { log.DebugLog() testHighTDStarvationAttack(t, 64, LightSync) }
 
-func testHighTDStarvationAttack(t *testing.T, protocol int, mode SyncMode) {
+func testHighTDStarvationAttack(t *testing.T, protocol int, mode SyncMode) { log.DebugLog()
 	t.Parallel()
 
 	tester := newTester()
@@ -1297,11 +1297,11 @@ func testHighTDStarvationAttack(t *testing.T, protocol int, mode SyncMode) {
 }
 
 // Tests that misbehaving peers are disconnected, whilst behaving ones are not.
-func TestBlockHeaderAttackerDropping62(t *testing.T) { testBlockHeaderAttackerDropping(t, 62) }
-func TestBlockHeaderAttackerDropping63(t *testing.T) { testBlockHeaderAttackerDropping(t, 63) }
-func TestBlockHeaderAttackerDropping64(t *testing.T) { testBlockHeaderAttackerDropping(t, 64) }
+func TestBlockHeaderAttackerDropping62(t *testing.T) { log.DebugLog() testBlockHeaderAttackerDropping(t, 62) }
+func TestBlockHeaderAttackerDropping63(t *testing.T) { log.DebugLog() testBlockHeaderAttackerDropping(t, 63) }
+func TestBlockHeaderAttackerDropping64(t *testing.T) { log.DebugLog() testBlockHeaderAttackerDropping(t, 64) }
 
-func testBlockHeaderAttackerDropping(t *testing.T, protocol int) {
+func testBlockHeaderAttackerDropping(t *testing.T, protocol int) { log.DebugLog()
 	t.Parallel()
 
 	// Define the disconnection requirement for individual hash fetch errors
@@ -1355,14 +1355,14 @@ func testBlockHeaderAttackerDropping(t *testing.T, protocol int) {
 
 // Tests that synchronisation progress (origin block number, current block number
 // and highest block number) is tracked and updated correctly.
-func TestSyncProgress62(t *testing.T)      { testSyncProgress(t, 62, FullSync) }
-func TestSyncProgress63Full(t *testing.T)  { testSyncProgress(t, 63, FullSync) }
-func TestSyncProgress63Fast(t *testing.T)  { testSyncProgress(t, 63, FastSync) }
-func TestSyncProgress64Full(t *testing.T)  { testSyncProgress(t, 64, FullSync) }
-func TestSyncProgress64Fast(t *testing.T)  { testSyncProgress(t, 64, FastSync) }
-func TestSyncProgress64Light(t *testing.T) { testSyncProgress(t, 64, LightSync) }
+func TestSyncProgress62(t *testing.T)      { log.DebugLog() testSyncProgress(t, 62, FullSync) }
+func TestSyncProgress63Full(t *testing.T)  { log.DebugLog() testSyncProgress(t, 63, FullSync) }
+func TestSyncProgress63Fast(t *testing.T)  { log.DebugLog() testSyncProgress(t, 63, FastSync) }
+func TestSyncProgress64Full(t *testing.T)  { log.DebugLog() testSyncProgress(t, 64, FullSync) }
+func TestSyncProgress64Fast(t *testing.T)  { log.DebugLog() testSyncProgress(t, 64, FastSync) }
+func TestSyncProgress64Light(t *testing.T) { log.DebugLog() testSyncProgress(t, 64, LightSync) }
 
-func testSyncProgress(t *testing.T, protocol int, mode SyncMode) {
+func testSyncProgress(t *testing.T, protocol int, mode SyncMode) { log.DebugLog()
 	t.Parallel()
 
 	tester := newTester()
@@ -1428,14 +1428,14 @@ func testSyncProgress(t *testing.T, protocol int, mode SyncMode) {
 // Tests that synchronisation progress (origin block number and highest block
 // number) is tracked and updated correctly in case of a fork (or manual head
 // revertal).
-func TestForkedSyncProgress62(t *testing.T)      { testForkedSyncProgress(t, 62, FullSync) }
-func TestForkedSyncProgress63Full(t *testing.T)  { testForkedSyncProgress(t, 63, FullSync) }
-func TestForkedSyncProgress63Fast(t *testing.T)  { testForkedSyncProgress(t, 63, FastSync) }
-func TestForkedSyncProgress64Full(t *testing.T)  { testForkedSyncProgress(t, 64, FullSync) }
-func TestForkedSyncProgress64Fast(t *testing.T)  { testForkedSyncProgress(t, 64, FastSync) }
-func TestForkedSyncProgress64Light(t *testing.T) { testForkedSyncProgress(t, 64, LightSync) }
+func TestForkedSyncProgress62(t *testing.T)      { log.DebugLog() testForkedSyncProgress(t, 62, FullSync) }
+func TestForkedSyncProgress63Full(t *testing.T)  { log.DebugLog() testForkedSyncProgress(t, 63, FullSync) }
+func TestForkedSyncProgress63Fast(t *testing.T)  { log.DebugLog() testForkedSyncProgress(t, 63, FastSync) }
+func TestForkedSyncProgress64Full(t *testing.T)  { log.DebugLog() testForkedSyncProgress(t, 64, FullSync) }
+func TestForkedSyncProgress64Fast(t *testing.T)  { log.DebugLog() testForkedSyncProgress(t, 64, FastSync) }
+func TestForkedSyncProgress64Light(t *testing.T) { log.DebugLog() testForkedSyncProgress(t, 64, LightSync) }
 
-func testForkedSyncProgress(t *testing.T, protocol int, mode SyncMode) {
+func testForkedSyncProgress(t *testing.T, protocol int, mode SyncMode) { log.DebugLog()
 	t.Parallel()
 
 	tester := newTester()
@@ -1504,14 +1504,14 @@ func testForkedSyncProgress(t *testing.T, protocol int, mode SyncMode) {
 // Tests that if synchronisation is aborted due to some failure, then the progress
 // origin is not updated in the next sync cycle, as it should be considered the
 // continuation of the previous sync and not a new instance.
-func TestFailedSyncProgress62(t *testing.T)      { testFailedSyncProgress(t, 62, FullSync) }
-func TestFailedSyncProgress63Full(t *testing.T)  { testFailedSyncProgress(t, 63, FullSync) }
-func TestFailedSyncProgress63Fast(t *testing.T)  { testFailedSyncProgress(t, 63, FastSync) }
-func TestFailedSyncProgress64Full(t *testing.T)  { testFailedSyncProgress(t, 64, FullSync) }
-func TestFailedSyncProgress64Fast(t *testing.T)  { testFailedSyncProgress(t, 64, FastSync) }
-func TestFailedSyncProgress64Light(t *testing.T) { testFailedSyncProgress(t, 64, LightSync) }
+func TestFailedSyncProgress62(t *testing.T)      { log.DebugLog() testFailedSyncProgress(t, 62, FullSync) }
+func TestFailedSyncProgress63Full(t *testing.T)  { log.DebugLog() testFailedSyncProgress(t, 63, FullSync) }
+func TestFailedSyncProgress63Fast(t *testing.T)  { log.DebugLog() testFailedSyncProgress(t, 63, FastSync) }
+func TestFailedSyncProgress64Full(t *testing.T)  { log.DebugLog() testFailedSyncProgress(t, 64, FullSync) }
+func TestFailedSyncProgress64Fast(t *testing.T)  { log.DebugLog() testFailedSyncProgress(t, 64, FastSync) }
+func TestFailedSyncProgress64Light(t *testing.T) { log.DebugLog() testFailedSyncProgress(t, 64, LightSync) }
 
-func testFailedSyncProgress(t *testing.T, protocol int, mode SyncMode) {
+func testFailedSyncProgress(t *testing.T, protocol int, mode SyncMode) { log.DebugLog()
 	t.Parallel()
 
 	tester := newTester()
@@ -1581,14 +1581,14 @@ func testFailedSyncProgress(t *testing.T, protocol int, mode SyncMode) {
 
 // Tests that if an attacker fakes a chain height, after the attack is detected,
 // the progress height is successfully reduced at the next sync invocation.
-func TestFakedSyncProgress62(t *testing.T)      { testFakedSyncProgress(t, 62, FullSync) }
-func TestFakedSyncProgress63Full(t *testing.T)  { testFakedSyncProgress(t, 63, FullSync) }
-func TestFakedSyncProgress63Fast(t *testing.T)  { testFakedSyncProgress(t, 63, FastSync) }
-func TestFakedSyncProgress64Full(t *testing.T)  { testFakedSyncProgress(t, 64, FullSync) }
-func TestFakedSyncProgress64Fast(t *testing.T)  { testFakedSyncProgress(t, 64, FastSync) }
-func TestFakedSyncProgress64Light(t *testing.T) { testFakedSyncProgress(t, 64, LightSync) }
+func TestFakedSyncProgress62(t *testing.T)      { log.DebugLog() testFakedSyncProgress(t, 62, FullSync) }
+func TestFakedSyncProgress63Full(t *testing.T)  { log.DebugLog() testFakedSyncProgress(t, 63, FullSync) }
+func TestFakedSyncProgress63Fast(t *testing.T)  { log.DebugLog() testFakedSyncProgress(t, 63, FastSync) }
+func TestFakedSyncProgress64Full(t *testing.T)  { log.DebugLog() testFakedSyncProgress(t, 64, FullSync) }
+func TestFakedSyncProgress64Fast(t *testing.T)  { log.DebugLog() testFakedSyncProgress(t, 64, FastSync) }
+func TestFakedSyncProgress64Light(t *testing.T) { log.DebugLog() testFakedSyncProgress(t, 64, LightSync) }
 
-func testFakedSyncProgress(t *testing.T, protocol int, mode SyncMode) {
+func testFakedSyncProgress(t *testing.T, protocol int, mode SyncMode) { log.DebugLog()
 	t.Parallel()
 
 	tester := newTester()
@@ -1661,7 +1661,7 @@ func testFakedSyncProgress(t *testing.T, protocol int, mode SyncMode) {
 // block indefinitely if they arrived at the right time.
 // We use data driven subtests to manage this so that it will be parallel on its own
 // and not with the other tests, avoiding intermittent failures.
-func TestDeliverHeadersHang(t *testing.T) {
+func TestDeliverHeadersHang(t *testing.T) { log.DebugLog()
 	testCases := []struct {
 		protocol int
 		syncMode SyncMode
@@ -1686,21 +1686,21 @@ type floodingTestPeer struct {
 	pend   sync.WaitGroup
 }
 
-func (ftp *floodingTestPeer) Head() (common.Hash, *big.Int) { return ftp.peer.Head() }
-func (ftp *floodingTestPeer) RequestHeadersByHash(hash common.Hash, count int, skip int, reverse bool) error {
+func (ftp *floodingTestPeer) Head() (common.Hash, *big.Int) { log.DebugLog() return ftp.peer.Head() }
+func (ftp *floodingTestPeer) RequestHeadersByHash(hash common.Hash, count int, skip int, reverse bool) error { log.DebugLog()
 	return ftp.peer.RequestHeadersByHash(hash, count, skip, reverse)
 }
-func (ftp *floodingTestPeer) RequestBodies(hashes []common.Hash) error {
+func (ftp *floodingTestPeer) RequestBodies(hashes []common.Hash) error { log.DebugLog()
 	return ftp.peer.RequestBodies(hashes)
 }
-func (ftp *floodingTestPeer) RequestReceipts(hashes []common.Hash) error {
+func (ftp *floodingTestPeer) RequestReceipts(hashes []common.Hash) error { log.DebugLog()
 	return ftp.peer.RequestReceipts(hashes)
 }
-func (ftp *floodingTestPeer) RequestNodeData(hashes []common.Hash) error {
+func (ftp *floodingTestPeer) RequestNodeData(hashes []common.Hash) error { log.DebugLog()
 	return ftp.peer.RequestNodeData(hashes)
 }
 
-func (ftp *floodingTestPeer) RequestHeadersByNumber(from uint64, count, skip int, reverse bool) error {
+func (ftp *floodingTestPeer) RequestHeadersByNumber(from uint64, count, skip int, reverse bool) error { log.DebugLog()
 	deliveriesDone := make(chan struct{}, 500)
 	for i := 0; i < cap(deliveriesDone); i++ {
 		peer := fmt.Sprintf("fake-peer%d", i)
@@ -1726,7 +1726,7 @@ func (ftp *floodingTestPeer) RequestHeadersByNumber(from uint64, count, skip int
 	return nil
 }
 
-func testDeliverHeadersHang(t *testing.T, protocol int, mode SyncMode) {
+func testDeliverHeadersHang(t *testing.T, protocol int, mode SyncMode) { log.DebugLog()
 	t.Parallel()
 
 	master := newTester()

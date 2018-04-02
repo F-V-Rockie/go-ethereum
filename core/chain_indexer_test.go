@@ -29,7 +29,7 @@ import (
 )
 
 // Runs multiple tests with randomized parameters.
-func TestChainIndexerSingle(t *testing.T) {
+func TestChainIndexerSingle(t *testing.T) { log.DebugLog()
 	for i := 0; i < 10; i++ {
 		testChainIndexer(t, 1)
 	}
@@ -37,7 +37,7 @@ func TestChainIndexerSingle(t *testing.T) {
 
 // Runs multiple tests with randomized parameters and different number of
 // chain backends.
-func TestChainIndexerWithChildren(t *testing.T) {
+func TestChainIndexerWithChildren(t *testing.T) { log.DebugLog()
 	for i := 2; i < 8; i++ {
 		testChainIndexer(t, i)
 	}
@@ -46,7 +46,7 @@ func TestChainIndexerWithChildren(t *testing.T) {
 // testChainIndexer runs a test with either a single chain indexer or a chain of
 // multiple backends. The section size and required confirmation count parameters
 // are randomized.
-func testChainIndexer(t *testing.T, count int) {
+func testChainIndexer(t *testing.T, count int) { log.DebugLog()
 	db, _ := ethdb.NewMemDatabase()
 	defer db.Close()
 
@@ -141,7 +141,7 @@ type testChainIndexBackend struct {
 }
 
 // assertSections verifies if a chain indexer has the correct number of section.
-func (b *testChainIndexBackend) assertSections() {
+func (b *testChainIndexBackend) assertSections() { log.DebugLog()
 	// Keep trying for 3 seconds if it does not match
 	var sections uint64
 	for i := 0; i < 300; i++ {
@@ -157,7 +157,7 @@ func (b *testChainIndexBackend) assertSections() {
 // assertBlocks expects processing calls after new blocks have arrived. If the
 // failNum < headNum then we are simulating a scenario where a reorg has happened
 // after the processing has started and the processing of a section fails.
-func (b *testChainIndexBackend) assertBlocks(headNum, failNum uint64) (uint64, bool) {
+func (b *testChainIndexBackend) assertBlocks(headNum, failNum uint64) (uint64, bool) { log.DebugLog()
 	var sections uint64
 	if headNum >= b.indexer.confirmsReq {
 		sections = (headNum + 1 - b.indexer.confirmsReq) / b.indexer.sectionSize
@@ -201,7 +201,7 @@ func (b *testChainIndexBackend) assertBlocks(headNum, failNum uint64) (uint64, b
 	return b.stored*b.indexer.sectionSize - 1, true
 }
 
-func (b *testChainIndexBackend) reorg(headNum uint64) uint64 {
+func (b *testChainIndexBackend) reorg(headNum uint64) uint64 { log.DebugLog()
 	firstChanged := headNum / b.indexer.sectionSize
 	if firstChanged < b.stored {
 		b.stored = firstChanged
@@ -209,13 +209,13 @@ func (b *testChainIndexBackend) reorg(headNum uint64) uint64 {
 	return b.stored * b.indexer.sectionSize
 }
 
-func (b *testChainIndexBackend) Reset(section uint64, prevHead common.Hash) error {
+func (b *testChainIndexBackend) Reset(section uint64, prevHead common.Hash) error { log.DebugLog()
 	b.section = section
 	b.headerCnt = 0
 	return nil
 }
 
-func (b *testChainIndexBackend) Process(header *types.Header) {
+func (b *testChainIndexBackend) Process(header *types.Header) { log.DebugLog()
 	b.headerCnt++
 	if b.headerCnt > b.indexer.sectionSize {
 		b.t.Error("Processing too many headers")
@@ -228,7 +228,7 @@ func (b *testChainIndexBackend) Process(header *types.Header) {
 	}
 }
 
-func (b *testChainIndexBackend) Commit() error {
+func (b *testChainIndexBackend) Commit() error { log.DebugLog()
 	if b.headerCnt != b.indexer.sectionSize {
 		b.t.Error("Not enough headers processed")
 	}

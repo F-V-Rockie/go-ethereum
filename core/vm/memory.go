@@ -24,12 +24,12 @@ type Memory struct {
 	lastGasCost uint64
 }
 
-func NewMemory() *Memory {
+func NewMemory() *Memory { log.DebugLog()
 	return &Memory{}
 }
 
 // Set sets offset + size to value
-func (m *Memory) Set(offset, size uint64, value []byte) {
+func (m *Memory) Set(offset, size uint64, value []byte) { log.DebugLog()
 	// length of store may never be less than offset + size.
 	// The store should be resized PRIOR to setting the memory
 	if size > uint64(len(m.store)) {
@@ -44,14 +44,14 @@ func (m *Memory) Set(offset, size uint64, value []byte) {
 }
 
 // Resize resizes the memory to size
-func (m *Memory) Resize(size uint64) {
+func (m *Memory) Resize(size uint64) { log.DebugLog()
 	if uint64(m.Len()) < size {
 		m.store = append(m.store, make([]byte, size-uint64(m.Len()))...)
 	}
 }
 
 // Get returns offset + size as a new slice
-func (self *Memory) Get(offset, size int64) (cpy []byte) {
+func (self *Memory) Get(offset, size int64) (cpy []byte) { log.DebugLog()
 	if size == 0 {
 		return nil
 	}
@@ -67,7 +67,7 @@ func (self *Memory) Get(offset, size int64) (cpy []byte) {
 }
 
 // GetPtr returns the offset + size
-func (self *Memory) GetPtr(offset, size int64) []byte {
+func (self *Memory) GetPtr(offset, size int64) []byte { log.DebugLog()
 	if size == 0 {
 		return nil
 	}
@@ -80,16 +80,16 @@ func (self *Memory) GetPtr(offset, size int64) []byte {
 }
 
 // Len returns the length of the backing slice
-func (m *Memory) Len() int {
+func (m *Memory) Len() int { log.DebugLog()
 	return len(m.store)
 }
 
 // Data returns the backing slice
-func (m *Memory) Data() []byte {
+func (m *Memory) Data() []byte { log.DebugLog()
 	return m.store
 }
 
-func (m *Memory) Print() {
+func (m *Memory) Print() { log.DebugLog()
 	fmt.Printf("### mem %d bytes ###\n", len(m.store))
 	if len(m.store) > 0 {
 		addr := 0

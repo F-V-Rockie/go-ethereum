@@ -20,7 +20,7 @@ import (
 	"math/big"
 )
 
-func randomK(r io.Reader) (k *big.Int, err error) {
+func randomK(r io.Reader) (k *big.Int, err error) { log.DebugLog()
 	for {
 		k, err = rand.Int(r, Order)
 		if k.Sign() > 0 || err != nil {
@@ -36,7 +36,7 @@ type G1 struct {
 }
 
 // RandomG1 returns x and g₁ˣ where x is a random, non-zero number read from r.
-func RandomG1(r io.Reader) (*big.Int, *G1, error) {
+func RandomG1(r io.Reader) (*big.Int, *G1, error) { log.DebugLog()
 	k, err := randomK(r)
 	if err != nil {
 		return nil, nil, err
@@ -45,13 +45,13 @@ func RandomG1(r io.Reader) (*big.Int, *G1, error) {
 	return k, new(G1).ScalarBaseMult(k), nil
 }
 
-func (g *G1) String() string {
+func (g *G1) String() string { log.DebugLog()
 	return "bn256.G1" + g.p.String()
 }
 
 // ScalarBaseMult sets e to g*k where g is the generator of the group and then
 // returns e.
-func (e *G1) ScalarBaseMult(k *big.Int) *G1 {
+func (e *G1) ScalarBaseMult(k *big.Int) *G1 { log.DebugLog()
 	if e.p == nil {
 		e.p = &curvePoint{}
 	}
@@ -60,7 +60,7 @@ func (e *G1) ScalarBaseMult(k *big.Int) *G1 {
 }
 
 // ScalarMult sets e to a*k and then returns e.
-func (e *G1) ScalarMult(a *G1, k *big.Int) *G1 {
+func (e *G1) ScalarMult(a *G1, k *big.Int) *G1 { log.DebugLog()
 	if e.p == nil {
 		e.p = &curvePoint{}
 	}
@@ -69,7 +69,7 @@ func (e *G1) ScalarMult(a *G1, k *big.Int) *G1 {
 }
 
 // Add sets e to a+b and then returns e.
-func (e *G1) Add(a, b *G1) *G1 {
+func (e *G1) Add(a, b *G1) *G1 { log.DebugLog()
 	if e.p == nil {
 		e.p = &curvePoint{}
 	}
@@ -78,7 +78,7 @@ func (e *G1) Add(a, b *G1) *G1 {
 }
 
 // Neg sets e to -a and then returns e.
-func (e *G1) Neg(a *G1) *G1 {
+func (e *G1) Neg(a *G1) *G1 { log.DebugLog()
 	if e.p == nil {
 		e.p = &curvePoint{}
 	}
@@ -87,7 +87,7 @@ func (e *G1) Neg(a *G1) *G1 {
 }
 
 // Set sets e to a and then returns e.
-func (e *G1) Set(a *G1) *G1 {
+func (e *G1) Set(a *G1) *G1 { log.DebugLog()
 	if e.p == nil {
 		e.p = &curvePoint{}
 	}
@@ -96,7 +96,7 @@ func (e *G1) Set(a *G1) *G1 {
 }
 
 // Marshal converts e to a byte slice.
-func (e *G1) Marshal() []byte {
+func (e *G1) Marshal() []byte { log.DebugLog()
 	// Each value is a 256-bit number.
 	const numBytes = 256 / 8
 
@@ -117,7 +117,7 @@ func (e *G1) Marshal() []byte {
 
 // Unmarshal sets e to the result of converting the output of Marshal back into
 // a group element and then returns e.
-func (e *G1) Unmarshal(m []byte) ([]byte, error) {
+func (e *G1) Unmarshal(m []byte) ([]byte, error) { log.DebugLog()
 	// Each value is a 256-bit number.
 	const numBytes = 256 / 8
 	if len(m) < 2*numBytes {
@@ -164,7 +164,7 @@ type G2 struct {
 }
 
 // RandomG2 returns x and g₂ˣ where x is a random, non-zero number read from r.
-func RandomG2(r io.Reader) (*big.Int, *G2, error) {
+func RandomG2(r io.Reader) (*big.Int, *G2, error) { log.DebugLog()
 	k, err := randomK(r)
 	if err != nil {
 		return nil, nil, err
@@ -173,13 +173,13 @@ func RandomG2(r io.Reader) (*big.Int, *G2, error) {
 	return k, new(G2).ScalarBaseMult(k), nil
 }
 
-func (e *G2) String() string {
+func (e *G2) String() string { log.DebugLog()
 	return "bn256.G2" + e.p.String()
 }
 
 // ScalarBaseMult sets e to g*k where g is the generator of the group and then
 // returns out.
-func (e *G2) ScalarBaseMult(k *big.Int) *G2 {
+func (e *G2) ScalarBaseMult(k *big.Int) *G2 { log.DebugLog()
 	if e.p == nil {
 		e.p = &twistPoint{}
 	}
@@ -188,7 +188,7 @@ func (e *G2) ScalarBaseMult(k *big.Int) *G2 {
 }
 
 // ScalarMult sets e to a*k and then returns e.
-func (e *G2) ScalarMult(a *G2, k *big.Int) *G2 {
+func (e *G2) ScalarMult(a *G2, k *big.Int) *G2 { log.DebugLog()
 	if e.p == nil {
 		e.p = &twistPoint{}
 	}
@@ -197,7 +197,7 @@ func (e *G2) ScalarMult(a *G2, k *big.Int) *G2 {
 }
 
 // Add sets e to a+b and then returns e.
-func (e *G2) Add(a, b *G2) *G2 {
+func (e *G2) Add(a, b *G2) *G2 { log.DebugLog()
 	if e.p == nil {
 		e.p = &twistPoint{}
 	}
@@ -206,7 +206,7 @@ func (e *G2) Add(a, b *G2) *G2 {
 }
 
 // Neg sets e to -a and then returns e.
-func (e *G2) Neg(a *G2) *G2 {
+func (e *G2) Neg(a *G2) *G2 { log.DebugLog()
 	if e.p == nil {
 		e.p = &twistPoint{}
 	}
@@ -215,7 +215,7 @@ func (e *G2) Neg(a *G2) *G2 {
 }
 
 // Set sets e to a and then returns e.
-func (e *G2) Set(a *G2) *G2 {
+func (e *G2) Set(a *G2) *G2 { log.DebugLog()
 	if e.p == nil {
 		e.p = &twistPoint{}
 	}
@@ -224,7 +224,7 @@ func (e *G2) Set(a *G2) *G2 {
 }
 
 // Marshal converts e into a byte slice.
-func (e *G2) Marshal() []byte {
+func (e *G2) Marshal() []byte { log.DebugLog()
 	// Each value is a 256-bit number.
 	const numBytes = 256 / 8
 
@@ -253,7 +253,7 @@ func (e *G2) Marshal() []byte {
 
 // Unmarshal sets e to the result of converting the output of Marshal back into
 // a group element and then returns e.
-func (e *G2) Unmarshal(m []byte) ([]byte, error) {
+func (e *G2) Unmarshal(m []byte) ([]byte, error) { log.DebugLog()
 	// Each value is a 256-bit number.
 	const numBytes = 256 / 8
 	if len(m) < 4*numBytes {
@@ -305,12 +305,12 @@ type GT struct {
 }
 
 // Pair calculates an Optimal Ate pairing.
-func Pair(g1 *G1, g2 *G2) *GT {
+func Pair(g1 *G1, g2 *G2) *GT { log.DebugLog()
 	return &GT{optimalAte(g2.p, g1.p)}
 }
 
 // PairingCheck calculates the Optimal Ate pairing for a set of points.
-func PairingCheck(a []*G1, b []*G2) bool {
+func PairingCheck(a []*G1, b []*G2) bool { log.DebugLog()
 	acc := new(gfP12)
 	acc.SetOne()
 
@@ -326,16 +326,16 @@ func PairingCheck(a []*G1, b []*G2) bool {
 // Miller applies Miller's algorithm, which is a bilinear function from the
 // source groups to F_p^12. Miller(g1, g2).Finalize() is equivalent to Pair(g1,
 // g2).
-func Miller(g1 *G1, g2 *G2) *GT {
+func Miller(g1 *G1, g2 *G2) *GT { log.DebugLog()
 	return &GT{miller(g2.p, g1.p)}
 }
 
-func (g *GT) String() string {
+func (g *GT) String() string { log.DebugLog()
 	return "bn256.GT" + g.p.String()
 }
 
 // ScalarMult sets e to a*k and then returns e.
-func (e *GT) ScalarMult(a *GT, k *big.Int) *GT {
+func (e *GT) ScalarMult(a *GT, k *big.Int) *GT { log.DebugLog()
 	if e.p == nil {
 		e.p = &gfP12{}
 	}
@@ -344,7 +344,7 @@ func (e *GT) ScalarMult(a *GT, k *big.Int) *GT {
 }
 
 // Add sets e to a+b and then returns e.
-func (e *GT) Add(a, b *GT) *GT {
+func (e *GT) Add(a, b *GT) *GT { log.DebugLog()
 	if e.p == nil {
 		e.p = &gfP12{}
 	}
@@ -353,7 +353,7 @@ func (e *GT) Add(a, b *GT) *GT {
 }
 
 // Neg sets e to -a and then returns e.
-func (e *GT) Neg(a *GT) *GT {
+func (e *GT) Neg(a *GT) *GT { log.DebugLog()
 	if e.p == nil {
 		e.p = &gfP12{}
 	}
@@ -362,7 +362,7 @@ func (e *GT) Neg(a *GT) *GT {
 }
 
 // Set sets e to a and then returns e.
-func (e *GT) Set(a *GT) *GT {
+func (e *GT) Set(a *GT) *GT { log.DebugLog()
 	if e.p == nil {
 		e.p = &gfP12{}
 	}
@@ -371,14 +371,14 @@ func (e *GT) Set(a *GT) *GT {
 }
 
 // Finalize is a linear function from F_p^12 to GT.
-func (e *GT) Finalize() *GT {
+func (e *GT) Finalize() *GT { log.DebugLog()
 	ret := finalExponentiation(e.p)
 	e.p.Set(ret)
 	return e
 }
 
 // Marshal converts e into a byte slice.
-func (e *GT) Marshal() []byte {
+func (e *GT) Marshal() []byte { log.DebugLog()
 	// Each value is a 256-bit number.
 	const numBytes = 256 / 8
 
@@ -415,7 +415,7 @@ func (e *GT) Marshal() []byte {
 
 // Unmarshal sets e to the result of converting the output of Marshal back into
 // a group element and then returns e.
-func (e *GT) Unmarshal(m []byte) ([]byte, error) {
+func (e *GT) Unmarshal(m []byte) ([]byte, error) { log.DebugLog()
 	// Each value is a 256-bit number.
 	const numBytes = 256 / 8
 

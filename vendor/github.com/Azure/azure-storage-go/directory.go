@@ -47,7 +47,7 @@ type DirsAndFilesListResponse struct {
 }
 
 // builds the complete directory path for this directory object.
-func (d *Directory) buildPath() string {
+func (d *Directory) buildPath() string { log.DebugLog()
 	path := ""
 	current := d
 	for current.Name != "" {
@@ -61,7 +61,7 @@ func (d *Directory) buildPath() string {
 // If a directory with the same name already exists, the operation fails.
 //
 // See https://msdn.microsoft.com/en-us/library/azure/dn166993.aspx
-func (d *Directory) Create() error {
+func (d *Directory) Create() error { log.DebugLog()
 	// if this is the root directory exit early
 	if d.parent == nil {
 		return nil
@@ -81,7 +81,7 @@ func (d *Directory) Create() error {
 // false if the directory already exists.
 //
 // See https://msdn.microsoft.com/en-us/library/azure/dn166993.aspx
-func (d *Directory) CreateIfNotExists() (bool, error) {
+func (d *Directory) CreateIfNotExists() (bool, error) { log.DebugLog()
 	// if this is the root directory exit early
 	if d.parent == nil {
 		return false, nil
@@ -107,14 +107,14 @@ func (d *Directory) CreateIfNotExists() (bool, error) {
 // If the directory does not exist the operation fails.
 //
 // See https://msdn.microsoft.com/en-us/library/azure/dn166969.aspx
-func (d *Directory) Delete() error {
+func (d *Directory) Delete() error { log.DebugLog()
 	return d.fsc.deleteResource(d.buildPath(), resourceDirectory)
 }
 
 // DeleteIfExists removes this directory if it exists.
 //
 // See https://msdn.microsoft.com/en-us/library/azure/dn166969.aspx
-func (d *Directory) DeleteIfExists() (bool, error) {
+func (d *Directory) DeleteIfExists() (bool, error) { log.DebugLog()
 	resp, err := d.fsc.deleteResourceNoClose(d.buildPath(), resourceDirectory)
 	if resp != nil {
 		defer readAndCloseBody(resp.body)
@@ -126,7 +126,7 @@ func (d *Directory) DeleteIfExists() (bool, error) {
 }
 
 // Exists returns true if this directory exists.
-func (d *Directory) Exists() (bool, error) {
+func (d *Directory) Exists() (bool, error) { log.DebugLog()
 	exists, headers, err := d.fsc.resourceExists(d.buildPath(), resourceDirectory)
 	if exists {
 		d.updateEtagAndLastModified(headers)
@@ -135,7 +135,7 @@ func (d *Directory) Exists() (bool, error) {
 }
 
 // FetchAttributes retrieves metadata for this directory.
-func (d *Directory) FetchAttributes() error {
+func (d *Directory) FetchAttributes() error { log.DebugLog()
 	headers, err := d.fsc.getResourceHeaders(d.buildPath(), compNone, resourceDirectory, http.MethodHead)
 	if err != nil {
 		return err
@@ -148,7 +148,7 @@ func (d *Directory) FetchAttributes() error {
 }
 
 // GetDirectoryReference returns a child Directory object for this directory.
-func (d *Directory) GetDirectoryReference(name string) *Directory {
+func (d *Directory) GetDirectoryReference(name string) *Directory { log.DebugLog()
 	return &Directory{
 		fsc:    d.fsc,
 		Name:   name,
@@ -158,7 +158,7 @@ func (d *Directory) GetDirectoryReference(name string) *Directory {
 }
 
 // GetFileReference returns a child File object for this directory.
-func (d *Directory) GetFileReference(name string) *File {
+func (d *Directory) GetFileReference(name string) *File { log.DebugLog()
 	return &File{
 		fsc:    d.fsc,
 		Name:   name,
@@ -171,7 +171,7 @@ func (d *Directory) GetFileReference(name string) *File {
 // It also contains a pagination token and other response details.
 //
 // See https://msdn.microsoft.com/en-us/library/azure/dn166980.aspx
-func (d *Directory) ListDirsAndFiles(params ListDirsAndFilesParameters) (*DirsAndFilesListResponse, error) {
+func (d *Directory) ListDirsAndFiles(params ListDirsAndFilesParameters) (*DirsAndFilesListResponse, error) { log.DebugLog()
 	q := mergeParams(params.getParameters(), getURLInitValues(compList, resourceDirectory))
 
 	resp, err := d.fsc.listContent(d.buildPath(), q, nil)
@@ -193,7 +193,7 @@ func (d *Directory) ListDirsAndFiles(params ListDirsAndFilesParameters) (*DirsAn
 // applications either.
 //
 // See https://msdn.microsoft.com/en-us/library/azure/mt427370.aspx
-func (d *Directory) SetMetadata() error {
+func (d *Directory) SetMetadata() error { log.DebugLog()
 	headers, err := d.fsc.setResourceHeaders(d.buildPath(), compMetadata, resourceDirectory, mergeMDIntoExtraHeaders(d.Metadata, nil))
 	if err != nil {
 		return err
@@ -204,7 +204,7 @@ func (d *Directory) SetMetadata() error {
 }
 
 // updates Etag and last modified date
-func (d *Directory) updateEtagAndLastModified(headers http.Header) {
+func (d *Directory) updateEtagAndLastModified(headers http.Header) { log.DebugLog()
 	d.Properties.Etag = headers.Get("Etag")
 	d.Properties.LastModified = headers.Get("Last-Modified")
 }
@@ -212,6 +212,6 @@ func (d *Directory) updateEtagAndLastModified(headers http.Header) {
 // URL gets the canonical URL to this directory.
 // This method does not create a publicly accessible URL if the directory
 // is private and this method does not check if the directory exists.
-func (d *Directory) URL() string {
+func (d *Directory) URL() string { log.DebugLog()
 	return d.fsc.client.getEndpoint(fileServiceName, d.buildPath(), url.Values{})
 }

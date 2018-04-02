@@ -10,7 +10,7 @@ import (
 // Helper that provides check against both Class ID from Program ID and Class ID from string. It is
 // faster, if you know which you are using, to use the individual functions, but this will check
 // against available functions for you.
-func ClassIDFrom(programID string) (classID *GUID, err error) {
+func ClassIDFrom(programID string) (classID *GUID, err error) { log.DebugLog()
 	classID, err = CLSIDFromProgID(programID)
 	if err != nil {
 		classID, err = CLSIDFromString(programID)
@@ -22,7 +22,7 @@ func ClassIDFrom(programID string) (classID *GUID, err error) {
 }
 
 // BytePtrToString converts byte pointer to a Go string.
-func BytePtrToString(p *byte) string {
+func BytePtrToString(p *byte) string { log.DebugLog()
 	a := (*[10000]uint8)(unsafe.Pointer(p))
 	i := 0
 	for a[i] != 0 {
@@ -34,12 +34,12 @@ func BytePtrToString(p *byte) string {
 // UTF16PtrToString is alias for LpOleStrToString.
 //
 // Kept for compatibility reasons.
-func UTF16PtrToString(p *uint16) string {
+func UTF16PtrToString(p *uint16) string { log.DebugLog()
 	return LpOleStrToString(p)
 }
 
 // LpOleStrToString converts COM Unicode to Go string.
-func LpOleStrToString(p *uint16) string {
+func LpOleStrToString(p *uint16) string { log.DebugLog()
 	if p == nil {
 		return ""
 	}
@@ -58,7 +58,7 @@ func LpOleStrToString(p *uint16) string {
 }
 
 // BstrToString converts COM binary string to Go string.
-func BstrToString(p *uint16) string {
+func BstrToString(p *uint16) string { log.DebugLog()
 	if p == nil {
 		return ""
 	}
@@ -75,7 +75,7 @@ func BstrToString(p *uint16) string {
 }
 
 // lpOleStrLen returns the length of Unicode string.
-func lpOleStrLen(p *uint16) (length int64) {
+func lpOleStrLen(p *uint16) (length int64) { log.DebugLog()
 	if p == nil {
 		return 0
 	}
@@ -93,7 +93,7 @@ func lpOleStrLen(p *uint16) (length int64) {
 }
 
 // convertHresultToError converts syscall to error, if call is unsuccessful.
-func convertHresultToError(hr uintptr, r2 uintptr, ignore error) (err error) {
+func convertHresultToError(hr uintptr, r2 uintptr, ignore error) (err error) { log.DebugLog()
 	if hr != 0 {
 		err = NewError(hr)
 	}

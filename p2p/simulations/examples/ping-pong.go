@@ -38,7 +38,7 @@ var adapterType = flag.String("adapter", "sim", `node adapter to use (one of "si
 
 // main() starts a simulation network which contains nodes running a simple
 // ping-pong protocol
-func main() {
+func main() { log.DebugLog()
 	flag.Parse()
 
 	// set the log level to Trace
@@ -101,14 +101,14 @@ type pingPongService struct {
 	received int64
 }
 
-func newPingPongService(id discover.NodeID) *pingPongService {
+func newPingPongService(id discover.NodeID) *pingPongService { log.DebugLog()
 	return &pingPongService{
 		id:  id,
 		log: log.New("node.id", id),
 	}
 }
 
-func (p *pingPongService) Protocols() []p2p.Protocol {
+func (p *pingPongService) Protocols() []p2p.Protocol { log.DebugLog()
 	return []p2p.Protocol{{
 		Name:     "ping-pong",
 		Version:  1,
@@ -118,21 +118,21 @@ func (p *pingPongService) Protocols() []p2p.Protocol {
 	}}
 }
 
-func (p *pingPongService) APIs() []rpc.API {
+func (p *pingPongService) APIs() []rpc.API { log.DebugLog()
 	return nil
 }
 
-func (p *pingPongService) Start(server *p2p.Server) error {
+func (p *pingPongService) Start(server *p2p.Server) error { log.DebugLog()
 	p.log.Info("ping-pong service starting")
 	return nil
 }
 
-func (p *pingPongService) Stop() error {
+func (p *pingPongService) Stop() error { log.DebugLog()
 	p.log.Info("ping-pong service stopping")
 	return nil
 }
 
-func (p *pingPongService) Info() interface{} {
+func (p *pingPongService) Info() interface{} { log.DebugLog()
 	return struct {
 		Received int64 `json:"received"`
 	}{
@@ -147,7 +147,7 @@ const (
 
 // Run implements the ping-pong protocol which sends ping messages to the peer
 // at 10s intervals, and responds to pings with pong messages.
-func (p *pingPongService) Run(peer *p2p.Peer, rw p2p.MsgReadWriter) error {
+func (p *pingPongService) Run(peer *p2p.Peer, rw p2p.MsgReadWriter) error { log.DebugLog()
 	log := p.log.New("peer.id", peer.ID())
 
 	errC := make(chan error)

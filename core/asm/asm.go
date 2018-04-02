@@ -35,14 +35,14 @@ type instructionIterator struct {
 }
 
 // Create a new instruction iterator.
-func NewInstructionIterator(code []byte) *instructionIterator {
+func NewInstructionIterator(code []byte) *instructionIterator { log.DebugLog()
 	it := new(instructionIterator)
 	it.code = code
 	return it
 }
 
 // Returns true if there is a next instruction and moves on.
-func (it *instructionIterator) Next() bool {
+func (it *instructionIterator) Next() bool { log.DebugLog()
 	if it.error != nil || uint64(len(it.code)) <= it.pc {
 		// We previously reached an error or the end.
 		return false
@@ -80,27 +80,27 @@ func (it *instructionIterator) Next() bool {
 }
 
 // Returns any error that may have been encountered.
-func (it *instructionIterator) Error() error {
+func (it *instructionIterator) Error() error { log.DebugLog()
 	return it.error
 }
 
 // Returns the PC of the current instruction.
-func (it *instructionIterator) PC() uint64 {
+func (it *instructionIterator) PC() uint64 { log.DebugLog()
 	return it.pc
 }
 
 // Returns the opcode of the current instruction.
-func (it *instructionIterator) Op() vm.OpCode {
+func (it *instructionIterator) Op() vm.OpCode { log.DebugLog()
 	return it.op
 }
 
 // Returns the argument of the current instruction.
-func (it *instructionIterator) Arg() []byte {
+func (it *instructionIterator) Arg() []byte { log.DebugLog()
 	return it.arg
 }
 
 // Pretty-print all disassembled EVM instructions to stdout.
-func PrintDisassembled(code string) error {
+func PrintDisassembled(code string) error { log.DebugLog()
 	script, err := hex.DecodeString(code)
 	if err != nil {
 		return err
@@ -118,7 +118,7 @@ func PrintDisassembled(code string) error {
 }
 
 // Return all disassembled EVM instructions in human-readable format.
-func Disassemble(script []byte) ([]string, error) {
+func Disassemble(script []byte) ([]string, error) { log.DebugLog()
 	instrs := make([]string, 0)
 
 	it := NewInstructionIterator(script)

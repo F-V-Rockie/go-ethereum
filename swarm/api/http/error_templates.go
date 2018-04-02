@@ -27,7 +27,7 @@ parsed by Go's html/template package
 package http
 
 //This returns the HTML for generic errors
-func GetGenericErrorPage() string {
+func GetGenericErrorPage() string { log.DebugLog()
 	page := `
 <html>
 
@@ -207,7 +207,7 @@ func GetGenericErrorPage() string {
 }
 
 //This returns the HTML for a 404 Not Found error
-func GetNotFoundErrorPage() string {
+func GetNotFoundErrorPage() string { log.DebugLog()
 	page := `
 <html>
 
@@ -389,7 +389,7 @@ func GetNotFoundErrorPage() string {
 //This returns the HTML for a page listing disambiguation options
 //i.e. if user requested bzz:/<hash>/read and the manifest contains "readme.md" and "readinglist.txt",
 //this page is returned with a clickable list the existing disambiguation links in the manifest
-func GetMultipleChoicesErrorPage() string {
+func GetMultipleChoicesErrorPage() string { log.DebugLog()
 	page := `
 <html>
 

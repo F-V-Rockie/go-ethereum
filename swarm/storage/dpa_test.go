@@ -27,7 +27,7 @@ import (
 
 const testDataSize = 0x1000000
 
-func TestDPArandom(t *testing.T) {
+func TestDPArandom(t *testing.T) { log.DebugLog()
 	dbStore := initDbStore(t)
 	dbStore.setCapacity(50000)
 	memStore := NewMemStore(dbStore, defaultCacheCapacity)
@@ -82,7 +82,7 @@ func TestDPArandom(t *testing.T) {
 	}
 }
 
-func TestDPA_capacity(t *testing.T) {
+func TestDPA_capacity(t *testing.T) { log.DebugLog()
 	dbStore := initDbStore(t)
 	memStore := NewMemStore(dbStore, defaultCacheCapacity)
 	localStore := &LocalStore{

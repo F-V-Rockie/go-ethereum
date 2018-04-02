@@ -67,7 +67,7 @@ type ttTransactionMarshaling struct {
 	V        *math.HexOrDecimal256
 }
 
-func (tt *TransactionTest) Run(config *params.ChainConfig) error {
+func (tt *TransactionTest) Run(config *params.ChainConfig) error { log.DebugLog()
 	tx := new(types.Transaction)
 	if err := rlp.DecodeBytes(tt.json.RLP, tx); err != nil {
 		if tt.json.Transaction == nil {
@@ -96,7 +96,7 @@ func (tt *TransactionTest) Run(config *params.ChainConfig) error {
 	return nil
 }
 
-func (tt *ttTransaction) verify(signer types.Signer, tx *types.Transaction) error {
+func (tt *ttTransaction) verify(signer types.Signer, tx *types.Transaction) error { log.DebugLog()
 	if !bytes.Equal(tx.Data(), tt.Data) {
 		return fmt.Errorf("Tx input data mismatch: got %x want %x", tx.Data(), tt.Data)
 	}

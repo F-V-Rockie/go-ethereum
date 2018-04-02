@@ -84,7 +84,7 @@ type DbStore struct {
 	lock sync.Mutex
 }
 
-func NewDbStore(path string, hash SwarmHasher, capacity uint64, radius int) (s *DbStore, err error) {
+func NewDbStore(path string, hash SwarmHasher, capacity uint64, radius int) (s *DbStore, err error) { log.DebugLog()
 	s = new(DbStore)
 
 	s.hashfunc = hash
@@ -118,28 +118,28 @@ type dpaDBIndex struct {
 	Access uint64
 }
 
-func BytesToU64(data []byte) uint64 {
+func BytesToU64(data []byte) uint64 { log.DebugLog()
 	if len(data) < 8 {
 		return 0
 	}
 	return binary.LittleEndian.Uint64(data)
 }
 
-func U64ToBytes(val uint64) []byte {
+func U64ToBytes(val uint64) []byte { log.DebugLog()
 	data := make([]byte, 8)
 	binary.LittleEndian.PutUint64(data, val)
 	return data
 }
 
-func getIndexGCValue(index *dpaDBIndex) uint64 {
+func getIndexGCValue(index *dpaDBIndex) uint64 { log.DebugLog()
 	return index.Access
 }
 
-func (s *DbStore) updateIndexAccess(index *dpaDBIndex) {
+func (s *DbStore) updateIndexAccess(index *dpaDBIndex) { log.DebugLog()
 	index.Access = s.accessCnt
 }
 
-func getIndexKey(hash Key) []byte {
+func getIndexKey(hash Key) []byte { log.DebugLog()
 	HashSize := len(hash)
 	key := make([]byte, HashSize+1)
 	key[0] = 0
@@ -147,7 +147,7 @@ func getIndexKey(hash Key) []byte {
 	return key
 }
 
-func getDataKey(idx uint64) []byte {
+func getDataKey(idx uint64) []byte { log.DebugLog()
 	key := make([]byte, 9)
 	key[0] = 1
 	binary.BigEndian.PutUint64(key[1:9], idx)
@@ -155,26 +155,26 @@ func getDataKey(idx uint64) []byte {
 	return key
 }
 
-func encodeIndex(index *dpaDBIndex) []byte {
+func encodeIndex(index *dpaDBIndex) []byte { log.DebugLog()
 	data, _ := rlp.EncodeToBytes(index)
 	return data
 }
 
-func encodeData(chunk *Chunk) []byte {
+func encodeData(chunk *Chunk) []byte { log.DebugLog()
 	return chunk.SData
 }
 
-func decodeIndex(data []byte, index *dpaDBIndex) {
+func decodeIndex(data []byte, index *dpaDBIndex) { log.DebugLog()
 	dec := rlp.NewStream(bytes.NewReader(data), 0)
 	dec.Decode(index)
 }
 
-func decodeData(data []byte, chunk *Chunk) {
+func decodeData(data []byte, chunk *Chunk) { log.DebugLog()
 	chunk.SData = data
 	chunk.Size = int64(binary.LittleEndian.Uint64(data[0:8]))
 }
 
-func gcListPartition(list []*gcItem, left int, right int, pivotIndex int) int {
+func gcListPartition(list []*gcItem, left int, right int, pivotIndex int) int { log.DebugLog()
 	pivotValue := list[pivotIndex].value
 	dd := list[pivotIndex]
 	list[pivotIndex] = list[right]
@@ -194,7 +194,7 @@ func gcListPartition(list []*gcItem, left int, right int, pivotIndex int) int {
 	return storeIndex
 }
 
-func gcListSelect(list []*gcItem, left int, right int, n int) int {
+func gcListSelect(list []*gcItem, left int, right int, n int) int { log.DebugLog()
 	if left == right {
 		return left
 	}
@@ -211,7 +211,7 @@ func gcListSelect(list []*gcItem, left int, right int, n int) int {
 	}
 }
 
-func (s *DbStore) collectGarbage(ratio float32) {
+func (s *DbStore) collectGarbage(ratio float32) { log.DebugLog()
 	it := s.db.NewIterator()
 	it.Seek(s.gcPos)
 	if it.Valid() {
@@ -274,7 +274,7 @@ func (s *DbStore) collectGarbage(ratio float32) {
 
 // Export writes all chunks from the store to a tar archive, returning the
 // number of chunks written.
-func (s *DbStore) Export(out io.Writer) (int64, error) {
+func (s *DbStore) Export(out io.Writer) (int64, error) { log.DebugLog()
 	tw := tar.NewWriter(out)
 	defer tw.Close()
 
@@ -315,7 +315,7 @@ func (s *DbStore) Export(out io.Writer) (int64, error) {
 
 // Import reads chunks into the store from a tar archive, returning the number
 // of chunks read.
-func (s *DbStore) Import(in io.Reader) (int64, error) {
+func (s *DbStore) Import(in io.Reader) (int64, error) { log.DebugLog()
 	tr := tar.NewReader(in)
 
 	var count int64
@@ -350,7 +350,7 @@ func (s *DbStore) Import(in io.Reader) (int64, error) {
 	return count, nil
 }
 
-func (s *DbStore) Cleanup() {
+func (s *DbStore) Cleanup() { log.DebugLog()
 	//Iterates over the database and checks that there are no faulty chunks
 	it := s.db.NewIterator()
 	startPosition := []byte{kpIndex}
@@ -387,7 +387,7 @@ func (s *DbStore) Cleanup() {
 	log.Warn(fmt.Sprintf("Found %v errors out of %v entries", errorsFound, total))
 }
 
-func (s *DbStore) delete(idx uint64, idxKey []byte) {
+func (s *DbStore) delete(idx uint64, idxKey []byte) { log.DebugLog()
 	batch := new(leveldb.Batch)
 	batch.Delete(idxKey)
 	batch.Delete(getDataKey(idx))
@@ -397,13 +397,13 @@ func (s *DbStore) delete(idx uint64, idxKey []byte) {
 	s.db.Write(batch)
 }
 
-func (s *DbStore) Counter() uint64 {
+func (s *DbStore) Counter() uint64 { log.DebugLog()
 	s.lock.Lock()
 	defer s.lock.Unlock()
 	return s.dataIdx
 }
 
-func (s *DbStore) Put(chunk *Chunk) {
+func (s *DbStore) Put(chunk *Chunk) { log.DebugLog()
 	s.lock.Lock()
 	defer s.lock.Unlock()
 
@@ -450,7 +450,7 @@ func (s *DbStore) Put(chunk *Chunk) {
 }
 
 // try to find index; if found, update access cnt and return true
-func (s *DbStore) tryAccessIdx(ikey []byte, index *dpaDBIndex) bool {
+func (s *DbStore) tryAccessIdx(ikey []byte, index *dpaDBIndex) bool { log.DebugLog()
 	idata, err := s.db.Get(ikey)
 	if err != nil {
 		return false
@@ -470,7 +470,7 @@ func (s *DbStore) tryAccessIdx(ikey []byte, index *dpaDBIndex) bool {
 	return true
 }
 
-func (s *DbStore) Get(key Key) (chunk *Chunk, err error) {
+func (s *DbStore) Get(key Key) (chunk *Chunk, err error) { log.DebugLog()
 	s.lock.Lock()
 	defer s.lock.Unlock()
 
@@ -505,7 +505,7 @@ func (s *DbStore) Get(key Key) (chunk *Chunk, err error) {
 
 }
 
-func (s *DbStore) updateAccessCnt(key Key) {
+func (s *DbStore) updateAccessCnt(key Key) { log.DebugLog()
 
 	s.lock.Lock()
 	defer s.lock.Unlock()
@@ -515,7 +515,7 @@ func (s *DbStore) updateAccessCnt(key Key) {
 
 }
 
-func (s *DbStore) setCapacity(c uint64) {
+func (s *DbStore) setCapacity(c uint64) { log.DebugLog()
 
 	s.lock.Lock()
 	defer s.lock.Unlock()
@@ -536,7 +536,7 @@ func (s *DbStore) setCapacity(c uint64) {
 	}
 }
 
-func (s *DbStore) Close() {
+func (s *DbStore) Close() { log.DebugLog()
 	s.db.Close()
 }
 
@@ -560,7 +560,7 @@ type dbSyncIterator struct {
 }
 
 // initialises a sync iterator from a syncToken (passed in with the handshake)
-func (self *DbStore) NewSyncIterator(state DbSyncState) (si *dbSyncIterator, err error) {
+func (self *DbStore) NewSyncIterator(state DbSyncState) (si *dbSyncIterator, err error) { log.DebugLog()
 	if state.First > state.Last {
 		return nil, fmt.Errorf("no entries found")
 	}
@@ -574,7 +574,7 @@ func (self *DbStore) NewSyncIterator(state DbSyncState) (si *dbSyncIterator, err
 
 // walk the area from Start to Stop and returns items within time interval
 // First to Last
-func (self *dbSyncIterator) Next() (key Key) {
+func (self *dbSyncIterator) Next() (key Key) { log.DebugLog()
 	for self.it.Valid() {
 		dbkey := self.it.Key()
 		if dbkey[0] != 0 {

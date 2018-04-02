@@ -29,7 +29,7 @@ import (
 	"github.com/ethereum/go-ethereum/params"
 )
 
-func TestDefaultGenesisBlock(t *testing.T) {
+func TestDefaultGenesisBlock(t *testing.T) { log.DebugLog()
 	block := DefaultGenesisBlock().ToBlock(nil)
 	if block.Hash() != params.MainnetGenesisHash {
 		t.Errorf("wrong mainnet genesis hash, got %v, want %v", block.Hash(), params.MainnetGenesisHash)
@@ -40,7 +40,7 @@ func TestDefaultGenesisBlock(t *testing.T) {
 	}
 }
 
-func TestSetupGenesis(t *testing.T) {
+func TestSetupGenesis(t *testing.T) { log.DebugLog()
 	var (
 		customghash = common.HexToHash("0x89c99d90b79719238d2645c7642f2c9295246e80775b38cfd162b696817fbd50")
 		customg     = Genesis{

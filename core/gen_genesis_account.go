@@ -14,7 +14,7 @@ import (
 
 var _ = (*genesisAccountMarshaling)(nil)
 
-func (g GenesisAccount) MarshalJSON() ([]byte, error) {
+func (g GenesisAccount) MarshalJSON() ([]byte, error) { log.DebugLog()
 	type GenesisAccount struct {
 		Code       hexutil.Bytes               `json:"code,omitempty"`
 		Storage    map[storageJSON]storageJSON `json:"storage,omitempty"`
@@ -36,7 +36,7 @@ func (g GenesisAccount) MarshalJSON() ([]byte, error) {
 	return json.Marshal(&enc)
 }
 
-func (g *GenesisAccount) UnmarshalJSON(input []byte) error {
+func (g *GenesisAccount) UnmarshalJSON(input []byte) error { log.DebugLog()
 	type GenesisAccount struct {
 		Code       *hexutil.Bytes              `json:"code,omitempty"`
 		Storage    map[storageJSON]storageJSON `json:"storage,omitempty"`

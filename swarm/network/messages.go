@@ -64,7 +64,7 @@ type statusMsgData struct {
 	NetworkId uint64
 }
 
-func (self *statusMsgData) String() string {
+func (self *statusMsgData) String() string { log.DebugLog()
 	return fmt.Sprintf("Status: Version: %v, ID: %v, Addr: %v, Swap: %v, NetworkId: %v", self.Version, self.ID, self.Addr, self.Swap, self.NetworkId)
 }
 
@@ -86,7 +86,7 @@ type storeRequestMsgData struct {
 	from           *peer      // [not serialised] protocol registers the requester
 }
 
-func (self storeRequestMsgData) String() string {
+func (self storeRequestMsgData) String() string { log.DebugLog()
 	var from string
 	if self.from == nil {
 		from = "self"
@@ -133,7 +133,7 @@ type retrieveRequestMsgData struct {
 	from     *peer       //
 }
 
-func (self *retrieveRequestMsgData) String() string {
+func (self *retrieveRequestMsgData) String() string { log.DebugLog()
 	var from string
 	if self.from == nil {
 		from = "ourselves"
@@ -148,12 +148,12 @@ func (self *retrieveRequestMsgData) String() string {
 }
 
 // lookups are encoded by missing request ID
-func (self *retrieveRequestMsgData) isLookup() bool {
+func (self *retrieveRequestMsgData) isLookup() bool { log.DebugLog()
 	return self.Id == 0
 }
 
 // sets timeout fields
-func (self *retrieveRequestMsgData) setTimeout(t *time.Time) {
+func (self *retrieveRequestMsgData) setTimeout(t *time.Time) { log.DebugLog()
 	self.timeout = t
 	if t != nil {
 		self.Timeout = uint64(t.UnixNano())
@@ -162,7 +162,7 @@ func (self *retrieveRequestMsgData) setTimeout(t *time.Time) {
 	}
 }
 
-func (self *retrieveRequestMsgData) getTimeout() (t *time.Time) {
+func (self *retrieveRequestMsgData) getTimeout() (t *time.Time) { log.DebugLog()
 	if self.Timeout > 0 && self.timeout == nil {
 		timeout := time.Unix(int64(self.Timeout), 0)
 		t = &timeout
@@ -180,7 +180,7 @@ type peerAddr struct {
 }
 
 // peerAddr pretty prints as enode
-func (self *peerAddr) String() string {
+func (self *peerAddr) String() string { log.DebugLog()
 	var nodeid discover.NodeID
 	copy(nodeid[:], self.ID)
 	return discover.NewNode(nodeid, self.IP, 0, self.Port).String()
@@ -213,7 +213,7 @@ type peersMsgData struct {
 }
 
 // peers msg pretty printer
-func (self *peersMsgData) String() string {
+func (self *peersMsgData) String() string { log.DebugLog()
 	var from string
 	if self.from == nil {
 		from = "ourselves"
@@ -227,7 +227,7 @@ func (self *peersMsgData) String() string {
 	return fmt.Sprintf("from: %v, Key: %x; ID: %v, Peers: %v", from, target, self.Id, self.Peers)
 }
 
-func (self *peersMsgData) setTimeout(t *time.Time) {
+func (self *peersMsgData) setTimeout(t *time.Time) { log.DebugLog()
 	self.timeout = t
 	if t != nil {
 		self.Timeout = uint64(t.UnixNano())
@@ -248,7 +248,7 @@ type syncRequestMsgData struct {
 	SyncState *syncState `rlp:"nil"`
 }
 
-func (self *syncRequestMsgData) String() string {
+func (self *syncRequestMsgData) String() string { log.DebugLog()
 	return fmt.Sprintf("%v", self.SyncState)
 }
 
@@ -265,7 +265,7 @@ type deliveryRequestMsgData struct {
 	Deliver []*syncRequest
 }
 
-func (self *deliveryRequestMsgData) String() string {
+func (self *deliveryRequestMsgData) String() string { log.DebugLog()
 	return fmt.Sprintf("sync request for new chunks\ndelivery request for %v chunks", len(self.Deliver))
 }
 
@@ -287,7 +287,7 @@ type unsyncedKeysMsgData struct {
 	State    *syncState
 }
 
-func (self *unsyncedKeysMsgData) String() string {
+func (self *unsyncedKeysMsgData) String() string { log.DebugLog()
 	return fmt.Sprintf("sync: keys of %d new chunks (state %v) => synced: %v", len(self.Unsynced), self.State, self.State.Synced)
 }
 
@@ -303,6 +303,6 @@ type paymentMsgData struct {
 	Promise *chequebook.Cheque // payment with cheque
 }
 
-func (self *paymentMsgData) String() string {
+func (self *paymentMsgData) String() string { log.DebugLog()
 	return fmt.Sprintf("payment for %d units: %v", self.Units, self.Promise)
 }

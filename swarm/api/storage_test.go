@@ -20,13 +20,13 @@ import (
 	"testing"
 )
 
-func testStorage(t *testing.T, f func(*Storage)) {
+func testStorage(t *testing.T, f func(*Storage)) { log.DebugLog()
 	testApi(t, func(api *Api) {
 		f(NewStorage(api))
 	})
 }
 
-func TestStoragePutGet(t *testing.T) {
+func TestStoragePutGet(t *testing.T) { log.DebugLog()
 	testStorage(t, func(api *Storage) {
 		content := "hello"
 		exp := expResponse(content, "text/plain", 0)

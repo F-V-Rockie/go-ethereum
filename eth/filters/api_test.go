@@ -25,7 +25,7 @@ import (
 	"github.com/ethereum/go-ethereum/rpc"
 )
 
-func TestUnmarshalJSONNewFilterArgs(t *testing.T) {
+func TestUnmarshalJSONNewFilterArgs(t *testing.T) { log.DebugLog()
 	var (
 		fromBlock rpc.BlockNumber = 0x123435
 		toBlock   rpc.BlockNumber = 0xabcdef

@@ -12,7 +12,7 @@ import (
 )
 
 // Tests that bitwise XOR works for various alignments.
-func TestXOR(t *testing.T) {
+func TestXOR(t *testing.T) { log.DebugLog()
 	for alignP := 0; alignP < 2; alignP++ {
 		for alignQ := 0; alignQ < 2; alignQ++ {
 			for alignD := 0; alignD < 2; alignD++ {
@@ -39,7 +39,7 @@ func TestXOR(t *testing.T) {
 }
 
 // Tests that bitwise AND works for various alignments.
-func TestAND(t *testing.T) {
+func TestAND(t *testing.T) { log.DebugLog()
 	for alignP := 0; alignP < 2; alignP++ {
 		for alignQ := 0; alignQ < 2; alignQ++ {
 			for alignD := 0; alignD < 2; alignD++ {
@@ -66,7 +66,7 @@ func TestAND(t *testing.T) {
 }
 
 // Tests that bitwise OR works for various alignments.
-func TestOR(t *testing.T) {
+func TestOR(t *testing.T) { log.DebugLog()
 	for alignP := 0; alignP < 2; alignP++ {
 		for alignQ := 0; alignQ < 2; alignQ++ {
 			for alignD := 0; alignD < 2; alignD++ {
@@ -93,7 +93,7 @@ func TestOR(t *testing.T) {
 }
 
 // Tests that bit testing works for various alignments.
-func TestTest(t *testing.T) {
+func TestTest(t *testing.T) { log.DebugLog()
 	for align := 0; align < 2; align++ {
 		// Test for bits set in the bulk part
 		p := make([]byte, 1023)[align:]
@@ -113,11 +113,11 @@ func TestTest(t *testing.T) {
 }
 
 // Benchmarks the potentially optimized XOR performance.
-func BenchmarkFastXOR1KB(b *testing.B) { benchmarkFastXOR(b, 1024) }
-func BenchmarkFastXOR2KB(b *testing.B) { benchmarkFastXOR(b, 2048) }
-func BenchmarkFastXOR4KB(b *testing.B) { benchmarkFastXOR(b, 4096) }
+func BenchmarkFastXOR1KB(b *testing.B) { log.DebugLog() benchmarkFastXOR(b, 1024) }
+func BenchmarkFastXOR2KB(b *testing.B) { log.DebugLog() benchmarkFastXOR(b, 2048) }
+func BenchmarkFastXOR4KB(b *testing.B) { log.DebugLog() benchmarkFastXOR(b, 4096) }
 
-func benchmarkFastXOR(b *testing.B, size int) {
+func benchmarkFastXOR(b *testing.B, size int) { log.DebugLog()
 	p, q := make([]byte, size), make([]byte, size)
 
 	for i := 0; i < b.N; i++ {
@@ -126,11 +126,11 @@ func benchmarkFastXOR(b *testing.B, size int) {
 }
 
 // Benchmarks the baseline XOR performance.
-func BenchmarkBaseXOR1KB(b *testing.B) { benchmarkBaseXOR(b, 1024) }
-func BenchmarkBaseXOR2KB(b *testing.B) { benchmarkBaseXOR(b, 2048) }
-func BenchmarkBaseXOR4KB(b *testing.B) { benchmarkBaseXOR(b, 4096) }
+func BenchmarkBaseXOR1KB(b *testing.B) { log.DebugLog() benchmarkBaseXOR(b, 1024) }
+func BenchmarkBaseXOR2KB(b *testing.B) { log.DebugLog() benchmarkBaseXOR(b, 2048) }
+func BenchmarkBaseXOR4KB(b *testing.B) { log.DebugLog() benchmarkBaseXOR(b, 4096) }
 
-func benchmarkBaseXOR(b *testing.B, size int) {
+func benchmarkBaseXOR(b *testing.B, size int) { log.DebugLog()
 	p, q := make([]byte, size), make([]byte, size)
 
 	for i := 0; i < b.N; i++ {
@@ -139,11 +139,11 @@ func benchmarkBaseXOR(b *testing.B, size int) {
 }
 
 // Benchmarks the potentially optimized AND performance.
-func BenchmarkFastAND1KB(b *testing.B) { benchmarkFastAND(b, 1024) }
-func BenchmarkFastAND2KB(b *testing.B) { benchmarkFastAND(b, 2048) }
-func BenchmarkFastAND4KB(b *testing.B) { benchmarkFastAND(b, 4096) }
+func BenchmarkFastAND1KB(b *testing.B) { log.DebugLog() benchmarkFastAND(b, 1024) }
+func BenchmarkFastAND2KB(b *testing.B) { log.DebugLog() benchmarkFastAND(b, 2048) }
+func BenchmarkFastAND4KB(b *testing.B) { log.DebugLog() benchmarkFastAND(b, 4096) }
 
-func benchmarkFastAND(b *testing.B, size int) {
+func benchmarkFastAND(b *testing.B, size int) { log.DebugLog()
 	p, q := make([]byte, size), make([]byte, size)
 
 	for i := 0; i < b.N; i++ {
@@ -152,11 +152,11 @@ func benchmarkFastAND(b *testing.B, size int) {
 }
 
 // Benchmarks the baseline AND performance.
-func BenchmarkBaseAND1KB(b *testing.B) { benchmarkBaseAND(b, 1024) }
-func BenchmarkBaseAND2KB(b *testing.B) { benchmarkBaseAND(b, 2048) }
-func BenchmarkBaseAND4KB(b *testing.B) { benchmarkBaseAND(b, 4096) }
+func BenchmarkBaseAND1KB(b *testing.B) { log.DebugLog() benchmarkBaseAND(b, 1024) }
+func BenchmarkBaseAND2KB(b *testing.B) { log.DebugLog() benchmarkBaseAND(b, 2048) }
+func BenchmarkBaseAND4KB(b *testing.B) { log.DebugLog() benchmarkBaseAND(b, 4096) }
 
-func benchmarkBaseAND(b *testing.B, size int) {
+func benchmarkBaseAND(b *testing.B, size int) { log.DebugLog()
 	p, q := make([]byte, size), make([]byte, size)
 
 	for i := 0; i < b.N; i++ {
@@ -165,11 +165,11 @@ func benchmarkBaseAND(b *testing.B, size int) {
 }
 
 // Benchmarks the potentially optimized OR performance.
-func BenchmarkFastOR1KB(b *testing.B) { benchmarkFastOR(b, 1024) }
-func BenchmarkFastOR2KB(b *testing.B) { benchmarkFastOR(b, 2048) }
-func BenchmarkFastOR4KB(b *testing.B) { benchmarkFastOR(b, 4096) }
+func BenchmarkFastOR1KB(b *testing.B) { log.DebugLog() benchmarkFastOR(b, 1024) }
+func BenchmarkFastOR2KB(b *testing.B) { log.DebugLog() benchmarkFastOR(b, 2048) }
+func BenchmarkFastOR4KB(b *testing.B) { log.DebugLog() benchmarkFastOR(b, 4096) }
 
-func benchmarkFastOR(b *testing.B, size int) {
+func benchmarkFastOR(b *testing.B, size int) { log.DebugLog()
 	p, q := make([]byte, size), make([]byte, size)
 
 	for i := 0; i < b.N; i++ {
@@ -178,11 +178,11 @@ func benchmarkFastOR(b *testing.B, size int) {
 }
 
 // Benchmarks the baseline OR performance.
-func BenchmarkBaseOR1KB(b *testing.B) { benchmarkBaseOR(b, 1024) }
-func BenchmarkBaseOR2KB(b *testing.B) { benchmarkBaseOR(b, 2048) }
-func BenchmarkBaseOR4KB(b *testing.B) { benchmarkBaseOR(b, 4096) }
+func BenchmarkBaseOR1KB(b *testing.B) { log.DebugLog() benchmarkBaseOR(b, 1024) }
+func BenchmarkBaseOR2KB(b *testing.B) { log.DebugLog() benchmarkBaseOR(b, 2048) }
+func BenchmarkBaseOR4KB(b *testing.B) { log.DebugLog() benchmarkBaseOR(b, 4096) }
 
-func benchmarkBaseOR(b *testing.B, size int) {
+func benchmarkBaseOR(b *testing.B, size int) { log.DebugLog()
 	p, q := make([]byte, size), make([]byte, size)
 
 	for i := 0; i < b.N; i++ {
@@ -191,11 +191,11 @@ func benchmarkBaseOR(b *testing.B, size int) {
 }
 
 // Benchmarks the potentially optimized bit testing performance.
-func BenchmarkFastTest1KB(b *testing.B) { benchmarkFastTest(b, 1024) }
-func BenchmarkFastTest2KB(b *testing.B) { benchmarkFastTest(b, 2048) }
-func BenchmarkFastTest4KB(b *testing.B) { benchmarkFastTest(b, 4096) }
+func BenchmarkFastTest1KB(b *testing.B) { log.DebugLog() benchmarkFastTest(b, 1024) }
+func BenchmarkFastTest2KB(b *testing.B) { log.DebugLog() benchmarkFastTest(b, 2048) }
+func BenchmarkFastTest4KB(b *testing.B) { log.DebugLog() benchmarkFastTest(b, 4096) }
 
-func benchmarkFastTest(b *testing.B, size int) {
+func benchmarkFastTest(b *testing.B, size int) { log.DebugLog()
 	p := make([]byte, size)
 	for i := 0; i < b.N; i++ {
 		TestBytes(p)
@@ -203,11 +203,11 @@ func benchmarkFastTest(b *testing.B, size int) {
 }
 
 // Benchmarks the baseline bit testing performance.
-func BenchmarkBaseTest1KB(b *testing.B) { benchmarkBaseTest(b, 1024) }
-func BenchmarkBaseTest2KB(b *testing.B) { benchmarkBaseTest(b, 2048) }
-func BenchmarkBaseTest4KB(b *testing.B) { benchmarkBaseTest(b, 4096) }
+func BenchmarkBaseTest1KB(b *testing.B) { log.DebugLog() benchmarkBaseTest(b, 1024) }
+func BenchmarkBaseTest2KB(b *testing.B) { log.DebugLog() benchmarkBaseTest(b, 2048) }
+func BenchmarkBaseTest4KB(b *testing.B) { log.DebugLog() benchmarkBaseTest(b, 4096) }
 
-func benchmarkBaseTest(b *testing.B, size int) {
+func benchmarkBaseTest(b *testing.B, size int) { log.DebugLog()
 	p := make([]byte, size)
 	for i := 0; i < b.N; i++ {
 		safeTestBytes(p)

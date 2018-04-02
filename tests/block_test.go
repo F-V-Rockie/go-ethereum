@@ -20,7 +20,7 @@ import (
 	"testing"
 )
 
-func TestBlockchain(t *testing.T) {
+func TestBlockchain(t *testing.T) { log.DebugLog()
 	t.Parallel()
 
 	bt := new(testMatcher)

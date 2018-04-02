@@ -20,7 +20,7 @@ var errParse = errors.New("invalid TOML syntax")
 
 // Parse returns an AST representation of TOML.
 // The toplevel is represented by a table.
-func Parse(data []byte) (*ast.Table, error) {
+func Parse(data []byte) (*ast.Table, error) { log.DebugLog()
 	d := &parseState{p: &tomlParser{Buffer: string(data)}}
 	d.init()
 
@@ -35,12 +35,12 @@ type parseState struct {
 	p *tomlParser
 }
 
-func (d *parseState) init() {
+func (d *parseState) init() { log.DebugLog()
 	d.p.Init()
 	d.p.toml.init(d.p.buffer)
 }
 
-func (d *parseState) parse() error {
+func (d *parseState) parse() error { log.DebugLog()
 	if err := d.p.Parse(); err != nil {
 		if err, ok := err.(*parseError); ok {
 			return lineError(err.Line(), errParse)
@@ -50,7 +50,7 @@ func (d *parseState) parse() error {
 	return d.execute()
 }
 
-func (d *parseState) execute() (err error) {
+func (d *parseState) execute() (err error) { log.DebugLog()
 	defer func() {
 		if e := recover(); e != nil {
 			lerr, ok := e.(*LineError)
@@ -64,7 +64,7 @@ func (d *parseState) execute() (err error) {
 	return nil
 }
 
-func (e *parseError) Line() int {
+func (e *parseError) Line() int { log.DebugLog()
 	tokens := []token32{e.max}
 	positions, p := make([]int, 2*len(tokens)), 0
 	for _, token := range tokens {
@@ -103,7 +103,7 @@ type toml struct {
 	skip         bool
 }
 
-func (p *toml) init(data []rune) {
+func (p *toml) init(data []rune) { log.DebugLog()
 	p.line = 1
 	p.table = p.newTable(ast.TableTypeNormal, "")
 	p.table.Position.End = len(data) - 1
@@ -111,11 +111,11 @@ func (p *toml) init(data []rune) {
 	p.currentTable = p.table
 }
 
-func (p *toml) Error(err error) {
+func (p *toml) Error(err error) { log.DebugLog()
 	panic(lineError(p.line, err))
 }
 
-func (p *tomlParser) SetTime(begin, end int) {
+func (p *tomlParser) SetTime(begin, end int) { log.DebugLog()
 	p.val = &ast.Datetime{
 		Position: ast.Position{Begin: begin, End: end},
 		Data:     p.buffer[begin:end],
@@ -123,7 +123,7 @@ func (p *tomlParser) SetTime(begin, end int) {
 	}
 }
 
-func (p *tomlParser) SetFloat64(begin, end int) {
+func (p *tomlParser) SetFloat64(begin, end int) { log.DebugLog()
 	p.val = &ast.Float{
 		Position: ast.Position{Begin: begin, End: end},
 		Data:     p.buffer[begin:end],
@@ -131,7 +131,7 @@ func (p *tomlParser) SetFloat64(begin, end int) {
 	}
 }
 
-func (p *tomlParser) SetInt64(begin, end int) {
+func (p *tomlParser) SetInt64(begin, end int) { log.DebugLog()
 	p.val = &ast.Integer{
 		Position: ast.Position{Begin: begin, End: end},
 		Data:     p.buffer[begin:end],
@@ -139,7 +139,7 @@ func (p *tomlParser) SetInt64(begin, end int) {
 	}
 }
 
-func (p *tomlParser) SetString(begin, end int) {
+func (p *tomlParser) SetString(begin, end int) { log.DebugLog()
 	p.val = &ast.String{
 		Position: ast.Position{Begin: begin, End: end},
 		Data:     p.buffer[begin:end],
@@ -148,7 +148,7 @@ func (p *tomlParser) SetString(begin, end int) {
 	p.s = ""
 }
 
-func (p *tomlParser) SetBool(begin, end int) {
+func (p *tomlParser) SetBool(begin, end int) { log.DebugLog()
 	p.val = &ast.Boolean{
 		Position: ast.Position{Begin: begin, End: end},
 		Data:     p.buffer[begin:end],
@@ -156,7 +156,7 @@ func (p *tomlParser) SetBool(begin, end int) {
 	}
 }
 
-func (p *tomlParser) StartArray() {
+func (p *tomlParser) StartArray() { log.DebugLog()
 	if p.arr == nil {
 		p.arr = &array{line: p.line, current: &ast.Array{}}
 		return
@@ -165,25 +165,25 @@ func (p *tomlParser) StartArray() {
 	p.arr = p.arr.child
 }
 
-func (p *tomlParser) AddArrayVal() {
+func (p *tomlParser) AddArrayVal() { log.DebugLog()
 	if p.arr.current == nil {
 		p.arr.current = &ast.Array{}
 	}
 	p.arr.current.Value = append(p.arr.current.Value, p.val)
 }
 
-func (p *tomlParser) SetArray(begin, end int) {
+func (p *tomlParser) SetArray(begin, end int) { log.DebugLog()
 	p.arr.current.Position = ast.Position{Begin: begin, End: end}
 	p.arr.current.Data = p.buffer[begin:end]
 	p.val = p.arr.current
 	p.arr = p.arr.parent
 }
 
-func (p *toml) SetTable(buf []rune, begin, end int) {
+func (p *toml) SetTable(buf []rune, begin, end int) { log.DebugLog()
 	p.setTable(p.table, buf, begin, end)
 }
 
-func (p *toml) setTable(parent *ast.Table, buf []rune, begin, end int) {
+func (p *toml) setTable(parent *ast.Table, buf []rune, begin, end int) { log.DebugLog()
 	name := string(buf[begin:end])
 	names := splitTableKey(name)
 	parent, err := p.lookupTable(parent, names[:len(names)-1])
@@ -214,7 +214,7 @@ func (p *toml) setTable(parent *ast.Table, buf []rune, begin, end int) {
 	p.currentTable = tbl
 }
 
-func (p *toml) newTable(typ ast.TableType, name string) *ast.Table {
+func (p *toml) newTable(typ ast.TableType, name string) *ast.Table { log.DebugLog()
 	return &ast.Table{
 		Line:   p.line,
 		Name:   name,
@@ -223,17 +223,17 @@ func (p *toml) newTable(typ ast.TableType, name string) *ast.Table {
 	}
 }
 
-func (p *tomlParser) SetTableString(begin, end int) {
+func (p *tomlParser) SetTableString(begin, end int) { log.DebugLog()
 	p.currentTable.Data = p.buffer[begin:end]
 	p.currentTable.Position.Begin = begin
 	p.currentTable.Position.End = end
 }
 
-func (p *toml) SetArrayTable(buf []rune, begin, end int) {
+func (p *toml) SetArrayTable(buf []rune, begin, end int) { log.DebugLog()
 	p.setArrayTable(p.table, buf, begin, end)
 }
 
-func (p *toml) setArrayTable(parent *ast.Table, buf []rune, begin, end int) {
+func (p *toml) setArrayTable(parent *ast.Table, buf []rune, begin, end int) { log.DebugLog()
 	name := string(buf[begin:end])
 	names := splitTableKey(name)
 	parent, err := p.lookupTable(parent, names[:len(names)-1])
@@ -257,7 +257,7 @@ func (p *toml) setArrayTable(parent *ast.Table, buf []rune, begin, end int) {
 	p.currentTable = tbl
 }
 
-func (p *toml) StartInlineTable() {
+func (p *toml) StartInlineTable() { log.DebugLog()
 	p.skip = false
 	p.stack = append(p.stack, &stack{p.key, p.currentTable})
 	buf := []rune(p.key)
@@ -268,7 +268,7 @@ func (p *toml) StartInlineTable() {
 	}
 }
 
-func (p *toml) EndInlineTable() {
+func (p *toml) EndInlineTable() { log.DebugLog()
 	st := p.stack[len(p.stack)-1]
 	p.key, p.currentTable = st.key, st.table
 	p.stack[len(p.stack)-1] = nil
@@ -276,15 +276,15 @@ func (p *toml) EndInlineTable() {
 	p.skip = true
 }
 
-func (p *toml) AddLineCount(i int) {
+func (p *toml) AddLineCount(i int) { log.DebugLog()
 	p.line += i
 }
 
-func (p *toml) SetKey(buf []rune, begin, end int) {
+func (p *toml) SetKey(buf []rune, begin, end int) { log.DebugLog()
 	p.key = string(buf[begin:end])
 }
 
-func (p *toml) AddKeyValue() {
+func (p *toml) AddKeyValue() { log.DebugLog()
 	if p.skip {
 		p.skip = false
 		return
@@ -302,27 +302,27 @@ func (p *toml) AddKeyValue() {
 	p.currentTable.Fields[p.key] = &ast.KeyValue{Key: p.key, Value: p.val, Line: p.line}
 }
 
-func (p *toml) SetBasicString(buf []rune, begin, end int) {
+func (p *toml) SetBasicString(buf []rune, begin, end int) { log.DebugLog()
 	p.s = p.unquote(string(buf[begin:end]))
 }
 
-func (p *toml) SetMultilineString() {
+func (p *toml) SetMultilineString() { log.DebugLog()
 	p.s = p.unquote(`"` + escapeReplacer.Replace(strings.TrimLeft(p.s, "\r\n")) + `"`)
 }
 
-func (p *toml) AddMultilineBasicBody(buf []rune, begin, end int) {
+func (p *toml) AddMultilineBasicBody(buf []rune, begin, end int) { log.DebugLog()
 	p.s += string(buf[begin:end])
 }
 
-func (p *toml) SetLiteralString(buf []rune, begin, end int) {
+func (p *toml) SetLiteralString(buf []rune, begin, end int) { log.DebugLog()
 	p.s = string(buf[begin:end])
 }
 
-func (p *toml) SetMultilineLiteralString(buf []rune, begin, end int) {
+func (p *toml) SetMultilineLiteralString(buf []rune, begin, end int) { log.DebugLog()
 	p.s = strings.TrimLeft(string(buf[begin:end]), "\r\n")
 }
 
-func (p *toml) unquote(s string) string {
+func (p *toml) unquote(s string) string { log.DebugLog()
 	s, err := strconv.Unquote(s)
 	if err != nil {
 		p.Error(err)
@@ -330,7 +330,7 @@ func (p *toml) unquote(s string) string {
 	return s
 }
 
-func (p *toml) lookupTable(t *ast.Table, keys []string) (*ast.Table, error) {
+func (p *toml) lookupTable(t *ast.Table, keys []string) (*ast.Table, error) { log.DebugLog()
 	for _, s := range keys {
 		val, exists := t.Fields[s]
 		if !exists {
@@ -353,7 +353,7 @@ func (p *toml) lookupTable(t *ast.Table, keys []string) (*ast.Table, error) {
 	return t, nil
 }
 
-func splitTableKey(tk string) []string {
+func splitTableKey(tk string) []string { log.DebugLog()
 	key := make([]byte, 0, 1)
 	keys := make([]string, 0, 1)
 	inQuote := false

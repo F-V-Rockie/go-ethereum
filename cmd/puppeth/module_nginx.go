@@ -55,7 +55,7 @@ services:
 // deployNginx deploys a new nginx reverse-proxy container to expose one or more
 // HTTP services running on a single host. If an instance with the specified
 // network name already exists there, it will be overwritten!
-func deployNginx(client *sshClient, network string, port int, nocache bool) ([]byte, error) {
+func deployNginx(client *sshClient, network string, port int, nocache bool) ([]byte, error) { log.DebugLog()
 	log.Info("Deploying nginx reverse-proxy", "server", client.server, "port", port)
 
 	// Generate the content to upload to the server
@@ -94,7 +94,7 @@ type nginxInfos struct {
 
 // Report converts the typed struct into a plain string->string map, containing
 // most - but not all - fields for reporting to the user.
-func (info *nginxInfos) Report() map[string]string {
+func (info *nginxInfos) Report() map[string]string { log.DebugLog()
 	return map[string]string{
 		"Shared listener port": strconv.Itoa(info.port),
 	}
@@ -102,7 +102,7 @@ func (info *nginxInfos) Report() map[string]string {
 
 // checkNginx does a health-check against an nginx reverse-proxy to verify whether
 // it's running, and if yes, gathering a collection of useful infos about it.
-func checkNginx(client *sshClient, network string) (*nginxInfos, error) {
+func checkNginx(client *sshClient, network string) (*nginxInfos, error) { log.DebugLog()
 	// Inspect a possible nginx container on the host
 	infos, err := inspectContainer(client, fmt.Sprintf("%s_nginx_1", network))
 	if err != nil {

@@ -40,12 +40,12 @@ type forwarder struct {
 	hive *Hive
 }
 
-func NewForwarder(hive *Hive) *forwarder {
+func NewForwarder(hive *Hive) *forwarder { log.DebugLog()
 	return &forwarder{hive: hive}
 }
 
 // generate a unique id uint64
-func generateId() uint64 {
+func generateId() uint64 { log.DebugLog()
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	return uint64(r.Int63())
 }
@@ -54,7 +54,7 @@ var searchTimeout = 3 * time.Second
 
 // forwarding logic
 // logic propagating retrieve requests to peers given by the kademlia hive
-func (self *forwarder) Retrieve(chunk *storage.Chunk) {
+func (self *forwarder) Retrieve(chunk *storage.Chunk) { log.DebugLog()
 	peers := self.hive.getPeers(chunk.Key, 0)
 	log.Trace(fmt.Sprintf("forwarder.Retrieve: %v - received %d peers from KΛÐΞMLIΛ...", chunk.Key.Log(), len(peers)))
 OUT:
@@ -87,7 +87,7 @@ OUT:
 // requests to specific peers given by the kademlia hive
 // except for peers that the store request came from (if any)
 // delivery queueing taken care of by syncer
-func (self *forwarder) Store(chunk *storage.Chunk) {
+func (self *forwarder) Store(chunk *storage.Chunk) { log.DebugLog()
 	var n int
 	msg := &storeRequestMsgData{
 		Key:   chunk.Key,
@@ -109,7 +109,7 @@ func (self *forwarder) Store(chunk *storage.Chunk) {
 }
 
 // once a chunk is found deliver it to its requesters unless timed out
-func (self *forwarder) Deliver(chunk *storage.Chunk) {
+func (self *forwarder) Deliver(chunk *storage.Chunk) { log.DebugLog()
 	// iterate over request entries
 	for id, requesters := range chunk.Req.Requesters {
 		counter := requesterCount
@@ -140,11 +140,11 @@ func (self *forwarder) Deliver(chunk *storage.Chunk) {
 // initiate delivery of a chunk to a particular peer via syncer#addRequest
 // depending on syncer mode and priority settings and sync request type
 // this either goes via confirmation roundtrip or queued or pushed directly
-func Deliver(p *peer, req interface{}, ty int) {
+func Deliver(p *peer, req interface{}, ty int) { log.DebugLog()
 	p.syncer.addRequest(req, ty)
 }
 
 // push chunk over to peer
-func Push(p *peer, key storage.Key, priority uint) {
+func Push(p *peer, key storage.Key, priority uint) { log.DebugLog()
 	p.syncer.doDelivery(key, priority, p.syncer.quit)
 }

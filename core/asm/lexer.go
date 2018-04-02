@@ -59,7 +59,7 @@ const (
 )
 
 // String implements stringer
-func (it tokenType) String() string {
+func (it tokenType) String() string { log.DebugLog()
 	if int(it) > len(stringtokenTypes) {
 		return "invalid"
 	}
@@ -95,7 +95,7 @@ type lexer struct {
 
 // lex lexes the program by name with the given source. It returns a
 // channel on which the tokens are delivered.
-func Lex(name string, source []byte, debug bool) <-chan token {
+func Lex(name string, source []byte, debug bool) <-chan token { log.DebugLog()
 	ch := make(chan token)
 	l := &lexer{
 		input:  string(source),
@@ -116,7 +116,7 @@ func Lex(name string, source []byte, debug bool) <-chan token {
 }
 
 // next returns the next rune in the program's source.
-func (l *lexer) next() (rune rune) {
+func (l *lexer) next() (rune rune) { log.DebugLog()
 	if l.pos >= len(l.input) {
 		l.width = 0
 		return 0
@@ -127,24 +127,24 @@ func (l *lexer) next() (rune rune) {
 }
 
 // backup backsup the last parsed element (multi-character)
-func (l *lexer) backup() {
+func (l *lexer) backup() { log.DebugLog()
 	l.pos -= l.width
 }
 
 // peek returns the next rune but does not advance the seeker
-func (l *lexer) peek() rune {
+func (l *lexer) peek() rune { log.DebugLog()
 	r := l.next()
 	l.backup()
 	return r
 }
 
 // ignore advances the seeker and ignores the value
-func (l *lexer) ignore() {
+func (l *lexer) ignore() { log.DebugLog()
 	l.start = l.pos
 }
 
 // Accepts checks whether the given input matches the next rune
-func (l *lexer) accept(valid string) bool {
+func (l *lexer) accept(valid string) bool { log.DebugLog()
 	if strings.ContainsRune(valid, l.next()) {
 		return true
 	}
@@ -156,7 +156,7 @@ func (l *lexer) accept(valid string) bool {
 
 // acceptRun will continue to advance the seeker until valid
 // can no longer be met.
-func (l *lexer) acceptRun(valid string) {
+func (l *lexer) acceptRun(valid string) { log.DebugLog()
 	for strings.ContainsRune(valid, l.next()) {
 	}
 	l.backup()
@@ -164,7 +164,7 @@ func (l *lexer) acceptRun(valid string) {
 
 // acceptRunUntil is the inverse of acceptRun and will continue
 // to advance the seeker until the rune has been found.
-func (l *lexer) acceptRunUntil(until rune) bool {
+func (l *lexer) acceptRunUntil(until rune) bool { log.DebugLog()
 	// Continues running until a rune is found
 	for i := l.next(); !strings.ContainsRune(string(until), i); i = l.next() {
 		if i == 0 {
@@ -176,12 +176,12 @@ func (l *lexer) acceptRunUntil(until rune) bool {
 }
 
 // blob returns the current value
-func (l *lexer) blob() string {
+func (l *lexer) blob() string { log.DebugLog()
 	return l.input[l.start:l.pos]
 }
 
 // Emits a new token on to token channel for processing
-func (l *lexer) emit(t tokenType) {
+func (l *lexer) emit(t tokenType) { log.DebugLog()
 	token := token{t, l.lineno, l.blob()}
 
 	if l.debug {
@@ -193,7 +193,7 @@ func (l *lexer) emit(t tokenType) {
 }
 
 // lexLine is state function for lexing lines
-func lexLine(l *lexer) stateFn {
+func lexLine(l *lexer) stateFn { log.DebugLog()
 	for {
 		switch r := l.next(); {
 		case r == '\n':
@@ -223,7 +223,7 @@ func lexLine(l *lexer) stateFn {
 
 // lexComment parses the current position until the end
 // of the line and discards the text.
-func lexComment(l *lexer) stateFn {
+func lexComment(l *lexer) stateFn { log.DebugLog()
 	l.acceptRunUntil('\n')
 	l.ignore()
 
@@ -233,7 +233,7 @@ func lexComment(l *lexer) stateFn {
 // lexLabel parses the current label, emits and returns
 // the lex text state function to advance the parsing
 // process.
-func lexLabel(l *lexer) stateFn {
+func lexLabel(l *lexer) stateFn { log.DebugLog()
 	l.acceptRun(Alpha + "_")
 
 	l.emit(label)
@@ -244,7 +244,7 @@ func lexLabel(l *lexer) stateFn {
 // lexInsideString lexes the inside of a string until
 // until the state function finds the closing quote.
 // It returns the lex text state function.
-func lexInsideString(l *lexer) stateFn {
+func lexInsideString(l *lexer) stateFn { log.DebugLog()
 	if l.acceptRunUntil('"') {
 		l.emit(stringValue)
 	}
@@ -252,7 +252,7 @@ func lexInsideString(l *lexer) stateFn {
 	return lexLine
 }
 
-func lexNumber(l *lexer) stateFn {
+func lexNumber(l *lexer) stateFn { log.DebugLog()
 	acceptance := Numbers
 	if l.accept("0") || l.accept("xX") {
 		acceptance = HexadecimalNumbers
@@ -264,7 +264,7 @@ func lexNumber(l *lexer) stateFn {
 	return lexLine
 }
 
-func lexElement(l *lexer) stateFn {
+func lexElement(l *lexer) stateFn { log.DebugLog()
 	l.acceptRun(Alpha + "_" + Numbers)
 
 	if l.peek() == ':' {
@@ -278,14 +278,14 @@ func lexElement(l *lexer) stateFn {
 	return lexLine
 }
 
-func isLetter(t rune) bool {
+func isLetter(t rune) bool { log.DebugLog()
 	return unicode.IsLetter(t)
 }
 
-func isSpace(t rune) bool {
+func isSpace(t rune) bool { log.DebugLog()
 	return unicode.IsSpace(t)
 }
 
-func isNumber(t rune) bool {
+func isNumber(t rune) bool { log.DebugLog()
 	return unicode.IsNumber(t)
 }

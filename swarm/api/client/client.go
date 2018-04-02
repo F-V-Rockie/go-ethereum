@@ -41,7 +41,7 @@ var (
 	DefaultClient  = NewClient(DefaultGateway)
 )
 
-func NewClient(gateway string) *Client {
+func NewClient(gateway string) *Client { log.DebugLog()
 	return &Client{
 		Gateway: gateway,
 	}
@@ -53,7 +53,7 @@ type Client struct {
 }
 
 // UploadRaw uploads raw data to swarm and returns the resulting hash
-func (c *Client) UploadRaw(r io.Reader, size int64) (string, error) {
+func (c *Client) UploadRaw(r io.Reader, size int64) (string, error) { log.DebugLog()
 	if size <= 0 {
 		return "", errors.New("data size must be greater than zero")
 	}
@@ -78,7 +78,7 @@ func (c *Client) UploadRaw(r io.Reader, size int64) (string, error) {
 }
 
 // DownloadRaw downloads raw data from swarm
-func (c *Client) DownloadRaw(hash string) (io.ReadCloser, error) {
+func (c *Client) DownloadRaw(hash string) (io.ReadCloser, error) { log.DebugLog()
 	uri := c.Gateway + "/bzz-raw:/" + hash
 	res, err := http.DefaultClient.Get(uri)
 	if err != nil {
@@ -100,7 +100,7 @@ type File struct {
 
 // Open opens a local file which can then be passed to client.Upload to upload
 // it to swarm
-func Open(path string) (*File, error) {
+func Open(path string) (*File, error) { log.DebugLog()
 	f, err := os.Open(path)
 	if err != nil {
 		return nil, err
@@ -125,7 +125,7 @@ func Open(path string) (*File, error) {
 // (if the manifest argument is non-empty) or creates a new manifest containing
 // the file, returning the resulting manifest hash (the file will then be
 // available at bzz:/<hash>/<path>)
-func (c *Client) Upload(file *File, manifest string) (string, error) {
+func (c *Client) Upload(file *File, manifest string) (string, error) { log.DebugLog()
 	if file.Size <= 0 {
 		return "", errors.New("file size must be greater than zero")
 	}
@@ -134,7 +134,7 @@ func (c *Client) Upload(file *File, manifest string) (string, error) {
 
 // Download downloads a file with the given path from the swarm manifest with
 // the given hash (i.e. it gets bzz:/<hash>/<path>)
-func (c *Client) Download(hash, path string) (*File, error) {
+func (c *Client) Download(hash, path string) (*File, error) { log.DebugLog()
 	uri := c.Gateway + "/bzz:/" + hash + "/" + path
 	res, err := http.DefaultClient.Get(uri)
 	if err != nil {
@@ -159,7 +159,7 @@ func (c *Client) Download(hash, path string) (*File, error) {
 // directory will then be available at bzz:/<hash>/path/to/file), with
 // the file specified in defaultPath being uploaded to the root of the manifest
 // (i.e. bzz:/<hash>/)
-func (c *Client) UploadDirectory(dir, defaultPath, manifest string) (string, error) {
+func (c *Client) UploadDirectory(dir, defaultPath, manifest string) (string, error) { log.DebugLog()
 	stat, err := os.Stat(dir)
 	if err != nil {
 		return "", err
@@ -171,7 +171,7 @@ func (c *Client) UploadDirectory(dir, defaultPath, manifest string) (string, err
 
 // DownloadDirectory downloads the files contained in a swarm manifest under
 // the given path into a local directory (existing files will be overwritten)
-func (c *Client) DownloadDirectory(hash, path, destDir string) error {
+func (c *Client) DownloadDirectory(hash, path, destDir string) error { log.DebugLog()
 	stat, err := os.Stat(destDir)
 	if err != nil {
 		return err
@@ -229,7 +229,7 @@ func (c *Client) DownloadDirectory(hash, path, destDir string) error {
 }
 
 // UploadManifest uploads the given manifest to swarm
-func (c *Client) UploadManifest(m *api.Manifest) (string, error) {
+func (c *Client) UploadManifest(m *api.Manifest) (string, error) { log.DebugLog()
 	data, err := json.Marshal(m)
 	if err != nil {
 		return "", err
@@ -238,7 +238,7 @@ func (c *Client) UploadManifest(m *api.Manifest) (string, error) {
 }
 
 // DownloadManifest downloads a swarm manifest
-func (c *Client) DownloadManifest(hash string) (*api.Manifest, error) {
+func (c *Client) DownloadManifest(hash string) (*api.Manifest, error) { log.DebugLog()
 	res, err := c.DownloadRaw(hash)
 	if err != nil {
 		return nil, err
@@ -268,7 +268,7 @@ func (c *Client) DownloadManifest(hash string) (*api.Manifest, error) {
 // - a prefix of "dir1/" would return [dir1/dir2/, dir1/file3.txt]
 //
 // where entries ending with "/" are common prefixes.
-func (c *Client) List(hash, prefix string) (*api.ManifestList, error) {
+func (c *Client) List(hash, prefix string) (*api.ManifestList, error) { log.DebugLog()
 	res, err := http.DefaultClient.Get(c.Gateway + "/bzz-list:/" + hash + "/" + prefix)
 	if err != nil {
 		return nil, err
@@ -291,7 +291,7 @@ type Uploader interface {
 
 type UploaderFunc func(UploadFn) error
 
-func (u UploaderFunc) Upload(upload UploadFn) error {
+func (u UploaderFunc) Upload(upload UploadFn) error { log.DebugLog()
 	return u(upload)
 }
 
@@ -303,7 +303,7 @@ type DirectoryUploader struct {
 }
 
 // Upload performs the upload of the directory and default path
-func (d *DirectoryUploader) Upload(upload UploadFn) error {
+func (d *DirectoryUploader) Upload(upload UploadFn) error { log.DebugLog()
 	if d.DefaultPath != "" {
 		file, err := Open(d.DefaultPath)
 		if err != nil {
@@ -339,7 +339,7 @@ type FileUploader struct {
 }
 
 // Upload performs the upload of the file
-func (f *FileUploader) Upload(upload UploadFn) error {
+func (f *FileUploader) Upload(upload UploadFn) error { log.DebugLog()
 	return upload(f.File)
 }
 
@@ -350,7 +350,7 @@ type UploadFn func(file *File) error
 
 // TarUpload uses the given Uploader to upload files to swarm as a tar stream,
 // returning the resulting manifest hash
-func (c *Client) TarUpload(hash string, uploader Uploader) (string, error) {
+func (c *Client) TarUpload(hash string, uploader Uploader) (string, error) { log.DebugLog()
 	reqR, reqW := io.Pipe()
 	defer reqR.Close()
 	req, err := http.NewRequest("POST", c.Gateway+"/bzz:/"+hash, reqR)
@@ -410,7 +410,7 @@ func (c *Client) TarUpload(hash string, uploader Uploader) (string, error) {
 
 // MultipartUpload uses the given Uploader to upload files to swarm as a
 // multipart form, returning the resulting manifest hash
-func (c *Client) MultipartUpload(hash string, uploader Uploader) (string, error) {
+func (c *Client) MultipartUpload(hash string, uploader Uploader) (string, error) { log.DebugLog()
 	reqR, reqW := io.Pipe()
 	defer reqR.Close()
 	req, err := http.NewRequest("POST", c.Gateway+"/bzz:/"+hash, reqR)

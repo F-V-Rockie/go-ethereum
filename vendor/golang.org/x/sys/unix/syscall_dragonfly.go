@@ -29,7 +29,7 @@ type SockaddrDatalink struct {
 }
 
 // Translate "kern.hostname" to []_C_int{0,1,2,3}.
-func nametomib(name string) (mib []_C_int, err error) {
+func nametomib(name string) (mib []_C_int, err error) { log.DebugLog()
 	const siz = unsafe.Sizeof(mib[0])
 
 	// NOTE(rsc): It seems strange to set the buffer to have
@@ -56,11 +56,11 @@ func nametomib(name string) (mib []_C_int, err error) {
 	return buf[0 : n/siz], nil
 }
 
-func direntIno(buf []byte) (uint64, bool) {
+func direntIno(buf []byte) (uint64, bool) { log.DebugLog()
 	return readInt(buf, unsafe.Offsetof(Dirent{}.Fileno), unsafe.Sizeof(Dirent{}.Fileno))
 }
 
-func direntReclen(buf []byte) (uint64, bool) {
+func direntReclen(buf []byte) (uint64, bool) { log.DebugLog()
 	namlen, ok := direntNamlen(buf)
 	if !ok {
 		return 0, false
@@ -68,13 +68,13 @@ func direntReclen(buf []byte) (uint64, bool) {
 	return (16 + namlen + 1 + 7) &^ 7, true
 }
 
-func direntNamlen(buf []byte) (uint64, bool) {
+func direntNamlen(buf []byte) (uint64, bool) { log.DebugLog()
 	return readInt(buf, unsafe.Offsetof(Dirent{}.Namlen), unsafe.Sizeof(Dirent{}.Namlen))
 }
 
 //sysnb pipe() (r int, w int, err error)
 
-func Pipe(p []int) (err error) {
+func Pipe(p []int) (err error) { log.DebugLog()
 	if len(p) != 2 {
 		return EINVAL
 	}
@@ -83,16 +83,16 @@ func Pipe(p []int) (err error) {
 }
 
 //sys	extpread(fd int, p []byte, flags int, offset int64) (n int, err error)
-func Pread(fd int, p []byte, offset int64) (n int, err error) {
+func Pread(fd int, p []byte, offset int64) (n int, err error) { log.DebugLog()
 	return extpread(fd, p, 0, offset)
 }
 
 //sys	extpwrite(fd int, p []byte, flags int, offset int64) (n int, err error)
-func Pwrite(fd int, p []byte, offset int64) (n int, err error) {
+func Pwrite(fd int, p []byte, offset int64) (n int, err error) { log.DebugLog()
 	return extpwrite(fd, p, 0, offset)
 }
 
-func Accept4(fd, flags int) (nfd int, sa Sockaddr, err error) {
+func Accept4(fd, flags int) (nfd int, sa Sockaddr, err error) { log.DebugLog()
 	var rsa RawSockaddrAny
 	var len _Socklen = SizeofSockaddrAny
 	nfd, err = accept4(fd, &rsa, &len, flags)
@@ -110,7 +110,7 @@ func Accept4(fd, flags int) (nfd int, sa Sockaddr, err error) {
 	return
 }
 
-func Getfsstat(buf []Statfs_t, flags int) (n int, err error) {
+func Getfsstat(buf []Statfs_t, flags int) (n int, err error) { log.DebugLog()
 	var _p0 unsafe.Pointer
 	var bufsize uintptr
 	if len(buf) > 0 {
@@ -125,7 +125,7 @@ func Getfsstat(buf []Statfs_t, flags int) (n int, err error) {
 	return
 }
 
-func setattrlistTimes(path string, times []Timespec, flags int) error {
+func setattrlistTimes(path string, times []Timespec, flags int) error { log.DebugLog()
 	// used on Darwin for UtimesNano
 	return ENOSYS
 }
@@ -137,33 +137,33 @@ func setattrlistTimes(path string, times []Timespec, flags int) error {
 
 // IoctlSetInt performs an ioctl operation which sets an integer value
 // on fd, using the specified request number.
-func IoctlSetInt(fd int, req uint, value int) error {
+func IoctlSetInt(fd int, req uint, value int) error { log.DebugLog()
 	return ioctl(fd, req, uintptr(value))
 }
 
-func IoctlSetWinsize(fd int, req uint, value *Winsize) error {
+func IoctlSetWinsize(fd int, req uint, value *Winsize) error { log.DebugLog()
 	return ioctl(fd, req, uintptr(unsafe.Pointer(value)))
 }
 
-func IoctlSetTermios(fd int, req uint, value *Termios) error {
+func IoctlSetTermios(fd int, req uint, value *Termios) error { log.DebugLog()
 	return ioctl(fd, req, uintptr(unsafe.Pointer(value)))
 }
 
 // IoctlGetInt performs an ioctl operation which gets an integer value
 // from fd, using the specified request number.
-func IoctlGetInt(fd int, req uint) (int, error) {
+func IoctlGetInt(fd int, req uint) (int, error) { log.DebugLog()
 	var value int
 	err := ioctl(fd, req, uintptr(unsafe.Pointer(&value)))
 	return value, err
 }
 
-func IoctlGetWinsize(fd int, req uint) (*Winsize, error) {
+func IoctlGetWinsize(fd int, req uint) (*Winsize, error) { log.DebugLog()
 	var value Winsize
 	err := ioctl(fd, req, uintptr(unsafe.Pointer(&value)))
 	return &value, err
 }
 
-func IoctlGetTermios(fd int, req uint) (*Termios, error) {
+func IoctlGetTermios(fd int, req uint) (*Termios, error) { log.DebugLog()
 	var value Termios
 	err := ioctl(fd, req, uintptr(unsafe.Pointer(&value)))
 	return &value, err

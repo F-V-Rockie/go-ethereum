@@ -26,7 +26,7 @@ import (
 	"gopkg.in/urfave/cli.v1"
 )
 
-func hash(ctx *cli.Context) {
+func hash(ctx *cli.Context) { log.DebugLog()
 	args := ctx.Args()
 	if len(args) < 1 {
 		utils.Fatalf("Usage: swarm hash <file name>")

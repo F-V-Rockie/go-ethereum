@@ -25,7 +25,7 @@ import (
 )
 
 // deployExplorer creates a new block explorer based on some user input.
-func (w *wizard) deployExplorer() {
+func (w *wizard) deployExplorer() { log.DebugLog()
 	// Do some sanity check before the user wastes time on input
 	if w.conf.Genesis == nil {
 		log.Error("No genesis block configured")

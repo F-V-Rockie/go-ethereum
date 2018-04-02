@@ -31,7 +31,7 @@ type AccessPolicy struct {
 
 // convertAccessPolicyToXMLStructs converts between AccessPolicyDetails which is a struct better for API usage to the
 // AccessPolicy struct which will get converted to XML.
-func convertAccessPolicyToXMLStructs(id string, startTime time.Time, expiryTime time.Time, permissions string) SignedIdentifier {
+func convertAccessPolicyToXMLStructs(id string, startTime time.Time, expiryTime time.Time, permissions string) SignedIdentifier { log.DebugLog()
 	return SignedIdentifier{
 		ID: id,
 		AccessPolicy: AccessPolicyDetailsXML{
@@ -42,6 +42,6 @@ func convertAccessPolicyToXMLStructs(id string, startTime time.Time, expiryTime 
 	}
 }
 
-func updatePermissions(permissions, permission string) bool {
+func updatePermissions(permissions, permission string) bool { log.DebugLog()
 	return strings.Contains(permissions, permission)
 }

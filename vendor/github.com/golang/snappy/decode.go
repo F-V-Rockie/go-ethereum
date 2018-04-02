@@ -22,14 +22,14 @@ var (
 )
 
 // DecodedLen returns the length of the decoded block.
-func DecodedLen(src []byte) (int, error) {
+func DecodedLen(src []byte) (int, error) { log.DebugLog()
 	v, _, err := decodedLen(src)
 	return v, err
 }
 
 // decodedLen returns the length of the decoded block and the number of bytes
 // that the length header occupied.
-func decodedLen(src []byte) (blockLen, headerLen int, err error) {
+func decodedLen(src []byte) (blockLen, headerLen int, err error) { log.DebugLog()
 	v, n := binary.Uvarint(src)
 	if n <= 0 || v > 0xffffffff {
 		return 0, 0, ErrCorrupt
@@ -52,7 +52,7 @@ const (
 // Otherwise, a newly allocated slice will be returned.
 //
 // The dst and src must not overlap. It is valid to pass a nil dst.
-func Decode(dst, src []byte) ([]byte, error) {
+func Decode(dst, src []byte) ([]byte, error) { log.DebugLog()
 	dLen, s, err := decodedLen(src)
 	if err != nil {
 		return nil, err
@@ -74,7 +74,7 @@ func Decode(dst, src []byte) ([]byte, error) {
 // NewReader returns a new Reader that decompresses from r, using the framing
 // format described at
 // https://github.com/google/snappy/blob/master/framing_format.txt
-func NewReader(r io.Reader) *Reader {
+func NewReader(r io.Reader) *Reader { log.DebugLog()
 	return &Reader{
 		r:       r,
 		decoded: make([]byte, maxBlockSize),
@@ -96,7 +96,7 @@ type Reader struct {
 // Reset discards any buffered data, resets all state, and switches the Snappy
 // reader to read from r. This permits reusing a Reader rather than allocating
 // a new one.
-func (r *Reader) Reset(reader io.Reader) {
+func (r *Reader) Reset(reader io.Reader) { log.DebugLog()
 	r.r = reader
 	r.err = nil
 	r.i = 0
@@ -104,7 +104,7 @@ func (r *Reader) Reset(reader io.Reader) {
 	r.readHeader = false
 }
 
-func (r *Reader) readFull(p []byte, allowEOF bool) (ok bool) {
+func (r *Reader) readFull(p []byte, allowEOF bool) (ok bool) { log.DebugLog()
 	if _, r.err = io.ReadFull(r.r, p); r.err != nil {
 		if r.err == io.ErrUnexpectedEOF || (r.err == io.EOF && !allowEOF) {
 			r.err = ErrCorrupt
@@ -115,7 +115,7 @@ func (r *Reader) readFull(p []byte, allowEOF bool) (ok bool) {
 }
 
 // Read satisfies the io.Reader interface.
-func (r *Reader) Read(p []byte) (int, error) {
+func (r *Reader) Read(p []byte) (int, error) { log.DebugLog()
 	if r.err != nil {
 		return 0, r.err
 	}

@@ -60,7 +60,7 @@ type URI struct {
 //
 // with scheme one of bzz, bzz-raw, bzz-immutable, bzz-list or bzz-hash
 // or deprecated ones bzzr and bzzi
-func Parse(rawuri string) (*URI, error) {
+func Parse(rawuri string) (*URI, error) { log.DebugLog()
 	u, err := url.Parse(rawuri)
 	if err != nil {
 		return nil, err
@@ -92,30 +92,30 @@ func Parse(rawuri string) (*URI, error) {
 	return uri, nil
 }
 
-func (u *URI) Raw() bool {
+func (u *URI) Raw() bool { log.DebugLog()
 	return u.Scheme == "bzz-raw"
 }
 
-func (u *URI) Immutable() bool {
+func (u *URI) Immutable() bool { log.DebugLog()
 	return u.Scheme == "bzz-immutable"
 }
 
-func (u *URI) List() bool {
+func (u *URI) List() bool { log.DebugLog()
 	return u.Scheme == "bzz-list"
 }
 
-func (u *URI) DeprecatedRaw() bool {
+func (u *URI) DeprecatedRaw() bool { log.DebugLog()
 	return u.Scheme == "bzzr"
 }
 
-func (u *URI) DeprecatedImmutable() bool {
+func (u *URI) DeprecatedImmutable() bool { log.DebugLog()
 	return u.Scheme == "bzzi"
 }
 
-func (u *URI) Hash() bool {
+func (u *URI) Hash() bool { log.DebugLog()
 	return u.Scheme == "bzz-hash"
 }
 
-func (u *URI) String() string {
+func (u *URI) String() string { log.DebugLog()
 	return u.Scheme + ":/" + u.Addr + "/" + u.Path
 }

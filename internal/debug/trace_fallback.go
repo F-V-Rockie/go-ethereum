@@ -22,10 +22,10 @@ package debug
 
 import "errors"
 
-func (*HandlerT) StartGoTrace(string) error {
+func (*HandlerT) StartGoTrace(string) error { log.DebugLog()
 	return errors.New("tracing is not supported on Go < 1.5")
 }
 
-func (*HandlerT) StopGoTrace() error {
+func (*HandlerT) StopGoTrace() error { log.DebugLog()
 	return errors.New("tracing is not supported on Go < 1.5")
 }

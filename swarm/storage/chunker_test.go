@@ -45,7 +45,7 @@ type chunkerTester struct {
 	t      test
 }
 
-func (self *chunkerTester) Split(chunker Splitter, data io.Reader, size int64, chunkC chan *Chunk, swg *sync.WaitGroup, expectedError error) (key Key, err error) {
+func (self *chunkerTester) Split(chunker Splitter, data io.Reader, size int64, chunkC chan *Chunk, swg *sync.WaitGroup, expectedError error) (key Key, err error) { log.DebugLog()
 	// reset
 	self.chunks = make(map[string]*Chunk)
 
@@ -89,7 +89,7 @@ func (self *chunkerTester) Split(chunker Splitter, data io.Reader, size int64, c
 	return key, err
 }
 
-func (self *chunkerTester) Append(chunker Splitter, rootKey Key, data io.Reader, chunkC chan *Chunk, swg *sync.WaitGroup, expectedError error) (key Key, err error) {
+func (self *chunkerTester) Append(chunker Splitter, rootKey Key, data io.Reader, chunkC chan *Chunk, swg *sync.WaitGroup, expectedError error) (key Key, err error) { log.DebugLog()
 	quitC := make(chan bool)
 	timeout := time.After(60 * time.Second)
 	if chunkC != nil {
@@ -135,7 +135,7 @@ func (self *chunkerTester) Append(chunker Splitter, rootKey Key, data io.Reader,
 	return key, err
 }
 
-func (self *chunkerTester) Join(chunker Chunker, key Key, c int, chunkC chan *Chunk, quitC chan bool) LazySectionReader {
+func (self *chunkerTester) Join(chunker Chunker, key Key, c int, chunkC chan *Chunk, quitC chan bool) LazySectionReader { log.DebugLog()
 	// reset but not the chunks
 
 	reader := chunker.Join(key, chunkC)
@@ -167,7 +167,7 @@ func (self *chunkerTester) Join(chunker Chunker, key Key, c int, chunkC chan *Ch
 	return reader
 }
 
-func testRandomBrokenData(splitter Splitter, n int, tester *chunkerTester) {
+func testRandomBrokenData(splitter Splitter, n int, tester *chunkerTester) { log.DebugLog()
 	data := io.LimitReader(rand.Reader, int64(n))
 	brokendata := brokenLimitReader(data, n, n/2)
 
@@ -191,7 +191,7 @@ func testRandomBrokenData(splitter Splitter, n int, tester *chunkerTester) {
 	tester.t.Logf(" Key = %v\n", key)
 }
 
-func testRandomData(splitter Splitter, n int, tester *chunkerTester) Key {
+func testRandomData(splitter Splitter, n int, tester *chunkerTester) Key { log.DebugLog()
 	if tester.inputs == nil {
 		tester.inputs = make(map[uint64][]byte)
 	}
@@ -234,7 +234,7 @@ func testRandomData(splitter Splitter, n int, tester *chunkerTester) Key {
 	return key
 }
 
-func testRandomDataAppend(splitter Splitter, n, m int, tester *chunkerTester) {
+func testRandomDataAppend(splitter Splitter, n, m int, tester *chunkerTester) { log.DebugLog()
 	if tester.inputs == nil {
 		tester.inputs = make(map[uint64][]byte)
 	}
@@ -294,7 +294,7 @@ func testRandomDataAppend(splitter Splitter, n, m int, tester *chunkerTester) {
 	close(chunkC)
 }
 
-func TestSha3ForCorrectness(t *testing.T) {
+func TestSha3ForCorrectness(t *testing.T) { log.DebugLog()
 	tester := &chunkerTester{t: t}
 
 	size := 4096
@@ -323,7 +323,7 @@ func TestSha3ForCorrectness(t *testing.T) {
 
 }
 
-func TestDataAppend(t *testing.T) {
+func TestDataAppend(t *testing.T) { log.DebugLog()
 	sizes := []int{1, 1, 1, 4095, 4096, 4097, 1, 1, 1, 123456, 2345678, 2345678}
 	appendSizes := []int{4095, 4096, 4097, 1, 1, 1, 8191, 8192, 8193, 9000, 3000, 5000}
 
@@ -335,7 +335,7 @@ func TestDataAppend(t *testing.T) {
 	}
 }
 
-func TestRandomData(t *testing.T) {
+func TestRandomData(t *testing.T) { log.DebugLog()
 	sizes := []int{1, 60, 83, 179, 253, 1024, 4095, 4096, 4097, 8191, 8192, 8193, 12287, 12288, 12289, 123456, 2345678}
 	tester := &chunkerTester{t: t}
 
@@ -363,7 +363,7 @@ func TestRandomData(t *testing.T) {
 
 }
 
-func XTestRandomBrokenData(t *testing.T) {
+func XTestRandomBrokenData(t *testing.T) { log.DebugLog()
 	sizes := []int{1, 60, 83, 179, 253, 1024, 4095, 4096, 4097, 8191, 8192, 8193, 12287, 12288, 12289, 123456, 2345678}
 	tester := &chunkerTester{t: t}
 	chunker := NewTreeChunker(NewChunkerParams())
@@ -372,7 +372,7 @@ func XTestRandomBrokenData(t *testing.T) {
 	}
 }
 
-func benchReadAll(reader LazySectionReader) {
+func benchReadAll(reader LazySectionReader) { log.DebugLog()
 	size, _ := reader.Size(nil)
 	output := make([]byte, 1000)
 	for pos := int64(0); pos < size; pos += 1000 {
@@ -380,7 +380,7 @@ func benchReadAll(reader LazySectionReader) {
 	}
 }
 
-func benchmarkJoin(n int, t *testing.B) {
+func benchmarkJoin(n int, t *testing.B) { log.DebugLog()
 	t.ReportAllocs()
 	for i := 0; i < t.N; i++ {
 		chunker := NewTreeChunker(NewChunkerParams())
@@ -403,7 +403,7 @@ func benchmarkJoin(n int, t *testing.B) {
 	}
 }
 
-func benchmarkSplitTreeSHA3(n int, t *testing.B) {
+func benchmarkSplitTreeSHA3(n int, t *testing.B) { log.DebugLog()
 	t.ReportAllocs()
 	for i := 0; i < t.N; i++ {
 		chunker := NewTreeChunker(NewChunkerParams())
@@ -416,7 +416,7 @@ func benchmarkSplitTreeSHA3(n int, t *testing.B) {
 	}
 }
 
-func benchmarkSplitTreeBMT(n int, t *testing.B) {
+func benchmarkSplitTreeBMT(n int, t *testing.B) { log.DebugLog()
 	t.ReportAllocs()
 	for i := 0; i < t.N; i++ {
 		cp := NewChunkerParams()
@@ -431,7 +431,7 @@ func benchmarkSplitTreeBMT(n int, t *testing.B) {
 	}
 }
 
-func benchmarkSplitPyramidSHA3(n int, t *testing.B) {
+func benchmarkSplitPyramidSHA3(n int, t *testing.B) { log.DebugLog()
 	t.ReportAllocs()
 	for i := 0; i < t.N; i++ {
 		splitter := NewPyramidChunker(NewChunkerParams())
@@ -444,7 +444,7 @@ func benchmarkSplitPyramidSHA3(n int, t *testing.B) {
 	}
 }
 
-func benchmarkSplitPyramidBMT(n int, t *testing.B) {
+func benchmarkSplitPyramidBMT(n int, t *testing.B) { log.DebugLog()
 	t.ReportAllocs()
 	for i := 0; i < t.N; i++ {
 		cp := NewChunkerParams()
@@ -459,7 +459,7 @@ func benchmarkSplitPyramidBMT(n int, t *testing.B) {
 	}
 }
 
-func benchmarkAppendPyramid(n, m int, t *testing.B) {
+func benchmarkAppendPyramid(n, m int, t *testing.B) { log.DebugLog()
 	t.ReportAllocs()
 	for i := 0; i < t.N; i++ {
 		chunker := NewPyramidChunker(NewChunkerParams())
@@ -486,67 +486,67 @@ func benchmarkAppendPyramid(n, m int, t *testing.B) {
 	}
 }
 
-func BenchmarkJoin_2(t *testing.B) { benchmarkJoin(100, t) }
-func BenchmarkJoin_3(t *testing.B) { benchmarkJoin(1000, t) }
-func BenchmarkJoin_4(t *testing.B) { benchmarkJoin(10000, t) }
-func BenchmarkJoin_5(t *testing.B) { benchmarkJoin(100000, t) }
-func BenchmarkJoin_6(t *testing.B) { benchmarkJoin(1000000, t) }
-func BenchmarkJoin_7(t *testing.B) { benchmarkJoin(10000000, t) }
-func BenchmarkJoin_8(t *testing.B) { benchmarkJoin(100000000, t) }
+func BenchmarkJoin_2(t *testing.B) { log.DebugLog() benchmarkJoin(100, t) }
+func BenchmarkJoin_3(t *testing.B) { log.DebugLog() benchmarkJoin(1000, t) }
+func BenchmarkJoin_4(t *testing.B) { log.DebugLog() benchmarkJoin(10000, t) }
+func BenchmarkJoin_5(t *testing.B) { log.DebugLog() benchmarkJoin(100000, t) }
+func BenchmarkJoin_6(t *testing.B) { log.DebugLog() benchmarkJoin(1000000, t) }
+func BenchmarkJoin_7(t *testing.B) { log.DebugLog() benchmarkJoin(10000000, t) }
+func BenchmarkJoin_8(t *testing.B) { log.DebugLog() benchmarkJoin(100000000, t) }
 
-func BenchmarkSplitTreeSHA3_2(t *testing.B)  { benchmarkSplitTreeSHA3(100, t) }
-func BenchmarkSplitTreeSHA3_2h(t *testing.B) { benchmarkSplitTreeSHA3(500, t) }
-func BenchmarkSplitTreeSHA3_3(t *testing.B)  { benchmarkSplitTreeSHA3(1000, t) }
-func BenchmarkSplitTreeSHA3_3h(t *testing.B) { benchmarkSplitTreeSHA3(5000, t) }
-func BenchmarkSplitTreeSHA3_4(t *testing.B)  { benchmarkSplitTreeSHA3(10000, t) }
-func BenchmarkSplitTreeSHA3_4h(t *testing.B) { benchmarkSplitTreeSHA3(50000, t) }
-func BenchmarkSplitTreeSHA3_5(t *testing.B)  { benchmarkSplitTreeSHA3(100000, t) }
-func BenchmarkSplitTreeSHA3_6(t *testing.B)  { benchmarkSplitTreeSHA3(1000000, t) }
-func BenchmarkSplitTreeSHA3_7(t *testing.B)  { benchmarkSplitTreeSHA3(10000000, t) }
-func BenchmarkSplitTreeSHA3_8(t *testing.B)  { benchmarkSplitTreeSHA3(100000000, t) }
+func BenchmarkSplitTreeSHA3_2(t *testing.B)  { log.DebugLog() benchmarkSplitTreeSHA3(100, t) }
+func BenchmarkSplitTreeSHA3_2h(t *testing.B) { log.DebugLog() benchmarkSplitTreeSHA3(500, t) }
+func BenchmarkSplitTreeSHA3_3(t *testing.B)  { log.DebugLog() benchmarkSplitTreeSHA3(1000, t) }
+func BenchmarkSplitTreeSHA3_3h(t *testing.B) { log.DebugLog() benchmarkSplitTreeSHA3(5000, t) }
+func BenchmarkSplitTreeSHA3_4(t *testing.B)  { log.DebugLog() benchmarkSplitTreeSHA3(10000, t) }
+func BenchmarkSplitTreeSHA3_4h(t *testing.B) { log.DebugLog() benchmarkSplitTreeSHA3(50000, t) }
+func BenchmarkSplitTreeSHA3_5(t *testing.B)  { log.DebugLog() benchmarkSplitTreeSHA3(100000, t) }
+func BenchmarkSplitTreeSHA3_6(t *testing.B)  { log.DebugLog() benchmarkSplitTreeSHA3(1000000, t) }
+func BenchmarkSplitTreeSHA3_7(t *testing.B)  { log.DebugLog() benchmarkSplitTreeSHA3(10000000, t) }
+func BenchmarkSplitTreeSHA3_8(t *testing.B)  { log.DebugLog() benchmarkSplitTreeSHA3(100000000, t) }
 
-func BenchmarkSplitTreeBMT_2(t *testing.B)  { benchmarkSplitTreeBMT(100, t) }
-func BenchmarkSplitTreeBMT_2h(t *testing.B) { benchmarkSplitTreeBMT(500, t) }
-func BenchmarkSplitTreeBMT_3(t *testing.B)  { benchmarkSplitTreeBMT(1000, t) }
-func BenchmarkSplitTreeBMT_3h(t *testing.B) { benchmarkSplitTreeBMT(5000, t) }
-func BenchmarkSplitTreeBMT_4(t *testing.B)  { benchmarkSplitTreeBMT(10000, t) }
-func BenchmarkSplitTreeBMT_4h(t *testing.B) { benchmarkSplitTreeBMT(50000, t) }
-func BenchmarkSplitTreeBMT_5(t *testing.B)  { benchmarkSplitTreeBMT(100000, t) }
-func BenchmarkSplitTreeBMT_6(t *testing.B)  { benchmarkSplitTreeBMT(1000000, t) }
-func BenchmarkSplitTreeBMT_7(t *testing.B)  { benchmarkSplitTreeBMT(10000000, t) }
-func BenchmarkSplitTreeBMT_8(t *testing.B)  { benchmarkSplitTreeBMT(100000000, t) }
+func BenchmarkSplitTreeBMT_2(t *testing.B)  { log.DebugLog() benchmarkSplitTreeBMT(100, t) }
+func BenchmarkSplitTreeBMT_2h(t *testing.B) { log.DebugLog() benchmarkSplitTreeBMT(500, t) }
+func BenchmarkSplitTreeBMT_3(t *testing.B)  { log.DebugLog() benchmarkSplitTreeBMT(1000, t) }
+func BenchmarkSplitTreeBMT_3h(t *testing.B) { log.DebugLog() benchmarkSplitTreeBMT(5000, t) }
+func BenchmarkSplitTreeBMT_4(t *testing.B)  { log.DebugLog() benchmarkSplitTreeBMT(10000, t) }
+func BenchmarkSplitTreeBMT_4h(t *testing.B) { log.DebugLog() benchmarkSplitTreeBMT(50000, t) }
+func BenchmarkSplitTreeBMT_5(t *testing.B)  { log.DebugLog() benchmarkSplitTreeBMT(100000, t) }
+func BenchmarkSplitTreeBMT_6(t *testing.B)  { log.DebugLog() benchmarkSplitTreeBMT(1000000, t) }
+func BenchmarkSplitTreeBMT_7(t *testing.B)  { log.DebugLog() benchmarkSplitTreeBMT(10000000, t) }
+func BenchmarkSplitTreeBMT_8(t *testing.B)  { log.DebugLog() benchmarkSplitTreeBMT(100000000, t) }
 
-func BenchmarkSplitPyramidSHA3_2(t *testing.B)  { benchmarkSplitPyramidSHA3(100, t) }
-func BenchmarkSplitPyramidSHA3_2h(t *testing.B) { benchmarkSplitPyramidSHA3(500, t) }
-func BenchmarkSplitPyramidSHA3_3(t *testing.B)  { benchmarkSplitPyramidSHA3(1000, t) }
-func BenchmarkSplitPyramidSHA3_3h(t *testing.B) { benchmarkSplitPyramidSHA3(5000, t) }
-func BenchmarkSplitPyramidSHA3_4(t *testing.B)  { benchmarkSplitPyramidSHA3(10000, t) }
-func BenchmarkSplitPyramidSHA3_4h(t *testing.B) { benchmarkSplitPyramidSHA3(50000, t) }
-func BenchmarkSplitPyramidSHA3_5(t *testing.B)  { benchmarkSplitPyramidSHA3(100000, t) }
-func BenchmarkSplitPyramidSHA3_6(t *testing.B)  { benchmarkSplitPyramidSHA3(1000000, t) }
-func BenchmarkSplitPyramidSHA3_7(t *testing.B)  { benchmarkSplitPyramidSHA3(10000000, t) }
-func BenchmarkSplitPyramidSHA3_8(t *testing.B)  { benchmarkSplitPyramidSHA3(100000000, t) }
+func BenchmarkSplitPyramidSHA3_2(t *testing.B)  { log.DebugLog() benchmarkSplitPyramidSHA3(100, t) }
+func BenchmarkSplitPyramidSHA3_2h(t *testing.B) { log.DebugLog() benchmarkSplitPyramidSHA3(500, t) }
+func BenchmarkSplitPyramidSHA3_3(t *testing.B)  { log.DebugLog() benchmarkSplitPyramidSHA3(1000, t) }
+func BenchmarkSplitPyramidSHA3_3h(t *testing.B) { log.DebugLog() benchmarkSplitPyramidSHA3(5000, t) }
+func BenchmarkSplitPyramidSHA3_4(t *testing.B)  { log.DebugLog() benchmarkSplitPyramidSHA3(10000, t) }
+func BenchmarkSplitPyramidSHA3_4h(t *testing.B) { log.DebugLog() benchmarkSplitPyramidSHA3(50000, t) }
+func BenchmarkSplitPyramidSHA3_5(t *testing.B)  { log.DebugLog() benchmarkSplitPyramidSHA3(100000, t) }
+func BenchmarkSplitPyramidSHA3_6(t *testing.B)  { log.DebugLog() benchmarkSplitPyramidSHA3(1000000, t) }
+func BenchmarkSplitPyramidSHA3_7(t *testing.B)  { log.DebugLog() benchmarkSplitPyramidSHA3(10000000, t) }
+func BenchmarkSplitPyramidSHA3_8(t *testing.B)  { log.DebugLog() benchmarkSplitPyramidSHA3(100000000, t) }
 
-func BenchmarkSplitPyramidBMT_2(t *testing.B)  { benchmarkSplitPyramidBMT(100, t) }
-func BenchmarkSplitPyramidBMT_2h(t *testing.B) { benchmarkSplitPyramidBMT(500, t) }
-func BenchmarkSplitPyramidBMT_3(t *testing.B)  { benchmarkSplitPyramidBMT(1000, t) }
-func BenchmarkSplitPyramidBMT_3h(t *testing.B) { benchmarkSplitPyramidBMT(5000, t) }
-func BenchmarkSplitPyramidBMT_4(t *testing.B)  { benchmarkSplitPyramidBMT(10000, t) }
-func BenchmarkSplitPyramidBMT_4h(t *testing.B) { benchmarkSplitPyramidBMT(50000, t) }
-func BenchmarkSplitPyramidBMT_5(t *testing.B)  { benchmarkSplitPyramidBMT(100000, t) }
-func BenchmarkSplitPyramidBMT_6(t *testing.B)  { benchmarkSplitPyramidBMT(1000000, t) }
-func BenchmarkSplitPyramidBMT_7(t *testing.B)  { benchmarkSplitPyramidBMT(10000000, t) }
-func BenchmarkSplitPyramidBMT_8(t *testing.B)  { benchmarkSplitPyramidBMT(100000000, t) }
+func BenchmarkSplitPyramidBMT_2(t *testing.B)  { log.DebugLog() benchmarkSplitPyramidBMT(100, t) }
+func BenchmarkSplitPyramidBMT_2h(t *testing.B) { log.DebugLog() benchmarkSplitPyramidBMT(500, t) }
+func BenchmarkSplitPyramidBMT_3(t *testing.B)  { log.DebugLog() benchmarkSplitPyramidBMT(1000, t) }
+func BenchmarkSplitPyramidBMT_3h(t *testing.B) { log.DebugLog() benchmarkSplitPyramidBMT(5000, t) }
+func BenchmarkSplitPyramidBMT_4(t *testing.B)  { log.DebugLog() benchmarkSplitPyramidBMT(10000, t) }
+func BenchmarkSplitPyramidBMT_4h(t *testing.B) { log.DebugLog() benchmarkSplitPyramidBMT(50000, t) }
+func BenchmarkSplitPyramidBMT_5(t *testing.B)  { log.DebugLog() benchmarkSplitPyramidBMT(100000, t) }
+func BenchmarkSplitPyramidBMT_6(t *testing.B)  { log.DebugLog() benchmarkSplitPyramidBMT(1000000, t) }
+func BenchmarkSplitPyramidBMT_7(t *testing.B)  { log.DebugLog() benchmarkSplitPyramidBMT(10000000, t) }
+func BenchmarkSplitPyramidBMT_8(t *testing.B)  { log.DebugLog() benchmarkSplitPyramidBMT(100000000, t) }
 
-func BenchmarkAppendPyramid_2(t *testing.B)  { benchmarkAppendPyramid(100, 1000, t) }
-func BenchmarkAppendPyramid_2h(t *testing.B) { benchmarkAppendPyramid(500, 1000, t) }
-func BenchmarkAppendPyramid_3(t *testing.B)  { benchmarkAppendPyramid(1000, 1000, t) }
-func BenchmarkAppendPyramid_4(t *testing.B)  { benchmarkAppendPyramid(10000, 1000, t) }
-func BenchmarkAppendPyramid_4h(t *testing.B) { benchmarkAppendPyramid(50000, 1000, t) }
-func BenchmarkAppendPyramid_5(t *testing.B)  { benchmarkAppendPyramid(1000000, 1000, t) }
-func BenchmarkAppendPyramid_6(t *testing.B)  { benchmarkAppendPyramid(1000000, 1000, t) }
-func BenchmarkAppendPyramid_7(t *testing.B)  { benchmarkAppendPyramid(10000000, 1000, t) }
-func BenchmarkAppendPyramid_8(t *testing.B)  { benchmarkAppendPyramid(100000000, 1000, t) }
+func BenchmarkAppendPyramid_2(t *testing.B)  { log.DebugLog() benchmarkAppendPyramid(100, 1000, t) }
+func BenchmarkAppendPyramid_2h(t *testing.B) { log.DebugLog() benchmarkAppendPyramid(500, 1000, t) }
+func BenchmarkAppendPyramid_3(t *testing.B)  { log.DebugLog() benchmarkAppendPyramid(1000, 1000, t) }
+func BenchmarkAppendPyramid_4(t *testing.B)  { log.DebugLog() benchmarkAppendPyramid(10000, 1000, t) }
+func BenchmarkAppendPyramid_4h(t *testing.B) { log.DebugLog() benchmarkAppendPyramid(50000, 1000, t) }
+func BenchmarkAppendPyramid_5(t *testing.B)  { log.DebugLog() benchmarkAppendPyramid(1000000, 1000, t) }
+func BenchmarkAppendPyramid_6(t *testing.B)  { log.DebugLog() benchmarkAppendPyramid(1000000, 1000, t) }
+func BenchmarkAppendPyramid_7(t *testing.B)  { log.DebugLog() benchmarkAppendPyramid(10000000, 1000, t) }
+func BenchmarkAppendPyramid_8(t *testing.B)  { log.DebugLog() benchmarkAppendPyramid(100000000, 1000, t) }
 
 // go test -timeout 20m -cpu 4 -bench=./swarm/storage -run no
 // If you dont add the timeout argument above .. the benchmark will timeout and dump

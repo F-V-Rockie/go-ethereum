@@ -46,7 +46,7 @@ type Subscription interface {
 // NewSubscription runs a producer function as a subscription in a new goroutine. The
 // channel given to the producer is closed when Unsubscribe is called. If fn returns an
 // error, it is sent on the subscription's error channel.
-func NewSubscription(producer func(<-chan struct{}) error) Subscription {
+func NewSubscription(producer func(<-chan struct{}) error) Subscription { log.DebugLog()
 	s := &funcSub{unsub: make(chan struct{}), err: make(chan error, 1)}
 	go func() {
 		defer close(s.err)
@@ -70,7 +70,7 @@ type funcSub struct {
 	unsubscribed bool
 }
 
-func (s *funcSub) Unsubscribe() {
+func (s *funcSub) Unsubscribe() { log.DebugLog()
 	s.mu.Lock()
 	if s.unsubscribed {
 		s.mu.Unlock()
@@ -83,7 +83,7 @@ func (s *funcSub) Unsubscribe() {
 	<-s.err
 }
 
-func (s *funcSub) Err() <-chan error {
+func (s *funcSub) Err() <-chan error { log.DebugLog()
 	return s.err
 }
 
@@ -94,7 +94,7 @@ func (s *funcSub) Err() <-chan error {
 //
 // Resubscribe applies backoff between calls to fn. The time between calls is adapted
 // based on the error rate, but will never exceed backoffMax.
-func Resubscribe(backoffMax time.Duration, fn ResubscribeFunc) Subscription {
+func Resubscribe(backoffMax time.Duration, fn ResubscribeFunc) Subscription { log.DebugLog()
 	s := &resubscribeSub{
 		waitTime:   backoffMax / 10,
 		backoffMax: backoffMax,
@@ -118,18 +118,18 @@ type resubscribeSub struct {
 	waitTime, backoffMax time.Duration
 }
 
-func (s *resubscribeSub) Unsubscribe() {
+func (s *resubscribeSub) Unsubscribe() { log.DebugLog()
 	s.unsubOnce.Do(func() {
 		s.unsub <- struct{}{}
 		<-s.err
 	})
 }
 
-func (s *resubscribeSub) Err() <-chan error {
+func (s *resubscribeSub) Err() <-chan error { log.DebugLog()
 	return s.err
 }
 
-func (s *resubscribeSub) loop() {
+func (s *resubscribeSub) loop() { log.DebugLog()
 	defer close(s.err)
 	var done bool
 	for !done {
@@ -142,7 +142,7 @@ func (s *resubscribeSub) loop() {
 	}
 }
 
-func (s *resubscribeSub) subscribe() Subscription {
+func (s *resubscribeSub) subscribe() Subscription { log.DebugLog()
 	subscribed := make(chan error)
 	var sub Subscription
 retry:
@@ -175,7 +175,7 @@ retry:
 	}
 }
 
-func (s *resubscribeSub) waitForError(sub Subscription) bool {
+func (s *resubscribeSub) waitForError(sub Subscription) bool { log.DebugLog()
 	defer sub.Unsubscribe()
 	select {
 	case err := <-sub.Err():
@@ -185,7 +185,7 @@ func (s *resubscribeSub) waitForError(sub Subscription) bool {
 	}
 }
 
-func (s *resubscribeSub) backoffWait() bool {
+func (s *resubscribeSub) backoffWait() bool { log.DebugLog()
 	if time.Duration(mclock.Now()-s.lastTry) > s.backoffMax {
 		s.waitTime = s.backoffMax / 10
 	} else {
@@ -226,7 +226,7 @@ type scopeSub struct {
 // Track starts tracking a subscription. If the scope is closed, Track returns nil. The
 // returned subscription is a wrapper. Unsubscribing the wrapper removes it from the
 // scope.
-func (sc *SubscriptionScope) Track(s Subscription) Subscription {
+func (sc *SubscriptionScope) Track(s Subscription) Subscription { log.DebugLog()
 	sc.mu.Lock()
 	defer sc.mu.Unlock()
 	if sc.closed {
@@ -242,7 +242,7 @@ func (sc *SubscriptionScope) Track(s Subscription) Subscription {
 
 // Close calls Unsubscribe on all tracked subscriptions and prevents further additions to
 // the tracked set. Calls to Track after Close return nil.
-func (sc *SubscriptionScope) Close() {
+func (sc *SubscriptionScope) Close() { log.DebugLog()
 	sc.mu.Lock()
 	defer sc.mu.Unlock()
 	if sc.closed {
@@ -257,19 +257,19 @@ func (sc *SubscriptionScope) Close() {
 
 // Count returns the number of tracked subscriptions.
 // It is meant to be used for debugging.
-func (sc *SubscriptionScope) Count() int {
+func (sc *SubscriptionScope) Count() int { log.DebugLog()
 	sc.mu.Lock()
 	defer sc.mu.Unlock()
 	return len(sc.subs)
 }
 
-func (s *scopeSub) Unsubscribe() {
+func (s *scopeSub) Unsubscribe() { log.DebugLog()
 	s.s.Unsubscribe()
 	s.sc.mu.Lock()
 	defer s.sc.mu.Unlock()
 	delete(s.sc.subs, s)
 }
 
-func (s *scopeSub) Err() <-chan error {
+func (s *scopeSub) Err() <-chan error { log.DebugLog()
 	return s.s.Err()
 }

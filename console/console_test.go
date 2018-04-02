@@ -44,7 +44,7 @@ type hookedPrompter struct {
 	scheduler chan string
 }
 
-func (p *hookedPrompter) PromptInput(prompt string) (string, error) {
+func (p *hookedPrompter) PromptInput(prompt string) (string, error) { log.DebugLog()
 	// Send the prompt to the tester
 	select {
 	case p.scheduler <- prompt:
@@ -60,16 +60,16 @@ func (p *hookedPrompter) PromptInput(prompt string) (string, error) {
 	}
 }
 
-func (p *hookedPrompter) PromptPassword(prompt string) (string, error) {
+func (p *hookedPrompter) PromptPassword(prompt string) (string, error) { log.DebugLog()
 	return "", errors.New("not implemented")
 }
-func (p *hookedPrompter) PromptConfirm(prompt string) (bool, error) {
+func (p *hookedPrompter) PromptConfirm(prompt string) (bool, error) { log.DebugLog()
 	return false, errors.New("not implemented")
 }
-func (p *hookedPrompter) SetHistory(history []string)              {}
-func (p *hookedPrompter) AppendHistory(command string)             {}
-func (p *hookedPrompter) ClearHistory()                            {}
-func (p *hookedPrompter) SetWordCompleter(completer WordCompleter) {}
+func (p *hookedPrompter) SetHistory(history []string)              { log.DebugLog()}
+func (p *hookedPrompter) AppendHistory(command string)             { log.DebugLog()}
+func (p *hookedPrompter) ClearHistory()                            { log.DebugLog()}
+func (p *hookedPrompter) SetWordCompleter(completer WordCompleter) { log.DebugLog()}
 
 // tester is a console test environment for the console tests to operate on.
 type tester struct {
@@ -83,7 +83,7 @@ type tester struct {
 
 // newTester creates a test environment based on which the console can operate.
 // Please ensure you call Close() on the returned tester to avoid leaks.
-func newTester(t *testing.T, confOverride func(*eth.Config)) *tester {
+func newTester(t *testing.T, confOverride func(*eth.Config)) *tester { log.DebugLog()
 	// Create a temporary storage for the node keys and initialize it
 	workspace, err := ioutil.TempDir("", "console-tester-")
 	if err != nil {
@@ -145,7 +145,7 @@ func newTester(t *testing.T, confOverride func(*eth.Config)) *tester {
 }
 
 // Close cleans up any temporary data folders and held resources.
-func (env *tester) Close(t *testing.T) {
+func (env *tester) Close(t *testing.T) { log.DebugLog()
 	if err := env.console.Stop(false); err != nil {
 		t.Errorf("failed to stop embedded console: %v", err)
 	}
@@ -158,7 +158,7 @@ func (env *tester) Close(t *testing.T) {
 // Tests that the node lists the correct welcome message, notably that it contains
 // the instance name, coinbase account, block number, data directory and supported
 // console modules.
-func TestWelcome(t *testing.T) {
+func TestWelcome(t *testing.T) { log.DebugLog()
 	tester := newTester(t, nil)
 	defer tester.Close(t)
 
@@ -183,7 +183,7 @@ func TestWelcome(t *testing.T) {
 }
 
 // Tests that JavaScript statement evaluation works as intended.
-func TestEvaluate(t *testing.T) {
+func TestEvaluate(t *testing.T) { log.DebugLog()
 	tester := newTester(t, nil)
 	defer tester.Close(t)
 
@@ -194,7 +194,7 @@ func TestEvaluate(t *testing.T) {
 }
 
 // Tests that the console can be used in interactive mode.
-func TestInteractive(t *testing.T) {
+func TestInteractive(t *testing.T) { log.DebugLog()
 	// Create a tester and run an interactive console in the background
 	tester := newTester(t, nil)
 	defer tester.Close(t)
@@ -225,7 +225,7 @@ func TestInteractive(t *testing.T) {
 
 // Tests that preloaded JavaScript files have been executed before user is given
 // input.
-func TestPreload(t *testing.T) {
+func TestPreload(t *testing.T) { log.DebugLog()
 	tester := newTester(t, nil)
 	defer tester.Close(t)
 
@@ -236,7 +236,7 @@ func TestPreload(t *testing.T) {
 }
 
 // Tests that JavaScript scripts can be executes from the configured asset path.
-func TestExecute(t *testing.T) {
+func TestExecute(t *testing.T) { log.DebugLog()
 	tester := newTester(t, nil)
 	defer tester.Close(t)
 
@@ -250,7 +250,7 @@ func TestExecute(t *testing.T) {
 
 // Tests that the JavaScript objects returned by statement executions are properly
 // pretty printed instead of just displaing "[object]".
-func TestPrettyPrint(t *testing.T) {
+func TestPrettyPrint(t *testing.T) { log.DebugLog()
 	tester := newTester(t, nil)
 	defer tester.Close(t)
 
@@ -281,7 +281,7 @@ func TestPrettyPrint(t *testing.T) {
 }
 
 // Tests that the JavaScript exceptions are properly formatted and colored.
-func TestPrettyError(t *testing.T) {
+func TestPrettyError(t *testing.T) { log.DebugLog()
 	tester := newTester(t, nil)
 	defer tester.Close(t)
 	tester.console.Evaluate("throw 'hello'")
@@ -293,7 +293,7 @@ func TestPrettyError(t *testing.T) {
 }
 
 // Tests that tests if the number of indents for JS input is calculated correct.
-func TestIndenting(t *testing.T) {
+func TestIndenting(t *testing.T) { log.DebugLog()
 	testCases := []struct {
 		input               string
 		expectedIndentCount int

@@ -43,7 +43,7 @@ const (
 )
 
 // NewServer will create a new server instance with no registered handlers.
-func NewServer() *Server {
+func NewServer() *Server { log.DebugLog()
 	server := &Server{
 		services: make(serviceRegistry),
 		codecs:   set.New(),
@@ -65,7 +65,7 @@ type RPCService struct {
 }
 
 // Modules returns the list of RPC services with their version number
-func (s *RPCService) Modules() map[string]string {
+func (s *RPCService) Modules() map[string]string { log.DebugLog()
 	modules := make(map[string]string)
 	for name := range s.server.services {
 		modules[name] = "1.0"
@@ -76,7 +76,7 @@ func (s *RPCService) Modules() map[string]string {
 // RegisterName will create a service for the given rcvr type under the given name. When no methods on the given rcvr
 // match the criteria to be either a RPC method or a subscription an error is returned. Otherwise a new service is
 // created and added to the service collection this server instance serves.
-func (s *Server) RegisterName(name string, rcvr interface{}) error {
+func (s *Server) RegisterName(name string, rcvr interface{}) error { log.DebugLog()
 	if s.services == nil {
 		s.services = make(serviceRegistry)
 	}
@@ -125,7 +125,7 @@ func (s *Server) RegisterName(name string, rcvr interface{}) error {
 // If singleShot is true it will process a single request, otherwise it will handle
 // requests until the codec returns an error when reading a request (in most cases
 // an EOF). It executes requests in parallel when singleShot is false.
-func (s *Server) serveRequest(codec ServerCodec, singleShot bool, options CodecOption) error {
+func (s *Server) serveRequest(codec ServerCodec, singleShot bool, options CodecOption) error { log.DebugLog()
 	var pend sync.WaitGroup
 
 	defer func() {
@@ -213,7 +213,7 @@ func (s *Server) serveRequest(codec ServerCodec, singleShot bool, options CodecO
 // ServeCodec reads incoming requests from codec, calls the appropriate callback and writes the
 // response back using the given codec. It will block until the codec is closed or the server is
 // stopped. In either case the codec is closed.
-func (s *Server) ServeCodec(codec ServerCodec, options CodecOption) {
+func (s *Server) ServeCodec(codec ServerCodec, options CodecOption) { log.DebugLog()
 	defer codec.Close()
 	s.serveRequest(codec, false, options)
 }
@@ -221,13 +221,13 @@ func (s *Server) ServeCodec(codec ServerCodec, options CodecOption) {
 // ServeSingleRequest reads and processes a single RPC request from the given codec. It will not
 // close the codec unless a non-recoverable error has occurred. Note, this method will return after
 // a single request has been processed!
-func (s *Server) ServeSingleRequest(codec ServerCodec, options CodecOption) {
+func (s *Server) ServeSingleRequest(codec ServerCodec, options CodecOption) { log.DebugLog()
 	s.serveRequest(codec, true, options)
 }
 
 // Stop will stop reading new requests, wait for stopPendingRequestTimeout to allow pending requests to finish,
 // close all codecs which will cancel pending requests/subscriptions.
-func (s *Server) Stop() {
+func (s *Server) Stop() { log.DebugLog()
 	if atomic.CompareAndSwapInt32(&s.run, 1, 0) {
 		log.Debug("RPC Server shutdown initiatied")
 		s.codecsMu.Lock()
@@ -240,7 +240,7 @@ func (s *Server) Stop() {
 }
 
 // createSubscription will call the subscription callback and returns the subscription id or error.
-func (s *Server) createSubscription(ctx context.Context, c ServerCodec, req *serverRequest) (ID, error) {
+func (s *Server) createSubscription(ctx context.Context, c ServerCodec, req *serverRequest) (ID, error) { log.DebugLog()
 	// subscription have as first argument the context following optional arguments
 	args := []reflect.Value{req.callb.rcvr, reflect.ValueOf(ctx)}
 	args = append(args, req.args...)
@@ -254,7 +254,7 @@ func (s *Server) createSubscription(ctx context.Context, c ServerCodec, req *ser
 }
 
 // handle executes a request and returns the response from the callback.
-func (s *Server) handle(ctx context.Context, codec ServerCodec, req *serverRequest) (interface{}, func()) {
+func (s *Server) handle(ctx context.Context, codec ServerCodec, req *serverRequest) (interface{}, func()) { log.DebugLog()
 	if req.err != nil {
 		return codec.CreateErrorResponse(&req.id, req.err), nil
 	}
@@ -324,7 +324,7 @@ func (s *Server) handle(ctx context.Context, codec ServerCodec, req *serverReque
 }
 
 // exec executes the given request and writes the result back using the codec.
-func (s *Server) exec(ctx context.Context, codec ServerCodec, req *serverRequest) {
+func (s *Server) exec(ctx context.Context, codec ServerCodec, req *serverRequest) { log.DebugLog()
 	var response interface{}
 	var callback func()
 	if req.err != nil {
@@ -346,7 +346,7 @@ func (s *Server) exec(ctx context.Context, codec ServerCodec, req *serverRequest
 
 // execBatch executes the given requests and writes the result back using the codec.
 // It will only write the response back when the last request is processed.
-func (s *Server) execBatch(ctx context.Context, codec ServerCodec, requests []*serverRequest) {
+func (s *Server) execBatch(ctx context.Context, codec ServerCodec, requests []*serverRequest) { log.DebugLog()
 	responses := make([]interface{}, len(requests))
 	var callbacks []func()
 	for i, req := range requests {
@@ -374,7 +374,7 @@ func (s *Server) execBatch(ctx context.Context, codec ServerCodec, requests []*s
 // readRequest requests the next (batch) request from the codec. It will return the collection
 // of requests, an indication if the request was a batch, the invalid request identifier and an
 // error when the request could not be read/parsed.
-func (s *Server) readRequest(codec ServerCodec) ([]*serverRequest, bool, Error) {
+func (s *Server) readRequest(codec ServerCodec) ([]*serverRequest, bool, Error) { log.DebugLog()
 	reqs, batch, err := codec.ReadRequestHeaders()
 	if err != nil {
 		return nil, batch, err

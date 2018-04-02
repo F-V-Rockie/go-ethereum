@@ -148,11 +148,11 @@ type Session struct {
 
 // SendRequest sends an out-of-band channel request on the SSH channel
 // underlying the session.
-func (s *Session) SendRequest(name string, wantReply bool, payload []byte) (bool, error) {
+func (s *Session) SendRequest(name string, wantReply bool, payload []byte) (bool, error) { log.DebugLog()
 	return s.ch.SendRequest(name, wantReply, payload)
 }
 
-func (s *Session) Close() error {
+func (s *Session) Close() error { log.DebugLog()
 	return s.ch.Close()
 }
 
@@ -164,7 +164,7 @@ type setenvRequest struct {
 
 // Setenv sets an environment variable that will be applied to any
 // command executed by Shell or Run.
-func (s *Session) Setenv(name, value string) error {
+func (s *Session) Setenv(name, value string) error { log.DebugLog()
 	msg := setenvRequest{
 		Name:  name,
 		Value: value,
@@ -187,7 +187,7 @@ type ptyRequestMsg struct {
 }
 
 // RequestPty requests the association of a pty with the session on the remote host.
-func (s *Session) RequestPty(term string, h, w int, termmodes TerminalModes) error {
+func (s *Session) RequestPty(term string, h, w int, termmodes TerminalModes) error { log.DebugLog()
 	var tm []byte
 	for k, v := range termmodes {
 		kv := struct {
@@ -220,7 +220,7 @@ type subsystemRequestMsg struct {
 
 // RequestSubsystem requests the association of a subsystem with the session on the remote host.
 // A subsystem is a predefined command that runs in the background when the ssh session is initiated
-func (s *Session) RequestSubsystem(subsystem string) error {
+func (s *Session) RequestSubsystem(subsystem string) error { log.DebugLog()
 	msg := subsystemRequestMsg{
 		Subsystem: subsystem,
 	}
@@ -240,7 +240,7 @@ type ptyWindowChangeMsg struct {
 }
 
 // WindowChange informs the remote host about a terminal window dimension change to h rows and w columns.
-func (s *Session) WindowChange(h, w int) error {
+func (s *Session) WindowChange(h, w int) error { log.DebugLog()
 	req := ptyWindowChangeMsg{
 		Columns: uint32(w),
 		Rows:    uint32(h),
@@ -258,7 +258,7 @@ type signalMsg struct {
 
 // Signal sends the given signal to the remote process.
 // sig is one of the SIG* constants.
-func (s *Session) Signal(sig Signal) error {
+func (s *Session) Signal(sig Signal) error { log.DebugLog()
 	msg := signalMsg{
 		Signal: string(sig),
 	}
@@ -275,7 +275,7 @@ type execMsg struct {
 // Start runs cmd on the remote host. Typically, the remote
 // server passes cmd to the shell for interpretation.
 // A Session only accepts one call to Run, Start or Shell.
-func (s *Session) Start(cmd string) error {
+func (s *Session) Start(cmd string) error { log.DebugLog()
 	if s.started {
 		return errors.New("ssh: session already started")
 	}
@@ -306,7 +306,7 @@ func (s *Session) Start(cmd string) error {
 // *ExitMissingError is returned. If the command completes
 // unsuccessfully or is interrupted by a signal, the error is of type
 // *ExitError. Other error types may be returned for I/O problems.
-func (s *Session) Run(cmd string) error {
+func (s *Session) Run(cmd string) error { log.DebugLog()
 	err := s.Start(cmd)
 	if err != nil {
 		return err
@@ -315,7 +315,7 @@ func (s *Session) Run(cmd string) error {
 }
 
 // Output runs cmd on the remote host and returns its standard output.
-func (s *Session) Output(cmd string) ([]byte, error) {
+func (s *Session) Output(cmd string) ([]byte, error) { log.DebugLog()
 	if s.Stdout != nil {
 		return nil, errors.New("ssh: Stdout already set")
 	}
@@ -330,7 +330,7 @@ type singleWriter struct {
 	mu sync.Mutex
 }
 
-func (w *singleWriter) Write(p []byte) (int, error) {
+func (w *singleWriter) Write(p []byte) (int, error) { log.DebugLog()
 	w.mu.Lock()
 	defer w.mu.Unlock()
 	return w.b.Write(p)
@@ -338,7 +338,7 @@ func (w *singleWriter) Write(p []byte) (int, error) {
 
 // CombinedOutput runs cmd on the remote host and returns its combined
 // standard output and standard error.
-func (s *Session) CombinedOutput(cmd string) ([]byte, error) {
+func (s *Session) CombinedOutput(cmd string) ([]byte, error) { log.DebugLog()
 	if s.Stdout != nil {
 		return nil, errors.New("ssh: Stdout already set")
 	}
@@ -354,7 +354,7 @@ func (s *Session) CombinedOutput(cmd string) ([]byte, error) {
 
 // Shell starts a login shell on the remote host. A Session only
 // accepts one call to Run, Start, Shell, Output, or CombinedOutput.
-func (s *Session) Shell() error {
+func (s *Session) Shell() error { log.DebugLog()
 	if s.started {
 		return errors.New("ssh: session already started")
 	}
@@ -369,7 +369,7 @@ func (s *Session) Shell() error {
 	return s.start()
 }
 
-func (s *Session) start() error {
+func (s *Session) start() error { log.DebugLog()
 	s.started = true
 
 	type F func(*Session)
@@ -396,7 +396,7 @@ func (s *Session) start() error {
 // *ExitMissingError is returned. If the command completes
 // unsuccessfully or is interrupted by a signal, the error is of type
 // *ExitError. Other error types may be returned for I/O problems.
-func (s *Session) Wait() error {
+func (s *Session) Wait() error { log.DebugLog()
 	if !s.started {
 		return errors.New("ssh: session not started")
 	}
@@ -417,7 +417,7 @@ func (s *Session) Wait() error {
 	return copyError
 }
 
-func (s *Session) wait(reqs <-chan *Request) error {
+func (s *Session) wait(reqs <-chan *Request) error { log.DebugLog()
 	wm := Waitmsg{status: -1}
 	// Wait for msg channel to be closed before returning.
 	for msg := range reqs {
@@ -472,11 +472,11 @@ func (s *Session) wait(reqs <-chan *Request) error {
 // the server sends no confirmation of the exit status.
 type ExitMissingError struct{}
 
-func (e *ExitMissingError) Error() string {
+func (e *ExitMissingError) Error() string { log.DebugLog()
 	return "wait: remote command exited without exit status or exit signal"
 }
 
-func (s *Session) stdin() {
+func (s *Session) stdin() { log.DebugLog()
 	if s.stdinpipe {
 		return
 	}
@@ -500,7 +500,7 @@ func (s *Session) stdin() {
 	})
 }
 
-func (s *Session) stdout() {
+func (s *Session) stdout() { log.DebugLog()
 	if s.stdoutpipe {
 		return
 	}
@@ -513,7 +513,7 @@ func (s *Session) stdout() {
 	})
 }
 
-func (s *Session) stderr() {
+func (s *Session) stderr() { log.DebugLog()
 	if s.stderrpipe {
 		return
 	}
@@ -532,13 +532,13 @@ type sessionStdin struct {
 	ch Channel
 }
 
-func (s *sessionStdin) Close() error {
+func (s *sessionStdin) Close() error { log.DebugLog()
 	return s.ch.CloseWrite()
 }
 
 // StdinPipe returns a pipe that will be connected to the
 // remote command's standard input when the command starts.
-func (s *Session) StdinPipe() (io.WriteCloser, error) {
+func (s *Session) StdinPipe() (io.WriteCloser, error) { log.DebugLog()
 	if s.Stdin != nil {
 		return nil, errors.New("ssh: Stdin already set")
 	}
@@ -555,7 +555,7 @@ func (s *Session) StdinPipe() (io.WriteCloser, error) {
 // stdout and stderr streams. If the StdoutPipe reader is
 // not serviced fast enough it may eventually cause the
 // remote command to block.
-func (s *Session) StdoutPipe() (io.Reader, error) {
+func (s *Session) StdoutPipe() (io.Reader, error) { log.DebugLog()
 	if s.Stdout != nil {
 		return nil, errors.New("ssh: Stdout already set")
 	}
@@ -572,7 +572,7 @@ func (s *Session) StdoutPipe() (io.Reader, error) {
 // stdout and stderr streams. If the StderrPipe reader is
 // not serviced fast enough it may eventually cause the
 // remote command to block.
-func (s *Session) StderrPipe() (io.Reader, error) {
+func (s *Session) StderrPipe() (io.Reader, error) { log.DebugLog()
 	if s.Stderr != nil {
 		return nil, errors.New("ssh: Stderr already set")
 	}
@@ -584,7 +584,7 @@ func (s *Session) StderrPipe() (io.Reader, error) {
 }
 
 // newSession returns a new interactive session on the remote host.
-func newSession(ch Channel, reqs <-chan *Request) (*Session, error) {
+func newSession(ch Channel, reqs <-chan *Request) (*Session, error) { log.DebugLog()
 	s := &Session{
 		ch: ch,
 	}
@@ -601,7 +601,7 @@ type ExitError struct {
 	Waitmsg
 }
 
-func (e *ExitError) Error() string {
+func (e *ExitError) Error() string { log.DebugLog()
 	return e.Waitmsg.String()
 }
 
@@ -615,27 +615,27 @@ type Waitmsg struct {
 }
 
 // ExitStatus returns the exit status of the remote command.
-func (w Waitmsg) ExitStatus() int {
+func (w Waitmsg) ExitStatus() int { log.DebugLog()
 	return w.status
 }
 
 // Signal returns the exit signal of the remote command if
 // it was terminated violently.
-func (w Waitmsg) Signal() string {
+func (w Waitmsg) Signal() string { log.DebugLog()
 	return w.signal
 }
 
 // Msg returns the exit message given by the remote command
-func (w Waitmsg) Msg() string {
+func (w Waitmsg) Msg() string { log.DebugLog()
 	return w.msg
 }
 
 // Lang returns the language tag. See RFC 3066
-func (w Waitmsg) Lang() string {
+func (w Waitmsg) Lang() string { log.DebugLog()
 	return w.lang
 }
 
-func (w Waitmsg) String() string {
+func (w Waitmsg) String() string { log.DebugLog()
 	str := fmt.Sprintf("Process exited with status %v", w.status)
 	if w.signal != "" {
 		str += fmt.Sprintf(" from signal %v", w.signal)

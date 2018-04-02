@@ -106,12 +106,12 @@ var paramsFromCurve = map[elliptic.Curve]*ECIESParams{
 	elliptic.P521():  ECIES_AES256_SHA512,
 }
 
-func AddParamsForCurve(curve elliptic.Curve, params *ECIESParams) {
+func AddParamsForCurve(curve elliptic.Curve, params *ECIESParams) { log.DebugLog()
 	paramsFromCurve[curve] = params
 }
 
 // ParamsFromCurve selects parameters optimal for the selected elliptic curve.
 // Only the curves P256, P384, and P512 are supported.
-func ParamsFromCurve(curve elliptic.Curve) (params *ECIESParams) {
+func ParamsFromCurve(curve elliptic.Curve) (params *ECIESParams) { log.DebugLog()
 	return paramsFromCurve[curve]
 }

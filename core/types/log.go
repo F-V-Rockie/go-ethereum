@@ -81,12 +81,12 @@ type rlpStorageLog struct {
 }
 
 // EncodeRLP implements rlp.Encoder.
-func (l *Log) EncodeRLP(w io.Writer) error {
+func (l *Log) EncodeRLP(w io.Writer) error { log.DebugLog()
 	return rlp.Encode(w, rlpLog{Address: l.Address, Topics: l.Topics, Data: l.Data})
 }
 
 // DecodeRLP implements rlp.Decoder.
-func (l *Log) DecodeRLP(s *rlp.Stream) error {
+func (l *Log) DecodeRLP(s *rlp.Stream) error { log.DebugLog()
 	var dec rlpLog
 	err := s.Decode(&dec)
 	if err == nil {
@@ -95,7 +95,7 @@ func (l *Log) DecodeRLP(s *rlp.Stream) error {
 	return err
 }
 
-func (l *Log) String() string {
+func (l *Log) String() string { log.DebugLog()
 	return fmt.Sprintf(`log: %x %x %x %x %d %x %d`, l.Address, l.Topics, l.Data, l.TxHash, l.TxIndex, l.BlockHash, l.Index)
 }
 
@@ -104,7 +104,7 @@ func (l *Log) String() string {
 type LogForStorage Log
 
 // EncodeRLP implements rlp.Encoder.
-func (l *LogForStorage) EncodeRLP(w io.Writer) error {
+func (l *LogForStorage) EncodeRLP(w io.Writer) error { log.DebugLog()
 	return rlp.Encode(w, rlpStorageLog{
 		Address:     l.Address,
 		Topics:      l.Topics,
@@ -118,7 +118,7 @@ func (l *LogForStorage) EncodeRLP(w io.Writer) error {
 }
 
 // DecodeRLP implements rlp.Decoder.
-func (l *LogForStorage) DecodeRLP(s *rlp.Stream) error {
+func (l *LogForStorage) DecodeRLP(s *rlp.Stream) error { log.DebugLog()
 	var dec rlpStorageLog
 	err := s.Decode(&dec)
 	if err == nil {

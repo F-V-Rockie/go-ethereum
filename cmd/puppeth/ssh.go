@@ -46,7 +46,7 @@ type sshClient struct {
 // dial establishes an SSH connection to a remote node using the current user and
 // the user's configured private RSA key. If that fails, password authentication
 // is fallen back to. The caller may override the login user via user@server:port.
-func dial(server string, pubkey []byte) (*sshClient, error) {
+func dial(server string, pubkey []byte) (*sshClient, error) { log.DebugLog()
 	// Figure out a label for the server and a logger
 	label := server
 	if strings.Contains(label, ":") {
@@ -160,7 +160,7 @@ func dial(server string, pubkey []byte) (*sshClient, error) {
 
 // init runs some initialization commands on the remote server to ensure it's
 // capable of acting as puppeth target.
-func (client *sshClient) init() error {
+func (client *sshClient) init() error { log.DebugLog()
 	client.logger.Debug("Verifying if docker is available")
 	if out, err := client.Run("docker version"); err != nil {
 		if len(out) == 0 {
@@ -179,13 +179,13 @@ func (client *sshClient) init() error {
 }
 
 // Close terminates the connection to an SSH server.
-func (client *sshClient) Close() error {
+func (client *sshClient) Close() error { log.DebugLog()
 	return client.client.Close()
 }
 
 // Run executes a command on the remote server and returns the combined output
 // along with any error status.
-func (client *sshClient) Run(cmd string) ([]byte, error) {
+func (client *sshClient) Run(cmd string) ([]byte, error) { log.DebugLog()
 	// Establish a single command session
 	session, err := client.client.NewSession()
 	if err != nil {
@@ -200,7 +200,7 @@ func (client *sshClient) Run(cmd string) ([]byte, error) {
 
 // Stream executes a command on the remote server and streams all outputs into
 // the local stdout and stderr streams.
-func (client *sshClient) Stream(cmd string) error {
+func (client *sshClient) Stream(cmd string) error { log.DebugLog()
 	// Establish a single command session
 	session, err := client.client.NewSession()
 	if err != nil {
@@ -218,7 +218,7 @@ func (client *sshClient) Stream(cmd string) error {
 
 // Upload copies the set of files to a remote server via SCP, creating any non-
 // existing folders in the mean time.
-func (client *sshClient) Upload(files map[string][]byte) ([]byte, error) {
+func (client *sshClient) Upload(files map[string][]byte) ([]byte, error) { log.DebugLog()
 	// Establish a single command session
 	session, err := client.client.NewSession()
 	if err != nil {

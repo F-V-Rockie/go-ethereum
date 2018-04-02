@@ -63,7 +63,7 @@ type Network struct {
 }
 
 // NewNetwork returns a Network which uses the given NodeAdapter and NetworkConfig
-func NewNetwork(nodeAdapter adapters.NodeAdapter, conf *NetworkConfig) *Network {
+func NewNetwork(nodeAdapter adapters.NodeAdapter, conf *NetworkConfig) *Network { log.DebugLog()
 	return &Network{
 		NetworkConfig: *conf,
 		nodeAdapter:   nodeAdapter,
@@ -74,12 +74,12 @@ func NewNetwork(nodeAdapter adapters.NodeAdapter, conf *NetworkConfig) *Network 
 }
 
 // Events returns the output event feed of the Network.
-func (self *Network) Events() *event.Feed {
+func (self *Network) Events() *event.Feed { log.DebugLog()
 	return &self.events
 }
 
 // NewNode adds a new node to the network with a random ID
-func (self *Network) NewNode() (*Node, error) {
+func (self *Network) NewNode() (*Node, error) { log.DebugLog()
 	conf := adapters.RandomNodeConfig()
 	conf.Services = []string{self.DefaultService}
 	return self.NewNodeWithConfig(conf)
@@ -87,7 +87,7 @@ func (self *Network) NewNode() (*Node, error) {
 
 // NewNodeWithConfig adds a new node to the network with the given config,
 // returning an error if a node with the same ID or name already exists
-func (self *Network) NewNodeWithConfig(conf *adapters.NodeConfig) (*Node, error) {
+func (self *Network) NewNodeWithConfig(conf *adapters.NodeConfig) (*Node, error) { log.DebugLog()
 	self.lock.Lock()
 	defer self.lock.Unlock()
 
@@ -143,12 +143,12 @@ func (self *Network) NewNodeWithConfig(conf *adapters.NodeConfig) (*Node, error)
 }
 
 // Config returns the network configuration
-func (self *Network) Config() *NetworkConfig {
+func (self *Network) Config() *NetworkConfig { log.DebugLog()
 	return &self.NetworkConfig
 }
 
 // StartAll starts all nodes in the network
-func (self *Network) StartAll() error {
+func (self *Network) StartAll() error { log.DebugLog()
 	for _, node := range self.Nodes {
 		if node.Up {
 			continue
@@ -161,7 +161,7 @@ func (self *Network) StartAll() error {
 }
 
 // StopAll stops all nodes in the network
-func (self *Network) StopAll() error {
+func (self *Network) StopAll() error { log.DebugLog()
 	for _, node := range self.Nodes {
 		if !node.Up {
 			continue
@@ -174,13 +174,13 @@ func (self *Network) StopAll() error {
 }
 
 // Start starts the node with the given ID
-func (self *Network) Start(id discover.NodeID) error {
+func (self *Network) Start(id discover.NodeID) error { log.DebugLog()
 	return self.startWithSnapshots(id, nil)
 }
 
 // startWithSnapshots starts the node with the given ID using the give
 // snapshots
-func (self *Network) startWithSnapshots(id discover.NodeID, snapshots map[string][]byte) error {
+func (self *Network) startWithSnapshots(id discover.NodeID, snapshots map[string][]byte) error { log.DebugLog()
 	node := self.GetNode(id)
 	if node == nil {
 		return fmt.Errorf("node %v does not exist", id)
@@ -214,7 +214,7 @@ func (self *Network) startWithSnapshots(id discover.NodeID, snapshots map[string
 
 // watchPeerEvents reads peer events from the given channel and emits
 // corresponding network events
-func (self *Network) watchPeerEvents(id discover.NodeID, events chan *p2p.PeerEvent, sub event.Subscription) {
+func (self *Network) watchPeerEvents(id discover.NodeID, events chan *p2p.PeerEvent, sub event.Subscription) { log.DebugLog()
 	defer func() {
 		sub.Unsubscribe()
 
@@ -258,7 +258,7 @@ func (self *Network) watchPeerEvents(id discover.NodeID, events chan *p2p.PeerEv
 }
 
 // Stop stops the node with the given ID
-func (self *Network) Stop(id discover.NodeID) error {
+func (self *Network) Stop(id discover.NodeID) error { log.DebugLog()
 	node := self.GetNode(id)
 	if node == nil {
 		return fmt.Errorf("node %v does not exist", id)
@@ -278,7 +278,7 @@ func (self *Network) Stop(id discover.NodeID) error {
 
 // Connect connects two nodes together by calling the "admin_addPeer" RPC
 // method on the "one" node so that it connects to the "other" node
-func (self *Network) Connect(oneID, otherID discover.NodeID) error {
+func (self *Network) Connect(oneID, otherID discover.NodeID) error { log.DebugLog()
 	log.Debug(fmt.Sprintf("connecting %s to %s", oneID, otherID))
 	conn, err := self.InitConn(oneID, otherID)
 	if err != nil {
@@ -294,7 +294,7 @@ func (self *Network) Connect(oneID, otherID discover.NodeID) error {
 
 // Disconnect disconnects two nodes by calling the "admin_removePeer" RPC
 // method on the "one" node so that it disconnects from the "other" node
-func (self *Network) Disconnect(oneID, otherID discover.NodeID) error {
+func (self *Network) Disconnect(oneID, otherID discover.NodeID) error { log.DebugLog()
 	conn := self.GetConn(oneID, otherID)
 	if conn == nil {
 		return fmt.Errorf("connection between %v and %v does not exist", oneID, otherID)
@@ -311,7 +311,7 @@ func (self *Network) Disconnect(oneID, otherID discover.NodeID) error {
 }
 
 // DidConnect tracks the fact that the "one" node connected to the "other" node
-func (self *Network) DidConnect(one, other discover.NodeID) error {
+func (self *Network) DidConnect(one, other discover.NodeID) error { log.DebugLog()
 	conn, err := self.GetOrCreateConn(one, other)
 	if err != nil {
 		return fmt.Errorf("connection between %v and %v does not exist", one, other)
@@ -326,7 +326,7 @@ func (self *Network) DidConnect(one, other discover.NodeID) error {
 
 // DidDisconnect tracks the fact that the "one" node disconnected from the
 // "other" node
-func (self *Network) DidDisconnect(one, other discover.NodeID) error {
+func (self *Network) DidDisconnect(one, other discover.NodeID) error { log.DebugLog()
 	conn := self.GetConn(one, other)
 	if conn == nil {
 		return fmt.Errorf("connection between %v and %v does not exist", one, other)
@@ -341,7 +341,7 @@ func (self *Network) DidDisconnect(one, other discover.NodeID) error {
 }
 
 // DidSend tracks the fact that "sender" sent a message to "receiver"
-func (self *Network) DidSend(sender, receiver discover.NodeID, proto string, code uint64) error {
+func (self *Network) DidSend(sender, receiver discover.NodeID, proto string, code uint64) error { log.DebugLog()
 	msg := &Msg{
 		One:      sender,
 		Other:    receiver,
@@ -354,7 +354,7 @@ func (self *Network) DidSend(sender, receiver discover.NodeID, proto string, cod
 }
 
 // DidReceive tracks the fact that "receiver" received a message from "sender"
-func (self *Network) DidReceive(sender, receiver discover.NodeID, proto string, code uint64) error {
+func (self *Network) DidReceive(sender, receiver discover.NodeID, proto string, code uint64) error { log.DebugLog()
 	msg := &Msg{
 		One:      sender,
 		Other:    receiver,
@@ -368,7 +368,7 @@ func (self *Network) DidReceive(sender, receiver discover.NodeID, proto string, 
 
 // GetNode gets the node with the given ID, returning nil if the node does not
 // exist
-func (self *Network) GetNode(id discover.NodeID) *Node {
+func (self *Network) GetNode(id discover.NodeID) *Node { log.DebugLog()
 	self.lock.Lock()
 	defer self.lock.Unlock()
 	return self.getNode(id)
@@ -376,13 +376,13 @@ func (self *Network) GetNode(id discover.NodeID) *Node {
 
 // GetNode gets the node with the given name, returning nil if the node does
 // not exist
-func (self *Network) GetNodeByName(name string) *Node {
+func (self *Network) GetNodeByName(name string) *Node { log.DebugLog()
 	self.lock.Lock()
 	defer self.lock.Unlock()
 	return self.getNodeByName(name)
 }
 
-func (self *Network) getNode(id discover.NodeID) *Node {
+func (self *Network) getNode(id discover.NodeID) *Node { log.DebugLog()
 	i, found := self.nodeMap[id]
 	if !found {
 		return nil
@@ -390,7 +390,7 @@ func (self *Network) getNode(id discover.NodeID) *Node {
 	return self.Nodes[i]
 }
 
-func (self *Network) getNodeByName(name string) *Node {
+func (self *Network) getNodeByName(name string) *Node { log.DebugLog()
 	for _, node := range self.Nodes {
 		if node.Config.Name == name {
 			return node
@@ -400,7 +400,7 @@ func (self *Network) getNodeByName(name string) *Node {
 }
 
 // GetNodes returns the existing nodes
-func (self *Network) GetNodes() (nodes []*Node) {
+func (self *Network) GetNodes() (nodes []*Node) { log.DebugLog()
 	self.lock.Lock()
 	defer self.lock.Unlock()
 
@@ -410,7 +410,7 @@ func (self *Network) GetNodes() (nodes []*Node) {
 
 // GetConn returns the connection which exists between "one" and "other"
 // regardless of which node initiated the connection
-func (self *Network) GetConn(oneID, otherID discover.NodeID) *Conn {
+func (self *Network) GetConn(oneID, otherID discover.NodeID) *Conn { log.DebugLog()
 	self.lock.Lock()
 	defer self.lock.Unlock()
 	return self.getConn(oneID, otherID)
@@ -418,13 +418,13 @@ func (self *Network) GetConn(oneID, otherID discover.NodeID) *Conn {
 
 // GetOrCreateConn is like GetConn but creates the connection if it doesn't
 // already exist
-func (self *Network) GetOrCreateConn(oneID, otherID discover.NodeID) (*Conn, error) {
+func (self *Network) GetOrCreateConn(oneID, otherID discover.NodeID) (*Conn, error) { log.DebugLog()
 	self.lock.Lock()
 	defer self.lock.Unlock()
 	return self.getOrCreateConn(oneID, otherID)
 }
 
-func (self *Network) getOrCreateConn(oneID, otherID discover.NodeID) (*Conn, error) {
+func (self *Network) getOrCreateConn(oneID, otherID discover.NodeID) (*Conn, error) { log.DebugLog()
 	if conn := self.getConn(oneID, otherID); conn != nil {
 		return conn, nil
 	}
@@ -449,7 +449,7 @@ func (self *Network) getOrCreateConn(oneID, otherID discover.NodeID) (*Conn, err
 	return conn, nil
 }
 
-func (self *Network) getConn(oneID, otherID discover.NodeID) *Conn {
+func (self *Network) getConn(oneID, otherID discover.NodeID) *Conn { log.DebugLog()
 	label := ConnLabel(oneID, otherID)
 	i, found := self.connMap[label]
 	if !found {
@@ -466,7 +466,7 @@ func (self *Network) getConn(oneID, otherID discover.NodeID) *Conn {
 // it also checks whether there has been recent attempt to connect the peers
 // this is cheating as the simulation is used as an oracle and know about
 // remote peers attempt to connect to a node which will then not initiate the connection
-func (self *Network) InitConn(oneID, otherID discover.NodeID) (*Conn, error) {
+func (self *Network) InitConn(oneID, otherID discover.NodeID) (*Conn, error) { log.DebugLog()
 	self.lock.Lock()
 	defer self.lock.Unlock()
 	if oneID == otherID {
@@ -491,7 +491,7 @@ func (self *Network) InitConn(oneID, otherID discover.NodeID) (*Conn, error) {
 }
 
 // Shutdown stops all nodes in the network and closes the quit channel
-func (self *Network) Shutdown() {
+func (self *Network) Shutdown() { log.DebugLog()
 	for _, node := range self.Nodes {
 		log.Debug(fmt.Sprintf("stopping node %s", node.ID().TerminalString()))
 		if err := node.Stop(); err != nil {
@@ -503,7 +503,7 @@ func (self *Network) Shutdown() {
 
 //Reset resets all network properties:
 //emtpies the nodes and the connection list
-func (self *Network) Reset() {
+func (self *Network) Reset() { log.DebugLog()
 	self.lock.Lock()
 	defer self.lock.Unlock()
 
@@ -528,17 +528,17 @@ type Node struct {
 }
 
 // ID returns the ID of the node
-func (self *Node) ID() discover.NodeID {
+func (self *Node) ID() discover.NodeID { log.DebugLog()
 	return self.Config.ID
 }
 
 // String returns a log-friendly string
-func (self *Node) String() string {
+func (self *Node) String() string { log.DebugLog()
 	return fmt.Sprintf("Node %v", self.ID().TerminalString())
 }
 
 // NodeInfo returns information about the node
-func (self *Node) NodeInfo() *p2p.NodeInfo {
+func (self *Node) NodeInfo() *p2p.NodeInfo { log.DebugLog()
 	// avoid a panic if the node is not started yet
 	if self.Node == nil {
 		return nil
@@ -550,7 +550,7 @@ func (self *Node) NodeInfo() *p2p.NodeInfo {
 
 // MarshalJSON implements the json.Marshaler interface so that the encoded
 // JSON includes the NodeInfo
-func (self *Node) MarshalJSON() ([]byte, error) {
+func (self *Node) MarshalJSON() ([]byte, error) { log.DebugLog()
 	return json.Marshal(struct {
 		Info   *p2p.NodeInfo        `json:"info,omitempty"`
 		Config *adapters.NodeConfig `json:"config,omitempty"`
@@ -580,7 +580,7 @@ type Conn struct {
 }
 
 // nodesUp returns whether both nodes are currently up
-func (self *Conn) nodesUp() error {
+func (self *Conn) nodesUp() error { log.DebugLog()
 	if !self.one.Up {
 		return fmt.Errorf("one %v is not up", self.One)
 	}
@@ -591,7 +591,7 @@ func (self *Conn) nodesUp() error {
 }
 
 // String returns a log-friendly string
-func (self *Conn) String() string {
+func (self *Conn) String() string { log.DebugLog()
 	return fmt.Sprintf("Conn %v->%v", self.One.TerminalString(), self.Other.TerminalString())
 }
 
@@ -605,14 +605,14 @@ type Msg struct {
 }
 
 // String returns a log-friendly string
-func (self *Msg) String() string {
+func (self *Msg) String() string { log.DebugLog()
 	return fmt.Sprintf("Msg(%d) %v->%v", self.Code, self.One.TerminalString(), self.Other.TerminalString())
 }
 
 // ConnLabel generates a deterministic string which represents a connection
 // between two nodes, used to compare if two connections are between the same
 // nodes
-func ConnLabel(source, target discover.NodeID) string {
+func ConnLabel(source, target discover.NodeID) string { log.DebugLog()
 	var first, second discover.NodeID
 	if bytes.Compare(source.Bytes(), target.Bytes()) > 0 {
 		first = target
@@ -640,7 +640,7 @@ type NodeSnapshot struct {
 }
 
 // Snapshot creates a network snapshot
-func (self *Network) Snapshot() (*Snapshot, error) {
+func (self *Network) Snapshot() (*Snapshot, error) { log.DebugLog()
 	self.lock.Lock()
 	defer self.lock.Unlock()
 	snap := &Snapshot{
@@ -665,7 +665,7 @@ func (self *Network) Snapshot() (*Snapshot, error) {
 }
 
 // Load loads a network snapshot
-func (self *Network) Load(snap *Snapshot) error {
+func (self *Network) Load(snap *Snapshot) error { log.DebugLog()
 	for _, n := range snap.Nodes {
 		if _, err := self.NewNodeWithConfig(n.Node.Config); err != nil {
 			return err
@@ -692,7 +692,7 @@ func (self *Network) Load(snap *Snapshot) error {
 }
 
 // Subscribe reads control events from a channel and executes them
-func (self *Network) Subscribe(events chan *Event) {
+func (self *Network) Subscribe(events chan *Event) { log.DebugLog()
 	for {
 		select {
 		case event, ok := <-events:
@@ -708,7 +708,7 @@ func (self *Network) Subscribe(events chan *Event) {
 	}
 }
 
-func (self *Network) executeControlEvent(event *Event) {
+func (self *Network) executeControlEvent(event *Event) { log.DebugLog()
 	log.Trace("execute control event", "type", event.Type, "event", event)
 	switch event.Type {
 	case EventTypeNode:
@@ -724,7 +724,7 @@ func (self *Network) executeControlEvent(event *Event) {
 	}
 }
 
-func (self *Network) executeNodeEvent(e *Event) error {
+func (self *Network) executeNodeEvent(e *Event) error { log.DebugLog()
 	if !e.Node.Up {
 		return self.Stop(e.Node.ID())
 	}
@@ -735,7 +735,7 @@ func (self *Network) executeNodeEvent(e *Event) error {
 	return self.Start(e.Node.ID())
 }
 
-func (self *Network) executeConnEvent(e *Event) error {
+func (self *Network) executeConnEvent(e *Event) error { log.DebugLog()
 	if e.Conn.Up {
 		return self.Connect(e.Conn.One, e.Conn.Other)
 	} else {

@@ -47,7 +47,7 @@ type Peer struct {
 }
 
 // newPeer creates a new whisper peer object, but does not run the handshake itself.
-func newPeer(host *Whisper, remote *p2p.Peer, rw p2p.MsgReadWriter) *Peer {
+func newPeer(host *Whisper, remote *p2p.Peer, rw p2p.MsgReadWriter) *Peer { log.DebugLog()
 	return &Peer{
 		host:           host,
 		peer:           remote,
@@ -63,20 +63,20 @@ func newPeer(host *Whisper, remote *p2p.Peer, rw p2p.MsgReadWriter) *Peer {
 
 // start initiates the peer updater, periodically broadcasting the whisper packets
 // into the network.
-func (peer *Peer) start() {
+func (peer *Peer) start() { log.DebugLog()
 	go peer.update()
 	log.Trace("start", "peer", peer.ID())
 }
 
 // stop terminates the peer updater, stopping message forwarding to it.
-func (peer *Peer) stop() {
+func (peer *Peer) stop() { log.DebugLog()
 	close(peer.quit)
 	log.Trace("stop", "peer", peer.ID())
 }
 
 // handshake sends the protocol initiation status message to the remote peer and
 // verifies the remote status too.
-func (peer *Peer) handshake() error {
+func (peer *Peer) handshake() error { log.DebugLog()
 	// Send the handshake status message asynchronously
 	errc := make(chan error, 1)
 	go func() {
@@ -135,7 +135,7 @@ func (peer *Peer) handshake() error {
 
 // update executes periodic operations on the peer, including message transmission
 // and expiration.
-func (peer *Peer) update() {
+func (peer *Peer) update() { log.DebugLog()
 	// Start the tickers for the updates
 	expire := time.NewTicker(expirationCycle)
 	transmit := time.NewTicker(transmissionCycle)
@@ -159,18 +159,18 @@ func (peer *Peer) update() {
 }
 
 // mark marks an envelope known to the peer so that it won't be sent back.
-func (peer *Peer) mark(envelope *Envelope) {
+func (peer *Peer) mark(envelope *Envelope) { log.DebugLog()
 	peer.known.Add(envelope.Hash())
 }
 
 // marked checks if an envelope is already known to the remote peer.
-func (peer *Peer) marked(envelope *Envelope) bool {
+func (peer *Peer) marked(envelope *Envelope) bool { log.DebugLog()
 	return peer.known.Has(envelope.Hash())
 }
 
 // expire iterates over all the known envelopes in the host and removes all
 // expired (unknown) ones from the known list.
-func (peer *Peer) expire() {
+func (peer *Peer) expire() { log.DebugLog()
 	unmark := make(map[common.Hash]struct{})
 	peer.known.Each(func(v interface{}) bool {
 		if !peer.host.isEnvelopeCached(v.(common.Hash)) {
@@ -186,7 +186,7 @@ func (peer *Peer) expire() {
 
 // broadcast iterates over the collection of envelopes and transmits yet unknown
 // ones over the network.
-func (peer *Peer) broadcast() error {
+func (peer *Peer) broadcast() error { log.DebugLog()
 	envelopes := peer.host.Envelopes()
 	bundle := make([]*Envelope, 0, len(envelopes))
 	for _, envelope := range envelopes {
@@ -212,27 +212,27 @@ func (peer *Peer) broadcast() error {
 }
 
 // ID returns a peer's id
-func (peer *Peer) ID() []byte {
+func (peer *Peer) ID() []byte { log.DebugLog()
 	id := peer.peer.ID()
 	return id[:]
 }
 
-func (peer *Peer) notifyAboutPowRequirementChange(pow float64) error {
+func (peer *Peer) notifyAboutPowRequirementChange(pow float64) error { log.DebugLog()
 	i := math.Float64bits(pow)
 	return p2p.Send(peer.ws, powRequirementCode, i)
 }
 
-func (peer *Peer) notifyAboutBloomFilterChange(bloom []byte) error {
+func (peer *Peer) notifyAboutBloomFilterChange(bloom []byte) error { log.DebugLog()
 	return p2p.Send(peer.ws, bloomFilterExCode, bloom)
 }
 
-func (peer *Peer) bloomMatch(env *Envelope) bool {
+func (peer *Peer) bloomMatch(env *Envelope) bool { log.DebugLog()
 	peer.bloomMu.Lock()
 	defer peer.bloomMu.Unlock()
 	return peer.fullNode || BloomFilterMatch(peer.bloomFilter, env.Bloom())
 }
 
-func (peer *Peer) setBloomFilter(bloom []byte) {
+func (peer *Peer) setBloomFilter(bloom []byte) { log.DebugLog()
 	peer.bloomMu.Lock()
 	defer peer.bloomMu.Unlock()
 	peer.bloomFilter = bloom
@@ -242,7 +242,7 @@ func (peer *Peer) setBloomFilter(bloom []byte) {
 	}
 }
 
-func MakeFullNodeBloom() []byte {
+func MakeFullNodeBloom() []byte { log.DebugLog()
 	bloom := make([]byte, BloomFilterSize)
 	for i := 0; i < BloomFilterSize; i++ {
 		bloom[i] = 0xFF

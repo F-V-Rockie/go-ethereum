@@ -45,7 +45,7 @@ const (
 // to be used as is in client code, but rather as an intermediate struct which
 // enforces compile time type safety and naming convention opposed to having to
 // manually maintain hard coded strings that break on runtime.
-func Bind(types []string, abis []string, bytecodes []string, pkg string, lang Lang) (string, error) {
+func Bind(types []string, abis []string, bytecodes []string, pkg string, lang Lang) (string, error) { log.DebugLog()
 	// Process each individual contract requested binding
 	contracts := make(map[string]*tmplContract)
 
@@ -172,7 +172,7 @@ var bindType = map[Lang]func(kind abi.Type) string{
 //
 // Returned array sizes are in the same order as solidity signatures; inner array size first.
 // Array sizes may also be "", indicating a dynamic array.
-func wrapArray(stringKind string, innerLen int, innerMapping string) (string, []string) {
+func wrapArray(stringKind string, innerLen int, innerMapping string) (string, []string) { log.DebugLog()
 	remainder := stringKind[innerLen:]
 	//find all the sizes
 	matches := regexp.MustCompile(`\[(\d*)\]`).FindAllStringSubmatch(remainder, -1)
@@ -186,7 +186,7 @@ func wrapArray(stringKind string, innerLen int, innerMapping string) (string, []
 
 // Translates the array sizes to a Go-lang declaration of a (nested) array of the inner type.
 // Simply returns the inner type if arraySizes is empty.
-func arrayBindingGo(inner string, arraySizes []string) string {
+func arrayBindingGo(inner string, arraySizes []string) string { log.DebugLog()
 	out := ""
 	//prepend all array sizes, from outer (end arraySizes) to inner (start arraySizes)
 	for i := len(arraySizes) - 1; i >= 0; i-- {
@@ -199,7 +199,7 @@ func arrayBindingGo(inner string, arraySizes []string) string {
 // bindTypeGo converts a Solidity type to a Go one. Since there is no clear mapping
 // from all Solidity types to Go ones (e.g. uint17), those that cannot be exactly
 // mapped will use an upscaled type (e.g. *big.Int).
-func bindTypeGo(kind abi.Type) string {
+func bindTypeGo(kind abi.Type) string { log.DebugLog()
 	stringKind := kind.String()
 	innerLen, innerMapping := bindUnnestedTypeGo(stringKind)
 	return arrayBindingGo(wrapArray(stringKind, innerLen, innerMapping))
@@ -208,7 +208,7 @@ func bindTypeGo(kind abi.Type) string {
 // The inner function of bindTypeGo, this finds the inner type of stringKind.
 // (Or just the type itself if it is not an array or slice)
 // The length of the matched part is returned, with the the translated type.
-func bindUnnestedTypeGo(stringKind string) (int, string) {
+func bindUnnestedTypeGo(stringKind string) (int, string) { log.DebugLog()
 
 	switch {
 	case strings.HasPrefix(stringKind, "address"):
@@ -239,7 +239,7 @@ func bindUnnestedTypeGo(stringKind string) (int, string) {
 
 // Translates the array sizes to a Java declaration of a (nested) array of the inner type.
 // Simply returns the inner type if arraySizes is empty.
-func arrayBindingJava(inner string, arraySizes []string) string {
+func arrayBindingJava(inner string, arraySizes []string) string { log.DebugLog()
 	// Java array type declarations do not include the length.
 	return inner + strings.Repeat("[]", len(arraySizes))
 }
@@ -247,7 +247,7 @@ func arrayBindingJava(inner string, arraySizes []string) string {
 // bindTypeJava converts a Solidity type to a Java one. Since there is no clear mapping
 // from all Solidity types to Java ones (e.g. uint17), those that cannot be exactly
 // mapped will use an upscaled type (e.g. BigDecimal).
-func bindTypeJava(kind abi.Type) string {
+func bindTypeJava(kind abi.Type) string { log.DebugLog()
 	stringKind := kind.String()
 	innerLen, innerMapping := bindUnnestedTypeJava(stringKind)
 	return arrayBindingJava(wrapArray(stringKind, innerLen, innerMapping))
@@ -256,7 +256,7 @@ func bindTypeJava(kind abi.Type) string {
 // The inner function of bindTypeJava, this finds the inner type of stringKind.
 // (Or just the type itself if it is not an array or slice)
 // The length of the matched part is returned, with the the translated type.
-func bindUnnestedTypeJava(stringKind string) (int, string) {
+func bindUnnestedTypeJava(stringKind string) (int, string) { log.DebugLog()
 
 	switch {
 	case strings.HasPrefix(stringKind, "address"):
@@ -317,7 +317,7 @@ var bindTopicType = map[Lang]func(kind abi.Type) string{
 
 // bindTypeGo converts a Solidity topic type to a Go one. It is almost the same
 // funcionality as for simple types, but dynamic types get converted to hashes.
-func bindTopicTypeGo(kind abi.Type) string {
+func bindTopicTypeGo(kind abi.Type) string { log.DebugLog()
 	bound := bindTypeGo(kind)
 	if bound == "string" || bound == "[]byte" {
 		bound = "common.Hash"
@@ -327,7 +327,7 @@ func bindTopicTypeGo(kind abi.Type) string {
 
 // bindTypeGo converts a Solidity topic type to a Java one. It is almost the same
 // funcionality as for simple types, but dynamic types get converted to hashes.
-func bindTopicTypeJava(kind abi.Type) string {
+func bindTopicTypeJava(kind abi.Type) string { log.DebugLog()
 	bound := bindTypeJava(kind)
 	if bound == "String" || bound == "Bytes" {
 		bound = "Hash"
@@ -344,7 +344,7 @@ var namedType = map[Lang]func(string, abi.Type) string{
 
 // namedTypeJava converts some primitive data types to named variants that can
 // be used as parts of method names.
-func namedTypeJava(javaKind string, solKind abi.Type) string {
+func namedTypeJava(javaKind string, solKind abi.Type) string { log.DebugLog()
 	switch javaKind {
 	case "byte[]":
 		return "Binary"
@@ -386,7 +386,7 @@ var methodNormalizer = map[Lang]func(string) string{
 }
 
 // capitalise makes a camel-case string which starts with an upper case character.
-func capitalise(input string) string {
+func capitalise(input string) string { log.DebugLog()
 	for len(input) > 0 && input[0] == '_' {
 		input = input[1:]
 	}
@@ -397,7 +397,7 @@ func capitalise(input string) string {
 }
 
 // decapitalise makes a camel-case string which starts with a lower case character.
-func decapitalise(input string) string {
+func decapitalise(input string) string { log.DebugLog()
 	for len(input) > 0 && input[0] == '_' {
 		input = input[1:]
 	}
@@ -408,7 +408,7 @@ func decapitalise(input string) string {
 }
 
 // toCamelCase converts an under-score string to a camel-case string
-func toCamelCase(input string) string {
+func toCamelCase(input string) string { log.DebugLog()
 	toupper := false
 
 	result := ""
@@ -433,7 +433,7 @@ func toCamelCase(input string) string {
 
 // structured checks whether a list of ABI data types has enough information to
 // operate through a proper Go struct or if flat returns are needed.
-func structured(args abi.Arguments) bool {
+func structured(args abi.Arguments) bool { log.DebugLog()
 	if len(args) < 2 {
 		return false
 	}

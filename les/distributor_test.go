@@ -30,16 +30,16 @@ type testDistReq struct {
 	canSendTo             map[*testDistPeer]struct{}
 }
 
-func (r *testDistReq) getCost(dp distPeer) uint64 {
+func (r *testDistReq) getCost(dp distPeer) uint64 { log.DebugLog()
 	return r.cost
 }
 
-func (r *testDistReq) canSend(dp distPeer) bool {
+func (r *testDistReq) canSend(dp distPeer) bool { log.DebugLog()
 	_, ok := r.canSendTo[dp.(*testDistPeer)]
 	return ok
 }
 
-func (r *testDistReq) request(dp distPeer) func() {
+func (r *testDistReq) request(dp distPeer) func() { log.DebugLog()
 	return func() { dp.(*testDistPeer).send(r) }
 }
 
@@ -49,7 +49,7 @@ type testDistPeer struct {
 	lock    sync.RWMutex
 }
 
-func (p *testDistPeer) send(r *testDistReq) {
+func (p *testDistPeer) send(r *testDistReq) { log.DebugLog()
 	p.lock.Lock()
 	defer p.lock.Unlock()
 
@@ -57,7 +57,7 @@ func (p *testDistPeer) send(r *testDistReq) {
 	p.sumCost += r.cost
 }
 
-func (p *testDistPeer) worker(t *testing.T, checkOrder bool, stop chan struct{}) {
+func (p *testDistPeer) worker(t *testing.T, checkOrder bool, stop chan struct{}) { log.DebugLog()
 	var last uint64
 	for {
 		wait := time.Millisecond
@@ -91,7 +91,7 @@ const (
 	testDistMaxResendCount = 3
 )
 
-func (p *testDistPeer) waitBefore(cost uint64) (time.Duration, float64) {
+func (p *testDistPeer) waitBefore(cost uint64) (time.Duration, float64) { log.DebugLog()
 	p.lock.RLock()
 	sumCost := p.sumCost + cost
 	p.lock.RUnlock()
@@ -102,23 +102,23 @@ func (p *testDistPeer) waitBefore(cost uint64) (time.Duration, float64) {
 	}
 }
 
-func (p *testDistPeer) canQueue() bool {
+func (p *testDistPeer) canQueue() bool { log.DebugLog()
 	return true
 }
 
-func (p *testDistPeer) queueSend(f func()) {
+func (p *testDistPeer) queueSend(f func()) { log.DebugLog()
 	f()
 }
 
-func TestRequestDistributor(t *testing.T) {
+func TestRequestDistributor(t *testing.T) { log.DebugLog()
 	testRequestDistributor(t, false)
 }
 
-func TestRequestDistributorResend(t *testing.T) {
+func TestRequestDistributorResend(t *testing.T) { log.DebugLog()
 	testRequestDistributor(t, true)
 }
 
-func testRequestDistributor(t *testing.T, resend bool) {
+func testRequestDistributor(t *testing.T, resend bool) { log.DebugLog()
 	stop := make(chan struct{})
 	defer close(stop)
 

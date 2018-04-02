@@ -28,7 +28,7 @@ import (
 )
 
 // makeTopics converts a filter query argument list into a filter topic set.
-func makeTopics(query ...[]interface{}) ([][]common.Hash, error) {
+func makeTopics(query ...[]interface{}) ([][]common.Hash, error) { log.DebugLog()
 	topics := make([][]common.Hash, len(query))
 	for i, filter := range query {
 		for _, rule := range filter {
@@ -107,7 +107,7 @@ var (
 //
 // Note, dynamic types cannot be reconstructed since they get mapped to Keccak256
 // hashes as the topic value!
-func parseTopics(out interface{}, fields abi.Arguments, topics []common.Hash) error {
+func parseTopics(out interface{}, fields abi.Arguments, topics []common.Hash) error { log.DebugLog()
 	// Sanity check that the fields and topics match up
 	if len(fields) != len(topics) {
 		return errors.New("topic/field count mismatch")

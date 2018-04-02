@@ -42,12 +42,12 @@ type BasicReleaser struct {
 }
 
 // Released returns whether Release method already called.
-func (r *BasicReleaser) Released() bool {
+func (r *BasicReleaser) Released() bool { log.DebugLog()
 	return r.released
 }
 
 // Release implements Releaser.Release.
-func (r *BasicReleaser) Release() {
+func (r *BasicReleaser) Release() { log.DebugLog()
 	if !r.released {
 		if r.releaser != nil {
 			r.releaser.Release()
@@ -58,7 +58,7 @@ func (r *BasicReleaser) Release() {
 }
 
 // SetReleaser implements ReleaseSetter.SetReleaser.
-func (r *BasicReleaser) SetReleaser(releaser Releaser) {
+func (r *BasicReleaser) SetReleaser(releaser Releaser) { log.DebugLog()
 	if r.released {
 		panic(ErrReleased)
 	}
@@ -70,4 +70,4 @@ func (r *BasicReleaser) SetReleaser(releaser Releaser) {
 
 type NoopReleaser struct{}
 
-func (NoopReleaser) Release() {}
+func (NoopReleaser) Release() { log.DebugLog()}

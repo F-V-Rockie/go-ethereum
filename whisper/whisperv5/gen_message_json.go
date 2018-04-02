@@ -10,7 +10,7 @@ import (
 
 var _ = (*messageOverride)(nil)
 
-func (m Message) MarshalJSON() ([]byte, error) {
+func (m Message) MarshalJSON() ([]byte, error) { log.DebugLog()
 	type Message struct {
 		Sig       hexutil.Bytes `json:"sig,omitempty"`
 		TTL       uint32        `json:"ttl"`
@@ -35,7 +35,7 @@ func (m Message) MarshalJSON() ([]byte, error) {
 	return json.Marshal(&enc)
 }
 
-func (m *Message) UnmarshalJSON(input []byte) error {
+func (m *Message) UnmarshalJSON(input []byte) error { log.DebugLog()
 	type Message struct {
 		Sig       *hexutil.Bytes `json:"sig,omitempty"`
 		TTL       *uint32        `json:"ttl"`

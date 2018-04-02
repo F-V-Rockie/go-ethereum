@@ -77,16 +77,16 @@ type (
 	}
 )
 
-func (ch createObjectChange) undo(s *StateDB) {
+func (ch createObjectChange) undo(s *StateDB) { log.DebugLog()
 	delete(s.stateObjects, *ch.account)
 	delete(s.stateObjectsDirty, *ch.account)
 }
 
-func (ch resetObjectChange) undo(s *StateDB) {
+func (ch resetObjectChange) undo(s *StateDB) { log.DebugLog()
 	s.setStateObject(ch.prev)
 }
 
-func (ch suicideChange) undo(s *StateDB) {
+func (ch suicideChange) undo(s *StateDB) { log.DebugLog()
 	obj := s.getStateObject(*ch.account)
 	if obj != nil {
 		obj.suicided = ch.prev
@@ -96,7 +96,7 @@ func (ch suicideChange) undo(s *StateDB) {
 
 var ripemd = common.HexToAddress("0000000000000000000000000000000000000003")
 
-func (ch touchChange) undo(s *StateDB) {
+func (ch touchChange) undo(s *StateDB) { log.DebugLog()
 	if !ch.prev && *ch.account != ripemd {
 		s.getStateObject(*ch.account).touched = ch.prev
 		if !ch.prevDirty {
@@ -105,27 +105,27 @@ func (ch touchChange) undo(s *StateDB) {
 	}
 }
 
-func (ch balanceChange) undo(s *StateDB) {
+func (ch balanceChange) undo(s *StateDB) { log.DebugLog()
 	s.getStateObject(*ch.account).setBalance(ch.prev)
 }
 
-func (ch nonceChange) undo(s *StateDB) {
+func (ch nonceChange) undo(s *StateDB) { log.DebugLog()
 	s.getStateObject(*ch.account).setNonce(ch.prev)
 }
 
-func (ch codeChange) undo(s *StateDB) {
+func (ch codeChange) undo(s *StateDB) { log.DebugLog()
 	s.getStateObject(*ch.account).setCode(common.BytesToHash(ch.prevhash), ch.prevcode)
 }
 
-func (ch storageChange) undo(s *StateDB) {
+func (ch storageChange) undo(s *StateDB) { log.DebugLog()
 	s.getStateObject(*ch.account).setState(ch.key, ch.prevalue)
 }
 
-func (ch refundChange) undo(s *StateDB) {
+func (ch refundChange) undo(s *StateDB) { log.DebugLog()
 	s.refund = ch.prev
 }
 
-func (ch addLogChange) undo(s *StateDB) {
+func (ch addLogChange) undo(s *StateDB) { log.DebugLog()
 	logs := s.logs[ch.txhash]
 	if len(logs) == 1 {
 		delete(s.logs, ch.txhash)
@@ -135,6 +135,6 @@ func (ch addLogChange) undo(s *StateDB) {
 	s.logSize--
 }
 
-func (ch addPreimageChange) undo(s *StateDB) {
+func (ch addPreimageChange) undo(s *StateDB) { log.DebugLog()
 	delete(s.preimages, ch.hash)
 }

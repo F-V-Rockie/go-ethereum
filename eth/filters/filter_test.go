@@ -33,7 +33,7 @@ import (
 	"github.com/ethereum/go-ethereum/params"
 )
 
-func makeReceipt(addr common.Address) *types.Receipt {
+func makeReceipt(addr common.Address) *types.Receipt { log.DebugLog()
 	receipt := types.NewReceipt(nil, false, 0)
 	receipt.Logs = []*types.Log{
 		{Address: addr},
@@ -42,7 +42,7 @@ func makeReceipt(addr common.Address) *types.Receipt {
 	return receipt
 }
 
-func BenchmarkFilters(b *testing.B) {
+func BenchmarkFilters(b *testing.B) { log.DebugLog()
 	dir, err := ioutil.TempDir("", "filtertest")
 	if err != nil {
 		b.Fatal(err)
@@ -107,7 +107,7 @@ func BenchmarkFilters(b *testing.B) {
 	}
 }
 
-func TestFilters(t *testing.T) {
+func TestFilters(t *testing.T) { log.DebugLog()
 	dir, err := ioutil.TempDir("", "filtertest")
 	if err != nil {
 		t.Fatal(err)

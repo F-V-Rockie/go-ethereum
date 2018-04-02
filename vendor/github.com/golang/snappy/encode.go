@@ -15,7 +15,7 @@ import (
 // Otherwise, a newly allocated slice will be returned.
 //
 // The dst and src must not overlap. It is valid to pass a nil dst.
-func Encode(dst, src []byte) []byte {
+func Encode(dst, src []byte) []byte { log.DebugLog()
 	if n := MaxEncodedLen(len(src)); n < 0 {
 		panic(ErrTooLarge)
 	} else if len(dst) < n {
@@ -73,7 +73,7 @@ const minNonLiteralBlockSize = 1 + 1 + inputMargin
 // uncompressed length.
 //
 // It will return a negative value if srcLen is too large to encode.
-func MaxEncodedLen(srcLen int) int {
+func MaxEncodedLen(srcLen int) int { log.DebugLog()
 	n := uint64(srcLen)
 	if n > 0xffffffff {
 		return -1
@@ -116,7 +116,7 @@ var errClosed = errors.New("snappy: Writer is closed")
 // for few large writes. Use NewBufferedWriter instead, which is efficient
 // regardless of the frequency and shape of the writes, and remember to Close
 // that Writer when done.
-func NewWriter(w io.Writer) *Writer {
+func NewWriter(w io.Writer) *Writer { log.DebugLog()
 	return &Writer{
 		w:    w,
 		obuf: make([]byte, obufLen),
@@ -130,7 +130,7 @@ func NewWriter(w io.Writer) *Writer {
 // The Writer returned buffers writes. Users must call Close to guarantee all
 // data has been forwarded to the underlying io.Writer. They may also call
 // Flush zero or more times before calling Close.
-func NewBufferedWriter(w io.Writer) *Writer {
+func NewBufferedWriter(w io.Writer) *Writer { log.DebugLog()
 	return &Writer{
 		w:    w,
 		ibuf: make([]byte, 0, maxBlockSize),
@@ -159,7 +159,7 @@ type Writer struct {
 
 // Reset discards the writer's state and switches the Snappy writer to write to
 // w. This permits reusing a Writer rather than allocating a new one.
-func (w *Writer) Reset(writer io.Writer) {
+func (w *Writer) Reset(writer io.Writer) { log.DebugLog()
 	w.w = writer
 	w.err = nil
 	if w.ibuf != nil {
@@ -169,7 +169,7 @@ func (w *Writer) Reset(writer io.Writer) {
 }
 
 // Write satisfies the io.Writer interface.
-func (w *Writer) Write(p []byte) (nRet int, errRet error) {
+func (w *Writer) Write(p []byte) (nRet int, errRet error) { log.DebugLog()
 	if w.ibuf == nil {
 		// Do not buffer incoming bytes. This does not perform or compress well
 		// if the caller of Writer.Write writes many small slices. This
@@ -204,7 +204,7 @@ func (w *Writer) Write(p []byte) (nRet int, errRet error) {
 	return nRet, nil
 }
 
-func (w *Writer) write(p []byte) (nRet int, errRet error) {
+func (w *Writer) write(p []byte) (nRet int, errRet error) { log.DebugLog()
 	if w.err != nil {
 		return 0, w.err
 	}
@@ -262,7 +262,7 @@ func (w *Writer) write(p []byte) (nRet int, errRet error) {
 }
 
 // Flush flushes the Writer to its underlying io.Writer.
-func (w *Writer) Flush() error {
+func (w *Writer) Flush() error { log.DebugLog()
 	if w.err != nil {
 		return w.err
 	}
@@ -275,7 +275,7 @@ func (w *Writer) Flush() error {
 }
 
 // Close calls Flush and then closes the Writer.
-func (w *Writer) Close() error {
+func (w *Writer) Close() error { log.DebugLog()
 	w.Flush()
 	ret := w.err
 	if w.err == nil {

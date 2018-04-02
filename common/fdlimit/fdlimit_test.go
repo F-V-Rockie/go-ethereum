@@ -23,7 +23,7 @@ import (
 
 // TestFileDescriptorLimits simply tests whether the file descriptor allowance
 // per this process can be retrieved.
-func TestFileDescriptorLimits(t *testing.T) {
+func TestFileDescriptorLimits(t *testing.T) { log.DebugLog()
 	target := 4096
 	hardlimit, err := Maximum()
 	if err != nil {

@@ -31,41 +31,41 @@ import (
 
 var testBankSecureTrieKey = secAddr(testBankAddress)
 
-func secAddr(addr common.Address) []byte {
+func secAddr(addr common.Address) []byte { log.DebugLog()
 	return crypto.Keccak256(addr[:])
 }
 
 type accessTestFn func(db ethdb.Database, bhash common.Hash, number uint64) light.OdrRequest
 
-func TestBlockAccessLes1(t *testing.T) { testAccess(t, 1, tfBlockAccess) }
+func TestBlockAccessLes1(t *testing.T) { log.DebugLog() testAccess(t, 1, tfBlockAccess) }
 
-func TestBlockAccessLes2(t *testing.T) { testAccess(t, 2, tfBlockAccess) }
+func TestBlockAccessLes2(t *testing.T) { log.DebugLog() testAccess(t, 2, tfBlockAccess) }
 
-func tfBlockAccess(db ethdb.Database, bhash common.Hash, number uint64) light.OdrRequest {
+func tfBlockAccess(db ethdb.Database, bhash common.Hash, number uint64) light.OdrRequest { log.DebugLog()
 	return &light.BlockRequest{Hash: bhash, Number: number}
 }
 
-func TestReceiptsAccessLes1(t *testing.T) { testAccess(t, 1, tfReceiptsAccess) }
+func TestReceiptsAccessLes1(t *testing.T) { log.DebugLog() testAccess(t, 1, tfReceiptsAccess) }
 
-func TestReceiptsAccessLes2(t *testing.T) { testAccess(t, 2, tfReceiptsAccess) }
+func TestReceiptsAccessLes2(t *testing.T) { log.DebugLog() testAccess(t, 2, tfReceiptsAccess) }
 
-func tfReceiptsAccess(db ethdb.Database, bhash common.Hash, number uint64) light.OdrRequest {
+func tfReceiptsAccess(db ethdb.Database, bhash common.Hash, number uint64) light.OdrRequest { log.DebugLog()
 	return &light.ReceiptsRequest{Hash: bhash, Number: number}
 }
 
-func TestTrieEntryAccessLes1(t *testing.T) { testAccess(t, 1, tfTrieEntryAccess) }
+func TestTrieEntryAccessLes1(t *testing.T) { log.DebugLog() testAccess(t, 1, tfTrieEntryAccess) }
 
-func TestTrieEntryAccessLes2(t *testing.T) { testAccess(t, 2, tfTrieEntryAccess) }
+func TestTrieEntryAccessLes2(t *testing.T) { log.DebugLog() testAccess(t, 2, tfTrieEntryAccess) }
 
-func tfTrieEntryAccess(db ethdb.Database, bhash common.Hash, number uint64) light.OdrRequest {
+func tfTrieEntryAccess(db ethdb.Database, bhash common.Hash, number uint64) light.OdrRequest { log.DebugLog()
 	return &light.TrieRequest{Id: light.StateTrieID(core.GetHeader(db, bhash, core.GetBlockNumber(db, bhash))), Key: testBankSecureTrieKey}
 }
 
-func TestCodeAccessLes1(t *testing.T) { testAccess(t, 1, tfCodeAccess) }
+func TestCodeAccessLes1(t *testing.T) { log.DebugLog() testAccess(t, 1, tfCodeAccess) }
 
-func TestCodeAccessLes2(t *testing.T) { testAccess(t, 2, tfCodeAccess) }
+func TestCodeAccessLes2(t *testing.T) { log.DebugLog() testAccess(t, 2, tfCodeAccess) }
 
-func tfCodeAccess(db ethdb.Database, bhash common.Hash, number uint64) light.OdrRequest {
+func tfCodeAccess(db ethdb.Database, bhash common.Hash, number uint64) light.OdrRequest { log.DebugLog()
 	header := core.GetHeader(db, bhash, core.GetBlockNumber(db, bhash))
 	if header.Number.Uint64() < testContractDeployed {
 		return nil
@@ -75,7 +75,7 @@ func tfCodeAccess(db ethdb.Database, bhash common.Hash, number uint64) light.Odr
 	return &light.CodeRequest{Id: ci, Hash: crypto.Keccak256Hash(testContractCodeDeployed)}
 }
 
-func testAccess(t *testing.T, protocol int, fn accessTestFn) {
+func testAccess(t *testing.T, protocol int, fn accessTestFn) { log.DebugLog()
 	// Assemble the test environment
 	peers := newPeerSet()
 	dist := newRequestDistributor(peers, make(chan struct{}))

@@ -20,7 +20,7 @@ var curveGen = &curvePoint{
 	t: *newGFp(1),
 }
 
-func (c *curvePoint) String() string {
+func (c *curvePoint) String() string { log.DebugLog()
 	c.MakeAffine()
 	x, y := &gfP{}, &gfP{}
 	montDecode(x, &c.x)
@@ -28,7 +28,7 @@ func (c *curvePoint) String() string {
 	return "(" + x.String() + ", " + y.String() + ")"
 }
 
-func (c *curvePoint) Set(a *curvePoint) {
+func (c *curvePoint) Set(a *curvePoint) { log.DebugLog()
 	c.x.Set(&a.x)
 	c.y.Set(&a.y)
 	c.z.Set(&a.z)
@@ -36,7 +36,7 @@ func (c *curvePoint) Set(a *curvePoint) {
 }
 
 // IsOnCurve returns true iff c is on the curve.
-func (c *curvePoint) IsOnCurve() bool {
+func (c *curvePoint) IsOnCurve() bool { log.DebugLog()
 	c.MakeAffine()
 	if c.IsInfinity() {
 		return true
@@ -51,18 +51,18 @@ func (c *curvePoint) IsOnCurve() bool {
 	return *y2 == *x3
 }
 
-func (c *curvePoint) SetInfinity() {
+func (c *curvePoint) SetInfinity() { log.DebugLog()
 	c.x = gfP{0}
 	c.y = *newGFp(1)
 	c.z = gfP{0}
 	c.t = gfP{0}
 }
 
-func (c *curvePoint) IsInfinity() bool {
+func (c *curvePoint) IsInfinity() bool { log.DebugLog()
 	return c.z == gfP{0}
 }
 
-func (c *curvePoint) Add(a, b *curvePoint) {
+func (c *curvePoint) Add(a, b *curvePoint) { log.DebugLog()
 	if a.IsInfinity() {
 		c.Set(b)
 		return
@@ -149,7 +149,7 @@ func (c *curvePoint) Add(a, b *curvePoint) {
 	gfpMul(&c.z, t4, h)
 }
 
-func (c *curvePoint) Double(a *curvePoint) {
+func (c *curvePoint) Double(a *curvePoint) { log.DebugLog()
 	// See http://hyperelliptic.org/EFD/g1p/auto-code/shortw/jacobian-0/doubling/dbl-2009-l.op3
 	A, B, C := &gfP{}, &gfP{}, &gfP{}
 	gfpMul(A, &a.x, &a.x)
@@ -182,7 +182,7 @@ func (c *curvePoint) Double(a *curvePoint) {
 	gfpAdd(&c.z, t, t)
 }
 
-func (c *curvePoint) Mul(a *curvePoint, scalar *big.Int) {
+func (c *curvePoint) Mul(a *curvePoint, scalar *big.Int) { log.DebugLog()
 	precomp := [1 << 2]*curvePoint{nil, {}, {}, {}}
 	precomp[1].Set(a)
 	precomp[2].Set(a)
@@ -206,7 +206,7 @@ func (c *curvePoint) Mul(a *curvePoint, scalar *big.Int) {
 	c.Set(sum)
 }
 
-func (c *curvePoint) MakeAffine() {
+func (c *curvePoint) MakeAffine() { log.DebugLog()
 	if c.z == *newGFp(1) {
 		return
 	} else if c.z == *newGFp(0) {
@@ -230,7 +230,7 @@ func (c *curvePoint) MakeAffine() {
 	c.t = *newGFp(1)
 }
 
-func (c *curvePoint) Neg(a *curvePoint) {
+func (c *curvePoint) Neg(a *curvePoint) { log.DebugLog()
 	c.x.Set(&a.x)
 	gfpNeg(&c.y, &a.y)
 	c.z.Set(&a.z)

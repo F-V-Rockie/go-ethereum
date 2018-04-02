@@ -29,7 +29,7 @@ type DerivableList interface {
 	GetRlp(i int) []byte
 }
 
-func DeriveSha(list DerivableList) common.Hash {
+func DeriveSha(list DerivableList) common.Hash { log.DebugLog()
 	keybuf := new(bytes.Buffer)
 	trie := new(trie.Trie)
 	for i := 0; i < list.Len(); i++ {

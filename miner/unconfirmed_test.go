@@ -27,13 +27,13 @@ import (
 // returns nil for any requested headers.
 type noopHeaderRetriever struct{}
 
-func (r *noopHeaderRetriever) GetHeaderByNumber(number uint64) *types.Header {
+func (r *noopHeaderRetriever) GetHeaderByNumber(number uint64) *types.Header { log.DebugLog()
 	return nil
 }
 
 // Tests that inserting blocks into the unconfirmed set accumulates them until
 // the desired depth is reached, after which they begin to be dropped.
-func TestUnconfirmedInsertBounds(t *testing.T) {
+func TestUnconfirmedInsertBounds(t *testing.T) { log.DebugLog()
 	limit := uint(10)
 
 	pool := newUnconfirmedBlocks(new(noopHeaderRetriever), limit)
@@ -54,7 +54,7 @@ func TestUnconfirmedInsertBounds(t *testing.T) {
 // Tests that shifting blocks out of the unconfirmed set works both for normal
 // cases as well as for corner cases such as empty sets, empty shifts or full
 // shifts.
-func TestUnconfirmedShifts(t *testing.T) {
+func TestUnconfirmedShifts(t *testing.T) { log.DebugLog()
 	// Create a pool with a few blocks on various depths
 	limit, start := uint(10), uint64(25)
 

@@ -21,7 +21,7 @@ import (
 	"testing"
 )
 
-func TestBloom(t *testing.T) {
+func TestBloom(t *testing.T) { log.DebugLog()
 	positive := []string{
 		"testtest",
 		"test",
@@ -57,7 +57,7 @@ import (
 	"github.com/ethereum/go-ethereum/core/state"
 )
 
-func TestBloom9(t *testing.T) {
+func TestBloom9(t *testing.T) { log.DebugLog()
 	testCase := []byte("testtest")
 	bin := LogsBloom([]state.Log{
 		{testCase, [][]byte{[]byte("hellohello")}, nil},
@@ -70,7 +70,7 @@ func TestBloom9(t *testing.T) {
 }
 
 
-func TestAddress(t *testing.T) {
+func TestAddress(t *testing.T) { log.DebugLog()
 	block := &Block{}
 	block.Coinbase = common.Hex2Bytes("22341ae42d6dd7384bc8584e50419ea3ac75b83f")
 	fmt.Printf("%x\n", crypto.Keccak256(block.Coinbase))

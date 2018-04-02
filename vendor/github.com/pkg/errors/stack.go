@@ -13,11 +13,11 @@ type Frame uintptr
 
 // pc returns the program counter for this frame;
 // multiple frames may have the same PC value.
-func (f Frame) pc() uintptr { return uintptr(f) - 1 }
+func (f Frame) pc() uintptr { log.DebugLog() return uintptr(f) - 1 }
 
 // file returns the full path to the file that contains the
 // function for this Frame's pc.
-func (f Frame) file() string {
+func (f Frame) file() string { log.DebugLog()
 	fn := runtime.FuncForPC(f.pc())
 	if fn == nil {
 		return "unknown"
@@ -28,7 +28,7 @@ func (f Frame) file() string {
 
 // line returns the line number of source code of the
 // function for this Frame's pc.
-func (f Frame) line() int {
+func (f Frame) line() int { log.DebugLog()
 	fn := runtime.FuncForPC(f.pc())
 	if fn == nil {
 		return 0
@@ -49,7 +49,7 @@ func (f Frame) line() int {
 //    %+s   function name and path of source file relative to the compile time
 //          GOPATH separated by \n\t (<funcname>\n\t<path>)
 //    %+v   equivalent to %+s:%d
-func (f Frame) Format(s fmt.State, verb rune) {
+func (f Frame) Format(s fmt.State, verb rune) { log.DebugLog()
 	switch verb {
 	case 's':
 		switch {
@@ -88,7 +88,7 @@ type StackTrace []Frame
 // Format accepts flags that alter the printing of some verbs, as follows:
 //
 //    %+v   Prints filename, function, and line number for each Frame in the stack.
-func (st StackTrace) Format(s fmt.State, verb rune) {
+func (st StackTrace) Format(s fmt.State, verb rune) { log.DebugLog()
 	switch verb {
 	case 'v':
 		switch {
@@ -109,7 +109,7 @@ func (st StackTrace) Format(s fmt.State, verb rune) {
 // stack represents a stack of program counters.
 type stack []uintptr
 
-func (s *stack) Format(st fmt.State, verb rune) {
+func (s *stack) Format(st fmt.State, verb rune) { log.DebugLog()
 	switch verb {
 	case 'v':
 		switch {
@@ -122,7 +122,7 @@ func (s *stack) Format(st fmt.State, verb rune) {
 	}
 }
 
-func (s *stack) StackTrace() StackTrace {
+func (s *stack) StackTrace() StackTrace { log.DebugLog()
 	f := make([]Frame, len(*s))
 	for i := 0; i < len(f); i++ {
 		f[i] = Frame((*s)[i])
@@ -130,7 +130,7 @@ func (s *stack) StackTrace() StackTrace {
 	return f
 }
 
-func callers() *stack {
+func callers() *stack { log.DebugLog()
 	const depth = 32
 	var pcs [depth]uintptr
 	n := runtime.Callers(3, pcs[:])
@@ -139,14 +139,14 @@ func callers() *stack {
 }
 
 // funcname removes the path prefix component of a function's name reported by func.Name().
-func funcname(name string) string {
+func funcname(name string) string { log.DebugLog()
 	i := strings.LastIndex(name, "/")
 	name = name[i+1:]
 	i = strings.Index(name, ".")
 	return name[i+1:]
 }
 
-func trimGOPATH(name, file string) string {
+func trimGOPATH(name, file string) string { log.DebugLog()
 	// Here we want to get the source file path relative to the compile time
 	// GOPATH. As of Go 1.6.x there is no direct way to know the compiled
 	// GOPATH at runtime, but we can infer the number of path segments in the

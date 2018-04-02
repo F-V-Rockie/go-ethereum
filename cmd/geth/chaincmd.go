@@ -173,7 +173,7 @@ Use "ethereum dump 0" to dump the genesis block.`,
 
 // initGenesis will initialise the given JSON format genesis file and writes it as
 // the zero'd block (i.e. genesis) or will fail hard if it can't succeed.
-func initGenesis(ctx *cli.Context) error {
+func initGenesis(ctx *cli.Context) error { log.DebugLog()
 	// Make sure we have a valid genesis JSON
 	genesisPath := ctx.Args().First()
 	if len(genesisPath) == 0 {
@@ -205,7 +205,7 @@ func initGenesis(ctx *cli.Context) error {
 	return nil
 }
 
-func importChain(ctx *cli.Context) error {
+func importChain(ctx *cli.Context) error { log.DebugLog()
 	if len(ctx.Args()) < 1 {
 		utils.Fatalf("This command requires an argument.")
 	}
@@ -299,7 +299,7 @@ func importChain(ctx *cli.Context) error {
 	return nil
 }
 
-func exportChain(ctx *cli.Context) error {
+func exportChain(ctx *cli.Context) error { log.DebugLog()
 	if len(ctx.Args()) < 1 {
 		utils.Fatalf("This command requires an argument.")
 	}
@@ -332,7 +332,7 @@ func exportChain(ctx *cli.Context) error {
 }
 
 // importPreimages imports preimage data from the specified file.
-func importPreimages(ctx *cli.Context) error {
+func importPreimages(ctx *cli.Context) error { log.DebugLog()
 	if len(ctx.Args()) < 1 {
 		utils.Fatalf("This command requires an argument.")
 	}
@@ -348,7 +348,7 @@ func importPreimages(ctx *cli.Context) error {
 }
 
 // exportPreimages dumps the preimage data to specified json file in streaming way.
-func exportPreimages(ctx *cli.Context) error {
+func exportPreimages(ctx *cli.Context) error { log.DebugLog()
 	if len(ctx.Args()) < 1 {
 		utils.Fatalf("This command requires an argument.")
 	}
@@ -363,7 +363,7 @@ func exportPreimages(ctx *cli.Context) error {
 	return nil
 }
 
-func copyDb(ctx *cli.Context) error {
+func copyDb(ctx *cli.Context) error { log.DebugLog()
 	// Ensure we have a source chain directory to copy
 	if len(ctx.Args()) != 1 {
 		utils.Fatalf("Source chaindata directory path argument missing")
@@ -411,7 +411,7 @@ func copyDb(ctx *cli.Context) error {
 	return nil
 }
 
-func removeDB(ctx *cli.Context) error {
+func removeDB(ctx *cli.Context) error { log.DebugLog()
 	stack, _ := makeConfigNode(ctx)
 
 	for _, name := range []string{"chaindata", "lightchaindata"} {
@@ -440,7 +440,7 @@ func removeDB(ctx *cli.Context) error {
 	return nil
 }
 
-func dump(ctx *cli.Context) error {
+func dump(ctx *cli.Context) error { log.DebugLog()
 	stack := makeFullNode(ctx)
 	chain, chainDb := utils.MakeChain(ctx, stack)
 	for _, arg := range ctx.Args() {
@@ -467,7 +467,7 @@ func dump(ctx *cli.Context) error {
 }
 
 // hashish returns true for strings that look like hashes.
-func hashish(x string) bool {
+func hashish(x string) bool { log.DebugLog()
 	_, err := strconv.Atoi(x)
 	return err != nil
 }

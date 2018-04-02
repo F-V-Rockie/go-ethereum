@@ -18,29 +18,29 @@ type UnknownLike interface {
 	Release() int32
 }
 
-func (v *IUnknown) VTable() *IUnknownVtbl {
+func (v *IUnknown) VTable() *IUnknownVtbl { log.DebugLog()
 	return (*IUnknownVtbl)(unsafe.Pointer(v.RawVTable))
 }
 
-func (v *IUnknown) PutQueryInterface(interfaceID *GUID, obj interface{}) error {
+func (v *IUnknown) PutQueryInterface(interfaceID *GUID, obj interface{}) error { log.DebugLog()
 	return reflectQueryInterface(v, v.VTable().QueryInterface, interfaceID, obj)
 }
 
-func (v *IUnknown) IDispatch(interfaceID *GUID) (dispatch *IDispatch, err error) {
+func (v *IUnknown) IDispatch(interfaceID *GUID) (dispatch *IDispatch, err error) { log.DebugLog()
 	err = v.PutQueryInterface(interfaceID, &dispatch)
 	return
 }
 
-func (v *IUnknown) IEnumVARIANT(interfaceID *GUID) (enum *IEnumVARIANT, err error) {
+func (v *IUnknown) IEnumVARIANT(interfaceID *GUID) (enum *IEnumVARIANT, err error) { log.DebugLog()
 	err = v.PutQueryInterface(interfaceID, &enum)
 	return
 }
 
-func (v *IUnknown) QueryInterface(iid *GUID) (*IDispatch, error) {
+func (v *IUnknown) QueryInterface(iid *GUID) (*IDispatch, error) { log.DebugLog()
 	return queryInterface(v, iid)
 }
 
-func (v *IUnknown) MustQueryInterface(iid *GUID) (disp *IDispatch) {
+func (v *IUnknown) MustQueryInterface(iid *GUID) (disp *IDispatch) { log.DebugLog()
 	unk, err := queryInterface(v, iid)
 	if err != nil {
 		panic(err)
@@ -48,10 +48,10 @@ func (v *IUnknown) MustQueryInterface(iid *GUID) (disp *IDispatch) {
 	return unk
 }
 
-func (v *IUnknown) AddRef() int32 {
+func (v *IUnknown) AddRef() int32 { log.DebugLog()
 	return addRef(v)
 }
 
-func (v *IUnknown) Release() int32 {
+func (v *IUnknown) Release() int32 { log.DebugLog()
 	return release(v)
 }

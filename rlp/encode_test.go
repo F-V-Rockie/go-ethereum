@@ -31,7 +31,7 @@ type testEncoder struct {
 	err error
 }
 
-func (e *testEncoder) EncodeRLP(w io.Writer) error {
+func (e *testEncoder) EncodeRLP(w io.Writer) error { log.DebugLog()
 	if e == nil {
 		w.Write([]byte{0, 0, 0, 0})
 	} else if e.err != nil {
@@ -44,7 +44,7 @@ func (e *testEncoder) EncodeRLP(w io.Writer) error {
 
 type byteEncoder byte
 
-func (e byteEncoder) EncodeRLP(w io.Writer) error {
+func (e byteEncoder) EncodeRLP(w io.Writer) error { log.DebugLog()
 	w.Write(EmptyList)
 	return nil
 }
@@ -53,7 +53,7 @@ type encodableReader struct {
 	A, B uint
 }
 
-func (e *encodableReader) Read(b []byte) (int, error) {
+func (e *encodableReader) Read(b []byte) (int, error) { log.DebugLog()
 	panic("called")
 }
 
@@ -249,7 +249,7 @@ var encTests = []encTest{
 	{val: []byteEncoder{0, 1, 2, 3, 4}, output: "C5C0C0C0C0C0"},
 }
 
-func runEncTests(t *testing.T, f func(val interface{}) ([]byte, error)) {
+func runEncTests(t *testing.T, f func(val interface{}) ([]byte, error)) { log.DebugLog()
 	for i, test := range encTests {
 		output, err := f(test.val)
 		if err != nil && test.error == "" {
@@ -269,7 +269,7 @@ func runEncTests(t *testing.T, f func(val interface{}) ([]byte, error)) {
 	}
 }
 
-func TestEncode(t *testing.T) {
+func TestEncode(t *testing.T) { log.DebugLog()
 	runEncTests(t, func(val interface{}) ([]byte, error) {
 		b := new(bytes.Buffer)
 		err := Encode(b, val)
@@ -277,11 +277,11 @@ func TestEncode(t *testing.T) {
 	})
 }
 
-func TestEncodeToBytes(t *testing.T) {
+func TestEncodeToBytes(t *testing.T) { log.DebugLog()
 	runEncTests(t, EncodeToBytes)
 }
 
-func TestEncodeToReader(t *testing.T) {
+func TestEncodeToReader(t *testing.T) { log.DebugLog()
 	runEncTests(t, func(val interface{}) ([]byte, error) {
 		_, r, err := EncodeToReader(val)
 		if err != nil {
@@ -291,7 +291,7 @@ func TestEncodeToReader(t *testing.T) {
 	})
 }
 
-func TestEncodeToReaderPiecewise(t *testing.T) {
+func TestEncodeToReaderPiecewise(t *testing.T) { log.DebugLog()
 	runEncTests(t, func(val interface{}) ([]byte, error) {
 		size, r, err := EncodeToReader(val)
 		if err != nil {
@@ -320,7 +320,7 @@ func TestEncodeToReaderPiecewise(t *testing.T) {
 
 // This is a regression test verifying that encReader
 // returns its encbuf to the pool only once.
-func TestEncodeToReaderReturnToPool(t *testing.T) {
+func TestEncodeToReaderReturnToPool(t *testing.T) { log.DebugLog()
 	buf := make([]byte, 50)
 	wg := new(sync.WaitGroup)
 	for i := 0; i < 5; i++ {

@@ -33,7 +33,7 @@ var gitCommit = ""
 
 var app *cli.App
 
-func init() {
+func init() { log.DebugLog()
 	app = utils.NewApp(gitCommit, "an Ethereum key manager")
 	app.Commands = []cli.Command{
 		commandGenerate,
@@ -59,7 +59,7 @@ var (
 	}
 )
 
-func main() {
+func main() { log.DebugLog()
 	if err := app.Run(os.Args); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)

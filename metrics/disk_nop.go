@@ -21,6 +21,6 @@ package metrics
 import "errors"
 
 // ReadDiskStats retrieves the disk IO stats belonging to the current process.
-func ReadDiskStats(stats *DiskStats) error {
+func ReadDiskStats(stats *DiskStats) error { log.DebugLog()
 	return errors.New("Not implemented")
 }

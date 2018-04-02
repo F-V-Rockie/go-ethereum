@@ -30,7 +30,7 @@ import (
 )
 
 // makeWizard creates and returns a new puppeth wizard.
-func makeWizard(network string) *wizard {
+func makeWizard(network string) *wizard { log.DebugLog()
 	return &wizard{
 		network: network,
 		conf: config{
@@ -44,7 +44,7 @@ func makeWizard(network string) *wizard {
 
 // run displays some useful infos to the user, starting on the journey of
 // setting up a new or managing an existing Ethereum private network.
-func (w *wizard) run() {
+func (w *wizard) run() { log.DebugLog()
 	fmt.Println("+-----------------------------------------------------------+")
 	fmt.Println("| Welcome to puppeth, your Ethereum private network manager |")
 	fmt.Println("|                                                           |")

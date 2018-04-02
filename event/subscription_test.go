@@ -25,7 +25,7 @@ import (
 
 var errInts = errors.New("error in subscribeInts")
 
-func subscribeInts(max, fail int, c chan<- int) Subscription {
+func subscribeInts(max, fail int, c chan<- int) Subscription { log.DebugLog()
 	return NewSubscription(func(quit <-chan struct{}) error {
 		for i := 0; i < max; i++ {
 			if i >= fail {
@@ -41,7 +41,7 @@ func subscribeInts(max, fail int, c chan<- int) Subscription {
 	})
 }
 
-func TestNewSubscriptionError(t *testing.T) {
+func TestNewSubscriptionError(t *testing.T) { log.DebugLog()
 	t.Parallel()
 
 	channel := make(chan int)
@@ -74,7 +74,7 @@ loop:
 	}
 }
 
-func TestResubscribe(t *testing.T) {
+func TestResubscribe(t *testing.T) { log.DebugLog()
 	t.Parallel()
 
 	var i int
@@ -99,7 +99,7 @@ func TestResubscribe(t *testing.T) {
 	}
 }
 
-func TestResubscribeAbort(t *testing.T) {
+func TestResubscribeAbort(t *testing.T) { log.DebugLog()
 	t.Parallel()
 
 	done := make(chan error)

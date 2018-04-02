@@ -110,7 +110,7 @@ type UnexpectedStatusCodeError struct {
 	got     int
 }
 
-func (e UnexpectedStatusCodeError) Error() string {
+func (e UnexpectedStatusCodeError) Error() string { log.DebugLog()
 	s := func(i int) string { return fmt.Sprintf("%d %s", i, http.StatusText(i)) }
 
 	got := s(e.got)
@@ -122,13 +122,13 @@ func (e UnexpectedStatusCodeError) Error() string {
 }
 
 // Got is the actual status code returned by Azure.
-func (e UnexpectedStatusCodeError) Got() int {
+func (e UnexpectedStatusCodeError) Got() int { log.DebugLog()
 	return e.got
 }
 
 // NewBasicClient constructs a Client with given storage service name and
 // key.
-func NewBasicClient(accountName, accountKey string) (Client, error) {
+func NewBasicClient(accountName, accountKey string) (Client, error) { log.DebugLog()
 	if accountName == StorageEmulatorAccountName {
 		return NewEmulatorClient()
 	}
@@ -137,7 +137,7 @@ func NewBasicClient(accountName, accountKey string) (Client, error) {
 
 // NewBasicClientOnSovereignCloud constructs a Client with given storage service name and
 // key in the referenced cloud.
-func NewBasicClientOnSovereignCloud(accountName, accountKey string, env azure.Environment) (Client, error) {
+func NewBasicClientOnSovereignCloud(accountName, accountKey string, env azure.Environment) (Client, error) { log.DebugLog()
 	if accountName == StorageEmulatorAccountName {
 		return NewEmulatorClient()
 	}
@@ -146,14 +146,14 @@ func NewBasicClientOnSovereignCloud(accountName, accountKey string, env azure.En
 
 //NewEmulatorClient contructs a Client intended to only work with Azure
 //Storage Emulator
-func NewEmulatorClient() (Client, error) {
+func NewEmulatorClient() (Client, error) { log.DebugLog()
 	return NewClient(StorageEmulatorAccountName, StorageEmulatorAccountKey, DefaultBaseURL, DefaultAPIVersion, false)
 }
 
 // NewClient constructs a Client. This should be used if the caller wants
 // to specify whether to use HTTPS, a specific REST API version or a custom
 // storage endpoint than Azure Public Cloud.
-func NewClient(accountName, accountKey, blobServiceBaseURL, apiVersion string, useHTTPS bool) (Client, error) {
+func NewClient(accountName, accountKey, blobServiceBaseURL, apiVersion string, useHTTPS bool) (Client, error) { log.DebugLog()
 	var c Client
 	if accountName == "" {
 		return c, fmt.Errorf("azure: account name required")
@@ -180,7 +180,7 @@ func NewClient(accountName, accountKey, blobServiceBaseURL, apiVersion string, u
 	return c, nil
 }
 
-func (c Client) getDefaultUserAgent() string {
+func (c Client) getDefaultUserAgent() string { log.DebugLog()
 	return fmt.Sprintf("Go/%s (%s-%s) Azure-SDK-For-Go/%s storage-dataplane/%s",
 		runtime.Version(),
 		runtime.GOARCH,
@@ -191,7 +191,7 @@ func (c Client) getDefaultUserAgent() string {
 }
 
 // AddToUserAgent adds an extension to the current user agent
-func (c *Client) AddToUserAgent(extension string) error {
+func (c *Client) AddToUserAgent(extension string) error { log.DebugLog()
 	if extension != "" {
 		c.userAgent = fmt.Sprintf("%s %s", c.userAgent, extension)
 		return nil
@@ -202,7 +202,7 @@ func (c *Client) AddToUserAgent(extension string) error {
 // protectUserAgent is used in funcs that include extraheaders as a parameter.
 // It prevents the User-Agent header to be overwritten, instead if it happens to
 // be present, it gets added to the current User-Agent. Use it before getStandardHeaders
-func (c *Client) protectUserAgent(extraheaders map[string]string) map[string]string {
+func (c *Client) protectUserAgent(extraheaders map[string]string) map[string]string { log.DebugLog()
 	if v, ok := extraheaders[userAgentHeader]; ok {
 		c.AddToUserAgent(v)
 		delete(extraheaders, userAgentHeader)
@@ -210,7 +210,7 @@ func (c *Client) protectUserAgent(extraheaders map[string]string) map[string]str
 	return extraheaders
 }
 
-func (c Client) getBaseURL(service string) string {
+func (c Client) getBaseURL(service string) string { log.DebugLog()
 	scheme := "http"
 	if c.useHTTPS {
 		scheme = "https"
@@ -235,7 +235,7 @@ func (c Client) getBaseURL(service string) string {
 	return u.String()
 }
 
-func (c Client) getEndpoint(service, path string, params url.Values) string {
+func (c Client) getEndpoint(service, path string, params url.Values) string { log.DebugLog()
 	u, err := url.Parse(c.getBaseURL(service))
 	if err != nil {
 		// really should not be happening
@@ -258,7 +258,7 @@ func (c Client) getEndpoint(service, path string, params url.Values) string {
 
 // GetBlobService returns a BlobStorageClient which can operate on the blob
 // service of the storage account.
-func (c Client) GetBlobService() BlobStorageClient {
+func (c Client) GetBlobService() BlobStorageClient { log.DebugLog()
 	b := BlobStorageClient{
 		client: c,
 	}
@@ -272,7 +272,7 @@ func (c Client) GetBlobService() BlobStorageClient {
 
 // GetQueueService returns a QueueServiceClient which can operate on the queue
 // service of the storage account.
-func (c Client) GetQueueService() QueueServiceClient {
+func (c Client) GetQueueService() QueueServiceClient { log.DebugLog()
 	q := QueueServiceClient{
 		client: c,
 	}
@@ -286,7 +286,7 @@ func (c Client) GetQueueService() QueueServiceClient {
 
 // GetTableService returns a TableServiceClient which can operate on the table
 // service of the storage account.
-func (c Client) GetTableService() TableServiceClient {
+func (c Client) GetTableService() TableServiceClient { log.DebugLog()
 	t := TableServiceClient{
 		client: c,
 	}
@@ -300,7 +300,7 @@ func (c Client) GetTableService() TableServiceClient {
 
 // GetFileService returns a FileServiceClient which can operate on the file
 // service of the storage account.
-func (c Client) GetFileService() FileServiceClient {
+func (c Client) GetFileService() FileServiceClient { log.DebugLog()
 	f := FileServiceClient{
 		client: c,
 	}
@@ -312,7 +312,7 @@ func (c Client) GetFileService() FileServiceClient {
 	return f
 }
 
-func (c Client) getStandardHeaders() map[string]string {
+func (c Client) getStandardHeaders() map[string]string { log.DebugLog()
 	return map[string]string{
 		userAgentHeader: c.userAgent,
 		"x-ms-version":  c.apiVersion,
@@ -320,7 +320,7 @@ func (c Client) getStandardHeaders() map[string]string {
 	}
 }
 
-func (c Client) exec(verb, url string, headers map[string]string, body io.Reader, auth authentication) (*storageResponse, error) {
+func (c Client) exec(verb, url string, headers map[string]string, body io.Reader, auth authentication) (*storageResponse, error) { log.DebugLog()
 	headers, err := c.addAuthorizationHeader(verb, url, headers, auth)
 	if err != nil {
 		return nil, err
@@ -387,7 +387,7 @@ func (c Client) exec(verb, url string, headers map[string]string, body io.Reader
 		body:       resp.Body}, nil
 }
 
-func (c Client) execInternalJSON(verb, url string, headers map[string]string, body io.Reader, auth authentication) (*odataResponse, error) {
+func (c Client) execInternalJSON(verb, url string, headers map[string]string, body io.Reader, auth authentication) (*odataResponse, error) { log.DebugLog()
 	headers, err := c.addAuthorizationHeader(verb, url, headers, auth)
 	if err != nil {
 		return nil, err
@@ -434,7 +434,7 @@ func (c Client) execInternalJSON(verb, url string, headers map[string]string, bo
 	return respToRet, nil
 }
 
-func readAndCloseBody(body io.ReadCloser) ([]byte, error) {
+func readAndCloseBody(body io.ReadCloser) ([]byte, error) { log.DebugLog()
 	defer body.Close()
 	out, err := ioutil.ReadAll(body)
 	if err == io.EOF {
@@ -443,7 +443,7 @@ func readAndCloseBody(body io.ReadCloser) ([]byte, error) {
 	return out, err
 }
 
-func serviceErrFromXML(body []byte, statusCode int, requestID string) (AzureStorageServiceError, error) {
+func serviceErrFromXML(body []byte, statusCode int, requestID string) (AzureStorageServiceError, error) { log.DebugLog()
 	var storageErr AzureStorageServiceError
 	if err := xml.Unmarshal(body, &storageErr); err != nil {
 		return storageErr, err
@@ -453,7 +453,7 @@ func serviceErrFromXML(body []byte, statusCode int, requestID string) (AzureStor
 	return storageErr, nil
 }
 
-func serviceErrFromStatusCode(code int, status string, requestID string) AzureStorageServiceError {
+func serviceErrFromStatusCode(code int, status string, requestID string) AzureStorageServiceError { log.DebugLog()
 	return AzureStorageServiceError{
 		StatusCode: code,
 		Code:       status,
@@ -462,14 +462,14 @@ func serviceErrFromStatusCode(code int, status string, requestID string) AzureSt
 	}
 }
 
-func (e AzureStorageServiceError) Error() string {
+func (e AzureStorageServiceError) Error() string { log.DebugLog()
 	return fmt.Sprintf("storage: service returned error: StatusCode=%d, ErrorCode=%s, ErrorMessage=%s, RequestId=%s, QueryParameterName=%s, QueryParameterValue=%s",
 		e.StatusCode, e.Code, e.Message, e.RequestID, e.QueryParameterName, e.QueryParameterValue)
 }
 
 // checkRespCode returns UnexpectedStatusError if the given response code is not
 // one of the allowed status codes; otherwise nil.
-func checkRespCode(respCode int, allowed []int) error {
+func checkRespCode(respCode int, allowed []int) error { log.DebugLog()
 	for _, v := range allowed {
 		if respCode == v {
 			return nil

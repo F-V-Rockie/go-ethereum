@@ -31,12 +31,12 @@ import (
 const defaultPipeDialTimeout = 2 * time.Second
 
 // ipcListen will create a named pipe on the given endpoint.
-func ipcListen(endpoint string) (net.Listener, error) {
+func ipcListen(endpoint string) (net.Listener, error) { log.DebugLog()
 	return npipe.Listen(endpoint)
 }
 
 // newIPCConnection will connect to a named pipe with the given endpoint as name.
-func newIPCConnection(ctx context.Context, endpoint string) (net.Conn, error) {
+func newIPCConnection(ctx context.Context, endpoint string) (net.Conn, error) { log.DebugLog()
 	timeout := defaultPipeDialTimeout
 	if deadline, ok := ctx.Deadline(); ok {
 		timeout = deadline.Sub(time.Now())

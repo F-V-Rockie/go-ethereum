@@ -94,7 +94,7 @@ var expectedMessage []byte = []byte("per rectum ad astra")
 // 3. each node sends a number of random (undecryptable) messages,
 // 4. first node sends one expected (decryptable) message,
 // 5. checks if each node have received and decrypted exactly one message.
-func TestSimulation(t *testing.T) {
+func TestSimulation(t *testing.T) { log.DebugLog()
 	initialize(t)
 
 	for i := 0; i < NumNodes; i++ {
@@ -106,7 +106,7 @@ func TestSimulation(t *testing.T) {
 	stopServers()
 }
 
-func initialize(t *testing.T) {
+func initialize(t *testing.T) { log.DebugLog()
 	var err error
 	ip := net.IPv4(127, 0, 0, 1)
 	port0 := 30303
@@ -163,7 +163,7 @@ func initialize(t *testing.T) {
 	}
 }
 
-func stopServers() {
+func stopServers() { log.DebugLog()
 	for i := 0; i < NumNodes; i++ {
 		n := nodes[i]
 		if n != nil {
@@ -174,7 +174,7 @@ func stopServers() {
 	}
 }
 
-func checkPropagation(t *testing.T) {
+func checkPropagation(t *testing.T) { log.DebugLog()
 	if t.Failed() {
 		return
 	}
@@ -205,7 +205,7 @@ func checkPropagation(t *testing.T) {
 	t.Fatalf("Test was not complete: timeout %d seconds.", iterations*cycle/1000)
 }
 
-func validateMail(t *testing.T, index int, mail []*ReceivedMessage) bool {
+func validateMail(t *testing.T, index int, mail []*ReceivedMessage) bool { log.DebugLog()
 	var cnt int
 	for _, m := range mail {
 		if bytes.Equal(m.Payload, expectedMessage) {
@@ -233,7 +233,7 @@ func validateMail(t *testing.T, index int, mail []*ReceivedMessage) bool {
 	return true
 }
 
-func isTestComplete() bool {
+func isTestComplete() bool { log.DebugLog()
 	result.mutex.RLock()
 	defer result.mutex.RUnlock()
 
@@ -253,7 +253,7 @@ func isTestComplete() bool {
 	return true
 }
 
-func sendMsg(t *testing.T, expected bool, id int) {
+func sendMsg(t *testing.T, expected bool, id int) { log.DebugLog()
 	if t.Failed() {
 		return
 	}
@@ -280,7 +280,7 @@ func sendMsg(t *testing.T, expected bool, id int) {
 	}
 }
 
-func TestPeerBasic(t *testing.T) {
+func TestPeerBasic(t *testing.T) { log.DebugLog()
 	InitSingleTest()
 
 	params, err := generateMessageParams()

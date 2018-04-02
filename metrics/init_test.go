@@ -1,5 +1,5 @@
 package metrics
 
-func init() {
+func init() { log.DebugLog()
 	Enabled = true
 }

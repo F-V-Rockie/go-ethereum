@@ -62,7 +62,7 @@ const (
 )
 
 
-func main() {
+func main() { log.DebugLog()
 	// Create a new HTTPClient
 	c, err := client.NewHTTPClient(client.HTTPConfig{
 		Addr:     "http://localhost:8086",
@@ -120,7 +120,7 @@ provided InfluxDB will use the database _default_ retention policy.
 
 ```go
 
-func writePoints(clnt client.Client) {
+func writePoints(clnt client.Client) { log.DebugLog()
 	sampleSize := 1000
 
 	bp, err := client.NewBatchPoints(client.BatchPointsConfig{
@@ -180,7 +180,7 @@ as follows:
 
 ```go
 // queryDB convenience function to query the database
-func queryDB(clnt client.Client, cmd string) (res []client.Result, err error) {
+func queryDB(clnt client.Client, cmd string) (res []client.Result, err error) { log.DebugLog()
 	q := client.Query{
 		Command:  cmd,
 		Database: MyDB,
@@ -242,7 +242,7 @@ for i, row := range res[0].Series[0].Values {
 The **InfluxDB** client also supports writing over UDP.
 
 ```go
-func WriteUDP() {
+func WriteUDP() { log.DebugLog()
 	// Make client
 	c, err := client.NewUDPClient("localhost:8089")
 	if err != nil {

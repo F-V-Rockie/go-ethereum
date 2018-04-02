@@ -28,25 +28,25 @@ type dummyContractRef struct {
 	calledForEach bool
 }
 
-func (dummyContractRef) ReturnGas(*big.Int)          {}
-func (dummyContractRef) Address() common.Address     { return common.Address{} }
-func (dummyContractRef) Value() *big.Int             { return new(big.Int) }
-func (dummyContractRef) SetCode(common.Hash, []byte) {}
-func (d *dummyContractRef) ForEachStorage(callback func(key, value common.Hash) bool) {
+func (dummyContractRef) ReturnGas(*big.Int)          { log.DebugLog()}
+func (dummyContractRef) Address() common.Address     { log.DebugLog() return common.Address{} }
+func (dummyContractRef) Value() *big.Int             { log.DebugLog() return new(big.Int) }
+func (dummyContractRef) SetCode(common.Hash, []byte) { log.DebugLog()}
+func (d *dummyContractRef) ForEachStorage(callback func(key, value common.Hash) bool) { log.DebugLog()
 	d.calledForEach = true
 }
-func (d *dummyContractRef) SubBalance(amount *big.Int) {}
-func (d *dummyContractRef) AddBalance(amount *big.Int) {}
-func (d *dummyContractRef) SetBalance(*big.Int)        {}
-func (d *dummyContractRef) SetNonce(uint64)            {}
-func (d *dummyContractRef) Balance() *big.Int          { return new(big.Int) }
+func (d *dummyContractRef) SubBalance(amount *big.Int) { log.DebugLog()}
+func (d *dummyContractRef) AddBalance(amount *big.Int) { log.DebugLog()}
+func (d *dummyContractRef) SetBalance(*big.Int)        { log.DebugLog()}
+func (d *dummyContractRef) SetNonce(uint64)            { log.DebugLog()}
+func (d *dummyContractRef) Balance() *big.Int          { log.DebugLog() return new(big.Int) }
 
 type dummyStateDB struct {
 	NoopStateDB
 	ref *dummyContractRef
 }
 
-func TestStoreCapture(t *testing.T) {
+func TestStoreCapture(t *testing.T) { log.DebugLog()
 	var (
 		env      = NewEVM(Context{}, nil, params.TestChainConfig, Config{})
 		logger   = NewStructLogger(nil)

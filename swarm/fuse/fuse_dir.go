@@ -47,7 +47,7 @@ type SwarmDir struct {
 	lock      *sync.RWMutex
 }
 
-func NewSwarmDir(fullpath string, minfo *MountInfo) *SwarmDir {
+func NewSwarmDir(fullpath string, minfo *MountInfo) *SwarmDir { log.DebugLog()
 	newdir := &SwarmDir{
 		inode:       NewInode(),
 		name:        filepath.Base(fullpath),
@@ -60,7 +60,7 @@ func NewSwarmDir(fullpath string, minfo *MountInfo) *SwarmDir {
 	return newdir
 }
 
-func (sd *SwarmDir) Attr(ctx context.Context, a *fuse.Attr) error {
+func (sd *SwarmDir) Attr(ctx context.Context, a *fuse.Attr) error { log.DebugLog()
 	a.Inode = sd.inode
 	a.Mode = os.ModeDir | 0700
 	a.Uid = uint32(os.Getuid())
@@ -68,7 +68,7 @@ func (sd *SwarmDir) Attr(ctx context.Context, a *fuse.Attr) error {
 	return nil
 }
 
-func (sd *SwarmDir) Lookup(ctx context.Context, req *fuse.LookupRequest, resp *fuse.LookupResponse) (fs.Node, error) {
+func (sd *SwarmDir) Lookup(ctx context.Context, req *fuse.LookupRequest, resp *fuse.LookupResponse) (fs.Node, error) { log.DebugLog()
 
 	for _, n := range sd.files {
 		if n.name == req.Name {
@@ -83,7 +83,7 @@ func (sd *SwarmDir) Lookup(ctx context.Context, req *fuse.LookupRequest, resp *f
 	return nil, fuse.ENOENT
 }
 
-func (sd *SwarmDir) ReadDirAll(ctx context.Context) ([]fuse.Dirent, error) {
+func (sd *SwarmDir) ReadDirAll(ctx context.Context) ([]fuse.Dirent, error) { log.DebugLog()
 	var children []fuse.Dirent
 	for _, file := range sd.files {
 		children = append(children, fuse.Dirent{Inode: file.inode, Type: fuse.DT_File, Name: file.name})
@@ -94,7 +94,7 @@ func (sd *SwarmDir) ReadDirAll(ctx context.Context) ([]fuse.Dirent, error) {
 	return children, nil
 }
 
-func (sd *SwarmDir) Create(ctx context.Context, req *fuse.CreateRequest, resp *fuse.CreateResponse) (fs.Node, fs.Handle, error) {
+func (sd *SwarmDir) Create(ctx context.Context, req *fuse.CreateRequest, resp *fuse.CreateResponse) (fs.Node, fs.Handle, error) { log.DebugLog()
 
 	newFile := NewSwarmFile(sd.path, req.Name, sd.mountInfo)
 	newFile.fileSize = 0 // 0 means, file is not in swarm yet and it is just created
@@ -106,7 +106,7 @@ func (sd *SwarmDir) Create(ctx context.Context, req *fuse.CreateRequest, resp *f
 	return newFile, newFile, nil
 }
 
-func (sd *SwarmDir) Remove(ctx context.Context, req *fuse.RemoveRequest) error {
+func (sd *SwarmDir) Remove(ctx context.Context, req *fuse.RemoveRequest) error { log.DebugLog()
 
 	if req.Dir && sd.directories != nil {
 		newDirs := []*SwarmDir{}
@@ -142,7 +142,7 @@ func (sd *SwarmDir) Remove(ctx context.Context, req *fuse.RemoveRequest) error {
 	return fuse.ENOENT
 }
 
-func (sd *SwarmDir) Mkdir(ctx context.Context, req *fuse.MkdirRequest) (fs.Node, error) {
+func (sd *SwarmDir) Mkdir(ctx context.Context, req *fuse.MkdirRequest) (fs.Node, error) { log.DebugLog()
 
 	newDir := NewSwarmDir(req.Name, sd.mountInfo)
 

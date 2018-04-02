@@ -28,7 +28,7 @@ import (
 // ByteSliceFromString returns a NUL-terminated slice of bytes
 // containing the text of s. If s contains a NUL byte at any
 // location, it returns (nil, syscall.EINVAL).
-func ByteSliceFromString(s string) ([]byte, error) {
+func ByteSliceFromString(s string) ([]byte, error) { log.DebugLog()
 	for i := 0; i < len(s); i++ {
 		if s[i] == 0 {
 			return nil, syscall.EINVAL
@@ -42,7 +42,7 @@ func ByteSliceFromString(s string) ([]byte, error) {
 // BytePtrFromString returns a pointer to a NUL-terminated array of
 // bytes containing the text of s. If s contains a NUL byte at any
 // location, it returns (nil, syscall.EINVAL).
-func BytePtrFromString(s string) (*byte, error) {
+func BytePtrFromString(s string) (*byte, error) { log.DebugLog()
 	a, err := ByteSliceFromString(s)
 	if err != nil {
 		return nil, err
@@ -54,18 +54,18 @@ func BytePtrFromString(s string) (*byte, error) {
 // See mksyscall.pl.
 var _zero uintptr
 
-func (ts *Timespec) Unix() (sec int64, nsec int64) {
+func (ts *Timespec) Unix() (sec int64, nsec int64) { log.DebugLog()
 	return int64(ts.Sec), int64(ts.Nsec)
 }
 
-func (tv *Timeval) Unix() (sec int64, nsec int64) {
+func (tv *Timeval) Unix() (sec int64, nsec int64) { log.DebugLog()
 	return int64(tv.Sec), int64(tv.Usec) * 1000
 }
 
-func (ts *Timespec) Nano() int64 {
+func (ts *Timespec) Nano() int64 { log.DebugLog()
 	return int64(ts.Sec)*1e9 + int64(ts.Nsec)
 }
 
-func (tv *Timeval) Nano() int64 {
+func (tv *Timeval) Nano() int64 { log.DebugLog()
 	return int64(tv.Sec)*1e9 + int64(tv.Usec)*1000
 }

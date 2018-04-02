@@ -18,7 +18,7 @@ package vm
 
 import "testing"
 
-func TestJumpDestAnalysis(t *testing.T) {
+func TestJumpDestAnalysis(t *testing.T) { log.DebugLog()
 	tests := []struct {
 		code  []byte
 		exp   byte

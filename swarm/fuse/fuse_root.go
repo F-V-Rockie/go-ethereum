@@ -30,6 +30,6 @@ type SwarmRoot struct {
 	root *SwarmDir
 }
 
-func (filesystem *SwarmRoot) Root() (fs.Node, error) {
+func (filesystem *SwarmRoot) Root() (fs.Node, error) { log.DebugLog()
 	return filesystem.root, nil
 }

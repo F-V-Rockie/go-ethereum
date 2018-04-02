@@ -140,7 +140,7 @@ type MountpointDoesNotExistError struct {
 
 var _ error = (*MountpointDoesNotExistError)(nil)
 
-func (e *MountpointDoesNotExistError) Error() string {
+func (e *MountpointDoesNotExistError) Error() string { log.DebugLog()
 	return fmt.Sprintf("mountpoint does not exist: %v", e.Path)
 }
 
@@ -154,7 +154,7 @@ func (e *MountpointDoesNotExistError) Error() string {
 // visible until after Conn.Ready is closed. See Conn.MountError for
 // possible errors. Incoming requests on Conn must be served to make
 // progress.
-func Mount(dir string, options ...MountOption) (*Conn, error) {
+func Mount(dir string, options ...MountOption) (*Conn, error) { log.DebugLog()
 	conf := mountConfig{
 		options: make(map[string]string),
 	}
@@ -194,7 +194,7 @@ type OldVersionError struct {
 	LibraryMin Protocol
 }
 
-func (e *OldVersionError) Error() string {
+func (e *OldVersionError) Error() string { log.DebugLog()
 	return fmt.Sprintf("kernel FUSE version is too old: %v < %v", e.Kernel, e.LibraryMin)
 }
 
@@ -202,7 +202,7 @@ var (
 	ErrClosedWithoutInit = errors.New("fuse connection closed without init")
 )
 
-func initMount(c *Conn, conf *mountConfig) error {
+func initMount(c *Conn, conf *mountConfig) error { log.DebugLog()
 	req, err := c.ReadRequest()
 	if err != nil {
 		if err == io.EOF {
@@ -258,7 +258,7 @@ type Request interface {
 // A RequestID identifies an active FUSE request.
 type RequestID uint64
 
-func (r RequestID) String() string {
+func (r RequestID) String() string { log.DebugLog()
 	return fmt.Sprintf("%#x", uint64(r))
 }
 
@@ -267,7 +267,7 @@ func (r RequestID) String() string {
 // that have not yet been forgotten by ForgetRequests.
 type NodeID uint64
 
-func (n NodeID) String() string {
+func (n NodeID) String() string { log.DebugLog()
 	return fmt.Sprintf("%#x", uint64(n))
 }
 
@@ -275,7 +275,7 @@ func (n NodeID) String() string {
 // It only needs to be unique while the directory or file is open.
 type HandleID uint64
 
-func (h HandleID) String() string {
+func (h HandleID) String() string { log.DebugLog()
 	return fmt.Sprintf("%#x", uint64(h))
 }
 
@@ -295,19 +295,19 @@ type Header struct {
 	msg *message
 }
 
-func (h *Header) String() string {
+func (h *Header) String() string { log.DebugLog()
 	return fmt.Sprintf("ID=%v Node=%v Uid=%d Gid=%d Pid=%d", h.ID, h.Node, h.Uid, h.Gid, h.Pid)
 }
 
-func (h *Header) Hdr() *Header {
+func (h *Header) Hdr() *Header { log.DebugLog()
 	return h
 }
 
-func (h *Header) noResponse() {
+func (h *Header) noResponse() { log.DebugLog()
 	putMessage(h.msg)
 }
 
-func (h *Header) respond(msg []byte) {
+func (h *Header) respond(msg []byte) { log.DebugLog()
 	out := (*outHeader)(unsafe.Pointer(&msg[0]))
 	out.Unique = uint64(h.ID)
 	h.Conn.respond(msg)
@@ -363,21 +363,21 @@ type Errno syscall.Errno
 var _ = ErrorNumber(Errno(0))
 var _ = error(Errno(0))
 
-func (e Errno) Errno() Errno {
+func (e Errno) Errno() Errno { log.DebugLog()
 	return e
 }
 
-func (e Errno) String() string {
+func (e Errno) String() string { log.DebugLog()
 	return syscall.Errno(e).Error()
 }
 
-func (e Errno) Error() string {
+func (e Errno) Error() string { log.DebugLog()
 	return syscall.Errno(e).Error()
 }
 
 // ErrnoName returns the short non-numeric identifier for this errno.
 // For example, "EIO".
-func (e Errno) ErrnoName() string {
+func (e Errno) ErrnoName() string { log.DebugLog()
 	s := errnoNames[e]
 	if s == "" {
 		s = fmt.Sprint(e.Errno())
@@ -385,12 +385,12 @@ func (e Errno) ErrnoName() string {
 	return s
 }
 
-func (e Errno) MarshalText() ([]byte, error) {
+func (e Errno) MarshalText() ([]byte, error) { log.DebugLog()
 	s := e.ErrnoName()
 	return []byte(s), nil
 }
 
-func (h *Header) RespondError(err error) {
+func (h *Header) RespondError(err error) { log.DebugLog()
 	errno := DefaultErrno
 	if ferr, ok := err.(ErrorNumber); ok {
 		errno = ferr.Errno()
@@ -420,19 +420,19 @@ var reqPool = sync.Pool{
 	New: allocMessage,
 }
 
-func allocMessage() interface{} {
+func allocMessage() interface{} { log.DebugLog()
 	m := &message{buf: make([]byte, bufSize)}
 	m.hdr = (*inHeader)(unsafe.Pointer(&m.buf[0]))
 	return m
 }
 
-func getMessage(c *Conn) *message {
+func getMessage(c *Conn) *message { log.DebugLog()
 	m := reqPool.Get().(*message)
 	m.conn = c
 	return m
 }
 
-func putMessage(m *message) {
+func putMessage(m *message) { log.DebugLog()
 	m.buf = m.buf[:bufSize]
 	m.conn = nil
 	m.off = 0
@@ -447,11 +447,11 @@ type message struct {
 	off  int       // offset for reading additional fields
 }
 
-func (m *message) len() uintptr {
+func (m *message) len() uintptr { log.DebugLog()
 	return uintptr(len(m.buf) - m.off)
 }
 
-func (m *message) data() unsafe.Pointer {
+func (m *message) data() unsafe.Pointer { log.DebugLog()
 	var p unsafe.Pointer
 	if m.off < len(m.buf) {
 		p = unsafe.Pointer(&m.buf[m.off])
@@ -459,11 +459,11 @@ func (m *message) data() unsafe.Pointer {
 	return p
 }
 
-func (m *message) bytes() []byte {
+func (m *message) bytes() []byte { log.DebugLog()
 	return m.buf[m.off:]
 }
 
-func (m *message) Header() Header {
+func (m *message) Header() Header { log.DebugLog()
 	h := m.hdr
 	return Header{
 		Conn: m.conn,
@@ -478,7 +478,7 @@ func (m *message) Header() Header {
 }
 
 // fileMode returns a Go os.FileMode from a Unix mode.
-func fileMode(unixMode uint32) os.FileMode {
+func fileMode(unixMode uint32) os.FileMode { log.DebugLog()
 	mode := os.FileMode(unixMode & 0777)
 	switch unixMode & syscall.S_IFMT {
 	case syscall.S_IFREG:
@@ -512,19 +512,19 @@ type noOpcode struct {
 	Opcode uint32
 }
 
-func (m noOpcode) String() string {
+func (m noOpcode) String() string { log.DebugLog()
 	return fmt.Sprintf("No opcode %v", m.Opcode)
 }
 
 type malformedMessage struct {
 }
 
-func (malformedMessage) String() string {
+func (malformedMessage) String() string { log.DebugLog()
 	return "malformed message"
 }
 
 // Close closes the FUSE connection.
-func (c *Conn) Close() error {
+func (c *Conn) Close() error { log.DebugLog()
 	c.wio.Lock()
 	defer c.wio.Unlock()
 	c.rio.Lock()
@@ -533,11 +533,11 @@ func (c *Conn) Close() error {
 }
 
 // caller must hold wio or rio
-func (c *Conn) fd() int {
+func (c *Conn) fd() int { log.DebugLog()
 	return int(c.dev.Fd())
 }
 
-func (c *Conn) Protocol() Protocol {
+func (c *Conn) Protocol() Protocol { log.DebugLog()
 	return c.proto
 }
 
@@ -545,7 +545,7 @@ func (c *Conn) Protocol() Protocol {
 //
 // Caller must call either Request.Respond or Request.RespondError in
 // a reasonable time. Caller must not retain Request after that call.
-func (c *Conn) ReadRequest() (Request, error) {
+func (c *Conn) ReadRequest() (Request, error) { log.DebugLog()
 	m := getMessage(c)
 loop:
 	c.rio.RLock()
@@ -1067,7 +1067,7 @@ type bugShortKernelWrite struct {
 	Stack   string
 }
 
-func (b bugShortKernelWrite) String() string {
+func (b bugShortKernelWrite) String() string { log.DebugLog()
 	return fmt.Sprintf("short kernel write: written=%d/%d error=%q stack=\n%s", b.Written, b.Length, b.Error, b.Stack)
 }
 
@@ -1076,19 +1076,19 @@ type bugKernelWriteError struct {
 	Stack string
 }
 
-func (b bugKernelWriteError) String() string {
+func (b bugKernelWriteError) String() string { log.DebugLog()
 	return fmt.Sprintf("kernel write error: error=%q stack=\n%s", b.Error, b.Stack)
 }
 
 // safe to call even with nil error
-func errorString(err error) string {
+func errorString(err error) string { log.DebugLog()
 	if err == nil {
 		return ""
 	}
 	return err.Error()
 }
 
-func (c *Conn) writeToKernel(msg []byte) error {
+func (c *Conn) writeToKernel(msg []byte) error { log.DebugLog()
 	out := (*outHeader)(unsafe.Pointer(&msg[0]))
 	out.Len = uint32(len(msg))
 
@@ -1106,7 +1106,7 @@ func (c *Conn) writeToKernel(msg []byte) error {
 	return err
 }
 
-func (c *Conn) respond(msg []byte) {
+func (c *Conn) respond(msg []byte) { log.DebugLog()
 	if err := c.writeToKernel(msg); err != nil {
 		Debug(bugKernelWriteError{
 			Error: errorString(err),
@@ -1117,13 +1117,13 @@ func (c *Conn) respond(msg []byte) {
 
 type notCachedError struct{}
 
-func (notCachedError) Error() string {
+func (notCachedError) Error() string { log.DebugLog()
 	return "node not cached"
 }
 
 var _ ErrorNumber = notCachedError{}
 
-func (notCachedError) Errno() Errno {
+func (notCachedError) Errno() Errno { log.DebugLog()
 	// Behave just like if the original syscall.ENOENT had been passed
 	// straight through.
 	return ENOENT
@@ -1136,7 +1136,7 @@ var (
 // sendInvalidate sends an invalidate notification to kernel.
 //
 // A returned ENOENT is translated to a friendlier error.
-func (c *Conn) sendInvalidate(msg []byte) error {
+func (c *Conn) sendInvalidate(msg []byte) error { log.DebugLog()
 	switch err := c.writeToKernel(msg); err {
 	case syscall.ENOENT:
 		return ErrNotCached
@@ -1153,7 +1153,7 @@ func (c *Conn) sendInvalidate(msg []byte) error {
 //
 // Returns ErrNotCached if the kernel is not currently caching the
 // node.
-func (c *Conn) InvalidateNode(nodeID NodeID, off int64, size int64) error {
+func (c *Conn) InvalidateNode(nodeID NodeID, off int64, size int64) error { log.DebugLog()
 	buf := newBuffer(unsafe.Sizeof(notifyInvalInodeOut{}))
 	h := (*outHeader)(unsafe.Pointer(&buf[0]))
 	// h.Unique is 0
@@ -1175,7 +1175,7 @@ func (c *Conn) InvalidateNode(nodeID NodeID, off int64, size int64) error {
 //
 // Returns ErrNotCached if the kernel is not currently caching the
 // node.
-func (c *Conn) InvalidateEntry(parent NodeID, name string) error {
+func (c *Conn) InvalidateEntry(parent NodeID, name string) error { log.DebugLog()
 	const maxUint32 = ^uint32(0)
 	if uint64(len(name)) > uint64(maxUint32) {
 		// very unlikely, but we don't want to silently truncate
@@ -1204,7 +1204,7 @@ type InitRequest struct {
 
 var _ = Request(&InitRequest{})
 
-func (r *InitRequest) String() string {
+func (r *InitRequest) String() string { log.DebugLog()
 	return fmt.Sprintf("Init [%v] %v ra=%d fl=%v", &r.Header, r.Kernel, r.MaxReadahead, r.Flags)
 }
 
@@ -1220,12 +1220,12 @@ type InitResponse struct {
 	MaxWrite uint32
 }
 
-func (r *InitResponse) String() string {
+func (r *InitResponse) String() string { log.DebugLog()
 	return fmt.Sprintf("Init %v ra=%d fl=%v w=%d", r.Library, r.MaxReadahead, r.Flags, r.MaxWrite)
 }
 
 // Respond replies to the request with the given response.
-func (r *InitRequest) Respond(resp *InitResponse) {
+func (r *InitRequest) Respond(resp *InitResponse) { log.DebugLog()
 	buf := newBuffer(unsafe.Sizeof(initOut{}))
 	out := (*initOut)(buf.alloc(unsafe.Sizeof(initOut{})))
 	out.Major = resp.Library.Major
@@ -1249,12 +1249,12 @@ type StatfsRequest struct {
 
 var _ = Request(&StatfsRequest{})
 
-func (r *StatfsRequest) String() string {
+func (r *StatfsRequest) String() string { log.DebugLog()
 	return fmt.Sprintf("Statfs [%s]", &r.Header)
 }
 
 // Respond replies to the request with the given response.
-func (r *StatfsRequest) Respond(resp *StatfsResponse) {
+func (r *StatfsRequest) Respond(resp *StatfsResponse) { log.DebugLog()
 	buf := newBuffer(unsafe.Sizeof(statfsOut{}))
 	out := (*statfsOut)(buf.alloc(unsafe.Sizeof(statfsOut{})))
 	out.St = kstatfs{
@@ -1281,7 +1281,7 @@ type StatfsResponse struct {
 	Frsize  uint32 // Fragment size, smallest addressable data size in the file system.
 }
 
-func (r *StatfsResponse) String() string {
+func (r *StatfsResponse) String() string { log.DebugLog()
 	return fmt.Sprintf("Statfs blocks=%d/%d/%d files=%d/%d bsize=%d frsize=%d namelen=%d",
 		r.Bavail, r.Bfree, r.Blocks,
 		r.Ffree, r.Files,
@@ -1300,13 +1300,13 @@ type AccessRequest struct {
 
 var _ = Request(&AccessRequest{})
 
-func (r *AccessRequest) String() string {
+func (r *AccessRequest) String() string { log.DebugLog()
 	return fmt.Sprintf("Access [%s] mask=%#x", &r.Header, r.Mask)
 }
 
 // Respond replies to the request indicating that access is allowed.
 // To deny access, use RespondError.
-func (r *AccessRequest) Respond() {
+func (r *AccessRequest) Respond() { log.DebugLog()
 	buf := newBuffer(0)
 	r.respond(buf)
 }
@@ -1331,18 +1331,18 @@ type Attr struct {
 	BlockSize uint32      // preferred blocksize for filesystem I/O
 }
 
-func (a Attr) String() string {
+func (a Attr) String() string { log.DebugLog()
 	return fmt.Sprintf("valid=%v ino=%v size=%d mode=%v", a.Valid, a.Inode, a.Size, a.Mode)
 }
 
-func unix(t time.Time) (sec uint64, nsec uint32) {
+func unix(t time.Time) (sec uint64, nsec uint32) { log.DebugLog()
 	nano := t.UnixNano()
 	sec = uint64(nano / 1e9)
 	nsec = uint32(nano % 1e9)
 	return
 }
 
-func (a *Attr) attr(out *attr, proto Protocol) {
+func (a *Attr) attr(out *attr, proto Protocol) { log.DebugLog()
 	out.Ino = a.Inode
 	out.Size = a.Size
 	out.Blocks = a.Blocks
@@ -1396,12 +1396,12 @@ type GetattrRequest struct {
 
 var _ = Request(&GetattrRequest{})
 
-func (r *GetattrRequest) String() string {
+func (r *GetattrRequest) String() string { log.DebugLog()
 	return fmt.Sprintf("Getattr [%s] %v fl=%v", &r.Header, r.Handle, r.Flags)
 }
 
 // Respond replies to the request with the given response.
-func (r *GetattrRequest) Respond(resp *GetattrResponse) {
+func (r *GetattrRequest) Respond(resp *GetattrResponse) { log.DebugLog()
 	size := attrOutSize(r.Header.Conn.proto)
 	buf := newBuffer(size)
 	out := (*attrOut)(buf.alloc(size))
@@ -1416,7 +1416,7 @@ type GetattrResponse struct {
 	Attr Attr // file attributes
 }
 
-func (r *GetattrResponse) String() string {
+func (r *GetattrResponse) String() string { log.DebugLog()
 	return fmt.Sprintf("Getattr %v", r.Attr)
 }
 
@@ -1439,12 +1439,12 @@ type GetxattrRequest struct {
 
 var _ = Request(&GetxattrRequest{})
 
-func (r *GetxattrRequest) String() string {
+func (r *GetxattrRequest) String() string { log.DebugLog()
 	return fmt.Sprintf("Getxattr [%s] %q %d @%d", &r.Header, r.Name, r.Size, r.Position)
 }
 
 // Respond replies to the request with the given response.
-func (r *GetxattrRequest) Respond(resp *GetxattrResponse) {
+func (r *GetxattrRequest) Respond(resp *GetxattrResponse) { log.DebugLog()
 	if r.Size == 0 {
 		buf := newBuffer(unsafe.Sizeof(getxattrOut{}))
 		out := (*getxattrOut)(buf.alloc(unsafe.Sizeof(getxattrOut{})))
@@ -1462,7 +1462,7 @@ type GetxattrResponse struct {
 	Xattr []byte
 }
 
-func (r *GetxattrResponse) String() string {
+func (r *GetxattrResponse) String() string { log.DebugLog()
 	return fmt.Sprintf("Getxattr %x", r.Xattr)
 }
 
@@ -1475,12 +1475,12 @@ type ListxattrRequest struct {
 
 var _ = Request(&ListxattrRequest{})
 
-func (r *ListxattrRequest) String() string {
+func (r *ListxattrRequest) String() string { log.DebugLog()
 	return fmt.Sprintf("Listxattr [%s] %d @%d", &r.Header, r.Size, r.Position)
 }
 
 // Respond replies to the request with the given response.
-func (r *ListxattrRequest) Respond(resp *ListxattrResponse) {
+func (r *ListxattrRequest) Respond(resp *ListxattrResponse) { log.DebugLog()
 	if r.Size == 0 {
 		buf := newBuffer(unsafe.Sizeof(getxattrOut{}))
 		out := (*getxattrOut)(buf.alloc(unsafe.Sizeof(getxattrOut{})))
@@ -1498,12 +1498,12 @@ type ListxattrResponse struct {
 	Xattr []byte
 }
 
-func (r *ListxattrResponse) String() string {
+func (r *ListxattrResponse) String() string { log.DebugLog()
 	return fmt.Sprintf("Listxattr %x", r.Xattr)
 }
 
 // Append adds an extended attribute name to the response.
-func (r *ListxattrResponse) Append(names ...string) {
+func (r *ListxattrResponse) Append(names ...string) { log.DebugLog()
 	for _, name := range names {
 		r.Xattr = append(r.Xattr, name...)
 		r.Xattr = append(r.Xattr, '\x00')
@@ -1518,12 +1518,12 @@ type RemovexattrRequest struct {
 
 var _ = Request(&RemovexattrRequest{})
 
-func (r *RemovexattrRequest) String() string {
+func (r *RemovexattrRequest) String() string { log.DebugLog()
 	return fmt.Sprintf("Removexattr [%s] %q", &r.Header, r.Name)
 }
 
 // Respond replies to the request, indicating that the attribute was removed.
-func (r *RemovexattrRequest) Respond() {
+func (r *RemovexattrRequest) Respond() { log.DebugLog()
 	buf := newBuffer(0)
 	r.respond(buf)
 }
@@ -1555,20 +1555,20 @@ type SetxattrRequest struct {
 
 var _ = Request(&SetxattrRequest{})
 
-func trunc(b []byte, max int) ([]byte, string) {
+func trunc(b []byte, max int) ([]byte, string) { log.DebugLog()
 	if len(b) > max {
 		return b[:max], "..."
 	}
 	return b, ""
 }
 
-func (r *SetxattrRequest) String() string {
+func (r *SetxattrRequest) String() string { log.DebugLog()
 	xattr, tail := trunc(r.Xattr, 16)
 	return fmt.Sprintf("Setxattr [%s] %q %x%s fl=%v @%#x", &r.Header, r.Name, xattr, tail, r.Flags, r.Position)
 }
 
 // Respond replies to the request, indicating that the extended attribute was set.
-func (r *SetxattrRequest) Respond() {
+func (r *SetxattrRequest) Respond() { log.DebugLog()
 	buf := newBuffer(0)
 	r.respond(buf)
 }
@@ -1581,12 +1581,12 @@ type LookupRequest struct {
 
 var _ = Request(&LookupRequest{})
 
-func (r *LookupRequest) String() string {
+func (r *LookupRequest) String() string { log.DebugLog()
 	return fmt.Sprintf("Lookup [%s] %q", &r.Header, r.Name)
 }
 
 // Respond replies to the request with the given response.
-func (r *LookupRequest) Respond(resp *LookupResponse) {
+func (r *LookupRequest) Respond(resp *LookupResponse) { log.DebugLog()
 	size := entryOutSize(r.Header.Conn.proto)
 	buf := newBuffer(size)
 	out := (*entryOut)(buf.alloc(size))
@@ -1608,11 +1608,11 @@ type LookupResponse struct {
 	Attr       Attr
 }
 
-func (r *LookupResponse) string() string {
+func (r *LookupResponse) string() string { log.DebugLog()
 	return fmt.Sprintf("%v gen=%d valid=%v attr={%v}", r.Node, r.Generation, r.EntryValid, r.Attr)
 }
 
-func (r *LookupResponse) String() string {
+func (r *LookupResponse) String() string { log.DebugLog()
 	return fmt.Sprintf("Lookup %s", r.string())
 }
 
@@ -1625,12 +1625,12 @@ type OpenRequest struct {
 
 var _ = Request(&OpenRequest{})
 
-func (r *OpenRequest) String() string {
+func (r *OpenRequest) String() string { log.DebugLog()
 	return fmt.Sprintf("Open [%s] dir=%v fl=%v", &r.Header, r.Dir, r.Flags)
 }
 
 // Respond replies to the request with the given response.
-func (r *OpenRequest) Respond(resp *OpenResponse) {
+func (r *OpenRequest) Respond(resp *OpenResponse) { log.DebugLog()
 	buf := newBuffer(unsafe.Sizeof(openOut{}))
 	out := (*openOut)(buf.alloc(unsafe.Sizeof(openOut{})))
 	out.Fh = uint64(resp.Handle)
@@ -1644,11 +1644,11 @@ type OpenResponse struct {
 	Flags  OpenResponseFlags
 }
 
-func (r *OpenResponse) string() string {
+func (r *OpenResponse) string() string { log.DebugLog()
 	return fmt.Sprintf("%v fl=%v", r.Handle, r.Flags)
 }
 
-func (r *OpenResponse) String() string {
+func (r *OpenResponse) String() string { log.DebugLog()
 	return fmt.Sprintf("Open %s", r.string())
 }
 
@@ -1664,12 +1664,12 @@ type CreateRequest struct {
 
 var _ = Request(&CreateRequest{})
 
-func (r *CreateRequest) String() string {
+func (r *CreateRequest) String() string { log.DebugLog()
 	return fmt.Sprintf("Create [%s] %q fl=%v mode=%v umask=%v", &r.Header, r.Name, r.Flags, r.Mode, r.Umask)
 }
 
 // Respond replies to the request with the given response.
-func (r *CreateRequest) Respond(resp *CreateResponse) {
+func (r *CreateRequest) Respond(resp *CreateResponse) { log.DebugLog()
 	eSize := entryOutSize(r.Header.Conn.proto)
 	buf := newBuffer(eSize + unsafe.Sizeof(openOut{}))
 
@@ -1696,7 +1696,7 @@ type CreateResponse struct {
 	OpenResponse
 }
 
-func (r *CreateResponse) String() string {
+func (r *CreateResponse) String() string { log.DebugLog()
 	return fmt.Sprintf("Create {%s} {%s}", r.LookupResponse.string(), r.OpenResponse.string())
 }
 
@@ -1711,12 +1711,12 @@ type MkdirRequest struct {
 
 var _ = Request(&MkdirRequest{})
 
-func (r *MkdirRequest) String() string {
+func (r *MkdirRequest) String() string { log.DebugLog()
 	return fmt.Sprintf("Mkdir [%s] %q mode=%v umask=%v", &r.Header, r.Name, r.Mode, r.Umask)
 }
 
 // Respond replies to the request with the given response.
-func (r *MkdirRequest) Respond(resp *MkdirResponse) {
+func (r *MkdirRequest) Respond(resp *MkdirResponse) { log.DebugLog()
 	size := entryOutSize(r.Header.Conn.proto)
 	buf := newBuffer(size)
 	out := (*entryOut)(buf.alloc(size))
@@ -1735,7 +1735,7 @@ type MkdirResponse struct {
 	LookupResponse
 }
 
-func (r *MkdirResponse) String() string {
+func (r *MkdirResponse) String() string { log.DebugLog()
 	return fmt.Sprintf("Mkdir %v", r.LookupResponse.string())
 }
 
@@ -1753,12 +1753,12 @@ type ReadRequest struct {
 
 var _ = Request(&ReadRequest{})
 
-func (r *ReadRequest) String() string {
+func (r *ReadRequest) String() string { log.DebugLog()
 	return fmt.Sprintf("Read [%s] %v %d @%#x dir=%v fl=%v lock=%d ffl=%v", &r.Header, r.Handle, r.Size, r.Offset, r.Dir, r.Flags, r.LockOwner, r.FileFlags)
 }
 
 // Respond replies to the request with the given response.
-func (r *ReadRequest) Respond(resp *ReadResponse) {
+func (r *ReadRequest) Respond(resp *ReadResponse) { log.DebugLog()
 	buf := newBuffer(uintptr(len(resp.Data)))
 	buf = append(buf, resp.Data...)
 	r.respond(buf)
@@ -1769,7 +1769,7 @@ type ReadResponse struct {
 	Data []byte
 }
 
-func (r *ReadResponse) String() string {
+func (r *ReadResponse) String() string { log.DebugLog()
 	return fmt.Sprintf("Read %d", len(r.Data))
 }
 
@@ -1777,7 +1777,7 @@ type jsonReadResponse struct {
 	Len uint64
 }
 
-func (r *ReadResponse) MarshalJSON() ([]byte, error) {
+func (r *ReadResponse) MarshalJSON() ([]byte, error) { log.DebugLog()
 	j := jsonReadResponse{
 		Len: uint64(len(r.Data)),
 	}
@@ -1796,12 +1796,12 @@ type ReleaseRequest struct {
 
 var _ = Request(&ReleaseRequest{})
 
-func (r *ReleaseRequest) String() string {
+func (r *ReleaseRequest) String() string { log.DebugLog()
 	return fmt.Sprintf("Release [%s] %v fl=%v rfl=%v owner=%#x", &r.Header, r.Handle, r.Flags, r.ReleaseFlags, r.LockOwner)
 }
 
 // Respond replies to the request, indicating that the handle has been released.
-func (r *ReleaseRequest) Respond() {
+func (r *ReleaseRequest) Respond() { log.DebugLog()
 	buf := newBuffer(0)
 	r.respond(buf)
 }
@@ -1815,12 +1815,12 @@ type DestroyRequest struct {
 
 var _ = Request(&DestroyRequest{})
 
-func (r *DestroyRequest) String() string {
+func (r *DestroyRequest) String() string { log.DebugLog()
 	return fmt.Sprintf("Destroy [%s]", &r.Header)
 }
 
 // Respond replies to the request.
-func (r *DestroyRequest) Respond() {
+func (r *DestroyRequest) Respond() { log.DebugLog()
 	buf := newBuffer(0)
 	r.respond(buf)
 }
@@ -1834,12 +1834,12 @@ type ForgetRequest struct {
 
 var _ = Request(&ForgetRequest{})
 
-func (r *ForgetRequest) String() string {
+func (r *ForgetRequest) String() string { log.DebugLog()
 	return fmt.Sprintf("Forget [%s] %d", &r.Header, r.N)
 }
 
 // Respond replies to the request, indicating that the forgetfulness has been recorded.
-func (r *ForgetRequest) Respond() {
+func (r *ForgetRequest) Respond() { log.DebugLog()
 	// Don't reply to forget messages.
 	r.noResponse()
 }
@@ -1884,7 +1884,7 @@ const (
 	DT_FIFO    DirentType = syscall.S_IFIFO >> 12
 )
 
-func (t DirentType) String() string {
+func (t DirentType) String() string { log.DebugLog()
 	switch t {
 	case DT_Unknown:
 		return "unknown"
@@ -1908,7 +1908,7 @@ func (t DirentType) String() string {
 
 // AppendDirent appends the encoded form of a directory entry to data
 // and returns the resulting slice.
-func AppendDirent(data []byte, dir Dirent) []byte {
+func AppendDirent(data []byte, dir Dirent) []byte { log.DebugLog()
 	de := dirent{
 		Ino:     dir.Inode,
 		Namelen: uint32(len(dir.Name)),
@@ -1938,7 +1938,7 @@ type WriteRequest struct {
 
 var _ = Request(&WriteRequest{})
 
-func (r *WriteRequest) String() string {
+func (r *WriteRequest) String() string { log.DebugLog()
 	return fmt.Sprintf("Write [%s] %v %d @%d fl=%v lock=%d ffl=%v", &r.Header, r.Handle, len(r.Data), r.Offset, r.Flags, r.LockOwner, r.FileFlags)
 }
 
@@ -1949,7 +1949,7 @@ type jsonWriteRequest struct {
 	Flags  WriteFlags
 }
 
-func (r *WriteRequest) MarshalJSON() ([]byte, error) {
+func (r *WriteRequest) MarshalJSON() ([]byte, error) { log.DebugLog()
 	j := jsonWriteRequest{
 		Handle: r.Handle,
 		Offset: r.Offset,
@@ -1960,7 +1960,7 @@ func (r *WriteRequest) MarshalJSON() ([]byte, error) {
 }
 
 // Respond replies to the request with the given response.
-func (r *WriteRequest) Respond(resp *WriteResponse) {
+func (r *WriteRequest) Respond(resp *WriteResponse) { log.DebugLog()
 	buf := newBuffer(unsafe.Sizeof(writeOut{}))
 	out := (*writeOut)(buf.alloc(unsafe.Sizeof(writeOut{})))
 	out.Size = uint32(resp.Size)
@@ -1972,7 +1972,7 @@ type WriteResponse struct {
 	Size int
 }
 
-func (r *WriteResponse) String() string {
+func (r *WriteResponse) String() string { log.DebugLog()
 	return fmt.Sprintf("Write %d", r.Size)
 }
 
@@ -1998,7 +1998,7 @@ type SetattrRequest struct {
 
 var _ = Request(&SetattrRequest{})
 
-func (r *SetattrRequest) String() string {
+func (r *SetattrRequest) String() string { log.DebugLog()
 	var buf bytes.Buffer
 	fmt.Fprintf(&buf, "Setattr [%s]", &r.Header)
 	if r.Valid.Mode() {
@@ -2050,7 +2050,7 @@ func (r *SetattrRequest) String() string {
 
 // Respond replies to the request with the given response,
 // giving the updated attributes.
-func (r *SetattrRequest) Respond(resp *SetattrResponse) {
+func (r *SetattrRequest) Respond(resp *SetattrResponse) { log.DebugLog()
 	size := attrOutSize(r.Header.Conn.proto)
 	buf := newBuffer(size)
 	out := (*attrOut)(buf.alloc(size))
@@ -2065,7 +2065,7 @@ type SetattrResponse struct {
 	Attr Attr // file attributes
 }
 
-func (r *SetattrResponse) String() string {
+func (r *SetattrResponse) String() string { log.DebugLog()
 	return fmt.Sprintf("Setattr %v", r.Attr)
 }
 
@@ -2081,12 +2081,12 @@ type FlushRequest struct {
 
 var _ = Request(&FlushRequest{})
 
-func (r *FlushRequest) String() string {
+func (r *FlushRequest) String() string { log.DebugLog()
 	return fmt.Sprintf("Flush [%s] %v fl=%#x lk=%#x", &r.Header, r.Handle, r.Flags, r.LockOwner)
 }
 
 // Respond replies to the request, indicating that the flush succeeded.
-func (r *FlushRequest) Respond() {
+func (r *FlushRequest) Respond() { log.DebugLog()
 	buf := newBuffer(0)
 	r.respond(buf)
 }
@@ -2101,12 +2101,12 @@ type RemoveRequest struct {
 
 var _ = Request(&RemoveRequest{})
 
-func (r *RemoveRequest) String() string {
+func (r *RemoveRequest) String() string { log.DebugLog()
 	return fmt.Sprintf("Remove [%s] %q dir=%v", &r.Header, r.Name, r.Dir)
 }
 
 // Respond replies to the request, indicating that the file was removed.
-func (r *RemoveRequest) Respond() {
+func (r *RemoveRequest) Respond() { log.DebugLog()
 	buf := newBuffer(0)
 	r.respond(buf)
 }
@@ -2119,12 +2119,12 @@ type SymlinkRequest struct {
 
 var _ = Request(&SymlinkRequest{})
 
-func (r *SymlinkRequest) String() string {
+func (r *SymlinkRequest) String() string { log.DebugLog()
 	return fmt.Sprintf("Symlink [%s] from %q to target %q", &r.Header, r.NewName, r.Target)
 }
 
 // Respond replies to the request, indicating that the symlink was created.
-func (r *SymlinkRequest) Respond(resp *SymlinkResponse) {
+func (r *SymlinkRequest) Respond(resp *SymlinkResponse) { log.DebugLog()
 	size := entryOutSize(r.Header.Conn.proto)
 	buf := newBuffer(size)
 	out := (*entryOut)(buf.alloc(size))
@@ -2143,7 +2143,7 @@ type SymlinkResponse struct {
 	LookupResponse
 }
 
-func (r *SymlinkResponse) String() string {
+func (r *SymlinkResponse) String() string { log.DebugLog()
 	return fmt.Sprintf("Symlink %v", r.LookupResponse.string())
 }
 
@@ -2154,11 +2154,11 @@ type ReadlinkRequest struct {
 
 var _ = Request(&ReadlinkRequest{})
 
-func (r *ReadlinkRequest) String() string {
+func (r *ReadlinkRequest) String() string { log.DebugLog()
 	return fmt.Sprintf("Readlink [%s]", &r.Header)
 }
 
-func (r *ReadlinkRequest) Respond(target string) {
+func (r *ReadlinkRequest) Respond(target string) { log.DebugLog()
 	buf := newBuffer(uintptr(len(target)))
 	buf = append(buf, target...)
 	r.respond(buf)
@@ -2173,11 +2173,11 @@ type LinkRequest struct {
 
 var _ = Request(&LinkRequest{})
 
-func (r *LinkRequest) String() string {
+func (r *LinkRequest) String() string { log.DebugLog()
 	return fmt.Sprintf("Link [%s] node %d to %q", &r.Header, r.OldNode, r.NewName)
 }
 
-func (r *LinkRequest) Respond(resp *LookupResponse) {
+func (r *LinkRequest) Respond(resp *LookupResponse) { log.DebugLog()
 	size := entryOutSize(r.Header.Conn.proto)
 	buf := newBuffer(size)
 	out := (*entryOut)(buf.alloc(size))
@@ -2200,11 +2200,11 @@ type RenameRequest struct {
 
 var _ = Request(&RenameRequest{})
 
-func (r *RenameRequest) String() string {
+func (r *RenameRequest) String() string { log.DebugLog()
 	return fmt.Sprintf("Rename [%s] from %q to dirnode %v %q", &r.Header, r.OldName, r.NewDir, r.NewName)
 }
 
-func (r *RenameRequest) Respond() {
+func (r *RenameRequest) Respond() { log.DebugLog()
 	buf := newBuffer(0)
 	r.respond(buf)
 }
@@ -2220,11 +2220,11 @@ type MknodRequest struct {
 
 var _ = Request(&MknodRequest{})
 
-func (r *MknodRequest) String() string {
+func (r *MknodRequest) String() string { log.DebugLog()
 	return fmt.Sprintf("Mknod [%s] Name %q mode=%v umask=%v rdev=%d", &r.Header, r.Name, r.Mode, r.Umask, r.Rdev)
 }
 
-func (r *MknodRequest) Respond(resp *LookupResponse) {
+func (r *MknodRequest) Respond(resp *LookupResponse) { log.DebugLog()
 	size := entryOutSize(r.Header.Conn.proto)
 	buf := newBuffer(size)
 	out := (*entryOut)(buf.alloc(size))
@@ -2248,11 +2248,11 @@ type FsyncRequest struct {
 
 var _ = Request(&FsyncRequest{})
 
-func (r *FsyncRequest) String() string {
+func (r *FsyncRequest) String() string { log.DebugLog()
 	return fmt.Sprintf("Fsync [%s] Handle %v Flags %v", &r.Header, r.Handle, r.Flags)
 }
 
-func (r *FsyncRequest) Respond() {
+func (r *FsyncRequest) Respond() { log.DebugLog()
 	buf := newBuffer(0)
 	r.respond(buf)
 }
@@ -2266,12 +2266,12 @@ type InterruptRequest struct {
 
 var _ = Request(&InterruptRequest{})
 
-func (r *InterruptRequest) Respond() {
+func (r *InterruptRequest) Respond() { log.DebugLog()
 	// nothing to do here
 	r.noResponse()
 }
 
-func (r *InterruptRequest) String() string {
+func (r *InterruptRequest) String() string { log.DebugLog()
 	return fmt.Sprintf("Interrupt [%s] ID %v", &r.Header, r.IntrID)
 }
 
@@ -2292,12 +2292,12 @@ type ExchangeDataRequest struct {
 
 var _ = Request(&ExchangeDataRequest{})
 
-func (r *ExchangeDataRequest) String() string {
+func (r *ExchangeDataRequest) String() string { log.DebugLog()
 	// TODO options
 	return fmt.Sprintf("ExchangeData [%s] %v %q and %v %q", &r.Header, r.OldDir, r.OldName, r.NewDir, r.NewName)
 }
 
-func (r *ExchangeDataRequest) Respond() {
+func (r *ExchangeDataRequest) Respond() { log.DebugLog()
 	buf := newBuffer(0)
 	r.respond(buf)
 }

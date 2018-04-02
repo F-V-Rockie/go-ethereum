@@ -35,7 +35,7 @@ import (
 type bloomIndexes [3]uint
 
 // calcBloomIndexes returns the bloom filter bit indexes belonging to the given key.
-func calcBloomIndexes(b []byte) bloomIndexes {
+func calcBloomIndexes(b []byte) bloomIndexes { log.DebugLog()
 	b = crypto.Keccak256(b)
 
 	var idxs bloomIndexes
@@ -89,7 +89,7 @@ type Matcher struct {
 // NewMatcher creates a new pipeline for retrieving bloom bit streams and doing
 // address and topic filtering on them. Setting a filter component to `nil` is
 // allowed and will result in that filter rule being skipped (OR 0x11...1).
-func NewMatcher(sectionSize uint64, filters [][][]byte) *Matcher {
+func NewMatcher(sectionSize uint64, filters [][][]byte) *Matcher { log.DebugLog()
 	// Create the matcher instance
 	m := &Matcher{
 		sectionSize: sectionSize,
@@ -134,7 +134,7 @@ func NewMatcher(sectionSize uint64, filters [][][]byte) *Matcher {
 // addScheduler adds a bit stream retrieval scheduler for the given bit index if
 // it has not existed before. If the bit is already selected for filtering, the
 // existing scheduler can be used.
-func (m *Matcher) addScheduler(idx uint) {
+func (m *Matcher) addScheduler(idx uint) { log.DebugLog()
 	if _, ok := m.schedulers[idx]; ok {
 		return
 	}
@@ -144,7 +144,7 @@ func (m *Matcher) addScheduler(idx uint) {
 // Start starts the matching process and returns a stream of bloom matches in
 // a given range of blocks. If there are no more matches in the range, the result
 // channel is closed.
-func (m *Matcher) Start(ctx context.Context, begin, end uint64, results chan uint64) (*MatcherSession, error) {
+func (m *Matcher) Start(ctx context.Context, begin, end uint64, results chan uint64) (*MatcherSession, error) { log.DebugLog()
 	// Make sure we're not creating concurrent sessions
 	if atomic.SwapUint32(&m.running, 1) == 1 {
 		return nil, errors.New("matcher already running")
@@ -222,7 +222,7 @@ func (m *Matcher) Start(ctx context.Context, begin, end uint64, results chan uin
 //
 // The method starts feeding the section indexes into the first sub-matcher on a
 // new goroutine and returns a sink channel receiving the results.
-func (m *Matcher) run(begin, end uint64, buffer int, session *MatcherSession) chan *partialMatches {
+func (m *Matcher) run(begin, end uint64, buffer int, session *MatcherSession) chan *partialMatches { log.DebugLog()
 	// Create the source channel and feed section indexes into
 	source := make(chan *partialMatches, buffer)
 
@@ -257,7 +257,7 @@ func (m *Matcher) run(begin, end uint64, buffer int, session *MatcherSession) ch
 // binary AND-s the result to the daisy-chain input (source) and forwards it to the daisy-chain output.
 // The matches of each address/topic are calculated by fetching the given sections of the three bloom bit indexes belonging to
 // that address/topic, and binary AND-ing those vectors together.
-func (m *Matcher) subMatch(source chan *partialMatches, dist chan *request, bloom []bloomIndexes, session *MatcherSession) chan *partialMatches {
+func (m *Matcher) subMatch(source chan *partialMatches, dist chan *request, bloom []bloomIndexes, session *MatcherSession) chan *partialMatches { log.DebugLog()
 	// Start the concurrent schedulers for each bit required by the bloom filter
 	sectionSources := make([][3]chan uint64, len(bloom))
 	sectionSinks := make([][3]chan []byte, len(bloom))
@@ -379,7 +379,7 @@ func (m *Matcher) subMatch(source chan *partialMatches, dist chan *request, bloo
 
 // distributor receives requests from the schedulers and queues them into a set
 // of pending requests, which are assigned to retrievers wanting to fulfil them.
-func (m *Matcher) distributor(dist chan *request, session *MatcherSession) {
+func (m *Matcher) distributor(dist chan *request, session *MatcherSession) { log.DebugLog()
 	defer session.pend.Done()
 
 	var (
@@ -525,7 +525,7 @@ type MatcherSession struct {
 // Close stops the matching process and waits for all subprocesses to terminate
 // before returning. The timeout may be used for graceful shutdown, allowing the
 // currently running retrievals to complete before this time.
-func (s *MatcherSession) Close() {
+func (s *MatcherSession) Close() { log.DebugLog()
 	s.closer.Do(func() {
 		// Signal termination and wait for all goroutines to tear down
 		close(s.quit)
@@ -535,7 +535,7 @@ func (s *MatcherSession) Close() {
 }
 
 // Error returns any failure encountered during the matching session.
-func (s *MatcherSession) Error() error {
+func (s *MatcherSession) Error() error { log.DebugLog()
 	if err := s.err.Load(); err != nil {
 		return err.(error)
 	}
@@ -545,7 +545,7 @@ func (s *MatcherSession) Error() error {
 // AllocateRetrieval assigns a bloom bit index to a client process that can either
 // immediately reuest and fetch the section contents assigned to this bit or wait
 // a little while for more sections to be requested.
-func (s *MatcherSession) AllocateRetrieval() (uint, bool) {
+func (s *MatcherSession) AllocateRetrieval() (uint, bool) { log.DebugLog()
 	fetcher := make(chan uint)
 
 	select {
@@ -559,7 +559,7 @@ func (s *MatcherSession) AllocateRetrieval() (uint, bool) {
 
 // PendingSections returns the number of pending section retrievals belonging to
 // the given bloom bit index.
-func (s *MatcherSession) PendingSections(bit uint) int {
+func (s *MatcherSession) PendingSections(bit uint) int { log.DebugLog()
 	fetcher := make(chan uint)
 
 	select {
@@ -573,7 +573,7 @@ func (s *MatcherSession) PendingSections(bit uint) int {
 
 // AllocateSections assigns all or part of an already allocated bit-task queue
 // to the requesting process.
-func (s *MatcherSession) AllocateSections(bit uint, count int) []uint64 {
+func (s *MatcherSession) AllocateSections(bit uint, count int) []uint64 { log.DebugLog()
 	fetcher := make(chan *Retrieval)
 
 	select {
@@ -591,7 +591,7 @@ func (s *MatcherSession) AllocateSections(bit uint, count int) []uint64 {
 
 // DeliverSections delivers a batch of section bit-vectors for a specific bloom
 // bit index to be injected into the processing pipeline.
-func (s *MatcherSession) DeliverSections(bit uint, sections []uint64, bitsets [][]byte) {
+func (s *MatcherSession) DeliverSections(bit uint, sections []uint64, bitsets [][]byte) { log.DebugLog()
 	select {
 	case <-s.kill:
 		return
@@ -605,7 +605,7 @@ func (s *MatcherSession) DeliverSections(bit uint, sections []uint64, bitsets []
 // This method will block for the lifetime of the session. Even after termination
 // of the session, any request in-flight need to be responded to! Empty responses
 // are fine though in that case.
-func (s *MatcherSession) Multiplex(batch int, wait time.Duration, mux chan chan *Retrieval) {
+func (s *MatcherSession) Multiplex(batch int, wait time.Duration, mux chan chan *Retrieval) { log.DebugLog()
 	for {
 		// Allocate a new bloom bit index to retrieve data for, stopping when done
 		bit, ok := s.AllocateRetrieval()

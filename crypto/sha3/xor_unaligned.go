@@ -9,7 +9,7 @@ package sha3
 
 import "unsafe"
 
-func xorInUnaligned(d *state, buf []byte) {
+func xorInUnaligned(d *state, buf []byte) { log.DebugLog()
 	bw := (*[maxRate / 8]uint64)(unsafe.Pointer(&buf[0]))
 	n := len(buf)
 	if n >= 72 {
@@ -45,7 +45,7 @@ func xorInUnaligned(d *state, buf []byte) {
 	}
 }
 
-func copyOutUnaligned(d *state, buf []byte) {
+func copyOutUnaligned(d *state, buf []byte) { log.DebugLog()
 	ab := (*[maxRate]uint8)(unsafe.Pointer(&d.a[0]))
 	copy(buf, ab[:])
 }

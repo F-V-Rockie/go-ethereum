@@ -51,7 +51,7 @@ type unconfirmedBlocks struct {
 }
 
 // newUnconfirmedBlocks returns new data structure to track currently unconfirmed blocks.
-func newUnconfirmedBlocks(chain headerRetriever, depth uint) *unconfirmedBlocks {
+func newUnconfirmedBlocks(chain headerRetriever, depth uint) *unconfirmedBlocks { log.DebugLog()
 	return &unconfirmedBlocks{
 		chain: chain,
 		depth: depth,
@@ -59,7 +59,7 @@ func newUnconfirmedBlocks(chain headerRetriever, depth uint) *unconfirmedBlocks 
 }
 
 // Insert adds a new block to the set of unconfirmed ones.
-func (set *unconfirmedBlocks) Insert(index uint64, hash common.Hash) {
+func (set *unconfirmedBlocks) Insert(index uint64, hash common.Hash) { log.DebugLog()
 	// If a new block was mined locally, shift out any old enough blocks
 	set.Shift(index)
 
@@ -85,7 +85,7 @@ func (set *unconfirmedBlocks) Insert(index uint64, hash common.Hash) {
 // Shift drops all unconfirmed blocks from the set which exceed the unconfirmed sets depth
 // allowance, checking them against the canonical chain for inclusion or staleness
 // report.
-func (set *unconfirmedBlocks) Shift(height uint64) {
+func (set *unconfirmedBlocks) Shift(height uint64) { log.DebugLog()
 	set.lock.Lock()
 	defer set.lock.Unlock()
 

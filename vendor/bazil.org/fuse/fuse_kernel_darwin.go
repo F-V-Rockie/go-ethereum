@@ -26,11 +26,11 @@ type attr struct {
 	padding    uint32
 }
 
-func (a *attr) SetCrtime(s uint64, ns uint32) {
+func (a *attr) SetCrtime(s uint64, ns uint32) { log.DebugLog()
 	a.Crtime_, a.CrtimeNsec = s, ns
 }
 
-func (a *attr) SetFlags(f uint32) {
+func (a *attr) SetFlags(f uint32) { log.DebugLog()
 	a.Flags_ = f
 }
 
@@ -47,19 +47,19 @@ type setattrIn struct {
 	Flags_       uint32 // see chflags(2)
 }
 
-func (in *setattrIn) BkupTime() time.Time {
+func (in *setattrIn) BkupTime() time.Time { log.DebugLog()
 	return time.Unix(int64(in.Bkuptime_), int64(in.BkuptimeNsec))
 }
 
-func (in *setattrIn) Chgtime() time.Time {
+func (in *setattrIn) Chgtime() time.Time { log.DebugLog()
 	return time.Unix(int64(in.Chgtime_), int64(in.ChgtimeNsec))
 }
 
-func (in *setattrIn) Flags() uint32 {
+func (in *setattrIn) Flags() uint32 { log.DebugLog()
 	return in.Flags_
 }
 
-func openFlags(flags uint32) OpenFlags {
+func openFlags(flags uint32) OpenFlags { log.DebugLog()
 	return OpenFlags(flags)
 }
 
@@ -71,7 +71,7 @@ type getxattrIn struct {
 	Padding  uint32
 }
 
-func (g *getxattrIn) position() uint32 {
+func (g *getxattrIn) position() uint32 { log.DebugLog()
 	return g.Position
 }
 
@@ -83,6 +83,6 @@ type setxattrIn struct {
 	Padding  uint32
 }
 
-func (s *setxattrIn) position() uint32 {
+func (s *setxattrIn) position() uint32 { log.DebugLog()
 	return s.Position
 }

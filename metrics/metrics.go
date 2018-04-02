@@ -28,7 +28,7 @@ const DashboardEnabledFlag = "dashboard"
 // Init enables or disables the metrics system. Since we need this to run before
 // any other code gets to create meters and timers, we'll actually do an ugly hack
 // and peek into the command line args for the metrics flag.
-func init() {
+func init() { log.DebugLog()
 	for _, arg := range os.Args {
 		if flag := strings.TrimLeft(arg, "-"); flag == MetricsEnabledFlag || flag == DashboardEnabledFlag {
 			log.Info("Enabling metrics collection")
@@ -39,7 +39,7 @@ func init() {
 
 // CollectProcessMetrics periodically collects various metrics about the running
 // process.
-func CollectProcessMetrics(refresh time.Duration) {
+func CollectProcessMetrics(refresh time.Duration) { log.DebugLog()
 	// Short circuit if the metrics system is disabled
 	if !Enabled {
 		return

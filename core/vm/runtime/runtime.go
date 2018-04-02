@@ -49,7 +49,7 @@ type Config struct {
 }
 
 // sets defaults on the config
-func setDefaults(cfg *Config) {
+func setDefaults(cfg *Config) { log.DebugLog()
 	if cfg.ChainConfig == nil {
 		cfg.ChainConfig = &params.ChainConfig{
 			ChainId:        big.NewInt(1),
@@ -92,7 +92,7 @@ func setDefaults(cfg *Config) {
 //
 // Executes sets up a in memory, temporarily, environment for the execution of
 // the given code. It makes sure that it's restored to it's original state afterwards.
-func Execute(code, input []byte, cfg *Config) ([]byte, *state.StateDB, error) {
+func Execute(code, input []byte, cfg *Config) ([]byte, *state.StateDB, error) { log.DebugLog()
 	if cfg == nil {
 		cfg = new(Config)
 	}
@@ -123,7 +123,7 @@ func Execute(code, input []byte, cfg *Config) ([]byte, *state.StateDB, error) {
 }
 
 // Create executes the code using the EVM create method
-func Create(input []byte, cfg *Config) ([]byte, common.Address, uint64, error) {
+func Create(input []byte, cfg *Config) ([]byte, common.Address, uint64, error) { log.DebugLog()
 	if cfg == nil {
 		cfg = new(Config)
 	}
@@ -153,7 +153,7 @@ func Create(input []byte, cfg *Config) ([]byte, common.Address, uint64, error) {
 //
 // Call, unlike Execute, requires a config and also requires the State field to
 // be set.
-func Call(address common.Address, input []byte, cfg *Config) ([]byte, uint64, error) {
+func Call(address common.Address, input []byte, cfg *Config) ([]byte, uint64, error) { log.DebugLog()
 	setDefaults(cfg)
 
 	vmenv := NewEnv(cfg)

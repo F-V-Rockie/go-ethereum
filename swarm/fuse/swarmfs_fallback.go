@@ -24,7 +24,7 @@ import (
 
 var errNoFUSE = errors.New("FUSE is not supported on this platform")
 
-func isFUSEUnsupportedError(err error) bool {
+func isFUSEUnsupportedError(err error) bool { log.DebugLog()
 	return err == errNoFUSE
 }
 
@@ -34,18 +34,18 @@ type MountInfo struct {
 	LatestManifest string
 }
 
-func (self *SwarmFS) Mount(mhash, mountpoint string) (*MountInfo, error) {
+func (self *SwarmFS) Mount(mhash, mountpoint string) (*MountInfo, error) { log.DebugLog()
 	return nil, errNoFUSE
 }
 
-func (self *SwarmFS) Unmount(mountpoint string) (bool, error) {
+func (self *SwarmFS) Unmount(mountpoint string) (bool, error) { log.DebugLog()
 	return false, errNoFUSE
 }
 
-func (self *SwarmFS) Listmounts() ([]*MountInfo, error) {
+func (self *SwarmFS) Listmounts() ([]*MountInfo, error) { log.DebugLog()
 	return nil, errNoFUSE
 }
 
-func (self *SwarmFS) Stop() error {
+func (self *SwarmFS) Stop() error { log.DebugLog()
 	return nil
 }

@@ -11,7 +11,7 @@ import (
 var _ = (*newMessageOverride)(nil)
 
 // MarshalJSON marshals type NewMessage to a json string
-func (n NewMessage) MarshalJSON() ([]byte, error) {
+func (n NewMessage) MarshalJSON() ([]byte, error) { log.DebugLog()
 	type NewMessage struct {
 		SymKeyID   string        `json:"symKeyID"`
 		PublicKey  hexutil.Bytes `json:"pubKey"`
@@ -39,7 +39,7 @@ func (n NewMessage) MarshalJSON() ([]byte, error) {
 }
 
 // UnmarshalJSON unmarshals type NewMessage to a json string
-func (n *NewMessage) UnmarshalJSON(input []byte) error {
+func (n *NewMessage) UnmarshalJSON(input []byte) error { log.DebugLog()
 	type NewMessage struct {
 		SymKeyID   *string        `json:"symKeyID"`
 		PublicKey  *hexutil.Bytes `json:"pubKey"`

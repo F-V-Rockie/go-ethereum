@@ -27,7 +27,7 @@ import (
 )
 
 // deployNode creates a new node configuration based on some user input.
-func (w *wizard) deployNode(boot bool) {
+func (w *wizard) deployNode(boot bool) { log.DebugLog()
 	// Do some sanity check before the user wastes time on input
 	if w.conf.Genesis == nil {
 		log.Error("No genesis block configured")

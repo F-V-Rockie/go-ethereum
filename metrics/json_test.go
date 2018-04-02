@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestRegistryMarshallJSON(t *testing.T) {
+func TestRegistryMarshallJSON(t *testing.T) { log.DebugLog()
 	b := &bytes.Buffer{}
 	enc := json.NewEncoder(b)
 	r := NewRegistry()
@@ -17,7 +17,7 @@ func TestRegistryMarshallJSON(t *testing.T) {
 	}
 }
 
-func TestRegistryWriteJSONOnce(t *testing.T) {
+func TestRegistryWriteJSONOnce(t *testing.T) { log.DebugLog()
 	r := NewRegistry()
 	r.Register("counter", NewCounter())
 	b := &bytes.Buffer{}

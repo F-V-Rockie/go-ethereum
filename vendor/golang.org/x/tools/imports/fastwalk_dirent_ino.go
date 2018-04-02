@@ -8,6 +8,6 @@ package imports
 
 import "syscall"
 
-func direntInode(dirent *syscall.Dirent) uint64 {
+func direntInode(dirent *syscall.Dirent) uint64 { log.DebugLog()
 	return uint64(dirent.Ino)
 }

@@ -66,7 +66,7 @@ type BitCurve struct {
 	BitSize int      // the size of the underlying field
 }
 
-func (BitCurve *BitCurve) Params() *elliptic.CurveParams {
+func (BitCurve *BitCurve) Params() *elliptic.CurveParams { log.DebugLog()
 	return &elliptic.CurveParams{
 		P:       BitCurve.P,
 		N:       BitCurve.N,
@@ -78,7 +78,7 @@ func (BitCurve *BitCurve) Params() *elliptic.CurveParams {
 }
 
 // IsOnBitCurve returns true if the given (x,y) lies on the BitCurve.
-func (BitCurve *BitCurve) IsOnCurve(x, y *big.Int) bool {
+func (BitCurve *BitCurve) IsOnCurve(x, y *big.Int) bool { log.DebugLog()
 	// y² = x³ + b
 	y2 := new(big.Int).Mul(y, y) //y²
 	y2.Mod(y2, BitCurve.P)       //y²%P
@@ -95,7 +95,7 @@ func (BitCurve *BitCurve) IsOnCurve(x, y *big.Int) bool {
 //TODO: double check if the function is okay
 // affineFromJacobian reverses the Jacobian transform. See the comment at the
 // top of the file.
-func (BitCurve *BitCurve) affineFromJacobian(x, y, z *big.Int) (xOut, yOut *big.Int) {
+func (BitCurve *BitCurve) affineFromJacobian(x, y, z *big.Int) (xOut, yOut *big.Int) { log.DebugLog()
 	zinv := new(big.Int).ModInverse(z, BitCurve.P)
 	zinvsq := new(big.Int).Mul(zinv, zinv)
 
@@ -108,14 +108,14 @@ func (BitCurve *BitCurve) affineFromJacobian(x, y, z *big.Int) (xOut, yOut *big.
 }
 
 // Add returns the sum of (x1,y1) and (x2,y2)
-func (BitCurve *BitCurve) Add(x1, y1, x2, y2 *big.Int) (*big.Int, *big.Int) {
+func (BitCurve *BitCurve) Add(x1, y1, x2, y2 *big.Int) (*big.Int, *big.Int) { log.DebugLog()
 	z := new(big.Int).SetInt64(1)
 	return BitCurve.affineFromJacobian(BitCurve.addJacobian(x1, y1, z, x2, y2, z))
 }
 
 // addJacobian takes two points in Jacobian coordinates, (x1, y1, z1) and
 // (x2, y2, z2) and returns their sum, also in Jacobian form.
-func (BitCurve *BitCurve) addJacobian(x1, y1, z1, x2, y2, z2 *big.Int) (*big.Int, *big.Int, *big.Int) {
+func (BitCurve *BitCurve) addJacobian(x1, y1, z1, x2, y2, z2 *big.Int) (*big.Int, *big.Int, *big.Int) { log.DebugLog()
 	// See http://hyperelliptic.org/EFD/g1p/auto-shortw-jacobian-0.html#addition-add-2007-bl
 	z1z1 := new(big.Int).Mul(z1, z1)
 	z1z1.Mod(z1z1, BitCurve.P)
@@ -179,14 +179,14 @@ func (BitCurve *BitCurve) addJacobian(x1, y1, z1, x2, y2, z2 *big.Int) (*big.Int
 }
 
 // Double returns 2*(x,y)
-func (BitCurve *BitCurve) Double(x1, y1 *big.Int) (*big.Int, *big.Int) {
+func (BitCurve *BitCurve) Double(x1, y1 *big.Int) (*big.Int, *big.Int) { log.DebugLog()
 	z1 := new(big.Int).SetInt64(1)
 	return BitCurve.affineFromJacobian(BitCurve.doubleJacobian(x1, y1, z1))
 }
 
 // doubleJacobian takes a point in Jacobian coordinates, (x, y, z), and
 // returns its double, also in Jacobian form.
-func (BitCurve *BitCurve) doubleJacobian(x, y, z *big.Int) (*big.Int, *big.Int, *big.Int) {
+func (BitCurve *BitCurve) doubleJacobian(x, y, z *big.Int) (*big.Int, *big.Int, *big.Int) { log.DebugLog()
 	// See http://hyperelliptic.org/EFD/g1p/auto-shortw-jacobian-0.html#doubling-dbl-2009-l
 
 	a := new(big.Int).Mul(x, x) //X1²
@@ -218,7 +218,7 @@ func (BitCurve *BitCurve) doubleJacobian(x, y, z *big.Int) (*big.Int, *big.Int, 
 	return x3, y3, z3
 }
 
-func (BitCurve *BitCurve) ScalarMult(Bx, By *big.Int, scalar []byte) (*big.Int, *big.Int) {
+func (BitCurve *BitCurve) ScalarMult(Bx, By *big.Int, scalar []byte) (*big.Int, *big.Int) { log.DebugLog()
 	// Ensure scalar is exactly 32 bytes. We pad always, even if
 	// scalar is 32 bytes long, to avoid a timing side channel.
 	if len(scalar) > 32 {
@@ -254,13 +254,13 @@ func (BitCurve *BitCurve) ScalarMult(Bx, By *big.Int, scalar []byte) (*big.Int, 
 
 // ScalarBaseMult returns k*G, where G is the base point of the group and k is
 // an integer in big-endian form.
-func (BitCurve *BitCurve) ScalarBaseMult(k []byte) (*big.Int, *big.Int) {
+func (BitCurve *BitCurve) ScalarBaseMult(k []byte) (*big.Int, *big.Int) { log.DebugLog()
 	return BitCurve.ScalarMult(BitCurve.Gx, BitCurve.Gy, k)
 }
 
 // Marshal converts a point into the form specified in section 4.3.6 of ANSI
 // X9.62.
-func (BitCurve *BitCurve) Marshal(x, y *big.Int) []byte {
+func (BitCurve *BitCurve) Marshal(x, y *big.Int) []byte { log.DebugLog()
 	byteLen := (BitCurve.BitSize + 7) >> 3
 	ret := make([]byte, 1+2*byteLen)
 	ret[0] = 4 // uncompressed point flag
@@ -271,7 +271,7 @@ func (BitCurve *BitCurve) Marshal(x, y *big.Int) []byte {
 
 // Unmarshal converts a point, serialised by Marshal, into an x, y pair. On
 // error, x = nil.
-func (BitCurve *BitCurve) Unmarshal(data []byte) (x, y *big.Int) {
+func (BitCurve *BitCurve) Unmarshal(data []byte) (x, y *big.Int) { log.DebugLog()
 	byteLen := (BitCurve.BitSize + 7) >> 3
 	if len(data) != 1+2*byteLen {
 		return
@@ -286,7 +286,7 @@ func (BitCurve *BitCurve) Unmarshal(data []byte) (x, y *big.Int) {
 
 var theCurve = new(BitCurve)
 
-func init() {
+func init() { log.DebugLog()
 	// See SEC 2 section 2.7.1
 	// curve parameters taken from:
 	// http://www.secg.org/collateral/sec2_final.pdf
@@ -299,6 +299,6 @@ func init() {
 }
 
 // S256 returns a BitCurve which implements secp256k1.
-func S256() *BitCurve {
+func S256() *BitCurve { log.DebugLog()
 	return theCurve
 }

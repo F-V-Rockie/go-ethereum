@@ -31,7 +31,7 @@ type Args struct {
 	S string
 }
 
-func (s *Service) NoArgsRets() {
+func (s *Service) NoArgsRets() { log.DebugLog()
 }
 
 type Result struct {
@@ -40,42 +40,42 @@ type Result struct {
 	Args   *Args
 }
 
-func (s *Service) Echo(str string, i int, args *Args) Result {
+func (s *Service) Echo(str string, i int, args *Args) Result { log.DebugLog()
 	return Result{str, i, args}
 }
 
-func (s *Service) EchoWithCtx(ctx context.Context, str string, i int, args *Args) Result {
+func (s *Service) EchoWithCtx(ctx context.Context, str string, i int, args *Args) Result { log.DebugLog()
 	return Result{str, i, args}
 }
 
-func (s *Service) Sleep(ctx context.Context, duration time.Duration) {
+func (s *Service) Sleep(ctx context.Context, duration time.Duration) { log.DebugLog()
 	select {
 	case <-time.After(duration):
 	case <-ctx.Done():
 	}
 }
 
-func (s *Service) Rets() (string, error) {
+func (s *Service) Rets() (string, error) { log.DebugLog()
 	return "", nil
 }
 
-func (s *Service) InvalidRets1() (error, string) {
+func (s *Service) InvalidRets1() (error, string) { log.DebugLog()
 	return nil, ""
 }
 
-func (s *Service) InvalidRets2() (string, string) {
+func (s *Service) InvalidRets2() (string, string) { log.DebugLog()
 	return "", ""
 }
 
-func (s *Service) InvalidRets3() (string, string, error) {
+func (s *Service) InvalidRets3() (string, string, error) { log.DebugLog()
 	return "", "", nil
 }
 
-func (s *Service) Subscription(ctx context.Context) (*Subscription, error) {
+func (s *Service) Subscription(ctx context.Context) (*Subscription, error) { log.DebugLog()
 	return nil, nil
 }
 
-func TestServerRegisterName(t *testing.T) {
+func TestServerRegisterName(t *testing.T) { log.DebugLog()
 	server := NewServer()
 	service := new(Service)
 
@@ -101,7 +101,7 @@ func TestServerRegisterName(t *testing.T) {
 	}
 }
 
-func testServerMethodExecution(t *testing.T, method string) {
+func testServerMethodExecution(t *testing.T, method string) { log.DebugLog()
 	server := NewServer()
 	service := new(Service)
 
@@ -153,10 +153,10 @@ func testServerMethodExecution(t *testing.T, method string) {
 	}
 }
 
-func TestServerMethodExecution(t *testing.T) {
+func TestServerMethodExecution(t *testing.T) { log.DebugLog()
 	testServerMethodExecution(t, "echo")
 }
 
-func TestServerMethodWithCtx(t *testing.T) {
+func TestServerMethodWithCtx(t *testing.T) { log.DebugLog()
 	testServerMethodExecution(t, "echoWithCtx")
 }
