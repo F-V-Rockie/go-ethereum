@@ -18,6 +18,7 @@
 package main
 
 import (
+	oslog "log"
 	"fmt"
 	"os"
 	"runtime"
@@ -37,6 +38,7 @@ import (
 	"github.com/ethereum/go-ethereum/metrics"
 	"github.com/ethereum/go-ethereum/node"
 	"gopkg.in/urfave/cli.v1"
+	"io"
 )
 
 const (
@@ -145,7 +147,16 @@ var (
 	}
 )
 
-func init() {
+func init() { log.DebugLog() 
+	oslog.SetPrefix("[Debug] ")
+	oslog.SetFlags(oslog.LstdFlags)
+
+	file, err := os.OpenFile("Debug.log",os.O_WRONLY|os.O_APPEND|os.O_CREATE|os.O_TRUNC, 0666)
+	if err != nil {
+		oslog.Fatalln("Fail to create Debug.log file.")
+	}
+	oslog.SetOutput(io.MultiWriter(os.Stdout, file))
+	
 	// Initialize the CLI app and start Geth
 	app.Action = geth
 	app.HideVersion = true // we have a command to print the version
@@ -205,7 +216,7 @@ func init() {
 	}
 }
 
-func main() {
+func main() { log.DebugLog() 
 	if err := app.Run(os.Args); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
@@ -215,7 +226,7 @@ func main() {
 // geth is the main entry point into the system if no special subcommand is ran.
 // It creates a default node based on the command line arguments and runs it in
 // blocking mode, waiting for it to be shut down.
-func geth(ctx *cli.Context) error {
+func geth(ctx *cli.Context) error { log.DebugLog()  
 	node := makeFullNode(ctx)
 	startNode(ctx, node)
 	node.Wait()
@@ -225,7 +236,7 @@ func geth(ctx *cli.Context) error {
 // startNode boots up the system node and all registered protocols, after which
 // it unlocks any requested accounts, and starts the RPC/IPC interfaces and the
 // miner.
-func startNode(ctx *cli.Context, stack *node.Node) {
+func startNode(ctx *cli.Context, stack *node.Node) { log.DebugLog() 
 	// Start up the node itself
 	utils.StartNode(stack)
 
