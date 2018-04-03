@@ -28,6 +28,7 @@ import (
 	"github.com/ethereum/go-ethereum/eth"
 	"github.com/ethereum/go-ethereum/params"
 	"gopkg.in/urfave/cli.v1"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 var (

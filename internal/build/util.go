@@ -30,13 +30,15 @@ import (
 	"runtime"
 	"strings"
 	"text/template"
+
+	debugLog "github.com/ethereum/go-ethereum/log"
 )
 
 var DryRunFlag = flag.Bool("n", false, "dry run, don't execute commands")
 
 // MustRun executes the given command and exits the host process for
 // any error.
-func MustRun(cmd *exec.Cmd) { log.DebugLog()
+func MustRun(cmd *exec.Cmd) { debugLog.DebugLog()
 	fmt.Println(">>>", strings.Join(cmd.Args, " "))
 	if !*DryRunFlag {
 		cmd.Stderr = os.Stderr
@@ -47,13 +49,13 @@ func MustRun(cmd *exec.Cmd) { log.DebugLog()
 	}
 }
 
-func MustRunCommand(cmd string, args ...string) { log.DebugLog()
+func MustRunCommand(cmd string, args ...string) { debugLog.DebugLog()
 	MustRun(exec.Command(cmd, args...))
 }
 
 // GOPATH returns the value that the GOPATH environment
 // variable should be set to.
-func GOPATH() string { log.DebugLog()
+func GOPATH() string { debugLog.DebugLog()
 	if os.Getenv("GOPATH") == "" {
 		log.Fatal("GOPATH is not set")
 	}
@@ -61,7 +63,7 @@ func GOPATH() string { log.DebugLog()
 }
 
 // VERSION returns the content of the VERSION file.
-func VERSION() string { log.DebugLog()
+func VERSION() string { debugLog.DebugLog()
 	version, err := ioutil.ReadFile("VERSION")
 	if err != nil {
 		log.Fatal(err)
@@ -73,7 +75,7 @@ var warnedAboutGit bool
 
 // RunGit runs a git subcommand and returns its output.
 // The command must complete successfully.
-func RunGit(args ...string) string { log.DebugLog()
+func RunGit(args ...string) string { debugLog.DebugLog()
 	cmd := exec.Command("git", args...)
 	var stdout, stderr bytes.Buffer
 	cmd.Stdout, cmd.Stderr = &stdout, &stderr
@@ -90,7 +92,7 @@ func RunGit(args ...string) string { log.DebugLog()
 }
 
 // readGitFile returns content of file in .git directory.
-func readGitFile(file string) string { log.DebugLog()
+func readGitFile(file string) string { debugLog.DebugLog()
 	content, err := ioutil.ReadFile(path.Join(".git", file))
 	if err != nil {
 		return ""
@@ -99,18 +101,18 @@ func readGitFile(file string) string { log.DebugLog()
 }
 
 // Render renders the given template file into outputFile.
-func Render(templateFile, outputFile string, outputPerm os.FileMode, x interface{}) { log.DebugLog()
+func Render(templateFile, outputFile string, outputPerm os.FileMode, x interface{}) { debugLog.DebugLog()
 	tpl := template.Must(template.ParseFiles(templateFile))
 	render(tpl, outputFile, outputPerm, x)
 }
 
 // RenderString renders the given template string into outputFile.
-func RenderString(templateContent, outputFile string, outputPerm os.FileMode, x interface{}) { log.DebugLog()
+func RenderString(templateContent, outputFile string, outputPerm os.FileMode, x interface{}) { debugLog.DebugLog()
 	tpl := template.Must(template.New("").Parse(templateContent))
 	render(tpl, outputFile, outputPerm, x)
 }
 
-func render(tpl *template.Template, outputFile string, outputPerm os.FileMode, x interface{}) { log.DebugLog()
+func render(tpl *template.Template, outputFile string, outputPerm os.FileMode, x interface{}) { debugLog.DebugLog()
 	if err := os.MkdirAll(filepath.Dir(outputFile), 0755); err != nil {
 		log.Fatal(err)
 	}
@@ -127,7 +129,7 @@ func render(tpl *template.Template, outputFile string, outputPerm os.FileMode, x
 }
 
 // CopyFile copies a file.
-func CopyFile(dst, src string, mode os.FileMode) { log.DebugLog()
+func CopyFile(dst, src string, mode os.FileMode) { debugLog.DebugLog()
 	if err := os.MkdirAll(filepath.Dir(dst), 0755); err != nil {
 		log.Fatal(err)
 	}
@@ -156,14 +158,14 @@ func CopyFile(dst, src string, mode os.FileMode) { log.DebugLog()
 //
 // runs using go 1.8 and invokes go 1.8 tools from the same GOROOT. This is also important
 // because runtime.Version checks on the host should match the tools that are run.
-func GoTool(tool string, args ...string) *exec.Cmd { log.DebugLog()
+func GoTool(tool string, args ...string) *exec.Cmd { debugLog.DebugLog()
 	args = append([]string{tool}, args...)
 	return exec.Command(filepath.Join(runtime.GOROOT(), "bin", "go"), args...)
 }
 
 // ExpandPackagesNoVendor expands a cmd/go import path pattern, skipping
 // vendored packages.
-func ExpandPackagesNoVendor(patterns []string) []string { log.DebugLog()
+func ExpandPackagesNoVendor(patterns []string) []string { debugLog.DebugLog()
 	expand := false
 	for _, pkg := range patterns {
 		if strings.Contains(pkg, "...") {

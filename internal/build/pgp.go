@@ -25,6 +25,7 @@ import (
 	"os"
 
 	"golang.org/x/crypto/openpgp"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // PGPSignFile parses a PGP private key from the specified string and creates a
@@ -32,7 +33,8 @@ import (
 //
 // Note, this method assumes a single key will be container in the pgpkey arg,
 // furthermore that it is in armored format.
-func PGPSignFile(input string, output string, pgpkey string) error { log.DebugLog()
+func PGPSignFile(input string, output string, pgpkey string) error {
+	log.DebugLog()
 	// Parse the keyring and make sure we only have a single private key in it
 	keys, err := openpgp.ReadArmoredKeyRing(bytes.NewBufferString(pgpkey))
 	if err != nil {

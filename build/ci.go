@@ -59,6 +59,7 @@ import (
 	"time"
 
 	"github.com/ethereum/go-ethereum/internal/build"
+	debugLog "github.com/ethereum/go-ethereum/log"
 )
 
 var (
@@ -127,14 +128,14 @@ var (
 
 var GOBIN, _ = filepath.Abs(filepath.Join("build", "bin"))
 
-func executablePath(name string) string { log.DebugLog()
+func executablePath(name string) string { debugLog.DebugLog()
 	if runtime.GOOS == "windows" {
 		name += ".exe"
 	}
 	return filepath.Join(GOBIN, name)
 }
 
-func main() { log.DebugLog()
+func main() { debugLog.DebugLog()
 	log.SetFlags(log.Lshortfile)
 
 	if _, err := os.Stat(filepath.Join("build", "ci.go")); os.IsNotExist(err) {
@@ -171,7 +172,7 @@ func main() { log.DebugLog()
 
 // Compiling
 
-func doInstall(cmdline []string) { log.DebugLog()
+func doInstall(cmdline []string) { debugLog.DebugLog()
 	var (
 		arch = flag.String("arch", "", "Architecture to cross build for")
 		cc   = flag.String("cc", "", "C compiler to cross build with")
@@ -241,7 +242,7 @@ func doInstall(cmdline []string) { log.DebugLog()
 	}
 }
 
-func buildFlags(env build.Environment) (flags []string) { log.DebugLog()
+func buildFlags(env build.Environment) (flags []string) { debugLog.DebugLog()
 	var ld []string
 	if env.Commit != "" {
 		ld = append(ld, "-X", "main.gitCommit="+env.Commit)
@@ -256,11 +257,11 @@ func buildFlags(env build.Environment) (flags []string) { log.DebugLog()
 	return flags
 }
 
-func goTool(subcmd string, args ...string) *exec.Cmd { log.DebugLog()
+func goTool(subcmd string, args ...string) *exec.Cmd { debugLog.DebugLog()
 	return goToolArch(runtime.GOARCH, os.Getenv("CC"), subcmd, args...)
 }
 
-func goToolArch(arch string, cc string, subcmd string, args ...string) *exec.Cmd { log.DebugLog()
+func goToolArch(arch string, cc string, subcmd string, args ...string) *exec.Cmd { debugLog.DebugLog()
 	cmd := build.GoTool(subcmd, args...)
 	cmd.Env = []string{"GOPATH=" + build.GOPATH()}
 	if arch == "" || arch == runtime.GOARCH {
@@ -285,7 +286,7 @@ func goToolArch(arch string, cc string, subcmd string, args ...string) *exec.Cmd
 //
 // "tests" also includes static analysis tools such as vet.
 
-func doTest(cmdline []string) { log.DebugLog()
+func doTest(cmdline []string) { debugLog.DebugLog()
 	var (
 		coverage = flag.Bool("coverage", false, "Whether to record code coverage")
 	)
@@ -315,7 +316,7 @@ func doTest(cmdline []string) { log.DebugLog()
 }
 
 // runs gometalinter on requested packages
-func doLint(cmdline []string) { log.DebugLog()
+func doLint(cmdline []string) { debugLog.DebugLog()
 	flag.CommandLine.Parse(cmdline)
 
 	packages := []string{"./..."}
@@ -347,7 +348,7 @@ func doLint(cmdline []string) { log.DebugLog()
 
 // Release Packaging
 
-func doArchive(cmdline []string) { log.DebugLog()
+func doArchive(cmdline []string) { debugLog.DebugLog()
 	var (
 		arch   = flag.String("arch", runtime.GOARCH, "Architecture cross packaging")
 		atype  = flag.String("type", "zip", "Type of archive to write (zip|tar)")
@@ -385,7 +386,7 @@ func doArchive(cmdline []string) { log.DebugLog()
 	}
 }
 
-func archiveBasename(arch string, env build.Environment) string { log.DebugLog()
+func archiveBasename(arch string, env build.Environment) string { debugLog.DebugLog()
 	platform := runtime.GOOS + "-" + arch
 	if arch == "arm" {
 		platform += os.Getenv("GOARM")
@@ -399,7 +400,7 @@ func archiveBasename(arch string, env build.Environment) string { log.DebugLog()
 	return platform + "-" + archiveVersion(env)
 }
 
-func archiveVersion(env build.Environment) string { log.DebugLog()
+func archiveVersion(env build.Environment) string { debugLog.DebugLog()
 	version := build.VERSION()
 	if isUnstableBuild(env) {
 		version += "-unstable"
@@ -410,7 +411,7 @@ func archiveVersion(env build.Environment) string { log.DebugLog()
 	return version
 }
 
-func archiveUpload(archive string, blobstore string, signer string) error { log.DebugLog()
+func archiveUpload(archive string, blobstore string, signer string) error { debugLog.DebugLog()
 	// If signing was requested, generate the signature files
 	if signer != "" {
 		pgpkey, err := base64.StdEncoding.DecodeString(os.Getenv(signer))
@@ -441,7 +442,7 @@ func archiveUpload(archive string, blobstore string, signer string) error { log.
 }
 
 // skips archiving for some build configurations.
-func maybeSkipArchive(env build.Environment) { log.DebugLog()
+func maybeSkipArchive(env build.Environment) { debugLog.DebugLog()
 	if env.IsPullRequest {
 		log.Printf("skipping because this is a PR build")
 		os.Exit(0)
@@ -458,7 +459,7 @@ func maybeSkipArchive(env build.Environment) { log.DebugLog()
 
 // Debian Packaging
 
-func doDebianSource(cmdline []string) { log.DebugLog()
+func doDebianSource(cmdline []string) { debugLog.DebugLog()
 	var (
 		signer  = flag.String("signer", "", `Signing key name, also used as package author`)
 		upload  = flag.String("upload", "", `Where to upload the source package (usually "ppa:ethereum/ethereum")`)
@@ -500,7 +501,7 @@ func doDebianSource(cmdline []string) { log.DebugLog()
 	}
 }
 
-func makeWorkdir(wdflag string) string { log.DebugLog()
+func makeWorkdir(wdflag string) string { debugLog.DebugLog()
 	var err error
 	if wdflag != "" {
 		err = os.MkdirAll(wdflag, 0744)
@@ -513,7 +514,7 @@ func makeWorkdir(wdflag string) string { log.DebugLog()
 	return wdflag
 }
 
-func isUnstableBuild(env build.Environment) bool { log.DebugLog()
+func isUnstableBuild(env build.Environment) bool { debugLog.DebugLog()
 	if env.Tag != "" {
 		return false
 	}
@@ -537,7 +538,7 @@ type debExecutable struct {
 	Name, Description string
 }
 
-func newDebMetadata(distro, author string, env build.Environment, t time.Time) debMetadata { log.DebugLog()
+func newDebMetadata(distro, author string, env build.Environment, t time.Time) debMetadata { debugLog.DebugLog()
 	if author == "" {
 		// No signing key, use default author.
 		author = "Ethereum Builds <fjl@ethereum.org>"
@@ -554,7 +555,7 @@ func newDebMetadata(distro, author string, env build.Environment, t time.Time) d
 
 // Name returns the name of the metapackage that depends
 // on all executable packages.
-func (meta debMetadata) Name() string { log.DebugLog()
+func (meta debMetadata) Name() string { debugLog.DebugLog()
 	if isUnstableBuild(meta.Env) {
 		return "ethereum-unstable"
 	}
@@ -562,7 +563,7 @@ func (meta debMetadata) Name() string { log.DebugLog()
 }
 
 // VersionString returns the debian version of the packages.
-func (meta debMetadata) VersionString() string { log.DebugLog()
+func (meta debMetadata) VersionString() string { debugLog.DebugLog()
 	vsn := meta.Version
 	if meta.Env.Buildnum != "" {
 		vsn += "+build" + meta.Env.Buildnum
@@ -574,7 +575,7 @@ func (meta debMetadata) VersionString() string { log.DebugLog()
 }
 
 // ExeList returns the list of all executable packages.
-func (meta debMetadata) ExeList() string { log.DebugLog()
+func (meta debMetadata) ExeList() string { debugLog.DebugLog()
 	names := make([]string, len(meta.Executables))
 	for i, e := range meta.Executables {
 		names[i] = meta.ExeName(e)
@@ -583,7 +584,7 @@ func (meta debMetadata) ExeList() string { log.DebugLog()
 }
 
 // ExeName returns the package name of an executable package.
-func (meta debMetadata) ExeName(exe debExecutable) string { log.DebugLog()
+func (meta debMetadata) ExeName(exe debExecutable) string { debugLog.DebugLog()
 	if isUnstableBuild(meta.Env) {
 		return exe.Name + "-unstable"
 	}
@@ -592,7 +593,7 @@ func (meta debMetadata) ExeName(exe debExecutable) string { log.DebugLog()
 
 // ExeConflicts returns the content of the Conflicts field
 // for executable packages.
-func (meta debMetadata) ExeConflicts(exe debExecutable) string { log.DebugLog()
+func (meta debMetadata) ExeConflicts(exe debExecutable) string { debugLog.DebugLog()
 	if isUnstableBuild(meta.Env) {
 		// Set up the conflicts list so that the *-unstable packages
 		// cannot be installed alongside the regular version.
@@ -607,7 +608,7 @@ func (meta debMetadata) ExeConflicts(exe debExecutable) string { log.DebugLog()
 	return ""
 }
 
-func stageDebianSource(tmpdir string, meta debMetadata) (pkgdir string) { log.DebugLog()
+func stageDebianSource(tmpdir string, meta debMetadata) (pkgdir string) { debugLog.DebugLog()
 	pkg := meta.Name() + "-" + meta.VersionString()
 	pkgdir = filepath.Join(tmpdir, pkg)
 	if err := os.Mkdir(pkgdir, 0755); err != nil {
@@ -637,7 +638,7 @@ func stageDebianSource(tmpdir string, meta debMetadata) (pkgdir string) { log.De
 
 // Windows installer
 
-func doWindowsInstaller(cmdline []string) { log.DebugLog()
+func doWindowsInstaller(cmdline []string) { debugLog.DebugLog()
 	// Parse the flags and make skip installer generation on PRs
 	var (
 		arch    = flag.String("arch", runtime.GOARCH, "Architecture for cross build packaging")
@@ -708,7 +709,7 @@ func doWindowsInstaller(cmdline []string) { log.DebugLog()
 
 // Android archives
 
-func doAndroidArchive(cmdline []string) { log.DebugLog()
+func doAndroidArchive(cmdline []string) { debugLog.DebugLog()
 	var (
 		local  = flag.Bool("local", false, `Flag whether we're only doing a local build (skip Maven artifacts)`)
 		signer = flag.String("signer", "", `Environment variable holding the signing key (e.g. ANDROID_SIGNING_KEY)`)
@@ -772,7 +773,7 @@ func doAndroidArchive(cmdline []string) { log.DebugLog()
 	}
 }
 
-func gomobileTool(subcmd string, args ...string) *exec.Cmd { log.DebugLog()
+func gomobileTool(subcmd string, args ...string) *exec.Cmd { debugLog.DebugLog()
 	cmd := exec.Command(filepath.Join(GOBIN, "gomobile"), subcmd)
 	cmd.Args = append(cmd.Args, args...)
 	cmd.Env = []string{
@@ -800,7 +801,7 @@ type mavenContributor struct {
 	Email string
 }
 
-func newMavenMetadata(env build.Environment) mavenMetadata { log.DebugLog()
+func newMavenMetadata(env build.Environment) mavenMetadata { debugLog.DebugLog()
 	// Collect the list of authors from the repo root
 	contribs := []mavenContributor{}
 	if authors, err := os.Open("AUTHORS"); err == nil {
@@ -836,7 +837,7 @@ func newMavenMetadata(env build.Environment) mavenMetadata { log.DebugLog()
 
 // XCode frameworks
 
-func doXCodeFramework(cmdline []string) { log.DebugLog()
+func doXCodeFramework(cmdline []string) { debugLog.DebugLog()
 	var (
 		local  = flag.Bool("local", false, `Flag whether we're only doing a local build (skip Maven artifacts)`)
 		signer = flag.String("signer", "", `Environment variable holding the signing key (e.g. IOS_SIGNING_KEY)`)
@@ -892,7 +893,7 @@ type podContributor struct {
 	Email string
 }
 
-func newPodMetadata(env build.Environment, archive string) podMetadata { log.DebugLog()
+func newPodMetadata(env build.Environment, archive string) podMetadata { debugLog.DebugLog()
 	// Collect the list of authors from the repo root
 	contribs := []podContributor{}
 	if authors, err := os.Open("AUTHORS"); err == nil {
@@ -927,7 +928,7 @@ func newPodMetadata(env build.Environment, archive string) podMetadata { log.Deb
 
 // Cross compilation
 
-func doXgo(cmdline []string) { log.DebugLog()
+func doXgo(cmdline []string) { debugLog.DebugLog()
 	var (
 		alltools = flag.Bool("alltools", false, `Flag whether we're building all known tools, or only on in particular`)
 	)
@@ -962,7 +963,7 @@ func doXgo(cmdline []string) { log.DebugLog()
 	build.MustRun(xgo)
 }
 
-func xgoTool(args []string) *exec.Cmd { log.DebugLog()
+func xgoTool(args []string) *exec.Cmd { debugLog.DebugLog()
 	cmd := exec.Command(filepath.Join(GOBIN, "xgo"), args...)
 	cmd.Env = []string{
 		"GOPATH=" + build.GOPATH(),
@@ -979,7 +980,7 @@ func xgoTool(args []string) *exec.Cmd { log.DebugLog()
 
 // Binary distribution cleanups
 
-func doPurge(cmdline []string) { log.DebugLog()
+func doPurge(cmdline []string) { debugLog.DebugLog()
 	var (
 		store = flag.String("store", "", `Destination from where to purge archives (usually "gethstore/builds")`)
 		limit = flag.Int("days", 30, `Age threshold above which to delete unstalbe archives`)

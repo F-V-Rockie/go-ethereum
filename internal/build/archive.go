@@ -25,6 +25,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 type Archive interface {
@@ -41,7 +42,8 @@ type Archive interface {
 	Close() error
 }
 
-func NewArchive(file *os.File) (Archive, string) { log.DebugLog()
+func NewArchive(file *os.File) (Archive, string) {
+	log.DebugLog()
 	switch {
 	case strings.HasSuffix(file.Name(), ".zip"):
 		return NewZipArchive(file), strings.TrimSuffix(file.Name(), ".zip")
@@ -53,7 +55,8 @@ func NewArchive(file *os.File) (Archive, string) { log.DebugLog()
 }
 
 // AddFile appends an existing file to an archive.
-func AddFile(a Archive, file string) error { log.DebugLog()
+func AddFile(a Archive, file string) error {
+	log.DebugLog()
 	fd, err := os.Open(file)
 	if err != nil {
 		return err
@@ -74,7 +77,8 @@ func AddFile(a Archive, file string) error { log.DebugLog()
 }
 
 // WriteArchive creates an archive containing the given files.
-func WriteArchive(name string, files []string) (err error) { log.DebugLog()
+func WriteArchive(name string, files []string) (err error) {
+	log.DebugLog()
 	archfd, err := os.Create(name)
 	if err != nil {
 		return err
@@ -110,16 +114,19 @@ type ZipArchive struct {
 	file io.Closer
 }
 
-func NewZipArchive(w io.WriteCloser) Archive { log.DebugLog()
+func NewZipArchive(w io.WriteCloser) Archive {
+	log.DebugLog()
 	return &ZipArchive{"", zip.NewWriter(w), w}
 }
 
-func (a *ZipArchive) Directory(name string) error { log.DebugLog()
+func (a *ZipArchive) Directory(name string) error {
+	log.DebugLog()
 	a.dir = name + "/"
 	return nil
 }
 
-func (a *ZipArchive) Header(fi os.FileInfo) (io.Writer, error) { log.DebugLog()
+func (a *ZipArchive) Header(fi os.FileInfo) (io.Writer, error) {
+	log.DebugLog()
 	head, err := zip.FileInfoHeader(fi)
 	if err != nil {
 		return nil, fmt.Errorf("can't make zip header: %v", err)
@@ -133,7 +140,8 @@ func (a *ZipArchive) Header(fi os.FileInfo) (io.Writer, error) { log.DebugLog()
 	return w, nil
 }
 
-func (a *ZipArchive) Close() error { log.DebugLog()
+func (a *ZipArchive) Close() error {
+	log.DebugLog()
 	if err := a.zipw.Close(); err != nil {
 		return err
 	}
@@ -147,13 +155,15 @@ type TarballArchive struct {
 	file io.Closer
 }
 
-func NewTarballArchive(w io.WriteCloser) Archive { log.DebugLog()
+func NewTarballArchive(w io.WriteCloser) Archive {
+	log.DebugLog()
 	gzw := gzip.NewWriter(w)
 	tarw := tar.NewWriter(gzw)
 	return &TarballArchive{"", tarw, gzw, w}
 }
 
-func (a *TarballArchive) Directory(name string) error { log.DebugLog()
+func (a *TarballArchive) Directory(name string) error {
+	log.DebugLog()
 	a.dir = name + "/"
 	return a.tarw.WriteHeader(&tar.Header{
 		Name:     a.dir,
@@ -162,7 +172,8 @@ func (a *TarballArchive) Directory(name string) error { log.DebugLog()
 	})
 }
 
-func (a *TarballArchive) Header(fi os.FileInfo) (io.Writer, error) { log.DebugLog()
+func (a *TarballArchive) Header(fi os.FileInfo) (io.Writer, error) {
+	log.DebugLog()
 	head, err := tar.FileInfoHeader(fi, "")
 	if err != nil {
 		return nil, fmt.Errorf("can't make tar header: %v", err)
@@ -174,7 +185,8 @@ func (a *TarballArchive) Header(fi os.FileInfo) (io.Writer, error) { log.DebugLo
 	return a.tarw, nil
 }
 
-func (a *TarballArchive) Close() error { log.DebugLog()
+func (a *TarballArchive) Close() error {
+	log.DebugLog()
 	if err := a.tarw.Close(); err != nil {
 		return err
 	}
