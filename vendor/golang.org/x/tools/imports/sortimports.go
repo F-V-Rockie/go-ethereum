@@ -15,7 +15,7 @@ import (
 
 // sortImports sorts runs of consecutive import lines in import blocks in f.
 // It also removes duplicate imports when it is possible to do so without data loss.
-func sortImports(fset *token.FileSet, f *ast.File) { log.DebugLog()
+func sortImports(fset *token.FileSet, f *ast.File) { 
 	for i, d := range f.Decls {
 		d, ok := d.(*ast.GenDecl)
 		if !ok || d.Tok != token.IMPORT {
@@ -58,7 +58,7 @@ func sortImports(fset *token.FileSet, f *ast.File) { log.DebugLog()
 	}
 }
 
-func importPath(s ast.Spec) string { log.DebugLog()
+func importPath(s ast.Spec) string { 
 	t, err := strconv.Unquote(s.(*ast.ImportSpec).Path.Value)
 	if err == nil {
 		return t
@@ -66,7 +66,7 @@ func importPath(s ast.Spec) string { log.DebugLog()
 	return ""
 }
 
-func importName(s ast.Spec) string { log.DebugLog()
+func importName(s ast.Spec) string { 
 	n := s.(*ast.ImportSpec).Name
 	if n == nil {
 		return ""
@@ -74,7 +74,7 @@ func importName(s ast.Spec) string { log.DebugLog()
 	return n.Name
 }
 
-func importComment(s ast.Spec) string { log.DebugLog()
+func importComment(s ast.Spec) string { 
 	c := s.(*ast.ImportSpec).Comment
 	if c == nil {
 		return ""
@@ -83,7 +83,7 @@ func importComment(s ast.Spec) string { log.DebugLog()
 }
 
 // collapse indicates whether prev may be removed, leaving only next.
-func collapse(prev, next ast.Spec) bool { log.DebugLog()
+func collapse(prev, next ast.Spec) bool { 
 	if importPath(next) != importPath(prev) || importName(next) != importName(prev) {
 		return false
 	}
@@ -95,7 +95,7 @@ type posSpan struct {
 	End   token.Pos
 }
 
-func sortSpecs(fset *token.FileSet, f *ast.File, specs []ast.Spec) []ast.Spec { log.DebugLog()
+func sortSpecs(fset *token.FileSet, f *ast.File, specs []ast.Spec) []ast.Spec { 
 	// Can't short-circuit here even if specs are already sorted,
 	// since they might yet need deduplication.
 	// A lone import, however, may be safely ignored.
@@ -181,9 +181,9 @@ func sortSpecs(fset *token.FileSet, f *ast.File, specs []ast.Spec) []ast.Spec { 
 
 type byImportSpec []ast.Spec // slice of *ast.ImportSpec
 
-func (x byImportSpec) Len() int      { log.DebugLog() return len(x) }
-func (x byImportSpec) Swap(i, j int) { log.DebugLog() x[i], x[j] = x[j], x[i] }
-func (x byImportSpec) Less(i, j int) bool { log.DebugLog()
+func (x byImportSpec) Len() int      {  return len(x) }
+func (x byImportSpec) Swap(i, j int) {  x[i], x[j] = x[j], x[i] }
+func (x byImportSpec) Less(i, j int) bool { 
 	ipath := importPath(x[i])
 	jpath := importPath(x[j])
 
@@ -207,6 +207,6 @@ func (x byImportSpec) Less(i, j int) bool { log.DebugLog()
 
 type byCommentPos []*ast.CommentGroup
 
-func (x byCommentPos) Len() int           { log.DebugLog() return len(x) }
-func (x byCommentPos) Swap(i, j int)      { log.DebugLog() x[i], x[j] = x[j], x[i] }
-func (x byCommentPos) Less(i, j int) bool { log.DebugLog() return x[i].Pos() < x[j].Pos() }
+func (x byCommentPos) Len() int           {  return len(x) }
+func (x byCommentPos) Swap(i, j int)      {  x[i], x[j] = x[j], x[i] }
+func (x byCommentPos) Less(i, j int) bool {  return x[i].Pos() < x[j].Pos() }

@@ -46,7 +46,7 @@ type MBarChart struct {
 }
 
 // NewBarChart returns a new *BarChart with current theme.
-func NewMBarChart() *MBarChart { log.DebugLog()
+func NewMBarChart() *MBarChart { 
 	bc := &MBarChart{Block: *NewBlock()}
 	bc.BarColor[0] = ThemeAttr("mbarchart.bar.bg")
 	bc.NumColor[0] = ThemeAttr("mbarchart.num.fg")
@@ -56,7 +56,7 @@ func NewMBarChart() *MBarChart { log.DebugLog()
 	return bc
 }
 
-func (bc *MBarChart) layout() { log.DebugLog()
+func (bc *MBarChart) layout() { 
 	bc.numBar = bc.innerArea.Dx() / (bc.BarGap + bc.BarWidth)
 	bc.labels = make([][]rune, bc.numBar)
 	DataLen := 0
@@ -136,7 +136,7 @@ func (bc *MBarChart) layout() { log.DebugLog()
 
 }
 
-func (bc *MBarChart) SetMax(max int) { log.DebugLog()
+func (bc *MBarChart) SetMax(max int) { 
 
 	if max > 0 {
 		bc.max = max
@@ -144,7 +144,7 @@ func (bc *MBarChart) SetMax(max int) { log.DebugLog()
 }
 
 // Buffer implements Bufferer interface.
-func (bc *MBarChart) Buffer() Buffer { log.DebugLog()
+func (bc *MBarChart) Buffer() Buffer { 
 	buf := bc.Block.Buffer()
 	bc.layout()
 	var oftX int

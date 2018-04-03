@@ -11,13 +11,13 @@ type _exception struct {
 	value interface{}
 }
 
-func newException(value interface{}) *_exception { log.DebugLog()
+func newException(value interface{}) *_exception { 
 	return &_exception{
 		value: value,
 	}
 }
 
-func (self *_exception) eject() interface{} { log.DebugLog()
+func (self *_exception) eject() interface{} { 
 	value := self.value
 	self.value = nil // Prevent Go from holding on to the value, whatever it is
 	return value
@@ -31,7 +31,7 @@ type _error struct {
 	offset int
 }
 
-func (err _error) format() string { log.DebugLog()
+func (err _error) format() string { 
 	if len(err.name) == 0 {
 		return err.message
 	}
@@ -41,7 +41,7 @@ func (err _error) format() string { log.DebugLog()
 	return fmt.Sprintf("%s: %s", err.name, err.message)
 }
 
-func (err _error) formatWithStack() string { log.DebugLog()
+func (err _error) formatWithStack() string { 
 	str := err.format() + "\n"
 	for _, frame := range err.trace {
 		str += "    at " + frame.location() + "\n"
@@ -64,7 +64,7 @@ var (
 
 type _at int
 
-func (fr _frame) location() string { log.DebugLog()
+func (fr _frame) location() string { 
 	str := "<unknown>"
 
 	switch {
@@ -101,7 +101,7 @@ type Error struct {
 //
 //    TypeError: 'def' is not a function
 //
-func (err Error) Error() string { log.DebugLog()
+func (err Error) Error() string { 
 	return err.format()
 }
 
@@ -112,29 +112,29 @@ func (err Error) Error() string { log.DebugLog()
 //        at xyz (<anonymous>:3:9)
 //        at <anonymous>:7:1/
 //
-func (err Error) String() string { log.DebugLog()
+func (err Error) String() string { 
 	return err.formatWithStack()
 }
 
-func (err _error) describe(format string, in ...interface{}) string { log.DebugLog()
+func (err _error) describe(format string, in ...interface{}) string { 
 	return fmt.Sprintf(format, in...)
 }
 
-func (self _error) messageValue() Value { log.DebugLog()
+func (self _error) messageValue() Value { 
 	if self.message == "" {
 		return Value{}
 	}
 	return toValue_string(self.message)
 }
 
-func (rt *_runtime) typeErrorResult(throw bool) bool { log.DebugLog()
+func (rt *_runtime) typeErrorResult(throw bool) bool { 
 	if throw {
 		panic(rt.panicTypeError())
 	}
 	return false
 }
 
-func newError(rt *_runtime, name string, stackFramesToPop int, in ...interface{}) _error { log.DebugLog()
+func newError(rt *_runtime, name string, stackFramesToPop int, in ...interface{}) _error { 
 	err := _error{
 		name:   name,
 		offset: -1,
@@ -190,37 +190,37 @@ func newError(rt *_runtime, name string, stackFramesToPop int, in ...interface{}
 	return err
 }
 
-func (rt *_runtime) panicTypeError(argumentList ...interface{}) *_exception { log.DebugLog()
+func (rt *_runtime) panicTypeError(argumentList ...interface{}) *_exception { 
 	return &_exception{
 		value: newError(rt, "TypeError", 0, argumentList...),
 	}
 }
 
-func (rt *_runtime) panicReferenceError(argumentList ...interface{}) *_exception { log.DebugLog()
+func (rt *_runtime) panicReferenceError(argumentList ...interface{}) *_exception { 
 	return &_exception{
 		value: newError(rt, "ReferenceError", 0, argumentList...),
 	}
 }
 
-func (rt *_runtime) panicURIError(argumentList ...interface{}) *_exception { log.DebugLog()
+func (rt *_runtime) panicURIError(argumentList ...interface{}) *_exception { 
 	return &_exception{
 		value: newError(rt, "URIError", 0, argumentList...),
 	}
 }
 
-func (rt *_runtime) panicSyntaxError(argumentList ...interface{}) *_exception { log.DebugLog()
+func (rt *_runtime) panicSyntaxError(argumentList ...interface{}) *_exception { 
 	return &_exception{
 		value: newError(rt, "SyntaxError", 0, argumentList...),
 	}
 }
 
-func (rt *_runtime) panicRangeError(argumentList ...interface{}) *_exception { log.DebugLog()
+func (rt *_runtime) panicRangeError(argumentList ...interface{}) *_exception { 
 	return &_exception{
 		value: newError(rt, "RangeError", 0, argumentList...),
 	}
 }
 
-func catchPanic(function func()) (err error) { log.DebugLog()
+func catchPanic(function func()) (err error) { 
 	defer func() {
 		if caught := recover(); caught != nil {
 			if exception, ok := caught.(*_exception); ok {

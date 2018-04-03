@@ -31,7 +31,7 @@ import (
 // substitute a nil value passed to tIn or tNotIn. Invalid UTF-8 is translated
 // to RuneError to determine which transformer to apply, but is passed as is to
 // the respective transformer.
-func If(s Set, tIn, tNotIn transform.Transformer) Transformer { log.DebugLog()
+func If(s Set, tIn, tNotIn transform.Transformer) Transformer { 
 	if tIn == nil && tNotIn == nil {
 		return Transformer{transform.Nop}
 	}
@@ -61,7 +61,7 @@ func If(s Set, tIn, tNotIn transform.Transformer) Transformer { log.DebugLog()
 
 type dummySpan struct{ transform.Transformer }
 
-func (d dummySpan) Span(src []byte, atEOF bool) (n int, err error) { log.DebugLog()
+func (d dummySpan) Span(src []byte, atEOF bool) (n int, err error) { 
 	return 0, transform.ErrEndOfSpan
 }
 
@@ -73,13 +73,13 @@ type cond struct {
 }
 
 // Reset implements transform.Transformer.
-func (t *cond) Reset() { log.DebugLog()
+func (t *cond) Reset() { 
 	t.check = t.is
 	t.t = t.tIn
 	t.t.Reset() // notIn will be reset on first usage.
 }
 
-func (t *cond) is(r rune) bool { log.DebugLog()
+func (t *cond) is(r rune) bool { 
 	if t.f(r) {
 		return true
 	}
@@ -89,7 +89,7 @@ func (t *cond) is(r rune) bool { log.DebugLog()
 	return false
 }
 
-func (t *cond) isNot(r rune) bool { log.DebugLog()
+func (t *cond) isNot(r rune) bool { 
 	if !t.f(r) {
 		return true
 	}
@@ -104,7 +104,7 @@ func (t *cond) isNot(r rune) bool { log.DebugLog()
 // TODO: there are certainly room for improvements, though. For example, if
 // t.t == transform.Nop (which will a common occurrence) it will save a bundle
 // to special-case that loop.
-func (t *cond) Span(src []byte, atEOF bool) (n int, err error) { log.DebugLog()
+func (t *cond) Span(src []byte, atEOF bool) (n int, err error) { 
 	p := 0
 	for n < len(src) && err == nil {
 		// Don't process too much at a time as the Spanner that will be
@@ -144,7 +144,7 @@ func (t *cond) Span(src []byte, atEOF bool) (n int, err error) { log.DebugLog()
 	return n, err
 }
 
-func (t *cond) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) { log.DebugLog()
+func (t *cond) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) { 
 	p := 0
 	for nSrc < len(src) && err == nil {
 		// Don't process too much at a time, as the work might be wasted if the

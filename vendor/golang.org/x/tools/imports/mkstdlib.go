@@ -21,7 +21,7 @@ import (
 	"strings"
 )
 
-func mustOpen(name string) io.Reader { log.DebugLog()
+func mustOpen(name string) io.Reader { 
 	f, err := os.Open(name)
 	if err != nil {
 		log.Fatal(err)
@@ -29,13 +29,13 @@ func mustOpen(name string) io.Reader { log.DebugLog()
 	return f
 }
 
-func api(base string) string { log.DebugLog()
+func api(base string) string { 
 	return filepath.Join(os.Getenv("GOROOT"), "api", base)
 }
 
 var sym = regexp.MustCompile(`^pkg (\S+).*?, (?:var|func|type|const) ([A-Z]\w*)`)
 
-func main() { log.DebugLog()
+func main() { 
 	var buf bytes.Buffer
 	outf := func(format string, args ...interface{}) {
 		fmt.Fprintf(&buf, format, args...)

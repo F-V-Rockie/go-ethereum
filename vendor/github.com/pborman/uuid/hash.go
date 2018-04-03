@@ -24,7 +24,7 @@ var (
 // first 16 bytes of the hash are used to form the UUID.  The version of the
 // UUID will be the lower 4 bits of version.  NewHash is used to implement
 // NewMD5 and NewSHA1.
-func NewHash(h hash.Hash, space UUID, data []byte, version int) UUID { log.DebugLog()
+func NewHash(h hash.Hash, space UUID, data []byte, version int) UUID { 
 	h.Reset()
 	h.Write(space)
 	h.Write([]byte(data))
@@ -40,7 +40,7 @@ func NewHash(h hash.Hash, space UUID, data []byte, version int) UUID { log.Debug
 // supplied name space and data.
 //
 //  NewHash(md5.New(), space, data, 3)
-func NewMD5(space UUID, data []byte) UUID { log.DebugLog()
+func NewMD5(space UUID, data []byte) UUID { 
 	return NewHash(md5.New(), space, data, 3)
 }
 
@@ -48,6 +48,6 @@ func NewMD5(space UUID, data []byte) UUID { log.DebugLog()
 // supplied name space and data.
 //
 //  NewHash(sha1.New(), space, data, 5)
-func NewSHA1(space UUID, data []byte) UUID { log.DebugLog()
+func NewSHA1(space UUID, data []byte) UUID { 
 	return NewHash(sha1.New(), space, data, 5)
 }

@@ -12,6 +12,6 @@ const (
 	errNoXattr = ENODATA
 )
 
-func init() { log.DebugLog()
+func init() { 
 	errnoNames[errNoXattr] = "ENODATA"
 }

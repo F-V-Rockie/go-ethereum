@@ -25,13 +25,13 @@ type cStat struct {
 	write    int64
 }
 
-func (p *cStat) add(n *cStatStaging) { log.DebugLog()
+func (p *cStat) add(n *cStatStaging) { 
 	p.duration += n.duration
 	p.read += n.read
 	p.write += n.write
 }
 
-func (p *cStat) get() (duration time.Duration, read, write int64) { log.DebugLog()
+func (p *cStat) get() (duration time.Duration, read, write int64) { 
 	return p.duration, p.read, p.write
 }
 
@@ -43,14 +43,14 @@ type cStatStaging struct {
 	write    int64
 }
 
-func (p *cStatStaging) startTimer() { log.DebugLog()
+func (p *cStatStaging) startTimer() { 
 	if !p.on {
 		p.start = time.Now()
 		p.on = true
 	}
 }
 
-func (p *cStatStaging) stopTimer() { log.DebugLog()
+func (p *cStatStaging) stopTimer() { 
 	if p.on {
 		p.duration += time.Since(p.start)
 		p.on = false
@@ -62,7 +62,7 @@ type cStats struct {
 	stats []cStat
 }
 
-func (p *cStats) addStat(level int, n *cStatStaging) { log.DebugLog()
+func (p *cStats) addStat(level int, n *cStatStaging) { 
 	p.lk.Lock()
 	if level >= len(p.stats) {
 		newStats := make([]cStat, level+1)
@@ -73,7 +73,7 @@ func (p *cStats) addStat(level int, n *cStatStaging) { log.DebugLog()
 	p.lk.Unlock()
 }
 
-func (p *cStats) getStat(level int) (duration time.Duration, read, write int64) { log.DebugLog()
+func (p *cStats) getStat(level int) (duration time.Duration, read, write int64) { 
 	p.lk.Lock()
 	defer p.lk.Unlock()
 	if level < len(p.stats) {
@@ -82,7 +82,7 @@ func (p *cStats) getStat(level int) (duration time.Duration, read, write int64) 
 	return
 }
 
-func (db *DB) compactionError() { log.DebugLog()
+func (db *DB) compactionError() { 
 	var err error
 noerr:
 	// No error.
@@ -138,7 +138,7 @@ hasperr:
 
 type compactionTransactCounter int
 
-func (cnt *compactionTransactCounter) incr() { log.DebugLog()
+func (cnt *compactionTransactCounter) incr() { 
 	*cnt++
 }
 
@@ -147,7 +147,7 @@ type compactionTransactInterface interface {
 	revert() error
 }
 
-func (db *DB) compactionTransact(name string, t compactionTransactInterface) { log.DebugLog()
+func (db *DB) compactionTransact(name string, t compactionTransactInterface) { 
 	defer func() {
 		if x := recover(); x != nil {
 			if x == errCompactionTransactExiting {
@@ -232,31 +232,31 @@ func (db *DB) compactionTransact(name string, t compactionTransactInterface) { l
 	}
 }
 
-type compactionTransactfunc struct { log.DebugLog()
+type compactionTransactfunc struct { 
 	runFunc    func(cnt *compactionTransactCounter) error
 	revertFunc func() error
 }
 
-func (t *compactionTransactFunc) run(cnt *compactionTransactCounter) error { log.DebugLog()
+func (t *compactionTransactFunc) run(cnt *compactionTransactCounter) error { 
 	return t.runFunc(cnt)
 }
 
-func (t *compactionTransactFunc) revert() error { log.DebugLog()
-	if t.revertfunc != nil { log.DebugLog()
+func (t *compactionTransactFunc) revert() error { 
+	if t.revertfunc != nil { 
 		return t.revertFunc()
 	}
 	return nil
 }
 
-func (db *DB) compactionTransactFunc(name string, run func(cnt *compactionTransactCounter) error, revert func() error) { log.DebugLog()
+func (db *DB) compactionTransactFunc(name string, run func(cnt *compactionTransactCounter) error, revert func() error) { 
 	db.compactionTransact(name, &compactionTransactFunc{run, revert})
 }
 
-func (db *DB) compactionExitTransact() { log.DebugLog()
+func (db *DB) compactionExitTransact() { 
 	panic(errCompactionTransactExiting)
 }
 
-func (db *DB) compactionCommit(name string, rec *sessionRecord) { log.DebugLog()
+func (db *DB) compactionCommit(name string, rec *sessionRecord) { 
 	db.compCommitLk.Lock()
 	defer db.compCommitLk.Unlock() // Defer is necessary.
 	db.compactionTransactFunc(name+"@commit", func(cnt *compactionTransactCounter) error {
@@ -264,7 +264,7 @@ func (db *DB) compactionCommit(name string, rec *sessionRecord) { log.DebugLog()
 	}, nil)
 }
 
-func (db *DB) memCompaction() { log.DebugLog()
+func (db *DB) memCompaction() { 
 	mdb := db.getFrozenMem()
 	if mdb == nil {
 		return
@@ -370,7 +370,7 @@ type tableCompactionBuilder struct {
 	tw *tWriter
 }
 
-func (b *tableCompactionBuilder) appendKV(key, value []byte) error { log.DebugLog()
+func (b *tableCompactionBuilder) appendKV(key, value []byte) error { 
 	// Create new table if not already.
 	if b.tw == nil {
 		// Check for pause event.
@@ -396,11 +396,11 @@ func (b *tableCompactionBuilder) appendKV(key, value []byte) error { log.DebugLo
 	return b.tw.append(key, value)
 }
 
-func (b *tableCompactionBuilder) needFlush() bool { log.DebugLog()
+func (b *tableCompactionBuilder) needFlush() bool { 
 	return b.tw.tw.BytesLen() >= b.tableSize
 }
 
-func (b *tableCompactionBuilder) flush() error { log.DebugLog()
+func (b *tableCompactionBuilder) flush() error { 
 	t, err := b.tw.finish()
 	if err != nil {
 		return err
@@ -412,14 +412,14 @@ func (b *tableCompactionBuilder) flush() error { log.DebugLog()
 	return nil
 }
 
-func (b *tableCompactionBuilder) cleanup() { log.DebugLog()
+func (b *tableCompactionBuilder) cleanup() { 
 	if b.tw != nil {
 		b.tw.drop()
 		b.tw = nil
 	}
 }
 
-func (b *tableCompactionBuilder) run(cnt *compactionTransactCounter) error { log.DebugLog()
+func (b *tableCompactionBuilder) run(cnt *compactionTransactCounter) error { 
 	snapResumed := b.snapIter > 0
 	hasLastUkey := b.snapHasLastUkey // The key might has zero length, so this is necessary.
 	lastUkey := append([]byte{}, b.snapLastUkey...)
@@ -527,7 +527,7 @@ func (b *tableCompactionBuilder) run(cnt *compactionTransactCounter) error { log
 	return nil
 }
 
-func (b *tableCompactionBuilder) revert() error { log.DebugLog()
+func (b *tableCompactionBuilder) revert() error { 
 	for _, at := range b.rec.addedTables {
 		b.s.logf("table@build revert @%d", at.num)
 		if err := b.s.stor.Remove(storage.FileDesc{Type: storage.TypeTable, Num: at.num}); err != nil {
@@ -537,7 +537,7 @@ func (b *tableCompactionBuilder) revert() error { log.DebugLog()
 	return nil
 }
 
-func (db *DB) tableCompaction(c *compaction, noTrivial bool) { log.DebugLog()
+func (db *DB) tableCompaction(c *compaction, noTrivial bool) { 
 	defer c.release()
 
 	rec := &sessionRecord{}
@@ -590,7 +590,7 @@ func (db *DB) tableCompaction(c *compaction, noTrivial bool) { log.DebugLog()
 	}
 }
 
-func (db *DB) tableRangeCompaction(level int, umin, umax []byte) error { log.DebugLog()
+func (db *DB) tableRangeCompaction(level int, umin, umax []byte) error { 
 	db.logf("table@compaction range L%d %q:%q", level, umin, umax)
 	if level >= 0 {
 		if c := db.s.getCompactionRange(level, umin, umax, true); c != nil {
@@ -628,19 +628,19 @@ func (db *DB) tableRangeCompaction(level int, umin, umax []byte) error { log.Deb
 	return nil
 }
 
-func (db *DB) tableAutoCompaction() { log.DebugLog()
+func (db *DB) tableAutoCompaction() { 
 	if c := db.s.pickCompaction(); c != nil {
 		db.tableCompaction(c, false)
 	}
 }
 
-func (db *DB) tableNeedCompaction() bool { log.DebugLog()
+func (db *DB) tableNeedCompaction() bool { 
 	v := db.s.version()
 	defer v.release()
 	return v.needCompaction()
 }
 
-func (db *DB) pauseCompaction(ch chan<- struct{}) { log.DebugLog()
+func (db *DB) pauseCompaction(ch chan<- struct{}) { 
 	select {
 	case ch <- struct{}{}:
 	case <-db.closeC:
@@ -656,7 +656,7 @@ type cAuto struct {
 	ackC chan<- error
 }
 
-func (r cAuto) ack(err error) { log.DebugLog()
+func (r cAuto) ack(err error) { 
 	if r.ackC != nil {
 		defer func() {
 			recover()
@@ -671,7 +671,7 @@ type cRange struct {
 	ackC     chan<- error
 }
 
-func (r cRange) ack(err error) { log.DebugLog()
+func (r cRange) ack(err error) { 
 	if r.ackC != nil {
 		defer func() {
 			recover()
@@ -681,7 +681,7 @@ func (r cRange) ack(err error) { log.DebugLog()
 }
 
 // This will trigger auto compaction but will not wait for it.
-func (db *DB) compTrigger(compC chan<- cCmd) { log.DebugLog()
+func (db *DB) compTrigger(compC chan<- cCmd) { 
 	select {
 	case compC <- cAuto{}:
 	default:
@@ -689,7 +689,7 @@ func (db *DB) compTrigger(compC chan<- cCmd) { log.DebugLog()
 }
 
 // This will trigger auto compaction and/or wait for all compaction to be done.
-func (db *DB) compTriggerWait(compC chan<- cCmd) (err error) { log.DebugLog()
+func (db *DB) compTriggerWait(compC chan<- cCmd) (err error) { 
 	ch := make(chan error)
 	defer close(ch)
 	// Send cmd.
@@ -711,7 +711,7 @@ func (db *DB) compTriggerWait(compC chan<- cCmd) (err error) { log.DebugLog()
 }
 
 // Send range compaction request.
-func (db *DB) compTriggerRange(compC chan<- cCmd, level int, min, max []byte) (err error) { log.DebugLog()
+func (db *DB) compTriggerRange(compC chan<- cCmd, level int, min, max []byte) (err error) { 
 	ch := make(chan error)
 	defer close(ch)
 	// Send cmd.
@@ -732,7 +732,7 @@ func (db *DB) compTriggerRange(compC chan<- cCmd, level int, min, max []byte) (e
 	return err
 }
 
-func (db *DB) mCompaction() { log.DebugLog()
+func (db *DB) mCompaction() { 
 	var x cCmd
 
 	defer func() {
@@ -764,7 +764,7 @@ func (db *DB) mCompaction() { log.DebugLog()
 	}
 }
 
-func (db *DB) tCompaction() { log.DebugLog()
+func (db *DB) tCompaction() { 
 	var x cCmd
 	var ackQ []cCmd
 

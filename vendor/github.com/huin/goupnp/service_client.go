@@ -22,7 +22,7 @@ type ServiceClient struct {
 // NewServiceClients discovers services, and returns clients for them. err will
 // report any error with the discovery process (blocking any device/service
 // discovery), errors reports errors on a per-root-device basis.
-func NewServiceClients(searchTarget string) (clients []ServiceClient, errors []error, err error) { log.DebugLog()
+func NewServiceClients(searchTarget string) (clients []ServiceClient, errors []error, err error) { 
 	var maybeRootDevices []MaybeRootDevice
 	if maybeRootDevices, err = DiscoverDevices(searchTarget); err != nil {
 		return
@@ -49,7 +49,7 @@ func NewServiceClients(searchTarget string) (clients []ServiceClient, errors []e
 
 // NewServiceClientsByURL creates client(s) for the given service URN, for a
 // root device at the given URL.
-func NewServiceClientsByURL(loc *url.URL, searchTarget string) ([]ServiceClient, error) { log.DebugLog()
+func NewServiceClientsByURL(loc *url.URL, searchTarget string) ([]ServiceClient, error) { 
 	rootDevice, err := DeviceByURL(loc)
 	if err != nil {
 		return nil, err
@@ -60,7 +60,7 @@ func NewServiceClientsByURL(loc *url.URL, searchTarget string) ([]ServiceClient,
 // NewServiceClientsFromDevice creates client(s) for the given service URN, in
 // a given root device. The loc parameter is simply assigned to the
 // Location attribute of the returned ServiceClient(s).
-func NewServiceClientsFromRootDevice(rootDevice *RootDevice, loc *url.URL, searchTarget string) ([]ServiceClient, error) { log.DebugLog()
+func NewServiceClientsFromRootDevice(rootDevice *RootDevice, loc *url.URL, searchTarget string) ([]ServiceClient, error) { 
 	device := &rootDevice.Device
 	srvs := device.FindService(searchTarget)
 	if len(srvs) == 0 {
@@ -83,6 +83,6 @@ func NewServiceClientsFromRootDevice(rootDevice *RootDevice, loc *url.URL, searc
 // GetServiceClient returns the ServiceClient itself. This is provided so that the
 // service client attributes can be accessed via an interface method on a
 // wrapping type.
-func (client *ServiceClient) GetServiceClient() *ServiceClient { log.DebugLog()
+func (client *ServiceClient) GetServiceClient() *ServiceClient { 
 	return client
 }

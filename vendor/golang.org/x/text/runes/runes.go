@@ -20,7 +20,7 @@ type Set interface {
 
 type setFunc func(rune) bool
 
-func (s setFunc) Contains(r rune) bool { log.DebugLog()
+func (s setFunc) Contains(r rune) bool { 
 	return s(r)
 }
 
@@ -29,18 +29,18 @@ func (s setFunc) Contains(r rune) bool { log.DebugLog()
 
 // In creates a Set with a Contains method that returns true for all runes in
 // the given RangeTable.
-func In(rt *unicode.RangeTable) Set { log.DebugLog()
+func In(rt *unicode.RangeTable) Set { 
 	return setFunc(func(r rune) bool { return unicode.Is(rt, r) })
 }
 
 // In creates a Set with a Contains method that returns true for all runes not
 // in the given RangeTable.
-func NotIn(rt *unicode.RangeTable) Set { log.DebugLog()
+func NotIn(rt *unicode.RangeTable) Set { 
 	return setFunc(func(r rune) bool { return !unicode.Is(rt, r) })
 }
 
 // Predicate creates a Set with a Contains method that returns f(r).
-func Predicate(f func(rune) bool) Set { log.DebugLog()
+func Predicate(f func(rune) bool) Set { 
 	return setFunc(f)
 }
 
@@ -49,20 +49,20 @@ type Transformer struct {
 	t transform.SpanningTransformer
 }
 
-func (t Transformer) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) { log.DebugLog()
+func (t Transformer) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) { 
 	return t.t.Transform(dst, src, atEOF)
 }
 
-func (t Transformer) Span(b []byte, atEOF bool) (n int, err error) { log.DebugLog()
+func (t Transformer) Span(b []byte, atEOF bool) (n int, err error) { 
 	return t.t.Span(b, atEOF)
 }
 
-func (t Transformer) Reset() { log.DebugLog() t.t.Reset() }
+func (t Transformer) Reset() {  t.t.Reset() }
 
 // Bytes returns a new byte slice with the result of converting b using t.  It
 // calls Reset on t. It returns nil if any error was found. This can only happen
 // if an error-producing Transformer is passed to If.
-func (t Transformer) Bytes(b []byte) []byte { log.DebugLog()
+func (t Transformer) Bytes(b []byte) []byte { 
 	b, _, err := transform.Bytes(t, b)
 	if err != nil {
 		return nil
@@ -73,7 +73,7 @@ func (t Transformer) Bytes(b []byte) []byte { log.DebugLog()
 // String returns a string with the result of converting s using t. It calls
 // Reset on t. It returns the empty string if any error was found. This can only
 // happen if an error-producing Transformer is passed to If.
-func (t Transformer) String(s string) string { log.DebugLog()
+func (t Transformer) String(s string) string { 
 	s, _, err := transform.String(t, s)
 	if err != nil {
 		return ""
@@ -90,7 +90,7 @@ const runeErrorString = string(utf8.RuneError)
 
 // Remove returns a Transformer that removes runes r for which s.Contains(r).
 // Illegal input bytes are replaced by RuneError before being passed to f.
-func Remove(s Set) Transformer { log.DebugLog()
+func Remove(s Set) Transformer { 
 	if f, ok := s.(setFunc); ok {
 		// This little trick cuts the running time of BenchmarkRemove for sets
 		// created by Predicate roughly in half.
@@ -104,10 +104,10 @@ func Remove(s Set) Transformer { log.DebugLog()
 
 type remove func(r rune) bool
 
-func (remove) Reset() { log.DebugLog()}
+func (remove) Reset() { }
 
 // Span implements transform.Spanner.
-func (t remove) Span(src []byte, atEOF bool) (n int, err error) { log.DebugLog()
+func (t remove) Span(src []byte, atEOF bool) (n int, err error) { 
 	for r, size := rune(0), 0; n < len(src); {
 		if r = rune(src[n]); r < utf8.RuneSelf {
 			size = 1
@@ -130,7 +130,7 @@ func (t remove) Span(src []byte, atEOF bool) (n int, err error) { log.DebugLog()
 }
 
 // Transform implements transform.Transformer.
-func (t remove) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) { log.DebugLog()
+func (t remove) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) { 
 	for r, size := rune(0), 0; nSrc < len(src); {
 		if r = rune(src[nSrc]); r < utf8.RuneSelf {
 			size = 1
@@ -177,16 +177,16 @@ func (t remove) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err erro
 // Map returns a Transformer that maps the runes in the input using the given
 // mapping. Illegal bytes in the input are converted to utf8.RuneError before
 // being passed to the mapping func.
-func Map(mapping func(rune) rune) Transformer { log.DebugLog()
+func Map(mapping func(rune) rune) Transformer { 
 	return Transformer{mapper(mapping)}
 }
 
 type mapper func(rune) rune
 
-func (mapper) Reset() { log.DebugLog()}
+func (mapper) Reset() { }
 
 // Span implements transform.Spanner.
-func (t mapper) Span(src []byte, atEOF bool) (n int, err error) { log.DebugLog()
+func (t mapper) Span(src []byte, atEOF bool) (n int, err error) { 
 	for r, size := rune(0), 0; n < len(src); n += size {
 		if r = rune(src[n]); r < utf8.RuneSelf {
 			size = 1
@@ -208,7 +208,7 @@ func (t mapper) Span(src []byte, atEOF bool) (n int, err error) { log.DebugLog()
 }
 
 // Transform implements transform.Transformer.
-func (t mapper) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) { log.DebugLog()
+func (t mapper) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) { 
 	var replacement rune
 	var b [utf8.UTFMax]byte
 
@@ -274,13 +274,13 @@ func (t mapper) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err erro
 
 // ReplaceIllFormed returns a transformer that replaces all input bytes that are
 // not part of a well-formed UTF-8 code sequence with utf8.RuneError.
-func ReplaceIllFormed() Transformer { log.DebugLog()
+func ReplaceIllFormed() Transformer { 
 	return Transformer{&replaceIllFormed{}}
 }
 
 type replaceIllFormed struct{ transform.NopResetter }
 
-func (t replaceIllFormed) Span(src []byte, atEOF bool) (n int, err error) { log.DebugLog()
+func (t replaceIllFormed) Span(src []byte, atEOF bool) (n int, err error) { 
 	for n < len(src) {
 		// ASCII fast path.
 		if src[n] < utf8.RuneSelf {
@@ -309,7 +309,7 @@ func (t replaceIllFormed) Span(src []byte, atEOF bool) (n int, err error) { log.
 	return n, err
 }
 
-func (t replaceIllFormed) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) { log.DebugLog()
+func (t replaceIllFormed) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) { 
 	for nSrc < len(src) {
 		// ASCII fast path.
 		if r := src[nSrc]; r < utf8.RuneSelf {

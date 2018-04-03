@@ -20,7 +20,7 @@ type Version struct {
 //
 // For a table of version numbers see:
 // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724833(v=vs.85).aspx
-func GetWindowsVersion() Version { log.DebugLog()
+func GetWindowsVersion() Version { 
 	// https://msdn.microsoft.com/en-us/library/windows/desktop/ms724439(v=vs.85).aspx
 	ver, err := syscall.GetVersion()
 	if err != nil {
@@ -37,7 +37,7 @@ func GetWindowsVersion() Version { log.DebugLog()
 
 // IsWindowsVistaOrGreater returns true if the Windows version is Vista or
 // greater.
-func (v Version) IsWindowsVistaOrGreater() bool { log.DebugLog()
+func (v Version) IsWindowsVistaOrGreater() bool { 
 	// Vista is 6.0.
 	return v.Major >= 6 && v.Minor >= 0
 }

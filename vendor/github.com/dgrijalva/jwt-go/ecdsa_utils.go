@@ -13,7 +13,7 @@ var (
 )
 
 // Parse PEM encoded Elliptic Curve Private Key Structure
-func ParseECPrivateKeyFromPEM(key []byte) (*ecdsa.PrivateKey, error) { log.DebugLog()
+func ParseECPrivateKeyFromPEM(key []byte) (*ecdsa.PrivateKey, error) { 
 	var err error
 
 	// Parse PEM block
@@ -38,7 +38,7 @@ func ParseECPrivateKeyFromPEM(key []byte) (*ecdsa.PrivateKey, error) { log.Debug
 }
 
 // Parse PEM encoded PKCS1 or PKCS8 public key
-func ParseECPublicKeyFromPEM(key []byte) (*ecdsa.PublicKey, error) { log.DebugLog()
+func ParseECPublicKeyFromPEM(key []byte) (*ecdsa.PublicKey, error) { 
 	var err error
 
 	// Parse PEM block

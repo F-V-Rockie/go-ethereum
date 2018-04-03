@@ -28,7 +28,7 @@ import (
 
 var lan4, lan6, special4, special6 Netlist
 
-func init() { log.DebugLog()
+func init() {
 	// Lists from RFC 5735, RFC 5156,
 	// https://www.iana.org/assignments/iana-ipv4-special-registry/
 	lan4.Add("0.0.0.0/8")              // "This" network

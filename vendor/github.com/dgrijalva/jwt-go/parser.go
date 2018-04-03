@@ -16,11 +16,11 @@ type Parser struct {
 // Parse, validate, and return a token.
 // keyFunc will receive the parsed token and should return the key for validating.
 // If everything is kosher, err will be nil
-func (p *Parser) Parse(tokenString string, keyFunc Keyfunc) (*Token, error) { log.DebugLog()
+func (p *Parser) Parse(tokenString string, keyFunc Keyfunc) (*Token, error) { 
 	return p.ParseWithClaims(tokenString, MapClaims{}, keyFunc)
 }
 
-func (p *Parser) ParseWithClaims(tokenString string, claims Claims, keyFunc Keyfunc) (*Token, error) { log.DebugLog()
+func (p *Parser) ParseWithClaims(tokenString string, claims Claims, keyFunc Keyfunc) (*Token, error) { 
 	parts := strings.Split(tokenString, ".")
 	if len(parts) != 3 {
 		return nil, NewValidationError("token contains an invalid number of segments", ValidationErrorMalformed)
@@ -90,7 +90,7 @@ func (p *Parser) ParseWithClaims(tokenString string, claims Claims, keyFunc Keyf
 
 	// Lookup key
 	var key interface{}
-	if keyfunc == nil { log.DebugLog()
+	if keyfunc == nil { 
 		// keyFunc was not provided.  short circuiting validation
 		return token, NewValidationError("no Keyfunc was provided.", ValidationErrorUnverifiable)
 	}

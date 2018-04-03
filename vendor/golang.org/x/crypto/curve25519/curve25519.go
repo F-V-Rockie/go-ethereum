@@ -21,30 +21,30 @@ import (
 // context.
 type fieldElement [10]int32
 
-func feZero(fe *fieldElement) { log.DebugLog()
+func feZero(fe *fieldElement) { 
 	for i := range fe {
 		fe[i] = 0
 	}
 }
 
-func feOne(fe *fieldElement) { log.DebugLog()
+func feOne(fe *fieldElement) { 
 	feZero(fe)
 	fe[0] = 1
 }
 
-func feAdd(dst, a, b *fieldElement) { log.DebugLog()
+func feAdd(dst, a, b *fieldElement) { 
 	for i := range dst {
 		dst[i] = a[i] + b[i]
 	}
 }
 
-func feSub(dst, a, b *fieldElement) { log.DebugLog()
+func feSub(dst, a, b *fieldElement) { 
 	for i := range dst {
 		dst[i] = a[i] - b[i]
 	}
 }
 
-func feCopy(dst, src *fieldElement) { log.DebugLog()
+func feCopy(dst, src *fieldElement) { 
 	for i := range dst {
 		dst[i] = src[i]
 	}
@@ -53,7 +53,7 @@ func feCopy(dst, src *fieldElement) { log.DebugLog()
 // feCSwap replaces (f,g) with (g,f) if b == 1; replaces (f,g) with (f,g) if b == 0.
 //
 // Preconditions: b in {0,1}.
-func feCSwap(f, g *fieldElement, b int32) { log.DebugLog()
+func feCSwap(f, g *fieldElement, b int32) { 
 	b = -b
 	for i := range f {
 		t := b & (f[i] ^ g[i])
@@ -63,7 +63,7 @@ func feCSwap(f, g *fieldElement, b int32) { log.DebugLog()
 }
 
 // load3 reads a 24-bit, little-endian value from in.
-func load3(in []byte) int64 { log.DebugLog()
+func load3(in []byte) int64 { 
 	var r int64
 	r = int64(in[0])
 	r |= int64(in[1]) << 8
@@ -72,11 +72,11 @@ func load3(in []byte) int64 { log.DebugLog()
 }
 
 // load4 reads a 32-bit, little-endian value from in.
-func load4(in []byte) int64 { log.DebugLog()
+func load4(in []byte) int64 { 
 	return int64(binary.LittleEndian.Uint32(in))
 }
 
-func feFromBytes(dst *fieldElement, src *[32]byte) { log.DebugLog()
+func feFromBytes(dst *fieldElement, src *[32]byte) { 
 	h0 := load4(src[:])
 	h1 := load3(src[4:]) << 6
 	h2 := load3(src[7:]) << 5
@@ -156,7 +156,7 @@ func feFromBytes(dst *fieldElement, src *[32]byte) { log.DebugLog()
 //
 //   Have q+2^(-255)x = 2^(-255)(h + 19 2^(-25) h9 + 2^(-1))
 //   so floor(2^(-255)(h + 19 2^(-25) h9 + 2^(-1))) = q.
-func feToBytes(s *[32]byte, h *fieldElement) { log.DebugLog()
+func feToBytes(s *[32]byte, h *fieldElement) { 
 	var carry [10]int32
 
 	q := (19*h[9] + (1 << 24)) >> 25
@@ -272,7 +272,7 @@ func feToBytes(s *[32]byte, h *fieldElement) { log.DebugLog()
 // Can get away with 11 carries, but then data flow is much deeper.
 //
 // With tighter constraints on inputs can squeeze carries into int32.
-func feMul(h, f, g *fieldElement) { log.DebugLog()
+func feMul(h, f, g *fieldElement) { 
 	f0 := f[0]
 	f1 := f[1]
 	f2 := f[2]
@@ -510,7 +510,7 @@ func feMul(h, f, g *fieldElement) { log.DebugLog()
 //
 // Postconditions:
 //    |h| bounded by 1.1*2^25,1.1*2^24,1.1*2^25,1.1*2^24,etc.
-func feSquare(h, f *fieldElement) { log.DebugLog()
+func feSquare(h, f *fieldElement) { 
 	f0 := f[0]
 	f1 := f[1]
 	f2 := f[2]
@@ -663,7 +663,7 @@ func feSquare(h, f *fieldElement) { log.DebugLog()
 //
 // Postconditions:
 //    |h| bounded by 1.1*2^25,1.1*2^24,1.1*2^25,1.1*2^24,etc.
-func feMul121666(h, f *fieldElement) { log.DebugLog()
+func feMul121666(h, f *fieldElement) { 
 	h0 := int64(f[0]) * 121666
 	h1 := int64(f[1]) * 121666
 	h2 := int64(f[2]) * 121666
@@ -721,7 +721,7 @@ func feMul121666(h, f *fieldElement) { log.DebugLog()
 }
 
 // feInvert sets out = z^-1.
-func feInvert(out, z *fieldElement) { log.DebugLog()
+func feInvert(out, z *fieldElement) { 
 	var t0, t1, t2, t3 fieldElement
 	var i int
 
@@ -782,7 +782,7 @@ func feInvert(out, z *fieldElement) { log.DebugLog()
 	feMul(out, &t1, &t0)
 }
 
-func scalarMult(out, in, base *[32]byte) { log.DebugLog()
+func scalarMult(out, in, base *[32]byte) { 
 	var e [32]byte
 
 	copy(e[:], in[:])

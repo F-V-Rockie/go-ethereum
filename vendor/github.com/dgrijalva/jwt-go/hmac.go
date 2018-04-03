@@ -20,7 +20,7 @@ var (
 	ErrSignatureInvalid = errors.New("signature is invalid")
 )
 
-func init() { log.DebugLog()
+func init() { 
 	// HS256
 	SigningMethodHS256 = &SigningMethodHMAC{"HS256", crypto.SHA256}
 	RegisterSigningMethod(SigningMethodHS256.Alg(), func() SigningMethod {
@@ -40,12 +40,12 @@ func init() { log.DebugLog()
 	})
 }
 
-func (m *SigningMethodHMAC) Alg() string { log.DebugLog()
+func (m *SigningMethodHMAC) Alg() string { 
 	return m.Name
 }
 
 // Verify the signature of HSXXX tokens.  Returns nil if the signature is valid.
-func (m *SigningMethodHMAC) Verify(signingString, signature string, key interface{}) error { log.DebugLog()
+func (m *SigningMethodHMAC) Verify(signingString, signature string, key interface{}) error { 
 	// Verify the key is the right type
 	keyBytes, ok := key.([]byte)
 	if !ok {
@@ -78,7 +78,7 @@ func (m *SigningMethodHMAC) Verify(signingString, signature string, key interfac
 
 // Implements the Sign method from SigningMethod for this signing method.
 // Key must be []byte
-func (m *SigningMethodHMAC) Sign(signingString string, key interface{}) (string, error) { log.DebugLog()
+func (m *SigningMethodHMAC) Sign(signingString string, key interface{}) (string, error) { 
 	if keyBytes, ok := key.([]byte); ok {
 		if !m.Hash.Available() {
 			return "", ErrHashUnavailable

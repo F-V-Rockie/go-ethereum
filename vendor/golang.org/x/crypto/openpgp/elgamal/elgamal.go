@@ -34,7 +34,7 @@ type PrivateKey struct {
 // Encrypt encrypts the given message to the given public key. The result is a
 // pair of integers. Errors can result from reading random, or because msg is
 // too large to be encrypted to the public key.
-func Encrypt(random io.Reader, pub *PublicKey, msg []byte) (c1, c2 *big.Int, err error) { log.DebugLog()
+func Encrypt(random io.Reader, pub *PublicKey, msg []byte) (c1, c2 *big.Int, err error) { 
 	pLen := (pub.P.BitLen() + 7) / 8
 	if len(msg) > pLen-11 {
 		err = errors.New("elgamal: message too long")
@@ -74,7 +74,7 @@ func Encrypt(random io.Reader, pub *PublicKey, msg []byte) (c1, c2 *big.Int, err
 // be used to break the cryptosystem.  See ``Chosen Ciphertext Attacks
 // Against Protocols Based on the RSA Encryption Standard PKCS #1'', Daniel
 // Bleichenbacher, Advances in Cryptology (Crypto '98),
-func Decrypt(priv *PrivateKey, c1, c2 *big.Int) (msg []byte, err error) { log.DebugLog()
+func Decrypt(priv *PrivateKey, c1, c2 *big.Int) (msg []byte, err error) { 
 	s := new(big.Int).Exp(c1, priv.X, priv.P)
 	s.ModInverse(s, priv.P)
 	s.Mul(s, c2)
@@ -103,7 +103,7 @@ func Decrypt(priv *PrivateKey, c1, c2 *big.Int) (msg []byte, err error) { log.De
 }
 
 // nonZeroRandomBytes fills the given slice with non-zero random octets.
-func nonZeroRandomBytes(s []byte, rand io.Reader) (err error) { log.DebugLog()
+func nonZeroRandomBytes(s []byte, rand io.Reader) (err error) { 
 	_, err = io.ReadFull(rand, s)
 	if err != nil {
 		return

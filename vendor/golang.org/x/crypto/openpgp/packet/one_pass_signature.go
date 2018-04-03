@@ -25,7 +25,7 @@ type OnePassSignature struct {
 
 const onePassSignatureVersion = 3
 
-func (ops *OnePassSignature) parse(r io.Reader) (err error) { log.DebugLog()
+func (ops *OnePassSignature) parse(r io.Reader) (err error) { 
 	var buf [13]byte
 
 	_, err = readFull(r, buf[:])
@@ -50,7 +50,7 @@ func (ops *OnePassSignature) parse(r io.Reader) (err error) { log.DebugLog()
 }
 
 // Serialize marshals the given OnePassSignature to w.
-func (ops *OnePassSignature) Serialize(w io.Writer) error { log.DebugLog()
+func (ops *OnePassSignature) Serialize(w io.Writer) error { 
 	var buf [13]byte
 	buf[0] = onePassSignatureVersion
 	buf[1] = uint8(ops.SigType)

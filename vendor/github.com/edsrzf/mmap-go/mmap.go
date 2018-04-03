@@ -45,7 +45,7 @@ type MMap []byte
 
 // Map maps an entire file into memory.
 // If ANON is set in flags, f is ignored.
-func Map(f *os.File, prot, flags int) (MMap, error) { log.DebugLog()
+func Map(f *os.File, prot, flags int) (MMap, error) { 
 	return MapRegion(f, -1, prot, flags, 0)
 }
 
@@ -53,7 +53,7 @@ func Map(f *os.File, prot, flags int) (MMap, error) { log.DebugLog()
 // The offset parameter must be a multiple of the system's page size.
 // If length < 0, the entire file will be mapped.
 // If ANON is set in flags, f is ignored.
-func MapRegion(f *os.File, length int, prot, flags int, offset int64) (MMap, error) { log.DebugLog()
+func MapRegion(f *os.File, length int, prot, flags int, offset int64) (MMap, error) { 
 	var fd uintptr
 	if flags&ANON == 0 {
 		fd = uintptr(f.Fd())
@@ -73,13 +73,13 @@ func MapRegion(f *os.File, length int, prot, flags int, offset int64) (MMap, err
 	return mmap(length, uintptr(prot), uintptr(flags), fd, offset)
 }
 
-func (m *MMap) header() *reflect.SliceHeader { log.DebugLog()
+func (m *MMap) header() *reflect.SliceHeader { 
 	return (*reflect.SliceHeader)(unsafe.Pointer(m))
 }
 
 // Lock keeps the mapped region in physical memory, ensuring that it will not be
 // swapped out.
-func (m MMap) Lock() error { log.DebugLog()
+func (m MMap) Lock() error { 
 	dh := m.header()
 	return lock(dh.Data, uintptr(dh.Len))
 }
@@ -87,13 +87,13 @@ func (m MMap) Lock() error { log.DebugLog()
 // Unlock reverses the effect of Lock, allowing the mapped region to potentially
 // be swapped out.
 // If m is already unlocked, aan error will result.
-func (m MMap) Unlock() error { log.DebugLog()
+func (m MMap) Unlock() error { 
 	dh := m.header()
 	return unlock(dh.Data, uintptr(dh.Len))
 }
 
 // Flush synchronizes the mapping's contents to the file's contents on disk.
-func (m MMap) Flush() error { log.DebugLog()
+func (m MMap) Flush() error { 
 	dh := m.header()
 	return flush(dh.Data, uintptr(dh.Len))
 }
@@ -104,7 +104,7 @@ func (m MMap) Flush() error { log.DebugLog()
 // result in undefined behavior.
 // Unmap should only be called on the slice value that was originally returned from
 // a call to Map. Calling Unmap on a derived slice may cause errors.
-func (m *MMap) Unmap() error { log.DebugLog()
+func (m *MMap) Unmap() error { 
 	dh := m.header()
 	err := unmap(dh.Data, uintptr(dh.Len))
 	*m = nil

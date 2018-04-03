@@ -26,24 +26,24 @@ type truncatingMAC struct {
 	hmac   hash.Hash
 }
 
-func (t truncatingMAC) Write(data []byte) (int, error) { log.DebugLog()
+func (t truncatingMAC) Write(data []byte) (int, error) {
 	return t.hmac.Write(data)
 }
 
-func (t truncatingMAC) Sum(in []byte) []byte { log.DebugLog()
+func (t truncatingMAC) Sum(in []byte) []byte {
 	out := t.hmac.Sum(in)
 	return out[:len(in)+t.length]
 }
 
-func (t truncatingMAC) Reset() { log.DebugLog()
+func (t truncatingMAC) Reset() {
 	t.hmac.Reset()
 }
 
-func (t truncatingMAC) Size() int { log.DebugLog()
+func (t truncatingMAC) Size() int {
 	return t.length
 }
 
-func (t truncatingMAC) BlockSize() int { log.DebugLog() return t.hmac.BlockSize() }
+func (t truncatingMAC) BlockSize() int {  return t.hmac.BlockSize() }
 
 var macModes = map[string]*macMode{
 	"hmac-sha2-256-etm@openssh.com": {32, true, func(key []byte) hash.Hash {

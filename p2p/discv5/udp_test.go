@@ -32,7 +32,7 @@ import (
 	"github.com/ethereum/go-ethereum/rlp"
 )
 
-func init() { log.DebugLog()
+func init() {
 	spew.Config.DisableMethods = true
 }
 

@@ -7,7 +7,7 @@ import (
 	"unicode/utf16"
 )
 
-func (value Value) bool() bool { log.DebugLog()
+func (value Value) bool() bool { 
 	if value.kind == valueBoolean {
 		return value.value.(bool)
 	}

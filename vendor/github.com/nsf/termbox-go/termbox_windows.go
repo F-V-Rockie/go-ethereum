@@ -65,7 +65,7 @@ const (
 	mouse_mmb = 0x4 | 0x8 | 0x10
 )
 
-func (this coord) uintptr() uintptr { log.DebugLog()
+func (this coord) uintptr() uintptr { 
 	return uintptr(*(*int32)(unsafe.Pointer(&this)))
 }
 
@@ -93,7 +93,7 @@ var (
 	proc_set_event                        = kernel32.NewProc("SetEvent")
 )
 
-func set_console_active_screen_buffer(h syscall.Handle) (err error) { log.DebugLog()
+func set_console_active_screen_buffer(h syscall.Handle) (err error) { 
 	r0, _, e1 := syscall.Syscall(proc_set_console_active_screen_buffer.Addr(),
 		1, uintptr(h), 0, 0)
 	if int(r0) == 0 {
@@ -106,7 +106,7 @@ func set_console_active_screen_buffer(h syscall.Handle) (err error) { log.DebugL
 	return
 }
 
-func set_console_screen_buffer_size(h syscall.Handle, size coord) (err error) { log.DebugLog()
+func set_console_screen_buffer_size(h syscall.Handle, size coord) (err error) { 
 	r0, _, e1 := syscall.Syscall(proc_set_console_screen_buffer_size.Addr(),
 		2, uintptr(h), size.uintptr(), 0)
 	if int(r0) == 0 {
@@ -119,7 +119,7 @@ func set_console_screen_buffer_size(h syscall.Handle, size coord) (err error) { 
 	return
 }
 
-func create_console_screen_buffer() (h syscall.Handle, err error) { log.DebugLog()
+func create_console_screen_buffer() (h syscall.Handle, err error) { 
 	r0, _, e1 := syscall.Syscall6(proc_create_console_screen_buffer.Addr(),
 		5, uintptr(generic_read|generic_write), 0, 0, console_textmode_buffer, 0, 0)
 	if int(r0) == 0 {
@@ -132,7 +132,7 @@ func create_console_screen_buffer() (h syscall.Handle, err error) { log.DebugLog
 	return syscall.Handle(r0), err
 }
 
-func get_console_screen_buffer_info(h syscall.Handle, info *console_screen_buffer_info) (err error) { log.DebugLog()
+func get_console_screen_buffer_info(h syscall.Handle, info *console_screen_buffer_info) (err error) { 
 	r0, _, e1 := syscall.Syscall(proc_get_console_screen_buffer_info.Addr(),
 		2, uintptr(h), uintptr(unsafe.Pointer(info)), 0)
 	if int(r0) == 0 {
@@ -145,7 +145,7 @@ func get_console_screen_buffer_info(h syscall.Handle, info *console_screen_buffe
 	return
 }
 
-func write_console_output(h syscall.Handle, chars []char_info, dst small_rect) (err error) { log.DebugLog()
+func write_console_output(h syscall.Handle, chars []char_info, dst small_rect) (err error) { 
 	tmp_coord = coord{dst.right - dst.left + 1, dst.bottom - dst.top + 1}
 	tmp_rect = dst
 	r0, _, e1 := syscall.Syscall6(proc_write_console_output.Addr(),
@@ -161,7 +161,7 @@ func write_console_output(h syscall.Handle, chars []char_info, dst small_rect) (
 	return
 }
 
-func write_console_output_character(h syscall.Handle, chars []wchar, pos coord) (err error) { log.DebugLog()
+func write_console_output_character(h syscall.Handle, chars []wchar, pos coord) (err error) { 
 	r0, _, e1 := syscall.Syscall6(proc_write_console_output_character.Addr(),
 		5, uintptr(h), uintptr(unsafe.Pointer(&chars[0])), uintptr(len(chars)),
 		pos.uintptr(), uintptr(unsafe.Pointer(&tmp_arg)), 0)
@@ -175,7 +175,7 @@ func write_console_output_character(h syscall.Handle, chars []wchar, pos coord) 
 	return
 }
 
-func write_console_output_attribute(h syscall.Handle, attrs []word, pos coord) (err error) { log.DebugLog()
+func write_console_output_attribute(h syscall.Handle, attrs []word, pos coord) (err error) { 
 	r0, _, e1 := syscall.Syscall6(proc_write_console_output_attribute.Addr(),
 		5, uintptr(h), uintptr(unsafe.Pointer(&attrs[0])), uintptr(len(attrs)),
 		pos.uintptr(), uintptr(unsafe.Pointer(&tmp_arg)), 0)
@@ -189,7 +189,7 @@ func write_console_output_attribute(h syscall.Handle, attrs []word, pos coord) (
 	return
 }
 
-func set_console_cursor_info(h syscall.Handle, info *console_cursor_info) (err error) { log.DebugLog()
+func set_console_cursor_info(h syscall.Handle, info *console_cursor_info) (err error) { 
 	r0, _, e1 := syscall.Syscall(proc_set_console_cursor_info.Addr(),
 		2, uintptr(h), uintptr(unsafe.Pointer(info)), 0)
 	if int(r0) == 0 {
@@ -202,7 +202,7 @@ func set_console_cursor_info(h syscall.Handle, info *console_cursor_info) (err e
 	return
 }
 
-func get_console_cursor_info(h syscall.Handle, info *console_cursor_info) (err error) { log.DebugLog()
+func get_console_cursor_info(h syscall.Handle, info *console_cursor_info) (err error) { 
 	r0, _, e1 := syscall.Syscall(proc_get_console_cursor_info.Addr(),
 		2, uintptr(h), uintptr(unsafe.Pointer(info)), 0)
 	if int(r0) == 0 {
@@ -215,7 +215,7 @@ func get_console_cursor_info(h syscall.Handle, info *console_cursor_info) (err e
 	return
 }
 
-func set_console_cursor_position(h syscall.Handle, pos coord) (err error) { log.DebugLog()
+func set_console_cursor_position(h syscall.Handle, pos coord) (err error) { 
 	r0, _, e1 := syscall.Syscall(proc_set_console_cursor_position.Addr(),
 		2, uintptr(h), pos.uintptr(), 0)
 	if int(r0) == 0 {
@@ -228,7 +228,7 @@ func set_console_cursor_position(h syscall.Handle, pos coord) (err error) { log.
 	return
 }
 
-func read_console_input(h syscall.Handle, record *input_record) (err error) { log.DebugLog()
+func read_console_input(h syscall.Handle, record *input_record) (err error) { 
 	r0, _, e1 := syscall.Syscall6(proc_read_console_input.Addr(),
 		4, uintptr(h), uintptr(unsafe.Pointer(record)), 1, uintptr(unsafe.Pointer(&tmp_arg)), 0, 0)
 	if int(r0) == 0 {
@@ -241,7 +241,7 @@ func read_console_input(h syscall.Handle, record *input_record) (err error) { lo
 	return
 }
 
-func get_console_mode(h syscall.Handle, mode *dword) (err error) { log.DebugLog()
+func get_console_mode(h syscall.Handle, mode *dword) (err error) { 
 	r0, _, e1 := syscall.Syscall(proc_get_console_mode.Addr(),
 		2, uintptr(h), uintptr(unsafe.Pointer(mode)), 0)
 	if int(r0) == 0 {
@@ -254,7 +254,7 @@ func get_console_mode(h syscall.Handle, mode *dword) (err error) { log.DebugLog(
 	return
 }
 
-func set_console_mode(h syscall.Handle, mode dword) (err error) { log.DebugLog()
+func set_console_mode(h syscall.Handle, mode dword) (err error) { 
 	r0, _, e1 := syscall.Syscall(proc_set_console_mode.Addr(),
 		2, uintptr(h), uintptr(mode), 0)
 	if int(r0) == 0 {
@@ -267,7 +267,7 @@ func set_console_mode(h syscall.Handle, mode dword) (err error) { log.DebugLog()
 	return
 }
 
-func fill_console_output_character(h syscall.Handle, char wchar, n int) (err error) { log.DebugLog()
+func fill_console_output_character(h syscall.Handle, char wchar, n int) (err error) { 
 	r0, _, e1 := syscall.Syscall6(proc_fill_console_output_character.Addr(),
 		5, uintptr(h), uintptr(char), uintptr(n), tmp_coord.uintptr(),
 		uintptr(unsafe.Pointer(&tmp_arg)), 0)
@@ -281,7 +281,7 @@ func fill_console_output_character(h syscall.Handle, char wchar, n int) (err err
 	return
 }
 
-func fill_console_output_attribute(h syscall.Handle, attr word, n int) (err error) { log.DebugLog()
+func fill_console_output_attribute(h syscall.Handle, attr word, n int) (err error) { 
 	r0, _, e1 := syscall.Syscall6(proc_fill_console_output_attribute.Addr(),
 		5, uintptr(h), uintptr(attr), uintptr(n), tmp_coord.uintptr(),
 		uintptr(unsafe.Pointer(&tmp_arg)), 0)
@@ -295,7 +295,7 @@ func fill_console_output_attribute(h syscall.Handle, attr word, n int) (err erro
 	return
 }
 
-func create_event() (out syscall.Handle, err error) { log.DebugLog()
+func create_event() (out syscall.Handle, err error) { 
 	r0, _, e1 := syscall.Syscall6(proc_create_event.Addr(),
 		4, 0, 0, 0, 0, 0, 0)
 	if int(r0) == 0 {
@@ -308,7 +308,7 @@ func create_event() (out syscall.Handle, err error) { log.DebugLog()
 	return syscall.Handle(r0), err
 }
 
-func wait_for_multiple_objects(objects []syscall.Handle) (err error) { log.DebugLog()
+func wait_for_multiple_objects(objects []syscall.Handle) (err error) { 
 	r0, _, e1 := syscall.Syscall6(proc_wait_for_multiple_objects.Addr(),
 		4, uintptr(len(objects)), uintptr(unsafe.Pointer(&objects[0])),
 		0, 0xFFFFFFFF, 0, 0)
@@ -322,7 +322,7 @@ func wait_for_multiple_objects(objects []syscall.Handle) (err error) { log.Debug
 	return
 }
 
-func set_event(ev syscall.Handle) (err error) { log.DebugLog()
+func set_event(ev syscall.Handle) (err error) { 
 	r0, _, e1 := syscall.Syscall(proc_set_event.Addr(),
 		1, uintptr(ev), 0, 0)
 	if int(r0) == 0 {
@@ -381,7 +381,7 @@ var (
 	tmp_rect   = small_rect{0, 0, 0, 0}
 )
 
-func get_cursor_position(out syscall.Handle) coord { log.DebugLog()
+func get_cursor_position(out syscall.Handle) coord { 
 	err := get_console_screen_buffer_info(out, &tmp_info)
 	if err != nil {
 		panic(err)
@@ -389,7 +389,7 @@ func get_cursor_position(out syscall.Handle) coord { log.DebugLog()
 	return tmp_info.cursor_position
 }
 
-func get_term_size(out syscall.Handle) coord { log.DebugLog()
+func get_term_size(out syscall.Handle) coord { 
 	err := get_console_screen_buffer_info(out, &tmp_info)
 	if err != nil {
 		panic(err)
@@ -397,7 +397,7 @@ func get_term_size(out syscall.Handle) coord { log.DebugLog()
 	return tmp_info.size
 }
 
-func get_win_size(out syscall.Handle) coord { log.DebugLog()
+func get_win_size(out syscall.Handle) coord { 
 	err := get_console_screen_buffer_info(out, &tmp_info)
 	if err != nil {
 		panic(err)
@@ -408,7 +408,7 @@ func get_win_size(out syscall.Handle) coord { log.DebugLog()
 	}
 }
 
-func update_size_maybe() { log.DebugLog()
+func update_size_maybe() { 
 	size := get_term_size(out)
 	if size.x != term_size.x || size.y != term_size.y {
 		term_size = size
@@ -457,7 +457,7 @@ const (
 	surr_self        = 0x10000
 )
 
-func append_diff_line(y int) int { log.DebugLog()
+func append_diff_line(y int) int { 
 	n := 0
 	for x := 0; x < front_buffer.width; {
 		cell_offset := y*front_buffer.width + x
@@ -482,7 +482,7 @@ func append_diff_line(y int) int { log.DebugLog()
 
 // compares 'back_buffer' with 'front_buffer' and prepares all changes in the form of
 // 'diff_msg's in the 'diff_buf'
-func prepare_diff_messages() { log.DebugLog()
+func prepare_diff_messages() { 
 	// clear buffers
 	diffbuf = diffbuf[:0]
 	charbuf = charbuf[:0]
@@ -522,7 +522,7 @@ func prepare_diff_messages() { log.DebugLog()
 	}
 }
 
-func get_ct(table []word, idx int) word { log.DebugLog()
+func get_ct(table []word, idx int) word { 
 	idx = idx & 0x0F
 	if idx >= len(table) {
 		idx = len(table) - 1
@@ -530,7 +530,7 @@ func get_ct(table []word, idx int) word { log.DebugLog()
 	return table[idx]
 }
 
-func cell_to_char_info(c Cell) (attr word, wc [2]wchar) { log.DebugLog()
+func cell_to_char_info(c Cell) (attr word, wc [2]wchar) { 
 	attr = get_ct(color_table_fg, int(c.Fg)) | get_ct(color_table_bg, int(c.Bg))
 	if c.Fg&AttrReverse|c.Bg&AttrReverse != 0 {
 		attr = (attr&0xF0)>>4 | (attr&0x0F)<<4
@@ -553,14 +553,14 @@ func cell_to_char_info(c Cell) (attr word, wc [2]wchar) { log.DebugLog()
 	return
 }
 
-func move_cursor(x, y int) { log.DebugLog()
+func move_cursor(x, y int) { 
 	err := set_console_cursor_position(out, coord{short(x), short(y)})
 	if err != nil {
 		panic(err)
 	}
 }
 
-func show_cursor(visible bool) { log.DebugLog()
+func show_cursor(visible bool) { 
 	var v int32
 	if visible {
 		v = 1
@@ -575,7 +575,7 @@ func show_cursor(visible bool) { log.DebugLog()
 	}
 }
 
-func clear() { log.DebugLog()
+func clear() { 
 	var err error
 	attr, char := cell_to_char_info(Cell{
 		' ',
@@ -597,7 +597,7 @@ func clear() { log.DebugLog()
 	}
 }
 
-func key_event_record_to_event(r *key_event_record) (Event, bool) { log.DebugLog()
+func key_event_record_to_event(r *key_event_record) (Event, bool) { 
 	if r.key_down == 0 {
 		return Event{}, false
 	}
@@ -748,7 +748,7 @@ func key_event_record_to_event(r *key_event_record) (Event, bool) { log.DebugLog
 	return Event{}, false
 }
 
-func input_event_producer() { log.DebugLog()
+func input_event_producer() { 
 	var r input_record
 	var err error
 	var last_button Key

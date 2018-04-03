@@ -35,7 +35,7 @@ var (
 	single  = flag.Bool("single", false, "print only the first element, discard the rest")
 )
 
-func init() { log.DebugLog()
+func init() {
 	flag.Usage = func() {
 		fmt.Fprintln(os.Stderr, "Usage:", os.Args[0], "[-noascii] [-hex <data>] [filename]")
 		flag.PrintDefaults()

@@ -9,7 +9,7 @@ import (
 
 // CloseHandler returns a Handler, cancelling the context when the client
 // connection closes unexpectedly.
-func CloseHandler(next HandlerC) HandlerC { log.DebugLog()
+func CloseHandler(next HandlerC) HandlerC { 
 	return HandlerFuncC(func(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 		// Cancel the context if the client closes the connection
 		if wcn, ok := w.(http.CloseNotifier); ok {
@@ -35,7 +35,7 @@ func CloseHandler(next HandlerC) HandlerC { log.DebugLog()
 //
 // Child handlers have the responsability of obeying the context deadline and to return
 // an appropriate error (or not) response in case of timeout.
-func TimeoutHandler(timeout time.Duration) func(next HandlerC) HandlerC { log.DebugLog()
+func TimeoutHandler(timeout time.Duration) func(next HandlerC) HandlerC { 
 	return func(next HandlerC) HandlerC {
 		return HandlerFuncC(func(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 			ctx, _ = context.WithTimeout(ctx, timeout)
@@ -46,7 +46,7 @@ func TimeoutHandler(timeout time.Duration) func(next HandlerC) HandlerC { log.De
 
 // If is a special handler that will skip insert the condNext handler only if a condition
 // applies at runtime.
-func If(cond func(ctx context.Context, w http.ResponseWriter, r *http.Request) bool, condNext func(next HandlerC) HandlerC) func(next HandlerC) HandlerC { log.DebugLog()
+func If(cond func(ctx context.Context, w http.ResponseWriter, r *http.Request) bool, condNext func(next HandlerC) HandlerC) func(next HandlerC) HandlerC { 
 	return func(next HandlerC) HandlerC {
 		return HandlerFuncC(func(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 			if cond(ctx, w, r) {

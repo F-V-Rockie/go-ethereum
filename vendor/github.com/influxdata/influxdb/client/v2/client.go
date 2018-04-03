@@ -80,7 +80,7 @@ type Client interface {
 
 // NewHTTPClient returns a new Client from the provided config.
 // Client is safe for concurrent use by multiple goroutines.
-func NewHTTPClient(conf HTTPConfig) (Client, error) { log.DebugLog()
+func NewHTTPClient(conf HTTPConfig) (Client, error) { 
 	if conf.UserAgent == "" {
 		conf.UserAgent = "InfluxDBClient"
 	}
@@ -117,7 +117,7 @@ func NewHTTPClient(conf HTTPConfig) (Client, error) { log.DebugLog()
 
 // Ping will check to see if the server is up with an optional timeout on waiting for leader.
 // Ping returns how long the request took, the version of the server it connected to, and an error if one occurred.
-func (c *client) Ping(timeout time.Duration) (time.Duration, string, error) { log.DebugLog()
+func (c *client) Ping(timeout time.Duration) (time.Duration, string, error) { 
 	now := time.Now()
 	u := c.url
 	u.Path = "ping"
@@ -160,7 +160,7 @@ func (c *client) Ping(timeout time.Duration) (time.Duration, string, error) { lo
 }
 
 // Close releases the client's resources.
-func (c *client) Close() error { log.DebugLog()
+func (c *client) Close() error { 
 	c.transport.CloseIdleConnections()
 	return nil
 }
@@ -211,7 +211,7 @@ type BatchPoints interface {
 }
 
 // NewBatchPoints returns a BatchPoints interface based on the given config.
-func NewBatchPoints(conf BatchPointsConfig) (BatchPoints, error) { log.DebugLog()
+func NewBatchPoints(conf BatchPointsConfig) (BatchPoints, error) { 
 	if conf.Precision == "" {
 		conf.Precision = "ns"
 	}
@@ -235,35 +235,35 @@ type batchpoints struct {
 	writeConsistency string
 }
 
-func (bp *batchpoints) AddPoint(p *Point) { log.DebugLog()
+func (bp *batchpoints) AddPoint(p *Point) { 
 	bp.points = append(bp.points, p)
 }
 
-func (bp *batchpoints) AddPoints(ps []*Point) { log.DebugLog()
+func (bp *batchpoints) AddPoints(ps []*Point) { 
 	bp.points = append(bp.points, ps...)
 }
 
-func (bp *batchpoints) Points() []*Point { log.DebugLog()
+func (bp *batchpoints) Points() []*Point { 
 	return bp.points
 }
 
-func (bp *batchpoints) Precision() string { log.DebugLog()
+func (bp *batchpoints) Precision() string { 
 	return bp.precision
 }
 
-func (bp *batchpoints) Database() string { log.DebugLog()
+func (bp *batchpoints) Database() string { 
 	return bp.database
 }
 
-func (bp *batchpoints) WriteConsistency() string { log.DebugLog()
+func (bp *batchpoints) WriteConsistency() string { 
 	return bp.writeConsistency
 }
 
-func (bp *batchpoints) RetentionPolicy() string { log.DebugLog()
+func (bp *batchpoints) RetentionPolicy() string { 
 	return bp.retentionPolicy
 }
 
-func (bp *batchpoints) SetPrecision(p string) error { log.DebugLog()
+func (bp *batchpoints) SetPrecision(p string) error { 
 	if _, err := time.ParseDuration("1" + p); err != nil {
 		return err
 	}
@@ -271,15 +271,15 @@ func (bp *batchpoints) SetPrecision(p string) error { log.DebugLog()
 	return nil
 }
 
-func (bp *batchpoints) SetDatabase(db string) { log.DebugLog()
+func (bp *batchpoints) SetDatabase(db string) { 
 	bp.database = db
 }
 
-func (bp *batchpoints) SetWriteConsistency(wc string) { log.DebugLog()
+func (bp *batchpoints) SetWriteConsistency(wc string) { 
 	bp.writeConsistency = wc
 }
 
-func (bp *batchpoints) SetRetentionPolicy(rp string) { log.DebugLog()
+func (bp *batchpoints) SetRetentionPolicy(rp string) { 
 	bp.retentionPolicy = rp
 }
 
@@ -313,47 +313,47 @@ func NewPoint(
 }
 
 // String returns a line-protocol string of the Point.
-func (p *Point) String() string { log.DebugLog()
+func (p *Point) String() string { 
 	return p.pt.String()
 }
 
 // PrecisionString returns a line-protocol string of the Point,
 // with the timestamp formatted for the given precision.
-func (p *Point) PrecisionString(precison string) string { log.DebugLog()
+func (p *Point) PrecisionString(precison string) string { 
 	return p.pt.PrecisionString(precison)
 }
 
 // Name returns the measurement name of the point.
-func (p *Point) Name() string { log.DebugLog()
+func (p *Point) Name() string { 
 	return string(p.pt.Name())
 }
 
 // Tags returns the tags associated with the point.
-func (p *Point) Tags() map[string]string { log.DebugLog()
+func (p *Point) Tags() map[string]string { 
 	return p.pt.Tags().Map()
 }
 
 // Time return the timestamp for the point.
-func (p *Point) Time() time.Time { log.DebugLog()
+func (p *Point) Time() time.Time { 
 	return p.pt.Time()
 }
 
 // UnixNano returns timestamp of the point in nanoseconds since Unix epoch.
-func (p *Point) UnixNano() int64 { log.DebugLog()
+func (p *Point) UnixNano() int64 { 
 	return p.pt.UnixNano()
 }
 
 // Fields returns the fields for the point.
-func (p *Point) Fields() (map[string]interface{}, error) { log.DebugLog()
+func (p *Point) Fields() (map[string]interface{}, error) { 
 	return p.pt.Fields()
 }
 
 // NewPointFrom returns a point from the provided models.Point.
-func NewPointFrom(pt models.Point) *Point { log.DebugLog()
+func NewPointFrom(pt models.Point) *Point { 
 	return &Point{pt: pt}
 }
 
-func (c *client) Write(bp BatchPoints) error { log.DebugLog()
+func (c *client) Write(bp BatchPoints) error { 
 	var b bytes.Buffer
 
 	for _, p := range bp.Points() {
@@ -416,7 +416,7 @@ type Query struct {
 
 // NewQuery returns a query object.
 // The database and precision arguments can be empty strings if they are not needed for the query.
-func NewQuery(command, database, precision string) Query { log.DebugLog()
+func NewQuery(command, database, precision string) Query { 
 	return Query{
 		Command:    command,
 		Database:   database,
@@ -428,7 +428,7 @@ func NewQuery(command, database, precision string) Query { log.DebugLog()
 // NewQueryWithParameters returns a query object.
 // The database and precision arguments can be empty strings if they are not needed for the query.
 // parameters is a map of the parameter names used in the command to their values.
-func NewQueryWithParameters(command, database, precision string, parameters map[string]interface{}) Query { log.DebugLog()
+func NewQueryWithParameters(command, database, precision string, parameters map[string]interface{}) Query { 
 	return Query{
 		Command:    command,
 		Database:   database,
@@ -445,7 +445,7 @@ type Response struct {
 
 // Error returns the first error from any statement.
 // It returns nil if no errors occurred on any statements.
-func (r *Response) Error() error { log.DebugLog()
+func (r *Response) Error() error { 
 	if r.Err != "" {
 		return fmt.Errorf(r.Err)
 	}
@@ -471,7 +471,7 @@ type Result struct {
 }
 
 // Query sends a command to the server and returns the Response.
-func (c *client) Query(q Query) (*Response, error) { log.DebugLog()
+func (c *client) Query(q Query) (*Response, error) { 
 	u := c.url
 	u.Path = "query"
 
@@ -590,7 +590,7 @@ type duplexReader struct {
 	w io.Writer
 }
 
-func (r *duplexReader) Read(p []byte) (n int, err error) { log.DebugLog()
+func (r *duplexReader) Read(p []byte) (n int, err error) { 
 	n, err = r.r.Read(p)
 	if err == nil {
 		r.w.Write(p[:n])
@@ -607,7 +607,7 @@ type ChunkedResponse struct {
 }
 
 // NewChunkedResponse reads a stream and produces responses from the stream.
-func NewChunkedResponse(r io.Reader) *ChunkedResponse { log.DebugLog()
+func NewChunkedResponse(r io.Reader) *ChunkedResponse { 
 	resp := &ChunkedResponse{}
 	resp.duplex = &duplexReader{r: r, w: &resp.buf}
 	resp.dec = json.NewDecoder(resp.duplex)
@@ -616,7 +616,7 @@ func NewChunkedResponse(r io.Reader) *ChunkedResponse { log.DebugLog()
 }
 
 // NextResponse reads the next line of the stream and returns a response.
-func (r *ChunkedResponse) NextResponse() (*Response, error) { log.DebugLog()
+func (r *ChunkedResponse) NextResponse() (*Response, error) { 
 	var response Response
 
 	if err := r.dec.Decode(&response); err != nil {

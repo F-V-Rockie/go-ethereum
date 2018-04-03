@@ -11,12 +11,12 @@ const (
 type InlineFNV64a uint64
 
 // NewInlineFNV64a returns a new instance of InlineFNV64a.
-func NewInlineFNV64a() InlineFNV64a { log.DebugLog()
+func NewInlineFNV64a() InlineFNV64a { 
 	return offset64
 }
 
 // Write adds data to the running hash.
-func (s *InlineFNV64a) Write(data []byte) (int, error) { log.DebugLog()
+func (s *InlineFNV64a) Write(data []byte) (int, error) { 
 	hash := uint64(*s)
 	for _, c := range data {
 		hash ^= uint64(c)
@@ -27,6 +27,6 @@ func (s *InlineFNV64a) Write(data []byte) (int, error) { log.DebugLog()
 }
 
 // Sum64 returns the uint64 of the current resulting hash.
-func (s *InlineFNV64a) Sum64() uint64 { log.DebugLog()
+func (s *InlineFNV64a) Sum64() uint64 { 
 	return uint64(*s)
 }

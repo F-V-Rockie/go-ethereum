@@ -17,13 +17,13 @@ import (
 type Array [16]byte
 
 // UUID converts uuid into a slice.
-func (uuid Array) UUID() UUID { log.DebugLog()
+func (uuid Array) UUID() UUID { 
 	return uuid[:]
 }
 
 // String returns the string representation of uuid,
 // xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx.
-func (uuid Array) String() string { log.DebugLog()
+func (uuid Array) String() string { 
 	return uuid.UUID().String()
 }
 
@@ -50,14 +50,14 @@ var rander = rand.Reader // random function
 
 // New returns a new random (version 4) UUID as a string.  It is a convenience
 // function for NewRandom().String().
-func New() string { log.DebugLog()
+func New() string { 
 	return NewRandom().String()
 }
 
 // Parse decodes s into a UUID or returns nil.  Both the UUID form of
 // xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx and
 // urn:uuid:xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx are decoded.
-func Parse(s string) UUID { log.DebugLog()
+func Parse(s string) UUID { 
 	if len(s) == 36+9 {
 		if strings.ToLower(s[:9]) != "urn:uuid:" {
 			return nil
@@ -86,13 +86,13 @@ func Parse(s string) UUID { log.DebugLog()
 }
 
 // Equal returns true if uuid1 and uuid2 are equal.
-func Equal(uuid1, uuid2 UUID) bool { log.DebugLog()
+func Equal(uuid1, uuid2 UUID) bool { 
 	return bytes.Equal(uuid1, uuid2)
 }
 
 // Array returns an array representation of uuid that can be used as a map key.
 // Array panics if uuid is not valid.
-func (uuid UUID) Array() Array { log.DebugLog()
+func (uuid UUID) Array() Array { 
 	if len(uuid) != 16 {
 		panic("invalid uuid")
 	}
@@ -103,7 +103,7 @@ func (uuid UUID) Array() Array { log.DebugLog()
 
 // String returns the string form of uuid, xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 // , or "" if uuid is invalid.
-func (uuid UUID) String() string { log.DebugLog()
+func (uuid UUID) String() string { 
 	if len(uuid) != 16 {
 		return ""
 	}
@@ -114,7 +114,7 @@ func (uuid UUID) String() string { log.DebugLog()
 
 // URN returns the RFC 2141 URN form of uuid,
 // urn:uuid:xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx,  or "" if uuid is invalid.
-func (uuid UUID) URN() string { log.DebugLog()
+func (uuid UUID) URN() string { 
 	if len(uuid) != 16 {
 		return ""
 	}
@@ -124,7 +124,7 @@ func (uuid UUID) URN() string { log.DebugLog()
 	return string(buf[:])
 }
 
-func encodeHex(dst []byte, uuid UUID) { log.DebugLog()
+func encodeHex(dst []byte, uuid UUID) { 
 	hex.Encode(dst[:], uuid[:4])
 	dst[8] = '-'
 	hex.Encode(dst[9:13], uuid[4:6])
@@ -138,7 +138,7 @@ func encodeHex(dst []byte, uuid UUID) { log.DebugLog()
 
 // Variant returns the variant encoded in uuid.  It returns Invalid if
 // uuid is invalid.
-func (uuid UUID) Variant() Variant { log.DebugLog()
+func (uuid UUID) Variant() Variant { 
 	if len(uuid) != 16 {
 		return Invalid
 	}
@@ -156,21 +156,21 @@ func (uuid UUID) Variant() Variant { log.DebugLog()
 
 // Version returns the version of uuid.  It returns false if uuid is not
 // valid.
-func (uuid UUID) Version() (Version, bool) { log.DebugLog()
+func (uuid UUID) Version() (Version, bool) { 
 	if len(uuid) != 16 {
 		return 0, false
 	}
 	return Version(uuid[6] >> 4), true
 }
 
-func (v Version) String() string { log.DebugLog()
+func (v Version) String() string { 
 	if v > 15 {
 		return fmt.Sprintf("BAD_VERSION_%d", v)
 	}
 	return fmt.Sprintf("VERSION_%d", v)
 }
 
-func (v Variant) String() string { log.DebugLog()
+func (v Variant) String() string { 
 	switch v {
 	case RFC4122:
 		return "RFC4122"
@@ -192,7 +192,7 @@ func (v Variant) String() string { log.DebugLog()
 //
 // Calling SetRand with nil sets the random number generator to the default
 // generator.
-func SetRand(r io.Reader) { log.DebugLog()
+func SetRand(r io.Reader) { 
 	if r == nil {
 		rander = rand.Reader
 		return

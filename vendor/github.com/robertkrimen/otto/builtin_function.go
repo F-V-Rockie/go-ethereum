@@ -11,15 +11,15 @@ import (
 
 // Function
 
-func builtinFunction(call FunctionCall) Value { log.DebugLog()
+func builtinFunction(call FunctionCall) Value { 
 	return toValue_object(builtinNewFunctionNative(call.runtime, call.ArgumentList))
 }
 
-func builtinNewFunction(self *_object, argumentList []Value) Value { log.DebugLog()
+func builtinNewFunction(self *_object, argumentList []Value) Value { 
 	return toValue_object(builtinNewFunctionNative(self.runtime, argumentList))
 }
 
-func argumentList2parameterList(argumentList []Value) []string { log.DebugLog()
+func argumentList2parameterList(argumentList []Value) []string { 
 	parameterList := make([]string, 0, len(argumentList))
 	for _, value := range argumentList {
 		tmp := strings.FieldsFunc(value.string(), func(chr rune) bool {
@@ -32,7 +32,7 @@ func argumentList2parameterList(argumentList []Value) []string { log.DebugLog()
 
 var matchIdentifier = regexp.MustCompile(`^[$_\p{L}][$_\p{L}\d}]*$`)
 
-func builtinNewFunctionNative(runtime *_runtime, argumentList []Value) *_object { log.DebugLog()
+func builtinNewFunctionNative(runtime *_runtime, argumentList []Value) *_object { 
 	var parameterList, body string
 	count := len(argumentList)
 	if count > 0 {
@@ -53,7 +53,7 @@ func builtinNewFunctionNative(runtime *_runtime, argumentList []Value) *_object 
 	return runtime.newNodeFunction(cmpl_function.(*_nodeFunctionLiteral), runtime.globalStash)
 }
 
-func builtinFunction_toString(call FunctionCall) Value { log.DebugLog()
+func builtinFunction_toString(call FunctionCall) Value { 
 	object := call.thisClassObject("Function") // Should throw a TypeError unless Function
 	switch fn := object.value.(type) {
 	case _nativeFunctionObject:
@@ -67,7 +67,7 @@ func builtinFunction_toString(call FunctionCall) Value { log.DebugLog()
 	panic(call.runtime.panicTypeError("Function.toString()"))
 }
 
-func builtinFunction_apply(call FunctionCall) Value { log.DebugLog()
+func builtinFunction_apply(call FunctionCall) Value { 
 	if !call.This.isCallable() {
 		panic(call.runtime.panicTypeError())
 	}
@@ -95,7 +95,7 @@ func builtinFunction_apply(call FunctionCall) Value { log.DebugLog()
 	return thisObject.call(this, valueArray, false, nativeFrame)
 }
 
-func builtinFunction_call(call FunctionCall) Value { log.DebugLog()
+func builtinFunction_call(call FunctionCall) Value { 
 	if !call.This.isCallable() {
 		panic(call.runtime.panicTypeError())
 	}
@@ -111,7 +111,7 @@ func builtinFunction_call(call FunctionCall) Value { log.DebugLog()
 	return thisObject.call(this, nil, false, nativeFrame)
 }
 
-func builtinFunction_bind(call FunctionCall) Value { log.DebugLog()
+func builtinFunction_bind(call FunctionCall) Value { 
 	target := call.This
 	if !target.isCallable() {
 		panic(call.runtime.panicTypeError())

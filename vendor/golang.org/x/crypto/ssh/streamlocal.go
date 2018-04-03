@@ -31,7 +31,7 @@ type streamLocalChannelForwardMsg struct {
 }
 
 // ListenUnix is similar to ListenTCP but uses a Unix domain socket.
-func (c *Client) ListenUnix(socketPath string) (net.Listener, error) { log.DebugLog()
+func (c *Client) ListenUnix(socketPath string) (net.Listener, error) { 
 	m := streamLocalChannelForwardMsg{
 		socketPath,
 	}
@@ -48,7 +48,7 @@ func (c *Client) ListenUnix(socketPath string) (net.Listener, error) { log.Debug
 	return &unixListener{socketPath, c, ch}, nil
 }
 
-func (c *Client) dialStreamLocal(socketPath string) (Channel, error) { log.DebugLog()
+func (c *Client) dialStreamLocal(socketPath string) (Channel, error) { 
 	msg := streamLocalChannelOpenDirectMsg{
 		socketPath: socketPath,
 	}
@@ -68,7 +68,7 @@ type unixListener struct {
 }
 
 // Accept waits for and returns the next connection to the listener.
-func (l *unixListener) Accept() (net.Conn, error) { log.DebugLog()
+func (l *unixListener) Accept() (net.Conn, error) { 
 	s, ok := <-l.in
 	if !ok {
 		return nil, io.EOF
@@ -93,7 +93,7 @@ func (l *unixListener) Accept() (net.Conn, error) { log.DebugLog()
 }
 
 // Close closes the listener.
-func (l *unixListener) Close() error { log.DebugLog()
+func (l *unixListener) Close() error { 
 	// this also closes the listener.
 	l.conn.forwards.remove(&net.UnixAddr{Name: l.socketPath, Net: "unix"})
 	m := streamLocalChannelForwardMsg{
@@ -107,7 +107,7 @@ func (l *unixListener) Close() error { log.DebugLog()
 }
 
 // Addr returns the listener's network address.
-func (l *unixListener) Addr() net.Addr { log.DebugLog()
+func (l *unixListener) Addr() net.Addr { 
 	return &net.UnixAddr{
 		Name: l.socketPath,
 		Net:  "unix",

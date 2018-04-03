@@ -43,7 +43,7 @@ const (
 	DRIVE_RAMDISK
 )
 
-func (dt DriveType) String() string { log.DebugLog()
+func (dt DriveType) String() string { 
 	names := map[DriveType]string{
 		DRIVE_UNKNOWN:     "unknown",
 		DRIVE_NO_ROOT_DIR: "invalid",
@@ -89,11 +89,11 @@ type ProcessEntry32 struct {
 
 // ExeFile returns the name of the executable file for the process. It does
 // not contain the full path.
-func (p ProcessEntry32) ExeFile() string { log.DebugLog()
+func (p ProcessEntry32) ExeFile() string { 
 	return syscall.UTF16ToString(p.exeFile[:])
 }
 
-func (p ProcessEntry32) String() string { log.DebugLog()
+func (p ProcessEntry32) String() string { 
 	return fmt.Sprintf("{CntUsage:%v ProcessID:%v DefaultHeapID:%v ModuleID:%v "+
 		"CntThreads:%v ParentProcessID:%v PriorityClassBase:%v Flags:%v ExeFile:%v",
 		p.CntUsage, p.ProcessID, p.DefaultHeapID, p.ModuleID, p.CntThreads,
@@ -135,7 +135,7 @@ type ProcessMemoryCountersEx struct {
 
 // GetLogicalDriveStrings returns a list of drives in the system.
 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364975(v=vs.85).aspx
-func GetLogicalDriveStrings() ([]string, error) { log.DebugLog()
+func GetLogicalDriveStrings() ([]string, error) { 
 	// Determine the size of the buffer required to receive all drives.
 	bufferLength, err := _GetLogicalDriveStringsW(0, nil)
 	if err != nil {
@@ -175,7 +175,7 @@ func GetLogicalDriveStrings() ([]string, error) { log.DebugLog()
 // GlobalMemoryStatusEx retrieves information about the system's current usage
 // of both physical and virtual memory.
 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa366589(v=vs.85).aspx
-func GlobalMemoryStatusEx() (MemoryStatusEx, error) { log.DebugLog()
+func GlobalMemoryStatusEx() (MemoryStatusEx, error) { 
 	memoryStatusEx := MemoryStatusEx{length: sizeofMemoryStatusEx}
 	err := _GlobalMemoryStatusEx(&memoryStatusEx)
 	if err != nil {
@@ -188,7 +188,7 @@ func GlobalMemoryStatusEx() (MemoryStatusEx, error) { log.DebugLog()
 // GetProcessMemoryInfo retrieves information about the memory usage of the
 // specified process.
 // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683219(v=vs.85).aspx
-func GetProcessMemoryInfo(handle syscall.Handle) (ProcessMemoryCountersEx, error) { log.DebugLog()
+func GetProcessMemoryInfo(handle syscall.Handle) (ProcessMemoryCountersEx, error) { 
 	processMemoryCountersEx := ProcessMemoryCountersEx{cb: sizeofProcessMemoryCountersEx}
 	err := _GetProcessMemoryInfo(handle, &processMemoryCountersEx, processMemoryCountersEx.cb)
 	if err != nil {
@@ -201,7 +201,7 @@ func GetProcessMemoryInfo(handle syscall.Handle) (ProcessMemoryCountersEx, error
 // GetProcessImageFileName Retrieves the name of the executable file for the
 // specified process.
 // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683217(v=vs.85).aspx
-func GetProcessImageFileName(handle syscall.Handle) (string, error) { log.DebugLog()
+func GetProcessImageFileName(handle syscall.Handle) (string, error) { 
 	buffer := make([]uint16, MAX_PATH)
 	_, err := _GetProcessImageFileName(handle, &buffer[0], uint32(len(buffer)))
 	if err != nil {
@@ -215,7 +215,7 @@ func GetProcessImageFileName(handle syscall.Handle) (string, error) { log.DebugL
 // system, the values returned are the sum of the designated times across all
 // processors. The returned kernel time does not include the system idle time.
 // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724400(v=vs.85).aspx
-func GetSystemTimes() (idle, kernel, user time.Duration, err error) { log.DebugLog()
+func GetSystemTimes() (idle, kernel, user time.Duration, err error) { 
 	var idleTime, kernelTime, userTime syscall.Filetime
 	err = _GetSystemTimes(&idleTime, &kernelTime, &userTime)
 	if err != nil {
@@ -232,7 +232,7 @@ func GetSystemTimes() (idle, kernel, user time.Duration, err error) { log.DebugL
 // FiletimeToDuration converts a Filetime to a time.Duration. Do not use this
 // method to convert a Filetime to an actual clock time, for that use
 // Filetime.Nanosecond().
-func FiletimeToDuration(ft *syscall.Filetime) time.Duration { log.DebugLog()
+func FiletimeToDuration(ft *syscall.Filetime) time.Duration { 
 	n := int64(ft.HighDateTime)<<32 + int64(ft.LowDateTime) // in 100-nanosecond intervals
 	return time.Duration(n * 100)
 }
@@ -241,7 +241,7 @@ func FiletimeToDuration(ft *syscall.Filetime) time.Duration { log.DebugLog()
 // RAM disk, or network drive. A trailing backslash is required on the
 // rootPathName.
 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364939
-func GetDriveType(rootPathName string) (DriveType, error) { log.DebugLog()
+func GetDriveType(rootPathName string) (DriveType, error) { 
 	rootPathNamePtr, err := syscall.UTF16PtrFromString(rootPathName)
 	if err != nil {
 		return DRIVE_UNKNOWN, errors.Wrapf(err, "UTF16PtrFromString failed for rootPathName=%v", rootPathName)
@@ -259,7 +259,7 @@ func GetDriveType(rootPathName string) (DriveType, error) { log.DebugLog()
 // system. This function can return a max of 65536 PIDs. If there are more
 // processes than that then this will not return them all.
 // https://msdn.microsoft.com/en-us/library/windows/desktop/ms682629(v=vs.85).aspx
-func EnumProcesses() ([]uint32, error) { log.DebugLog()
+func EnumProcesses() ([]uint32, error) { 
 	enumProcesses := func(size int) ([]uint32, error) {
 		var (
 			pids         = make([]uint32, size)
@@ -305,7 +305,7 @@ func EnumProcesses() ([]uint32, error) { log.DebugLog()
 // amount of free space, and the total amount of free space available to the
 // user that is associated with the calling thread.
 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364937(v=vs.85).aspx
-func GetDiskFreeSpaceEx(directoryName string) (freeBytesAvailable, totalNumberOfBytes, totalNumberOfFreeBytes uint64, err error) { log.DebugLog()
+func GetDiskFreeSpaceEx(directoryName string) (freeBytesAvailable, totalNumberOfBytes, totalNumberOfFreeBytes uint64, err error) { 
 	directoryNamePtr, err := syscall.UTF16PtrFromString(directoryName)
 	if err != nil {
 		return 0, 0, 0, errors.Wrapf(err, "UTF16PtrFromString failed for directoryName=%v", directoryName)
@@ -322,7 +322,7 @@ func GetDiskFreeSpaceEx(directoryName string) (freeBytesAvailable, totalNumberOf
 // CreateToolhelp32Snapshot takes a snapshot of the specified processes, as well
 // as the heaps, modules, and threads used by these processes.
 // https://msdn.microsoft.com/en-us/library/windows/desktop/ms682489(v=vs.85).aspx
-func CreateToolhelp32Snapshot(flags, pid uint32) (syscall.Handle, error) { log.DebugLog()
+func CreateToolhelp32Snapshot(flags, pid uint32) (syscall.Handle, error) { 
 	h, err := _CreateToolhelp32Snapshot(flags, pid)
 	if err != nil {
 		return syscall.InvalidHandle, err
@@ -337,7 +337,7 @@ func CreateToolhelp32Snapshot(flags, pid uint32) (syscall.Handle, error) { log.D
 // Process32First retrieves information about the first process encountered in a
 // system snapshot.
 // https://msdn.microsoft.com/en-us/library/windows/desktop/ms684834
-func Process32First(handle syscall.Handle) (ProcessEntry32, error) { log.DebugLog()
+func Process32First(handle syscall.Handle) (ProcessEntry32, error) { 
 	processEntry32 := ProcessEntry32{size: sizeofProcessEntry32}
 	err := _Process32First(handle, &processEntry32)
 	if err != nil {
@@ -351,7 +351,7 @@ func Process32First(handle syscall.Handle) (ProcessEntry32, error) { log.DebugLo
 // system snapshot. When there are no more processes to iterate then
 // syscall.ERROR_NO_MORE_FILES is returned (use errors.Cause() to unwrap).
 // https://msdn.microsoft.com/en-us/library/windows/desktop/ms684836
-func Process32Next(handle syscall.Handle) (ProcessEntry32, error) { log.DebugLog()
+func Process32Next(handle syscall.Handle) (ProcessEntry32, error) { 
 	processEntry32 := ProcessEntry32{size: sizeofProcessEntry32}
 	err := _Process32Next(handle, &processEntry32)
 	if err != nil {

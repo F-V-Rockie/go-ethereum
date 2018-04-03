@@ -20,7 +20,7 @@ type Tree struct {
 	tree
 }
 
-func (t *Tree) Root() (Node, error) { log.DebugLog()
+func (t *Tree) Root() (Node, error) { 
 	return &t.tree, nil
 }
 
@@ -29,7 +29,7 @@ func (t *Tree) Root() (Node, error) { log.DebugLog()
 // Add panics.
 //
 // Add is only safe to call before starting to serve requests.
-func (t *Tree) Add(path string, node Node) { log.DebugLog()
+func (t *Tree) Add(path string, node Node) { 
 	path = pathpkg.Clean("/" + path)[1:]
 	elems := strings.Split(path, "/")
 	dir := Node(&t.tree)
@@ -64,7 +64,7 @@ type tree struct {
 	dir []treeDir
 }
 
-func (t *tree) lookup(name string) Node { log.DebugLog()
+func (t *tree) lookup(name string) Node { 
 	for _, d := range t.dir {
 		if d.name == name {
 			return d.node
@@ -73,16 +73,16 @@ func (t *tree) lookup(name string) Node { log.DebugLog()
 	return nil
 }
 
-func (t *tree) add(name string, n Node) { log.DebugLog()
+func (t *tree) add(name string, n Node) { 
 	t.dir = append(t.dir, treeDir{name, n})
 }
 
-func (t *tree) Attr(ctx context.Context, a *fuse.Attr) error { log.DebugLog()
+func (t *tree) Attr(ctx context.Context, a *fuse.Attr) error { 
 	a.Mode = os.ModeDir | 0555
 	return nil
 }
 
-func (t *tree) Lookup(ctx context.Context, name string) (Node, error) { log.DebugLog()
+func (t *tree) Lookup(ctx context.Context, name string) (Node, error) { 
 	n := t.lookup(name)
 	if n != nil {
 		return n, nil
@@ -90,7 +90,7 @@ func (t *tree) Lookup(ctx context.Context, name string) (Node, error) { log.Debu
 	return nil, fuse.ENOENT
 }
 
-func (t *tree) ReadDirAll(ctx context.Context) ([]fuse.Dirent, error) { log.DebugLog()
+func (t *tree) ReadDirAll(ctx context.Context) ([]fuse.Dirent, error) { 
 	var out []fuse.Dirent
 	for _, d := range t.dir {
 		out = append(out, fuse.Dirent{Name: d.name})

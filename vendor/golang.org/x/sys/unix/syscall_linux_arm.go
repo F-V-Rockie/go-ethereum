@@ -11,15 +11,15 @@ import (
 	"unsafe"
 )
 
-func setTimespec(sec, nsec int64) Timespec { log.DebugLog()
+func setTimespec(sec, nsec int64) Timespec { 
 	return Timespec{Sec: int32(sec), Nsec: int32(nsec)}
 }
 
-func setTimeval(sec, usec int64) Timeval { log.DebugLog()
+func setTimeval(sec, usec int64) Timeval { 
 	return Timeval{Sec: int32(sec), Usec: int32(usec)}
 }
 
-func Pipe(p []int) (err error) { log.DebugLog()
+func Pipe(p []int) (err error) { 
 	if len(p) != 2 {
 		return EINVAL
 	}
@@ -32,7 +32,7 @@ func Pipe(p []int) (err error) { log.DebugLog()
 
 //sysnb pipe2(p *[2]_C_int, flags int) (err error)
 
-func Pipe2(p []int, flags int) (err error) { log.DebugLog()
+func Pipe2(p []int, flags int) (err error) { 
 	if len(p) != 2 {
 		return EINVAL
 	}
@@ -47,7 +47,7 @@ func Pipe2(p []int, flags int) (err error) { log.DebugLog()
 // Implemented in assembly to avoid allocation.
 func seek(fd int, offset int64, whence int) (newoffset int64, err syscall.Errno)
 
-func Seek(fd int, offset int64, whence int) (newoffset int64, err error) { log.DebugLog()
+func Seek(fd int, offset int64, whence int) (newoffset int64, err error) { 
 	newoffset, errno := seek(fd, offset, whence)
 	if errno != 0 {
 		return 0, errno
@@ -102,7 +102,7 @@ func Seek(fd int, offset int64, whence int) (newoffset int64, err error) { log.D
 //sys	EpollWait(epfd int, events []EpollEvent, msec int) (n int, err error)
 //sys	Pause() (err error)
 
-func Time(t *Time_t) (Time_t, error) { log.DebugLog()
+func Time(t *Time_t) (Time_t, error) { 
 	var tv Timeval
 	err := Gettimeofday(&tv)
 	if err != nil {
@@ -114,7 +114,7 @@ func Time(t *Time_t) (Time_t, error) { log.DebugLog()
 	return Time_t(tv.Sec), nil
 }
 
-func Utime(path string, buf *Utimbuf) error { log.DebugLog()
+func Utime(path string, buf *Utimbuf) error { 
 	tv := []Timeval{
 		{Sec: buf.Actime},
 		{Sec: buf.Modtime},
@@ -127,7 +127,7 @@ func Utime(path string, buf *Utimbuf) error { log.DebugLog()
 //sys	Truncate(path string, length int64) (err error) = SYS_TRUNCATE64
 //sys	Ftruncate(fd int, length int64) (err error) = SYS_FTRUNCATE64
 
-func Fadvise(fd int, offset int64, length int64, advice int) (err error) { log.DebugLog()
+func Fadvise(fd int, offset int64, length int64, advice int) (err error) { 
 	_, _, e1 := Syscall6(SYS_ARM_FADVISE64_64, uintptr(fd), uintptr(advice), uintptr(offset), uintptr(offset>>32), uintptr(length), uintptr(length>>32))
 	if e1 != 0 {
 		err = errnoErr(e1)
@@ -137,7 +137,7 @@ func Fadvise(fd int, offset int64, length int64, advice int) (err error) { log.D
 
 //sys	mmap2(addr uintptr, length uintptr, prot int, flags int, fd int, pageOffset uintptr) (xaddr uintptr, err error)
 
-func Fstatfs(fd int, buf *Statfs_t) (err error) { log.DebugLog()
+func Fstatfs(fd int, buf *Statfs_t) (err error) { 
 	_, _, e := Syscall(SYS_FSTATFS64, uintptr(fd), unsafe.Sizeof(*buf), uintptr(unsafe.Pointer(buf)))
 	if e != 0 {
 		err = e
@@ -145,7 +145,7 @@ func Fstatfs(fd int, buf *Statfs_t) (err error) { log.DebugLog()
 	return
 }
 
-func Statfs(path string, buf *Statfs_t) (err error) { log.DebugLog()
+func Statfs(path string, buf *Statfs_t) (err error) { 
 	pathp, err := BytePtrFromString(path)
 	if err != nil {
 		return err
@@ -157,7 +157,7 @@ func Statfs(path string, buf *Statfs_t) (err error) { log.DebugLog()
 	return
 }
 
-func mmap(addr uintptr, length uintptr, prot int, flags int, fd int, offset int64) (xaddr uintptr, err error) { log.DebugLog()
+func mmap(addr uintptr, length uintptr, prot int, flags int, fd int, offset int64) (xaddr uintptr, err error) { 
 	page := uintptr(offset / 4096)
 	if offset != int64(page)*4096 {
 		return 0, EINVAL
@@ -175,7 +175,7 @@ type rlimit32 struct {
 const rlimInf32 = ^uint32(0)
 const rlimInf64 = ^uint64(0)
 
-func Getrlimit(resource int, rlim *Rlimit) (err error) { log.DebugLog()
+func Getrlimit(resource int, rlim *Rlimit) (err error) { 
 	err = prlimit(0, resource, nil, rlim)
 	if err != ENOSYS {
 		return err
@@ -203,7 +203,7 @@ func Getrlimit(resource int, rlim *Rlimit) (err error) { log.DebugLog()
 
 //sysnb setrlimit(resource int, rlim *rlimit32) (err error) = SYS_SETRLIMIT
 
-func Setrlimit(resource int, rlim *Rlimit) (err error) { log.DebugLog()
+func Setrlimit(resource int, rlim *Rlimit) (err error) { 
 	err = prlimit(0, resource, rlim, nil)
 	if err != ENOSYS {
 		return err
@@ -228,25 +228,25 @@ func Setrlimit(resource int, rlim *Rlimit) (err error) { log.DebugLog()
 	return setrlimit(resource, &rl)
 }
 
-func (r *PtraceRegs) PC() uint64 { log.DebugLog() return uint64(r.Uregs[15]) }
+func (r *PtraceRegs) PC() uint64 {  return uint64(r.Uregs[15]) }
 
-func (r *PtraceRegs) SetPC(pc uint64) { log.DebugLog() r.Uregs[15] = uint32(pc) }
+func (r *PtraceRegs) SetPC(pc uint64) {  r.Uregs[15] = uint32(pc) }
 
-func (iov *Iovec) SetLen(length int) { log.DebugLog()
+func (iov *Iovec) SetLen(length int) { 
 	iov.Len = uint32(length)
 }
 
-func (msghdr *Msghdr) SetControllen(length int) { log.DebugLog()
+func (msghdr *Msghdr) SetControllen(length int) { 
 	msghdr.Controllen = uint32(length)
 }
 
-func (cmsg *Cmsghdr) SetLen(length int) { log.DebugLog()
+func (cmsg *Cmsghdr) SetLen(length int) { 
 	cmsg.Len = uint32(length)
 }
 
 //sys	poll(fds *PollFd, nfds int, timeout int) (n int, err error)
 
-func Poll(fds []PollFd, timeout int) (n int, err error) { log.DebugLog()
+func Poll(fds []PollFd, timeout int) (n int, err error) { 
 	if len(fds) == 0 {
 		return poll(nil, 0, timeout)
 	}

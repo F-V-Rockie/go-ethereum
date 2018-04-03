@@ -28,7 +28,7 @@ var mblenTable = map[string]int{
 	"gb2312":  2,
 }
 
-func isEastAsian(locale string) bool { log.DebugLog()
+func isEastAsian(locale string) bool {
 	charset := strings.ToLower(locale)
 	r := reLoc.FindStringSubmatch(locale)
 	if len(r) == 2 {
@@ -59,7 +59,7 @@ func isEastAsian(locale string) bool { log.DebugLog()
 }
 
 // IsEastAsian return true if the current locale is CJK
-func IsEastAsian() bool { log.DebugLog()
+func IsEastAsian() bool {
 	locale := os.Getenv("LC_CTYPE")
 	if locale == "" {
 		locale = os.Getenv("LANG")

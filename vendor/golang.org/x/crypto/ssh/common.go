@@ -79,16 +79,16 @@ var hashFuncs = map[string]crypto.Hash{
 
 // unexpectedMessageError results when the SSH message that we received didn't
 // match what we wanted.
-func unexpectedMessageError(expected, got uint8) error { log.DebugLog()
+func unexpectedMessageError(expected, got uint8) error { 
 	return fmt.Errorf("ssh: unexpected message type %d (expected %d)", got, expected)
 }
 
 // parseError results from a malformed SSH message.
-func parseError(tag uint8) error { log.DebugLog()
+func parseError(tag uint8) error { 
 	return fmt.Errorf("ssh: parse error in message type %d", tag)
 }
 
-func findCommon(what string, client []string, server []string) (common string, err error) { log.DebugLog()
+func findCommon(what string, client []string, server []string) (common string, err error) { 
 	for _, c := range client {
 		for _, s := range server {
 			if c == s {
@@ -106,7 +106,7 @@ type directionAlgorithms struct {
 }
 
 // rekeyBytes returns a rekeying intervals in bytes.
-func (a *directionAlgorithms) rekeyBytes() int64 { log.DebugLog()
+func (a *directionAlgorithms) rekeyBytes() int64 { 
 	// According to RFC4344 block ciphers should rekey after
 	// 2^(BLOCKSIZE/4) blocks. For all AES flavors BLOCKSIZE is
 	// 128.
@@ -127,7 +127,7 @@ type algorithms struct {
 	r       directionAlgorithms
 }
 
-func findAgreedAlgorithms(clientKexInit, serverKexInit *kexInitMsg) (algs *algorithms, err error) { log.DebugLog()
+func findAgreedAlgorithms(clientKexInit, serverKexInit *kexInitMsg) (algs *algorithms, err error) { 
 	result := &algorithms{}
 
 	result.kex, err = findCommon("key exchange", clientKexInit.KexAlgos, serverKexInit.KexAlgos)
@@ -206,7 +206,7 @@ type Config struct {
 // SetDefaults sets sensible values for unset fields in config. This is
 // exported for testing: Configs passed to SSH functions are copied and have
 // default values set automatically.
-func (c *Config) SetDefaults() { log.DebugLog()
+func (c *Config) SetDefaults() { 
 	if c.Rand == nil {
 		c.Rand = rand.Reader
 	}
@@ -242,7 +242,7 @@ func (c *Config) SetDefaults() { log.DebugLog()
 
 // buildDataSignedForAuth returns the data that is signed in order to prove
 // possession of a private key. See RFC 4252, section 7.
-func buildDataSignedForAuth(sessionId []byte, req userAuthRequestMsg, algo, pubKey []byte) []byte { log.DebugLog()
+func buildDataSignedForAuth(sessionId []byte, req userAuthRequestMsg, algo, pubKey []byte) []byte { 
 	data := struct {
 		Session []byte
 		Type    byte
@@ -265,31 +265,31 @@ func buildDataSignedForAuth(sessionId []byte, req userAuthRequestMsg, algo, pubK
 	return Marshal(data)
 }
 
-func appendU16(buf []byte, n uint16) []byte { log.DebugLog()
+func appendU16(buf []byte, n uint16) []byte { 
 	return append(buf, byte(n>>8), byte(n))
 }
 
-func appendU32(buf []byte, n uint32) []byte { log.DebugLog()
+func appendU32(buf []byte, n uint32) []byte { 
 	return append(buf, byte(n>>24), byte(n>>16), byte(n>>8), byte(n))
 }
 
-func appendU64(buf []byte, n uint64) []byte { log.DebugLog()
+func appendU64(buf []byte, n uint64) []byte { 
 	return append(buf,
 		byte(n>>56), byte(n>>48), byte(n>>40), byte(n>>32),
 		byte(n>>24), byte(n>>16), byte(n>>8), byte(n))
 }
 
-func appendInt(buf []byte, n int) []byte { log.DebugLog()
+func appendInt(buf []byte, n int) []byte { 
 	return appendU32(buf, uint32(n))
 }
 
-func appendString(buf []byte, s string) []byte { log.DebugLog()
+func appendString(buf []byte, s string) []byte { 
 	buf = appendU32(buf, uint32(len(s)))
 	buf = append(buf, s...)
 	return buf
 }
 
-func appendBool(buf []byte, b bool) []byte { log.DebugLog()
+func appendBool(buf []byte, b bool) []byte { 
 	if b {
 		return append(buf, 1)
 	}
@@ -298,7 +298,7 @@ func appendBool(buf []byte, b bool) []byte { log.DebugLog()
 
 // newCond is a helper to hide the fact that there is no usable zero
 // value for sync.Cond.
-func newCond() *sync.Cond { log.DebugLog() return sync.NewCond(new(sync.Mutex)) }
+func newCond() *sync.Cond {  return sync.NewCond(new(sync.Mutex)) }
 
 // window represents the buffer available to clients
 // wishing to write to a channel.
@@ -311,7 +311,7 @@ type window struct {
 
 // add adds win to the amount of window available
 // for consumers.
-func (w *window) add(win uint32) bool { log.DebugLog()
+func (w *window) add(win uint32) bool { 
 	// a zero sized window adjust is a noop.
 	if win == 0 {
 		return true
@@ -332,7 +332,7 @@ func (w *window) add(win uint32) bool { log.DebugLog()
 
 // close sets the window to closed, so all reservations fail
 // immediately.
-func (w *window) close() { log.DebugLog()
+func (w *window) close() { 
 	w.L.Lock()
 	w.closed = true
 	w.Broadcast()
@@ -342,7 +342,7 @@ func (w *window) close() { log.DebugLog()
 // reserve reserves win from the available window capacity.
 // If no capacity remains, reserve will block. reserve may
 // return less than requested.
-func (w *window) reserve(win uint32) (uint32, error) { log.DebugLog()
+func (w *window) reserve(win uint32) (uint32, error) { 
 	var err error
 	w.L.Lock()
 	w.writeWaiters++
@@ -364,7 +364,7 @@ func (w *window) reserve(win uint32) (uint32, error) { log.DebugLog()
 
 // waitWriterBlocked waits until some goroutine is blocked for further
 // writes. It is used in tests only.
-func (w *window) waitWriterBlocked() { log.DebugLog()
+func (w *window) waitWriterBlocked() { 
 	w.Cond.L.Lock()
 	for w.writeWaiters == 0 {
 		w.Cond.Wait()

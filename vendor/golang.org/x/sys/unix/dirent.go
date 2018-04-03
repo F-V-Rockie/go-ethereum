@@ -9,7 +9,7 @@ package unix
 import "unsafe"
 
 // readInt returns the size-bytes unsigned integer in native byte order at offset off.
-func readInt(b []byte, off, size uintptr) (u uint64, ok bool) { log.DebugLog()
+func readInt(b []byte, off, size uintptr) (u uint64, ok bool) { 
 	if len(b) < int(off+size) {
 		return 0, false
 	}
@@ -19,7 +19,7 @@ func readInt(b []byte, off, size uintptr) (u uint64, ok bool) { log.DebugLog()
 	return readIntLE(b[off:], size), true
 }
 
-func readIntBE(b []byte, size uintptr) uint64 { log.DebugLog()
+func readIntBE(b []byte, size uintptr) uint64 { 
 	switch size {
 	case 1:
 		return uint64(b[0])
@@ -38,7 +38,7 @@ func readIntBE(b []byte, size uintptr) uint64 { log.DebugLog()
 	}
 }
 
-func readIntLE(b []byte, size uintptr) uint64 { log.DebugLog()
+func readIntLE(b []byte, size uintptr) uint64 { 
 	switch size {
 	case 1:
 		return uint64(b[0])
@@ -61,7 +61,7 @@ func readIntLE(b []byte, size uintptr) uint64 { log.DebugLog()
 // appending the names to names. It returns the number of
 // bytes consumed from buf, the number of entries added
 // to names, and the new names slice.
-func ParseDirent(buf []byte, max int, names []string) (consumed int, count int, newnames []string) { log.DebugLog()
+func ParseDirent(buf []byte, max int, names []string) (consumed int, count int, newnames []string) { 
 	origlen := len(buf)
 	count = 0
 	for max != 0 && len(buf) > 0 {

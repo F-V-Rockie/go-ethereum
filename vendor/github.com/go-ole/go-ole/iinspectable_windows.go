@@ -10,7 +10,7 @@ import (
 	"unsafe"
 )
 
-func (v *IInspectable) GetIids() (iids []*GUID, err error) { log.DebugLog()
+func (v *IInspectable) GetIids() (iids []*GUID, err error) { 
 	var count uint32
 	var array uintptr
 	hr, _, _ := syscall.Syscall(
@@ -41,7 +41,7 @@ func (v *IInspectable) GetIids() (iids []*GUID, err error) { log.DebugLog()
 	return
 }
 
-func (v *IInspectable) GetRuntimeClassName() (s string, err error) { log.DebugLog()
+func (v *IInspectable) GetRuntimeClassName() (s string, err error) { 
 	var hstring HString
 	hr, _, _ := syscall.Syscall(
 		v.VTable().GetRuntimeClassName,
@@ -58,7 +58,7 @@ func (v *IInspectable) GetRuntimeClassName() (s string, err error) { log.DebugLo
 	return
 }
 
-func (v *IInspectable) GetTrustLevel() (level uint32, err error) { log.DebugLog()
+func (v *IInspectable) GetTrustLevel() (level uint32, err error) { 
 	hr, _, _ := syscall.Syscall(
 		v.VTable().GetTrustLevel,
 		2,

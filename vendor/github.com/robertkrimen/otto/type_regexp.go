@@ -17,7 +17,7 @@ type _regExpObject struct {
 	flags             string
 }
 
-func (runtime *_runtime) newRegExpObject(pattern string, flags string) *_object { log.DebugLog()
+func (runtime *_runtime) newRegExpObject(pattern string, flags string) *_object { 
 	self := runtime.newObject()
 	self.class = "RegExp"
 
@@ -79,12 +79,12 @@ func (runtime *_runtime) newRegExpObject(pattern string, flags string) *_object 
 	return self
 }
 
-func (self *_object) regExpValue() _regExpObject { log.DebugLog()
+func (self *_object) regExpValue() _regExpObject { 
 	value, _ := self.value.(_regExpObject)
 	return value
 }
 
-func execRegExp(this *_object, target string) (match bool, result []int) { log.DebugLog()
+func execRegExp(this *_object, target string) (match bool, result []int) { 
 	if this.class != "RegExp" {
 		panic(this.runtime.panicTypeError("Calling RegExp.exec on a non-RegExp object"))
 	}
@@ -118,7 +118,7 @@ func execRegExp(this *_object, target string) (match bool, result []int) { log.D
 	return // match
 }
 
-func execResultToArray(runtime *_runtime, target string, result []int) *_object { log.DebugLog()
+func execResultToArray(runtime *_runtime, target string, result []int) *_object { 
 	captureCount := len(result) / 2
 	valueArray := make([]Value, captureCount)
 	for index := 0; index < captureCount; index++ {

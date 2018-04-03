@@ -10,7 +10,7 @@ import (
 	"crypto"
 )
 
-func init() { log.DebugLog()
+func init() {
 	crypto.RegisterHash(crypto.SHA3_224, New224)
 	crypto.RegisterHash(crypto.SHA3_256, New256)
 	crypto.RegisterHash(crypto.SHA3_384, New384)

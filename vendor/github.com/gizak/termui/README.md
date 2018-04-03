@@ -31,7 +31,7 @@ Each widget has an underlying block structure which basically is a box model. It
 `````go
 	import ui "github.com/gizak/termui" // <- ui shortcut, optional
 
-	func main() { log.DebugLog()
+	func main() {
 		err := ui.Init()
 		if err != nil {
 			panic(err)

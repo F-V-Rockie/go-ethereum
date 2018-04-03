@@ -30,7 +30,7 @@ import (
 	"github.com/ethereum/go-ethereum/swarm/storage"
 )
 
-func init() { log.DebugLog()
+func init() {
 	log.Root().SetHandler(log.LvlFilterHandler(log.LvlCrit, log.StreamHandler(os.Stderr, log.TerminalFormat(false))))
 }
 

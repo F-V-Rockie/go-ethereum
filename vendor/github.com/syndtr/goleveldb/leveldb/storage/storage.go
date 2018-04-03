@@ -26,7 +26,7 @@ const (
 	TypeAll = TypeManifest | TypeJournal | TypeTable | TypeTemp
 )
 
-func (t FileType) String() string { log.DebugLog()
+func (t FileType) String() string { 
 	switch t {
 	case TypeManifest:
 		return "manifest"
@@ -55,7 +55,7 @@ type ErrCorrupted struct {
 	Err error
 }
 
-func (e *ErrCorrupted) Error() string { log.DebugLog()
+func (e *ErrCorrupted) Error() string { 
 	if !e.Fd.Zero() {
 		return fmt.Sprintf("%v [file=%v]", e.Err, e.Fd)
 	}
@@ -94,7 +94,7 @@ type FileDesc struct {
 	Num  int64
 }
 
-func (fd FileDesc) String() string { log.DebugLog()
+func (fd FileDesc) String() string { 
 	switch fd.Type {
 	case TypeManifest:
 		return fmt.Sprintf("MANIFEST-%06d", fd.Num)
@@ -110,12 +110,12 @@ func (fd FileDesc) String() string { log.DebugLog()
 }
 
 // Zero returns true if fd == (FileDesc{}).
-func (fd FileDesc) Zero() bool { log.DebugLog()
+func (fd FileDesc) Zero() bool { 
 	return fd == (FileDesc{})
 }
 
 // FileDescOk returns true if fd is a valid 'file descriptor'.
-func FileDescOk(fd FileDesc) bool { log.DebugLog()
+func FileDescOk(fd FileDesc) bool { 
 	switch fd.Type {
 	case TypeManifest:
 	case TypeJournal:

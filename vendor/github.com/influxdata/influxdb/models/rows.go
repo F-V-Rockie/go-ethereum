@@ -14,12 +14,12 @@ type Row struct {
 }
 
 // SameSeries returns true if r contains values for the same series as o.
-func (r *Row) SameSeries(o *Row) bool { log.DebugLog()
+func (r *Row) SameSeries(o *Row) bool { 
 	return r.tagsHash() == o.tagsHash() && r.Name == o.Name
 }
 
 // tagsHash returns a hash of tag key/value pairs.
-func (r *Row) tagsHash() uint64 { log.DebugLog()
+func (r *Row) tagsHash() uint64 { 
 	h := NewInlineFNV64a()
 	keys := r.tagsKeys()
 	for _, k := range keys {
@@ -30,7 +30,7 @@ func (r *Row) tagsHash() uint64 { log.DebugLog()
 }
 
 // tagKeys returns a sorted list of tag keys.
-func (r *Row) tagsKeys() []string { log.DebugLog()
+func (r *Row) tagsKeys() []string { 
 	a := make([]string, 0, len(r.Tags))
 	for k := range r.Tags {
 		a = append(a, k)
@@ -43,10 +43,10 @@ func (r *Row) tagsKeys() []string { log.DebugLog()
 type Rows []*Row
 
 // Len implements sort.Interface.
-func (p Rows) Len() int { log.DebugLog() return len(p) }
+func (p Rows) Len() int {  return len(p) }
 
 // Less implements sort.Interface.
-func (p Rows) Less(i, j int) bool { log.DebugLog()
+func (p Rows) Less(i, j int) bool { 
 	// Sort by name first.
 	if p[i].Name != p[j].Name {
 		return p[i].Name < p[j].Name
@@ -59,4 +59,4 @@ func (p Rows) Less(i, j int) bool { log.DebugLog()
 }
 
 // Swap implements sort.Interface.
-func (p Rows) Swap(i, j int) { log.DebugLog() p[i], p[j] = p[j], p[i] }
+func (p Rows) Swap(i, j int) {  p[i], p[j] = p[j], p[i] }

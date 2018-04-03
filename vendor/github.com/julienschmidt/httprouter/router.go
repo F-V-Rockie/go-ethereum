@@ -98,7 +98,7 @@ type Params []Param
 
 // ByName returns the value of the first Param which key matches the given name.
 // If no matching Param is found, an empty string is returned.
-func (ps Params) ByName(name string) string { log.DebugLog()
+func (ps Params) ByName(name string) string { 
 	for i := range ps {
 		if ps[i].Key == name {
 			return ps[i].Value
@@ -166,7 +166,7 @@ var _ http.Handler = New()
 
 // New returns a new initialized Router.
 // Path auto-correction, including trailing slashes, is enabled by default.
-func New() *Router { log.DebugLog()
+func New() *Router { 
 	return &Router{
 		RedirectTrailingSlash:  true,
 		RedirectFixedPath:      true,
@@ -176,37 +176,37 @@ func New() *Router { log.DebugLog()
 }
 
 // GET is a shortcut for router.Handle("GET", path, handle)
-func (r *Router) GET(path string, handle Handle) { log.DebugLog()
+func (r *Router) GET(path string, handle Handle) { 
 	r.Handle("GET", path, handle)
 }
 
 // HEAD is a shortcut for router.Handle("HEAD", path, handle)
-func (r *Router) HEAD(path string, handle Handle) { log.DebugLog()
+func (r *Router) HEAD(path string, handle Handle) { 
 	r.Handle("HEAD", path, handle)
 }
 
 // OPTIONS is a shortcut for router.Handle("OPTIONS", path, handle)
-func (r *Router) OPTIONS(path string, handle Handle) { log.DebugLog()
+func (r *Router) OPTIONS(path string, handle Handle) { 
 	r.Handle("OPTIONS", path, handle)
 }
 
 // POST is a shortcut for router.Handle("POST", path, handle)
-func (r *Router) POST(path string, handle Handle) { log.DebugLog()
+func (r *Router) POST(path string, handle Handle) { 
 	r.Handle("POST", path, handle)
 }
 
 // PUT is a shortcut for router.Handle("PUT", path, handle)
-func (r *Router) PUT(path string, handle Handle) { log.DebugLog()
+func (r *Router) PUT(path string, handle Handle) { 
 	r.Handle("PUT", path, handle)
 }
 
 // PATCH is a shortcut for router.Handle("PATCH", path, handle)
-func (r *Router) PATCH(path string, handle Handle) { log.DebugLog()
+func (r *Router) PATCH(path string, handle Handle) { 
 	r.Handle("PATCH", path, handle)
 }
 
 // DELETE is a shortcut for router.Handle("DELETE", path, handle)
-func (r *Router) DELETE(path string, handle Handle) { log.DebugLog()
+func (r *Router) DELETE(path string, handle Handle) { 
 	r.Handle("DELETE", path, handle)
 }
 
@@ -218,7 +218,7 @@ func (r *Router) DELETE(path string, handle Handle) { log.DebugLog()
 // This function is intended for bulk loading and to allow the usage of less
 // frequently used, non-standardized or custom methods (e.g. for internal
 // communication with a proxy).
-func (r *Router) Handle(method, path string, handle Handle) { log.DebugLog()
+func (r *Router) Handle(method, path string, handle Handle) { 
 	if path[0] != '/' {
 		panic("path must begin with '/' in path '" + path + "'")
 	}
@@ -238,7 +238,7 @@ func (r *Router) Handle(method, path string, handle Handle) { log.DebugLog()
 
 // Handler is an adapter which allows the usage of an http.Handler as a
 // request handle.
-func (r *Router) Handler(method, path string, handler http.Handler) { log.DebugLog()
+func (r *Router) Handler(method, path string, handler http.Handler) { 
 	r.Handle(method, path,
 		func(w http.ResponseWriter, req *http.Request, _ Params) {
 			handler.ServeHTTP(w, req)
@@ -248,7 +248,7 @@ func (r *Router) Handler(method, path string, handler http.Handler) { log.DebugL
 
 // HandlerFunc is an adapter which allows the usage of an http.HandlerFunc as a
 // request handle.
-func (r *Router) HandlerFunc(method, path string, handler http.HandlerFunc) { log.DebugLog()
+func (r *Router) HandlerFunc(method, path string, handler http.HandlerFunc) { 
 	r.Handler(method, path, handler)
 }
 
@@ -262,7 +262,7 @@ func (r *Router) HandlerFunc(method, path string, handler http.HandlerFunc) { lo
 // To use the operating system's file system implementation,
 // use http.Dir:
 //     router.ServeFiles("/src/*filepath", http.Dir("/var/www"))
-func (r *Router) ServeFiles(path string, root http.FileSystem) { log.DebugLog()
+func (r *Router) ServeFiles(path string, root http.FileSystem) { 
 	if len(path) < 10 || path[len(path)-10:] != "/*filepath" {
 		panic("path must end with /*filepath in path '" + path + "'")
 	}
@@ -275,7 +275,7 @@ func (r *Router) ServeFiles(path string, root http.FileSystem) { log.DebugLog()
 	})
 }
 
-func (r *Router) recv(w http.ResponseWriter, req *http.Request) { log.DebugLog()
+func (r *Router) recv(w http.ResponseWriter, req *http.Request) { 
 	if rcv := recover(); rcv != nil {
 		r.PanicHandler(w, req, rcv)
 	}
@@ -286,14 +286,14 @@ func (r *Router) recv(w http.ResponseWriter, req *http.Request) { log.DebugLog()
 // If the path was found, it returns the handle function and the path parameter
 // values. Otherwise the third return value indicates whether a redirection to
 // the same path with an extra / without the trailing slash should be performed.
-func (r *Router) Lookup(method, path string) (Handle, Params, bool) { log.DebugLog()
+func (r *Router) Lookup(method, path string) (Handle, Params, bool) { 
 	if root := r.trees[method]; root != nil {
 		return root.getValue(path)
 	}
 	return nil, nil, false
 }
 
-func (r *Router) allowed(path, reqMethod string) (allow string) { log.DebugLog()
+func (r *Router) allowed(path, reqMethod string) (allow string) { 
 	if path == "*" { // server-wide
 		for method := range r.trees {
 			if method == "OPTIONS" {
@@ -332,7 +332,7 @@ func (r *Router) allowed(path, reqMethod string) (allow string) { log.DebugLog()
 }
 
 // ServeHTTP makes the router implement the http.Handler interface.
-func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) { log.DebugLog()
+func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) { 
 	if r.PanicHandler != nil {
 		defer r.recv(w, req)
 	}

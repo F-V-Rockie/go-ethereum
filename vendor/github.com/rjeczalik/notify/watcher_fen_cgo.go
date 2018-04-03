@@ -56,18 +56,18 @@ type cfen struct {
 	p2fo map[string]*C.struct_file_obj
 }
 
-func newCfen() cfen { log.DebugLog()
+func newCfen() cfen { 
 	return cfen{
 		p2pe: make(map[string]*C.port_event_t),
 		p2fo: make(map[string]*C.struct_file_obj),
 	}
 }
 
-func unix2C(sec int64, nsec int64) (C.time_t, C.long) { log.DebugLog()
+func unix2C(sec int64, nsec int64) (C.time_t, C.long) { 
 	return C.time_t(sec), C.long(nsec)
 }
 
-func (c *cfen) portAssociate(p int, fo FileObj, e int) (err error) { log.DebugLog()
+func (c *cfen) portAssociate(p int, fo FileObj, e int) (err error) { 
 	cfo := C.newFo()
 	cfo.fo_atime.tv_sec, cfo.fo_atime.tv_nsec = unix2C(fo.Atim.Unix())
 	cfo.fo_mtime.tv_sec, cfo.fo_mtime.tv_nsec = unix2C(fo.Mtim.Unix())
@@ -78,7 +78,7 @@ func (c *cfen) portAssociate(p int, fo FileObj, e int) (err error) { log.DebugLo
 	return
 }
 
-func (c *cfen) portDissociate(port int, fo FileObj) (err error) { log.DebugLog()
+func (c *cfen) portDissociate(port int, fo FileObj) (err error) { 
 	cfo, ok := c.p2fo[fo.Name]
 	if !ok {
 		return errNotWatched
@@ -94,7 +94,7 @@ const srcAlert = C.PORT_SOURCE_ALERT
 const srcFile = C.PORT_SOURCE_FILE
 const alertSet = C.PORT_ALERT_SET
 
-func cfo2fo(cfo *C.struct_file_obj) *FileObj { log.DebugLog()
+func cfo2fo(cfo *C.struct_file_obj) *FileObj { 
 	// Currently remaining attributes are not used.
 	if cfo == nil {
 		return nil
@@ -104,7 +104,7 @@ func cfo2fo(cfo *C.struct_file_obj) *FileObj { log.DebugLog()
 	return &fo
 }
 
-func (c *cfen) portGet(port int, pe *PortEvent) (err error) { log.DebugLog()
+func (c *cfen) portGet(port int, pe *PortEvent) (err error) { 
 	cpe := C.newPe()
 	if _, err = C.port_get(C.int(port), cpe, nil); err != nil {
 		C.free(unsafe.Pointer(cpe))
@@ -118,17 +118,17 @@ func (c *cfen) portGet(port int, pe *PortEvent) (err error) { log.DebugLog()
 	return
 }
 
-func (c *cfen) portCreate() (int, error) { log.DebugLog()
+func (c *cfen) portCreate() (int, error) { 
 	p, err := C.port_create()
 	return int(p), err
 }
 
-func (c *cfen) portAlert(p int) (err error) { log.DebugLog()
+func (c *cfen) portAlert(p int) (err error) { 
 	_, err = C.port_alert(C.int(p), alertSet, C.int(666), nil)
 	return
 }
 
-func (c *cfen) free() { log.DebugLog()
+func (c *cfen) free() { 
 	for i := range c.p2fo {
 		C.free(unsafe.Pointer(c.p2fo[i].fo_name))
 		C.free(unsafe.Pointer(c.p2fo[i]))

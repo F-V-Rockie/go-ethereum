@@ -10,7 +10,7 @@ import (
 	"github.com/syndtr/goleveldb/leveldb/util"
 )
 
-func bloomHash(key []byte) uint32 { log.DebugLog()
+func bloomHash(key []byte) uint32 { 
 	return util.Hash(key, 0xbc9f1d34)
 }
 
@@ -19,11 +19,11 @@ type bloomFilter int
 // The bloom filter serializes its parameters and is backward compatible
 // with respect to them. Therefor, its parameters are not added to its
 // name.
-func (bloomFilter) Name() string { log.DebugLog()
+func (bloomFilter) Name() string { 
 	return "leveldb.BuiltinBloomFilter"
 }
 
-func (f bloomFilter) Contains(filter, key []byte) bool { log.DebugLog()
+func (f bloomFilter) Contains(filter, key []byte) bool { 
 	nBytes := len(filter) - 1
 	if nBytes < 1 {
 		return false
@@ -51,7 +51,7 @@ func (f bloomFilter) Contains(filter, key []byte) bool { log.DebugLog()
 	return true
 }
 
-func (f bloomFilter) NewGenerator() FilterGenerator { log.DebugLog()
+func (f bloomFilter) NewGenerator() FilterGenerator { 
 	// Round down to reduce probing cost a little bit.
 	k := uint8(f * 69 / 100) // 0.69 =~ ln(2)
 	if k < 1 {
@@ -72,13 +72,13 @@ type bloomFilterGenerator struct {
 	keyHashes []uint32
 }
 
-func (g *bloomFilterGenerator) Add(key []byte) { log.DebugLog()
+func (g *bloomFilterGenerator) Add(key []byte) { 
 	// Use double-hashing to generate a sequence of hash values.
 	// See analysis in [Kirsch,Mitzenmacher 2006].
 	g.keyHashes = append(g.keyHashes, bloomHash(key))
 }
 
-func (g *bloomFilterGenerator) Generate(b Buffer) { log.DebugLog()
+func (g *bloomFilterGenerator) Generate(b Buffer) { 
 	// Compute bloom filter size (in both bits and bytes)
 	nBits := uint32(len(g.keyHashes) * g.n)
 	// For small n, we can see a very high false positive rate.  Fix it
@@ -111,6 +111,6 @@ func (g *bloomFilterGenerator) Generate(b Buffer) { log.DebugLog()
 // changing bitsPerKey. This means that no big performance penalty will
 // be experienced when changing the parameter. See documentation for
 // opt.Options.Filter for more information.
-func NewBloomFilter(bitsPerKey int) Filter { log.DebugLog()
+func NewBloomFilter(bitsPerKey int) Filter { 
 	return bloomFilter(bitsPerKey)
 }

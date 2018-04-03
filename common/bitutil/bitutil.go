@@ -10,6 +10,7 @@ package bitutil
 import (
 	"runtime"
 	"unsafe"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 const wordSize = int(unsafe.Sizeof(uintptr(0)))
@@ -17,7 +18,8 @@ const supportsUnaligned = runtime.GOARCH == "386" || runtime.GOARCH == "amd64" |
 
 // XORBytes xors the bytes in a and b. The destination is assumed to have enough
 // space. Returns the number of bytes xor'd.
-func XORBytes(dst, a, b []byte) int { log.DebugLog()
+func XORBytes(dst, a, b []byte) int {
+	log.DebugLog()
 	if supportsUnaligned {
 		return fastXORBytes(dst, a, b)
 	}
@@ -26,7 +28,8 @@ func XORBytes(dst, a, b []byte) int { log.DebugLog()
 
 // fastXORBytes xors in bulk. It only works on architectures that support
 // unaligned read/writes.
-func fastXORBytes(dst, a, b []byte) int { log.DebugLog()
+func fastXORBytes(dst, a, b []byte) int {
+	log.DebugLog()
 	n := len(a)
 	if len(b) < n {
 		n = len(b)
@@ -48,7 +51,8 @@ func fastXORBytes(dst, a, b []byte) int { log.DebugLog()
 
 // safeXORBytes xors one by one. It works on all architectures, independent if
 // it supports unaligned read/writes or not.
-func safeXORBytes(dst, a, b []byte) int { log.DebugLog()
+func safeXORBytes(dst, a, b []byte) int {
+	log.DebugLog()
 	n := len(a)
 	if len(b) < n {
 		n = len(b)
@@ -61,7 +65,8 @@ func safeXORBytes(dst, a, b []byte) int { log.DebugLog()
 
 // ANDBytes ands the bytes in a and b. The destination is assumed to have enough
 // space. Returns the number of bytes and'd.
-func ANDBytes(dst, a, b []byte) int { log.DebugLog()
+func ANDBytes(dst, a, b []byte) int {
+	log.DebugLog()
 	if supportsUnaligned {
 		return fastANDBytes(dst, a, b)
 	}
@@ -70,7 +75,8 @@ func ANDBytes(dst, a, b []byte) int { log.DebugLog()
 
 // fastANDBytes ands in bulk. It only works on architectures that support
 // unaligned read/writes.
-func fastANDBytes(dst, a, b []byte) int { log.DebugLog()
+func fastANDBytes(dst, a, b []byte) int {
+	log.DebugLog()
 	n := len(a)
 	if len(b) < n {
 		n = len(b)
@@ -92,7 +98,8 @@ func fastANDBytes(dst, a, b []byte) int { log.DebugLog()
 
 // safeANDBytes ands one by one. It works on all architectures, independent if
 // it supports unaligned read/writes or not.
-func safeANDBytes(dst, a, b []byte) int { log.DebugLog()
+func safeANDBytes(dst, a, b []byte) int {
+	log.DebugLog()
 	n := len(a)
 	if len(b) < n {
 		n = len(b)
@@ -105,7 +112,8 @@ func safeANDBytes(dst, a, b []byte) int { log.DebugLog()
 
 // ORBytes ors the bytes in a and b. The destination is assumed to have enough
 // space. Returns the number of bytes or'd.
-func ORBytes(dst, a, b []byte) int { log.DebugLog()
+func ORBytes(dst, a, b []byte) int {
+	log.DebugLog()
 	if supportsUnaligned {
 		return fastORBytes(dst, a, b)
 	}
@@ -114,7 +122,8 @@ func ORBytes(dst, a, b []byte) int { log.DebugLog()
 
 // fastORBytes ors in bulk. It only works on architectures that support
 // unaligned read/writes.
-func fastORBytes(dst, a, b []byte) int { log.DebugLog()
+func fastORBytes(dst, a, b []byte) int {
+	log.DebugLog()
 	n := len(a)
 	if len(b) < n {
 		n = len(b)
@@ -136,7 +145,8 @@ func fastORBytes(dst, a, b []byte) int { log.DebugLog()
 
 // safeORBytes ors one by one. It works on all architectures, independent if
 // it supports unaligned read/writes or not.
-func safeORBytes(dst, a, b []byte) int { log.DebugLog()
+func safeORBytes(dst, a, b []byte) int {
+	log.DebugLog()
 	n := len(a)
 	if len(b) < n {
 		n = len(b)
@@ -148,7 +158,8 @@ func safeORBytes(dst, a, b []byte) int { log.DebugLog()
 }
 
 // TestBytes tests whether any bit is set in the input byte slice.
-func TestBytes(p []byte) bool { log.DebugLog()
+func TestBytes(p []byte) bool {
+	log.DebugLog()
 	if supportsUnaligned {
 		return fastTestBytes(p)
 	}
@@ -157,7 +168,8 @@ func TestBytes(p []byte) bool { log.DebugLog()
 
 // fastTestBytes tests for set bits in bulk. It only works on architectures that
 // support unaligned read/writes.
-func fastTestBytes(p []byte) bool { log.DebugLog()
+func fastTestBytes(p []byte) bool {
+	log.DebugLog()
 	n := len(p)
 	w := n / wordSize
 	if w > 0 {
@@ -178,7 +190,8 @@ func fastTestBytes(p []byte) bool { log.DebugLog()
 
 // safeTestBytes tests for set bits one byte at a time. It works on all
 // architectures, independent if it supports unaligned read/writes or not.
-func safeTestBytes(p []byte) bool { log.DebugLog()
+func safeTestBytes(p []byte) bool {
+	log.DebugLog()
 	for i := 0; i < len(p); i++ {
 		if p[i] != 0 {
 			return true

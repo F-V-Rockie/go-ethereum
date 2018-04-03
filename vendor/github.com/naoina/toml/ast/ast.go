@@ -23,15 +23,15 @@ type String struct {
 	Data     []rune
 }
 
-func (s *String) Pos() int { log.DebugLog()
+func (s *String) Pos() int { 
 	return s.Position.Begin
 }
 
-func (s *String) End() int { log.DebugLog()
+func (s *String) End() int { 
 	return s.Position.End
 }
 
-func (s *String) Source() string { log.DebugLog()
+func (s *String) Source() string { 
 	return string(s.Data)
 }
 
@@ -41,19 +41,19 @@ type Integer struct {
 	Data     []rune
 }
 
-func (i *Integer) Pos() int { log.DebugLog()
+func (i *Integer) Pos() int { 
 	return i.Position.Begin
 }
 
-func (i *Integer) End() int { log.DebugLog()
+func (i *Integer) End() int { 
 	return i.Position.End
 }
 
-func (i *Integer) Source() string { log.DebugLog()
+func (i *Integer) Source() string { 
 	return string(i.Data)
 }
 
-func (i *Integer) Int() (int64, error) { log.DebugLog()
+func (i *Integer) Int() (int64, error) { 
 	return strconv.ParseInt(i.Value, 10, 64)
 }
 
@@ -63,19 +63,19 @@ type Float struct {
 	Data     []rune
 }
 
-func (f *Float) Pos() int { log.DebugLog()
+func (f *Float) Pos() int { 
 	return f.Position.Begin
 }
 
-func (f *Float) End() int { log.DebugLog()
+func (f *Float) End() int { 
 	return f.Position.End
 }
 
-func (f *Float) Source() string { log.DebugLog()
+func (f *Float) Source() string { 
 	return string(f.Data)
 }
 
-func (f *Float) Float() (float64, error) { log.DebugLog()
+func (f *Float) Float() (float64, error) { 
 	return strconv.ParseFloat(f.Value, 64)
 }
 
@@ -85,19 +85,19 @@ type Boolean struct {
 	Data     []rune
 }
 
-func (b *Boolean) Pos() int { log.DebugLog()
+func (b *Boolean) Pos() int { 
 	return b.Position.Begin
 }
 
-func (b *Boolean) End() int { log.DebugLog()
+func (b *Boolean) End() int { 
 	return b.Position.End
 }
 
-func (b *Boolean) Source() string { log.DebugLog()
+func (b *Boolean) Source() string { 
 	return string(b.Data)
 }
 
-func (b *Boolean) Boolean() (bool, error) { log.DebugLog()
+func (b *Boolean) Boolean() (bool, error) { 
 	return strconv.ParseBool(b.Value)
 }
 
@@ -107,19 +107,19 @@ type Datetime struct {
 	Data     []rune
 }
 
-func (d *Datetime) Pos() int { log.DebugLog()
+func (d *Datetime) Pos() int { 
 	return d.Position.Begin
 }
 
-func (d *Datetime) End() int { log.DebugLog()
+func (d *Datetime) End() int { 
 	return d.Position.End
 }
 
-func (d *Datetime) Source() string { log.DebugLog()
+func (d *Datetime) Source() string { 
 	return string(d.Data)
 }
 
-func (d *Datetime) Time() (time.Time, error) { log.DebugLog()
+func (d *Datetime) Time() (time.Time, error) { 
 	switch {
 	case !strings.Contains(d.Value, ":"):
 		return time.Parse("2006-01-02", d.Value)
@@ -136,15 +136,15 @@ type Array struct {
 	Data     []rune
 }
 
-func (a *Array) Pos() int { log.DebugLog()
+func (a *Array) Pos() int { 
 	return a.Position.Begin
 }
 
-func (a *Array) End() int { log.DebugLog()
+func (a *Array) End() int { 
 	return a.Position.End
 }
 
-func (a *Array) Source() string { log.DebugLog()
+func (a *Array) Source() string { 
 	return string(a.Data)
 }
 
@@ -160,7 +160,7 @@ var tableTypes = [...]string{
 	"array",
 }
 
-func (t TableType) String() string { log.DebugLog()
+func (t TableType) String() string { 
 	return tableTypes[t]
 }
 
@@ -173,15 +173,15 @@ type Table struct {
 	Data     []rune
 }
 
-func (t *Table) Pos() int { log.DebugLog()
+func (t *Table) Pos() int { 
 	return t.Position.Begin
 }
 
-func (t *Table) End() int { log.DebugLog()
+func (t *Table) End() int { 
 	return t.Position.End
 }
 
-func (t *Table) Source() string { log.DebugLog()
+func (t *Table) Source() string { 
 	return string(t.Data)
 }
 

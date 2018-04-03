@@ -75,7 +75,7 @@ type connectionState struct {
 // prepareKeyChange sets up key material for a keychange. The key changes in
 // both directions are triggered by reading and writing a msgNewKey packet
 // respectively.
-func (t *transport) prepareKeyChange(algs *algorithms, kexResult *kexResult) error { log.DebugLog()
+func (t *transport) prepareKeyChange(algs *algorithms, kexResult *kexResult) error { 
 	if ciph, err := newPacketCipher(t.reader.dir, algs.r, kexResult); err != nil {
 		return err
 	} else {
@@ -91,7 +91,7 @@ func (t *transport) prepareKeyChange(algs *algorithms, kexResult *kexResult) err
 	return nil
 }
 
-func (t *transport) printPacket(p []byte, write bool) { log.DebugLog()
+func (t *transport) printPacket(p []byte, write bool) { 
 	if len(p) == 0 {
 		return
 	}
@@ -108,7 +108,7 @@ func (t *transport) printPacket(p []byte, write bool) { log.DebugLog()
 }
 
 // Read and decrypt next packet.
-func (t *transport) readPacket() (p []byte, err error) { log.DebugLog()
+func (t *transport) readPacket() (p []byte, err error) { 
 	for {
 		p, err = t.reader.readPacket(t.bufReader)
 		if err != nil {
@@ -125,7 +125,7 @@ func (t *transport) readPacket() (p []byte, err error) { log.DebugLog()
 	return p, err
 }
 
-func (s *connectionState) readPacket(r *bufio.Reader) ([]byte, error) { log.DebugLog()
+func (s *connectionState) readPacket(r *bufio.Reader) ([]byte, error) { 
 	packet, err := s.packetCipher.readPacket(s.seqNum, r)
 	s.seqNum++
 	if err == nil && len(packet) == 0 {
@@ -164,14 +164,14 @@ func (s *connectionState) readPacket(r *bufio.Reader) ([]byte, error) { log.Debu
 	return fresh, err
 }
 
-func (t *transport) writePacket(packet []byte) error { log.DebugLog()
+func (t *transport) writePacket(packet []byte) error { 
 	if debugTransport {
 		t.printPacket(packet, true)
 	}
 	return t.writer.writePacket(t.bufWriter, t.rand, packet)
 }
 
-func (s *connectionState) writePacket(w *bufio.Writer, rand io.Reader, packet []byte) error { log.DebugLog()
+func (s *connectionState) writePacket(w *bufio.Writer, rand io.Reader, packet []byte) error { 
 	changeKeys := len(packet) > 0 && packet[0] == msgNewKeys
 
 	err := s.packetCipher.writePacket(s.seqNum, w, rand, packet)
@@ -193,7 +193,7 @@ func (s *connectionState) writePacket(w *bufio.Writer, rand io.Reader, packet []
 	return err
 }
 
-func newTransport(rwc io.ReadWriteCloser, rand io.Reader, isClient bool) *transport { log.DebugLog()
+func newTransport(rwc io.ReadWriteCloser, rand io.Reader, isClient bool) *transport { 
 	t := &transport{
 		bufReader: bufio.NewReader(rwc),
 		bufWriter: bufio.NewWriter(rwc),
@@ -233,7 +233,7 @@ var (
 )
 
 // generateKeys generates key material for IV, MAC and encryption.
-func generateKeys(d direction, algs directionAlgorithms, kex *kexResult) (iv, key, macKey []byte) { log.DebugLog()
+func generateKeys(d direction, algs directionAlgorithms, kex *kexResult) (iv, key, macKey []byte) { 
 	cipherMode := cipherModes[algs.Cipher]
 	macMode := macModes[algs.MAC]
 
@@ -250,7 +250,7 @@ func generateKeys(d direction, algs directionAlgorithms, kex *kexResult) (iv, ke
 // setupKeys sets the cipher and MAC keys from kex.K, kex.H and sessionId, as
 // described in RFC 4253, section 6.4. direction should either be serverKeys
 // (to setup server->client keys) or clientKeys (for client->server keys).
-func newPacketCipher(d direction, algs directionAlgorithms, kex *kexResult) (packetCipher, error) { log.DebugLog()
+func newPacketCipher(d direction, algs directionAlgorithms, kex *kexResult) (packetCipher, error) { 
 	iv, key, macKey := generateKeys(d, algs, kex)
 
 	if algs.Cipher == gcmCipherID {
@@ -282,7 +282,7 @@ func newPacketCipher(d direction, algs directionAlgorithms, kex *kexResult) (pac
 
 // generateKeyMaterial fills out with key material generated from tag, K, H
 // and sessionId, as specified in RFC 4253, section 7.2.
-func generateKeyMaterial(out, tag []byte, r *kexResult) { log.DebugLog()
+func generateKeyMaterial(out, tag []byte, r *kexResult) { 
 	var digestsSoFar []byte
 
 	h := r.Hash.New()
@@ -312,7 +312,7 @@ const packageVersion = "SSH-2.0-Go"
 // Sends and receives a version line.  The versionLine string should
 // be US ASCII, start with "SSH-2.0-", and should not include a
 // newline. exchangeVersions returns the other side's version line.
-func exchangeVersions(rw io.ReadWriter, versionLine []byte) (them []byte, err error) { log.DebugLog()
+func exchangeVersions(rw io.ReadWriter, versionLine []byte) (them []byte, err error) { 
 	// Contrary to the RFC, we do not ignore lines that don't
 	// start with "SSH-2.0-" to make the library usable with
 	// nonconforming servers.
@@ -337,7 +337,7 @@ func exchangeVersions(rw io.ReadWriter, versionLine []byte) (them []byte, err er
 const maxVersionStringBytes = 255
 
 // Read version string as specified by RFC 4253, section 4.2.
-func readVersion(r io.Reader) ([]byte, error) { log.DebugLog()
+func readVersion(r io.Reader) ([]byte, error) { 
 	versionString := make([]byte, 0, 64)
 	var ok bool
 	var buf [1]byte

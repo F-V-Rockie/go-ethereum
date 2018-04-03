@@ -26,15 +26,15 @@ type memDB struct {
 	ref int32
 }
 
-func (m *memDB) getref() int32 { log.DebugLog()
+func (m *memDB) getref() int32 { 
 	return atomic.LoadInt32(&m.ref)
 }
 
-func (m *memDB) incref() { log.DebugLog()
+func (m *memDB) incref() { 
 	atomic.AddInt32(&m.ref, 1)
 }
 
-func (m *memDB) decref() { log.DebugLog()
+func (m *memDB) decref() { 
 	if ref := atomic.AddInt32(&m.ref, -1); ref == 0 {
 		// Only put back memdb with std capacity.
 		if m.Capacity() == m.db.s.o.GetWriteBuffer() {
@@ -49,20 +49,20 @@ func (m *memDB) decref() { log.DebugLog()
 }
 
 // Get latest sequence number.
-func (db *DB) getSeq() uint64 { log.DebugLog()
+func (db *DB) getSeq() uint64 { 
 	return atomic.LoadUint64(&db.seq)
 }
 
 // Atomically adds delta to seq.
-func (db *DB) addSeq(delta uint64) { log.DebugLog()
+func (db *DB) addSeq(delta uint64) { 
 	atomic.AddUint64(&db.seq, delta)
 }
 
-func (db *DB) setSeq(seq uint64) { log.DebugLog()
+func (db *DB) setSeq(seq uint64) { 
 	atomic.StoreUint64(&db.seq, seq)
 }
 
-func (db *DB) sampleSeek(ikey internalKey) { log.DebugLog()
+func (db *DB) sampleSeek(ikey internalKey) { 
 	v := db.s.version()
 	if v.sampleSeek(ikey) {
 		// Trigger table compaction.
@@ -71,7 +71,7 @@ func (db *DB) sampleSeek(ikey internalKey) { log.DebugLog()
 	v.release()
 }
 
-func (db *DB) mpoolPut(mem *memdb.DB) { log.DebugLog()
+func (db *DB) mpoolPut(mem *memdb.DB) { 
 	if !db.isClosed() {
 		select {
 		case db.memPool <- mem:
@@ -80,7 +80,7 @@ func (db *DB) mpoolPut(mem *memdb.DB) { log.DebugLog()
 	}
 }
 
-func (db *DB) mpoolGet(n int) *memDB { log.DebugLog()
+func (db *DB) mpoolGet(n int) *memDB { 
 	var mdb *memdb.DB
 	select {
 	case mdb = <-db.memPool:
@@ -95,7 +95,7 @@ func (db *DB) mpoolGet(n int) *memDB { log.DebugLog()
 	}
 }
 
-func (db *DB) mpoolDrain() { log.DebugLog()
+func (db *DB) mpoolDrain() { 
 	ticker := time.NewTicker(30 * time.Second)
 	for {
 		select {
@@ -119,7 +119,7 @@ func (db *DB) mpoolDrain() { log.DebugLog()
 
 // Create new memdb and froze the old one; need external synchronization.
 // newMem only called synchronously by the writer.
-func (db *DB) newMem(n int) (mem *memDB, err error) { log.DebugLog()
+func (db *DB) newMem(n int) (mem *memDB, err error) { 
 	fd := storage.FileDesc{Type: storage.TypeJournal, Num: db.s.allocFileNum()}
 	w, err := db.s.stor.Create(fd)
 	if err != nil {
@@ -155,7 +155,7 @@ func (db *DB) newMem(n int) (mem *memDB, err error) { log.DebugLog()
 }
 
 // Get all memdbs.
-func (db *DB) getMems() (e, f *memDB) { log.DebugLog()
+func (db *DB) getMems() (e, f *memDB) { 
 	db.memMu.RLock()
 	defer db.memMu.RUnlock()
 	if db.mem != nil {
@@ -170,7 +170,7 @@ func (db *DB) getMems() (e, f *memDB) { log.DebugLog()
 }
 
 // Get effective memdb.
-func (db *DB) getEffectiveMem() *memDB { log.DebugLog()
+func (db *DB) getEffectiveMem() *memDB { 
 	db.memMu.RLock()
 	defer db.memMu.RUnlock()
 	if db.mem != nil {
@@ -182,14 +182,14 @@ func (db *DB) getEffectiveMem() *memDB { log.DebugLog()
 }
 
 // Check whether we has frozen memdb.
-func (db *DB) hasFrozenMem() bool { log.DebugLog()
+func (db *DB) hasFrozenMem() bool { 
 	db.memMu.RLock()
 	defer db.memMu.RUnlock()
 	return db.frozenMem != nil
 }
 
 // Get frozen memdb.
-func (db *DB) getFrozenMem() *memDB { log.DebugLog()
+func (db *DB) getFrozenMem() *memDB { 
 	db.memMu.RLock()
 	defer db.memMu.RUnlock()
 	if db.frozenMem != nil {
@@ -199,7 +199,7 @@ func (db *DB) getFrozenMem() *memDB { log.DebugLog()
 }
 
 // Drop frozen memdb; assume that frozen memdb isn't nil.
-func (db *DB) dropFrozenMem() { log.DebugLog()
+func (db *DB) dropFrozenMem() { 
 	db.memMu.Lock()
 	if err := db.s.stor.Remove(db.frozenJournalFd); err != nil {
 		db.logf("journal@remove removing @%d %q", db.frozenJournalFd.Num, err)
@@ -213,7 +213,7 @@ func (db *DB) dropFrozenMem() { log.DebugLog()
 }
 
 // Clear mems ptr; used by DB.Close().
-func (db *DB) clearMems() { log.DebugLog()
+func (db *DB) clearMems() { 
 	db.memMu.Lock()
 	db.mem = nil
 	db.frozenMem = nil
@@ -221,17 +221,17 @@ func (db *DB) clearMems() { log.DebugLog()
 }
 
 // Set closed flag; return true if not already closed.
-func (db *DB) setClosed() bool { log.DebugLog()
+func (db *DB) setClosed() bool { 
 	return atomic.CompareAndSwapUint32(&db.closed, 0, 1)
 }
 
 // Check whether DB was closed.
-func (db *DB) isClosed() bool { log.DebugLog()
+func (db *DB) isClosed() bool { 
 	return atomic.LoadUint32(&db.closed) != 0
 }
 
 // Check read ok status.
-func (db *DB) ok() error { log.DebugLog()
+func (db *DB) ok() error { 
 	if db.isClosed() {
 		return ErrClosed
 	}

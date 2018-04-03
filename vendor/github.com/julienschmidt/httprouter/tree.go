@@ -10,14 +10,14 @@ import (
 	"unicode/utf8"
 )
 
-func min(a, b int) int { log.DebugLog()
+func min(a, b int) int { 
 	if a <= b {
 		return a
 	}
 	return b
 }
 
-func countParams(path string) uint8 { log.DebugLog()
+func countParams(path string) uint8 { 
 	var n uint
 	for i := 0; i < len(path); i++ {
 		if path[i] != ':' && path[i] != '*' {
@@ -52,7 +52,7 @@ type node struct {
 }
 
 // increments priority of the given child and reorders if necessary
-func (n *node) incrementChildPrio(pos int) int { log.DebugLog()
+func (n *node) incrementChildPrio(pos int) int { 
 	n.children[pos].priority++
 	prio := n.children[pos].priority
 
@@ -77,7 +77,7 @@ func (n *node) incrementChildPrio(pos int) int { log.DebugLog()
 
 // addRoute adds a node with the given handle to the path.
 // Not concurrency-safe!
-func (n *node) addRoute(path string, handle Handle) { log.DebugLog()
+func (n *node) addRoute(path string, handle Handle) { 
 	fullPath := path
 	n.priority++
 	numParams := countParams(path)
@@ -209,7 +209,7 @@ func (n *node) addRoute(path string, handle Handle) { log.DebugLog()
 	}
 }
 
-func (n *node) insertChild(numParams uint8, path, fullPath string, handle Handle) { log.DebugLog()
+func (n *node) insertChild(numParams uint8, path, fullPath string, handle Handle) { 
 	var offset int // already handled bytes of the path
 
 	// find prefix until first wildcard (beginning with ':'' or '*'')
@@ -327,7 +327,7 @@ func (n *node) insertChild(numParams uint8, path, fullPath string, handle Handle
 // If no handle can be found, a TSR (trailing slash redirect) recommendation is
 // made if a handle exists with an extra (without the) trailing slash for the
 // given path.
-func (n *node) getValue(path string) (handle Handle, p Params, tsr bool) { log.DebugLog()
+func (n *node) getValue(path string) (handle Handle, p Params, tsr bool) { 
 walk: // outer loop for walking the tree
 	for {
 		if len(path) > len(n.path) {
@@ -454,7 +454,7 @@ walk: // outer loop for walking the tree
 // It can optionally also fix trailing slashes.
 // It returns the case-corrected path and a bool indicating whether the lookup
 // was successful.
-func (n *node) findCaseInsensitivePath(path string, fixTrailingSlash bool) (ciPath []byte, found bool) { log.DebugLog()
+func (n *node) findCaseInsensitivePath(path string, fixTrailingSlash bool) (ciPath []byte, found bool) { 
 	return n.findCaseInsensitivePathRec(
 		path,
 		strings.ToLower(path),
@@ -465,7 +465,7 @@ func (n *node) findCaseInsensitivePath(path string, fixTrailingSlash bool) (ciPa
 }
 
 // shift bytes in array by n bytes left
-func shiftNRuneBytes(rb [4]byte, n int) [4]byte { log.DebugLog()
+func shiftNRuneBytes(rb [4]byte, n int) [4]byte { 
 	switch n {
 	case 0:
 		return rb
@@ -481,7 +481,7 @@ func shiftNRuneBytes(rb [4]byte, n int) [4]byte { log.DebugLog()
 }
 
 // recursive case-insensitive lookup function used by n.findCaseInsensitivePath
-func (n *node) findCaseInsensitivePathRec(path, loPath string, ciPath []byte, rb [4]byte, fixTrailingSlash bool) ([]byte, bool) { log.DebugLog()
+func (n *node) findCaseInsensitivePathRec(path, loPath string, ciPath []byte, rb [4]byte, fixTrailingSlash bool) ([]byte, bool) { 
 	loNPath := strings.ToLower(n.path)
 
 walk: // outer loop for walking the tree

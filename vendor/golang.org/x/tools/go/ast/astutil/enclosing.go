@@ -58,7 +58,7 @@ import (
 //
 // Postcondition: path is never nil; it always contains at least 'root'.
 //
-func PathEnclosingInterval(root *ast.File, start, end token.Pos) (path []ast.Node, exact bool) { log.DebugLog()
+func PathEnclosingInterval(root *ast.File, start, end token.Pos) (path []ast.Node, exact bool) { 
 	// fmt.Printf("EnclosingInterval %d %d\n", start, end) // debugging
 
 	// Precondition: node.[Pos..End) and adjoining whitespace contain [start, end).
@@ -166,15 +166,15 @@ type tokenNode struct {
 	end token.Pos
 }
 
-func (n tokenNode) Pos() token.Pos { log.DebugLog()
+func (n tokenNode) Pos() token.Pos { 
 	return n.pos
 }
 
-func (n tokenNode) End() token.Pos { log.DebugLog()
+func (n tokenNode) End() token.Pos { 
 	return n.end
 }
 
-func tok(pos token.Pos, len int) ast.Node { log.DebugLog()
+func tok(pos token.Pos, len int) ast.Node { 
 	return tokenNode{pos, pos + token.Pos(len)}
 }
 
@@ -182,7 +182,7 @@ func tok(pos token.Pos, len int) ast.Node { log.DebugLog()
 // It may include fake ast.Node implementations for bare tokens.
 // it is not safe to call (e.g.) ast.Walk on such nodes.
 //
-func childrenOf(n ast.Node) []ast.Node { log.DebugLog()
+func childrenOf(n ast.Node) []ast.Node { 
 	var children []ast.Node
 
 	// First add nodes for all true subtrees.
@@ -336,7 +336,7 @@ func childrenOf(n ast.Node) []ast.Node { log.DebugLog()
 		// nop
 
 	case *ast.FuncType:
-		if n.func != 0 { log.DebugLog()
+		if n.func != 0 { 
 			children = append(children,
 				tok(n.Func, len("func")))
 		}
@@ -462,13 +462,13 @@ func childrenOf(n ast.Node) []ast.Node { log.DebugLog()
 
 type byPos []ast.Node
 
-func (sl byPos) Len() int { log.DebugLog()
+func (sl byPos) Len() int { 
 	return len(sl)
 }
-func (sl byPos) Less(i, j int) bool { log.DebugLog()
+func (sl byPos) Less(i, j int) bool { 
 	return sl[i].Pos() < sl[j].Pos()
 }
-func (sl byPos) Swap(i, j int) { log.DebugLog()
+func (sl byPos) Swap(i, j int) { 
 	sl[i], sl[j] = sl[j], sl[i]
 }
 
@@ -479,7 +479,7 @@ func (sl byPos) Swap(i, j int) { log.DebugLog()
 // StarExpr) we could be much more specific given the path to the AST
 // root.  Perhaps we should do that.
 //
-func NodeDescription(n ast.Node) string { log.DebugLog()
+func NodeDescription(n ast.Node) string { 
 	switch n := n.(type) {
 	case *ast.ArrayType:
 		return "array type"

@@ -14,7 +14,7 @@ var (
 )
 
 // Parse PEM encoded PKCS1 or PKCS8 private key
-func ParseRSAPrivateKeyFromPEM(key []byte) (*rsa.PrivateKey, error) { log.DebugLog()
+func ParseRSAPrivateKeyFromPEM(key []byte) (*rsa.PrivateKey, error) { 
 	var err error
 
 	// Parse PEM block
@@ -40,7 +40,7 @@ func ParseRSAPrivateKeyFromPEM(key []byte) (*rsa.PrivateKey, error) { log.DebugL
 }
 
 // Parse PEM encoded PKCS1 or PKCS8 public key
-func ParseRSAPublicKeyFromPEM(key []byte) (*rsa.PublicKey, error) { log.DebugLog()
+func ParseRSAPublicKeyFromPEM(key []byte) (*rsa.PublicKey, error) { 
 	var err error
 
 	// Parse PEM block

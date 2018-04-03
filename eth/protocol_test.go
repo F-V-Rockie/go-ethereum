@@ -28,19 +28,23 @@ import (
 	"github.com/ethereum/go-ethereum/eth/downloader"
 	"github.com/ethereum/go-ethereum/p2p"
 	"github.com/ethereum/go-ethereum/rlp"
+	"github.com/ethereum/go-ethereum/log"
 )
 
-func init() { log.DebugLog()
+func init() {
 	// log.Root().SetHandler(log.LvlFilterHandler(log.LvlTrace, log.StreamHandler(os.Stderr, log.TerminalFormat(false))))
 }
 
 var testAccount, _ = crypto.HexToECDSA("b71c71a67e1177ad4e901695e1b4b9ee17ae16c6668d313eac2f96dbcda3f291")
 
 // Tests that handshake failures are detected and reported correctly.
-func TestStatusMsgErrors62(t *testing.T) { log.DebugLog() testStatusMsgErrors(t, 62) }
-func TestStatusMsgErrors63(t *testing.T) { log.DebugLog() testStatusMsgErrors(t, 63) }
+func TestStatusMsgErrors62(t *testing.T) { log.DebugLog()
+											 testStatusMsgErrors(t, 62) }
+func TestStatusMsgErrors63(t *testing.T) { log.DebugLog()
+											 testStatusMsgErrors(t, 63) }
 
-func testStatusMsgErrors(t *testing.T, protocol int) { log.DebugLog()
+func testStatusMsgErrors(t *testing.T, protocol int) {
+	log.DebugLog()
 	pm, _ := newTestProtocolManagerMust(t, downloader.FullSync, 0, nil, nil)
 	var (
 		genesis = pm.blockchain.Genesis()
@@ -55,19 +59,19 @@ func testStatusMsgErrors(t *testing.T, protocol int) { log.DebugLog()
 		wantError error
 	}{
 		{
-			code: TxMsg, data: []interface{}{},
+			code:      TxMsg, data: []interface{}{},
 			wantError: errResp(ErrNoStatusMsg, "first msg has code 2 (!= 0)"),
 		},
 		{
-			code: StatusMsg, data: statusData{10, DefaultConfig.NetworkId, td, head.Hash(), genesis.Hash()},
+			code:      StatusMsg, data: statusData{10, DefaultConfig.NetworkId, td, head.Hash(), genesis.Hash()},
 			wantError: errResp(ErrProtocolVersionMismatch, "10 (!= %d)", protocol),
 		},
 		{
-			code: StatusMsg, data: statusData{uint32(protocol), 999, td, head.Hash(), genesis.Hash()},
+			code:      StatusMsg, data: statusData{uint32(protocol), 999, td, head.Hash(), genesis.Hash()},
 			wantError: errResp(ErrNetworkIdMismatch, "999 (!= 1)"),
 		},
 		{
-			code: StatusMsg, data: statusData{uint32(protocol), DefaultConfig.NetworkId, td, head.Hash(), common.Hash{3}},
+			code:      StatusMsg, data: statusData{uint32(protocol), DefaultConfig.NetworkId, td, head.Hash(), common.Hash{3}},
 			wantError: errResp(ErrGenesisBlockMismatch, "0300000000000000 (!= %x)", genesis.Hash().Bytes()[:8]),
 		},
 	}
@@ -93,10 +97,13 @@ func testStatusMsgErrors(t *testing.T, protocol int) { log.DebugLog()
 }
 
 // This test checks that received transactions are added to the local pool.
-func TestRecvTransactions62(t *testing.T) { log.DebugLog() testRecvTransactions(t, 62) }
-func TestRecvTransactions63(t *testing.T) { log.DebugLog() testRecvTransactions(t, 63) }
+func TestRecvTransactions62(t *testing.T) { log.DebugLog()
+											  testRecvTransactions(t, 62) }
+func TestRecvTransactions63(t *testing.T) { log.DebugLog()
+											  testRecvTransactions(t, 63) }
 
-func testRecvTransactions(t *testing.T, protocol int) { log.DebugLog()
+func testRecvTransactions(t *testing.T, protocol int) {
+	log.DebugLog()
 	txAdded := make(chan []*types.Transaction)
 	pm, _ := newTestProtocolManagerMust(t, downloader.FullSync, 0, nil, txAdded)
 	pm.acceptTxs = 1 // mark synced to accept transactions
@@ -121,10 +128,13 @@ func testRecvTransactions(t *testing.T, protocol int) { log.DebugLog()
 }
 
 // This test checks that pending transactions are sent.
-func TestSendTransactions62(t *testing.T) { log.DebugLog() testSendTransactions(t, 62) }
-func TestSendTransactions63(t *testing.T) { log.DebugLog() testSendTransactions(t, 63) }
+func TestSendTransactions62(t *testing.T) { log.DebugLog()
+											  testSendTransactions(t, 62) }
+func TestSendTransactions63(t *testing.T) { log.DebugLog()
+											  testSendTransactions(t, 63) }
 
-func testSendTransactions(t *testing.T, protocol int) { log.DebugLog()
+func testSendTransactions(t *testing.T, protocol int) {
+	log.DebugLog()
 	pm, _ := newTestProtocolManagerMust(t, downloader.FullSync, 0, nil, nil)
 	defer pm.Stop()
 
@@ -179,7 +189,8 @@ func testSendTransactions(t *testing.T, protocol int) { log.DebugLog()
 }
 
 // Tests that the custom union field encoder and decoder works correctly.
-func TestGetBlockHeadersDataEncodeDecode(t *testing.T) { log.DebugLog()
+func TestGetBlockHeadersDataEncodeDecode(t *testing.T) {
+	log.DebugLog()
 	// Create a "random" hash for testing
 	var hash common.Hash
 	for i := range hash {

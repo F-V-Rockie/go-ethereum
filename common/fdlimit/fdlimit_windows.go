@@ -16,7 +16,10 @@
 
 package fdlimit
 
-import "errors"
+import (
+	"errors"
+	"github.com/ethereum/go-ethereum/log"
+)
 
 // Raise tries to maximize the file descriptor allowance of this process
 // to the maximum hard-limit allowed by the OS.

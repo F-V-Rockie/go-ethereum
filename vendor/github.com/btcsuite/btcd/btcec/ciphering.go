@@ -43,7 +43,7 @@ var (
 // GenerateSharedSecret generates a shared secret based on a private key and a
 // public key using Diffie-Hellman key exchange (ECDH) (RFC 4753).
 // RFC5903 Section 9 states we should only return x.
-func GenerateSharedSecret(privkey *PrivateKey, pubkey *PublicKey) []byte { log.DebugLog()
+func GenerateSharedSecret(privkey *PrivateKey, pubkey *PublicKey) []byte { 
 	x, _ := pubkey.Curve.ScalarMult(pubkey.X, pubkey.Y, privkey.D.Bytes())
 	return x.Bytes()
 }
@@ -67,7 +67,7 @@ func GenerateSharedSecret(privkey *PrivateKey, pubkey *PublicKey) []byte { log.D
 //
 // The primary aim is to ensure byte compatibility with Pyelliptic.  Also, refer
 // to section 5.8.1 of ANSI X9.63 for rationale on this format.
-func Encrypt(pubkey *PublicKey, in []byte) ([]byte, error) { log.DebugLog()
+func Encrypt(pubkey *PublicKey, in []byte) ([]byte, error) { 
 	ephemeral, err := NewPrivateKey(S256())
 	if err != nil {
 		return nil, err
@@ -118,7 +118,7 @@ func Encrypt(pubkey *PublicKey, in []byte) ([]byte, error) { log.DebugLog()
 }
 
 // Decrypt decrypts data that was encrypted using the Encrypt function.
-func Decrypt(priv *PrivateKey, in []byte) ([]byte, error) { log.DebugLog()
+func Decrypt(priv *PrivateKey, in []byte) ([]byte, error) { 
 	// IV + Curve params/X/Y + 1 block + HMAC-256
 	if len(in) < aes.BlockSize+70+aes.BlockSize+sha256.Size {
 		return nil, errInputTooShort
@@ -198,14 +198,14 @@ func Decrypt(priv *PrivateKey, in []byte) ([]byte, error) { log.DebugLog()
 // Implement PKCS#7 padding with block size of 16 (AES block size).
 
 // addPKCSPadding adds padding to a block of data
-func addPKCSPadding(src []byte) []byte { log.DebugLog()
+func addPKCSPadding(src []byte) []byte { 
 	padding := aes.BlockSize - len(src)%aes.BlockSize
 	padtext := bytes.Repeat([]byte{byte(padding)}, padding)
 	return append(src, padtext...)
 }
 
 // removePKCSPadding removes padding from data that was added with addPKCSPadding
-func removePKCSPadding(src []byte) ([]byte, error) { log.DebugLog()
+func removePKCSPadding(src []byte) ([]byte, error) { 
 	length := len(src)
 	padLength := int(src[length-1])
 	if padLength > aes.BlockSize || length < aes.BlockSize {

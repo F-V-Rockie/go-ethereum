@@ -36,7 +36,7 @@ var utf8enc = &internal.Encoding{
 
 type utf8Decoder struct{ transform.NopResetter }
 
-func (utf8Decoder) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) { log.DebugLog()
+func (utf8Decoder) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) { 
 	var pSrc int // point from which to start copy in src
 	var accept utf8internal.AcceptRange
 
@@ -149,7 +149,7 @@ func (utf8Decoder) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err e
 // corresponds to "Where the precise type of the data stream is known... the
 // BOM should not be used" and ExpectBOM corresponds to "A particular
 // protocol... may require use of the BOM".
-func UTF16(e Endianness, b BOMPolicy) encoding.Encoding { log.DebugLog()
+func UTF16(e Endianness, b BOMPolicy) encoding.Encoding { 
 	return utf16Encoding{config{e, b}, mibValue[e][b&bomMask]}
 }
 
@@ -242,14 +242,14 @@ type config struct {
 	bomPolicy  BOMPolicy
 }
 
-func (u utf16Encoding) NewDecoder() *encoding.Decoder { log.DebugLog()
+func (u utf16Encoding) NewDecoder() *encoding.Decoder { 
 	return &encoding.Decoder{Transformer: &utf16Decoder{
 		initial: u.config,
 		current: u.config,
 	}}
 }
 
-func (u utf16Encoding) NewEncoder() *encoding.Encoder { log.DebugLog()
+func (u utf16Encoding) NewEncoder() *encoding.Encoder { 
 	return &encoding.Encoder{Transformer: &utf16Encoder{
 		endianness:       u.endianness,
 		initialBOMPolicy: u.bomPolicy,
@@ -257,11 +257,11 @@ func (u utf16Encoding) NewEncoder() *encoding.Encoder { log.DebugLog()
 	}}
 }
 
-func (u utf16Encoding) ID() (mib identifier.MIB, other string) { log.DebugLog()
+func (u utf16Encoding) ID() (mib identifier.MIB, other string) { 
 	return u.mib, ""
 }
 
-func (u utf16Encoding) String() string { log.DebugLog()
+func (u utf16Encoding) String() string { 
 	e, b := "B", ""
 	if u.endianness == LittleEndian {
 		e = "L"
@@ -282,11 +282,11 @@ type utf16Decoder struct {
 	current config
 }
 
-func (u *utf16Decoder) Reset() { log.DebugLog()
+func (u *utf16Decoder) Reset() { 
 	u.current = u.initial
 }
 
-func (u *utf16Decoder) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) { log.DebugLog()
+func (u *utf16Decoder) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) { 
 	if len(src) == 0 {
 		if atEOF && u.current.bomPolicy&requireBOM != 0 {
 			return 0, 0, ErrMissingBOM
@@ -356,7 +356,7 @@ func (u *utf16Decoder) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, e
 	return nDst, nSrc, err
 }
 
-func isHighSurrogate(r rune) bool { log.DebugLog()
+func isHighSurrogate(r rune) bool { 
 	return 0xDC00 <= r && r <= 0xDFFF
 }
 
@@ -366,11 +366,11 @@ type utf16Encoder struct {
 	currentBOMPolicy BOMPolicy
 }
 
-func (u *utf16Encoder) Reset() { log.DebugLog()
+func (u *utf16Encoder) Reset() { 
 	u.currentBOMPolicy = u.initialBOMPolicy
 }
 
-func (u *utf16Encoder) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) { log.DebugLog()
+func (u *utf16Encoder) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) { 
 	if u.currentBOMPolicy&writeBOM != 0 {
 		if len(dst) < 2 {
 			return 0, 0, transform.ErrShortDst

@@ -1,25 +1,25 @@
 package fuse
 
-func localVolume(conf *mountConfig) error { log.DebugLog()
+func localVolume(conf *mountConfig) error { 
 	return nil
 }
 
-func volumeName(name string) MountOption { log.DebugLog()
+func volumeName(name string) MountOption { 
 	return dummyOption
 }
 
-func daemonTimeout(name string) MountOption { log.DebugLog()
+func daemonTimeout(name string) MountOption { 
 	return dummyOption
 }
 
-func noAppleXattr(conf *mountConfig) error { log.DebugLog()
+func noAppleXattr(conf *mountConfig) error { 
 	return nil
 }
 
-func noAppleDouble(conf *mountConfig) error { log.DebugLog()
+func noAppleDouble(conf *mountConfig) error { 
 	return nil
 }
 
-func exclCreate(conf *mountConfig) error { log.DebugLog()
+func exclCreate(conf *mountConfig) error { 
 	return nil
 }

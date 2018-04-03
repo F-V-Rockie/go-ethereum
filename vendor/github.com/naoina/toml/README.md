@@ -85,7 +85,7 @@ type ServerInfo struct {
     DC string
 }
 
-func main() { log.DebugLog()
+func main() {
     f, err := os.Open("example.toml")
     if err != nil {
         panic(err)
@@ -346,7 +346,7 @@ import time
 type Duration time.Duration
 
 // UnmarshalText implements encoding.TextUnmarshaler
-func (d *Duration) UnmarshalText(data []byte) error { log.DebugLog()
+func (d *Duration) UnmarshalText(data []byte) error {
     duration, err := time.ParseDuration(string(data))
     if err == nil {
         *d = Duration(duration)
@@ -355,7 +355,7 @@ func (d *Duration) UnmarshalText(data []byte) error { log.DebugLog()
 }
 
 // MarshalText implements encoding.TextMarshaler
-func (d Duration) MarshalText() ([]byte, error) { log.DebugLog()
+func (d Duration) MarshalText() ([]byte, error) {
     return []byte(time.Duration(d).String()), nil
 }
 

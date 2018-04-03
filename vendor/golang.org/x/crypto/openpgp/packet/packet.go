@@ -19,7 +19,7 @@ import (
 
 // readFull is the same as io.ReadFull except that reading zero bytes returns
 // ErrUnexpectedEOF rather than EOF.
-func readFull(r io.Reader, buf []byte) (n int, err error) { log.DebugLog()
+func readFull(r io.Reader, buf []byte) (n int, err error) { 
 	n, err = io.ReadFull(r, buf)
 	if err == io.EOF {
 		err = io.ErrUnexpectedEOF
@@ -28,7 +28,7 @@ func readFull(r io.Reader, buf []byte) (n int, err error) { log.DebugLog()
 }
 
 // readLength reads an OpenPGP length from r. See RFC 4880, section 4.2.2.
-func readLength(r io.Reader) (length int64, isPartial bool, err error) { log.DebugLog()
+func readLength(r io.Reader) (length int64, isPartial bool, err error) { 
 	var buf [4]byte
 	_, err = readFull(r, buf[:1])
 	if err != nil {
@@ -69,7 +69,7 @@ type partialLengthReader struct {
 	isPartial bool
 }
 
-func (r *partialLengthReader) Read(p []byte) (n int, err error) { log.DebugLog()
+func (r *partialLengthReader) Read(p []byte) (n int, err error) { 
 	for r.remaining == 0 {
 		if !r.isPartial {
 			return 0, io.EOF
@@ -100,7 +100,7 @@ type partialLengthWriter struct {
 	lengthByte [1]byte
 }
 
-func (w *partialLengthWriter) Write(p []byte) (n int, err error) { log.DebugLog()
+func (w *partialLengthWriter) Write(p []byte) (n int, err error) { 
 	for len(p) > 0 {
 		for power := uint(14); power < 32; power-- {
 			l := 1 << power
@@ -124,7 +124,7 @@ func (w *partialLengthWriter) Write(p []byte) (n int, err error) { log.DebugLog(
 	return
 }
 
-func (w *partialLengthWriter) Close() error { log.DebugLog()
+func (w *partialLengthWriter) Close() error { 
 	w.lengthByte[0] = 0
 	_, err := w.w.Write(w.lengthByte[:])
 	if err != nil {
@@ -140,7 +140,7 @@ type spanReader struct {
 	n int64
 }
 
-func (l *spanReader) Read(p []byte) (n int, err error) { log.DebugLog()
+func (l *spanReader) Read(p []byte) (n int, err error) { 
 	if l.n <= 0 {
 		return 0, io.EOF
 	}
@@ -157,7 +157,7 @@ func (l *spanReader) Read(p []byte) (n int, err error) { log.DebugLog()
 
 // readHeader parses a packet header and returns an io.Reader which will return
 // the contents of the packet. See RFC 4880, section 4.2.
-func readHeader(r io.Reader) (tag packetType, length int64, contents io.Reader, err error) { log.DebugLog()
+func readHeader(r io.Reader) (tag packetType, length int64, contents io.Reader, err error) { 
 	var buf [4]byte
 	_, err = io.ReadFull(r, buf[:1])
 	if err != nil {
@@ -210,7 +210,7 @@ func readHeader(r io.Reader) (tag packetType, length int64, contents io.Reader, 
 
 // serializeHeader writes an OpenPGP packet header to w. See RFC 4880, section
 // 4.2.
-func serializeHeader(w io.Writer, ptype packetType, length int) (err error) { log.DebugLog()
+func serializeHeader(w io.Writer, ptype packetType, length int) (err error) { 
 	var buf [6]byte
 	var n int
 
@@ -239,7 +239,7 @@ func serializeHeader(w io.Writer, ptype packetType, length int) (err error) { lo
 // serializeStreamHeader writes an OpenPGP packet header to w where the
 // length of the packet is unknown. It returns a io.WriteCloser which can be
 // used to write the contents of the packet. See RFC 4880, section 4.2.
-func serializeStreamHeader(w io.WriteCloser, ptype packetType) (out io.WriteCloser, err error) { log.DebugLog()
+func serializeStreamHeader(w io.WriteCloser, ptype packetType) (out io.WriteCloser, err error) { 
 	var buf [1]byte
 	buf[0] = 0x80 | 0x40 | byte(ptype)
 	_, err = w.Write(buf[:])
@@ -258,7 +258,7 @@ type Packet interface {
 
 // consumeAll reads from the given Reader until error, returning the number of
 // bytes read.
-func consumeAll(r io.Reader) (n int64, err error) { log.DebugLog()
+func consumeAll(r io.Reader) (n int64, err error) { 
 	var m int
 	var buf [1024]byte
 
@@ -299,7 +299,7 @@ const (
 // peekVersion detects the version of a public key packet about to
 // be read. A bufio.Reader at the original position of the io.Reader
 // is returned.
-func peekVersion(r io.Reader) (bufr *bufio.Reader, ver byte, err error) { log.DebugLog()
+func peekVersion(r io.Reader) (bufr *bufio.Reader, ver byte, err error) { 
 	bufr = bufio.NewReader(r)
 	var verBuf []byte
 	if verBuf, err = bufr.Peek(1); err != nil {
@@ -311,7 +311,7 @@ func peekVersion(r io.Reader) (bufr *bufio.Reader, ver byte, err error) { log.De
 
 // Read reads a single OpenPGP packet from the given io.Reader. If there is an
 // error parsing a packet, the whole packet is consumed from the input.
-func Read(r io.Reader) (p Packet, err error) { log.DebugLog()
+func Read(r io.Reader) (p Packet, err error) { 
 	tag, _, contents, err := readHeader(r)
 	if err != nil {
 		return
@@ -414,7 +414,7 @@ const (
 
 // CanEncrypt returns true if it's possible to encrypt a message to a public
 // key of the given type.
-func (pka PublicKeyAlgorithm) CanEncrypt() bool { log.DebugLog()
+func (pka PublicKeyAlgorithm) CanEncrypt() bool { 
 	switch pka {
 	case PubKeyAlgoRSA, PubKeyAlgoRSAEncryptOnly, PubKeyAlgoElGamal:
 		return true
@@ -424,7 +424,7 @@ func (pka PublicKeyAlgorithm) CanEncrypt() bool { log.DebugLog()
 
 // CanSign returns true if it's possible for a public key of the given type to
 // sign a message.
-func (pka PublicKeyAlgorithm) CanSign() bool { log.DebugLog()
+func (pka PublicKeyAlgorithm) CanSign() bool { 
 	switch pka {
 	case PubKeyAlgoRSA, PubKeyAlgoRSASignOnly, PubKeyAlgoDSA, PubKeyAlgoECDSA:
 		return true
@@ -445,7 +445,7 @@ const (
 )
 
 // KeySize returns the key size, in bytes, of cipher.
-func (cipher CipherFunction) KeySize() int { log.DebugLog()
+func (cipher CipherFunction) KeySize() int { 
 	switch cipher {
 	case Cipher3DES:
 		return 24
@@ -462,7 +462,7 @@ func (cipher CipherFunction) KeySize() int { log.DebugLog()
 }
 
 // blockSize returns the block size, in bytes, of cipher.
-func (cipher CipherFunction) blockSize() int { log.DebugLog()
+func (cipher CipherFunction) blockSize() int { 
 	switch cipher {
 	case Cipher3DES:
 		return des.BlockSize
@@ -475,7 +475,7 @@ func (cipher CipherFunction) blockSize() int { log.DebugLog()
 }
 
 // new returns a fresh instance of the given cipher.
-func (cipher CipherFunction) new(key []byte) (block cipher.Block) { log.DebugLog()
+func (cipher CipherFunction) new(key []byte) (block cipher.Block) { 
 	switch cipher {
 	case Cipher3DES:
 		block, _ = des.NewTripleDESCipher(key)
@@ -490,7 +490,7 @@ func (cipher CipherFunction) new(key []byte) (block cipher.Block) { log.DebugLog
 // readMPI reads a big integer from r. The bit length returned is the bit
 // length that was specified in r. This is preserved so that the integer can be
 // reserialized exactly.
-func readMPI(r io.Reader) (mpi []byte, bitLength uint16, err error) { log.DebugLog()
+func readMPI(r io.Reader) (mpi []byte, bitLength uint16, err error) { 
 	var buf [2]byte
 	_, err = readFull(r, buf[0:])
 	if err != nil {
@@ -505,14 +505,14 @@ func readMPI(r io.Reader) (mpi []byte, bitLength uint16, err error) { log.DebugL
 
 // mpiLength returns the length of the given *big.Int when serialized as an
 // MPI.
-func mpiLength(n *big.Int) (mpiLengthInBytes int) { log.DebugLog()
+func mpiLength(n *big.Int) (mpiLengthInBytes int) { 
 	mpiLengthInBytes = 2 /* MPI length */
 	mpiLengthInBytes += (n.BitLen() + 7) / 8
 	return
 }
 
 // writeMPI serializes a big integer to w.
-func writeMPI(w io.Writer, bitLength uint16, mpiBytes []byte) (err error) { log.DebugLog()
+func writeMPI(w io.Writer, bitLength uint16, mpiBytes []byte) (err error) { 
 	_, err = w.Write([]byte{byte(bitLength >> 8), byte(bitLength)})
 	if err == nil {
 		_, err = w.Write(mpiBytes)
@@ -521,7 +521,7 @@ func writeMPI(w io.Writer, bitLength uint16, mpiBytes []byte) (err error) { log.
 }
 
 // writeBig serializes a *big.Int to w.
-func writeBig(w io.Writer, i *big.Int) error { log.DebugLog()
+func writeBig(w io.Writer, i *big.Int) error { 
 	return writeMPI(w, uint16(i.BitLen()), i.Bytes())
 }
 

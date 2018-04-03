@@ -52,13 +52,13 @@ var attrMap = map[string]Attribute{
 	"reverse":   AttrReverse,
 }
 
-func rmSpc(s string) string { log.DebugLog()
+func rmSpc(s string) string { 
 	reg := regexp.MustCompile(`\s+`)
 	return reg.ReplaceAllString(s, "")
 }
 
 // readAttr translates strings like `fg-red,fg-bold,bg-white` to fg and bg Attribute
-func (mtb MarkdownTxBuilder) readAttr(s string) (Attribute, Attribute) { log.DebugLog()
+func (mtb MarkdownTxBuilder) readAttr(s string) (Attribute, Attribute) { 
 	fg := mtb.baseFg
 	bg := mtb.baseBg
 
@@ -97,13 +97,13 @@ func (mtb MarkdownTxBuilder) readAttr(s string) (Attribute, Attribute) { log.Deb
 	return fg, bg
 }
 
-func (mtb *MarkdownTxBuilder) reset() { log.DebugLog()
+func (mtb *MarkdownTxBuilder) reset() { 
 	mtb.plainTx = []rune{}
 	mtb.markers = []marker{}
 }
 
 // parse streams and parses text into normalized text and render sequence.
-func (mtb *MarkdownTxBuilder) parse(str string) { log.DebugLog()
+func (mtb *MarkdownTxBuilder) parse(str string) { 
 	rs := str2runes(str)
 	normTx := []rune{}
 	square := []rune{}
@@ -191,7 +191,7 @@ func (mtb *MarkdownTxBuilder) parse(str string) { log.DebugLog()
 	mtb.plainTx = normTx
 }
 
-func wrapTx(cs []Cell, wl int) []Cell { log.DebugLog()
+func wrapTx(cs []Cell, wl int) []Cell { 
 	tmpCell := make([]Cell, len(cs))
 	copy(tmpCell, cs)
 
@@ -253,7 +253,7 @@ func wrapTx(cs []Cell, wl int) []Cell { log.DebugLog()
 }
 
 // Build implements TextBuilder interface.
-func (mtb MarkdownTxBuilder) Build(s string, fg, bg Attribute) []Cell { log.DebugLog()
+func (mtb MarkdownTxBuilder) Build(s string, fg, bg Attribute) []Cell { 
 	mtb.baseFg = fg
 	mtb.baseBg = bg
 	mtb.reset()
@@ -273,6 +273,6 @@ func (mtb MarkdownTxBuilder) Build(s string, fg, bg Attribute) []Cell { log.Debu
 }
 
 // NewMarkdownTxBuilder returns a TextBuilder employing markdown syntax.
-func NewMarkdownTxBuilder() TextBuilder { log.DebugLog()
+func NewMarkdownTxBuilder() TextBuilder { 
 	return MarkdownTxBuilder{}
 }

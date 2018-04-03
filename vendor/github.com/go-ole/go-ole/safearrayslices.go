@@ -6,7 +6,7 @@ import (
 	"unsafe"
 )
 
-func safeArrayFromByteSlice(slice []byte) *SafeArray { log.DebugLog()
+func safeArrayFromByteSlice(slice []byte) *SafeArray { 
 	array, _ := safeArrayCreateVector(VT_UI1, 0, uint32(len(slice)))
 
 	if array == nil {
@@ -19,7 +19,7 @@ func safeArrayFromByteSlice(slice []byte) *SafeArray { log.DebugLog()
 	return array
 }
 
-func safeArrayFromStringSlice(slice []string) *SafeArray { log.DebugLog()
+func safeArrayFromStringSlice(slice []string) *SafeArray { 
 	array, _ := safeArrayCreateVector(VT_BSTR, 0, uint32(len(slice)))
 
 	if array == nil {

@@ -50,7 +50,7 @@ type Node struct {
 // is appended to the end of n's children.
 //
 // It will panic if newChild already has a parent or siblings.
-func (n *Node) InsertBefore(newChild, oldChild *Node) { log.DebugLog()
+func (n *Node) InsertBefore(newChild, oldChild *Node) { 
 	if newChild.Parent != nil || newChild.PrevSibling != nil || newChild.NextSibling != nil {
 		panic("html: InsertBefore called for an attached child Node")
 	}
@@ -78,7 +78,7 @@ func (n *Node) InsertBefore(newChild, oldChild *Node) { log.DebugLog()
 // AppendChild adds a node c as a child of n.
 //
 // It will panic if c already has a parent or siblings.
-func (n *Node) AppendChild(c *Node) { log.DebugLog()
+func (n *Node) AppendChild(c *Node) { 
 	if c.Parent != nil || c.PrevSibling != nil || c.NextSibling != nil {
 		panic("html: AppendChild called for an attached child Node")
 	}
@@ -97,7 +97,7 @@ func (n *Node) AppendChild(c *Node) { log.DebugLog()
 // no parent and no siblings.
 //
 // It will panic if c's parent is not n.
-func (n *Node) RemoveChild(c *Node) { log.DebugLog()
+func (n *Node) RemoveChild(c *Node) { 
 	if c.Parent != n {
 		panic("html: RemoveChild called for a non-child Node")
 	}
@@ -119,7 +119,7 @@ func (n *Node) RemoveChild(c *Node) { log.DebugLog()
 }
 
 // reparentChildren reparents all of src's child nodes to dst.
-func reparentChildren(dst, src *Node) { log.DebugLog()
+func reparentChildren(dst, src *Node) { 
 	for {
 		child := src.FirstChild
 		if child == nil {
@@ -132,7 +132,7 @@ func reparentChildren(dst, src *Node) { log.DebugLog()
 
 // clone returns a new node with the same type, data and attributes.
 // The clone has no parent, no siblings and no children.
-func (n *Node) clone() *Node { log.DebugLog()
+func (n *Node) clone() *Node { 
 	m := &Node{
 		Type:     n.Type,
 		DataAtom: n.DataAtom,
@@ -147,7 +147,7 @@ func (n *Node) clone() *Node { log.DebugLog()
 type nodeStack []*Node
 
 // pop pops the stack. It will panic if s is empty.
-func (s *nodeStack) pop() *Node { log.DebugLog()
+func (s *nodeStack) pop() *Node { 
 	i := len(*s)
 	n := (*s)[i-1]
 	*s = (*s)[:i-1]
@@ -155,7 +155,7 @@ func (s *nodeStack) pop() *Node { log.DebugLog()
 }
 
 // top returns the most recently pushed node, or nil if s is empty.
-func (s *nodeStack) top() *Node { log.DebugLog()
+func (s *nodeStack) top() *Node { 
 	if i := len(*s); i > 0 {
 		return (*s)[i-1]
 	}
@@ -164,7 +164,7 @@ func (s *nodeStack) top() *Node { log.DebugLog()
 
 // index returns the index of the top-most occurrence of n in the stack, or -1
 // if n is not present.
-func (s *nodeStack) index(n *Node) int { log.DebugLog()
+func (s *nodeStack) index(n *Node) int { 
 	for i := len(*s) - 1; i >= 0; i-- {
 		if (*s)[i] == n {
 			return i
@@ -174,14 +174,14 @@ func (s *nodeStack) index(n *Node) int { log.DebugLog()
 }
 
 // insert inserts a node at the given index.
-func (s *nodeStack) insert(i int, n *Node) { log.DebugLog()
+func (s *nodeStack) insert(i int, n *Node) { 
 	(*s) = append(*s, nil)
 	copy((*s)[i+1:], (*s)[i:])
 	(*s)[i] = n
 }
 
 // remove removes a node from the stack. It is a no-op if n is not present.
-func (s *nodeStack) remove(n *Node) { log.DebugLog()
+func (s *nodeStack) remove(n *Node) { 
 	i := s.index(n)
 	if i == -1 {
 		return

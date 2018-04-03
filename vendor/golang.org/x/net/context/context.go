@@ -137,7 +137,7 @@ type Context interface {
 // values, and has no deadline. It is typically used by the main function,
 // initialization, and tests, and as the top-level Context for incoming
 // requests.
-func Background() Context { log.DebugLog()
+func Background() Context { 
 	return background
 }
 
@@ -146,7 +146,7 @@ func Background() Context { log.DebugLog()
 // surrounding function has not yet been extended to accept a Context
 // parameter).  TODO is recognized by static analysis tools that determine
 // whether Contexts are propagated correctly in a program.
-func TODO() Context { log.DebugLog()
+func TODO() Context { 
 	return todo
 }
 

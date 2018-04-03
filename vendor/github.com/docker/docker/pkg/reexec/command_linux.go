@@ -9,7 +9,7 @@ import (
 
 // Self returns the path to the current process's binary.
 // Returns "/proc/self/exe".
-func Self() string { log.DebugLog()
+func Self() string { 
 	return "/proc/self/exe"
 }
 
@@ -17,7 +17,7 @@ func Self() string { log.DebugLog()
 // SysProcAttr.Pdeathsig to SIGTERM.
 // This will use the in-memory version (/proc/self/exe) of the current binary,
 // it is thus safe to delete or replace the on-disk binary (os.Args[0]).
-func Command(args ...string) *exec.Cmd { log.DebugLog()
+func Command(args ...string) *exec.Cmd { 
 	return &exec.Cmd{
 		Path: Self(),
 		Args: args,

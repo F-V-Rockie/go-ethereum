@@ -23,21 +23,21 @@ import (
 	"strings"
 )
 
-func min(a, b int) int { log.DebugLog()
+func min(a, b int) int { 
 	if a < b {
 		return a
 	}
 	return b
 }
 
-func max(a, b int) int { log.DebugLog()
+func max(a, b int) int { 
 	if a > b {
 		return a
 	}
 	return b
 }
 
-func calculateRatio(matches, length int) float64 { log.DebugLog()
+func calculateRatio(matches, length int) float64 { 
 	if length > 0 {
 		return 2.0 * float64(matches) / float64(length)
 	}
@@ -97,7 +97,7 @@ type SequenceMatcher struct {
 	opCodes        []OpCode
 }
 
-func NewMatcher(a, b []string) *SequenceMatcher { log.DebugLog()
+func NewMatcher(a, b []string) *SequenceMatcher { 
 	m := SequenceMatcher{autoJunk: true}
 	m.SetSeqs(a, b)
 	return &m
@@ -112,7 +112,7 @@ func NewMatcherWithJunk(a, b []string, autoJunk bool,
 }
 
 // Set two sequences to be compared.
-func (m *SequenceMatcher) SetSeqs(a, b []string) { log.DebugLog()
+func (m *SequenceMatcher) SetSeqs(a, b []string) { 
 	m.SetSeq1(a)
 	m.SetSeq2(b)
 }
@@ -126,7 +126,7 @@ func (m *SequenceMatcher) SetSeqs(a, b []string) { log.DebugLog()
 // sequences.
 //
 // See also SetSeqs() and SetSeq2().
-func (m *SequenceMatcher) SetSeq1(a []string) { log.DebugLog()
+func (m *SequenceMatcher) SetSeq1(a []string) { 
 	if &a == &m.a {
 		return
 	}
@@ -137,7 +137,7 @@ func (m *SequenceMatcher) SetSeq1(a []string) { log.DebugLog()
 
 // Set the second sequence to be compared. The first sequence to be compared is
 // not changed.
-func (m *SequenceMatcher) SetSeq2(b []string) { log.DebugLog()
+func (m *SequenceMatcher) SetSeq2(b []string) { 
 	if &b == &m.b {
 		return
 	}
@@ -148,7 +148,7 @@ func (m *SequenceMatcher) SetSeq2(b []string) { log.DebugLog()
 	m.chainB()
 }
 
-func (m *SequenceMatcher) chainB() { log.DebugLog()
+func (m *SequenceMatcher) chainB() { 
 	// Populate line -> index mapping
 	b2j := map[string][]int{}
 	for i, s := range m.b {
@@ -189,7 +189,7 @@ func (m *SequenceMatcher) chainB() { log.DebugLog()
 	m.b2j = b2j
 }
 
-func (m *SequenceMatcher) isBJunk(s string) bool { log.DebugLog()
+func (m *SequenceMatcher) isBJunk(s string) bool { 
 	_, ok := m.bJunk[s]
 	return ok
 }
@@ -218,7 +218,7 @@ func (m *SequenceMatcher) isBJunk(s string) bool { log.DebugLog()
 // happens to be adjacent to an "interesting" match.
 //
 // If no blocks match, return (alo, blo, 0).
-func (m *SequenceMatcher) findLongestMatch(alo, ahi, blo, bhi int) Match { log.DebugLog()
+func (m *SequenceMatcher) findLongestMatch(alo, ahi, blo, bhi int) Match { 
 	// CAUTION:  stripping common prefix or suffix would be incorrect.
 	// E.g.,
 	//    ab
@@ -302,7 +302,7 @@ func (m *SequenceMatcher) findLongestMatch(alo, ahi, blo, bhi int) Match { log.D
 //
 // The last triple is a dummy, (len(a), len(b), 0), and is the only
 // triple with n==0.
-func (m *SequenceMatcher) GetMatchingBlocks() []Match { log.DebugLog()
+func (m *SequenceMatcher) GetMatchingBlocks() []Match { 
 	if m.matchingBlocks != nil {
 		return m.matchingBlocks
 	}
@@ -370,7 +370,7 @@ func (m *SequenceMatcher) GetMatchingBlocks() []Match { log.DebugLog()
 // 'i' (insert):   b[j1:j2] should be inserted at a[i1:i1], i1==i2 in this case.
 //
 // 'e' (equal):    a[i1:i2] == b[j1:j2]
-func (m *SequenceMatcher) GetOpCodes() []OpCode { log.DebugLog()
+func (m *SequenceMatcher) GetOpCodes() []OpCode { 
 	if m.opCodes != nil {
 		return m.opCodes
 	}
@@ -410,7 +410,7 @@ func (m *SequenceMatcher) GetOpCodes() []OpCode { log.DebugLog()
 //
 // Return a generator of groups with up to n lines of context.
 // Each group is in the same format as returned by GetOpCodes().
-func (m *SequenceMatcher) GetGroupedOpCodes(n int) [][]OpCode { log.DebugLog()
+func (m *SequenceMatcher) GetGroupedOpCodes(n int) [][]OpCode { 
 	if n < 0 {
 		n = 3
 	}
@@ -462,7 +462,7 @@ func (m *SequenceMatcher) GetGroupedOpCodes(n int) [][]OpCode { log.DebugLog()
 // .GetMatchingBlocks() or .GetOpCodes(), in which case you may
 // want to try .QuickRatio() or .RealQuickRation() first to get an
 // upper bound.
-func (m *SequenceMatcher) Ratio() float64 { log.DebugLog()
+func (m *SequenceMatcher) Ratio() float64 { 
 	matches := 0
 	for _, m := range m.GetMatchingBlocks() {
 		matches += m.Size
@@ -474,7 +474,7 @@ func (m *SequenceMatcher) Ratio() float64 { log.DebugLog()
 //
 // This isn't defined beyond that it is an upper bound on .Ratio(), and
 // is faster to compute.
-func (m *SequenceMatcher) QuickRatio() float64 { log.DebugLog()
+func (m *SequenceMatcher) QuickRatio() float64 { 
 	// viewing a and b as multisets, set matches to the cardinality
 	// of their intersection; this counts the number of matches
 	// without regard to order, so is clearly an upper bound
@@ -506,13 +506,13 @@ func (m *SequenceMatcher) QuickRatio() float64 { log.DebugLog()
 //
 // This isn't defined beyond that it is an upper bound on .Ratio(), and
 // is faster to compute than either .Ratio() or .QuickRatio().
-func (m *SequenceMatcher) RealQuickRatio() float64 { log.DebugLog()
+func (m *SequenceMatcher) RealQuickRatio() float64 { 
 	la, lb := len(m.a), len(m.b)
 	return calculateRatio(min(la, lb), la+lb)
 }
 
 // Convert range to the "ed" format
-func formatRangeUnified(start, stop int) string { log.DebugLog()
+func formatRangeUnified(start, stop int) string { 
 	// Per the diff spec at http://www.unix.org/single_unix_specification/
 	beginning := start + 1 // lines start numbering with one
 	length := stop - start
@@ -556,7 +556,7 @@ type UnifiedDiff struct {
 // times.  Any or all of these may be specified using strings for
 // 'fromfile', 'tofile', 'fromfiledate', and 'tofiledate'.
 // The modification times are normally expressed in the ISO 8601 format.
-func WriteUnifiedDiff(writer io.Writer, diff UnifiedDiff) error { log.DebugLog()
+func WriteUnifiedDiff(writer io.Writer, diff UnifiedDiff) error { 
 	buf := bufio.NewWriter(writer)
 	defer buf.Flush()
 	wf := func(format string, args ...interface{}) error {
@@ -632,14 +632,14 @@ func WriteUnifiedDiff(writer io.Writer, diff UnifiedDiff) error { log.DebugLog()
 }
 
 // Like WriteUnifiedDiff but returns the diff a string.
-func GetUnifiedDiffString(diff UnifiedDiff) (string, error) { log.DebugLog()
+func GetUnifiedDiffString(diff UnifiedDiff) (string, error) { 
 	w := &bytes.Buffer{}
 	err := WriteUnifiedDiff(w, diff)
 	return string(w.Bytes()), err
 }
 
 // Convert range to the "ed" format.
-func formatRangeContext(start, stop int) string { log.DebugLog()
+func formatRangeContext(start, stop int) string { 
 	// Per the diff spec at http://www.unix.org/single_unix_specification/
 	beginning := start + 1 // lines start numbering with one
 	length := stop - start
@@ -671,7 +671,7 @@ type ContextDiff UnifiedDiff
 // strings for diff.FromFile, diff.ToFile, diff.FromDate, diff.ToDate.
 // The modification times are normally expressed in the ISO 8601 format.
 // If not specified, the strings default to blanks.
-func WriteContextDiff(writer io.Writer, diff ContextDiff) error { log.DebugLog()
+func WriteContextDiff(writer io.Writer, diff ContextDiff) error { 
 	buf := bufio.NewWriter(writer)
 	defer buf.Flush()
 	var diffErr error
@@ -757,7 +757,7 @@ func WriteContextDiff(writer io.Writer, diff ContextDiff) error { log.DebugLog()
 }
 
 // Like WriteContextDiff but returns the diff a string.
-func GetContextDiffString(diff ContextDiff) (string, error) { log.DebugLog()
+func GetContextDiffString(diff ContextDiff) (string, error) { 
 	w := &bytes.Buffer{}
 	err := WriteContextDiff(w, diff)
 	return string(w.Bytes()), err
@@ -765,7 +765,7 @@ func GetContextDiffString(diff ContextDiff) (string, error) { log.DebugLog()
 
 // Split a string on "\n" while preserving them. The output can be used
 // as input for UnifiedDiff and ContextDiff structures.
-func SplitLines(s string) []string { log.DebugLog()
+func SplitLines(s string) []string { 
 	lines := strings.SplitAfter(s, "\n")
 	lines[len(lines)-1] += "\n"
 	return lines

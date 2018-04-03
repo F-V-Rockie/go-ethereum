@@ -10,7 +10,7 @@ type SafeArrayConversion struct {
 	Array *SafeArray
 }
 
-func (sac *SafeArrayConversion) ToStringArray() (strings []string) { log.DebugLog()
+func (sac *SafeArrayConversion) ToStringArray() (strings []string) { 
 	totalElements, _ := sac.TotalElements(0)
 	strings = make([]string, totalElements)
 
@@ -21,7 +21,7 @@ func (sac *SafeArrayConversion) ToStringArray() (strings []string) { log.DebugLo
 	return
 }
 
-func (sac *SafeArrayConversion) ToByteArray() (bytes []byte) { log.DebugLog()
+func (sac *SafeArrayConversion) ToByteArray() (bytes []byte) { 
 	totalElements, _ := sac.TotalElements(0)
 	bytes = make([]byte, totalElements)
 
@@ -32,7 +32,7 @@ func (sac *SafeArrayConversion) ToByteArray() (bytes []byte) { log.DebugLog()
 	return
 }
 
-func (sac *SafeArrayConversion) ToValueArray() (values []interface{}) { log.DebugLog()
+func (sac *SafeArrayConversion) ToValueArray() (values []interface{}) { 
 	totalElements, _ := sac.TotalElements(0)
 	values = make([]interface{}, totalElements)
 	vt, _ := safeArrayGetVartype(sac.Array)
@@ -99,19 +99,19 @@ func (sac *SafeArrayConversion) ToValueArray() (values []interface{}) { log.Debu
 	return
 }
 
-func (sac *SafeArrayConversion) GetType() (varType uint16, err error) { log.DebugLog()
+func (sac *SafeArrayConversion) GetType() (varType uint16, err error) { 
 	return safeArrayGetVartype(sac.Array)
 }
 
-func (sac *SafeArrayConversion) GetDimensions() (dimensions *uint32, err error) { log.DebugLog()
+func (sac *SafeArrayConversion) GetDimensions() (dimensions *uint32, err error) { 
 	return safeArrayGetDim(sac.Array)
 }
 
-func (sac *SafeArrayConversion) GetSize() (length *uint32, err error) { log.DebugLog()
+func (sac *SafeArrayConversion) GetSize() (length *uint32, err error) { 
 	return safeArrayGetElementSize(sac.Array)
 }
 
-func (sac *SafeArrayConversion) TotalElements(index uint32) (totalElements int64, err error) { log.DebugLog()
+func (sac *SafeArrayConversion) TotalElements(index uint32) (totalElements int64, err error) { 
 	if index < 1 {
 		index = 1
 	}
@@ -135,6 +135,6 @@ func (sac *SafeArrayConversion) TotalElements(index uint32) (totalElements int64
 }
 
 // Release Safe Array memory
-func (sac *SafeArrayConversion) Release() { log.DebugLog()
+func (sac *SafeArrayConversion) Release() { 
 	safeArrayDestroy(sac.Array)
 }

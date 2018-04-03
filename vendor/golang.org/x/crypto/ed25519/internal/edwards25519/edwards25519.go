@@ -15,16 +15,16 @@ type FieldElement [10]int32
 
 var zero FieldElement
 
-func FeZero(fe *FieldElement) { log.DebugLog()
+func FeZero(fe *FieldElement) { 
 	copy(fe[:], zero[:])
 }
 
-func FeOne(fe *FieldElement) { log.DebugLog()
+func FeOne(fe *FieldElement) { 
 	FeZero(fe)
 	fe[0] = 1
 }
 
-func FeAdd(dst, a, b *FieldElement) { log.DebugLog()
+func FeAdd(dst, a, b *FieldElement) { 
 	dst[0] = a[0] + b[0]
 	dst[1] = a[1] + b[1]
 	dst[2] = a[2] + b[2]
@@ -37,7 +37,7 @@ func FeAdd(dst, a, b *FieldElement) { log.DebugLog()
 	dst[9] = a[9] + b[9]
 }
 
-func FeSub(dst, a, b *FieldElement) { log.DebugLog()
+func FeSub(dst, a, b *FieldElement) { 
 	dst[0] = a[0] - b[0]
 	dst[1] = a[1] - b[1]
 	dst[2] = a[2] - b[2]
@@ -50,7 +50,7 @@ func FeSub(dst, a, b *FieldElement) { log.DebugLog()
 	dst[9] = a[9] - b[9]
 }
 
-func FeCopy(dst, src *FieldElement) { log.DebugLog()
+func FeCopy(dst, src *FieldElement) { 
 	copy(dst[:], src[:])
 }
 
@@ -58,7 +58,7 @@ func FeCopy(dst, src *FieldElement) { log.DebugLog()
 // replace (f,g) with (f,g) if b == 0.
 //
 // Preconditions: b in {0,1}.
-func FeCMove(f, g *FieldElement, b int32) { log.DebugLog()
+func FeCMove(f, g *FieldElement, b int32) { 
 	b = -b
 	f[0] ^= b & (f[0] ^ g[0])
 	f[1] ^= b & (f[1] ^ g[1])
@@ -72,7 +72,7 @@ func FeCMove(f, g *FieldElement, b int32) { log.DebugLog()
 	f[9] ^= b & (f[9] ^ g[9])
 }
 
-func load3(in []byte) int64 { log.DebugLog()
+func load3(in []byte) int64 { 
 	var r int64
 	r = int64(in[0])
 	r |= int64(in[1]) << 8
@@ -80,7 +80,7 @@ func load3(in []byte) int64 { log.DebugLog()
 	return r
 }
 
-func load4(in []byte) int64 { log.DebugLog()
+func load4(in []byte) int64 { 
 	var r int64
 	r = int64(in[0])
 	r |= int64(in[1]) << 8
@@ -89,7 +89,7 @@ func load4(in []byte) int64 { log.DebugLog()
 	return r
 }
 
-func FeFromBytes(dst *FieldElement, src *[32]byte) { log.DebugLog()
+func FeFromBytes(dst *FieldElement, src *[32]byte) { 
 	h0 := load4(src[:])
 	h1 := load3(src[4:]) << 6
 	h2 := load3(src[7:]) << 5
@@ -127,7 +127,7 @@ func FeFromBytes(dst *FieldElement, src *[32]byte) { log.DebugLog()
 //
 //   Have q+2^(-255)x = 2^(-255)(h + 19 2^(-25) h9 + 2^(-1))
 //   so floor(2^(-255)(h + 19 2^(-25) h9 + 2^(-1))) = q.
-func FeToBytes(s *[32]byte, h *FieldElement) { log.DebugLog()
+func FeToBytes(s *[32]byte, h *FieldElement) { 
 	var carry [10]int32
 
 	q := (19*h[9] + (1 << 24)) >> 25
@@ -216,13 +216,13 @@ func FeToBytes(s *[32]byte, h *FieldElement) { log.DebugLog()
 	s[31] = byte(h[9] >> 18)
 }
 
-func FeIsNegative(f *FieldElement) byte { log.DebugLog()
+func FeIsNegative(f *FieldElement) byte { 
 	var s [32]byte
 	FeToBytes(&s, f)
 	return s[0] & 1
 }
 
-func FeIsNonZero(f *FieldElement) int32 { log.DebugLog()
+func FeIsNonZero(f *FieldElement) int32 { 
 	var s [32]byte
 	FeToBytes(&s, f)
 	var x uint8
@@ -242,7 +242,7 @@ func FeIsNonZero(f *FieldElement) int32 { log.DebugLog()
 //
 // Postconditions:
 //    |h| bounded by 1.1*2^25,1.1*2^24,1.1*2^25,1.1*2^24,etc.
-func FeNeg(h, f *FieldElement) { log.DebugLog()
+func FeNeg(h, f *FieldElement) { 
 	h[0] = -f[0]
 	h[1] = -f[1]
 	h[2] = -f[2]
@@ -255,7 +255,7 @@ func FeNeg(h, f *FieldElement) { log.DebugLog()
 	h[9] = -f[9]
 }
 
-func FeCombine(h *FieldElement, h0, h1, h2, h3, h4, h5, h6, h7, h8, h9 int64) { log.DebugLog()
+func FeCombine(h *FieldElement, h0, h1, h2, h3, h4, h5, h6, h7, h8, h9 int64) { 
 	var c0, c1, c2, c3, c4, c5, c6, c7, c8, c9 int64
 
 	/*
@@ -371,7 +371,7 @@ func FeCombine(h *FieldElement, h0, h1, h2, h3, h4, h5, h6, h7, h8, h9 int64) { 
 // Can get away with 11 carries, but then data flow is much deeper.
 //
 // With tighter constraints on inputs, can squeeze carries into int32.
-func FeMul(h, f, g *FieldElement) { log.DebugLog()
+func FeMul(h, f, g *FieldElement) { 
 	f0 := int64(f[0])
 	f1 := int64(f[1])
 	f2 := int64(f[2])
@@ -424,7 +424,7 @@ func FeMul(h, f, g *FieldElement) { log.DebugLog()
 	FeCombine(h, h0, h1, h2, h3, h4, h5, h6, h7, h8, h9)
 }
 
-func feSquare(f *FieldElement) (h0, h1, h2, h3, h4, h5, h6, h7, h8, h9 int64) { log.DebugLog()
+func feSquare(f *FieldElement) (h0, h1, h2, h3, h4, h5, h6, h7, h8, h9 int64) { 
 	f0 := int64(f[0])
 	f1 := int64(f[1])
 	f2 := int64(f[2])
@@ -470,7 +470,7 @@ func feSquare(f *FieldElement) (h0, h1, h2, h3, h4, h5, h6, h7, h8, h9 int64) { 
 //
 // Postconditions:
 //    |h| bounded by 1.1*2^25,1.1*2^24,1.1*2^25,1.1*2^24,etc.
-func FeSquare(h, f *FieldElement) { log.DebugLog()
+func FeSquare(h, f *FieldElement) { 
 	h0, h1, h2, h3, h4, h5, h6, h7, h8, h9 := feSquare(f)
 	FeCombine(h, h0, h1, h2, h3, h4, h5, h6, h7, h8, h9)
 }
@@ -485,7 +485,7 @@ func FeSquare(h, f *FieldElement) { log.DebugLog()
 // Postconditions:
 //    |h| bounded by 1.01*2^25,1.01*2^24,1.01*2^25,1.01*2^24,etc.
 // See fe_mul.c for discussion of implementation strategy.
-func FeSquare2(h, f *FieldElement) { log.DebugLog()
+func FeSquare2(h, f *FieldElement) { 
 	h0, h1, h2, h3, h4, h5, h6, h7, h8, h9 := feSquare(f)
 
 	h0 += h0
@@ -502,7 +502,7 @@ func FeSquare2(h, f *FieldElement) { log.DebugLog()
 	FeCombine(h, h0, h1, h2, h3, h4, h5, h6, h7, h8, h9)
 }
 
-func FeInvert(out, z *FieldElement) { log.DebugLog()
+func FeInvert(out, z *FieldElement) { 
 	var t0, t1, t2, t3 FieldElement
 	var i int
 
@@ -557,7 +557,7 @@ func FeInvert(out, z *FieldElement) { log.DebugLog()
 	FeMul(out, &t1, &t0) // 254..5,3,1,0
 }
 
-func fePow22523(out, z *FieldElement) { log.DebugLog()
+func fePow22523(out, z *FieldElement) { 
 	var t0, t1, t2 FieldElement
 	var i int
 
@@ -647,13 +647,13 @@ type CachedGroupElement struct {
 	yPlusX, yMinusX, Z, T2d FieldElement
 }
 
-func (p *ProjectiveGroupElement) Zero() { log.DebugLog()
+func (p *ProjectiveGroupElement) Zero() { 
 	FeZero(&p.X)
 	FeOne(&p.Y)
 	FeOne(&p.Z)
 }
 
-func (p *ProjectiveGroupElement) Double(r *CompletedGroupElement) { log.DebugLog()
+func (p *ProjectiveGroupElement) Double(r *CompletedGroupElement) { 
 	var t0 FieldElement
 
 	FeSquare(&r.X, &p.X)
@@ -667,7 +667,7 @@ func (p *ProjectiveGroupElement) Double(r *CompletedGroupElement) { log.DebugLog
 	FeSub(&r.T, &r.T, &r.Z)
 }
 
-func (p *ProjectiveGroupElement) ToBytes(s *[32]byte) { log.DebugLog()
+func (p *ProjectiveGroupElement) ToBytes(s *[32]byte) { 
 	var recip, x, y FieldElement
 
 	FeInvert(&recip, &p.Z)
@@ -677,33 +677,33 @@ func (p *ProjectiveGroupElement) ToBytes(s *[32]byte) { log.DebugLog()
 	s[31] ^= FeIsNegative(&x) << 7
 }
 
-func (p *ExtendedGroupElement) Zero() { log.DebugLog()
+func (p *ExtendedGroupElement) Zero() { 
 	FeZero(&p.X)
 	FeOne(&p.Y)
 	FeOne(&p.Z)
 	FeZero(&p.T)
 }
 
-func (p *ExtendedGroupElement) Double(r *CompletedGroupElement) { log.DebugLog()
+func (p *ExtendedGroupElement) Double(r *CompletedGroupElement) { 
 	var q ProjectiveGroupElement
 	p.ToProjective(&q)
 	q.Double(r)
 }
 
-func (p *ExtendedGroupElement) ToCached(r *CachedGroupElement) { log.DebugLog()
+func (p *ExtendedGroupElement) ToCached(r *CachedGroupElement) { 
 	FeAdd(&r.yPlusX, &p.Y, &p.X)
 	FeSub(&r.yMinusX, &p.Y, &p.X)
 	FeCopy(&r.Z, &p.Z)
 	FeMul(&r.T2d, &p.T, &d2)
 }
 
-func (p *ExtendedGroupElement) ToProjective(r *ProjectiveGroupElement) { log.DebugLog()
+func (p *ExtendedGroupElement) ToProjective(r *ProjectiveGroupElement) { 
 	FeCopy(&r.X, &p.X)
 	FeCopy(&r.Y, &p.Y)
 	FeCopy(&r.Z, &p.Z)
 }
 
-func (p *ExtendedGroupElement) ToBytes(s *[32]byte) { log.DebugLog()
+func (p *ExtendedGroupElement) ToBytes(s *[32]byte) { 
 	var recip, x, y FieldElement
 
 	FeInvert(&recip, &p.Z)
@@ -713,7 +713,7 @@ func (p *ExtendedGroupElement) ToBytes(s *[32]byte) { log.DebugLog()
 	s[31] ^= FeIsNegative(&x) << 7
 }
 
-func (p *ExtendedGroupElement) FromBytes(s *[32]byte) bool { log.DebugLog()
+func (p *ExtendedGroupElement) FromBytes(s *[32]byte) bool { 
 	var u, v, v3, vxx, check FieldElement
 
 	FeFromBytes(&p.Y, s)
@@ -759,26 +759,26 @@ func (p *ExtendedGroupElement) FromBytes(s *[32]byte) bool { log.DebugLog()
 	return true
 }
 
-func (p *CompletedGroupElement) ToProjective(r *ProjectiveGroupElement) { log.DebugLog()
+func (p *CompletedGroupElement) ToProjective(r *ProjectiveGroupElement) { 
 	FeMul(&r.X, &p.X, &p.T)
 	FeMul(&r.Y, &p.Y, &p.Z)
 	FeMul(&r.Z, &p.Z, &p.T)
 }
 
-func (p *CompletedGroupElement) ToExtended(r *ExtendedGroupElement) { log.DebugLog()
+func (p *CompletedGroupElement) ToExtended(r *ExtendedGroupElement) { 
 	FeMul(&r.X, &p.X, &p.T)
 	FeMul(&r.Y, &p.Y, &p.Z)
 	FeMul(&r.Z, &p.Z, &p.T)
 	FeMul(&r.T, &p.X, &p.Y)
 }
 
-func (p *PreComputedGroupElement) Zero() { log.DebugLog()
+func (p *PreComputedGroupElement) Zero() { 
 	FeOne(&p.yPlusX)
 	FeOne(&p.yMinusX)
 	FeZero(&p.xy2d)
 }
 
-func geAdd(r *CompletedGroupElement, p *ExtendedGroupElement, q *CachedGroupElement) { log.DebugLog()
+func geAdd(r *CompletedGroupElement, p *ExtendedGroupElement, q *CachedGroupElement) { 
 	var t0 FieldElement
 
 	FeAdd(&r.X, &p.Y, &p.X)
@@ -794,7 +794,7 @@ func geAdd(r *CompletedGroupElement, p *ExtendedGroupElement, q *CachedGroupElem
 	FeSub(&r.T, &t0, &r.T)
 }
 
-func geSub(r *CompletedGroupElement, p *ExtendedGroupElement, q *CachedGroupElement) { log.DebugLog()
+func geSub(r *CompletedGroupElement, p *ExtendedGroupElement, q *CachedGroupElement) { 
 	var t0 FieldElement
 
 	FeAdd(&r.X, &p.Y, &p.X)
@@ -810,7 +810,7 @@ func geSub(r *CompletedGroupElement, p *ExtendedGroupElement, q *CachedGroupElem
 	FeAdd(&r.T, &t0, &r.T)
 }
 
-func geMixedAdd(r *CompletedGroupElement, p *ExtendedGroupElement, q *PreComputedGroupElement) { log.DebugLog()
+func geMixedAdd(r *CompletedGroupElement, p *ExtendedGroupElement, q *PreComputedGroupElement) { 
 	var t0 FieldElement
 
 	FeAdd(&r.X, &p.Y, &p.X)
@@ -825,7 +825,7 @@ func geMixedAdd(r *CompletedGroupElement, p *ExtendedGroupElement, q *PreCompute
 	FeSub(&r.T, &t0, &r.T)
 }
 
-func geMixedSub(r *CompletedGroupElement, p *ExtendedGroupElement, q *PreComputedGroupElement) { log.DebugLog()
+func geMixedSub(r *CompletedGroupElement, p *ExtendedGroupElement, q *PreComputedGroupElement) { 
 	var t0 FieldElement
 
 	FeAdd(&r.X, &p.Y, &p.X)
@@ -840,7 +840,7 @@ func geMixedSub(r *CompletedGroupElement, p *ExtendedGroupElement, q *PreCompute
 	FeAdd(&r.T, &t0, &r.T)
 }
 
-func slide(r *[256]int8, a *[32]byte) { log.DebugLog()
+func slide(r *[256]int8, a *[32]byte) { 
 	for i := range r {
 		r[i] = int8(1 & (a[i>>3] >> uint(i&7)))
 	}
@@ -874,7 +874,7 @@ func slide(r *[256]int8, a *[32]byte) { log.DebugLog()
 // where a = a[0]+256*a[1]+...+256^31 a[31].
 // and b = b[0]+256*b[1]+...+256^31 b[31].
 // B is the Ed25519 base point (x,4/5) with x positive.
-func GeDoubleScalarMultVartime(r *ProjectiveGroupElement, a *[32]byte, A *ExtendedGroupElement, b *[32]byte) { log.DebugLog()
+func GeDoubleScalarMultVartime(r *ProjectiveGroupElement, a *[32]byte, A *ExtendedGroupElement, b *[32]byte) { 
 	var aSlide, bSlide [256]int8
 	var Ai [8]CachedGroupElement // A,3A,5A,7A,9A,11A,13A,15A
 	var t CompletedGroupElement
@@ -927,24 +927,24 @@ func GeDoubleScalarMultVartime(r *ProjectiveGroupElement, a *[32]byte, A *Extend
 
 // equal returns 1 if b == c and 0 otherwise, assuming that b and c are
 // non-negative.
-func equal(b, c int32) int32 { log.DebugLog()
+func equal(b, c int32) int32 { 
 	x := uint32(b ^ c)
 	x--
 	return int32(x >> 31)
 }
 
 // negative returns 1 if b < 0 and 0 otherwise.
-func negative(b int32) int32 { log.DebugLog()
+func negative(b int32) int32 { 
 	return (b >> 31) & 1
 }
 
-func PreComputedGroupElementCMove(t, u *PreComputedGroupElement, b int32) { log.DebugLog()
+func PreComputedGroupElementCMove(t, u *PreComputedGroupElement, b int32) { 
 	FeCMove(&t.yPlusX, &u.yPlusX, b)
 	FeCMove(&t.yMinusX, &u.yMinusX, b)
 	FeCMove(&t.xy2d, &u.xy2d, b)
 }
 
-func selectPoint(t *PreComputedGroupElement, pos int32, b int32) { log.DebugLog()
+func selectPoint(t *PreComputedGroupElement, pos int32, b int32) { 
 	var minusT PreComputedGroupElement
 	bNegative := negative(b)
 	bAbs := b - (((-bNegative) & b) << 1)
@@ -965,7 +965,7 @@ func selectPoint(t *PreComputedGroupElement, pos int32, b int32) { log.DebugLog(
 //
 // Preconditions:
 //   a[31] <= 127
-func GeScalarMultBase(h *ExtendedGroupElement, a *[32]byte) { log.DebugLog()
+func GeScalarMultBase(h *ExtendedGroupElement, a *[32]byte) { 
 	var e [64]int8
 
 	for i, v := range a {
@@ -1021,7 +1021,7 @@ func GeScalarMultBase(h *ExtendedGroupElement, a *[32]byte) { log.DebugLog()
 // Output:
 //   s[0]+256*s[1]+...+256^31*s[31] = (ab+c) mod l
 //   where l = 2^252 + 27742317777372353535851937790883648493.
-func ScMulAdd(s, a, b, c *[32]byte) { log.DebugLog()
+func ScMulAdd(s, a, b, c *[32]byte) { 
 	a0 := 2097151 & load3(a[:])
 	a1 := 2097151 & (load4(a[2:]) >> 5)
 	a2 := 2097151 & (load3(a[5:]) >> 2)
@@ -1452,7 +1452,7 @@ func ScMulAdd(s, a, b, c *[32]byte) { log.DebugLog()
 // Output:
 //   s[0]+256*s[1]+...+256^31*s[31] = s mod l
 //   where l = 2^252 + 27742317777372353535851937790883648493.
-func ScReduce(out *[32]byte, s *[64]byte) { log.DebugLog()
+func ScReduce(out *[32]byte, s *[64]byte) { 
 	s0 := 2097151 & load3(s[:])
 	s1 := 2097151 & (load4(s[2:]) >> 5)
 	s2 := 2097151 & (load3(s[5:]) >> 2)

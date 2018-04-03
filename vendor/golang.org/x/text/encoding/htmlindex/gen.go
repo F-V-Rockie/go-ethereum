@@ -23,7 +23,7 @@ type group struct {
 	}
 }
 
-func main() { log.DebugLog()
+func main() { 
 	gen.Init()
 
 	r := gen.Open("https://encoding.spec.whatwg.org", "whatwg", "encodings.json")

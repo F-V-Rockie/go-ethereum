@@ -139,7 +139,7 @@ all groups that are reachable from the groups set in the respective entry.`,
 // memory, but may increase the need for memory allocations. This could be
 // mitigated if we can piggyback on language tags for common cases.
 
-func failOnError(e error) { log.DebugLog()
+func failOnError(e error) { 
 	if e != nil {
 		log.Panic(e)
 	}
@@ -162,13 +162,13 @@ type stringSet struct {
 	typ    setType // used for checking.
 }
 
-func (ss *stringSet) clone() stringSet { log.DebugLog()
+func (ss *stringSet) clone() stringSet { 
 	c := *ss
 	c.s = append([]string(nil), c.s...)
 	return c
 }
 
-func (ss *stringSet) setType(t setType) { log.DebugLog()
+func (ss *stringSet) setType(t setType) { 
 	if ss.typ != t && ss.typ != 0 {
 		log.Panicf("type %d cannot be assigned as it was already %d", t, ss.typ)
 	}
@@ -176,7 +176,7 @@ func (ss *stringSet) setType(t setType) { log.DebugLog()
 
 // parse parses a whitespace-separated string and initializes ss with its
 // components.
-func (ss *stringSet) parse(s string) { log.DebugLog()
+func (ss *stringSet) parse(s string) { 
 	scan := bufio.NewScanner(strings.NewReader(s))
 	scan.Split(bufio.ScanWords)
 	for scan.Scan() {
@@ -184,24 +184,24 @@ func (ss *stringSet) parse(s string) { log.DebugLog()
 	}
 }
 
-func (ss *stringSet) assertChangeable() { log.DebugLog()
+func (ss *stringSet) assertChangeable() { 
 	if ss.frozen {
 		log.Panic("attempt to modify a frozen stringSet")
 	}
 }
 
-func (ss *stringSet) add(s string) { log.DebugLog()
+func (ss *stringSet) add(s string) { 
 	ss.assertChangeable()
 	ss.s = append(ss.s, s)
 	ss.sorted = ss.frozen
 }
 
-func (ss *stringSet) freeze() { log.DebugLog()
+func (ss *stringSet) freeze() { 
 	ss.compact()
 	ss.frozen = true
 }
 
-func (ss *stringSet) compact() { log.DebugLog()
+func (ss *stringSet) compact() { 
 	if ss.sorted {
 		return
 	}
@@ -223,16 +223,16 @@ type funcSorter struct {
 	sort.StringSlice
 }
 
-func (s funcSorter) Less(i, j int) bool { log.DebugLog()
+func (s funcSorter) Less(i, j int) bool { 
 	return s.fn(s.StringSlice[i], s.StringSlice[j])
 }
 
-func (ss *stringSet) sortFunc(f func(a, b string) bool) { log.DebugLog()
+func (ss *stringSet) sortFunc(f func(a, b string) bool) { 
 	ss.compact()
 	sort.Sort(funcSorter{f, sort.StringSlice(ss.s)})
 }
 
-func (ss *stringSet) remove(s string) { log.DebugLog()
+func (ss *stringSet) remove(s string) { 
 	ss.assertChangeable()
 	if i, ok := ss.find(s); ok {
 		copy(ss.s[i:], ss.s[i+1:])
@@ -240,12 +240,12 @@ func (ss *stringSet) remove(s string) { log.DebugLog()
 	}
 }
 
-func (ss *stringSet) replace(ol, nu string) { log.DebugLog()
+func (ss *stringSet) replace(ol, nu string) { 
 	ss.s[ss.index(ol)] = nu
 	ss.sorted = ss.frozen
 }
 
-func (ss *stringSet) index(s string) int { log.DebugLog()
+func (ss *stringSet) index(s string) int { 
 	ss.setType(Indexed)
 	i, ok := ss.find(s)
 	if !ok {
@@ -258,18 +258,18 @@ func (ss *stringSet) index(s string) int { log.DebugLog()
 	return i
 }
 
-func (ss *stringSet) find(s string) (int, bool) { log.DebugLog()
+func (ss *stringSet) find(s string) (int, bool) { 
 	ss.compact()
 	i := sort.SearchStrings(ss.s, s)
 	return i, i != len(ss.s) && ss.s[i] == s
 }
 
-func (ss *stringSet) slice() []string { log.DebugLog()
+func (ss *stringSet) slice() []string { 
 	ss.compact()
 	return ss.s
 }
 
-func (ss *stringSet) updateLater(v, key string) { log.DebugLog()
+func (ss *stringSet) updateLater(v, key string) { 
 	if ss.update == nil {
 		ss.update = map[string]string{}
 	}
@@ -277,7 +277,7 @@ func (ss *stringSet) updateLater(v, key string) { log.DebugLog()
 }
 
 // join joins the string and ensures that all entries are of the same length.
-func (ss *stringSet) join() string { log.DebugLog()
+func (ss *stringSet) join() string { 
 	ss.setType(Indexed)
 	n := len(ss.s[0])
 	for _, s := range ss.s {
@@ -328,7 +328,7 @@ type builder struct {
 
 type index uint
 
-func newBuilder(w *gen.CodeWriter) *builder { log.DebugLog()
+func newBuilder(w *gen.CodeWriter) *builder { 
 	r := gen.OpenCLDRCoreZip()
 	defer r.Close()
 	d := &cldr.Decoder{}
@@ -344,7 +344,7 @@ func newBuilder(w *gen.CodeWriter) *builder { log.DebugLog()
 	return &b
 }
 
-func (b *builder) parseRegistry() { log.DebugLog()
+func (b *builder) parseRegistry() { 
 	r := gen.OpenIANAFile("assignments/language-subtag-registry")
 	defer r.Close()
 	b.registry = make(map[string]*ianaEntry)
@@ -403,7 +403,7 @@ func (b *builder) parseRegistry() { log.DebugLog()
 	}
 }
 
-func (b *builder) addToRegistry(key string, entry *ianaEntry) { log.DebugLog()
+func (b *builder) addToRegistry(key string, entry *ianaEntry) { 
 	if info, ok := b.registry[key]; ok {
 		if info.typ != "language" || entry.typ != "extlang" {
 			log.Fatalf("parseRegistry: tag %q already exists", key)
@@ -415,14 +415,14 @@ func (b *builder) addToRegistry(key string, entry *ianaEntry) { log.DebugLog()
 
 var commentIndex = make(map[string]string)
 
-func init() { log.DebugLog()
+func init() { 
 	for _, s := range comment {
 		key := strings.TrimSpace(strings.SplitN(s, " ", 2)[0])
 		commentIndex[key] = s
 	}
 }
 
-func (b *builder) comment(name string) { log.DebugLog()
+func (b *builder) comment(name string) { 
 	if s := commentIndex[name]; len(s) > 0 {
 		b.w.WriteComment(s)
 	} else {
@@ -430,28 +430,28 @@ func (b *builder) comment(name string) { log.DebugLog()
 	}
 }
 
-func (b *builder) pf(f string, x ...interface{}) { log.DebugLog()
+func (b *builder) pf(f string, x ...interface{}) { 
 	fmt.Fprintf(b.hw, f, x...)
 	fmt.Fprint(b.hw, "\n")
 }
 
-func (b *builder) p(x ...interface{}) { log.DebugLog()
+func (b *builder) p(x ...interface{}) { 
 	fmt.Fprintln(b.hw, x...)
 }
 
-func (b *builder) addSize(s int) { log.DebugLog()
+func (b *builder) addSize(s int) { 
 	b.w.Size += s
 	b.pf("// Size: %d bytes", s)
 }
 
-func (b *builder) writeConst(name string, x interface{}) { log.DebugLog()
+func (b *builder) writeConst(name string, x interface{}) { 
 	b.comment(name)
 	b.w.WriteConst(name, x)
 }
 
 // writeConsts computes f(v) for all v in values and writes the results
 // as constants named _v to a single constant block.
-func (b *builder) writeConsts(f func(string) int, values ...string) { log.DebugLog()
+func (b *builder) writeConsts(f func(string) int, values ...string) { 
 	b.pf("const (")
 	for _, v := range values {
 		b.pf("\t_%s = %v", v, f(v))
@@ -460,16 +460,16 @@ func (b *builder) writeConsts(f func(string) int, values ...string) { log.DebugL
 }
 
 // writeType writes the type of the given value, which must be a struct.
-func (b *builder) writeType(value interface{}) { log.DebugLog()
+func (b *builder) writeType(value interface{}) { 
 	b.comment(reflect.TypeOf(value).Name())
 	b.w.WriteType(value)
 }
 
-func (b *builder) writeSlice(name string, ss interface{}) { log.DebugLog()
+func (b *builder) writeSlice(name string, ss interface{}) { 
 	b.writeSliceAddSize(name, 0, ss)
 }
 
-func (b *builder) writeSliceAddSize(name string, extraSize int, ss interface{}) { log.DebugLog()
+func (b *builder) writeSliceAddSize(name string, extraSize int, ss interface{}) { 
 	b.comment(name)
 	b.w.Size += extraSize
 	v := reflect.ValueOf(ss)
@@ -485,7 +485,7 @@ type fromTo struct {
 	from, to uint16
 }
 
-func (b *builder) writeSortedMap(name string, ss *stringSet, index func(s string) uint16) { log.DebugLog()
+func (b *builder) writeSortedMap(name string, ss *stringSet, index func(s string) uint16) { 
 	ss.sortFunc(func(a, b string) bool {
 		return index(a) < index(b)
 	})
@@ -498,7 +498,7 @@ func (b *builder) writeSortedMap(name string, ss *stringSet, index func(s string
 
 const base = 'z' - 'a' + 1
 
-func strToInt(s string) uint { log.DebugLog()
+func strToInt(s string) uint { 
 	v := uint(0)
 	for i := 0; i < len(s); i++ {
 		v *= base
@@ -509,14 +509,14 @@ func strToInt(s string) uint { log.DebugLog()
 
 // converts the given integer to the original ASCII string passed to strToInt.
 // len(s) must match the number of characters obtained.
-func intToStr(v uint, s []byte) { log.DebugLog()
+func intToStr(v uint, s []byte) { 
 	for i := len(s) - 1; i >= 0; i-- {
 		s[i] = byte(v%base) + 'a'
 		v /= base
 	}
 }
 
-func (b *builder) writeBitVector(name string, ss []string) { log.DebugLog()
+func (b *builder) writeBitVector(name string, ss []string) { 
 	vec := make([]uint8, int(math.Ceil(math.Pow(base, float64(len(ss[0])))/8)))
 	for _, s := range ss {
 		v := strToInt(s)
@@ -526,7 +526,7 @@ func (b *builder) writeBitVector(name string, ss []string) { log.DebugLog()
 }
 
 // TODO: convert this type into a list or two-stage trie.
-func (b *builder) writeMapFunc(name string, m map[string]string, f func(string) uint16) { log.DebugLog()
+func (b *builder) writeMapFunc(name string, m map[string]string, f func(string) uint16) { 
 	b.comment(name)
 	v := reflect.ValueOf(m)
 	sz := v.Len() * (2 + int(v.Type().Key().Size()))
@@ -546,7 +546,7 @@ func (b *builder) writeMapFunc(name string, m map[string]string, f func(string) 
 	b.p("}")
 }
 
-func (b *builder) writeMap(name string, m interface{}) { log.DebugLog()
+func (b *builder) writeMap(name string, m interface{}) { 
 	b.comment(name)
 	v := reflect.ValueOf(m)
 	sz := v.Len() * (2 + int(v.Type().Key().Size()) + int(v.Type().Elem().Size()))
@@ -562,7 +562,7 @@ func (b *builder) writeMap(name string, m interface{}) { log.DebugLog()
 	b.p("}")
 }
 
-func (b *builder) langIndex(s string) uint16 { log.DebugLog()
+func (b *builder) langIndex(s string) uint16 { 
 	if s == "und" {
 		return 0
 	}
@@ -573,7 +573,7 @@ func (b *builder) langIndex(s string) uint16 { log.DebugLog()
 }
 
 // inc advances the string to its lexicographical successor.
-func inc(s string) string { log.DebugLog()
+func inc(s string) string { 
 	const maxTagLength = 4
 	var buf [maxTagLength]byte
 	intToStr(strToInt(strings.ToLower(s))+1, buf[:len(s)])
@@ -585,7 +585,7 @@ func inc(s string) string { log.DebugLog()
 	return string(buf[:len(s)])
 }
 
-func (b *builder) parseIndices() { log.DebugLog()
+func (b *builder) parseIndices() { 
 	meta := b.supp.Metadata
 
 	for k, v := range b.registry {
@@ -680,7 +680,7 @@ func (b *builder) parseIndices() { log.DebugLog()
 
 // TODO: region inclusion data will probably not be use used in future matchers.
 
-func (b *builder) computeRegionGroups() { log.DebugLog()
+func (b *builder) computeRegionGroups() { 
 	b.groups = make(map[int]index)
 
 	// Create group indices.
@@ -718,7 +718,7 @@ var langConsts = []string{
 }
 
 // writeLanguage generates all tables needed for language canonicalization.
-func (b *builder) writeLanguage() { log.DebugLog()
+func (b *builder) writeLanguage() { 
 	meta := b.supp.Metadata
 
 	b.writeConst("nonCanonicalUnd", b.lang.index("und"))
@@ -857,7 +857,7 @@ var scriptConsts = []string{
 	"Zzzz",
 }
 
-func (b *builder) writeScript() { log.DebugLog()
+func (b *builder) writeScript() { 
 	b.writeConsts(b.script.index, scriptConsts...)
 	b.writeConst("script", tag.Index(b.script.join()))
 
@@ -878,7 +878,7 @@ func (b *builder) writeScript() { log.DebugLog()
 	}
 }
 
-func parseM49(s string) int16 { log.DebugLog()
+func parseM49(s string) int16 { 
 	if len(s) == 0 {
 		return 0
 	}
@@ -892,7 +892,7 @@ var regionConsts = []string{
 	"ZZ", "XA", "XC", "XK", // Unofficial tag for Kosovo.
 }
 
-func (b *builder) writeRegion() { log.DebugLog()
+func (b *builder) writeRegion() { 
 	b.writeConsts(b.region.index, regionConsts...)
 
 	isoOffset := b.region.index("AA")
@@ -1078,7 +1078,7 @@ const (
 	bcp47Region
 )
 
-func find(list []string, s string) int { log.DebugLog()
+func find(list []string, s string) int { 
 	for i, t := range list {
 		if t == s {
 			return i
@@ -1107,7 +1107,7 @@ func find(list []string, s string) int { log.DebugLog()
 // future using the same algorithm or for non-compliant combinations of
 // variants. For this reason, consider using simple alphabetic sorting
 // of variants and ignore Prefix restrictions altogether.
-func (b *builder) writeVariant() { log.DebugLog()
+func (b *builder) writeVariant() { 
 	generalized := stringSet{}
 	specialized := stringSet{}
 	specializedExtend := stringSet{}
@@ -1200,13 +1200,13 @@ func (b *builder) writeVariant() { log.DebugLog()
 	b.writeConst("variantNumSpecialized", numSpecialized)
 }
 
-func (b *builder) writeLanguageInfo() { log.DebugLog()
+func (b *builder) writeLanguageInfo() { 
 }
 
 // writeLikelyData writes tables that are used both for finding parent relations and for
 // language matching.  Each entry contains additional bits to indicate the status of the
 // data to know when it cannot be used for parent relations.
-func (b *builder) writeLikelyData() { log.DebugLog()
+func (b *builder) writeLikelyData() { 
 	const (
 		isList = 1 << iota
 		scriptInFrom
@@ -1375,20 +1375,20 @@ type scriptIntelligibility struct {
 
 type sortByConf []mutualIntelligibility
 
-func (l sortByConf) Less(a, b int) bool { log.DebugLog()
+func (l sortByConf) Less(a, b int) bool { 
 	return l[a].conf > l[b].conf
 }
 
-func (l sortByConf) Swap(a, b int) { log.DebugLog()
+func (l sortByConf) Swap(a, b int) { 
 	l[a], l[b] = l[b], l[a]
 }
 
-func (l sortByConf) Len() int { log.DebugLog()
+func (l sortByConf) Len() int { 
 	return len(l)
 }
 
 // toConf converts a percentage value [0, 100] to a confidence class.
-func toConf(pct uint8) uint8 { log.DebugLog()
+func toConf(pct uint8) uint8 { 
 	switch {
 	case pct == 100:
 		return 3 // Exact
@@ -1407,7 +1407,7 @@ func toConf(pct uint8) uint8 { log.DebugLog()
 // we slightly modify the data. For example, we convert scores to confidence levels.
 // We also drop all region-related data as we use a different algorithm to
 // determine region equivalence.
-func (b *builder) writeMatchData() { log.DebugLog()
+func (b *builder) writeMatchData() { 
 	b.writeType(mutualIntelligibility{})
 	b.writeType(scriptIntelligibility{})
 	lm := b.supp.LanguageMatching.LanguageMatches
@@ -1480,7 +1480,7 @@ func (b *builder) writeMatchData() { log.DebugLog()
 	b.writeSlice("matchScript", matchScript)
 }
 
-func (b *builder) writeRegionInclusionData() { log.DebugLog()
+func (b *builder) writeRegionInclusionData() { 
 	var (
 		// mm holds for each group the set of groups with a distance of 1.
 		mm = make(map[int][]index)
@@ -1585,7 +1585,7 @@ type parentRel struct {
 	fromRegion []uint16
 }
 
-func (b *builder) writeParents() { log.DebugLog()
+func (b *builder) writeParents() { 
 	b.writeType(parentRel{})
 
 	parents := []parentRel{}
@@ -1620,7 +1620,7 @@ func (b *builder) writeParents() { log.DebugLog()
 	b.writeSliceAddSize("parents", n*2, parents)
 }
 
-func main() { log.DebugLog()
+func main() { 
 	gen.Init()
 
 	gen.Repackage("gen_common.go", "common.go", "language")

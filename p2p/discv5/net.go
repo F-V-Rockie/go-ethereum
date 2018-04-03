@@ -872,7 +872,7 @@ var (
 	unresponsive     *nodeState
 )
 
-func init() { log.DebugLog()
+func init() {
 	unknown = &nodeState{
 		name: "unknown",
 		enter: func(net *Network, n *Node) {

@@ -60,7 +60,7 @@ var (
 
 // initializes the global runloop and ensures any created stream awaits its
 // readiness.
-func init() { log.DebugLog()
+func init() { 
 	wg.Add(1)
 	go func() {
 		// There is exactly one run loop per thread. Lock this goroutine to its
@@ -76,12 +76,12 @@ func init() { log.DebugLog()
 }
 
 //export gosource
-func gosource(unsafe.Pointer) { log.DebugLog()
+func gosource(unsafe.Pointer) { 
 	wg.Done()
 }
 
 //export gostream
-func gostream(_, info uintptr, n C.size_t, paths, flags, ids uintptr) { log.DebugLog()
+func gostream(_, info uintptr, n C.size_t, paths, flags, ids uintptr) { 
 	const (
 		offchar = unsafe.Sizeof((*C.char)(nil))
 		offflag = unsafe.Sizeof(C.FSEventStreamEventFlags(0))
@@ -118,13 +118,13 @@ type streamFuncRegistry struct {
 	i  uintptr
 }
 
-func (r *streamFuncRegistry) get(id uintptr) streamFunc { log.DebugLog()
+func (r *streamFuncRegistry) get(id uintptr) streamFunc { 
 	r.mu.Lock()
 	defer r.mu.Unlock()
 	return r.m[id]
 }
 
-func (r *streamFuncRegistry) add(fn streamFunc) uintptr { log.DebugLog()
+func (r *streamFuncRegistry) add(fn streamFunc) uintptr { 
 	r.mu.Lock()
 	defer r.mu.Unlock()
 	r.i++
@@ -132,7 +132,7 @@ func (r *streamFuncRegistry) add(fn streamFunc) uintptr { log.DebugLog()
 	return r.i
 }
 
-func (r *streamFuncRegistry) delete(id uintptr) { log.DebugLog()
+func (r *streamFuncRegistry) delete(id uintptr) { 
 	r.mu.Lock()
 	defer r.mu.Unlock()
 	delete(r.m, id)
@@ -148,7 +148,7 @@ type stream struct {
 
 // NewStream creates a stream for given path, listening for file events and
 // calling fn upon receiving any.
-func newStream(path string, fn streamFunc) *stream { log.DebugLog()
+func newStream(path string, fn streamFunc) *stream { 
 	return &stream{
 		path: path,
 		info: streamFuncs.add(fn),
@@ -157,7 +157,7 @@ func newStream(path string, fn streamFunc) *stream { log.DebugLog()
 
 // Start creates a FSEventStream for the given path and schedules it with
 // global runloop. It's a nop if the stream was already started.
-func (s *stream) Start() error { log.DebugLog()
+func (s *stream) Start() error { 
 	if s.ref != nilstream {
 		return nil
 	}
@@ -180,7 +180,7 @@ func (s *stream) Start() error { log.DebugLog()
 }
 
 // Stop stops underlying FSEventStream and unregisters it from global runloop.
-func (s *stream) Stop() { log.DebugLog()
+func (s *stream) Stop() { 
 	if s.ref == nilstream {
 		return
 	}

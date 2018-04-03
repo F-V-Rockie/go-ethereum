@@ -79,7 +79,7 @@ type getTableEntriesResponse struct {
 //
 // Example:
 // 		entities, cToken, err = tSvc.QueryTableEntities("table", cToken, reflect.TypeOf(entity), 20, "")
-func (c *TableServiceClient) QueryTableEntities(tableName AzureTable, previousContToken *ContinuationToken, retType reflect.Type, top int, query string) ([]TableEntity, *ContinuationToken, error) { log.DebugLog()
+func (c *TableServiceClient) QueryTableEntities(tableName AzureTable, previousContToken *ContinuationToken, retType reflect.Type, top int, query string) ([]TableEntity, *ContinuationToken, error) { 
 	if top > maxTopParameter {
 		return nil, nil, fmt.Errorf("top accepts at maximum %d elements. Requested %d instead", maxTopParameter, top)
 	}
@@ -123,7 +123,7 @@ func (c *TableServiceClient) QueryTableEntities(tableName AzureTable, previousCo
 // InsertEntity inserts an entity in the specified table.
 // The function fails if there is an entity with the same
 // PartitionKey and RowKey in the table.
-func (c *TableServiceClient) InsertEntity(table AzureTable, entity TableEntity) error { log.DebugLog()
+func (c *TableServiceClient) InsertEntity(table AzureTable, entity TableEntity) error { 
 	sc, err := c.execTable(table, entity, false, http.MethodPost)
 	if err != nil {
 		return err
@@ -132,7 +132,7 @@ func (c *TableServiceClient) InsertEntity(table AzureTable, entity TableEntity) 
 	return checkRespCode(sc, []int{http.StatusCreated})
 }
 
-func (c *TableServiceClient) execTable(table AzureTable, entity TableEntity, specifyKeysInURL bool, method string) (int, error) { log.DebugLog()
+func (c *TableServiceClient) execTable(table AzureTable, entity TableEntity, specifyKeysInURL bool, method string) (int, error) { 
 	uri := c.client.getEndpoint(tableServiceName, pathForTable(table), url.Values{})
 	if specifyKeysInURL {
 		uri += fmt.Sprintf("(PartitionKey='%s',RowKey='%s')", url.QueryEscape(entity.PartitionKey()), url.QueryEscape(entity.RowKey()))
@@ -162,7 +162,7 @@ func (c *TableServiceClient) execTable(table AzureTable, entity TableEntity, spe
 // UpdateEntity updates the contents of an entity with the
 // one passed as parameter. The function fails if there is no entity
 // with the same PartitionKey and RowKey in the table.
-func (c *TableServiceClient) UpdateEntity(table AzureTable, entity TableEntity) error { log.DebugLog()
+func (c *TableServiceClient) UpdateEntity(table AzureTable, entity TableEntity) error { 
 	sc, err := c.execTable(table, entity, true, http.MethodPut)
 	if err != nil {
 		return err
@@ -175,7 +175,7 @@ func (c *TableServiceClient) UpdateEntity(table AzureTable, entity TableEntity) 
 // one passed as parameter.
 // The function fails if there is no entity
 // with the same PartitionKey and RowKey in the table.
-func (c *TableServiceClient) MergeEntity(table AzureTable, entity TableEntity) error { log.DebugLog()
+func (c *TableServiceClient) MergeEntity(table AzureTable, entity TableEntity) error { 
 	sc, err := c.execTable(table, entity, true, "MERGE")
 	if err != nil {
 		return err
@@ -189,7 +189,7 @@ func (c *TableServiceClient) MergeEntity(table AzureTable, entity TableEntity) e
 // parameter so the entity is always deleted.
 // The function fails if there is no entity
 // with the same PartitionKey and RowKey in the table.
-func (c *TableServiceClient) DeleteEntityWithoutCheck(table AzureTable, entity TableEntity) error { log.DebugLog()
+func (c *TableServiceClient) DeleteEntityWithoutCheck(table AzureTable, entity TableEntity) error { 
 	return c.DeleteEntity(table, entity, "*")
 }
 
@@ -198,7 +198,7 @@ func (c *TableServiceClient) DeleteEntityWithoutCheck(table AzureTable, entity T
 // The function fails if there is no entity
 // with the same PartitionKey and RowKey in the table or
 // the ifMatch is different.
-func (c *TableServiceClient) DeleteEntity(table AzureTable, entity TableEntity, ifMatch string) error { log.DebugLog()
+func (c *TableServiceClient) DeleteEntity(table AzureTable, entity TableEntity, ifMatch string) error { 
 	uri := c.client.getEndpoint(tableServiceName, pathForTable(table), url.Values{})
 	uri += fmt.Sprintf("(PartitionKey='%s',RowKey='%s')", url.QueryEscape(entity.PartitionKey()), url.QueryEscape(entity.RowKey()))
 
@@ -223,7 +223,7 @@ func (c *TableServiceClient) DeleteEntity(table AzureTable, entity TableEntity, 
 
 // InsertOrReplaceEntity inserts an entity in the specified table
 // or replaced the existing one.
-func (c *TableServiceClient) InsertOrReplaceEntity(table AzureTable, entity TableEntity) error { log.DebugLog()
+func (c *TableServiceClient) InsertOrReplaceEntity(table AzureTable, entity TableEntity) error { 
 	sc, err := c.execTable(table, entity, true, http.MethodPut)
 	if err != nil {
 		return err
@@ -234,7 +234,7 @@ func (c *TableServiceClient) InsertOrReplaceEntity(table AzureTable, entity Tabl
 
 // InsertOrMergeEntity inserts an entity in the specified table
 // or merges the existing one.
-func (c *TableServiceClient) InsertOrMergeEntity(table AzureTable, entity TableEntity) error { log.DebugLog()
+func (c *TableServiceClient) InsertOrMergeEntity(table AzureTable, entity TableEntity) error { 
 	sc, err := c.execTable(table, entity, true, "MERGE")
 	if err != nil {
 		return err
@@ -243,7 +243,7 @@ func (c *TableServiceClient) InsertOrMergeEntity(table AzureTable, entity TableE
 	return checkRespCode(sc, []int{http.StatusNoContent})
 }
 
-func injectPartitionAndRowKeys(entity TableEntity, buf *bytes.Buffer) error { log.DebugLog()
+func injectPartitionAndRowKeys(entity TableEntity, buf *bytes.Buffer) error { 
 	if err := json.NewEncoder(buf).Encode(entity); err != nil {
 		return err
 	}
@@ -284,7 +284,7 @@ func injectPartitionAndRowKeys(entity TableEntity, buf *bytes.Buffer) error { lo
 	return nil
 }
 
-func deserializeEntity(retType reflect.Type, reader io.Reader) ([]TableEntity, error) { log.DebugLog()
+func deserializeEntity(retType reflect.Type, reader io.Reader) ([]TableEntity, error) { 
 	buf := new(bytes.Buffer)
 
 	var ret getTableEntriesResponse
@@ -344,7 +344,7 @@ func deserializeEntity(retType reflect.Type, reader io.Reader) ([]TableEntity, e
 	return tEntries, nil
 }
 
-func extractContinuationTokenFromHeaders(h http.Header) *ContinuationToken { log.DebugLog()
+func extractContinuationTokenFromHeaders(h http.Header) *ContinuationToken { 
 	ct := ContinuationToken{h.Get(continuationTokenPartitionKeyHeader), h.Get(continuationTokenRowHeader)}
 
 	if ct.NextPartitionKey != "" && ct.NextRowKey != "" {

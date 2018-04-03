@@ -45,7 +45,7 @@ import (
 
 var dumpEnc bool
 
-func init() { log.DebugLog()
+func init() {
 	flDump := flag.Bool("dump", false, "write encrypted test message to file")
 	flag.Parse()
 	dumpEnc = *flDump

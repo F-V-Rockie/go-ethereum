@@ -37,7 +37,7 @@ type mappings struct {
 	values []mapping
 }
 
-func parseMappings(s string) ([]mapping, error) { log.DebugLog()
+func parseMappings(s string) ([]mapping, error) { 
 	rd := strings.NewReader(s)
 	m := &mappings{
 		rd:  rd,
@@ -53,7 +53,7 @@ func parseMappings(s string) ([]mapping, error) { log.DebugLog()
 	return m.values, nil
 }
 
-func (m *mappings) parse() error { log.DebugLog()
+func (m *mappings) parse() error { 
 	next := parseGenCol
 	for {
 		c, err := m.rd.ReadByte()
@@ -90,7 +90,7 @@ func (m *mappings) parse() error { log.DebugLog()
 	}
 }
 
-func parseGenCol(m *mappings) (fn, error) { log.DebugLog()
+func parseGenCol(m *mappings) (fn, error) { 
 	n, err := m.dec.Decode()
 	if err != nil {
 		return nil, err
@@ -99,7 +99,7 @@ func parseGenCol(m *mappings) (fn, error) { log.DebugLog()
 	return parseSourcesInd, nil
 }
 
-func parseSourcesInd(m *mappings) (fn, error) { log.DebugLog()
+func parseSourcesInd(m *mappings) (fn, error) { 
 	n, err := m.dec.Decode()
 	if err != nil {
 		return nil, err
@@ -108,7 +108,7 @@ func parseSourcesInd(m *mappings) (fn, error) { log.DebugLog()
 	return parseSourceLine, nil
 }
 
-func parseSourceLine(m *mappings) (fn, error) { log.DebugLog()
+func parseSourceLine(m *mappings) (fn, error) { 
 	n, err := m.dec.Decode()
 	if err != nil {
 		return nil, err
@@ -117,7 +117,7 @@ func parseSourceLine(m *mappings) (fn, error) { log.DebugLog()
 	return parseSourceCol, nil
 }
 
-func parseSourceCol(m *mappings) (fn, error) { log.DebugLog()
+func parseSourceCol(m *mappings) (fn, error) { 
 	n, err := m.dec.Decode()
 	if err != nil {
 		return nil, err
@@ -126,7 +126,7 @@ func parseSourceCol(m *mappings) (fn, error) { log.DebugLog()
 	return parseNamesInd, nil
 }
 
-func parseNamesInd(m *mappings) (fn, error) { log.DebugLog()
+func parseNamesInd(m *mappings) (fn, error) { 
 	n, err := m.dec.Decode()
 	if err != nil {
 		return nil, err
@@ -136,7 +136,7 @@ func parseNamesInd(m *mappings) (fn, error) { log.DebugLog()
 	return parseGenCol, nil
 }
 
-func (m *mappings) pushValue() { log.DebugLog()
+func (m *mappings) pushValue() { 
 	if m.value.sourceLine == 1 && m.value.sourceCol == 0 {
 		return
 	}

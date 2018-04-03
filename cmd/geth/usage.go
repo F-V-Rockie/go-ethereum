@@ -27,6 +27,7 @@ import (
 	"github.com/ethereum/go-ethereum/cmd/utils"
 	"github.com/ethereum/go-ethereum/internal/debug"
 	"gopkg.in/urfave/cli.v1"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // AppHelpTemplate is the test template for the default, global app help topic.
@@ -231,9 +232,12 @@ var AppHelpFlagGroups = []flagGroup{
 // defined in AppHelpFlagGroups.
 type byCategory []flagGroup
 
-func (a byCategory) Len() int      { log.DebugLog() return len(a) }
-func (a byCategory) Swap(i, j int) { log.DebugLog() a[i], a[j] = a[j], a[i] }
-func (a byCategory) Less(i, j int) bool { log.DebugLog()
+func (a byCategory) Len() int      { log.DebugLog()
+									   return len(a) }
+func (a byCategory) Swap(i, j int) { log.DebugLog()
+									   a[i], a[j] = a[j], a[i] }
+func (a byCategory) Less(i, j int) bool {
+	log.DebugLog()
 	iCat, jCat := a[i].Name, a[j].Name
 	iIdx, jIdx := len(AppHelpFlagGroups), len(AppHelpFlagGroups) // ensure non categorized flags come last
 
@@ -249,7 +253,8 @@ func (a byCategory) Less(i, j int) bool { log.DebugLog()
 	return iIdx < jIdx
 }
 
-func flagCategory(flag cli.Flag) string { log.DebugLog()
+func flagCategory(flag cli.Flag) string {
+	log.DebugLog()
 	for _, category := range AppHelpFlagGroups {
 		for _, flg := range category.Flags {
 			if flg.GetName() == flag.GetName() {
@@ -260,7 +265,7 @@ func flagCategory(flag cli.Flag) string { log.DebugLog()
 	return "MISC"
 }
 
-func init() { log.DebugLog()
+func init() {
 	// Override the default app help template
 	cli.AppHelpTemplate = AppHelpTemplate
 

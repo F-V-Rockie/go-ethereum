@@ -9,20 +9,20 @@ type CommandCategory struct {
 	Commands Commands
 }
 
-func (c CommandCategories) Less(i, j int) bool { log.DebugLog()
+func (c CommandCategories) Less(i, j int) bool { 
 	return c[i].Name < c[j].Name
 }
 
-func (c CommandCategories) Len() int { log.DebugLog()
+func (c CommandCategories) Len() int { 
 	return len(c)
 }
 
-func (c CommandCategories) Swap(i, j int) { log.DebugLog()
+func (c CommandCategories) Swap(i, j int) { 
 	c[i], c[j] = c[j], c[i]
 }
 
 // AddCommand adds a command to a category.
-func (c CommandCategories) AddCommand(category string, command Command) CommandCategories { log.DebugLog()
+func (c CommandCategories) AddCommand(category string, command Command) CommandCategories { 
 	for _, commandCategory := range c {
 		if commandCategory.Name == category {
 			commandCategory.Commands = append(commandCategory.Commands, command)
@@ -33,7 +33,7 @@ func (c CommandCategories) AddCommand(category string, command Command) CommandC
 }
 
 // VisibleCommands returns a slice of the Commands with Hidden=false
-func (c *CommandCategory) VisibleCommands() []Command { log.DebugLog()
+func (c *CommandCategory) VisibleCommands() []Command { 
 	ret := []Command{}
 	for _, command := range c.Commands {
 		if !command.Hidden {

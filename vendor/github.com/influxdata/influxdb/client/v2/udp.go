@@ -26,7 +26,7 @@ type UDPConfig struct {
 
 // NewUDPClient returns a client interface for writing to an InfluxDB UDP
 // service from the given config.
-func NewUDPClient(conf UDPConfig) (Client, error) { log.DebugLog()
+func NewUDPClient(conf UDPConfig) (Client, error) { 
 	var udpAddr *net.UDPAddr
 	udpAddr, err := net.ResolveUDPAddr("udp", conf.Addr)
 	if err != nil {
@@ -50,7 +50,7 @@ func NewUDPClient(conf UDPConfig) (Client, error) { log.DebugLog()
 }
 
 // Close releases the udpclient's resources.
-func (uc *udpclient) Close() error { log.DebugLog()
+func (uc *udpclient) Close() error { 
 	return uc.conn.Close()
 }
 
@@ -59,7 +59,7 @@ type udpclient struct {
 	payloadSize int
 }
 
-func (uc *udpclient) Write(bp BatchPoints) error { log.DebugLog()
+func (uc *udpclient) Write(bp BatchPoints) error { 
 	var b = make([]byte, 0, uc.payloadSize) // initial buffer size, it will grow as needed
 	var d, _ = time.ParseDuration("1" + bp.Precision())
 
@@ -103,10 +103,10 @@ func (uc *udpclient) Write(bp BatchPoints) error { log.DebugLog()
 	return delayedError
 }
 
-func (uc *udpclient) Query(q Query) (*Response, error) { log.DebugLog()
+func (uc *udpclient) Query(q Query) (*Response, error) { 
 	return nil, fmt.Errorf("Querying via UDP is not supported")
 }
 
-func (uc *udpclient) Ping(timeout time.Duration) (time.Duration, string, error) { log.DebugLog()
+func (uc *udpclient) Ping(timeout time.Duration) (time.Duration, string, error) { 
 	return 0, "", nil
 }

@@ -27,7 +27,7 @@ const (
 	ti_mouse_leave   = "\x1b[?1006l\x1b[?1015l\x1b[?1002l\x1b[?1000l"
 )
 
-func load_terminfo() ([]byte, error) { log.DebugLog()
+func load_terminfo() ([]byte, error) { 
 	var data []byte
 	var err error
 
@@ -73,7 +73,7 @@ func load_terminfo() ([]byte, error) { log.DebugLog()
 	return ti_try_path("/usr/share/terminfo")
 }
 
-func ti_try_path(path string) (data []byte, err error) { log.DebugLog()
+func ti_try_path(path string) (data []byte, err error) { 
 	// load_terminfo already made sure it is set
 	term := os.Getenv("TERM")
 
@@ -90,7 +90,7 @@ func ti_try_path(path string) (data []byte, err error) { log.DebugLog()
 	return
 }
 
-func setup_term_builtin() error { log.DebugLog()
+func setup_term_builtin() error { 
 	name := os.Getenv("TERM")
 	if name == "" {
 		return errors.New("termbox: TERM environment variable not set")
@@ -131,7 +131,7 @@ func setup_term_builtin() error { log.DebugLog()
 	return errors.New("termbox: unsupported terminal")
 }
 
-func setup_term() (err error) { log.DebugLog()
+func setup_term() (err error) { 
 	var data []byte
 	var header [6]int16
 	var str_offset, table_offset int16
@@ -179,7 +179,7 @@ func setup_term() (err error) { log.DebugLog()
 	return nil
 }
 
-func ti_read_string(rd *bytes.Reader, str_off, table int16) (string, error) { log.DebugLog()
+func ti_read_string(rd *bytes.Reader, str_off, table int16) (string, error) { 
 	var off int16
 
 	_, err := rd.Seek(int64(str_off), 0)

@@ -28,7 +28,7 @@ type cache struct {
 // Augment processes source files to improve calls to be more descriptive.
 //
 // It modifies goroutines in place.
-func Augment(goroutines []Goroutine) { log.DebugLog()
+func Augment(goroutines []Goroutine) { 
 	c := &cache{}
 	for i := range goroutines {
 		c.augmentGoroutine(&goroutines[i])
@@ -39,7 +39,7 @@ func Augment(goroutines []Goroutine) { log.DebugLog()
 // descriptive.
 //
 // It modifies the routine.
-func (c *cache) augmentGoroutine(goroutine *Goroutine) { log.DebugLog()
+func (c *cache) augmentGoroutine(goroutine *Goroutine) { 
 	if c.files == nil {
 		c.files = map[string][]byte{}
 	}
@@ -64,7 +64,7 @@ func (c *cache) augmentGoroutine(goroutine *Goroutine) { log.DebugLog()
 // Private stuff.
 
 // load loads a source file and parses the AST tree. Failures are ignored.
-func (c *cache) load(fileName string) { log.DebugLog()
+func (c *cache) load(fileName string) { 
 	if _, ok := c.parsed[fileName]; ok {
 		return
 	}
@@ -100,7 +100,7 @@ func (c *cache) load(fileName string) { log.DebugLog()
 	c.parsed[fileName] = &parsedFile{offsets, parsed}
 }
 
-func (c *cache) getFuncAST(call *Call) *ast.FuncDecl { log.DebugLog()
+func (c *cache) getFuncAST(call *Call) *ast.FuncDecl { 
 	if p := c.parsed[call.SourcePath]; p != nil {
 		return p.getFuncAST(call.Func.Name(), call.Line)
 	}
@@ -114,7 +114,7 @@ type parsedFile struct {
 
 // getFuncAST gets the callee site function AST representation for the code
 // inside the function f at line l.
-func (p *parsedFile) getFuncAST(f string, l int) (d *ast.FuncDecl) { log.DebugLog()
+func (p *parsedFile) getFuncAST(f string, l int) (d *ast.FuncDecl) { 
 	// Walk the AST to find the lineToByteOffset that fits the line number.
 	var lastFunc *ast.FuncDecl
 	var found ast.Node
@@ -154,7 +154,7 @@ func (p *parsedFile) getFuncAST(f string, l int) (d *ast.FuncDecl) { log.DebugLo
 	return
 }
 
-func name(n ast.Node) string { log.DebugLog()
+func name(n ast.Node) string { 
 	if _, ok := n.(*ast.InterfaceType); ok {
 		return "interface{}"
 	}
@@ -172,7 +172,7 @@ func name(n ast.Node) string { log.DebugLog()
 }
 
 // fieldToType returns the type name and whether if it's an ellipsis.
-func fieldToType(f *ast.Field) (string, bool) { log.DebugLog()
+func fieldToType(f *ast.Field) (string, bool) { 
 	switch arg := f.Type.(type) {
 	case *ast.ArrayType:
 		return "[]" + name(arg.Elt), false
@@ -196,7 +196,7 @@ func fieldToType(f *ast.Field) (string, bool) { log.DebugLog()
 }
 
 // extractArgumentsType returns the name of the type of each input argument.
-func extractArgumentsType(f *ast.FuncDecl) ([]string, bool) { log.DebugLog()
+func extractArgumentsType(f *ast.FuncDecl) ([]string, bool) { 
 	var fields []*ast.Field
 	if f.Recv != nil {
 		if len(f.Recv.List) != 1 {
@@ -226,7 +226,7 @@ func extractArgumentsType(f *ast.FuncDecl) ([]string, bool) { log.DebugLog()
 }
 
 // processCall walks the function and populate call accordingly.
-func processCall(call *Call, f *ast.FuncDecl) { log.DebugLog()
+func processCall(call *Call, f *ast.FuncDecl) { 
 	values := make([]uint64, len(call.Args.Values))
 	for i := range call.Args.Values {
 		values[i] = call.Args.Values[i].Value

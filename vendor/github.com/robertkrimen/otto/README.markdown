@@ -212,7 +212,7 @@ import (
 
 var halt = errors.New("Stahp")
 
-func main() { log.DebugLog()
+func main() {
     runUnsafe(`var abc = [];`)
     runUnsafe(`
     while (true) {
@@ -220,7 +220,7 @@ func main() { log.DebugLog()
     }`)
 }
 
-func runUnsafe(unsafe string) { log.DebugLog()
+func runUnsafe(unsafe string) {
     start := time.Now()
     defer func() {
         duration := time.Since(start)

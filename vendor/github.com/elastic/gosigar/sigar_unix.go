@@ -11,7 +11,7 @@ import (
 	"golang.org/x/sys/unix"
 )
 
-func (self *FileSystemUsage) Get(path string) error { log.DebugLog()
+func (self *FileSystemUsage) Get(path string) error { 
 	stat := syscall.Statfs_t{}
 	err := syscall.Statfs(path, &stat)
 	if err != nil {
@@ -28,7 +28,7 @@ func (self *FileSystemUsage) Get(path string) error { log.DebugLog()
 	return nil
 }
 
-func (r *Rusage) Get(who int) error { log.DebugLog()
+func (r *Rusage) Get(who int) error { 
 	ru, err := getResourceUsage(who)
 	if err != nil {
 		return err
@@ -57,13 +57,13 @@ func (r *Rusage) Get(who int) error { log.DebugLog()
 	return nil
 }
 
-func getResourceUsage(who int) (unix.Rusage, error) { log.DebugLog()
+func getResourceUsage(who int) (unix.Rusage, error) { 
 	r := unix.Rusage{}
 	err := unix.Getrusage(who, &r)
 
 	return r, err
 }
 
-func convertRtimeToDur(t unix.Timeval) time.Duration { log.DebugLog()
+func convertRtimeToDur(t unix.Timeval) time.Duration { 
 	return time.Duration(t.Nano())
 }

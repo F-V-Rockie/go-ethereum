@@ -8,7 +8,7 @@ var (
 )
 
 // UnescapeString returns unescaped version of in.
-func UnescapeString(in string) string { log.DebugLog()
+func UnescapeString(in string) string { 
 	if strings.IndexByte(in, '\\') == -1 {
 		return in
 	}
@@ -16,6 +16,6 @@ func UnescapeString(in string) string { log.DebugLog()
 }
 
 // String returns the escaped version of in.
-func String(in string) string { log.DebugLog()
+func String(in string) string { 
 	return escaper.Replace(in)
 }

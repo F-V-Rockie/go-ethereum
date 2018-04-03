@@ -9,7 +9,7 @@ Install:
 ## Quickstart
 
 ```go
-func ExampleParse() { log.DebugLog()
+func ExampleParse() {
 	mapURL := "http://code.jquery.com/jquery-2.0.3.min.map"
 	resp, err := http.Get(mapURL)
 	if err != nil {

@@ -9,7 +9,7 @@ import (
 )
 
 // randomBits completely fills slice b with random data.
-func randomBits(b []byte) { log.DebugLog()
+func randomBits(b []byte) { 
 	if _, err := io.ReadFull(rander, b); err != nil {
 		panic(err.Error()) // rand should never fail
 	}
@@ -36,7 +36,7 @@ var xvalues = [256]byte{
 }
 
 // xtob converts the the first two hex bytes of x into a byte.
-func xtob(x string) (byte, bool) { log.DebugLog()
+func xtob(x string) (byte, bool) { 
 	b1 := xvalues[x[0]]
 	b2 := xvalues[x[1]]
 	return (b1 << 4) | b2, b1 != 255 && b2 != 255

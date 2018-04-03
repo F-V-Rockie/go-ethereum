@@ -8,7 +8,7 @@ import (
 	"unsafe"
 )
 
-func getIDsOfName(disp *IDispatch, names []string) (dispid []int32, err error) { log.DebugLog()
+func getIDsOfName(disp *IDispatch, names []string) (dispid []int32, err error) { 
 	wnames := make([]*uint16, len(names))
 	for i := 0; i < len(names); i++ {
 		wnames[i] = syscall.StringToUTF16Ptr(names[i])
@@ -30,7 +30,7 @@ func getIDsOfName(disp *IDispatch, names []string) (dispid []int32, err error) {
 	return
 }
 
-func getTypeInfoCount(disp *IDispatch) (c uint32, err error) { log.DebugLog()
+func getTypeInfoCount(disp *IDispatch) (c uint32, err error) { 
 	hr, _, _ := syscall.Syscall(
 		disp.VTable().GetTypeInfoCount,
 		2,
@@ -43,7 +43,7 @@ func getTypeInfoCount(disp *IDispatch) (c uint32, err error) { log.DebugLog()
 	return
 }
 
-func getTypeInfo(disp *IDispatch) (tinfo *ITypeInfo, err error) { log.DebugLog()
+func getTypeInfo(disp *IDispatch) (tinfo *ITypeInfo, err error) { 
 	hr, _, _ := syscall.Syscall(
 		disp.VTable().GetTypeInfo,
 		3,
@@ -56,7 +56,7 @@ func getTypeInfo(disp *IDispatch) (tinfo *ITypeInfo, err error) { log.DebugLog()
 	return
 }
 
-func invoke(disp *IDispatch, dispid int32, dispatch int16, params ...interface{}) (result *VARIANT, err error) { log.DebugLog()
+func invoke(disp *IDispatch, dispid int32, dispatch int16, params ...interface{}) (result *VARIANT, err error) { 
 	var dispparams DISPPARAMS
 
 	if dispatch&DISPATCH_PROPERTYPUT != 0 {

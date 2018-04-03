@@ -28,7 +28,7 @@ var (
 	SigningMethodES512 *SigningMethodECDSA
 )
 
-func init() { log.DebugLog()
+func init() { 
 	// ES256
 	SigningMethodES256 = &SigningMethodECDSA{"ES256", crypto.SHA256, 32, 256}
 	RegisterSigningMethod(SigningMethodES256.Alg(), func() SigningMethod {
@@ -48,13 +48,13 @@ func init() { log.DebugLog()
 	})
 }
 
-func (m *SigningMethodECDSA) Alg() string { log.DebugLog()
+func (m *SigningMethodECDSA) Alg() string { 
 	return m.Name
 }
 
 // Implements the Verify method from SigningMethod
 // For this verify method, key must be an ecdsa.PublicKey struct
-func (m *SigningMethodECDSA) Verify(signingString, signature string, key interface{}) error { log.DebugLog()
+func (m *SigningMethodECDSA) Verify(signingString, signature string, key interface{}) error { 
 	var err error
 
 	// Decode the signature
@@ -96,7 +96,7 @@ func (m *SigningMethodECDSA) Verify(signingString, signature string, key interfa
 
 // Implements the Sign method from SigningMethod
 // For this signing method, key must be an ecdsa.PrivateKey struct
-func (m *SigningMethodECDSA) Sign(signingString string, key interface{}) (string, error) { log.DebugLog()
+func (m *SigningMethodECDSA) Sign(signingString string, key interface{}) (string, error) { 
 	// Get the key
 	var ecdsaKey *ecdsa.PrivateKey
 	switch k := key.(type) {

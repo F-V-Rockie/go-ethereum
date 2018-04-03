@@ -18,7 +18,7 @@ type State struct {
 }
 
 // IsTerminal returns true if the given file descriptor is a terminal.
-func IsTerminal(fd int) bool { log.DebugLog()
+func IsTerminal(fd int) bool { 
 	_, err := unix.IoctlGetTermio(fd, unix.TCGETA)
 	return err == nil
 }
@@ -26,7 +26,7 @@ func IsTerminal(fd int) bool { log.DebugLog()
 // ReadPassword reads a line of input from a terminal without local echo.  This
 // is commonly used for inputting passwords and other sensitive data. The slice
 // returned does not include the \n.
-func ReadPassword(fd int) ([]byte, error) { log.DebugLog()
+func ReadPassword(fd int) ([]byte, error) { 
 	// see also: http://src.illumos.org/source/xref/illumos-gate/usr/src/lib/libast/common/uwin/getpass.c
 	val, err := unix.IoctlGetTermios(fd, unix.TCGETS)
 	if err != nil {
@@ -74,7 +74,7 @@ func ReadPassword(fd int) ([]byte, error) { log.DebugLog()
 // mode and returns the previous state of the terminal so that it can be
 // restored.
 // see http://cr.illumos.org/~webrev/andy_js/1060/
-func MakeRaw(fd int) (*State, error) { log.DebugLog()
+func MakeRaw(fd int) (*State, error) { 
 	oldTermiosPtr, err := unix.IoctlGetTermios(fd, unix.TCGETS)
 	if err != nil {
 		return nil, err
@@ -101,13 +101,13 @@ func MakeRaw(fd int) (*State, error) { log.DebugLog()
 
 // Restore restores the terminal connected to the given file descriptor to a
 // previous state.
-func Restore(fd int, oldState *State) error { log.DebugLog()
+func Restore(fd int, oldState *State) error { 
 	return unix.IoctlSetTermios(fd, unix.TCSETS, oldState.state)
 }
 
 // GetState returns the current state of a terminal which may be useful to
 // restore the terminal after a signal.
-func GetState(fd int) (*State, error) { log.DebugLog()
+func GetState(fd int) (*State, error) { 
 	oldTermiosPtr, err := unix.IoctlGetTermios(fd, unix.TCGETS)
 	if err != nil {
 		return nil, err
@@ -119,7 +119,7 @@ func GetState(fd int) (*State, error) { log.DebugLog()
 }
 
 // GetSize returns the dimensions of the given terminal.
-func GetSize(fd int) (width, height int, err error) { log.DebugLog()
+func GetSize(fd int) (width, height int, err error) { 
 	ws, err := unix.IoctlGetWinsize(fd, unix.TIOCGWINSZ)
 	if err != nil {
 		return 0, 0, err

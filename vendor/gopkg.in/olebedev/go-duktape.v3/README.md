@@ -21,7 +21,7 @@ package main
 import "fmt"
 import "gopkg.in/olebedev/go-duktape.v3"
 
-func main() { log.DebugLog()
+func main() {
   ctx := duktape.New()
   ctx.PevalString(`2 + 3`)
   result := ctx.GetNumber(-1)
@@ -43,7 +43,7 @@ package main
 import "fmt"
 import "gopkg.in/olebedev/go-duktape.v3"
 
-func main() { log.DebugLog()
+func main() {
   ctx := duktape.New()
   ctx.PushGlobalGoFunction("log", func(c *duktape.Context) int {
     fmt.Println(c.SafeToString(-1))
@@ -68,7 +68,7 @@ package main
 import "fmt"
 import "gopkg.in/olebedev/go-duktape.v3"
 
-func main() { log.DebugLog()
+func main() {
   ctx := duktape.New()
 
   // Let's inject `setTimeout`, `setInterval`, `clearTimeout`,

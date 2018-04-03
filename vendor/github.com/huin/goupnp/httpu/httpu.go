@@ -21,7 +21,7 @@ type HTTPUClient struct {
 
 // NewHTTPUClient creates a new HTTPUClient, opening up a new UDP socket for the
 // purpose.
-func NewHTTPUClient() (*HTTPUClient, error) { log.DebugLog()
+func NewHTTPUClient() (*HTTPUClient, error) { 
 	conn, err := net.ListenPacket("udp", ":0")
 	if err != nil {
 		return nil, err
@@ -31,7 +31,7 @@ func NewHTTPUClient() (*HTTPUClient, error) { log.DebugLog()
 
 // NewHTTPUClientAddr creates a new HTTPUClient which will broadcast packets
 // from the specified address, opening up a new UDP socket for the purpose
-func NewHTTPUClientAddr(addr string) (*HTTPUClient, error) { log.DebugLog()
+func NewHTTPUClientAddr(addr string) (*HTTPUClient, error) { 
 	ip := net.ParseIP(addr)
 	if ip == nil {
 		return nil, errors.New("Invalid listening address")
@@ -45,7 +45,7 @@ func NewHTTPUClientAddr(addr string) (*HTTPUClient, error) { log.DebugLog()
 
 // Close shuts down the client. The client will no longer be useful following
 // this.
-func (httpu *HTTPUClient) Close() error { log.DebugLog()
+func (httpu *HTTPUClient) Close() error { 
 	httpu.connLock.Lock()
 	defer httpu.connLock.Unlock()
 	return httpu.conn.Close()
@@ -58,7 +58,7 @@ func (httpu *HTTPUClient) Close() error { log.DebugLog()
 //
 // Note that at present only one concurrent connection will happen per
 // HTTPUClient.
-func (httpu *HTTPUClient) Do(req *http.Request, timeout time.Duration, numSends int) ([]*http.Response, error) { log.DebugLog()
+func (httpu *HTTPUClient) Do(req *http.Request, timeout time.Duration, numSends int) ([]*http.Response, error) { 
 	httpu.connLock.Lock()
 	defer httpu.connLock.Unlock()
 

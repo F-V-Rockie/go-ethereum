@@ -13,7 +13,7 @@ import (
 // 1. Creating a new struct every time
 // 2. Creating an addressable? struct in the constructor
 
-func (runtime *_runtime) newGoStructObject(value reflect.Value) *_object { log.DebugLog()
+func (runtime *_runtime) newGoStructObject(value reflect.Value) *_object { 
 	self := runtime.newObject()
 	self.class = "Object" // TODO Should this be something else?
 	self.objectClass = _classGoStruct
@@ -25,7 +25,7 @@ type _goStructObject struct {
 	value reflect.Value
 }
 
-func _newGoStructObject(value reflect.Value) *_goStructObject { log.DebugLog()
+func _newGoStructObject(value reflect.Value) *_goStructObject { 
 	if reflect.Indirect(value).Kind() != reflect.Struct {
 		dbgf("%/panic//%@: %v != reflect.Struct", value.Kind())
 	}
@@ -35,7 +35,7 @@ func _newGoStructObject(value reflect.Value) *_goStructObject { log.DebugLog()
 	return self
 }
 
-func (self _goStructObject) getValue(name string) reflect.Value { log.DebugLog()
+func (self _goStructObject) getValue(name string) reflect.Value { 
 	if validGoStructName(name) {
 		// Do not reveal hidden or unexported fields
 		if field := reflect.Indirect(self.value).FieldByName(name); (field != reflect.Value{}) {
@@ -50,15 +50,15 @@ func (self _goStructObject) getValue(name string) reflect.Value { log.DebugLog()
 	return reflect.Value{}
 }
 
-func (self _goStructObject) field(name string) (reflect.StructField, bool) { log.DebugLog()
+func (self _goStructObject) field(name string) (reflect.StructField, bool) { 
 	return reflect.Indirect(self.value).Type().FieldByName(name)
 }
 
-func (self _goStructObject) method(name string) (reflect.Method, bool) { log.DebugLog()
+func (self _goStructObject) method(name string) (reflect.Method, bool) { 
 	return reflect.Indirect(self.value).Type().MethodByName(name)
 }
 
-func (self _goStructObject) setValue(name string, value Value) bool { log.DebugLog()
+func (self _goStructObject) setValue(name string, value Value) bool { 
 	field, exists := self.field(name)
 	if !exists {
 		return false
@@ -73,7 +73,7 @@ func (self _goStructObject) setValue(name string, value Value) bool { log.DebugL
 	return true
 }
 
-func goStructGetOwnProperty(self *_object, name string) *_property { log.DebugLog()
+func goStructGetOwnProperty(self *_object, name string) *_property { 
 	object := self.value.(*_goStructObject)
 	value := object.getValue(name)
 	if value.IsValid() {
@@ -83,14 +83,14 @@ func goStructGetOwnProperty(self *_object, name string) *_property { log.DebugLo
 	return objectGetOwnProperty(self, name)
 }
 
-func validGoStructName(name string) bool { log.DebugLog()
+func validGoStructName(name string) bool { 
 	if name == "" {
 		return false
 	}
 	return 'A' <= name[0] && name[0] <= 'Z' // TODO What about Unicode?
 }
 
-func goStructEnumerate(self *_object, all bool, each func(string) bool) { log.DebugLog()
+func goStructEnumerate(self *_object, all bool, each func(string) bool) { 
 	object := self.value.(*_goStructObject)
 
 	// Enumerate fields
@@ -116,7 +116,7 @@ func goStructEnumerate(self *_object, all bool, each func(string) bool) { log.De
 	objectEnumerate(self, all, each)
 }
 
-func goStructCanPut(self *_object, name string) bool { log.DebugLog()
+func goStructCanPut(self *_object, name string) bool { 
 	object := self.value.(*_goStructObject)
 	value := object.getValue(name)
 	if value.IsValid() {
@@ -126,7 +126,7 @@ func goStructCanPut(self *_object, name string) bool { log.DebugLog()
 	return objectCanPut(self, name)
 }
 
-func goStructPut(self *_object, name string, value Value, throw bool) { log.DebugLog()
+func goStructPut(self *_object, name string, value Value, throw bool) { 
 	object := self.value.(*_goStructObject)
 	if object.setValue(name, value) {
 		return
@@ -135,7 +135,7 @@ func goStructPut(self *_object, name string, value Value, throw bool) { log.Debu
 	objectPut(self, name, value, throw)
 }
 
-func goStructMarshalJSON(self *_object) json.Marshaler { log.DebugLog()
+func goStructMarshalJSON(self *_object) json.Marshaler { 
 	object := self.value.(*_goStructObject)
 	goValue := reflect.Indirect(object.value).Interface()
 	switch marshaler := goValue.(type) {

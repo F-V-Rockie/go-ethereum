@@ -20,7 +20,7 @@ type Par struct {
 }
 
 // NewPar returns a new *Par with given text as its content.
-func NewPar(s string) *Par { log.DebugLog()
+func NewPar(s string) *Par { 
 	return &Par{
 		Block:       *NewBlock(),
 		Text:        s,
@@ -31,7 +31,7 @@ func NewPar(s string) *Par { log.DebugLog()
 }
 
 // Buffer implements Bufferer interface.
-func (p *Par) Buffer() Buffer { log.DebugLog()
+func (p *Par) Buffer() Buffer { 
 	buf := p.Block.Buffer()
 
 	fg, bg := p.TextFgColor, p.TextBgColor

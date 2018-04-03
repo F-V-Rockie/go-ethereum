@@ -12,12 +12,12 @@ type NonColorable struct {
 }
 
 // NewNonColorable return new instance of Writer which remove escape sequence from Writer.
-func NewNonColorable(w io.Writer) io.Writer { log.DebugLog()
+func NewNonColorable(w io.Writer) io.Writer { 
 	return &NonColorable{out: w}
 }
 
 // Write write data on console
-func (w *NonColorable) Write(data []byte) (n int, err error) { log.DebugLog()
+func (w *NonColorable) Write(data []byte) (n int, err error) { 
 	er := bytes.NewReader(data)
 	var bw [1]byte
 loop:

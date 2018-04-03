@@ -3,12 +3,12 @@ package ole
 import "unsafe"
 
 // NewVariant returns new variant based on type and value.
-func NewVariant(vt VT, val int64) VARIANT { log.DebugLog()
+func NewVariant(vt VT, val int64) VARIANT { 
 	return VARIANT{VT: vt, Val: val}
 }
 
 // ToIUnknown converts Variant to Unknown object.
-func (v *VARIANT) ToIUnknown() *IUnknown { log.DebugLog()
+func (v *VARIANT) ToIUnknown() *IUnknown { 
 	if v.VT != VT_UNKNOWN {
 		return nil
 	}
@@ -16,7 +16,7 @@ func (v *VARIANT) ToIUnknown() *IUnknown { log.DebugLog()
 }
 
 // ToIDispatch converts variant to dispatch object.
-func (v *VARIANT) ToIDispatch() *IDispatch { log.DebugLog()
+func (v *VARIANT) ToIDispatch() *IDispatch { 
 	if v.VT != VT_DISPATCH {
 		return nil
 	}
@@ -24,7 +24,7 @@ func (v *VARIANT) ToIDispatch() *IDispatch { log.DebugLog()
 }
 
 // ToArray converts variant to SafeArray helper.
-func (v *VARIANT) ToArray() *SafeArrayConversion { log.DebugLog()
+func (v *VARIANT) ToArray() *SafeArrayConversion { 
 	if v.VT != VT_SAFEARRAY {
 		if v.VT&VT_ARRAY == 0 {
 			return nil
@@ -35,7 +35,7 @@ func (v *VARIANT) ToArray() *SafeArrayConversion { log.DebugLog()
 }
 
 // ToString converts variant to Go string.
-func (v *VARIANT) ToString() string { log.DebugLog()
+func (v *VARIANT) ToString() string { 
 	if v.VT != VT_BSTR {
 		return ""
 	}
@@ -43,7 +43,7 @@ func (v *VARIANT) ToString() string { log.DebugLog()
 }
 
 // Clear the memory of variant object.
-func (v *VARIANT) Clear() error { log.DebugLog()
+func (v *VARIANT) Clear() error { 
 	return VariantClear(v)
 }
 
@@ -54,7 +54,7 @@ func (v *VARIANT) Clear() error { log.DebugLog()
 // and will be returned as strings.
 //
 // Needs to be further converted, because this returns an interface{}.
-func (v *VARIANT) Value() interface{} { log.DebugLog()
+func (v *VARIANT) Value() interface{} { 
 	switch v.VT {
 	case VT_I1:
 		return int8(v.Val)

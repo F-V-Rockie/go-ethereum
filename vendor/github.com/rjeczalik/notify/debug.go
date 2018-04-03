@@ -17,7 +17,7 @@ var dbgprintf func(string, ...interface{})
 
 var dbgcallstack func(max int) []string
 
-func init() { log.DebugLog()
+func init() { 
 	if _, ok := os.LookupEnv("NOTIFY_DEBUG"); ok || debugTag {
 		log.SetOutput(os.Stdout)
 		log.SetFlags(log.Ldate | log.Ltime | log.Lmicroseconds)

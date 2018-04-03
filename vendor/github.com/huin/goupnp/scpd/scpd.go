@@ -9,7 +9,7 @@ const (
 	SCPDXMLNamespace = "urn:schemas-upnp-org:service-1-0"
 )
 
-func cleanWhitespace(s *string) { log.DebugLog()
+func cleanWhitespace(s *string) { 
 	*s = strings.TrimSpace(*s)
 }
 
@@ -27,7 +27,7 @@ type SCPD struct {
 // Clean attempts to remove stray whitespace etc. in the structure. It seems
 // unfortunately common for stray whitespace to be present in SCPD documents,
 // this method attempts to make it easy to clean them out.
-func (scpd *SCPD) Clean() { log.DebugLog()
+func (scpd *SCPD) Clean() { 
 	cleanWhitespace(&scpd.ConfigId)
 	for i := range scpd.Actions {
 		scpd.Actions[i].clean()
@@ -37,7 +37,7 @@ func (scpd *SCPD) Clean() { log.DebugLog()
 	}
 }
 
-func (scpd *SCPD) GetStateVariable(variable string) *StateVariable { log.DebugLog()
+func (scpd *SCPD) GetStateVariable(variable string) *StateVariable { 
 	for i := range scpd.StateVariables {
 		v := &scpd.StateVariables[i]
 		if v.Name == variable {
@@ -47,7 +47,7 @@ func (scpd *SCPD) GetStateVariable(variable string) *StateVariable { log.DebugLo
 	return nil
 }
 
-func (scpd *SCPD) GetAction(action string) *Action { log.DebugLog()
+func (scpd *SCPD) GetAction(action string) *Action { 
 	for i := range scpd.Actions {
 		a := &scpd.Actions[i]
 		if a.Name == action {
@@ -69,14 +69,14 @@ type Action struct {
 	Arguments []Argument `xml:"argumentList>argument"`
 }
 
-func (action *Action) clean() { log.DebugLog()
+func (action *Action) clean() { 
 	cleanWhitespace(&action.Name)
 	for i := range action.Arguments {
 		action.Arguments[i].clean()
 	}
 }
 
-func (action *Action) InputArguments() []*Argument { log.DebugLog()
+func (action *Action) InputArguments() []*Argument { 
 	var result []*Argument
 	for i := range action.Arguments {
 		arg := &action.Arguments[i]
@@ -87,7 +87,7 @@ func (action *Action) InputArguments() []*Argument { log.DebugLog()
 	return result
 }
 
-func (action *Action) OutputArguments() []*Argument { log.DebugLog()
+func (action *Action) OutputArguments() []*Argument { 
 	var result []*Argument
 	for i := range action.Arguments {
 		arg := &action.Arguments[i]
@@ -105,18 +105,18 @@ type Argument struct {
 	Retval               string `xml:"retval"`               // ?
 }
 
-func (arg *Argument) clean() { log.DebugLog()
+func (arg *Argument) clean() { 
 	cleanWhitespace(&arg.Name)
 	cleanWhitespace(&arg.Direction)
 	cleanWhitespace(&arg.RelatedStateVariable)
 	cleanWhitespace(&arg.Retval)
 }
 
-func (arg *Argument) IsInput() bool { log.DebugLog()
+func (arg *Argument) IsInput() bool { 
 	return arg.Direction == "in"
 }
 
-func (arg *Argument) IsOutput() bool { log.DebugLog()
+func (arg *Argument) IsOutput() bool { 
 	return arg.Direction == "out"
 }
 
@@ -130,7 +130,7 @@ type StateVariable struct {
 	AllowedValues     []string           `xml:"allowedValueList>allowedValue"`
 }
 
-func (v *StateVariable) clean() { log.DebugLog()
+func (v *StateVariable) clean() { 
 	cleanWhitespace(&v.Name)
 	cleanWhitespace(&v.SendEvents)
 	cleanWhitespace(&v.Multicast)
@@ -150,7 +150,7 @@ type AllowedValueRange struct {
 	Step    string `xml:"step"`
 }
 
-func (r *AllowedValueRange) clean() { log.DebugLog()
+func (r *AllowedValueRange) clean() { 
 	cleanWhitespace(&r.Minimum)
 	cleanWhitespace(&r.Maximum)
 	cleanWhitespace(&r.Step)
@@ -161,7 +161,7 @@ type DataType struct {
 	Type string `xml:"type,attr"`
 }
 
-func (dt *DataType) clean() { log.DebugLog()
+func (dt *DataType) clean() { 
 	cleanWhitespace(&dt.Name)
 	cleanWhitespace(&dt.Type)
 }

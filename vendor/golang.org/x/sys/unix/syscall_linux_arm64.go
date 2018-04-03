@@ -22,7 +22,7 @@ package unix
 //sys	Pwrite(fd int, p []byte, offset int64) (n int, err error) = SYS_PWRITE64
 //sys	Seek(fd int, offset int64, whence int) (off int64, err error) = SYS_LSEEK
 
-func Select(nfd int, r *FdSet, w *FdSet, e *FdSet, timeout *Timeval) (n int, err error) { log.DebugLog()
+func Select(nfd int, r *FdSet, w *FdSet, e *FdSet, timeout *Timeval) (n int, err error) { 
 	ts := Timespec{Sec: timeout.Sec, Nsec: timeout.Usec * 1000}
 	return Pselect(nfd, r, w, e, &ts, nil)
 }
@@ -38,15 +38,15 @@ func Select(nfd int, r *FdSet, w *FdSet, e *FdSet, timeout *Timeval) (n int, err
 //sys	Shutdown(fd int, how int) (err error)
 //sys	Splice(rfd int, roff *int64, wfd int, woff *int64, len int, flags int) (n int64, err error)
 
-func Stat(path string, stat *Stat_t) (err error) { log.DebugLog()
+func Stat(path string, stat *Stat_t) (err error) { 
 	return Fstatat(AT_FDCWD, path, stat, 0)
 }
 
-func Lchown(path string, uid int, gid int) (err error) { log.DebugLog()
+func Lchown(path string, uid int, gid int) (err error) { 
 	return Fchownat(AT_FDCWD, path, uid, gid, AT_SYMLINK_NOFOLLOW)
 }
 
-func Lstat(path string, stat *Stat_t) (err error) { log.DebugLog()
+func Lstat(path string, stat *Stat_t) (err error) { 
 	return Fstatat(AT_FDCWD, path, stat, AT_SYMLINK_NOFOLLOW)
 }
 
@@ -73,15 +73,15 @@ func Lstat(path string, stat *Stat_t) (err error) { log.DebugLog()
 
 //sysnb	Gettimeofday(tv *Timeval) (err error)
 
-func setTimespec(sec, nsec int64) Timespec { log.DebugLog()
+func setTimespec(sec, nsec int64) Timespec { 
 	return Timespec{Sec: sec, Nsec: nsec}
 }
 
-func setTimeval(sec, usec int64) Timeval { log.DebugLog()
+func setTimeval(sec, usec int64) Timeval { 
 	return Timeval{Sec: sec, Usec: usec}
 }
 
-func Time(t *Time_t) (Time_t, error) { log.DebugLog()
+func Time(t *Time_t) (Time_t, error) { 
 	var tv Timeval
 	err := Gettimeofday(&tv)
 	if err != nil {
@@ -93,7 +93,7 @@ func Time(t *Time_t) (Time_t, error) { log.DebugLog()
 	return Time_t(tv.Sec), nil
 }
 
-func Utime(path string, buf *Utimbuf) error { log.DebugLog()
+func Utime(path string, buf *Utimbuf) error { 
 	tv := []Timeval{
 		{Sec: buf.Actime},
 		{Sec: buf.Modtime},
@@ -101,7 +101,7 @@ func Utime(path string, buf *Utimbuf) error { log.DebugLog()
 	return Utimes(path, tv)
 }
 
-func Pipe(p []int) (err error) { log.DebugLog()
+func Pipe(p []int) (err error) { 
 	if len(p) != 2 {
 		return EINVAL
 	}
@@ -114,7 +114,7 @@ func Pipe(p []int) (err error) { log.DebugLog()
 
 //sysnb pipe2(p *[2]_C_int, flags int) (err error)
 
-func Pipe2(p []int, flags int) (err error) { log.DebugLog()
+func Pipe2(p []int, flags int) (err error) { 
 	if len(p) != 2 {
 		return EINVAL
 	}
@@ -125,31 +125,31 @@ func Pipe2(p []int, flags int) (err error) { log.DebugLog()
 	return
 }
 
-func (r *PtraceRegs) PC() uint64 { log.DebugLog() return r.Pc }
+func (r *PtraceRegs) PC() uint64 {  return r.Pc }
 
-func (r *PtraceRegs) SetPC(pc uint64) { log.DebugLog() r.Pc = pc }
+func (r *PtraceRegs) SetPC(pc uint64) {  r.Pc = pc }
 
-func (iov *Iovec) SetLen(length int) { log.DebugLog()
+func (iov *Iovec) SetLen(length int) { 
 	iov.Len = uint64(length)
 }
 
-func (msghdr *Msghdr) SetControllen(length int) { log.DebugLog()
+func (msghdr *Msghdr) SetControllen(length int) { 
 	msghdr.Controllen = uint64(length)
 }
 
-func (cmsg *Cmsghdr) SetLen(length int) { log.DebugLog()
+func (cmsg *Cmsghdr) SetLen(length int) { 
 	cmsg.Len = uint64(length)
 }
 
-func InotifyInit() (fd int, err error) { log.DebugLog()
+func InotifyInit() (fd int, err error) { 
 	return InotifyInit1(0)
 }
 
-func Dup2(oldfd int, newfd int) (err error) { log.DebugLog()
+func Dup2(oldfd int, newfd int) (err error) { 
 	return Dup3(oldfd, newfd, 0)
 }
 
-func Pause() (err error) { log.DebugLog()
+func Pause() (err error) { 
 	_, _, e1 := Syscall6(SYS_PPOLL, 0, 0, 0, 0, 0, 0)
 	if e1 != 0 {
 		err = errnoErr(e1)
@@ -173,7 +173,7 @@ const (
 	SYS_EPOLL_WAIT   = 1069
 )
 
-func Poll(fds []PollFd, timeout int) (n int, err error) { log.DebugLog()
+func Poll(fds []PollFd, timeout int) (n int, err error) { 
 	var ts *Timespec
 	if timeout >= 0 {
 		ts = new(Timespec)

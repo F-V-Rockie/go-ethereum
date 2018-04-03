@@ -26,9 +26,10 @@ import (
 	"github.com/davecgh/go-spew/spew"
 	"github.com/ethereum/go-ethereum/p2p/discover"
 	"github.com/ethereum/go-ethereum/p2p/netutil"
+	"github.com/ethereum/go-ethereum/log"
 )
 
-func init() { log.DebugLog()
+func init() {
 	spew.Config.Indent = "\t"
 }
 
@@ -43,7 +44,8 @@ type round struct {
 	new   []task  // the result must match this one
 }
 
-func runDialTest(t *testing.T, test dialtest) { log.DebugLog()
+func runDialTest(t *testing.T, test dialtest) {
+	log.DebugLog()
 	var (
 		vtime   time.Time
 		running int
@@ -78,14 +80,27 @@ func runDialTest(t *testing.T, test dialtest) { log.DebugLog()
 
 type fakeTable []*discover.Node
 
-func (t fakeTable) Self() *discover.Node                     { log.DebugLog() return new(discover.Node) }
-func (t fakeTable) Close()                                   { log.DebugLog()}
-func (t fakeTable) Lookup(discover.NodeID) []*discover.Node  { log.DebugLog() return nil }
-func (t fakeTable) Resolve(discover.NodeID) *discover.Node   { log.DebugLog() return nil }
-func (t fakeTable) ReadRandomNodes(buf []*discover.Node) int { log.DebugLog() return copy(buf, t) }
+func (t fakeTable) Self() *discover.Node {
+	log.DebugLog()
+	return new(discover.Node)
+}
+func (t fakeTable) Close() { log.DebugLog() }
+func (t fakeTable) Lookup(discover.NodeID) []*discover.Node {
+	log.DebugLog()
+	return nil
+}
+func (t fakeTable) Resolve(discover.NodeID) *discover.Node {
+	log.DebugLog()
+	return nil
+}
+func (t fakeTable) ReadRandomNodes(buf []*discover.Node) int {
+	log.DebugLog()
+	return copy(buf, t)
+}
 
 // This test checks that dynamic dials are launched from discovery results.
-func TestDialStateDynDial(t *testing.T) { log.DebugLog()
+func TestDialStateDynDial(t *testing.T) {
+	log.DebugLog()
 	runDialTest(t, dialtest{
 		init: newDialState(nil, nil, fakeTable{}, 5, nil),
 		rounds: []round{
@@ -220,7 +235,8 @@ func TestDialStateDynDial(t *testing.T) { log.DebugLog()
 }
 
 // Tests that bootnodes are dialed if no peers are connectd, but not otherwise.
-func TestDialStateDynDialBootnode(t *testing.T) { log.DebugLog()
+func TestDialStateDynDialBootnode(t *testing.T) {
+	log.DebugLog()
 	bootnodes := []*discover.Node{
 		{ID: uintID(1)},
 		{ID: uintID(2)},
@@ -307,7 +323,8 @@ func TestDialStateDynDialBootnode(t *testing.T) { log.DebugLog()
 	})
 }
 
-func TestDialStateDynDialFromTable(t *testing.T) { log.DebugLog()
+func TestDialStateDynDialFromTable(t *testing.T) {
+	log.DebugLog()
 	// This table always returns the same random nodes
 	// in the order given below.
 	table := fakeTable{
@@ -403,7 +420,8 @@ func TestDialStateDynDialFromTable(t *testing.T) { log.DebugLog()
 }
 
 // This test checks that candidates that do not match the netrestrict list are not dialed.
-func TestDialStateNetRestrict(t *testing.T) { log.DebugLog()
+func TestDialStateNetRestrict(t *testing.T) {
+	log.DebugLog()
 	// This table always returns the same random nodes
 	// in the order given below.
 	table := fakeTable{
@@ -433,7 +451,8 @@ func TestDialStateNetRestrict(t *testing.T) { log.DebugLog()
 }
 
 // This test checks that static dials are launched.
-func TestDialStateStaticDial(t *testing.T) { log.DebugLog()
+func TestDialStateStaticDial(t *testing.T) {
+	log.DebugLog()
 	wantStatic := []*discover.Node{
 		{ID: uintID(1)},
 		{ID: uintID(2)},
@@ -516,7 +535,8 @@ func TestDialStateStaticDial(t *testing.T) { log.DebugLog()
 }
 
 // This test checks that static peers will be redialed immediately if they were re-added to a static list.
-func TestDialStaticAfterReset(t *testing.T) { log.DebugLog()
+func TestDialStaticAfterReset(t *testing.T) {
+	log.DebugLog()
 	wantStatic := []*discover.Node{
 		{ID: uintID(1)},
 		{ID: uintID(2)},
@@ -560,7 +580,8 @@ func TestDialStaticAfterReset(t *testing.T) { log.DebugLog()
 }
 
 // This test checks that past dials are not retried for some time.
-func TestDialStateCache(t *testing.T) { log.DebugLog()
+func TestDialStateCache(t *testing.T) {
+	log.DebugLog()
 	wantStatic := []*discover.Node{
 		{ID: uintID(1)},
 		{ID: uintID(2)},
@@ -627,7 +648,8 @@ func TestDialStateCache(t *testing.T) { log.DebugLog()
 	})
 }
 
-func TestDialResolve(t *testing.T) { log.DebugLog()
+func TestDialResolve(t *testing.T) {
+	log.DebugLog()
 	resolved := discover.NewNode(uintID(1), net.IP{127, 0, 55, 234}, 3333, 4444)
 	table := &resolveMock{answer: resolved}
 	state := newDialState(nil, nil, table, 0, nil)
@@ -656,7 +678,8 @@ func TestDialResolve(t *testing.T) { log.DebugLog()
 }
 
 // compares task lists but doesn't care about the order.
-func sametasks(a, b []task) bool { log.DebugLog()
+func sametasks(a, b []task) bool {
+	log.DebugLog()
 	if len(a) != len(b) {
 		return false
 	}
@@ -672,7 +695,8 @@ next:
 	return true
 }
 
-func uintID(i uint32) discover.NodeID { log.DebugLog()
+func uintID(i uint32) discover.NodeID {
+	log.DebugLog()
 	var id discover.NodeID
 	binary.BigEndian.PutUint32(id[:], i)
 	return id
@@ -684,13 +708,23 @@ type resolveMock struct {
 	answer       *discover.Node
 }
 
-func (t *resolveMock) Resolve(id discover.NodeID) *discover.Node { log.DebugLog()
+func (t *resolveMock) Resolve(id discover.NodeID) *discover.Node {
+	log.DebugLog()
 	t.resolveCalls = append(t.resolveCalls, id)
 	return t.answer
 }
 
-func (t *resolveMock) Self() *discover.Node                     { log.DebugLog() return new(discover.Node) }
-func (t *resolveMock) Close()                                   { log.DebugLog()}
-func (t *resolveMock) Bootstrap([]*discover.Node)               { log.DebugLog()}
-func (t *resolveMock) Lookup(discover.NodeID) []*discover.Node  { log.DebugLog() return nil }
-func (t *resolveMock) ReadRandomNodes(buf []*discover.Node) int { log.DebugLog() return 0 }
+func (t *resolveMock) Self() *discover.Node {
+	log.DebugLog()
+	return new(discover.Node)
+}
+func (t *resolveMock) Close()                     { log.DebugLog() }
+func (t *resolveMock) Bootstrap([]*discover.Node) { log.DebugLog() }
+func (t *resolveMock) Lookup(discover.NodeID) []*discover.Node {
+	log.DebugLog()
+	return nil
+}
+func (t *resolveMock) ReadRandomNodes(buf []*discover.Node) int {
+	log.DebugLog()
+	return 0
+}

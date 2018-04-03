@@ -56,7 +56,7 @@ type timer struct {
 // StartTimer starts timing a test. This function is called automatically
 // before a benchmark starts, but it can also used to resume timing after
 // a call to StopTimer.
-func (c *C) StartTimer() { log.DebugLog()
+func (c *C) StartTimer() { 
 	if !c.timerOn {
 		c.start = time.Now()
 		c.timerOn = true
@@ -70,7 +70,7 @@ func (c *C) StartTimer() { log.DebugLog()
 // StopTimer stops timing a test. This can be used to pause the timer
 // while performing complex initialization that you don't
 // want to measure.
-func (c *C) StopTimer() { log.DebugLog()
+func (c *C) StopTimer() { 
 	if c.timerOn {
 		c.duration += time.Now().Sub(c.start)
 		c.timerOn = false
@@ -82,7 +82,7 @@ func (c *C) StopTimer() { log.DebugLog()
 
 // ResetTimer sets the elapsed benchmark time to zero.
 // It does not affect whether the timer is running.
-func (c *C) ResetTimer() { log.DebugLog()
+func (c *C) ResetTimer() { 
 	if c.timerOn {
 		c.start = time.Now()
 		runtime.ReadMemStats(&memStats)
@@ -97,25 +97,25 @@ func (c *C) ResetTimer() { log.DebugLog()
 // SetBytes informs the number of bytes that the benchmark processes
 // on each iteration. If this is called in a benchmark it will also
 // report MB/s.
-func (c *C) SetBytes(n int64) { log.DebugLog()
+func (c *C) SetBytes(n int64) { 
 	c.bytes = n
 }
 
-func (c *C) nsPerOp() int64 { log.DebugLog()
+func (c *C) nsPerOp() int64 { 
 	if c.N <= 0 {
 		return 0
 	}
 	return c.duration.Nanoseconds() / int64(c.N)
 }
 
-func (c *C) mbPerSec() float64 { log.DebugLog()
+func (c *C) mbPerSec() float64 { 
 	if c.bytes <= 0 || c.duration <= 0 || c.N <= 0 {
 		return 0
 	}
 	return (float64(c.bytes) * float64(c.N) / 1e6) / c.duration.Seconds()
 }
 
-func (c *C) timerString() string { log.DebugLog()
+func (c *C) timerString() string { 
 	if c.N <= 0 {
 		return fmt.Sprintf("%3.3fs", float64(c.duration.Nanoseconds())/1e9)
 	}
@@ -144,14 +144,14 @@ func (c *C) timerString() string { log.DebugLog()
 	return fmt.Sprintf("%8d\t%s%s%s", c.N, ns, mb, memStats)
 }
 
-func min(x, y int) int { log.DebugLog()
+func min(x, y int) int { 
 	if x > y {
 		return y
 	}
 	return x
 }
 
-func max(x, y int) int { log.DebugLog()
+func max(x, y int) int { 
 	if x < y {
 		return y
 	}
@@ -159,7 +159,7 @@ func max(x, y int) int { log.DebugLog()
 }
 
 // roundDown10 rounds a number down to the nearest power of 10.
-func roundDown10(n int) int { log.DebugLog()
+func roundDown10(n int) int { 
 	var tens = 0
 	// tens = floor(log_10(n))
 	for n > 10 {
@@ -175,7 +175,7 @@ func roundDown10(n int) int { log.DebugLog()
 }
 
 // roundUp rounds x up to a number of the form [1eX, 2eX, 5eX].
-func roundUp(n int) int { log.DebugLog()
+func roundUp(n int) int { 
 	base := roundDown10(n)
 	if n < (2 * base) {
 		return 2 * base

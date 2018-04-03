@@ -6,7 +6,7 @@ import (
 
 type ConcreteSigar struct{}
 
-func (c *ConcreteSigar) CollectCpuStats(collectionInterval time.Duration) (<-chan Cpu, chan<- struct{}) { log.DebugLog()
+func (c *ConcreteSigar) CollectCpuStats(collectionInterval time.Duration) (<-chan Cpu, chan<- struct{}) { 
 	// samplesCh is buffered to 1 value to immediately return first CPU sample
 	samplesCh := make(chan Cpu, 1)
 
@@ -44,31 +44,31 @@ func (c *ConcreteSigar) CollectCpuStats(collectionInterval time.Duration) (<-cha
 	return samplesCh, stopCh
 }
 
-func (c *ConcreteSigar) GetLoadAverage() (LoadAverage, error) { log.DebugLog()
+func (c *ConcreteSigar) GetLoadAverage() (LoadAverage, error) { 
 	l := LoadAverage{}
 	err := l.Get()
 	return l, err
 }
 
-func (c *ConcreteSigar) GetMem() (Mem, error) { log.DebugLog()
+func (c *ConcreteSigar) GetMem() (Mem, error) { 
 	m := Mem{}
 	err := m.Get()
 	return m, err
 }
 
-func (c *ConcreteSigar) GetSwap() (Swap, error) { log.DebugLog()
+func (c *ConcreteSigar) GetSwap() (Swap, error) { 
 	s := Swap{}
 	err := s.Get()
 	return s, err
 }
 
-func (c *ConcreteSigar) GetFileSystemUsage(path string) (FileSystemUsage, error) { log.DebugLog()
+func (c *ConcreteSigar) GetFileSystemUsage(path string) (FileSystemUsage, error) { 
 	f := FileSystemUsage{}
 	err := f.Get(path)
 	return f, err
 }
 
-func (c *ConcreteSigar) GetFDUsage() (FDUsage, error) { log.DebugLog()
+func (c *ConcreteSigar) GetFDUsage() (FDUsage, error) { 
 	fd := FDUsage{}
 	err := fd.Get()
 	return fd, err
@@ -76,7 +76,7 @@ func (c *ConcreteSigar) GetFDUsage() (FDUsage, error) { log.DebugLog()
 
 // GetRusage return the resource usage of the process
 // Possible params: 0 = RUSAGE_SELF, 1 = RUSAGE_CHILDREN, 2 = RUSAGE_THREAD
-func (c *ConcreteSigar) GetRusage(who int) (Rusage, error) { log.DebugLog()
+func (c *ConcreteSigar) GetRusage(who int) (Rusage, error) { 
 	r := Rusage{}
 	err := r.Get(who)
 	return r, err

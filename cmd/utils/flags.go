@@ -72,7 +72,7 @@ SUBCOMMANDS:
 {{end}}{{end}}`
 )
 
-func init() { log.DebugLog()
+func init() {
 	cli.AppHelpTemplate = `{{.Name}} {{if .Flags}}[global options] {{end}}command{{if .Flags}} [command options]{{end}} [arguments...]
 
 VERSION:

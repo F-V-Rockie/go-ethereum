@@ -50,7 +50,7 @@ const (
 	compRangeList  compType = "rangelist"
 )
 
-func (ct compType) String() string { log.DebugLog()
+func (ct compType) String() string { 
 	return string(ct)
 }
 
@@ -62,11 +62,11 @@ const (
 	resourceShare     resourceType = "share"
 )
 
-func (rt resourceType) String() string { log.DebugLog()
+func (rt resourceType) String() string { 
 	return string(rt)
 }
 
-func (p ListSharesParameters) getParameters() url.Values { log.DebugLog()
+func (p ListSharesParameters) getParameters() url.Values { 
 	out := url.Values{}
 
 	if p.Prefix != "" {
@@ -88,7 +88,7 @@ func (p ListSharesParameters) getParameters() url.Values { log.DebugLog()
 	return out
 }
 
-func (p ListDirsAndFilesParameters) getParameters() url.Values { log.DebugLog()
+func (p ListDirsAndFilesParameters) getParameters() url.Values { 
 	out := url.Values{}
 
 	if p.Marker != "" {
@@ -105,7 +105,7 @@ func (p ListDirsAndFilesParameters) getParameters() url.Values { log.DebugLog()
 }
 
 // returns url.Values for the specified types
-func getURLInitValues(comp compType, res resourceType) url.Values { log.DebugLog()
+func getURLInitValues(comp compType, res resourceType) url.Values { 
 	values := url.Values{}
 	if comp != compNone {
 		values.Set("comp", comp.String())
@@ -117,7 +117,7 @@ func getURLInitValues(comp compType, res resourceType) url.Values { log.DebugLog
 }
 
 // GetShareReference returns a Share object for the specified share name.
-func (f FileServiceClient) GetShareReference(name string) Share { log.DebugLog()
+func (f FileServiceClient) GetShareReference(name string) Share { 
 	return Share{
 		fsc:  &f,
 		Name: name,
@@ -131,7 +131,7 @@ func (f FileServiceClient) GetShareReference(name string) Share { log.DebugLog()
 // pagination token and other response details.
 //
 // See https://msdn.microsoft.com/en-us/library/azure/dd179352.aspx
-func (f FileServiceClient) ListShares(params ListSharesParameters) (*ShareListResponse, error) { log.DebugLog()
+func (f FileServiceClient) ListShares(params ListSharesParameters) (*ShareListResponse, error) { 
 	q := mergeParams(params.getParameters(), url.Values{"comp": {"list"}})
 
 	var out ShareListResponse
@@ -152,19 +152,19 @@ func (f FileServiceClient) ListShares(params ListSharesParameters) (*ShareListRe
 // GetServiceProperties gets the properties of your storage account's file service.
 // File service does not support logging
 // See: https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/get-file-service-properties
-func (f *FileServiceClient) GetServiceProperties() (*ServiceProperties, error) { log.DebugLog()
+func (f *FileServiceClient) GetServiceProperties() (*ServiceProperties, error) { 
 	return f.client.getServiceProperties(fileServiceName, f.auth)
 }
 
 // SetServiceProperties sets the properties of your storage account's file service.
 // File service does not support logging
 // See: https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/set-file-service-properties
-func (f *FileServiceClient) SetServiceProperties(props ServiceProperties) error { log.DebugLog()
+func (f *FileServiceClient) SetServiceProperties(props ServiceProperties) error { 
 	return f.client.setServiceProperties(props, fileServiceName, f.auth)
 }
 
 // retrieves directory or share content
-func (f FileServiceClient) listContent(path string, params url.Values, extraHeaders map[string]string) (*storageResponse, error) { log.DebugLog()
+func (f FileServiceClient) listContent(path string, params url.Values, extraHeaders map[string]string) (*storageResponse, error) { 
 	if err := f.checkForStorageEmulator(); err != nil {
 		return nil, err
 	}
@@ -187,7 +187,7 @@ func (f FileServiceClient) listContent(path string, params url.Values, extraHead
 }
 
 // returns true if the specified resource exists
-func (f FileServiceClient) resourceExists(path string, res resourceType) (bool, http.Header, error) { log.DebugLog()
+func (f FileServiceClient) resourceExists(path string, res resourceType) (bool, http.Header, error) { 
 	if err := f.checkForStorageEmulator(); err != nil {
 		return false, nil, err
 	}
@@ -206,7 +206,7 @@ func (f FileServiceClient) resourceExists(path string, res resourceType) (bool, 
 }
 
 // creates a resource depending on the specified resource type
-func (f FileServiceClient) createResource(path string, res resourceType, urlParams url.Values, extraHeaders map[string]string, expectedResponseCodes []int) (http.Header, error) { log.DebugLog()
+func (f FileServiceClient) createResource(path string, res resourceType, urlParams url.Values, extraHeaders map[string]string, expectedResponseCodes []int) (http.Header, error) { 
 	resp, err := f.createResourceNoClose(path, res, urlParams, extraHeaders)
 	if err != nil {
 		return nil, err
@@ -216,7 +216,7 @@ func (f FileServiceClient) createResource(path string, res resourceType, urlPara
 }
 
 // creates a resource depending on the specified resource type, doesn't close the response body
-func (f FileServiceClient) createResourceNoClose(path string, res resourceType, urlParams url.Values, extraHeaders map[string]string) (*storageResponse, error) { log.DebugLog()
+func (f FileServiceClient) createResourceNoClose(path string, res resourceType, urlParams url.Values, extraHeaders map[string]string) (*storageResponse, error) { 
 	if err := f.checkForStorageEmulator(); err != nil {
 		return nil, err
 	}
@@ -231,7 +231,7 @@ func (f FileServiceClient) createResourceNoClose(path string, res resourceType, 
 }
 
 // returns HTTP header data for the specified directory or share
-func (f FileServiceClient) getResourceHeaders(path string, comp compType, res resourceType, verb string) (http.Header, error) { log.DebugLog()
+func (f FileServiceClient) getResourceHeaders(path string, comp compType, res resourceType, verb string) (http.Header, error) { 
 	resp, err := f.getResourceNoClose(path, comp, res, verb, nil)
 	if err != nil {
 		return nil, err
@@ -246,7 +246,7 @@ func (f FileServiceClient) getResourceHeaders(path string, comp compType, res re
 }
 
 // gets the specified resource, doesn't close the response body
-func (f FileServiceClient) getResourceNoClose(path string, comp compType, res resourceType, verb string, extraHeaders map[string]string) (*storageResponse, error) { log.DebugLog()
+func (f FileServiceClient) getResourceNoClose(path string, comp compType, res resourceType, verb string, extraHeaders map[string]string) (*storageResponse, error) { 
 	if err := f.checkForStorageEmulator(); err != nil {
 		return nil, err
 	}
@@ -260,7 +260,7 @@ func (f FileServiceClient) getResourceNoClose(path string, comp compType, res re
 }
 
 // deletes the resource and returns the response
-func (f FileServiceClient) deleteResource(path string, res resourceType) error { log.DebugLog()
+func (f FileServiceClient) deleteResource(path string, res resourceType) error { 
 	resp, err := f.deleteResourceNoClose(path, res)
 	if err != nil {
 		return err
@@ -270,7 +270,7 @@ func (f FileServiceClient) deleteResource(path string, res resourceType) error {
 }
 
 // deletes the resource and returns the response, doesn't close the response body
-func (f FileServiceClient) deleteResourceNoClose(path string, res resourceType) (*storageResponse, error) { log.DebugLog()
+func (f FileServiceClient) deleteResourceNoClose(path string, res resourceType) (*storageResponse, error) { 
 	if err := f.checkForStorageEmulator(); err != nil {
 		return nil, err
 	}
@@ -281,7 +281,7 @@ func (f FileServiceClient) deleteResourceNoClose(path string, res resourceType) 
 }
 
 // merges metadata into extraHeaders and returns extraHeaders
-func mergeMDIntoExtraHeaders(metadata, extraHeaders map[string]string) map[string]string { log.DebugLog()
+func mergeMDIntoExtraHeaders(metadata, extraHeaders map[string]string) map[string]string { 
 	if metadata == nil && extraHeaders == nil {
 		return nil
 	}
@@ -295,7 +295,7 @@ func mergeMDIntoExtraHeaders(metadata, extraHeaders map[string]string) map[strin
 }
 
 // merges extraHeaders into headers and returns headers
-func mergeHeaders(headers, extraHeaders map[string]string) map[string]string { log.DebugLog()
+func mergeHeaders(headers, extraHeaders map[string]string) map[string]string { 
 	for k, v := range extraHeaders {
 		headers[k] = v
 	}
@@ -303,7 +303,7 @@ func mergeHeaders(headers, extraHeaders map[string]string) map[string]string { l
 }
 
 // sets extra header data for the specified resource
-func (f FileServiceClient) setResourceHeaders(path string, comp compType, res resourceType, extraHeaders map[string]string) (http.Header, error) { log.DebugLog()
+func (f FileServiceClient) setResourceHeaders(path string, comp compType, res resourceType, extraHeaders map[string]string) (http.Header, error) { 
 	if err := f.checkForStorageEmulator(); err != nil {
 		return nil, err
 	}
@@ -323,7 +323,7 @@ func (f FileServiceClient) setResourceHeaders(path string, comp compType, res re
 }
 
 // gets metadata for the specified resource
-func (f FileServiceClient) getMetadata(path string, res resourceType) (map[string]string, error) { log.DebugLog()
+func (f FileServiceClient) getMetadata(path string, res resourceType) (map[string]string, error) { 
 	if err := f.checkForStorageEmulator(); err != nil {
 		return nil, err
 	}
@@ -337,7 +337,7 @@ func (f FileServiceClient) getMetadata(path string, res resourceType) (map[strin
 }
 
 // returns a map of custom metadata values from the specified HTTP header
-func getMetadataFromHeaders(header http.Header) map[string]string { log.DebugLog()
+func getMetadataFromHeaders(header http.Header) map[string]string { 
 	metadata := make(map[string]string)
 	for k, v := range header {
 		// Can't trust CanonicalHeaderKey() to munge case
@@ -367,7 +367,7 @@ func getMetadataFromHeaders(header http.Header) map[string]string { log.DebugLog
 
 //checkForStorageEmulator determines if the client is setup for use with
 //Azure Storage Emulator, and returns a relevant error
-func (f FileServiceClient) checkForStorageEmulator() error { log.DebugLog()
+func (f FileServiceClient) checkForStorageEmulator() error { 
 	if f.client.accountName == StorageEmulatorAccountName {
 		return fmt.Errorf("Error: File service is not currently supported by Azure Storage Emulator")
 	}

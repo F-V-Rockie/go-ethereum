@@ -50,7 +50,7 @@ type Table struct {
 }
 
 // NewTable returns a new Table instance
-func NewTable() *Table { log.DebugLog()
+func NewTable() *Table { 
 	table := &Table{Block: *NewBlock()}
 	table.FgColor = ColorWhite
 	table.BgColor = ColorDefault
@@ -59,7 +59,7 @@ func NewTable() *Table { log.DebugLog()
 }
 
 // CellsWidth calculates the width of a cell array and returns an int
-func cellsWidth(cells []Cell) int { log.DebugLog()
+func cellsWidth(cells []Cell) int { 
 	width := 0
 	for _, c := range cells {
 		width += c.Width()
@@ -68,7 +68,7 @@ func cellsWidth(cells []Cell) int { log.DebugLog()
 }
 
 // Analysis generates and returns an array of []Cell that represent all columns in the Table
-func (table *Table) Analysis() [][]Cell { log.DebugLog()
+func (table *Table) Analysis() [][]Cell { 
 	var rowCells [][]Cell
 	length := len(table.Rows)
 	if length < 1 {
@@ -105,7 +105,7 @@ func (table *Table) Analysis() [][]Cell { log.DebugLog()
 }
 
 // SetSize calculates the table size and sets the internal value
-func (table *Table) SetSize() { log.DebugLog()
+func (table *Table) SetSize() { 
 	length := len(table.Rows)
 	if table.Separator {
 		table.Height = length*2 + 1
@@ -121,7 +121,7 @@ func (table *Table) SetSize() { log.DebugLog()
 }
 
 // CalculatePosition ...
-func (table *Table) CalculatePosition(x int, y int, coordinateX *int, coordinateY *int, cellStart *int) { log.DebugLog()
+func (table *Table) CalculatePosition(x int, y int, coordinateX *int, coordinateY *int, cellStart *int) { 
 	if table.Separator {
 		*coordinateY = table.innerArea.Min.Y + y*2
 	} else {
@@ -144,7 +144,7 @@ func (table *Table) CalculatePosition(x int, y int, coordinateX *int, coordinate
 }
 
 // Buffer ...
-func (table *Table) Buffer() Buffer { log.DebugLog()
+func (table *Table) Buffer() Buffer { 
 	buffer := table.Block.Buffer()
 	rowCells := table.Analysis()
 	pointerX := table.innerArea.Min.X + 2

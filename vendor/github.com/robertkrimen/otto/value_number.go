@@ -10,7 +10,7 @@ import (
 
 var stringToNumberParseInteger = regexp.MustCompile(`^(?:0[xX])`)
 
-func parseNumber(value string) float64 { log.DebugLog()
+func parseNumber(value string) float64 { 
 	value = strings.Trim(value, builtinString_trim_whitespace)
 
 	if value == "" {
@@ -41,7 +41,7 @@ func parseNumber(value string) float64 { log.DebugLog()
 	return float64(number)
 }
 
-func (value Value) float64() float64 { log.DebugLog()
+func (value Value) float64() float64 { 
 	switch value.kind {
 	case valueUndefined:
 		return math.NaN()
@@ -137,7 +137,7 @@ const (
 	float_minInt64  float64 = math.MinInt64
 )
 
-func toIntegerFloat(value Value) float64 { log.DebugLog()
+func toIntegerFloat(value Value) float64 { 
 	float := value.float64()
 	if math.IsInf(float, 0) {
 	} else if math.IsNaN(float) {
@@ -168,7 +168,7 @@ type _number struct {
 // FIXME
 // http://www.goinggo.net/2013/08/gustavos-ieee-754-brain-teaser.html
 // http://bazaar.launchpad.net/~niemeyer/strepr/trunk/view/6/strepr.go#L160
-func (value Value) number() (number _number) { log.DebugLog()
+func (value Value) number() (number _number) { 
 	switch value := value.value.(type) {
 	case int8:
 		number.int64 = int64(value)
@@ -235,7 +235,7 @@ func (value Value) number() (number _number) { log.DebugLog()
 }
 
 // ECMA 262: 9.5
-func toInt32(value Value) int32 { log.DebugLog()
+func toInt32(value Value) int32 { 
 	{
 		switch value := value.value.(type) {
 		case int8:
@@ -265,7 +265,7 @@ func toInt32(value Value) int32 { log.DebugLog()
 	return int32(remainder)
 }
 
-func toUint32(value Value) uint32 { log.DebugLog()
+func toUint32(value Value) uint32 { 
 	{
 		switch value := value.value.(type) {
 		case int8:
@@ -296,7 +296,7 @@ func toUint32(value Value) uint32 { log.DebugLog()
 	return uint32(remainder)
 }
 
-func toUint16(value Value) uint16 { log.DebugLog()
+func toUint16(value Value) uint16 { 
 	{
 		switch value := value.value.(type) {
 		case int8:

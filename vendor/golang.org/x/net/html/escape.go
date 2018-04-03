@@ -54,7 +54,7 @@ var replacementTable = [...]rune{
 // corresponding "<" to b[dst:], returning the incremented dst and src cursors.
 // Precondition: b[src] == '&' && dst <= src.
 // attribute should be true if parsing an attribute value.
-func unescapeEntity(b []byte, dst, src int, attribute bool) (dst1, src1 int) { log.DebugLog()
+func unescapeEntity(b []byte, dst, src int, attribute bool) (dst1, src1 int) { 
 	// https://html.spec.whatwg.org/multipage/syntax.html#consume-a-character-reference
 
 	// i starts at 1 because we already know that s[0] == '&'.
@@ -164,7 +164,7 @@ func unescapeEntity(b []byte, dst, src int, attribute bool) (dst1, src1 int) { l
 
 // unescape unescapes b's entities in-place, so that "a&lt;b" becomes "a<b".
 // attribute should be true if parsing an attribute value.
-func unescape(b []byte, attribute bool) []byte { log.DebugLog()
+func unescape(b []byte, attribute bool) []byte { 
 	for i, c := range b {
 		if c == '&' {
 			dst, src := unescapeEntity(b, i, i, attribute)
@@ -184,7 +184,7 @@ func unescape(b []byte, attribute bool) []byte { log.DebugLog()
 }
 
 // lower lower-cases the A-Z bytes in b in-place, so that "aBc" becomes "abc".
-func lower(b []byte) []byte { log.DebugLog()
+func lower(b []byte) []byte { 
 	for i, c := range b {
 		if 'A' <= c && c <= 'Z' {
 			b[i] = c + 'a' - 'A'
@@ -195,7 +195,7 @@ func lower(b []byte) []byte { log.DebugLog()
 
 const escapedChars = "&'<>\"\r"
 
-func escape(w writer, s string) error { log.DebugLog()
+func escape(w writer, s string) error { 
 	i := strings.IndexAny(s, escapedChars)
 	for i != -1 {
 		if _, err := w.WriteString(s[:i]); err != nil {
@@ -234,7 +234,7 @@ func escape(w writer, s string) error { log.DebugLog()
 // escapes only five such characters: <, >, &, ' and ".
 // UnescapeString(EscapeString(s)) == s always holds, but the converse isn't
 // always true.
-func EscapeString(s string) string { log.DebugLog()
+func EscapeString(s string) string { 
 	if strings.IndexAny(s, escapedChars) == -1 {
 		return s
 	}
@@ -248,7 +248,7 @@ func EscapeString(s string) string { log.DebugLog()
 // unescapes to "á", as does "&#225;" and "&xE1;".
 // UnescapeString(EscapeString(s)) == s always holds, but the converse isn't
 // always true.
-func UnescapeString(s string) string { log.DebugLog()
+func UnescapeString(s string) string { 
 	for _, c := range s {
 		if c == '&' {
 			return string(unescape([]byte(s), false))

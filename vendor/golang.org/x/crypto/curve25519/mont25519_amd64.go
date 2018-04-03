@@ -31,7 +31,7 @@ func mul(dest, a, b *[5]uint64)
 func square(out, in *[5]uint64)
 
 // mladder uses a Montgomery ladder to calculate (xr/zr) *= s.
-func mladder(xr, zr *[5]uint64, s *[32]byte) { log.DebugLog()
+func mladder(xr, zr *[5]uint64, s *[32]byte) { 
 	var work [5][5]uint64
 
 	work[0] = *xr
@@ -59,7 +59,7 @@ func mladder(xr, zr *[5]uint64, s *[32]byte) { log.DebugLog()
 	*zr = work[2]
 }
 
-func scalarMult(out, in, base *[32]byte) { log.DebugLog()
+func scalarMult(out, in, base *[32]byte) { 
 	var e [32]byte
 	copy(e[:], (*in)[:])
 	e[0] &= 248
@@ -74,7 +74,7 @@ func scalarMult(out, in, base *[32]byte) { log.DebugLog()
 	pack(out, &t)
 }
 
-func setint(r *[5]uint64, v uint64) { log.DebugLog()
+func setint(r *[5]uint64, v uint64) { 
 	r[0] = v
 	r[1] = 0
 	r[2] = 0
@@ -84,7 +84,7 @@ func setint(r *[5]uint64, v uint64) { log.DebugLog()
 
 // unpack sets r = x where r consists of 5, 51-bit limbs in little-endian
 // order.
-func unpack(r *[5]uint64, x *[32]byte) { log.DebugLog()
+func unpack(r *[5]uint64, x *[32]byte) { 
 	r[0] = uint64(x[0]) |
 		uint64(x[1])<<8 |
 		uint64(x[2])<<16 |
@@ -129,7 +129,7 @@ func unpack(r *[5]uint64, x *[32]byte) { log.DebugLog()
 
 // pack sets out = x where out is the usual, little-endian form of the 5,
 // 51-bit limbs in x.
-func pack(out *[32]byte, x *[5]uint64) { log.DebugLog()
+func pack(out *[32]byte, x *[5]uint64) { 
 	t := *x
 	freeze(&t)
 
@@ -176,7 +176,7 @@ func pack(out *[32]byte, x *[5]uint64) { log.DebugLog()
 }
 
 // invert calculates r = x^-1 mod p using Fermat's little theorem.
-func invert(r *[5]uint64, x *[5]uint64) { log.DebugLog()
+func invert(r *[5]uint64, x *[5]uint64) { 
 	var z2, z9, z11, z2_5_0, z2_10_0, z2_20_0, z2_50_0, z2_100_0, t [5]uint64
 
 	square(&z2, x)        /* 2 */

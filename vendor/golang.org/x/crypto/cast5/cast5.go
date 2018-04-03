@@ -16,7 +16,7 @@ type Cipher struct {
 	rotate  [16]uint8
 }
 
-func NewCipher(key []byte) (c *Cipher, err error) { log.DebugLog()
+func NewCipher(key []byte) (c *Cipher, err error) { 
 	if len(key) != KeySize {
 		return nil, errors.New("CAST5: keys must be 16 bytes")
 	}
@@ -26,11 +26,11 @@ func NewCipher(key []byte) (c *Cipher, err error) { log.DebugLog()
 	return
 }
 
-func (c *Cipher) BlockSize() int { log.DebugLog()
+func (c *Cipher) BlockSize() int { 
 	return BlockSize
 }
 
-func (c *Cipher) Encrypt(dst, src []byte) { log.DebugLog()
+func (c *Cipher) Encrypt(dst, src []byte) { 
 	l := uint32(src[0])<<24 | uint32(src[1])<<16 | uint32(src[2])<<8 | uint32(src[3])
 	r := uint32(src[4])<<24 | uint32(src[5])<<16 | uint32(src[6])<<8 | uint32(src[7])
 
@@ -64,7 +64,7 @@ func (c *Cipher) Encrypt(dst, src []byte) { log.DebugLog()
 	dst[7] = uint8(l)
 }
 
-func (c *Cipher) Decrypt(dst, src []byte) { log.DebugLog()
+func (c *Cipher) Decrypt(dst, src []byte) { 
 	l := uint32(src[0])<<24 | uint32(src[1])<<16 | uint32(src[2])<<8 | uint32(src[3])
 	r := uint32(src[4])<<24 | uint32(src[5])<<16 | uint32(src[6])<<8 | uint32(src[7])
 
@@ -185,7 +185,7 @@ var schedule = []struct {
 	},
 }
 
-func (c *Cipher) keySchedule(in []byte) { log.DebugLog()
+func (c *Cipher) keySchedule(in []byte) { 
 	var t [8]uint32
 	var k [32]uint32
 
@@ -232,19 +232,19 @@ func (c *Cipher) keySchedule(in []byte) { log.DebugLog()
 }
 
 // These are the three 'f' functions. See RFC 2144, section 2.2.
-func f1(d, m uint32, r uint8) uint32 { log.DebugLog()
+func f1(d, m uint32, r uint8) uint32 { 
 	t := m + d
 	I := (t << r) | (t >> (32 - r))
 	return ((sBox[0][I>>24] ^ sBox[1][(I>>16)&0xff]) - sBox[2][(I>>8)&0xff]) + sBox[3][I&0xff]
 }
 
-func f2(d, m uint32, r uint8) uint32 { log.DebugLog()
+func f2(d, m uint32, r uint8) uint32 { 
 	t := m ^ d
 	I := (t << r) | (t >> (32 - r))
 	return ((sBox[0][I>>24] - sBox[1][(I>>16)&0xff]) + sBox[2][(I>>8)&0xff]) ^ sBox[3][I&0xff]
 }
 
-func f3(d, m uint32, r uint8) uint32 { log.DebugLog()
+func f3(d, m uint32, r uint8) uint32 { 
 	t := m - d
 	I := (t << r) | (t >> (32 - r))
 	return ((sBox[0][I>>24] + sBox[1][(I>>16)&0xff]) ^ sBox[2][(I>>8)&0xff]) - sBox[3][I&0xff]

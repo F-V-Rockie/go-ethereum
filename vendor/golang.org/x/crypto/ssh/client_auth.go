@@ -12,7 +12,7 @@ import (
 )
 
 // clientAuthenticate authenticates with the remote server. See RFC 4252.
-func (c *connection) clientAuthenticate(config *ClientConfig) error { log.DebugLog()
+func (c *connection) clientAuthenticate(config *ClientConfig) error { 
 	// initiate user auth session
 	if err := c.transport.writePacket(Marshal(&serviceRequestMsg{serviceUserAuth})); err != nil {
 		return err
@@ -66,7 +66,7 @@ func (c *connection) clientAuthenticate(config *ClientConfig) error { log.DebugL
 	return fmt.Errorf("ssh: unable to authenticate, attempted methods %v, no supported methods remain", keys(tried))
 }
 
-func keys(m map[string]bool) []string { log.DebugLog()
+func keys(m map[string]bool) []string { 
 	s := make([]string, 0, len(m))
 
 	for key := range m {
@@ -91,7 +91,7 @@ type AuthMethod interface {
 // "none" authentication, RFC 4252 section 5.2.
 type noneAuth int
 
-func (n *noneAuth) auth(session []byte, user string, c packetConn, rand io.Reader) (bool, []string, error) { log.DebugLog()
+func (n *noneAuth) auth(session []byte, user string, c packetConn, rand io.Reader) (bool, []string, error) { 
 	if err := c.writePacket(Marshal(&userAuthRequestMsg{
 		User:    user,
 		Service: serviceSSH,
@@ -103,7 +103,7 @@ func (n *noneAuth) auth(session []byte, user string, c packetConn, rand io.Reade
 	return handleAuthResponse(c)
 }
 
-func (n *noneAuth) method() string { log.DebugLog()
+func (n *noneAuth) method() string { 
 	return "none"
 }
 
@@ -111,7 +111,7 @@ func (n *noneAuth) method() string { log.DebugLog()
 // a function call, e.g. by prompting the user.
 type passwordCallback func() (password string, err error)
 
-func (cb passwordCallback) auth(session []byte, user string, c packetConn, rand io.Reader) (bool, []string, error) { log.DebugLog()
+func (cb passwordCallback) auth(session []byte, user string, c packetConn, rand io.Reader) (bool, []string, error) { 
 	type passwordAuthMsg struct {
 		User     string `sshtype:"50"`
 		Service  string
@@ -141,18 +141,18 @@ func (cb passwordCallback) auth(session []byte, user string, c packetConn, rand 
 	return handleAuthResponse(c)
 }
 
-func (cb passwordCallback) method() string { log.DebugLog()
+func (cb passwordCallback) method() string { 
 	return "password"
 }
 
 // Password returns an AuthMethod using the given password.
-func Password(secret string) AuthMethod { log.DebugLog()
+func Password(secret string) AuthMethod { 
 	return passwordCallback(func() (string, error) { return secret, nil })
 }
 
 // PasswordCallback returns an AuthMethod that uses a callback for
 // fetching a password.
-func PasswordCallback(prompt func() (secret string, err error)) AuthMethod { log.DebugLog()
+func PasswordCallback(prompt func() (secret string, err error)) AuthMethod { 
 	return passwordCallback(prompt)
 }
 
@@ -174,11 +174,11 @@ type publickeyAuthMsg struct {
 // pairs for authentication.
 type publicKeyCallback func() ([]Signer, error)
 
-func (cb publicKeyCallback) method() string { log.DebugLog()
+func (cb publicKeyCallback) method() string { 
 	return "publickey"
 }
 
-func (cb publicKeyCallback) auth(session []byte, user string, c packetConn, rand io.Reader) (bool, []string, error) { log.DebugLog()
+func (cb publicKeyCallback) auth(session []byte, user string, c packetConn, rand io.Reader) (bool, []string, error) { 
 	// Authentication is performed by sending an enquiry to test if a key is
 	// acceptable to the remote. If the key is acceptable, the client will
 	// attempt to authenticate with the valid key.  If not the client will repeat
@@ -244,7 +244,7 @@ func (cb publicKeyCallback) auth(session []byte, user string, c packetConn, rand
 	return false, methods, nil
 }
 
-func containsMethod(methods []string, method string) bool { log.DebugLog()
+func containsMethod(methods []string, method string) bool { 
 	for _, m := range methods {
 		if m == method {
 			return true
@@ -255,7 +255,7 @@ func containsMethod(methods []string, method string) bool { log.DebugLog()
 }
 
 // validateKey validates the key provided is acceptable to the server.
-func validateKey(key PublicKey, user string, c packetConn) (bool, error) { log.DebugLog()
+func validateKey(key PublicKey, user string, c packetConn) (bool, error) { 
 	pubKey := key.Marshal()
 	msg := publickeyAuthMsg{
 		User:     user,
@@ -272,7 +272,7 @@ func validateKey(key PublicKey, user string, c packetConn) (bool, error) { log.D
 	return confirmKeyAck(key, c)
 }
 
-func confirmKeyAck(key PublicKey, c packetConn) (bool, error) { log.DebugLog()
+func confirmKeyAck(key PublicKey, c packetConn) (bool, error) { 
 	pubKey := key.Marshal()
 	algoname := key.Type()
 
@@ -303,20 +303,20 @@ func confirmKeyAck(key PublicKey, c packetConn) (bool, error) { log.DebugLog()
 
 // PublicKeys returns an AuthMethod that uses the given key
 // pairs.
-func PublicKeys(signers ...Signer) AuthMethod { log.DebugLog()
+func PublicKeys(signers ...Signer) AuthMethod { 
 	return publicKeyCallback(func() ([]Signer, error) { return signers, nil })
 }
 
 // PublicKeysCallback returns an AuthMethod that runs the given
 // function to obtain a list of key pairs.
-func PublicKeysCallback(getSigners func() (signers []Signer, err error)) AuthMethod { log.DebugLog()
+func PublicKeysCallback(getSigners func() (signers []Signer, err error)) AuthMethod { 
 	return publicKeyCallback(getSigners)
 }
 
 // handleAuthResponse returns whether the preceding authentication request succeeded
 // along with a list of remaining authentication methods to try next and
 // an error if an unexpected response was received.
-func handleAuthResponse(c packetConn) (bool, []string, error) { log.DebugLog()
+func handleAuthResponse(c packetConn) (bool, []string, error) { 
 	for {
 		packet, err := c.readPacket()
 		if err != nil {
@@ -351,15 +351,15 @@ type KeyboardInteractiveChallenge func(user, instruction string, questions []str
 
 // KeyboardInteractive returns an AuthMethod using a prompt/response
 // sequence controlled by the server.
-func KeyboardInteractive(challenge KeyboardInteractiveChallenge) AuthMethod { log.DebugLog()
+func KeyboardInteractive(challenge KeyboardInteractiveChallenge) AuthMethod { 
 	return challenge
 }
 
-func (cb KeyboardInteractiveChallenge) method() string { log.DebugLog()
+func (cb KeyboardInteractiveChallenge) method() string { 
 	return "keyboard-interactive"
 }
 
-func (cb KeyboardInteractiveChallenge) auth(session []byte, user string, c packetConn, rand io.Reader) (bool, []string, error) { log.DebugLog()
+func (cb KeyboardInteractiveChallenge) auth(session []byte, user string, c packetConn, rand io.Reader) (bool, []string, error) { 
 	type initiateMsg struct {
 		User       string `sshtype:"50"`
 		Service    string
@@ -456,7 +456,7 @@ type retryableAuthMethod struct {
 	maxTries   int
 }
 
-func (r *retryableAuthMethod) auth(session []byte, user string, c packetConn, rand io.Reader) (ok bool, methods []string, err error) { log.DebugLog()
+func (r *retryableAuthMethod) auth(session []byte, user string, c packetConn, rand io.Reader) (ok bool, methods []string, err error) { 
 	for i := 0; r.maxTries <= 0 || i < r.maxTries; i++ {
 		ok, methods, err = r.authMethod.auth(session, user, c, rand)
 		if ok || err != nil { // either success or error terminate
@@ -466,7 +466,7 @@ func (r *retryableAuthMethod) auth(session []byte, user string, c packetConn, ra
 	return ok, methods, err
 }
 
-func (r *retryableAuthMethod) method() string { log.DebugLog()
+func (r *retryableAuthMethod) method() string { 
 	return r.authMethod.method()
 }
 
@@ -481,6 +481,6 @@ func (r *retryableAuthMethod) method() string { log.DebugLog()
 // [keyboard-interactive]); Without this decorator, the non-retryable
 // AuthMethod would be removed from future consideration, and never tried again
 // (and so the user would never be able to retry their entry).
-func RetryableAuthMethod(auth AuthMethod, maxTries int) AuthMethod { log.DebugLog()
+func RetryableAuthMethod(auth AuthMethod, maxTries int) AuthMethod { 
 	return &retryableAuthMethod{authMethod: auth, maxTries: maxTries}
 }

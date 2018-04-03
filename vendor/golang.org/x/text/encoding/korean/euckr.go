@@ -30,7 +30,7 @@ var errInvalidEUCKR = errors.New("korean: invalid EUC-KR encoding")
 
 type eucKRDecoder struct{ transform.NopResetter }
 
-func (eucKRDecoder) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) { log.DebugLog()
+func (eucKRDecoder) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) { 
 	r, size := rune(0), 0
 loop:
 	for ; nSrc < len(src); nSrc += size {
@@ -92,7 +92,7 @@ loop:
 
 type eucKREncoder struct{ transform.NopResetter }
 
-func (eucKREncoder) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) { log.DebugLog()
+func (eucKREncoder) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) { 
 	r, size := rune(0), 0
 	for ; nSrc < len(src); nSrc += size {
 		r = rune(src[nSrc])
@@ -170,7 +170,7 @@ func (eucKREncoder) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err 
 	return nDst, nSrc, err
 }
 
-func init() { log.DebugLog()
+func init() { 
 	// Check that the hard-coded encode switch covers all tables.
 	if numEncodeTables != 7 {
 		panic("bad numEncodeTables")

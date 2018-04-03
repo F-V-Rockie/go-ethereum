@@ -19,31 +19,31 @@ type BoolFlag struct {
 
 // String returns a readable representation of this value
 // (for usage defaults)
-func (f BoolFlag) String() string { log.DebugLog()
+func (f BoolFlag) String() string { 
 	return FlagStringer(f)
 }
 
 // GetName returns the name of the flag
-func (f BoolFlag) GetName() string { log.DebugLog()
+func (f BoolFlag) GetName() string { 
 	return f.Name
 }
 
 // Bool looks up the value of a local BoolFlag, returns
 // false if not found
-func (c *Context) Bool(name string) bool { log.DebugLog()
+func (c *Context) Bool(name string) bool { 
 	return lookupBool(name, c.flagSet)
 }
 
 // GlobalBool looks up the value of a global BoolFlag, returns
 // false if not found
-func (c *Context) GlobalBool(name string) bool { log.DebugLog()
+func (c *Context) GlobalBool(name string) bool { 
 	if fs := lookupGlobalFlagSet(name, c); fs != nil {
 		return lookupBool(name, fs)
 	}
 	return false
 }
 
-func lookupBool(name string, set *flag.FlagSet) bool { log.DebugLog()
+func lookupBool(name string, set *flag.FlagSet) bool { 
 	f := set.Lookup(name)
 	if f != nil {
 		parsed, err := strconv.ParseBool(f.Value.String())
@@ -66,31 +66,31 @@ type BoolTFlag struct {
 
 // String returns a readable representation of this value
 // (for usage defaults)
-func (f BoolTFlag) String() string { log.DebugLog()
+func (f BoolTFlag) String() string { 
 	return FlagStringer(f)
 }
 
 // GetName returns the name of the flag
-func (f BoolTFlag) GetName() string { log.DebugLog()
+func (f BoolTFlag) GetName() string { 
 	return f.Name
 }
 
 // BoolT looks up the value of a local BoolTFlag, returns
 // false if not found
-func (c *Context) BoolT(name string) bool { log.DebugLog()
+func (c *Context) BoolT(name string) bool { 
 	return lookupBoolT(name, c.flagSet)
 }
 
 // GlobalBoolT looks up the value of a global BoolTFlag, returns
 // false if not found
-func (c *Context) GlobalBoolT(name string) bool { log.DebugLog()
+func (c *Context) GlobalBoolT(name string) bool { 
 	if fs := lookupGlobalFlagSet(name, c); fs != nil {
 		return lookupBoolT(name, fs)
 	}
 	return false
 }
 
-func lookupBoolT(name string, set *flag.FlagSet) bool { log.DebugLog()
+func lookupBoolT(name string, set *flag.FlagSet) bool { 
 	f := set.Lookup(name)
 	if f != nil {
 		parsed, err := strconv.ParseBool(f.Value.String())
@@ -114,31 +114,31 @@ type DurationFlag struct {
 
 // String returns a readable representation of this value
 // (for usage defaults)
-func (f DurationFlag) String() string { log.DebugLog()
+func (f DurationFlag) String() string { 
 	return FlagStringer(f)
 }
 
 // GetName returns the name of the flag
-func (f DurationFlag) GetName() string { log.DebugLog()
+func (f DurationFlag) GetName() string { 
 	return f.Name
 }
 
 // Duration looks up the value of a local DurationFlag, returns
 // 0 if not found
-func (c *Context) Duration(name string) time.Duration { log.DebugLog()
+func (c *Context) Duration(name string) time.Duration { 
 	return lookupDuration(name, c.flagSet)
 }
 
 // GlobalDuration looks up the value of a global DurationFlag, returns
 // 0 if not found
-func (c *Context) GlobalDuration(name string) time.Duration { log.DebugLog()
+func (c *Context) GlobalDuration(name string) time.Duration { 
 	if fs := lookupGlobalFlagSet(name, c); fs != nil {
 		return lookupDuration(name, fs)
 	}
 	return 0
 }
 
-func lookupDuration(name string, set *flag.FlagSet) time.Duration { log.DebugLog()
+func lookupDuration(name string, set *flag.FlagSet) time.Duration { 
 	f := set.Lookup(name)
 	if f != nil {
 		parsed, err := time.ParseDuration(f.Value.String())
@@ -162,31 +162,31 @@ type Float64Flag struct {
 
 // String returns a readable representation of this value
 // (for usage defaults)
-func (f Float64Flag) String() string { log.DebugLog()
+func (f Float64Flag) String() string { 
 	return FlagStringer(f)
 }
 
 // GetName returns the name of the flag
-func (f Float64Flag) GetName() string { log.DebugLog()
+func (f Float64Flag) GetName() string { 
 	return f.Name
 }
 
 // Float64 looks up the value of a local Float64Flag, returns
 // 0 if not found
-func (c *Context) Float64(name string) float64 { log.DebugLog()
+func (c *Context) Float64(name string) float64 { 
 	return lookupFloat64(name, c.flagSet)
 }
 
 // GlobalFloat64 looks up the value of a global Float64Flag, returns
 // 0 if not found
-func (c *Context) GlobalFloat64(name string) float64 { log.DebugLog()
+func (c *Context) GlobalFloat64(name string) float64 { 
 	if fs := lookupGlobalFlagSet(name, c); fs != nil {
 		return lookupFloat64(name, fs)
 	}
 	return 0
 }
 
-func lookupFloat64(name string, set *flag.FlagSet) float64 { log.DebugLog()
+func lookupFloat64(name string, set *flag.FlagSet) float64 { 
 	f := set.Lookup(name)
 	if f != nil {
 		parsed, err := strconv.ParseFloat(f.Value.String(), 64)
@@ -209,31 +209,31 @@ type GenericFlag struct {
 
 // String returns a readable representation of this value
 // (for usage defaults)
-func (f GenericFlag) String() string { log.DebugLog()
+func (f GenericFlag) String() string { 
 	return FlagStringer(f)
 }
 
 // GetName returns the name of the flag
-func (f GenericFlag) GetName() string { log.DebugLog()
+func (f GenericFlag) GetName() string { 
 	return f.Name
 }
 
 // Generic looks up the value of a local GenericFlag, returns
 // nil if not found
-func (c *Context) Generic(name string) interface{} { log.DebugLog()
+func (c *Context) Generic(name string) interface{} { 
 	return lookupGeneric(name, c.flagSet)
 }
 
 // GlobalGeneric looks up the value of a global GenericFlag, returns
 // nil if not found
-func (c *Context) GlobalGeneric(name string) interface{} { log.DebugLog()
+func (c *Context) GlobalGeneric(name string) interface{} { 
 	if fs := lookupGlobalFlagSet(name, c); fs != nil {
 		return lookupGeneric(name, fs)
 	}
 	return nil
 }
 
-func lookupGeneric(name string, set *flag.FlagSet) interface{} { log.DebugLog()
+func lookupGeneric(name string, set *flag.FlagSet) interface{} { 
 	f := set.Lookup(name)
 	if f != nil {
 		parsed, err := f.Value, error(nil)
@@ -257,31 +257,31 @@ type Int64Flag struct {
 
 // String returns a readable representation of this value
 // (for usage defaults)
-func (f Int64Flag) String() string { log.DebugLog()
+func (f Int64Flag) String() string { 
 	return FlagStringer(f)
 }
 
 // GetName returns the name of the flag
-func (f Int64Flag) GetName() string { log.DebugLog()
+func (f Int64Flag) GetName() string { 
 	return f.Name
 }
 
 // Int64 looks up the value of a local Int64Flag, returns
 // 0 if not found
-func (c *Context) Int64(name string) int64 { log.DebugLog()
+func (c *Context) Int64(name string) int64 { 
 	return lookupInt64(name, c.flagSet)
 }
 
 // GlobalInt64 looks up the value of a global Int64Flag, returns
 // 0 if not found
-func (c *Context) GlobalInt64(name string) int64 { log.DebugLog()
+func (c *Context) GlobalInt64(name string) int64 { 
 	if fs := lookupGlobalFlagSet(name, c); fs != nil {
 		return lookupInt64(name, fs)
 	}
 	return 0
 }
 
-func lookupInt64(name string, set *flag.FlagSet) int64 { log.DebugLog()
+func lookupInt64(name string, set *flag.FlagSet) int64 { 
 	f := set.Lookup(name)
 	if f != nil {
 		parsed, err := strconv.ParseInt(f.Value.String(), 0, 64)
@@ -305,31 +305,31 @@ type IntFlag struct {
 
 // String returns a readable representation of this value
 // (for usage defaults)
-func (f IntFlag) String() string { log.DebugLog()
+func (f IntFlag) String() string { 
 	return FlagStringer(f)
 }
 
 // GetName returns the name of the flag
-func (f IntFlag) GetName() string { log.DebugLog()
+func (f IntFlag) GetName() string { 
 	return f.Name
 }
 
 // Int looks up the value of a local IntFlag, returns
 // 0 if not found
-func (c *Context) Int(name string) int { log.DebugLog()
+func (c *Context) Int(name string) int { 
 	return lookupInt(name, c.flagSet)
 }
 
 // GlobalInt looks up the value of a global IntFlag, returns
 // 0 if not found
-func (c *Context) GlobalInt(name string) int { log.DebugLog()
+func (c *Context) GlobalInt(name string) int { 
 	if fs := lookupGlobalFlagSet(name, c); fs != nil {
 		return lookupInt(name, fs)
 	}
 	return 0
 }
 
-func lookupInt(name string, set *flag.FlagSet) int { log.DebugLog()
+func lookupInt(name string, set *flag.FlagSet) int { 
 	f := set.Lookup(name)
 	if f != nil {
 		parsed, err := strconv.ParseInt(f.Value.String(), 0, 64)
@@ -352,31 +352,31 @@ type IntSliceFlag struct {
 
 // String returns a readable representation of this value
 // (for usage defaults)
-func (f IntSliceFlag) String() string { log.DebugLog()
+func (f IntSliceFlag) String() string { 
 	return FlagStringer(f)
 }
 
 // GetName returns the name of the flag
-func (f IntSliceFlag) GetName() string { log.DebugLog()
+func (f IntSliceFlag) GetName() string { 
 	return f.Name
 }
 
 // IntSlice looks up the value of a local IntSliceFlag, returns
 // nil if not found
-func (c *Context) IntSlice(name string) []int { log.DebugLog()
+func (c *Context) IntSlice(name string) []int { 
 	return lookupIntSlice(name, c.flagSet)
 }
 
 // GlobalIntSlice looks up the value of a global IntSliceFlag, returns
 // nil if not found
-func (c *Context) GlobalIntSlice(name string) []int { log.DebugLog()
+func (c *Context) GlobalIntSlice(name string) []int { 
 	if fs := lookupGlobalFlagSet(name, c); fs != nil {
 		return lookupIntSlice(name, fs)
 	}
 	return nil
 }
 
-func lookupIntSlice(name string, set *flag.FlagSet) []int { log.DebugLog()
+func lookupIntSlice(name string, set *flag.FlagSet) []int { 
 	f := set.Lookup(name)
 	if f != nil {
 		parsed, err := (f.Value.(*IntSlice)).Value(), error(nil)
@@ -399,31 +399,31 @@ type Int64SliceFlag struct {
 
 // String returns a readable representation of this value
 // (for usage defaults)
-func (f Int64SliceFlag) String() string { log.DebugLog()
+func (f Int64SliceFlag) String() string { 
 	return FlagStringer(f)
 }
 
 // GetName returns the name of the flag
-func (f Int64SliceFlag) GetName() string { log.DebugLog()
+func (f Int64SliceFlag) GetName() string { 
 	return f.Name
 }
 
 // Int64Slice looks up the value of a local Int64SliceFlag, returns
 // nil if not found
-func (c *Context) Int64Slice(name string) []int64 { log.DebugLog()
+func (c *Context) Int64Slice(name string) []int64 { 
 	return lookupInt64Slice(name, c.flagSet)
 }
 
 // GlobalInt64Slice looks up the value of a global Int64SliceFlag, returns
 // nil if not found
-func (c *Context) GlobalInt64Slice(name string) []int64 { log.DebugLog()
+func (c *Context) GlobalInt64Slice(name string) []int64 { 
 	if fs := lookupGlobalFlagSet(name, c); fs != nil {
 		return lookupInt64Slice(name, fs)
 	}
 	return nil
 }
 
-func lookupInt64Slice(name string, set *flag.FlagSet) []int64 { log.DebugLog()
+func lookupInt64Slice(name string, set *flag.FlagSet) []int64 { 
 	f := set.Lookup(name)
 	if f != nil {
 		parsed, err := (f.Value.(*Int64Slice)).Value(), error(nil)
@@ -447,31 +447,31 @@ type StringFlag struct {
 
 // String returns a readable representation of this value
 // (for usage defaults)
-func (f StringFlag) String() string { log.DebugLog()
+func (f StringFlag) String() string { 
 	return FlagStringer(f)
 }
 
 // GetName returns the name of the flag
-func (f StringFlag) GetName() string { log.DebugLog()
+func (f StringFlag) GetName() string { 
 	return f.Name
 }
 
 // String looks up the value of a local StringFlag, returns
 // "" if not found
-func (c *Context) String(name string) string { log.DebugLog()
+func (c *Context) String(name string) string { 
 	return lookupString(name, c.flagSet)
 }
 
 // GlobalString looks up the value of a global StringFlag, returns
 // "" if not found
-func (c *Context) GlobalString(name string) string { log.DebugLog()
+func (c *Context) GlobalString(name string) string { 
 	if fs := lookupGlobalFlagSet(name, c); fs != nil {
 		return lookupString(name, fs)
 	}
 	return ""
 }
 
-func lookupString(name string, set *flag.FlagSet) string { log.DebugLog()
+func lookupString(name string, set *flag.FlagSet) string { 
 	f := set.Lookup(name)
 	if f != nil {
 		parsed, err := f.Value.String(), error(nil)
@@ -494,31 +494,31 @@ type StringSliceFlag struct {
 
 // String returns a readable representation of this value
 // (for usage defaults)
-func (f StringSliceFlag) String() string { log.DebugLog()
+func (f StringSliceFlag) String() string { 
 	return FlagStringer(f)
 }
 
 // GetName returns the name of the flag
-func (f StringSliceFlag) GetName() string { log.DebugLog()
+func (f StringSliceFlag) GetName() string { 
 	return f.Name
 }
 
 // StringSlice looks up the value of a local StringSliceFlag, returns
 // nil if not found
-func (c *Context) StringSlice(name string) []string { log.DebugLog()
+func (c *Context) StringSlice(name string) []string { 
 	return lookupStringSlice(name, c.flagSet)
 }
 
 // GlobalStringSlice looks up the value of a global StringSliceFlag, returns
 // nil if not found
-func (c *Context) GlobalStringSlice(name string) []string { log.DebugLog()
+func (c *Context) GlobalStringSlice(name string) []string { 
 	if fs := lookupGlobalFlagSet(name, c); fs != nil {
 		return lookupStringSlice(name, fs)
 	}
 	return nil
 }
 
-func lookupStringSlice(name string, set *flag.FlagSet) []string { log.DebugLog()
+func lookupStringSlice(name string, set *flag.FlagSet) []string { 
 	f := set.Lookup(name)
 	if f != nil {
 		parsed, err := (f.Value.(*StringSlice)).Value(), error(nil)
@@ -542,31 +542,31 @@ type Uint64Flag struct {
 
 // String returns a readable representation of this value
 // (for usage defaults)
-func (f Uint64Flag) String() string { log.DebugLog()
+func (f Uint64Flag) String() string { 
 	return FlagStringer(f)
 }
 
 // GetName returns the name of the flag
-func (f Uint64Flag) GetName() string { log.DebugLog()
+func (f Uint64Flag) GetName() string { 
 	return f.Name
 }
 
 // Uint64 looks up the value of a local Uint64Flag, returns
 // 0 if not found
-func (c *Context) Uint64(name string) uint64 { log.DebugLog()
+func (c *Context) Uint64(name string) uint64 { 
 	return lookupUint64(name, c.flagSet)
 }
 
 // GlobalUint64 looks up the value of a global Uint64Flag, returns
 // 0 if not found
-func (c *Context) GlobalUint64(name string) uint64 { log.DebugLog()
+func (c *Context) GlobalUint64(name string) uint64 { 
 	if fs := lookupGlobalFlagSet(name, c); fs != nil {
 		return lookupUint64(name, fs)
 	}
 	return 0
 }
 
-func lookupUint64(name string, set *flag.FlagSet) uint64 { log.DebugLog()
+func lookupUint64(name string, set *flag.FlagSet) uint64 { 
 	f := set.Lookup(name)
 	if f != nil {
 		parsed, err := strconv.ParseUint(f.Value.String(), 0, 64)
@@ -590,31 +590,31 @@ type UintFlag struct {
 
 // String returns a readable representation of this value
 // (for usage defaults)
-func (f UintFlag) String() string { log.DebugLog()
+func (f UintFlag) String() string { 
 	return FlagStringer(f)
 }
 
 // GetName returns the name of the flag
-func (f UintFlag) GetName() string { log.DebugLog()
+func (f UintFlag) GetName() string { 
 	return f.Name
 }
 
 // Uint looks up the value of a local UintFlag, returns
 // 0 if not found
-func (c *Context) Uint(name string) uint { log.DebugLog()
+func (c *Context) Uint(name string) uint { 
 	return lookupUint(name, c.flagSet)
 }
 
 // GlobalUint looks up the value of a global UintFlag, returns
 // 0 if not found
-func (c *Context) GlobalUint(name string) uint { log.DebugLog()
+func (c *Context) GlobalUint(name string) uint { 
 	if fs := lookupGlobalFlagSet(name, c); fs != nil {
 		return lookupUint(name, fs)
 	}
 	return 0
 }
 
-func lookupUint(name string, set *flag.FlagSet) uint { log.DebugLog()
+func lookupUint(name string, set *flag.FlagSet) uint { 
 	f := set.Lookup(name)
 	if f != nil {
 		parsed, err := strconv.ParseUint(f.Value.String(), 0, 64)

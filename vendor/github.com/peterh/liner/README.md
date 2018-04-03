@@ -59,7 +59,7 @@ var (
 	names      = []string{"john", "james", "mary", "nancy"}
 )
 
-func main() { log.DebugLog()
+func main() {
 	line := liner.NewLiner()
 	defer line.Close()
 

@@ -47,7 +47,7 @@ var timeType = reflect.TypeOf(time.Time{})
 //	TOML arrays to any type of slice
 //	TOML tables to struct or map
 //	TOML array tables to slice of struct or map
-func (cfg *Config) Unmarshal(data []byte, v interface{}) error { log.DebugLog()
+func (cfg *Config) Unmarshal(data []byte, v interface{}) error { 
 	table, err := Parse(data)
 	if err != nil {
 		return err
@@ -66,13 +66,13 @@ type Decoder struct {
 
 // NewDecoder returns a new Decoder that reads from r.
 // Note that it reads all from r before parsing it.
-func (cfg *Config) NewDecoder(r io.Reader) *Decoder { log.DebugLog()
+func (cfg *Config) NewDecoder(r io.Reader) *Decoder { 
 	return &Decoder{r, cfg}
 }
 
 // Decode parses the TOML data from its input and stores it in the value pointed to by v.
 // See the documentation for Unmarshal for details about the conversion of TOML into a Go value.
-func (d *Decoder) Decode(v interface{}) error { log.DebugLog()
+func (d *Decoder) Decode(v interface{}) error { 
 	b, err := ioutil.ReadAll(d.r)
 	if err != nil {
 		return err
@@ -112,7 +112,7 @@ type Unmarshaler interface {
 //	TOML arrays to any type of slice
 //	TOML tables to struct or map
 //	TOML array tables to slice of struct or map
-func (cfg *Config) UnmarshalTable(t *ast.Table, v interface{}) error { log.DebugLog()
+func (cfg *Config) UnmarshalTable(t *ast.Table, v interface{}) error { 
 	rv := reflect.ValueOf(v)
 	toplevelMap := rv.Kind() == reflect.Map
 	if (!toplevelMap && rv.Kind() != reflect.Ptr) || rv.IsNil() {
@@ -122,7 +122,7 @@ func (cfg *Config) UnmarshalTable(t *ast.Table, v interface{}) error { log.Debug
 }
 
 // used for UnmarshalerRec.
-func unmarshalTableOrValue(cfg *Config, rv reflect.Value, av interface{}) error { log.DebugLog()
+func unmarshalTableOrValue(cfg *Config, rv reflect.Value, av interface{}) error { 
 	if (rv.Kind() != reflect.Ptr && rv.Kind() != reflect.Map) || rv.IsNil() {
 		return &invalidUnmarshalError{rv.Type()}
 	}
@@ -145,7 +145,7 @@ func unmarshalTableOrValue(cfg *Config, rv reflect.Value, av interface{}) error 
 //
 // toplevelMap is true when rv is an (unadressable) map given to UnmarshalTable. In this
 // (special) case, the map is used as-is instead of creating a new map.
-func unmarshalTable(cfg *Config, rv reflect.Value, t *ast.Table, toplevelMap bool) error { log.DebugLog()
+func unmarshalTable(cfg *Config, rv reflect.Value, t *ast.Table, toplevelMap bool) error { 
 	rv = indirect(rv)
 	if err, ok := setUnmarshaler(cfg, rv, t); ok {
 		return lineError(t.Line, err)
@@ -194,7 +194,7 @@ func unmarshalTable(cfg *Config, rv reflect.Value, t *ast.Table, toplevelMap boo
 	return nil
 }
 
-func fieldLineNumber(fieldAst interface{}) int { log.DebugLog()
+func fieldLineNumber(fieldAst interface{}) int { 
 	switch av := fieldAst.(type) {
 	case *ast.KeyValue:
 		return av.Line
@@ -207,7 +207,7 @@ func fieldLineNumber(fieldAst interface{}) int { log.DebugLog()
 	}
 }
 
-func unmarshalField(cfg *Config, rv reflect.Value, fieldAst interface{}) error { log.DebugLog()
+func unmarshalField(cfg *Config, rv reflect.Value, fieldAst interface{}) error { 
 	switch av := fieldAst.(type) {
 	case *ast.KeyValue:
 		return setValue(cfg, rv, av.Value)
@@ -241,7 +241,7 @@ func unmarshalField(cfg *Config, rv reflect.Value, fieldAst interface{}) error {
 	return nil
 }
 
-func unmarshalMapKey(typ reflect.Type, key string) (reflect.Value, error) { log.DebugLog()
+func unmarshalMapKey(typ reflect.Type, key string) (reflect.Value, error) { 
 	rv := reflect.New(typ).Elem()
 	if u, ok := rv.Addr().Interface().(encoding.TextUnmarshaler); ok {
 		return rv, u.UnmarshalText([]byte(key))
@@ -267,7 +267,7 @@ func unmarshalMapKey(typ reflect.Type, key string) (reflect.Value, error) { log.
 	return rv, nil
 }
 
-func setValue(cfg *Config, lhs reflect.Value, val ast.Value) error { log.DebugLog()
+func setValue(cfg *Config, lhs reflect.Value, val ast.Value) error { 
 	lhs = indirect(lhs)
 	if err, ok := setUnmarshaler(cfg, lhs, val); ok {
 		return err
@@ -293,7 +293,7 @@ func setValue(cfg *Config, lhs reflect.Value, val ast.Value) error { log.DebugLo
 	}
 }
 
-func indirect(rv reflect.Value) reflect.Value { log.DebugLog()
+func indirect(rv reflect.Value) reflect.Value { 
 	for rv.Kind() == reflect.Ptr {
 		if rv.IsNil() {
 			rv.Set(reflect.New(rv.Type().Elem()))
@@ -303,7 +303,7 @@ func indirect(rv reflect.Value) reflect.Value { log.DebugLog()
 	return rv
 }
 
-func setUnmarshaler(cfg *Config, lhs reflect.Value, av interface{}) (error, bool) { log.DebugLog()
+func setUnmarshaler(cfg *Config, lhs reflect.Value, av interface{}) (error, bool) { 
 	if lhs.CanAddr() {
 		if u, ok := lhs.Addr().Interface().(UnmarshalerRec); ok {
 			err := u.UnmarshalTOML(func(v interface{}) error {
@@ -318,7 +318,7 @@ func setUnmarshaler(cfg *Config, lhs reflect.Value, av interface{}) (error, bool
 	return nil, false
 }
 
-func unmarshalerSource(av interface{}) []byte { log.DebugLog()
+func unmarshalerSource(av interface{}) []byte { 
 	var source []byte
 	switch av := av.(type) {
 	case []*ast.Table:
@@ -336,7 +336,7 @@ func unmarshalerSource(av interface{}) []byte { log.DebugLog()
 	return source
 }
 
-func setTextUnmarshaler(lhs reflect.Value, val ast.Value) (error, bool) { log.DebugLog()
+func setTextUnmarshaler(lhs reflect.Value, val ast.Value) (error, bool) { 
 	if !lhs.CanAddr() {
 		return nil, false
 	}
@@ -356,7 +356,7 @@ func setTextUnmarshaler(lhs reflect.Value, val ast.Value) (error, bool) { log.De
 	return u.UnmarshalText([]byte(data)), true
 }
 
-func setInt(fv reflect.Value, v *ast.Integer) error { log.DebugLog()
+func setInt(fv reflect.Value, v *ast.Integer) error { 
 	k := fv.Kind()
 	switch {
 	case k >= reflect.Int && k <= reflect.Int64:
@@ -383,7 +383,7 @@ func setInt(fv reflect.Value, v *ast.Integer) error { log.DebugLog()
 	return nil
 }
 
-func setFloat(fv reflect.Value, v *ast.Float) error { log.DebugLog()
+func setFloat(fv reflect.Value, v *ast.Float) error { 
 	f, err := v.Float()
 	if err != nil {
 		return err
@@ -402,7 +402,7 @@ func setFloat(fv reflect.Value, v *ast.Float) error { log.DebugLog()
 	return nil
 }
 
-func setString(fv reflect.Value, v *ast.String) error { log.DebugLog()
+func setString(fv reflect.Value, v *ast.String) error { 
 	switch {
 	case fv.Kind() == reflect.String:
 		fv.SetString(v.Value)
@@ -414,7 +414,7 @@ func setString(fv reflect.Value, v *ast.String) error { log.DebugLog()
 	return nil
 }
 
-func setBoolean(fv reflect.Value, v *ast.Boolean) error { log.DebugLog()
+func setBoolean(fv reflect.Value, v *ast.Boolean) error { 
 	b, _ := v.Boolean()
 	switch {
 	case fv.Kind() == reflect.Bool:
@@ -427,7 +427,7 @@ func setBoolean(fv reflect.Value, v *ast.Boolean) error { log.DebugLog()
 	return nil
 }
 
-func setDatetime(rv reflect.Value, v *ast.Datetime) error { log.DebugLog()
+func setDatetime(rv reflect.Value, v *ast.Datetime) error { 
 	t, err := v.Time()
 	if err != nil {
 		return err
@@ -439,7 +439,7 @@ func setDatetime(rv reflect.Value, v *ast.Datetime) error { log.DebugLog()
 	return nil
 }
 
-func setArray(cfg *Config, rv reflect.Value, v *ast.Array) error { log.DebugLog()
+func setArray(cfg *Config, rv reflect.Value, v *ast.Array) error { 
 	var slicetyp reflect.Type
 	switch {
 	case rv.Kind() == reflect.Slice:
@@ -473,6 +473,6 @@ func setArray(cfg *Config, rv reflect.Value, v *ast.Array) error { log.DebugLog(
 	return nil
 }
 
-func isEface(rv reflect.Value) bool { log.DebugLog()
+func isEface(rv reflect.Value) bool { 
 	return rv.Kind() == reflect.Interface && rv.Type().NumMethod() == 0
 }

@@ -20,7 +20,7 @@ import (
 
 const ImplementsGetwd = true
 
-func Getwd() (string, error) { log.DebugLog()
+func Getwd() (string, error) { 
 	buf := make([]byte, 2048)
 	attrs, err := getAttrList(".", attrList{CommonAttr: attrCmnFullpath}, buf, 0)
 	if err == nil && len(attrs) == 1 && len(attrs[0]) >= 2 {
@@ -49,7 +49,7 @@ type SockaddrDatalink struct {
 }
 
 // Translate "kern.hostname" to []_C_int{0,1,2,3}.
-func nametomib(name string) (mib []_C_int, err error) { log.DebugLog()
+func nametomib(name string) (mib []_C_int, err error) { 
 	const siz = unsafe.Sizeof(mib[0])
 
 	// NOTE(rsc): It seems strange to set the buffer to have
@@ -76,21 +76,21 @@ func nametomib(name string) (mib []_C_int, err error) { log.DebugLog()
 	return buf[0 : n/siz], nil
 }
 
-func direntIno(buf []byte) (uint64, bool) { log.DebugLog()
+func direntIno(buf []byte) (uint64, bool) { 
 	return readInt(buf, unsafe.Offsetof(Dirent{}.Ino), unsafe.Sizeof(Dirent{}.Ino))
 }
 
-func direntReclen(buf []byte) (uint64, bool) { log.DebugLog()
+func direntReclen(buf []byte) (uint64, bool) { 
 	return readInt(buf, unsafe.Offsetof(Dirent{}.Reclen), unsafe.Sizeof(Dirent{}.Reclen))
 }
 
-func direntNamlen(buf []byte) (uint64, bool) { log.DebugLog()
+func direntNamlen(buf []byte) (uint64, bool) { 
 	return readInt(buf, unsafe.Offsetof(Dirent{}.Namlen), unsafe.Sizeof(Dirent{}.Namlen))
 }
 
 //sys   ptrace(request int, pid int, addr uintptr, data uintptr) (err error)
-func PtraceAttach(pid int) (err error) { log.DebugLog() return ptrace(PT_ATTACH, pid, 0, 0) }
-func PtraceDetach(pid int) (err error) { log.DebugLog() return ptrace(PT_DETACH, pid, 0, 0) }
+func PtraceAttach(pid int) (err error) {  return ptrace(PT_ATTACH, pid, 0, 0) }
+func PtraceDetach(pid int) (err error) {  return ptrace(PT_DETACH, pid, 0, 0) }
 
 const (
 	attrBitMapCount = 5
@@ -107,7 +107,7 @@ type attrList struct {
 	Forkattr    uint32
 }
 
-func getAttrList(path string, attrList attrList, attrBuf []byte, options uint) (attrs [][]byte, err error) { log.DebugLog()
+func getAttrList(path string, attrList attrList, attrBuf []byte, options uint) (attrs [][]byte, err error) { 
 	if len(attrBuf) < 4 {
 		return nil, errorspkg.New("attrBuf too small")
 	}
@@ -164,7 +164,7 @@ func getAttrList(path string, attrList attrList, attrBuf []byte, options uint) (
 
 //sysnb pipe() (r int, w int, err error)
 
-func Pipe(p []int) (err error) { log.DebugLog()
+func Pipe(p []int) (err error) { 
 	if len(p) != 2 {
 		return EINVAL
 	}
@@ -172,7 +172,7 @@ func Pipe(p []int) (err error) { log.DebugLog()
 	return
 }
 
-func Getfsstat(buf []Statfs_t, flags int) (n int, err error) { log.DebugLog()
+func Getfsstat(buf []Statfs_t, flags int) (n int, err error) { 
 	var _p0 unsafe.Pointer
 	var bufsize uintptr
 	if len(buf) > 0 {
@@ -187,7 +187,7 @@ func Getfsstat(buf []Statfs_t, flags int) (n int, err error) { log.DebugLog()
 	return
 }
 
-func setattrlistTimes(path string, times []Timespec, flags int) error { log.DebugLog()
+func setattrlistTimes(path string, times []Timespec, flags int) error { 
 	_p0, err := BytePtrFromString(path)
 	if err != nil {
 		return err
@@ -218,7 +218,7 @@ func setattrlistTimes(path string, times []Timespec, flags int) error { log.Debu
 	return nil
 }
 
-func utimensat(dirfd int, path string, times *[2]Timespec, flags int) error { log.DebugLog()
+func utimensat(dirfd int, path string, times *[2]Timespec, flags int) error { 
 	// Darwin doesn't support SYS_UTIMENSAT
 	return ENOSYS
 }
@@ -229,7 +229,7 @@ func utimensat(dirfd int, path string, times *[2]Timespec, flags int) error { lo
 
 //sys	kill(pid int, signum int, posix int) (err error)
 
-func Kill(pid int, signum syscall.Signal) (err error) { log.DebugLog() return kill(pid, int(signum), 1) }
+func Kill(pid int, signum syscall.Signal) (err error) {  return kill(pid, int(signum), 1) }
 
 //sys	ioctl(fd int, req uint, arg uintptr) (err error)
 
@@ -238,33 +238,33 @@ func Kill(pid int, signum syscall.Signal) (err error) { log.DebugLog() return ki
 
 // IoctlSetInt performs an ioctl operation which sets an integer value
 // on fd, using the specified request number.
-func IoctlSetInt(fd int, req uint, value int) error { log.DebugLog()
+func IoctlSetInt(fd int, req uint, value int) error { 
 	return ioctl(fd, req, uintptr(value))
 }
 
-func IoctlSetWinsize(fd int, req uint, value *Winsize) error { log.DebugLog()
+func IoctlSetWinsize(fd int, req uint, value *Winsize) error { 
 	return ioctl(fd, req, uintptr(unsafe.Pointer(value)))
 }
 
-func IoctlSetTermios(fd int, req uint, value *Termios) error { log.DebugLog()
+func IoctlSetTermios(fd int, req uint, value *Termios) error { 
 	return ioctl(fd, req, uintptr(unsafe.Pointer(value)))
 }
 
 // IoctlGetInt performs an ioctl operation which gets an integer value
 // from fd, using the specified request number.
-func IoctlGetInt(fd int, req uint) (int, error) { log.DebugLog()
+func IoctlGetInt(fd int, req uint) (int, error) { 
 	var value int
 	err := ioctl(fd, req, uintptr(unsafe.Pointer(&value)))
 	return value, err
 }
 
-func IoctlGetWinsize(fd int, req uint) (*Winsize, error) { log.DebugLog()
+func IoctlGetWinsize(fd int, req uint) (*Winsize, error) { 
 	var value Winsize
 	err := ioctl(fd, req, uintptr(unsafe.Pointer(&value)))
 	return &value, err
 }
 
-func IoctlGetTermios(fd int, req uint) (*Termios, error) { log.DebugLog()
+func IoctlGetTermios(fd int, req uint) (*Termios, error) { 
 	var value Termios
 	err := ioctl(fd, req, uintptr(unsafe.Pointer(&value)))
 	return &value, err

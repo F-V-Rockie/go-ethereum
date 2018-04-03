@@ -12,7 +12,7 @@ var matchLeading0Exponent = regexp.MustCompile(`([eE][\+\-])0+([1-9])`) // 1e-07
 
 // FIXME
 // https://code.google.com/p/v8/source/browse/branches/bleeding_edge/src/conversions.cc?spec=svn18082&r=18082
-func floatToString(value float64, bitsize int) string { log.DebugLog()
+func floatToString(value float64, bitsize int) string { 
 	// TODO Fit to ECMA-262 9.8.1 specification
 	if math.IsNaN(value) {
 		return "NaN"
@@ -29,7 +29,7 @@ func floatToString(value float64, bitsize int) string { log.DebugLog()
 	return strconv.FormatFloat(value, 'f', -1, bitsize)
 }
 
-func numberToStringRadix(value Value, radix int) string { log.DebugLog()
+func numberToStringRadix(value Value, radix int) string { 
 	float := value.float64()
 	if math.IsNaN(float) {
 		return "NaN"
@@ -44,7 +44,7 @@ func numberToStringRadix(value Value, radix int) string { log.DebugLog()
 	return strconv.FormatInt(int64(float), radix)
 }
 
-func (value Value) string() string { log.DebugLog()
+func (value Value) string() string { 
 	if value.kind == valueString {
 		switch value := value.value.(type) {
 		case string:

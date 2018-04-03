@@ -30,7 +30,7 @@ type Value struct {
 	value interface{}
 }
 
-func (value Value) safe() bool { log.DebugLog()
+func (value Value) safe() bool { 
 	return value.kind < valueEmpty
 }
 
@@ -45,7 +45,7 @@ var (
 //
 // This function will not work for advanced types (struct, map, slice/array, etc.) and
 // you should use Otto.ToValue instead.
-func ToValue(value interface{}) (Value, error) { log.DebugLog()
+func ToValue(value interface{}) (Value, error) { 
 	result := Value{}
 	err := catchPanic(func() {
 		result = toValue(value)
@@ -53,40 +53,40 @@ func ToValue(value interface{}) (Value, error) { log.DebugLog()
 	return result, err
 }
 
-func (value Value) isEmpty() bool { log.DebugLog()
+func (value Value) isEmpty() bool { 
 	return value.kind == valueEmpty
 }
 
 // Undefined
 
 // UndefinedValue will return a Value representing undefined.
-func UndefinedValue() Value { log.DebugLog()
+func UndefinedValue() Value { 
 	return Value{}
 }
 
 // IsDefined will return false if the value is undefined, and true otherwise.
-func (value Value) IsDefined() bool { log.DebugLog()
+func (value Value) IsDefined() bool { 
 	return value.kind != valueUndefined
 }
 
 // IsUndefined will return true if the value is undefined, and false otherwise.
-func (value Value) IsUndefined() bool { log.DebugLog()
+func (value Value) IsUndefined() bool { 
 	return value.kind == valueUndefined
 }
 
 // NullValue will return a Value representing null.
-func NullValue() Value { log.DebugLog()
+func NullValue() Value { 
 	return Value{kind: valueNull}
 }
 
 // IsNull will return true if the value is null, and false otherwise.
-func (value Value) IsNull() bool { log.DebugLog()
+func (value Value) IsNull() bool { 
 	return value.kind == valueNull
 }
 
 // ---
 
-func (value Value) isCallable() bool { log.DebugLog()
+func (value Value) isCallable() bool { 
 	switch value := value.value.(type) {
 	case *_object:
 		return value.isCall()
@@ -105,7 +105,7 @@ func (value Value) isCallable() bool { log.DebugLog()
 //		2. The value is not actually a function
 //		3. An (uncaught) exception is thrown
 //
-func (value Value) Call(this Value, argumentList ...interface{}) (Value, error) { log.DebugLog()
+func (value Value) Call(this Value, argumentList ...interface{}) (Value, error) { 
 	result := Value{}
 	err := catchPanic(func() {
 		// FIXME
@@ -117,7 +117,7 @@ func (value Value) Call(this Value, argumentList ...interface{}) (Value, error) 
 	return result, err
 }
 
-func (value Value) call(rt *_runtime, this Value, argumentList ...interface{}) Value { log.DebugLog()
+func (value Value) call(rt *_runtime, this Value, argumentList ...interface{}) Value { 
 	switch function := value.value.(type) {
 	case *_object:
 		return function.call(this, function.runtime.toValueArray(argumentList...), false, nativeFrame)
@@ -128,7 +128,7 @@ func (value Value) call(rt *_runtime, this Value, argumentList ...interface{}) V
 	panic(rt.panicTypeError())
 }
 
-func (value Value) constructSafe(rt *_runtime, this Value, argumentList ...interface{}) (Value, error) { log.DebugLog()
+func (value Value) constructSafe(rt *_runtime, this Value, argumentList ...interface{}) (Value, error) { 
 	result := Value{}
 	err := catchPanic(func() {
 		result = value.construct(rt, this, argumentList...)
@@ -136,7 +136,7 @@ func (value Value) constructSafe(rt *_runtime, this Value, argumentList ...inter
 	return result, err
 }
 
-func (value Value) construct(rt *_runtime, this Value, argumentList ...interface{}) Value { log.DebugLog()
+func (value Value) construct(rt *_runtime, this Value, argumentList ...interface{}) Value { 
 	switch fn := value.value.(type) {
 	case *_object:
 		return fn.construct(fn.runtime.toValueArray(argumentList...))
@@ -148,22 +148,22 @@ func (value Value) construct(rt *_runtime, this Value, argumentList ...interface
 }
 
 // IsPrimitive will return true if value is a primitive (any kind of primitive).
-func (value Value) IsPrimitive() bool { log.DebugLog()
+func (value Value) IsPrimitive() bool { 
 	return !value.IsObject()
 }
 
 // IsBoolean will return true if value is a boolean (primitive).
-func (value Value) IsBoolean() bool { log.DebugLog()
+func (value Value) IsBoolean() bool { 
 	return value.kind == valueBoolean
 }
 
 // IsNumber will return true if value is a number (primitive).
-func (value Value) IsNumber() bool { log.DebugLog()
+func (value Value) IsNumber() bool { 
 	return value.kind == valueNumber
 }
 
 // IsNaN will return true if value is NaN (or would convert to NaN).
-func (value Value) IsNaN() bool { log.DebugLog()
+func (value Value) IsNaN() bool { 
 	switch value := value.value.(type) {
 	case float64:
 		return math.IsNaN(value)
@@ -179,17 +179,17 @@ func (value Value) IsNaN() bool { log.DebugLog()
 }
 
 // IsString will return true if value is a string (primitive).
-func (value Value) IsString() bool { log.DebugLog()
+func (value Value) IsString() bool { 
 	return value.kind == valueString
 }
 
 // IsObject will return true if value is an object.
-func (value Value) IsObject() bool { log.DebugLog()
+func (value Value) IsObject() bool { 
 	return value.kind == valueObject
 }
 
 // IsFunction will return true if value is a function.
-func (value Value) IsFunction() bool { log.DebugLog()
+func (value Value) IsFunction() bool { 
 	if value.kind != valueObject {
 		return false
 	}
@@ -209,56 +209,56 @@ func (value Value) IsFunction() bool { log.DebugLog()
 //		Date
 //		RegExp
 //
-func (value Value) Class() string { log.DebugLog()
+func (value Value) Class() string { 
 	if value.kind != valueObject {
 		return ""
 	}
 	return value.value.(*_object).class
 }
 
-func (value Value) isArray() bool { log.DebugLog()
+func (value Value) isArray() bool { 
 	if value.kind != valueObject {
 		return false
 	}
 	return isArray(value.value.(*_object))
 }
 
-func (value Value) isStringObject() bool { log.DebugLog()
+func (value Value) isStringObject() bool { 
 	if value.kind != valueObject {
 		return false
 	}
 	return value.value.(*_object).class == "String"
 }
 
-func (value Value) isBooleanObject() bool { log.DebugLog()
+func (value Value) isBooleanObject() bool { 
 	if value.kind != valueObject {
 		return false
 	}
 	return value.value.(*_object).class == "Boolean"
 }
 
-func (value Value) isNumberObject() bool { log.DebugLog()
+func (value Value) isNumberObject() bool { 
 	if value.kind != valueObject {
 		return false
 	}
 	return value.value.(*_object).class == "Number"
 }
 
-func (value Value) isDate() bool { log.DebugLog()
+func (value Value) isDate() bool { 
 	if value.kind != valueObject {
 		return false
 	}
 	return value.value.(*_object).class == "Date"
 }
 
-func (value Value) isRegExp() bool { log.DebugLog()
+func (value Value) isRegExp() bool { 
 	if value.kind != valueObject {
 		return false
 	}
 	return value.value.(*_object).class == "RegExp"
 }
 
-func (value Value) isError() bool { log.DebugLog()
+func (value Value) isError() bool { 
 	if value.kind != valueObject {
 		return false
 	}
@@ -267,7 +267,7 @@ func (value Value) isError() bool { log.DebugLog()
 
 // ---
 
-func toValue_reflectValuePanic(value interface{}, kind reflect.Kind) { log.DebugLog()
+func toValue_reflectValuePanic(value interface{}, kind reflect.Kind) { 
 	// FIXME?
 	switch kind {
 	case reflect.Struct:
@@ -279,7 +279,7 @@ func toValue_reflectValuePanic(value interface{}, kind reflect.Kind) { log.Debug
 	}
 }
 
-func toValue(value interface{}) Value { log.DebugLog()
+func toValue(value interface{}) Value { 
 	switch value := value.(type) {
 	case Value:
 		return value
@@ -381,7 +381,7 @@ func toValue(value interface{}) Value { log.DebugLog()
 // String will return the value as a string.
 //
 // This method will make return the empty string if there is an error.
-func (value Value) String() string { log.DebugLog()
+func (value Value) String() string { 
 	result := ""
 	catchPanic(func() {
 		result = value.string()
@@ -398,7 +398,7 @@ func (value Value) String() string { log.DebugLog()
 //		ToValue("Nothing happens").ToBoolean() => true
 //
 // If there is an error during the conversion process (like an uncaught exception), then the result will be false and an error.
-func (value Value) ToBoolean() (bool, error) { log.DebugLog()
+func (value Value) ToBoolean() (bool, error) { 
 	result := false
 	err := catchPanic(func() {
 		result = value.bool()
@@ -406,7 +406,7 @@ func (value Value) ToBoolean() (bool, error) { log.DebugLog()
 	return result, err
 }
 
-func (value Value) numberValue() Value { log.DebugLog()
+func (value Value) numberValue() Value { 
 	if value.kind == valueNumber {
 		return value
 	}
@@ -420,7 +420,7 @@ func (value Value) numberValue() Value { log.DebugLog()
 //		ToValue("11").ToFloat() => 11.
 //
 // If there is an error during the conversion process (like an uncaught exception), then the result will be 0 and an error.
-func (value Value) ToFloat() (float64, error) { log.DebugLog()
+func (value Value) ToFloat() (float64, error) { 
 	result := float64(0)
 	err := catchPanic(func() {
 		result = value.float64()
@@ -435,7 +435,7 @@ func (value Value) ToFloat() (float64, error) { log.DebugLog()
 //		ToValue("11").ToInteger() => 11
 //
 // If there is an error during the conversion process (like an uncaught exception), then the result will be 0 and an error.
-func (value Value) ToInteger() (int64, error) { log.DebugLog()
+func (value Value) ToInteger() (int64, error) { 
 	result := int64(0)
 	err := catchPanic(func() {
 		result = value.number().int64
@@ -452,7 +452,7 @@ func (value Value) ToInteger() (int64, error) { log.DebugLog()
 //		ToValue('Nothing happens.').ToString() => "Nothing happens."
 //
 // If there is an error during the conversion process (like an uncaught exception), then the result will be the empty string ("") and an error.
-func (value Value) ToString() (string, error) { log.DebugLog()
+func (value Value) ToString() (string, error) { 
 	result := ""
 	err := catchPanic(func() {
 		result = value.string()
@@ -460,7 +460,7 @@ func (value Value) ToString() (string, error) { log.DebugLog()
 	return result, err
 }
 
-func (value Value) _object() *_object { log.DebugLog()
+func (value Value) _object() *_object { 
 	switch value := value.value.(type) {
 	case *_object:
 		return value
@@ -471,7 +471,7 @@ func (value Value) _object() *_object { log.DebugLog()
 // Object will return the object of the value, or nil if value is not an object.
 //
 // This method will not do any implicit conversion. For example, calling this method on a string primitive value will not return a String object.
-func (value Value) Object() *Object { log.DebugLog()
+func (value Value) Object() *Object { 
 	switch object := value.value.(type) {
 	case *_object:
 		return _newObject(object, value)
@@ -479,7 +479,7 @@ func (value Value) Object() *Object { log.DebugLog()
 	return nil
 }
 
-func (value Value) reference() _reference { log.DebugLog()
+func (value Value) reference() _reference { 
 	switch value := value.value.(type) {
 	case _reference:
 		return value
@@ -487,7 +487,7 @@ func (value Value) reference() _reference { log.DebugLog()
 	return nil
 }
 
-func (value Value) resolve() Value { log.DebugLog()
+func (value Value) resolve() Value { 
 	switch value := value.value.(type) {
 	case _reference:
 		return value.getValue()
@@ -503,19 +503,19 @@ var (
 	__NegativeZero__     float64 = math.Float64frombits(0 | (1 << 63))
 )
 
-func positiveInfinity() float64 { log.DebugLog()
+func positiveInfinity() float64 { 
 	return __PositiveInfinity__
 }
 
-func negativeInfinity() float64 { log.DebugLog()
+func negativeInfinity() float64 { 
 	return __NegativeInfinity__
 }
 
-func positiveZero() float64 { log.DebugLog()
+func positiveZero() float64 { 
 	return __PositiveZero__
 }
 
-func negativeZero() float64 { log.DebugLog()
+func negativeZero() float64 { 
 	return __NegativeZero__
 }
 
@@ -525,23 +525,23 @@ func negativeZero() float64 { log.DebugLog()
 //
 //		ToValue(math.NaN())
 //
-func NaNValue() Value { log.DebugLog()
+func NaNValue() Value { 
 	return Value{valueNumber, __NaN__}
 }
 
-func positiveInfinityValue() Value { log.DebugLog()
+func positiveInfinityValue() Value { 
 	return Value{valueNumber, __PositiveInfinity__}
 }
 
-func negativeInfinityValue() Value { log.DebugLog()
+func negativeInfinityValue() Value { 
 	return Value{valueNumber, __NegativeInfinity__}
 }
 
-func positiveZeroValue() Value { log.DebugLog()
+func positiveZeroValue() Value { 
 	return Value{valueNumber, __PositiveZero__}
 }
 
-func negativeZeroValue() Value { log.DebugLog()
+func negativeZeroValue() Value { 
 	return Value{valueNumber, __NegativeZero__}
 }
 
@@ -551,7 +551,7 @@ func negativeZeroValue() Value { log.DebugLog()
 //
 //		ToValue(true)
 //
-func TrueValue() Value { log.DebugLog()
+func TrueValue() Value { 
 	return Value{valueBoolean, true}
 }
 
@@ -561,11 +561,11 @@ func TrueValue() Value { log.DebugLog()
 //
 //		ToValue(false)
 //
-func FalseValue() Value { log.DebugLog()
+func FalseValue() Value { 
 	return Value{valueBoolean, false}
 }
 
-func sameValue(x Value, y Value) bool { log.DebugLog()
+func sameValue(x Value, y Value) bool { 
 	if x.kind != y.kind {
 		return false
 	}
@@ -598,7 +598,7 @@ func sameValue(x Value, y Value) bool { log.DebugLog()
 	return result
 }
 
-func strictEqualityComparison(x Value, y Value) bool { log.DebugLog()
+func strictEqualityComparison(x Value, y Value) bool { 
 	if x.kind != y.kind {
 		return false
 	}
@@ -644,11 +644,11 @@ func strictEqualityComparison(x Value, y Value) bool { log.DebugLog()
 //      Array       -> []interface{}
 //      Object      -> map[string]interface{}
 //
-func (self Value) Export() (interface{}, error) { log.DebugLog()
+func (self Value) Export() (interface{}, error) { 
 	return self.export(), nil
 }
 
-func (self Value) export() interface{} { log.DebugLog()
+func (self Value) export() interface{} { 
 
 	switch self.kind {
 	case valueUndefined:
@@ -739,7 +739,7 @@ func (self Value) export() interface{} { log.DebugLog()
 	return Value{}
 }
 
-func (self Value) evaluateBreakContinue(labels []string) _resultKind { log.DebugLog()
+func (self Value) evaluateBreakContinue(labels []string) _resultKind { 
 	result := self.value.(_result)
 	if result.kind == resultBreak || result.kind == resultContinue {
 		for _, label := range labels {
@@ -751,7 +751,7 @@ func (self Value) evaluateBreakContinue(labels []string) _resultKind { log.Debug
 	return resultReturn
 }
 
-func (self Value) evaluateBreak(labels []string) _resultKind { log.DebugLog()
+func (self Value) evaluateBreak(labels []string) _resultKind { 
 	result := self.value.(_result)
 	if result.kind == resultBreak {
 		for _, label := range labels {
@@ -763,7 +763,7 @@ func (self Value) evaluateBreak(labels []string) _resultKind { log.DebugLog()
 	return resultReturn
 }
 
-func (self Value) exportNative() interface{} { log.DebugLog()
+func (self Value) exportNative() interface{} { 
 
 	switch self.kind {
 	case valueUndefined:
@@ -798,7 +798,7 @@ func (self Value) exportNative() interface{} { log.DebugLog()
 
 // Make a best effort to return a reflect.Value corresponding to reflect.Kind, but
 // fallback to just returning the Go value we have handy.
-func (value Value) toReflectValue(kind reflect.Kind) (reflect.Value, error) { log.DebugLog()
+func (value Value) toReflectValue(kind reflect.Kind) (reflect.Value, error) { 
 	if kind != reflect.Float32 && kind != reflect.Float64 && kind != reflect.Interface {
 		switch value := value.value.(type) {
 		case float32:
@@ -944,7 +944,7 @@ func (value Value) toReflectValue(kind reflect.Kind) (reflect.Value, error) { lo
 	panic(fmt.Errorf("invalid conversion of %v (%v) to reflect.Kind: %v", value.kind, value, kind))
 }
 
-func stringToReflectValue(value string, kind reflect.Kind) (reflect.Value, error) { log.DebugLog()
+func stringToReflectValue(value string, kind reflect.Kind) (reflect.Value, error) { 
 	switch kind {
 	case reflect.Bool:
 		value, err := strconv.ParseBool(value)

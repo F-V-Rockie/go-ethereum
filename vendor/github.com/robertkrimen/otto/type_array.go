@@ -4,7 +4,7 @@ import (
 	"strconv"
 )
 
-func (runtime *_runtime) newArrayObject(length uint32) *_object { log.DebugLog()
+func (runtime *_runtime) newArrayObject(length uint32) *_object { 
 	self := runtime.newObject()
 	self.class = "Array"
 	self.defineProperty("length", toValue_uint32(length), 0100, false)
@@ -12,11 +12,11 @@ func (runtime *_runtime) newArrayObject(length uint32) *_object { log.DebugLog()
 	return self
 }
 
-func isArray(object *_object) bool { log.DebugLog()
+func isArray(object *_object) bool { 
 	return object != nil && (object.class == "Array" || object.class == "GoArray")
 }
 
-func objectLength(object *_object) uint32 { log.DebugLog()
+func objectLength(object *_object) uint32 { 
 	if object == nil {
 		return 0
 	}
@@ -31,7 +31,7 @@ func objectLength(object *_object) uint32 { log.DebugLog()
 	return 0
 }
 
-func arrayUint32(rt *_runtime, value Value) uint32 { log.DebugLog()
+func arrayUint32(rt *_runtime, value Value) uint32 { 
 	nm := value.number()
 	if nm.kind != numberInteger || !isUint32(nm.int64) {
 		// FIXME
@@ -40,7 +40,7 @@ func arrayUint32(rt *_runtime, value Value) uint32 { log.DebugLog()
 	return uint32(nm.int64)
 }
 
-func arrayDefineOwnProperty(self *_object, name string, descriptor _property, throw bool) bool { log.DebugLog()
+func arrayDefineOwnProperty(self *_object, name string, descriptor _property, throw bool) bool { 
 	lengthProperty := self.getOwnProperty("length")
 	lengthValue, valid := lengthProperty.value.(Value)
 	if !valid {

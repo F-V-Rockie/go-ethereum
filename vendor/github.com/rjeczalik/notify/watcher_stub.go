@@ -12,12 +12,12 @@ import "errors"
 type stub struct{ error }
 
 // newWatcher stub.
-func newWatcher(chan<- EventInfo) watcher { log.DebugLog()
+func newWatcher(chan<- EventInfo) watcher { 
 	return stub{errors.New("notify: not implemented")}
 }
 
 // Following methods implement notify.watcher interface.
-func (s stub) Watch(string, Event) error          { log.DebugLog() return s }
-func (s stub) Rewatch(string, Event, Event) error { log.DebugLog() return s }
-func (s stub) Unwatch(string) (err error)         { log.DebugLog() return s }
-func (s stub) Close() error                       { log.DebugLog() return s }
+func (s stub) Watch(string, Event) error          {  return s }
+func (s stub) Rewatch(string, Event, Event) error {  return s }
+func (s stub) Unwatch(string) (err error)         {  return s }
+func (s stub) Close() error                       {  return s }

@@ -10,6 +10,6 @@ package unix
 
 import "syscall"
 
-func Getpagesize() int { log.DebugLog()
+func Getpagesize() int { 
 	return syscall.Getpagesize()
 }

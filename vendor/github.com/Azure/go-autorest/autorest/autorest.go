@@ -72,18 +72,18 @@ const (
 
 // ResponseHasStatusCode returns true if the status code in the HTTP Response is in the passed set
 // and false otherwise.
-func ResponseHasStatusCode(resp *http.Response, codes ...int) bool { log.DebugLog()
+func ResponseHasStatusCode(resp *http.Response, codes ...int) bool { 
 	return containsInt(codes, resp.StatusCode)
 }
 
 // GetLocation retrieves the URL from the Location header of the passed response.
-func GetLocation(resp *http.Response) string { log.DebugLog()
+func GetLocation(resp *http.Response) string { 
 	return resp.Header.Get(HeaderLocation)
 }
 
 // GetRetryAfter extracts the retry delay from the Retry-After header of the passed response. If
 // the header is absent or is malformed, it will return the supplied default delay time.Duration.
-func GetRetryAfter(resp *http.Response, defaultDelay time.Duration) time.Duration { log.DebugLog()
+func GetRetryAfter(resp *http.Response, defaultDelay time.Duration) time.Duration { 
 	retry := resp.Header.Get(HeaderRetryAfter)
 	if retry == "" {
 		return defaultDelay
@@ -98,7 +98,7 @@ func GetRetryAfter(resp *http.Response, defaultDelay time.Duration) time.Duratio
 }
 
 // NewPollingRequest allocates and returns a new http.Request to poll for the passed response.
-func NewPollingRequest(resp *http.Response, cancel <-chan struct{}) (*http.Request, error) { log.DebugLog()
+func NewPollingRequest(resp *http.Response, cancel <-chan struct{}) (*http.Request, error) { 
 	location := GetLocation(resp)
 	if location == "" {
 		return nil, NewErrorWithResponse("autorest", "NewPollingRequest", resp, "Location header missing from response that requires polling")

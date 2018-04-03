@@ -113,7 +113,7 @@ var (
 	}
 )
 
-func init() { log.DebugLog()
+func init() {
 	app.Flags = []cli.Flag{
 		CreateFlag,
 		DebugFlag,

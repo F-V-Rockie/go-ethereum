@@ -3,9 +3,9 @@
 
 package trezor
 
-import proto "github.com/golang/protobuf/proto"
-import fmt "fmt"
-import math "math"
+import "github.com/golang/protobuf/proto"
+import "fmt"
+import "math"
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
@@ -243,15 +243,18 @@ var MessageType_value = map[string]int32{
 	"MessageType_DebugLinkFlashErase":      113,
 }
 
-func (x MessageType) Enum() *MessageType { log.DebugLog()
+func (x MessageType) Enum() *MessageType {
+	log.DebugLog()
 	p := new(MessageType)
 	*p = x
 	return p
 }
-func (x MessageType) String() string { log.DebugLog()
+func (x MessageType) String() string {
+	log.DebugLog()
 	return proto.EnumName(MessageType_name, int32(x))
 }
-func (x *MessageType) UnmarshalJSON(data []byte) error { log.DebugLog()
+func (x *MessageType) UnmarshalJSON(data []byte) error {
+	log.DebugLog()
 	value, err := proto.UnmarshalJSONEnum(MessageType_value, data, "MessageType")
 	if err != nil {
 		return err
@@ -259,7 +262,8 @@ func (x *MessageType) UnmarshalJSON(data []byte) error { log.DebugLog()
 	*x = MessageType(value)
 	return nil
 }
-func (MessageType) EnumDescriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{0} }
+func (MessageType) EnumDescriptor() ([]byte, []int) { log.DebugLog()
+														return fileDescriptor1, []int{0} }
 
 // *
 // Request: Reset device to default state and ask for device details
@@ -268,10 +272,12 @@ type Initialize struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *Initialize) Reset()                    { log.DebugLog() *m = Initialize{} }
-func (m *Initialize) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*Initialize) ProtoMessage()               { log.DebugLog()}
-func (*Initialize) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{0} }
+func (m *Initialize) Reset()                    { log.DebugLog() * m = Initialize{} }
+func (m *Initialize) String() string            { log.DebugLog()
+													return proto.CompactTextString(m) }
+func (*Initialize) ProtoMessage()               { log.DebugLog() }
+func (*Initialize) Descriptor() ([]byte, []int) { log.DebugLog()
+													return fileDescriptor1, []int{0} }
 
 // *
 // Request: Ask for device details (no device reset)
@@ -280,10 +286,14 @@ type GetFeatures struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *GetFeatures) Reset()                    { log.DebugLog() *m = GetFeatures{} }
-func (m *GetFeatures) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*GetFeatures) ProtoMessage()               { log.DebugLog()}
-func (*GetFeatures) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{1} }
+func (m *GetFeatures) Reset() { log.DebugLog() * m = GetFeatures{} }
+func (m *GetFeatures) String() string {
+	log.DebugLog()
+	return proto.CompactTextString(m)
+}
+func (*GetFeatures) ProtoMessage()               { log.DebugLog() }
+func (*GetFeatures) Descriptor() ([]byte, []int) { log.DebugLog()
+													 return fileDescriptor1, []int{1} }
 
 // *
 // Response: Reports various information about the device
@@ -313,145 +323,167 @@ type Features struct {
 	XXX_unrecognized     []byte      `json:"-"`
 }
 
-func (m *Features) Reset()                    { log.DebugLog() *m = Features{} }
-func (m *Features) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*Features) ProtoMessage()               { log.DebugLog()}
-func (*Features) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{2} }
+func (m *Features) Reset()                    { log.DebugLog() * m = Features{} }
+func (m *Features) String() string            { log.DebugLog()
+												  return proto.CompactTextString(m) }
+func (*Features) ProtoMessage()               { log.DebugLog() }
+func (*Features) Descriptor() ([]byte, []int) { log.DebugLog()
+												  return fileDescriptor1, []int{2} }
 
-func (m *Features) GetVendor() string { log.DebugLog()
+func (m *Features) GetVendor() string {
+	log.DebugLog()
 	if m != nil && m.Vendor != nil {
 		return *m.Vendor
 	}
 	return ""
 }
 
-func (m *Features) GetMajorVersion() uint32 { log.DebugLog()
+func (m *Features) GetMajorVersion() uint32 {
+	log.DebugLog()
 	if m != nil && m.MajorVersion != nil {
 		return *m.MajorVersion
 	}
 	return 0
 }
 
-func (m *Features) GetMinorVersion() uint32 { log.DebugLog()
+func (m *Features) GetMinorVersion() uint32 {
+	log.DebugLog()
 	if m != nil && m.MinorVersion != nil {
 		return *m.MinorVersion
 	}
 	return 0
 }
 
-func (m *Features) GetPatchVersion() uint32 { log.DebugLog()
+func (m *Features) GetPatchVersion() uint32 {
+	log.DebugLog()
 	if m != nil && m.PatchVersion != nil {
 		return *m.PatchVersion
 	}
 	return 0
 }
 
-func (m *Features) GetBootloaderMode() bool { log.DebugLog()
+func (m *Features) GetBootloaderMode() bool {
+	log.DebugLog()
 	if m != nil && m.BootloaderMode != nil {
 		return *m.BootloaderMode
 	}
 	return false
 }
 
-func (m *Features) GetDeviceId() string { log.DebugLog()
+func (m *Features) GetDeviceId() string {
+	log.DebugLog()
 	if m != nil && m.DeviceId != nil {
 		return *m.DeviceId
 	}
 	return ""
 }
 
-func (m *Features) GetPinProtection() bool { log.DebugLog()
+func (m *Features) GetPinProtection() bool {
+	log.DebugLog()
 	if m != nil && m.PinProtection != nil {
 		return *m.PinProtection
 	}
 	return false
 }
 
-func (m *Features) GetPassphraseProtection() bool { log.DebugLog()
+func (m *Features) GetPassphraseProtection() bool {
+	log.DebugLog()
 	if m != nil && m.PassphraseProtection != nil {
 		return *m.PassphraseProtection
 	}
 	return false
 }
 
-func (m *Features) GetLanguage() string { log.DebugLog()
+func (m *Features) GetLanguage() string {
+	log.DebugLog()
 	if m != nil && m.Language != nil {
 		return *m.Language
 	}
 	return ""
 }
 
-func (m *Features) GetLabel() string { log.DebugLog()
+func (m *Features) GetLabel() string {
+	log.DebugLog()
 	if m != nil && m.Label != nil {
 		return *m.Label
 	}
 	return ""
 }
 
-func (m *Features) GetCoins() []*CoinType { log.DebugLog()
+func (m *Features) GetCoins() []*CoinType {
+	log.DebugLog()
 	if m != nil {
 		return m.Coins
 	}
 	return nil
 }
 
-func (m *Features) GetInitialized() bool { log.DebugLog()
+func (m *Features) GetInitialized() bool {
+	log.DebugLog()
 	if m != nil && m.Initialized != nil {
 		return *m.Initialized
 	}
 	return false
 }
 
-func (m *Features) GetRevision() []byte { log.DebugLog()
+func (m *Features) GetRevision() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.Revision
 	}
 	return nil
 }
 
-func (m *Features) GetBootloaderHash() []byte { log.DebugLog()
+func (m *Features) GetBootloaderHash() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.BootloaderHash
 	}
 	return nil
 }
 
-func (m *Features) GetImported() bool { log.DebugLog()
+func (m *Features) GetImported() bool {
+	log.DebugLog()
 	if m != nil && m.Imported != nil {
 		return *m.Imported
 	}
 	return false
 }
 
-func (m *Features) GetPinCached() bool { log.DebugLog()
+func (m *Features) GetPinCached() bool {
+	log.DebugLog()
 	if m != nil && m.PinCached != nil {
 		return *m.PinCached
 	}
 	return false
 }
 
-func (m *Features) GetPassphraseCached() bool { log.DebugLog()
+func (m *Features) GetPassphraseCached() bool {
+	log.DebugLog()
 	if m != nil && m.PassphraseCached != nil {
 		return *m.PassphraseCached
 	}
 	return false
 }
 
-func (m *Features) GetFirmwarePresent() bool { log.DebugLog()
+func (m *Features) GetFirmwarePresent() bool {
+	log.DebugLog()
 	if m != nil && m.FirmwarePresent != nil {
 		return *m.FirmwarePresent
 	}
 	return false
 }
 
-func (m *Features) GetNeedsBackup() bool { log.DebugLog()
+func (m *Features) GetNeedsBackup() bool {
+	log.DebugLog()
 	if m != nil && m.NeedsBackup != nil {
 		return *m.NeedsBackup
 	}
 	return false
 }
 
-func (m *Features) GetFlags() uint32 { log.DebugLog()
+func (m *Features) GetFlags() uint32 {
+	log.DebugLog()
 	if m != nil && m.Flags != nil {
 		return *m.Flags
 	}
@@ -465,10 +497,12 @@ type ClearSession struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *ClearSession) Reset()                    { log.DebugLog() *m = ClearSession{} }
-func (m *ClearSession) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*ClearSession) ProtoMessage()               { log.DebugLog()}
-func (*ClearSession) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{3} }
+func (m *ClearSession) Reset()                    { log.DebugLog() * m = ClearSession{} }
+func (m *ClearSession) String() string            { log.DebugLog()
+													  return proto.CompactTextString(m) }
+func (*ClearSession) ProtoMessage()               { log.DebugLog() }
+func (*ClearSession) Descriptor() ([]byte, []int) { log.DebugLog()
+													  return fileDescriptor1, []int{3} }
 
 // *
 // Request: change language and/or label of the device
@@ -484,33 +518,39 @@ type ApplySettings struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *ApplySettings) Reset()                    { log.DebugLog() *m = ApplySettings{} }
-func (m *ApplySettings) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*ApplySettings) ProtoMessage()               { log.DebugLog()}
-func (*ApplySettings) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{4} }
+func (m *ApplySettings) Reset()                    { log.DebugLog() * m = ApplySettings{} }
+func (m *ApplySettings) String() string            { log.DebugLog()
+													   return proto.CompactTextString(m) }
+func (*ApplySettings) ProtoMessage()               { log.DebugLog() }
+func (*ApplySettings) Descriptor() ([]byte, []int) { log.DebugLog()
+													   return fileDescriptor1, []int{4} }
 
-func (m *ApplySettings) GetLanguage() string { log.DebugLog()
+func (m *ApplySettings) GetLanguage() string {
+	log.DebugLog()
 	if m != nil && m.Language != nil {
 		return *m.Language
 	}
 	return ""
 }
 
-func (m *ApplySettings) GetLabel() string { log.DebugLog()
+func (m *ApplySettings) GetLabel() string {
+	log.DebugLog()
 	if m != nil && m.Label != nil {
 		return *m.Label
 	}
 	return ""
 }
 
-func (m *ApplySettings) GetUsePassphrase() bool { log.DebugLog()
+func (m *ApplySettings) GetUsePassphrase() bool {
+	log.DebugLog()
 	if m != nil && m.UsePassphrase != nil {
 		return *m.UsePassphrase
 	}
 	return false
 }
 
-func (m *ApplySettings) GetHomescreen() []byte { log.DebugLog()
+func (m *ApplySettings) GetHomescreen() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.Homescreen
 	}
@@ -526,12 +566,15 @@ type ApplyFlags struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *ApplyFlags) Reset()                    { log.DebugLog() *m = ApplyFlags{} }
-func (m *ApplyFlags) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*ApplyFlags) ProtoMessage()               { log.DebugLog()}
-func (*ApplyFlags) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{5} }
+func (m *ApplyFlags) Reset()                    { log.DebugLog() * m = ApplyFlags{} }
+func (m *ApplyFlags) String() string            { log.DebugLog()
+													return proto.CompactTextString(m) }
+func (*ApplyFlags) ProtoMessage()               { log.DebugLog() }
+func (*ApplyFlags) Descriptor() ([]byte, []int) { log.DebugLog()
+													return fileDescriptor1, []int{5} }
 
-func (m *ApplyFlags) GetFlags() uint32 { log.DebugLog()
+func (m *ApplyFlags) GetFlags() uint32 {
+	log.DebugLog()
 	if m != nil && m.Flags != nil {
 		return *m.Flags
 	}
@@ -547,12 +590,15 @@ type ChangePin struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *ChangePin) Reset()                    { log.DebugLog() *m = ChangePin{} }
-func (m *ChangePin) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*ChangePin) ProtoMessage()               { log.DebugLog()}
-func (*ChangePin) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{6} }
+func (m *ChangePin) Reset()                    { log.DebugLog() * m = ChangePin{} }
+func (m *ChangePin) String() string            { log.DebugLog()
+												   return proto.CompactTextString(m) }
+func (*ChangePin) ProtoMessage()               { log.DebugLog() }
+func (*ChangePin) Descriptor() ([]byte, []int) { log.DebugLog()
+												   return fileDescriptor1, []int{6} }
 
-func (m *ChangePin) GetRemove() bool { log.DebugLog()
+func (m *ChangePin) GetRemove() bool {
+	log.DebugLog()
 	if m != nil && m.Remove != nil {
 		return *m.Remove
 	}
@@ -570,33 +616,39 @@ type Ping struct {
 	XXX_unrecognized     []byte  `json:"-"`
 }
 
-func (m *Ping) Reset()                    { log.DebugLog() *m = Ping{} }
-func (m *Ping) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*Ping) ProtoMessage()               { log.DebugLog()}
-func (*Ping) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{7} }
+func (m *Ping) Reset()                    { log.DebugLog() * m = Ping{} }
+func (m *Ping) String() string            { log.DebugLog()
+											  return proto.CompactTextString(m) }
+func (*Ping) ProtoMessage()               { log.DebugLog() }
+func (*Ping) Descriptor() ([]byte, []int) { log.DebugLog()
+											  return fileDescriptor1, []int{7} }
 
-func (m *Ping) GetMessage() string { log.DebugLog()
+func (m *Ping) GetMessage() string {
+	log.DebugLog()
 	if m != nil && m.Message != nil {
 		return *m.Message
 	}
 	return ""
 }
 
-func (m *Ping) GetButtonProtection() bool { log.DebugLog()
+func (m *Ping) GetButtonProtection() bool {
+	log.DebugLog()
 	if m != nil && m.ButtonProtection != nil {
 		return *m.ButtonProtection
 	}
 	return false
 }
 
-func (m *Ping) GetPinProtection() bool { log.DebugLog()
+func (m *Ping) GetPinProtection() bool {
+	log.DebugLog()
 	if m != nil && m.PinProtection != nil {
 		return *m.PinProtection
 	}
 	return false
 }
 
-func (m *Ping) GetPassphraseProtection() bool { log.DebugLog()
+func (m *Ping) GetPassphraseProtection() bool {
+	log.DebugLog()
 	if m != nil && m.PassphraseProtection != nil {
 		return *m.PassphraseProtection
 	}
@@ -610,12 +662,15 @@ type Success struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *Success) Reset()                    { log.DebugLog() *m = Success{} }
-func (m *Success) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*Success) ProtoMessage()               { log.DebugLog()}
-func (*Success) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{8} }
+func (m *Success) Reset()                    { log.DebugLog() * m = Success{} }
+func (m *Success) String() string            { log.DebugLog()
+												 return proto.CompactTextString(m) }
+func (*Success) ProtoMessage()               { log.DebugLog() }
+func (*Success) Descriptor() ([]byte, []int) { log.DebugLog()
+												 return fileDescriptor1, []int{8} }
 
-func (m *Success) GetMessage() string { log.DebugLog()
+func (m *Success) GetMessage() string {
+	log.DebugLog()
 	if m != nil && m.Message != nil {
 		return *m.Message
 	}
@@ -630,19 +685,23 @@ type Failure struct {
 	XXX_unrecognized []byte       `json:"-"`
 }
 
-func (m *Failure) Reset()                    { log.DebugLog() *m = Failure{} }
-func (m *Failure) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*Failure) ProtoMessage()               { log.DebugLog()}
-func (*Failure) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{9} }
+func (m *Failure) Reset()                    { log.DebugLog() * m = Failure{} }
+func (m *Failure) String() string            { log.DebugLog()
+												 return proto.CompactTextString(m) }
+func (*Failure) ProtoMessage()               { log.DebugLog() }
+func (*Failure) Descriptor() ([]byte, []int) { log.DebugLog()
+												 return fileDescriptor1, []int{9} }
 
-func (m *Failure) GetCode() FailureType { log.DebugLog()
+func (m *Failure) GetCode() FailureType {
+	log.DebugLog()
 	if m != nil && m.Code != nil {
 		return *m.Code
 	}
 	return FailureType_Failure_UnexpectedMessage
 }
 
-func (m *Failure) GetMessage() string { log.DebugLog()
+func (m *Failure) GetMessage() string {
+	log.DebugLog()
 	if m != nil && m.Message != nil {
 		return *m.Message
 	}
@@ -659,19 +718,23 @@ type ButtonRequest struct {
 	XXX_unrecognized []byte             `json:"-"`
 }
 
-func (m *ButtonRequest) Reset()                    { log.DebugLog() *m = ButtonRequest{} }
-func (m *ButtonRequest) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*ButtonRequest) ProtoMessage()               { log.DebugLog()}
-func (*ButtonRequest) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{10} }
+func (m *ButtonRequest) Reset()                    { log.DebugLog() * m = ButtonRequest{} }
+func (m *ButtonRequest) String() string            { log.DebugLog()
+													   return proto.CompactTextString(m) }
+func (*ButtonRequest) ProtoMessage()               { log.DebugLog() }
+func (*ButtonRequest) Descriptor() ([]byte, []int) { log.DebugLog()
+													   return fileDescriptor1, []int{10} }
 
-func (m *ButtonRequest) GetCode() ButtonRequestType { log.DebugLog()
+func (m *ButtonRequest) GetCode() ButtonRequestType {
+	log.DebugLog()
 	if m != nil && m.Code != nil {
 		return *m.Code
 	}
 	return ButtonRequestType_ButtonRequest_Other
 }
 
-func (m *ButtonRequest) GetData() string { log.DebugLog()
+func (m *ButtonRequest) GetData() string {
+	log.DebugLog()
 	if m != nil && m.Data != nil {
 		return *m.Data
 	}
@@ -685,10 +748,12 @@ type ButtonAck struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *ButtonAck) Reset()                    { log.DebugLog() *m = ButtonAck{} }
-func (m *ButtonAck) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*ButtonAck) ProtoMessage()               { log.DebugLog()}
-func (*ButtonAck) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{11} }
+func (m *ButtonAck) Reset()                    { log.DebugLog() * m = ButtonAck{} }
+func (m *ButtonAck) String() string            { log.DebugLog()
+												   return proto.CompactTextString(m) }
+func (*ButtonAck) ProtoMessage()               { log.DebugLog() }
+func (*ButtonAck) Descriptor() ([]byte, []int) { log.DebugLog()
+												   return fileDescriptor1, []int{11} }
 
 // *
 // Response: Device is asking computer to show PIN matrix and awaits PIN encoded using this matrix scheme
@@ -699,12 +764,15 @@ type PinMatrixRequest struct {
 	XXX_unrecognized []byte                `json:"-"`
 }
 
-func (m *PinMatrixRequest) Reset()                    { log.DebugLog() *m = PinMatrixRequest{} }
-func (m *PinMatrixRequest) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*PinMatrixRequest) ProtoMessage()               { log.DebugLog()}
-func (*PinMatrixRequest) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{12} }
+func (m *PinMatrixRequest) Reset()                    { log.DebugLog() * m = PinMatrixRequest{} }
+func (m *PinMatrixRequest) String() string            { log.DebugLog()
+														  return proto.CompactTextString(m) }
+func (*PinMatrixRequest) ProtoMessage()               { log.DebugLog() }
+func (*PinMatrixRequest) Descriptor() ([]byte, []int) { log.DebugLog()
+														  return fileDescriptor1, []int{12} }
 
-func (m *PinMatrixRequest) GetType() PinMatrixRequestType { log.DebugLog()
+func (m *PinMatrixRequest) GetType() PinMatrixRequestType {
+	log.DebugLog()
 	if m != nil && m.Type != nil {
 		return *m.Type
 	}
@@ -719,12 +787,15 @@ type PinMatrixAck struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *PinMatrixAck) Reset()                    { log.DebugLog() *m = PinMatrixAck{} }
-func (m *PinMatrixAck) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*PinMatrixAck) ProtoMessage()               { log.DebugLog()}
-func (*PinMatrixAck) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{13} }
+func (m *PinMatrixAck) Reset()                    { log.DebugLog() * m = PinMatrixAck{} }
+func (m *PinMatrixAck) String() string            { log.DebugLog()
+													  return proto.CompactTextString(m) }
+func (*PinMatrixAck) ProtoMessage()               { log.DebugLog() }
+func (*PinMatrixAck) Descriptor() ([]byte, []int) { log.DebugLog()
+													  return fileDescriptor1, []int{13} }
 
-func (m *PinMatrixAck) GetPin() string { log.DebugLog()
+func (m *PinMatrixAck) GetPin() string {
+	log.DebugLog()
 	if m != nil && m.Pin != nil {
 		return *m.Pin
 	}
@@ -740,10 +811,12 @@ type Cancel struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *Cancel) Reset()                    { log.DebugLog() *m = Cancel{} }
-func (m *Cancel) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*Cancel) ProtoMessage()               { log.DebugLog()}
-func (*Cancel) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{14} }
+func (m *Cancel) Reset()                    { log.DebugLog() * m = Cancel{} }
+func (m *Cancel) String() string            { log.DebugLog()
+												return proto.CompactTextString(m) }
+func (*Cancel) ProtoMessage()               { log.DebugLog() }
+func (*Cancel) Descriptor() ([]byte, []int) { log.DebugLog()
+												return fileDescriptor1, []int{14} }
 
 // *
 // Response: Device awaits encryption passphrase
@@ -753,10 +826,12 @@ type PassphraseRequest struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *PassphraseRequest) Reset()                    { log.DebugLog() *m = PassphraseRequest{} }
-func (m *PassphraseRequest) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*PassphraseRequest) ProtoMessage()               { log.DebugLog()}
-func (*PassphraseRequest) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{15} }
+func (m *PassphraseRequest) Reset()                    { log.DebugLog() * m = PassphraseRequest{} }
+func (m *PassphraseRequest) String() string            { log.DebugLog()
+														   return proto.CompactTextString(m) }
+func (*PassphraseRequest) ProtoMessage()               { log.DebugLog() }
+func (*PassphraseRequest) Descriptor() ([]byte, []int) { log.DebugLog()
+														   return fileDescriptor1, []int{15} }
 
 // *
 // Request: Send passphrase back
@@ -766,12 +841,15 @@ type PassphraseAck struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *PassphraseAck) Reset()                    { log.DebugLog() *m = PassphraseAck{} }
-func (m *PassphraseAck) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*PassphraseAck) ProtoMessage()               { log.DebugLog()}
-func (*PassphraseAck) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{16} }
+func (m *PassphraseAck) Reset()                    { log.DebugLog() * m = PassphraseAck{} }
+func (m *PassphraseAck) String() string            { log.DebugLog()
+													   return proto.CompactTextString(m) }
+func (*PassphraseAck) ProtoMessage()               { log.DebugLog() }
+func (*PassphraseAck) Descriptor() ([]byte, []int) { log.DebugLog()
+													   return fileDescriptor1, []int{16} }
 
-func (m *PassphraseAck) GetPassphrase() string { log.DebugLog()
+func (m *PassphraseAck) GetPassphrase() string {
+	log.DebugLog()
 	if m != nil && m.Passphrase != nil {
 		return *m.Passphrase
 	}
@@ -788,12 +866,15 @@ type GetEntropy struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *GetEntropy) Reset()                    { log.DebugLog() *m = GetEntropy{} }
-func (m *GetEntropy) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*GetEntropy) ProtoMessage()               { log.DebugLog()}
-func (*GetEntropy) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{17} }
+func (m *GetEntropy) Reset()                    { log.DebugLog() * m = GetEntropy{} }
+func (m *GetEntropy) String() string            { log.DebugLog()
+													return proto.CompactTextString(m) }
+func (*GetEntropy) ProtoMessage()               { log.DebugLog() }
+func (*GetEntropy) Descriptor() ([]byte, []int) { log.DebugLog()
+													return fileDescriptor1, []int{17} }
 
-func (m *GetEntropy) GetSize() uint32 { log.DebugLog()
+func (m *GetEntropy) GetSize() uint32 {
+	log.DebugLog()
 	if m != nil && m.Size != nil {
 		return *m.Size
 	}
@@ -808,12 +889,15 @@ type Entropy struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *Entropy) Reset()                    { log.DebugLog() *m = Entropy{} }
-func (m *Entropy) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*Entropy) ProtoMessage()               { log.DebugLog()}
-func (*Entropy) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{18} }
+func (m *Entropy) Reset()                    { log.DebugLog() * m = Entropy{} }
+func (m *Entropy) String() string            { log.DebugLog()
+												 return proto.CompactTextString(m) }
+func (*Entropy) ProtoMessage()               { log.DebugLog() }
+func (*Entropy) Descriptor() ([]byte, []int) { log.DebugLog()
+												 return fileDescriptor1, []int{18} }
 
-func (m *Entropy) GetEntropy() []byte { log.DebugLog()
+func (m *Entropy) GetEntropy() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.Entropy
 	}
@@ -833,35 +917,41 @@ type GetPublicKey struct {
 	XXX_unrecognized []byte   `json:"-"`
 }
 
-func (m *GetPublicKey) Reset()                    { log.DebugLog() *m = GetPublicKey{} }
-func (m *GetPublicKey) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*GetPublicKey) ProtoMessage()               { log.DebugLog()}
-func (*GetPublicKey) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{19} }
+func (m *GetPublicKey) Reset()                    { log.DebugLog() * m = GetPublicKey{} }
+func (m *GetPublicKey) String() string            { log.DebugLog()
+													  return proto.CompactTextString(m) }
+func (*GetPublicKey) ProtoMessage()               { log.DebugLog() }
+func (*GetPublicKey) Descriptor() ([]byte, []int) { log.DebugLog()
+													  return fileDescriptor1, []int{19} }
 
 const Default_GetPublicKey_CoinName string = "Bitcoin"
 
-func (m *GetPublicKey) GetAddressN() []uint32 { log.DebugLog()
+func (m *GetPublicKey) GetAddressN() []uint32 {
+	log.DebugLog()
 	if m != nil {
 		return m.AddressN
 	}
 	return nil
 }
 
-func (m *GetPublicKey) GetEcdsaCurveName() string { log.DebugLog()
+func (m *GetPublicKey) GetEcdsaCurveName() string {
+	log.DebugLog()
 	if m != nil && m.EcdsaCurveName != nil {
 		return *m.EcdsaCurveName
 	}
 	return ""
 }
 
-func (m *GetPublicKey) GetShowDisplay() bool { log.DebugLog()
+func (m *GetPublicKey) GetShowDisplay() bool {
+	log.DebugLog()
 	if m != nil && m.ShowDisplay != nil {
 		return *m.ShowDisplay
 	}
 	return false
 }
 
-func (m *GetPublicKey) GetCoinName() string { log.DebugLog()
+func (m *GetPublicKey) GetCoinName() string {
+	log.DebugLog()
 	if m != nil && m.CoinName != nil {
 		return *m.CoinName
 	}
@@ -877,19 +967,23 @@ type PublicKey struct {
 	XXX_unrecognized []byte      `json:"-"`
 }
 
-func (m *PublicKey) Reset()                    { log.DebugLog() *m = PublicKey{} }
-func (m *PublicKey) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*PublicKey) ProtoMessage()               { log.DebugLog()}
-func (*PublicKey) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{20} }
+func (m *PublicKey) Reset()                    { log.DebugLog() * m = PublicKey{} }
+func (m *PublicKey) String() string            { log.DebugLog()
+												   return proto.CompactTextString(m) }
+func (*PublicKey) ProtoMessage()               { log.DebugLog() }
+func (*PublicKey) Descriptor() ([]byte, []int) { log.DebugLog()
+												   return fileDescriptor1, []int{20} }
 
-func (m *PublicKey) GetNode() *HDNodeType { log.DebugLog()
+func (m *PublicKey) GetNode() *HDNodeType {
+	log.DebugLog()
 	if m != nil {
 		return m.Node
 	}
 	return nil
 }
 
-func (m *PublicKey) GetXpub() string { log.DebugLog()
+func (m *PublicKey) GetXpub() string {
+	log.DebugLog()
 	if m != nil && m.Xpub != nil {
 		return *m.Xpub
 	}
@@ -910,43 +1004,50 @@ type GetAddress struct {
 	XXX_unrecognized []byte                    `json:"-"`
 }
 
-func (m *GetAddress) Reset()                    { log.DebugLog() *m = GetAddress{} }
-func (m *GetAddress) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*GetAddress) ProtoMessage()               { log.DebugLog()}
-func (*GetAddress) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{21} }
+func (m *GetAddress) Reset()                    { log.DebugLog() * m = GetAddress{} }
+func (m *GetAddress) String() string            { log.DebugLog()
+													return proto.CompactTextString(m) }
+func (*GetAddress) ProtoMessage()               { log.DebugLog() }
+func (*GetAddress) Descriptor() ([]byte, []int) { log.DebugLog()
+													return fileDescriptor1, []int{21} }
 
 const Default_GetAddress_CoinName string = "Bitcoin"
 const Default_GetAddress_ScriptType InputScriptType = InputScriptType_SPENDADDRESS
 
-func (m *GetAddress) GetAddressN() []uint32 { log.DebugLog()
+func (m *GetAddress) GetAddressN() []uint32 {
+	log.DebugLog()
 	if m != nil {
 		return m.AddressN
 	}
 	return nil
 }
 
-func (m *GetAddress) GetCoinName() string { log.DebugLog()
+func (m *GetAddress) GetCoinName() string {
+	log.DebugLog()
 	if m != nil && m.CoinName != nil {
 		return *m.CoinName
 	}
 	return Default_GetAddress_CoinName
 }
 
-func (m *GetAddress) GetShowDisplay() bool { log.DebugLog()
+func (m *GetAddress) GetShowDisplay() bool {
+	log.DebugLog()
 	if m != nil && m.ShowDisplay != nil {
 		return *m.ShowDisplay
 	}
 	return false
 }
 
-func (m *GetAddress) GetMultisig() *MultisigRedeemScriptType { log.DebugLog()
+func (m *GetAddress) GetMultisig() *MultisigRedeemScriptType {
+	log.DebugLog()
 	if m != nil {
 		return m.Multisig
 	}
 	return nil
 }
 
-func (m *GetAddress) GetScriptType() InputScriptType { log.DebugLog()
+func (m *GetAddress) GetScriptType() InputScriptType {
+	log.DebugLog()
 	if m != nil && m.ScriptType != nil {
 		return *m.ScriptType
 	}
@@ -964,19 +1065,23 @@ type EthereumGetAddress struct {
 	XXX_unrecognized []byte   `json:"-"`
 }
 
-func (m *EthereumGetAddress) Reset()                    { log.DebugLog() *m = EthereumGetAddress{} }
-func (m *EthereumGetAddress) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*EthereumGetAddress) ProtoMessage()               { log.DebugLog()}
-func (*EthereumGetAddress) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{22} }
+func (m *EthereumGetAddress) Reset()                    { log.DebugLog() * m = EthereumGetAddress{} }
+func (m *EthereumGetAddress) String() string            { log.DebugLog()
+															return proto.CompactTextString(m) }
+func (*EthereumGetAddress) ProtoMessage()               { log.DebugLog() }
+func (*EthereumGetAddress) Descriptor() ([]byte, []int) { log.DebugLog()
+															return fileDescriptor1, []int{22} }
 
-func (m *EthereumGetAddress) GetAddressN() []uint32 { log.DebugLog()
+func (m *EthereumGetAddress) GetAddressN() []uint32 {
+	log.DebugLog()
 	if m != nil {
 		return m.AddressN
 	}
 	return nil
 }
 
-func (m *EthereumGetAddress) GetShowDisplay() bool { log.DebugLog()
+func (m *EthereumGetAddress) GetShowDisplay() bool {
+	log.DebugLog()
 	if m != nil && m.ShowDisplay != nil {
 		return *m.ShowDisplay
 	}
@@ -991,12 +1096,15 @@ type Address struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *Address) Reset()                    { log.DebugLog() *m = Address{} }
-func (m *Address) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*Address) ProtoMessage()               { log.DebugLog()}
-func (*Address) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{23} }
+func (m *Address) Reset()                    { log.DebugLog() * m = Address{} }
+func (m *Address) String() string            { log.DebugLog()
+												 return proto.CompactTextString(m) }
+func (*Address) ProtoMessage()               { log.DebugLog() }
+func (*Address) Descriptor() ([]byte, []int) { log.DebugLog()
+												 return fileDescriptor1, []int{23} }
 
-func (m *Address) GetAddress() string { log.DebugLog()
+func (m *Address) GetAddress() string {
+	log.DebugLog()
 	if m != nil && m.Address != nil {
 		return *m.Address
 	}
@@ -1011,12 +1119,15 @@ type EthereumAddress struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *EthereumAddress) Reset()                    { log.DebugLog() *m = EthereumAddress{} }
-func (m *EthereumAddress) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*EthereumAddress) ProtoMessage()               { log.DebugLog()}
-func (*EthereumAddress) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{24} }
+func (m *EthereumAddress) Reset()                    { log.DebugLog() * m = EthereumAddress{} }
+func (m *EthereumAddress) String() string            { log.DebugLog()
+														 return proto.CompactTextString(m) }
+func (*EthereumAddress) ProtoMessage()               { log.DebugLog() }
+func (*EthereumAddress) Descriptor() ([]byte, []int) { log.DebugLog()
+														 return fileDescriptor1, []int{24} }
 
-func (m *EthereumAddress) GetAddress() []byte { log.DebugLog()
+func (m *EthereumAddress) GetAddress() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.Address
 	}
@@ -1030,10 +1141,12 @@ type WipeDevice struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *WipeDevice) Reset()                    { log.DebugLog() *m = WipeDevice{} }
-func (m *WipeDevice) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*WipeDevice) ProtoMessage()               { log.DebugLog()}
-func (*WipeDevice) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{25} }
+func (m *WipeDevice) Reset()                    { log.DebugLog() * m = WipeDevice{} }
+func (m *WipeDevice) String() string            { log.DebugLog()
+													return proto.CompactTextString(m) }
+func (*WipeDevice) ProtoMessage()               { log.DebugLog() }
+func (*WipeDevice) Descriptor() ([]byte, []int) { log.DebugLog()
+													return fileDescriptor1, []int{25} }
 
 // *
 // Request: Load seed and related internal settings from the computer
@@ -1052,63 +1165,73 @@ type LoadDevice struct {
 	XXX_unrecognized     []byte      `json:"-"`
 }
 
-func (m *LoadDevice) Reset()                    { log.DebugLog() *m = LoadDevice{} }
-func (m *LoadDevice) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*LoadDevice) ProtoMessage()               { log.DebugLog()}
-func (*LoadDevice) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{26} }
+func (m *LoadDevice) Reset()                    { log.DebugLog() * m = LoadDevice{} }
+func (m *LoadDevice) String() string            { log.DebugLog()
+													return proto.CompactTextString(m) }
+func (*LoadDevice) ProtoMessage()               { log.DebugLog() }
+func (*LoadDevice) Descriptor() ([]byte, []int) { log.DebugLog()
+													return fileDescriptor1, []int{26} }
 
 const Default_LoadDevice_Language string = "english"
 
-func (m *LoadDevice) GetMnemonic() string { log.DebugLog()
+func (m *LoadDevice) GetMnemonic() string {
+	log.DebugLog()
 	if m != nil && m.Mnemonic != nil {
 		return *m.Mnemonic
 	}
 	return ""
 }
 
-func (m *LoadDevice) GetNode() *HDNodeType { log.DebugLog()
+func (m *LoadDevice) GetNode() *HDNodeType {
+	log.DebugLog()
 	if m != nil {
 		return m.Node
 	}
 	return nil
 }
 
-func (m *LoadDevice) GetPin() string { log.DebugLog()
+func (m *LoadDevice) GetPin() string {
+	log.DebugLog()
 	if m != nil && m.Pin != nil {
 		return *m.Pin
 	}
 	return ""
 }
 
-func (m *LoadDevice) GetPassphraseProtection() bool { log.DebugLog()
+func (m *LoadDevice) GetPassphraseProtection() bool {
+	log.DebugLog()
 	if m != nil && m.PassphraseProtection != nil {
 		return *m.PassphraseProtection
 	}
 	return false
 }
 
-func (m *LoadDevice) GetLanguage() string { log.DebugLog()
+func (m *LoadDevice) GetLanguage() string {
+	log.DebugLog()
 	if m != nil && m.Language != nil {
 		return *m.Language
 	}
 	return Default_LoadDevice_Language
 }
 
-func (m *LoadDevice) GetLabel() string { log.DebugLog()
+func (m *LoadDevice) GetLabel() string {
+	log.DebugLog()
 	if m != nil && m.Label != nil {
 		return *m.Label
 	}
 	return ""
 }
 
-func (m *LoadDevice) GetSkipChecksum() bool { log.DebugLog()
+func (m *LoadDevice) GetSkipChecksum() bool {
+	log.DebugLog()
 	if m != nil && m.SkipChecksum != nil {
 		return *m.SkipChecksum
 	}
 	return false
 }
 
-func (m *LoadDevice) GetU2FCounter() uint32 { log.DebugLog()
+func (m *LoadDevice) GetU2FCounter() uint32 {
+	log.DebugLog()
 	if m != nil && m.U2FCounter != nil {
 		return *m.U2FCounter
 	}
@@ -1131,64 +1254,74 @@ type ResetDevice struct {
 	XXX_unrecognized     []byte  `json:"-"`
 }
 
-func (m *ResetDevice) Reset()                    { log.DebugLog() *m = ResetDevice{} }
-func (m *ResetDevice) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*ResetDevice) ProtoMessage()               { log.DebugLog()}
-func (*ResetDevice) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{27} }
+func (m *ResetDevice) Reset()                    { log.DebugLog() * m = ResetDevice{} }
+func (m *ResetDevice) String() string            { log.DebugLog()
+													 return proto.CompactTextString(m) }
+func (*ResetDevice) ProtoMessage()               { log.DebugLog() }
+func (*ResetDevice) Descriptor() ([]byte, []int) { log.DebugLog()
+													 return fileDescriptor1, []int{27} }
 
 const Default_ResetDevice_Strength uint32 = 256
 const Default_ResetDevice_Language string = "english"
 
-func (m *ResetDevice) GetDisplayRandom() bool { log.DebugLog()
+func (m *ResetDevice) GetDisplayRandom() bool {
+	log.DebugLog()
 	if m != nil && m.DisplayRandom != nil {
 		return *m.DisplayRandom
 	}
 	return false
 }
 
-func (m *ResetDevice) GetStrength() uint32 { log.DebugLog()
+func (m *ResetDevice) GetStrength() uint32 {
+	log.DebugLog()
 	if m != nil && m.Strength != nil {
 		return *m.Strength
 	}
 	return Default_ResetDevice_Strength
 }
 
-func (m *ResetDevice) GetPassphraseProtection() bool { log.DebugLog()
+func (m *ResetDevice) GetPassphraseProtection() bool {
+	log.DebugLog()
 	if m != nil && m.PassphraseProtection != nil {
 		return *m.PassphraseProtection
 	}
 	return false
 }
 
-func (m *ResetDevice) GetPinProtection() bool { log.DebugLog()
+func (m *ResetDevice) GetPinProtection() bool {
+	log.DebugLog()
 	if m != nil && m.PinProtection != nil {
 		return *m.PinProtection
 	}
 	return false
 }
 
-func (m *ResetDevice) GetLanguage() string { log.DebugLog()
+func (m *ResetDevice) GetLanguage() string {
+	log.DebugLog()
 	if m != nil && m.Language != nil {
 		return *m.Language
 	}
 	return Default_ResetDevice_Language
 }
 
-func (m *ResetDevice) GetLabel() string { log.DebugLog()
+func (m *ResetDevice) GetLabel() string {
+	log.DebugLog()
 	if m != nil && m.Label != nil {
 		return *m.Label
 	}
 	return ""
 }
 
-func (m *ResetDevice) GetU2FCounter() uint32 { log.DebugLog()
+func (m *ResetDevice) GetU2FCounter() uint32 {
+	log.DebugLog()
 	if m != nil && m.U2FCounter != nil {
 		return *m.U2FCounter
 	}
 	return 0
 }
 
-func (m *ResetDevice) GetSkipBackup() bool { log.DebugLog()
+func (m *ResetDevice) GetSkipBackup() bool {
+	log.DebugLog()
 	if m != nil && m.SkipBackup != nil {
 		return *m.SkipBackup
 	}
@@ -1202,10 +1335,12 @@ type BackupDevice struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *BackupDevice) Reset()                    { log.DebugLog() *m = BackupDevice{} }
-func (m *BackupDevice) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*BackupDevice) ProtoMessage()               { log.DebugLog()}
-func (*BackupDevice) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{28} }
+func (m *BackupDevice) Reset()                    { log.DebugLog() * m = BackupDevice{} }
+func (m *BackupDevice) String() string            { log.DebugLog()
+													  return proto.CompactTextString(m) }
+func (*BackupDevice) ProtoMessage()               { log.DebugLog() }
+func (*BackupDevice) Descriptor() ([]byte, []int) { log.DebugLog()
+													  return fileDescriptor1, []int{28} }
 
 // *
 // Response: Ask for additional entropy from host computer
@@ -1215,10 +1350,12 @@ type EntropyRequest struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *EntropyRequest) Reset()                    { log.DebugLog() *m = EntropyRequest{} }
-func (m *EntropyRequest) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*EntropyRequest) ProtoMessage()               { log.DebugLog()}
-func (*EntropyRequest) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{29} }
+func (m *EntropyRequest) Reset()                    { log.DebugLog() * m = EntropyRequest{} }
+func (m *EntropyRequest) String() string            { log.DebugLog()
+														return proto.CompactTextString(m) }
+func (*EntropyRequest) ProtoMessage()               { log.DebugLog() }
+func (*EntropyRequest) Descriptor() ([]byte, []int) { log.DebugLog()
+														return fileDescriptor1, []int{29} }
 
 // *
 // Request: Provide additional entropy for seed generation function
@@ -1229,12 +1366,15 @@ type EntropyAck struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *EntropyAck) Reset()                    { log.DebugLog() *m = EntropyAck{} }
-func (m *EntropyAck) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*EntropyAck) ProtoMessage()               { log.DebugLog()}
-func (*EntropyAck) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{30} }
+func (m *EntropyAck) Reset()                    { log.DebugLog() * m = EntropyAck{} }
+func (m *EntropyAck) String() string            { log.DebugLog()
+													return proto.CompactTextString(m) }
+func (*EntropyAck) ProtoMessage()               { log.DebugLog() }
+func (*EntropyAck) Descriptor() ([]byte, []int) { log.DebugLog()
+													return fileDescriptor1, []int{30} }
 
-func (m *EntropyAck) GetEntropy() []byte { log.DebugLog()
+func (m *EntropyAck) GetEntropy() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.Entropy
 	}
@@ -1259,70 +1399,81 @@ type RecoveryDevice struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *RecoveryDevice) Reset()                    { log.DebugLog() *m = RecoveryDevice{} }
-func (m *RecoveryDevice) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*RecoveryDevice) ProtoMessage()               { log.DebugLog()}
-func (*RecoveryDevice) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{31} }
+func (m *RecoveryDevice) Reset()                    { log.DebugLog() * m = RecoveryDevice{} }
+func (m *RecoveryDevice) String() string            { log.DebugLog()
+														return proto.CompactTextString(m) }
+func (*RecoveryDevice) ProtoMessage()               { log.DebugLog() }
+func (*RecoveryDevice) Descriptor() ([]byte, []int) { log.DebugLog()
+														return fileDescriptor1, []int{31} }
 
 const Default_RecoveryDevice_Language string = "english"
 
-func (m *RecoveryDevice) GetWordCount() uint32 { log.DebugLog()
+func (m *RecoveryDevice) GetWordCount() uint32 {
+	log.DebugLog()
 	if m != nil && m.WordCount != nil {
 		return *m.WordCount
 	}
 	return 0
 }
 
-func (m *RecoveryDevice) GetPassphraseProtection() bool { log.DebugLog()
+func (m *RecoveryDevice) GetPassphraseProtection() bool {
+	log.DebugLog()
 	if m != nil && m.PassphraseProtection != nil {
 		return *m.PassphraseProtection
 	}
 	return false
 }
 
-func (m *RecoveryDevice) GetPinProtection() bool { log.DebugLog()
+func (m *RecoveryDevice) GetPinProtection() bool {
+	log.DebugLog()
 	if m != nil && m.PinProtection != nil {
 		return *m.PinProtection
 	}
 	return false
 }
 
-func (m *RecoveryDevice) GetLanguage() string { log.DebugLog()
+func (m *RecoveryDevice) GetLanguage() string {
+	log.DebugLog()
 	if m != nil && m.Language != nil {
 		return *m.Language
 	}
 	return Default_RecoveryDevice_Language
 }
 
-func (m *RecoveryDevice) GetLabel() string { log.DebugLog()
+func (m *RecoveryDevice) GetLabel() string {
+	log.DebugLog()
 	if m != nil && m.Label != nil {
 		return *m.Label
 	}
 	return ""
 }
 
-func (m *RecoveryDevice) GetEnforceWordlist() bool { log.DebugLog()
+func (m *RecoveryDevice) GetEnforceWordlist() bool {
+	log.DebugLog()
 	if m != nil && m.EnforceWordlist != nil {
 		return *m.EnforceWordlist
 	}
 	return false
 }
 
-func (m *RecoveryDevice) GetType() uint32 { log.DebugLog()
+func (m *RecoveryDevice) GetType() uint32 {
+	log.DebugLog()
 	if m != nil && m.Type != nil {
 		return *m.Type
 	}
 	return 0
 }
 
-func (m *RecoveryDevice) GetU2FCounter() uint32 { log.DebugLog()
+func (m *RecoveryDevice) GetU2FCounter() uint32 {
+	log.DebugLog()
 	if m != nil && m.U2FCounter != nil {
 		return *m.U2FCounter
 	}
 	return 0
 }
 
-func (m *RecoveryDevice) GetDryRun() bool { log.DebugLog()
+func (m *RecoveryDevice) GetDryRun() bool {
+	log.DebugLog()
 	if m != nil && m.DryRun != nil {
 		return *m.DryRun
 	}
@@ -1339,12 +1490,15 @@ type WordRequest struct {
 	XXX_unrecognized []byte           `json:"-"`
 }
 
-func (m *WordRequest) Reset()                    { log.DebugLog() *m = WordRequest{} }
-func (m *WordRequest) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*WordRequest) ProtoMessage()               { log.DebugLog()}
-func (*WordRequest) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{32} }
+func (m *WordRequest) Reset()                    { log.DebugLog() * m = WordRequest{} }
+func (m *WordRequest) String() string            { log.DebugLog()
+													 return proto.CompactTextString(m) }
+func (*WordRequest) ProtoMessage()               { log.DebugLog() }
+func (*WordRequest) Descriptor() ([]byte, []int) { log.DebugLog()
+													 return fileDescriptor1, []int{32} }
 
-func (m *WordRequest) GetType() WordRequestType { log.DebugLog()
+func (m *WordRequest) GetType() WordRequestType {
+	log.DebugLog()
 	if m != nil && m.Type != nil {
 		return *m.Type
 	}
@@ -1362,12 +1516,15 @@ type WordAck struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *WordAck) Reset()                    { log.DebugLog() *m = WordAck{} }
-func (m *WordAck) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*WordAck) ProtoMessage()               { log.DebugLog()}
-func (*WordAck) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{33} }
+func (m *WordAck) Reset()                    { log.DebugLog() * m = WordAck{} }
+func (m *WordAck) String() string            { log.DebugLog()
+												 return proto.CompactTextString(m) }
+func (*WordAck) ProtoMessage()               { log.DebugLog() }
+func (*WordAck) Descriptor() ([]byte, []int) { log.DebugLog()
+												 return fileDescriptor1, []int{33} }
 
-func (m *WordAck) GetWord() string { log.DebugLog()
+func (m *WordAck) GetWord() string {
+	log.DebugLog()
 	if m != nil && m.Word != nil {
 		return *m.Word
 	}
@@ -1386,36 +1543,42 @@ type SignMessage struct {
 	XXX_unrecognized []byte           `json:"-"`
 }
 
-func (m *SignMessage) Reset()                    { log.DebugLog() *m = SignMessage{} }
-func (m *SignMessage) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*SignMessage) ProtoMessage()               { log.DebugLog()}
-func (*SignMessage) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{34} }
+func (m *SignMessage) Reset()                    { log.DebugLog() * m = SignMessage{} }
+func (m *SignMessage) String() string            { log.DebugLog()
+													 return proto.CompactTextString(m) }
+func (*SignMessage) ProtoMessage()               { log.DebugLog() }
+func (*SignMessage) Descriptor() ([]byte, []int) { log.DebugLog()
+													 return fileDescriptor1, []int{34} }
 
 const Default_SignMessage_CoinName string = "Bitcoin"
 const Default_SignMessage_ScriptType InputScriptType = InputScriptType_SPENDADDRESS
 
-func (m *SignMessage) GetAddressN() []uint32 { log.DebugLog()
+func (m *SignMessage) GetAddressN() []uint32 {
+	log.DebugLog()
 	if m != nil {
 		return m.AddressN
 	}
 	return nil
 }
 
-func (m *SignMessage) GetMessage() []byte { log.DebugLog()
+func (m *SignMessage) GetMessage() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.Message
 	}
 	return nil
 }
 
-func (m *SignMessage) GetCoinName() string { log.DebugLog()
+func (m *SignMessage) GetCoinName() string {
+	log.DebugLog()
 	if m != nil && m.CoinName != nil {
 		return *m.CoinName
 	}
 	return Default_SignMessage_CoinName
 }
 
-func (m *SignMessage) GetScriptType() InputScriptType { log.DebugLog()
+func (m *SignMessage) GetScriptType() InputScriptType {
+	log.DebugLog()
 	if m != nil && m.ScriptType != nil {
 		return *m.ScriptType
 	}
@@ -1434,35 +1597,41 @@ type VerifyMessage struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *VerifyMessage) Reset()                    { log.DebugLog() *m = VerifyMessage{} }
-func (m *VerifyMessage) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*VerifyMessage) ProtoMessage()               { log.DebugLog()}
-func (*VerifyMessage) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{35} }
+func (m *VerifyMessage) Reset()                    { log.DebugLog() * m = VerifyMessage{} }
+func (m *VerifyMessage) String() string            { log.DebugLog()
+													   return proto.CompactTextString(m) }
+func (*VerifyMessage) ProtoMessage()               { log.DebugLog() }
+func (*VerifyMessage) Descriptor() ([]byte, []int) { log.DebugLog()
+													   return fileDescriptor1, []int{35} }
 
 const Default_VerifyMessage_CoinName string = "Bitcoin"
 
-func (m *VerifyMessage) GetAddress() string { log.DebugLog()
+func (m *VerifyMessage) GetAddress() string {
+	log.DebugLog()
 	if m != nil && m.Address != nil {
 		return *m.Address
 	}
 	return ""
 }
 
-func (m *VerifyMessage) GetSignature() []byte { log.DebugLog()
+func (m *VerifyMessage) GetSignature() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.Signature
 	}
 	return nil
 }
 
-func (m *VerifyMessage) GetMessage() []byte { log.DebugLog()
+func (m *VerifyMessage) GetMessage() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.Message
 	}
 	return nil
 }
 
-func (m *VerifyMessage) GetCoinName() string { log.DebugLog()
+func (m *VerifyMessage) GetCoinName() string {
+	log.DebugLog()
 	if m != nil && m.CoinName != nil {
 		return *m.CoinName
 	}
@@ -1478,19 +1647,23 @@ type MessageSignature struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *MessageSignature) Reset()                    { log.DebugLog() *m = MessageSignature{} }
-func (m *MessageSignature) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*MessageSignature) ProtoMessage()               { log.DebugLog()}
-func (*MessageSignature) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{36} }
+func (m *MessageSignature) Reset()                    { log.DebugLog() * m = MessageSignature{} }
+func (m *MessageSignature) String() string            { log.DebugLog()
+														  return proto.CompactTextString(m) }
+func (*MessageSignature) ProtoMessage()               { log.DebugLog() }
+func (*MessageSignature) Descriptor() ([]byte, []int) { log.DebugLog()
+														  return fileDescriptor1, []int{36} }
 
-func (m *MessageSignature) GetAddress() string { log.DebugLog()
+func (m *MessageSignature) GetAddress() string {
+	log.DebugLog()
 	if m != nil && m.Address != nil {
 		return *m.Address
 	}
 	return ""
 }
 
-func (m *MessageSignature) GetSignature() []byte { log.DebugLog()
+func (m *MessageSignature) GetSignature() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.Signature
 	}
@@ -1510,42 +1683,49 @@ type EncryptMessage struct {
 	XXX_unrecognized []byte   `json:"-"`
 }
 
-func (m *EncryptMessage) Reset()                    { log.DebugLog() *m = EncryptMessage{} }
-func (m *EncryptMessage) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*EncryptMessage) ProtoMessage()               { log.DebugLog()}
-func (*EncryptMessage) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{37} }
+func (m *EncryptMessage) Reset()                    { log.DebugLog() * m = EncryptMessage{} }
+func (m *EncryptMessage) String() string            { log.DebugLog()
+														return proto.CompactTextString(m) }
+func (*EncryptMessage) ProtoMessage()               { log.DebugLog() }
+func (*EncryptMessage) Descriptor() ([]byte, []int) { log.DebugLog()
+														return fileDescriptor1, []int{37} }
 
 const Default_EncryptMessage_CoinName string = "Bitcoin"
 
-func (m *EncryptMessage) GetPubkey() []byte { log.DebugLog()
+func (m *EncryptMessage) GetPubkey() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.Pubkey
 	}
 	return nil
 }
 
-func (m *EncryptMessage) GetMessage() []byte { log.DebugLog()
+func (m *EncryptMessage) GetMessage() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.Message
 	}
 	return nil
 }
 
-func (m *EncryptMessage) GetDisplayOnly() bool { log.DebugLog()
+func (m *EncryptMessage) GetDisplayOnly() bool {
+	log.DebugLog()
 	if m != nil && m.DisplayOnly != nil {
 		return *m.DisplayOnly
 	}
 	return false
 }
 
-func (m *EncryptMessage) GetAddressN() []uint32 { log.DebugLog()
+func (m *EncryptMessage) GetAddressN() []uint32 {
+	log.DebugLog()
 	if m != nil {
 		return m.AddressN
 	}
 	return nil
 }
 
-func (m *EncryptMessage) GetCoinName() string { log.DebugLog()
+func (m *EncryptMessage) GetCoinName() string {
+	log.DebugLog()
 	if m != nil && m.CoinName != nil {
 		return *m.CoinName
 	}
@@ -1562,26 +1742,31 @@ type EncryptedMessage struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *EncryptedMessage) Reset()                    { log.DebugLog() *m = EncryptedMessage{} }
-func (m *EncryptedMessage) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*EncryptedMessage) ProtoMessage()               { log.DebugLog()}
-func (*EncryptedMessage) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{38} }
+func (m *EncryptedMessage) Reset()                    { log.DebugLog() * m = EncryptedMessage{} }
+func (m *EncryptedMessage) String() string            { log.DebugLog()
+														  return proto.CompactTextString(m) }
+func (*EncryptedMessage) ProtoMessage()               { log.DebugLog() }
+func (*EncryptedMessage) Descriptor() ([]byte, []int) { log.DebugLog()
+														  return fileDescriptor1, []int{38} }
 
-func (m *EncryptedMessage) GetNonce() []byte { log.DebugLog()
+func (m *EncryptedMessage) GetNonce() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.Nonce
 	}
 	return nil
 }
 
-func (m *EncryptedMessage) GetMessage() []byte { log.DebugLog()
+func (m *EncryptedMessage) GetMessage() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.Message
 	}
 	return nil
 }
 
-func (m *EncryptedMessage) GetHmac() []byte { log.DebugLog()
+func (m *EncryptedMessage) GetHmac() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.Hmac
 	}
@@ -1600,33 +1785,39 @@ type DecryptMessage struct {
 	XXX_unrecognized []byte   `json:"-"`
 }
 
-func (m *DecryptMessage) Reset()                    { log.DebugLog() *m = DecryptMessage{} }
-func (m *DecryptMessage) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*DecryptMessage) ProtoMessage()               { log.DebugLog()}
-func (*DecryptMessage) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{39} }
+func (m *DecryptMessage) Reset()                    { log.DebugLog() * m = DecryptMessage{} }
+func (m *DecryptMessage) String() string            { log.DebugLog()
+														return proto.CompactTextString(m) }
+func (*DecryptMessage) ProtoMessage()               { log.DebugLog() }
+func (*DecryptMessage) Descriptor() ([]byte, []int) { log.DebugLog()
+														return fileDescriptor1, []int{39} }
 
-func (m *DecryptMessage) GetAddressN() []uint32 { log.DebugLog()
+func (m *DecryptMessage) GetAddressN() []uint32 {
+	log.DebugLog()
 	if m != nil {
 		return m.AddressN
 	}
 	return nil
 }
 
-func (m *DecryptMessage) GetNonce() []byte { log.DebugLog()
+func (m *DecryptMessage) GetNonce() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.Nonce
 	}
 	return nil
 }
 
-func (m *DecryptMessage) GetMessage() []byte { log.DebugLog()
+func (m *DecryptMessage) GetMessage() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.Message
 	}
 	return nil
 }
 
-func (m *DecryptMessage) GetHmac() []byte { log.DebugLog()
+func (m *DecryptMessage) GetHmac() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.Hmac
 	}
@@ -1642,19 +1833,23 @@ type DecryptedMessage struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *DecryptedMessage) Reset()                    { log.DebugLog() *m = DecryptedMessage{} }
-func (m *DecryptedMessage) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*DecryptedMessage) ProtoMessage()               { log.DebugLog()}
-func (*DecryptedMessage) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{40} }
+func (m *DecryptedMessage) Reset()                    { log.DebugLog() * m = DecryptedMessage{} }
+func (m *DecryptedMessage) String() string            { log.DebugLog()
+														  return proto.CompactTextString(m) }
+func (*DecryptedMessage) ProtoMessage()               { log.DebugLog() }
+func (*DecryptedMessage) Descriptor() ([]byte, []int) { log.DebugLog()
+														  return fileDescriptor1, []int{40} }
 
-func (m *DecryptedMessage) GetMessage() []byte { log.DebugLog()
+func (m *DecryptedMessage) GetMessage() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.Message
 	}
 	return nil
 }
 
-func (m *DecryptedMessage) GetAddress() string { log.DebugLog()
+func (m *DecryptedMessage) GetAddress() string {
+	log.DebugLog()
 	if m != nil && m.Address != nil {
 		return *m.Address
 	}
@@ -1676,54 +1871,63 @@ type CipherKeyValue struct {
 	XXX_unrecognized []byte   `json:"-"`
 }
 
-func (m *CipherKeyValue) Reset()                    { log.DebugLog() *m = CipherKeyValue{} }
-func (m *CipherKeyValue) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*CipherKeyValue) ProtoMessage()               { log.DebugLog()}
-func (*CipherKeyValue) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{41} }
+func (m *CipherKeyValue) Reset()                    { log.DebugLog() * m = CipherKeyValue{} }
+func (m *CipherKeyValue) String() string            { log.DebugLog()
+														return proto.CompactTextString(m) }
+func (*CipherKeyValue) ProtoMessage()               { log.DebugLog() }
+func (*CipherKeyValue) Descriptor() ([]byte, []int) { log.DebugLog()
+														return fileDescriptor1, []int{41} }
 
-func (m *CipherKeyValue) GetAddressN() []uint32 { log.DebugLog()
+func (m *CipherKeyValue) GetAddressN() []uint32 {
+	log.DebugLog()
 	if m != nil {
 		return m.AddressN
 	}
 	return nil
 }
 
-func (m *CipherKeyValue) GetKey() string { log.DebugLog()
+func (m *CipherKeyValue) GetKey() string {
+	log.DebugLog()
 	if m != nil && m.Key != nil {
 		return *m.Key
 	}
 	return ""
 }
 
-func (m *CipherKeyValue) GetValue() []byte { log.DebugLog()
+func (m *CipherKeyValue) GetValue() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.Value
 	}
 	return nil
 }
 
-func (m *CipherKeyValue) GetEncrypt() bool { log.DebugLog()
+func (m *CipherKeyValue) GetEncrypt() bool {
+	log.DebugLog()
 	if m != nil && m.Encrypt != nil {
 		return *m.Encrypt
 	}
 	return false
 }
 
-func (m *CipherKeyValue) GetAskOnEncrypt() bool { log.DebugLog()
+func (m *CipherKeyValue) GetAskOnEncrypt() bool {
+	log.DebugLog()
 	if m != nil && m.AskOnEncrypt != nil {
 		return *m.AskOnEncrypt
 	}
 	return false
 }
 
-func (m *CipherKeyValue) GetAskOnDecrypt() bool { log.DebugLog()
+func (m *CipherKeyValue) GetAskOnDecrypt() bool {
+	log.DebugLog()
 	if m != nil && m.AskOnDecrypt != nil {
 		return *m.AskOnDecrypt
 	}
 	return false
 }
 
-func (m *CipherKeyValue) GetIv() []byte { log.DebugLog()
+func (m *CipherKeyValue) GetIv() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.Iv
 	}
@@ -1738,12 +1942,15 @@ type CipheredKeyValue struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *CipheredKeyValue) Reset()                    { log.DebugLog() *m = CipheredKeyValue{} }
-func (m *CipheredKeyValue) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*CipheredKeyValue) ProtoMessage()               { log.DebugLog()}
-func (*CipheredKeyValue) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{42} }
+func (m *CipheredKeyValue) Reset()                    { log.DebugLog() * m = CipheredKeyValue{} }
+func (m *CipheredKeyValue) String() string            { log.DebugLog()
+														  return proto.CompactTextString(m) }
+func (*CipheredKeyValue) ProtoMessage()               { log.DebugLog() }
+func (*CipheredKeyValue) Descriptor() ([]byte, []int) { log.DebugLog()
+														  return fileDescriptor1, []int{42} }
 
-func (m *CipheredKeyValue) GetValue() []byte { log.DebugLog()
+func (m *CipheredKeyValue) GetValue() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.Value
 	}
@@ -1763,28 +1970,33 @@ type EstimateTxSize struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *EstimateTxSize) Reset()                    { log.DebugLog() *m = EstimateTxSize{} }
-func (m *EstimateTxSize) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*EstimateTxSize) ProtoMessage()               { log.DebugLog()}
-func (*EstimateTxSize) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{43} }
+func (m *EstimateTxSize) Reset()                    { log.DebugLog() * m = EstimateTxSize{} }
+func (m *EstimateTxSize) String() string            { log.DebugLog()
+														return proto.CompactTextString(m) }
+func (*EstimateTxSize) ProtoMessage()               { log.DebugLog() }
+func (*EstimateTxSize) Descriptor() ([]byte, []int) { log.DebugLog()
+														return fileDescriptor1, []int{43} }
 
 const Default_EstimateTxSize_CoinName string = "Bitcoin"
 
-func (m *EstimateTxSize) GetOutputsCount() uint32 { log.DebugLog()
+func (m *EstimateTxSize) GetOutputsCount() uint32 {
+	log.DebugLog()
 	if m != nil && m.OutputsCount != nil {
 		return *m.OutputsCount
 	}
 	return 0
 }
 
-func (m *EstimateTxSize) GetInputsCount() uint32 { log.DebugLog()
+func (m *EstimateTxSize) GetInputsCount() uint32 {
+	log.DebugLog()
 	if m != nil && m.InputsCount != nil {
 		return *m.InputsCount
 	}
 	return 0
 }
 
-func (m *EstimateTxSize) GetCoinName() string { log.DebugLog()
+func (m *EstimateTxSize) GetCoinName() string {
+	log.DebugLog()
 	if m != nil && m.CoinName != nil {
 		return *m.CoinName
 	}
@@ -1799,12 +2011,15 @@ type TxSize struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *TxSize) Reset()                    { log.DebugLog() *m = TxSize{} }
-func (m *TxSize) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*TxSize) ProtoMessage()               { log.DebugLog()}
-func (*TxSize) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{44} }
+func (m *TxSize) Reset()                    { log.DebugLog() * m = TxSize{} }
+func (m *TxSize) String() string            { log.DebugLog()
+												return proto.CompactTextString(m) }
+func (*TxSize) ProtoMessage()               { log.DebugLog() }
+func (*TxSize) Descriptor() ([]byte, []int) { log.DebugLog()
+												return fileDescriptor1, []int{44} }
 
-func (m *TxSize) GetTxSize() uint32 { log.DebugLog()
+func (m *TxSize) GetTxSize() uint32 {
+	log.DebugLog()
 	if m != nil && m.TxSize != nil {
 		return *m.TxSize
 	}
@@ -1826,44 +2041,51 @@ type SignTx struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *SignTx) Reset()                    { log.DebugLog() *m = SignTx{} }
-func (m *SignTx) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*SignTx) ProtoMessage()               { log.DebugLog()}
-func (*SignTx) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{45} }
+func (m *SignTx) Reset()                    { log.DebugLog() * m = SignTx{} }
+func (m *SignTx) String() string            { log.DebugLog()
+												return proto.CompactTextString(m) }
+func (*SignTx) ProtoMessage()               { log.DebugLog() }
+func (*SignTx) Descriptor() ([]byte, []int) { log.DebugLog()
+												return fileDescriptor1, []int{45} }
 
 const Default_SignTx_CoinName string = "Bitcoin"
 const Default_SignTx_Version uint32 = 1
 const Default_SignTx_LockTime uint32 = 0
 
-func (m *SignTx) GetOutputsCount() uint32 { log.DebugLog()
+func (m *SignTx) GetOutputsCount() uint32 {
+	log.DebugLog()
 	if m != nil && m.OutputsCount != nil {
 		return *m.OutputsCount
 	}
 	return 0
 }
 
-func (m *SignTx) GetInputsCount() uint32 { log.DebugLog()
+func (m *SignTx) GetInputsCount() uint32 {
+	log.DebugLog()
 	if m != nil && m.InputsCount != nil {
 		return *m.InputsCount
 	}
 	return 0
 }
 
-func (m *SignTx) GetCoinName() string { log.DebugLog()
+func (m *SignTx) GetCoinName() string {
+	log.DebugLog()
 	if m != nil && m.CoinName != nil {
 		return *m.CoinName
 	}
 	return Default_SignTx_CoinName
 }
 
-func (m *SignTx) GetVersion() uint32 { log.DebugLog()
+func (m *SignTx) GetVersion() uint32 {
+	log.DebugLog()
 	if m != nil && m.Version != nil {
 		return *m.Version
 	}
 	return Default_SignTx_Version
 }
 
-func (m *SignTx) GetLockTime() uint32 { log.DebugLog()
+func (m *SignTx) GetLockTime() uint32 {
+	log.DebugLog()
 	if m != nil && m.LockTime != nil {
 		return *m.LockTime
 	}
@@ -1888,51 +2110,59 @@ type SimpleSignTx struct {
 	XXX_unrecognized []byte             `json:"-"`
 }
 
-func (m *SimpleSignTx) Reset()                    { log.DebugLog() *m = SimpleSignTx{} }
-func (m *SimpleSignTx) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*SimpleSignTx) ProtoMessage()               { log.DebugLog()}
-func (*SimpleSignTx) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{46} }
+func (m *SimpleSignTx) Reset()                    { log.DebugLog() * m = SimpleSignTx{} }
+func (m *SimpleSignTx) String() string            { log.DebugLog()
+													  return proto.CompactTextString(m) }
+func (*SimpleSignTx) ProtoMessage()               { log.DebugLog() }
+func (*SimpleSignTx) Descriptor() ([]byte, []int) { log.DebugLog()
+													  return fileDescriptor1, []int{46} }
 
 const Default_SimpleSignTx_CoinName string = "Bitcoin"
 const Default_SimpleSignTx_Version uint32 = 1
 const Default_SimpleSignTx_LockTime uint32 = 0
 
-func (m *SimpleSignTx) GetInputs() []*TxInputType { log.DebugLog()
+func (m *SimpleSignTx) GetInputs() []*TxInputType {
+	log.DebugLog()
 	if m != nil {
 		return m.Inputs
 	}
 	return nil
 }
 
-func (m *SimpleSignTx) GetOutputs() []*TxOutputType { log.DebugLog()
+func (m *SimpleSignTx) GetOutputs() []*TxOutputType {
+	log.DebugLog()
 	if m != nil {
 		return m.Outputs
 	}
 	return nil
 }
 
-func (m *SimpleSignTx) GetTransactions() []*TransactionType { log.DebugLog()
+func (m *SimpleSignTx) GetTransactions() []*TransactionType {
+	log.DebugLog()
 	if m != nil {
 		return m.Transactions
 	}
 	return nil
 }
 
-func (m *SimpleSignTx) GetCoinName() string { log.DebugLog()
+func (m *SimpleSignTx) GetCoinName() string {
+	log.DebugLog()
 	if m != nil && m.CoinName != nil {
 		return *m.CoinName
 	}
 	return Default_SimpleSignTx_CoinName
 }
 
-func (m *SimpleSignTx) GetVersion() uint32 { log.DebugLog()
+func (m *SimpleSignTx) GetVersion() uint32 {
+	log.DebugLog()
 	if m != nil && m.Version != nil {
 		return *m.Version
 	}
 	return Default_SimpleSignTx_Version
 }
 
-func (m *SimpleSignTx) GetLockTime() uint32 { log.DebugLog()
+func (m *SimpleSignTx) GetLockTime() uint32 {
+	log.DebugLog()
 	if m != nil && m.LockTime != nil {
 		return *m.LockTime
 	}
@@ -1953,26 +2183,31 @@ type TxRequest struct {
 	XXX_unrecognized []byte                   `json:"-"`
 }
 
-func (m *TxRequest) Reset()                    { log.DebugLog() *m = TxRequest{} }
-func (m *TxRequest) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*TxRequest) ProtoMessage()               { log.DebugLog()}
-func (*TxRequest) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{47} }
+func (m *TxRequest) Reset()                    { log.DebugLog() * m = TxRequest{} }
+func (m *TxRequest) String() string            { log.DebugLog()
+												   return proto.CompactTextString(m) }
+func (*TxRequest) ProtoMessage()               { log.DebugLog() }
+func (*TxRequest) Descriptor() ([]byte, []int) { log.DebugLog()
+												   return fileDescriptor1, []int{47} }
 
-func (m *TxRequest) GetRequestType() RequestType { log.DebugLog()
+func (m *TxRequest) GetRequestType() RequestType {
+	log.DebugLog()
 	if m != nil && m.RequestType != nil {
 		return *m.RequestType
 	}
 	return RequestType_TXINPUT
 }
 
-func (m *TxRequest) GetDetails() *TxRequestDetailsType { log.DebugLog()
+func (m *TxRequest) GetDetails() *TxRequestDetailsType {
+	log.DebugLog()
 	if m != nil {
 		return m.Details
 	}
 	return nil
 }
 
-func (m *TxRequest) GetSerialized() *TxRequestSerializedType { log.DebugLog()
+func (m *TxRequest) GetSerialized() *TxRequestSerializedType {
+	log.DebugLog()
 	if m != nil {
 		return m.Serialized
 	}
@@ -1988,12 +2223,15 @@ type TxAck struct {
 	XXX_unrecognized []byte           `json:"-"`
 }
 
-func (m *TxAck) Reset()                    { log.DebugLog() *m = TxAck{} }
-func (m *TxAck) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*TxAck) ProtoMessage()               { log.DebugLog()}
-func (*TxAck) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{48} }
+func (m *TxAck) Reset()                    { log.DebugLog() * m = TxAck{} }
+func (m *TxAck) String() string            { log.DebugLog()
+											   return proto.CompactTextString(m) }
+func (*TxAck) ProtoMessage()               { log.DebugLog() }
+func (*TxAck) Descriptor() ([]byte, []int) { log.DebugLog()
+											   return fileDescriptor1, []int{48} }
 
-func (m *TxAck) GetTx() *TransactionType { log.DebugLog()
+func (m *TxAck) GetTx() *TransactionType {
+	log.DebugLog()
 	if m != nil {
 		return m.Tx
 	}
@@ -2021,68 +2259,79 @@ type EthereumSignTx struct {
 	XXX_unrecognized []byte   `json:"-"`
 }
 
-func (m *EthereumSignTx) Reset()                    { log.DebugLog() *m = EthereumSignTx{} }
-func (m *EthereumSignTx) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*EthereumSignTx) ProtoMessage()               { log.DebugLog()}
-func (*EthereumSignTx) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{49} }
+func (m *EthereumSignTx) Reset()                    { log.DebugLog() * m = EthereumSignTx{} }
+func (m *EthereumSignTx) String() string            { log.DebugLog()
+														return proto.CompactTextString(m) }
+func (*EthereumSignTx) ProtoMessage()               { log.DebugLog() }
+func (*EthereumSignTx) Descriptor() ([]byte, []int) { log.DebugLog()
+														return fileDescriptor1, []int{49} }
 
-func (m *EthereumSignTx) GetAddressN() []uint32 { log.DebugLog()
+func (m *EthereumSignTx) GetAddressN() []uint32 {
+	log.DebugLog()
 	if m != nil {
 		return m.AddressN
 	}
 	return nil
 }
 
-func (m *EthereumSignTx) GetNonce() []byte { log.DebugLog()
+func (m *EthereumSignTx) GetNonce() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.Nonce
 	}
 	return nil
 }
 
-func (m *EthereumSignTx) GetGasPrice() []byte { log.DebugLog()
+func (m *EthereumSignTx) GetGasPrice() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.GasPrice
 	}
 	return nil
 }
 
-func (m *EthereumSignTx) GetGasLimit() []byte { log.DebugLog()
+func (m *EthereumSignTx) GetGasLimit() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.GasLimit
 	}
 	return nil
 }
 
-func (m *EthereumSignTx) GetTo() []byte { log.DebugLog()
+func (m *EthereumSignTx) GetTo() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.To
 	}
 	return nil
 }
 
-func (m *EthereumSignTx) GetValue() []byte { log.DebugLog()
+func (m *EthereumSignTx) GetValue() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.Value
 	}
 	return nil
 }
 
-func (m *EthereumSignTx) GetDataInitialChunk() []byte { log.DebugLog()
+func (m *EthereumSignTx) GetDataInitialChunk() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.DataInitialChunk
 	}
 	return nil
 }
 
-func (m *EthereumSignTx) GetDataLength() uint32 { log.DebugLog()
+func (m *EthereumSignTx) GetDataLength() uint32 {
+	log.DebugLog()
 	if m != nil && m.DataLength != nil {
 		return *m.DataLength
 	}
 	return 0
 }
 
-func (m *EthereumSignTx) GetChainId() uint32 { log.DebugLog()
+func (m *EthereumSignTx) GetChainId() uint32 {
+	log.DebugLog()
 	if m != nil && m.ChainId != nil {
 		return *m.ChainId
 	}
@@ -2103,33 +2352,39 @@ type EthereumTxRequest struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *EthereumTxRequest) Reset()                    { log.DebugLog() *m = EthereumTxRequest{} }
-func (m *EthereumTxRequest) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*EthereumTxRequest) ProtoMessage()               { log.DebugLog()}
-func (*EthereumTxRequest) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{50} }
+func (m *EthereumTxRequest) Reset()                    { log.DebugLog() * m = EthereumTxRequest{} }
+func (m *EthereumTxRequest) String() string            { log.DebugLog()
+														   return proto.CompactTextString(m) }
+func (*EthereumTxRequest) ProtoMessage()               { log.DebugLog() }
+func (*EthereumTxRequest) Descriptor() ([]byte, []int) { log.DebugLog()
+														   return fileDescriptor1, []int{50} }
 
-func (m *EthereumTxRequest) GetDataLength() uint32 { log.DebugLog()
+func (m *EthereumTxRequest) GetDataLength() uint32 {
+	log.DebugLog()
 	if m != nil && m.DataLength != nil {
 		return *m.DataLength
 	}
 	return 0
 }
 
-func (m *EthereumTxRequest) GetSignatureV() uint32 { log.DebugLog()
+func (m *EthereumTxRequest) GetSignatureV() uint32 {
+	log.DebugLog()
 	if m != nil && m.SignatureV != nil {
 		return *m.SignatureV
 	}
 	return 0
 }
 
-func (m *EthereumTxRequest) GetSignatureR() []byte { log.DebugLog()
+func (m *EthereumTxRequest) GetSignatureR() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.SignatureR
 	}
 	return nil
 }
 
-func (m *EthereumTxRequest) GetSignatureS() []byte { log.DebugLog()
+func (m *EthereumTxRequest) GetSignatureS() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.SignatureS
 	}
@@ -2145,12 +2400,15 @@ type EthereumTxAck struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *EthereumTxAck) Reset()                    { log.DebugLog() *m = EthereumTxAck{} }
-func (m *EthereumTxAck) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*EthereumTxAck) ProtoMessage()               { log.DebugLog()}
-func (*EthereumTxAck) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{51} }
+func (m *EthereumTxAck) Reset()                    { log.DebugLog() * m = EthereumTxAck{} }
+func (m *EthereumTxAck) String() string            { log.DebugLog()
+													   return proto.CompactTextString(m) }
+func (*EthereumTxAck) ProtoMessage()               { log.DebugLog() }
+func (*EthereumTxAck) Descriptor() ([]byte, []int) { log.DebugLog()
+													   return fileDescriptor1, []int{51} }
 
-func (m *EthereumTxAck) GetDataChunk() []byte { log.DebugLog()
+func (m *EthereumTxAck) GetDataChunk() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.DataChunk
 	}
@@ -2167,19 +2425,23 @@ type EthereumSignMessage struct {
 	XXX_unrecognized []byte   `json:"-"`
 }
 
-func (m *EthereumSignMessage) Reset()                    { log.DebugLog() *m = EthereumSignMessage{} }
-func (m *EthereumSignMessage) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*EthereumSignMessage) ProtoMessage()               { log.DebugLog()}
-func (*EthereumSignMessage) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{52} }
+func (m *EthereumSignMessage) Reset()                    { log.DebugLog() * m = EthereumSignMessage{} }
+func (m *EthereumSignMessage) String() string            { log.DebugLog()
+															 return proto.CompactTextString(m) }
+func (*EthereumSignMessage) ProtoMessage()               { log.DebugLog() }
+func (*EthereumSignMessage) Descriptor() ([]byte, []int) { log.DebugLog()
+															 return fileDescriptor1, []int{52} }
 
-func (m *EthereumSignMessage) GetAddressN() []uint32 { log.DebugLog()
+func (m *EthereumSignMessage) GetAddressN() []uint32 {
+	log.DebugLog()
 	if m != nil {
 		return m.AddressN
 	}
 	return nil
 }
 
-func (m *EthereumSignMessage) GetMessage() []byte { log.DebugLog()
+func (m *EthereumSignMessage) GetMessage() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.Message
 	}
@@ -2197,26 +2459,31 @@ type EthereumVerifyMessage struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *EthereumVerifyMessage) Reset()                    { log.DebugLog() *m = EthereumVerifyMessage{} }
-func (m *EthereumVerifyMessage) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*EthereumVerifyMessage) ProtoMessage()               { log.DebugLog()}
-func (*EthereumVerifyMessage) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{53} }
+func (m *EthereumVerifyMessage) Reset()                    { log.DebugLog() * m = EthereumVerifyMessage{} }
+func (m *EthereumVerifyMessage) String() string            { log.DebugLog()
+															   return proto.CompactTextString(m) }
+func (*EthereumVerifyMessage) ProtoMessage()               { log.DebugLog() }
+func (*EthereumVerifyMessage) Descriptor() ([]byte, []int) { log.DebugLog()
+															   return fileDescriptor1, []int{53} }
 
-func (m *EthereumVerifyMessage) GetAddress() []byte { log.DebugLog()
+func (m *EthereumVerifyMessage) GetAddress() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.Address
 	}
 	return nil
 }
 
-func (m *EthereumVerifyMessage) GetSignature() []byte { log.DebugLog()
+func (m *EthereumVerifyMessage) GetSignature() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.Signature
 	}
 	return nil
 }
 
-func (m *EthereumVerifyMessage) GetMessage() []byte { log.DebugLog()
+func (m *EthereumVerifyMessage) GetMessage() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.Message
 	}
@@ -2232,19 +2499,23 @@ type EthereumMessageSignature struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *EthereumMessageSignature) Reset()                    { log.DebugLog() *m = EthereumMessageSignature{} }
-func (m *EthereumMessageSignature) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*EthereumMessageSignature) ProtoMessage()               { log.DebugLog()}
-func (*EthereumMessageSignature) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{54} }
+func (m *EthereumMessageSignature) Reset()                    { log.DebugLog() * m = EthereumMessageSignature{} }
+func (m *EthereumMessageSignature) String() string            { log.DebugLog()
+																  return proto.CompactTextString(m) }
+func (*EthereumMessageSignature) ProtoMessage()               { log.DebugLog() }
+func (*EthereumMessageSignature) Descriptor() ([]byte, []int) { log.DebugLog()
+																  return fileDescriptor1, []int{54} }
 
-func (m *EthereumMessageSignature) GetAddress() []byte { log.DebugLog()
+func (m *EthereumMessageSignature) GetAddress() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.Address
 	}
 	return nil
 }
 
-func (m *EthereumMessageSignature) GetSignature() []byte { log.DebugLog()
+func (m *EthereumMessageSignature) GetSignature() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.Signature
 	}
@@ -2263,33 +2534,39 @@ type SignIdentity struct {
 	XXX_unrecognized []byte        `json:"-"`
 }
 
-func (m *SignIdentity) Reset()                    { log.DebugLog() *m = SignIdentity{} }
-func (m *SignIdentity) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*SignIdentity) ProtoMessage()               { log.DebugLog()}
-func (*SignIdentity) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{55} }
+func (m *SignIdentity) Reset()                    { log.DebugLog() * m = SignIdentity{} }
+func (m *SignIdentity) String() string            { log.DebugLog()
+													  return proto.CompactTextString(m) }
+func (*SignIdentity) ProtoMessage()               { log.DebugLog() }
+func (*SignIdentity) Descriptor() ([]byte, []int) { log.DebugLog()
+													  return fileDescriptor1, []int{55} }
 
-func (m *SignIdentity) GetIdentity() *IdentityType { log.DebugLog()
+func (m *SignIdentity) GetIdentity() *IdentityType {
+	log.DebugLog()
 	if m != nil {
 		return m.Identity
 	}
 	return nil
 }
 
-func (m *SignIdentity) GetChallengeHidden() []byte { log.DebugLog()
+func (m *SignIdentity) GetChallengeHidden() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.ChallengeHidden
 	}
 	return nil
 }
 
-func (m *SignIdentity) GetChallengeVisual() string { log.DebugLog()
+func (m *SignIdentity) GetChallengeVisual() string {
+	log.DebugLog()
 	if m != nil && m.ChallengeVisual != nil {
 		return *m.ChallengeVisual
 	}
 	return ""
 }
 
-func (m *SignIdentity) GetEcdsaCurveName() string { log.DebugLog()
+func (m *SignIdentity) GetEcdsaCurveName() string {
+	log.DebugLog()
 	if m != nil && m.EcdsaCurveName != nil {
 		return *m.EcdsaCurveName
 	}
@@ -2306,26 +2583,31 @@ type SignedIdentity struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *SignedIdentity) Reset()                    { log.DebugLog() *m = SignedIdentity{} }
-func (m *SignedIdentity) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*SignedIdentity) ProtoMessage()               { log.DebugLog()}
-func (*SignedIdentity) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{56} }
+func (m *SignedIdentity) Reset()                    { log.DebugLog() * m = SignedIdentity{} }
+func (m *SignedIdentity) String() string            { log.DebugLog()
+														return proto.CompactTextString(m) }
+func (*SignedIdentity) ProtoMessage()               { log.DebugLog() }
+func (*SignedIdentity) Descriptor() ([]byte, []int) { log.DebugLog()
+														return fileDescriptor1, []int{56} }
 
-func (m *SignedIdentity) GetAddress() string { log.DebugLog()
+func (m *SignedIdentity) GetAddress() string {
+	log.DebugLog()
 	if m != nil && m.Address != nil {
 		return *m.Address
 	}
 	return ""
 }
 
-func (m *SignedIdentity) GetPublicKey() []byte { log.DebugLog()
+func (m *SignedIdentity) GetPublicKey() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.PublicKey
 	}
 	return nil
 }
 
-func (m *SignedIdentity) GetSignature() []byte { log.DebugLog()
+func (m *SignedIdentity) GetSignature() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.Signature
 	}
@@ -2343,26 +2625,31 @@ type GetECDHSessionKey struct {
 	XXX_unrecognized []byte        `json:"-"`
 }
 
-func (m *GetECDHSessionKey) Reset()                    { log.DebugLog() *m = GetECDHSessionKey{} }
-func (m *GetECDHSessionKey) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*GetECDHSessionKey) ProtoMessage()               { log.DebugLog()}
-func (*GetECDHSessionKey) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{57} }
+func (m *GetECDHSessionKey) Reset()                    { log.DebugLog() * m = GetECDHSessionKey{} }
+func (m *GetECDHSessionKey) String() string            { log.DebugLog()
+														   return proto.CompactTextString(m) }
+func (*GetECDHSessionKey) ProtoMessage()               { log.DebugLog() }
+func (*GetECDHSessionKey) Descriptor() ([]byte, []int) { log.DebugLog()
+														   return fileDescriptor1, []int{57} }
 
-func (m *GetECDHSessionKey) GetIdentity() *IdentityType { log.DebugLog()
+func (m *GetECDHSessionKey) GetIdentity() *IdentityType {
+	log.DebugLog()
 	if m != nil {
 		return m.Identity
 	}
 	return nil
 }
 
-func (m *GetECDHSessionKey) GetPeerPublicKey() []byte { log.DebugLog()
+func (m *GetECDHSessionKey) GetPeerPublicKey() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.PeerPublicKey
 	}
 	return nil
 }
 
-func (m *GetECDHSessionKey) GetEcdsaCurveName() string { log.DebugLog()
+func (m *GetECDHSessionKey) GetEcdsaCurveName() string {
+	log.DebugLog()
 	if m != nil && m.EcdsaCurveName != nil {
 		return *m.EcdsaCurveName
 	}
@@ -2377,12 +2664,15 @@ type ECDHSessionKey struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *ECDHSessionKey) Reset()                    { log.DebugLog() *m = ECDHSessionKey{} }
-func (m *ECDHSessionKey) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*ECDHSessionKey) ProtoMessage()               { log.DebugLog()}
-func (*ECDHSessionKey) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{58} }
+func (m *ECDHSessionKey) Reset()                    { log.DebugLog() * m = ECDHSessionKey{} }
+func (m *ECDHSessionKey) String() string            { log.DebugLog()
+														return proto.CompactTextString(m) }
+func (*ECDHSessionKey) ProtoMessage()               { log.DebugLog() }
+func (*ECDHSessionKey) Descriptor() ([]byte, []int) { log.DebugLog()
+														return fileDescriptor1, []int{58} }
 
-func (m *ECDHSessionKey) GetSessionKey() []byte { log.DebugLog()
+func (m *ECDHSessionKey) GetSessionKey() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.SessionKey
 	}
@@ -2397,12 +2687,15 @@ type SetU2FCounter struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *SetU2FCounter) Reset()                    { log.DebugLog() *m = SetU2FCounter{} }
-func (m *SetU2FCounter) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*SetU2FCounter) ProtoMessage()               { log.DebugLog()}
-func (*SetU2FCounter) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{59} }
+func (m *SetU2FCounter) Reset()                    { log.DebugLog() * m = SetU2FCounter{} }
+func (m *SetU2FCounter) String() string            { log.DebugLog()
+													   return proto.CompactTextString(m) }
+func (*SetU2FCounter) ProtoMessage()               { log.DebugLog() }
+func (*SetU2FCounter) Descriptor() ([]byte, []int) { log.DebugLog()
+													   return fileDescriptor1, []int{59} }
 
-func (m *SetU2FCounter) GetU2FCounter() uint32 { log.DebugLog()
+func (m *SetU2FCounter) GetU2FCounter() uint32 {
+	log.DebugLog()
 	if m != nil && m.U2FCounter != nil {
 		return *m.U2FCounter
 	}
@@ -2419,12 +2712,15 @@ type FirmwareErase struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *FirmwareErase) Reset()                    { log.DebugLog() *m = FirmwareErase{} }
-func (m *FirmwareErase) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*FirmwareErase) ProtoMessage()               { log.DebugLog()}
-func (*FirmwareErase) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{60} }
+func (m *FirmwareErase) Reset()                    { log.DebugLog() * m = FirmwareErase{} }
+func (m *FirmwareErase) String() string            { log.DebugLog()
+													   return proto.CompactTextString(m) }
+func (*FirmwareErase) ProtoMessage()               { log.DebugLog() }
+func (*FirmwareErase) Descriptor() ([]byte, []int) { log.DebugLog()
+													   return fileDescriptor1, []int{60} }
 
-func (m *FirmwareErase) GetLength() uint32 { log.DebugLog()
+func (m *FirmwareErase) GetLength() uint32 {
+	log.DebugLog()
 	if m != nil && m.Length != nil {
 		return *m.Length
 	}
@@ -2440,19 +2736,23 @@ type FirmwareRequest struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *FirmwareRequest) Reset()                    { log.DebugLog() *m = FirmwareRequest{} }
-func (m *FirmwareRequest) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*FirmwareRequest) ProtoMessage()               { log.DebugLog()}
-func (*FirmwareRequest) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{61} }
+func (m *FirmwareRequest) Reset()                    { log.DebugLog() * m = FirmwareRequest{} }
+func (m *FirmwareRequest) String() string            { log.DebugLog()
+														 return proto.CompactTextString(m) }
+func (*FirmwareRequest) ProtoMessage()               { log.DebugLog() }
+func (*FirmwareRequest) Descriptor() ([]byte, []int) { log.DebugLog()
+														 return fileDescriptor1, []int{61} }
 
-func (m *FirmwareRequest) GetOffset() uint32 { log.DebugLog()
+func (m *FirmwareRequest) GetOffset() uint32 {
+	log.DebugLog()
 	if m != nil && m.Offset != nil {
 		return *m.Offset
 	}
 	return 0
 }
 
-func (m *FirmwareRequest) GetLength() uint32 { log.DebugLog()
+func (m *FirmwareRequest) GetLength() uint32 {
+	log.DebugLog()
 	if m != nil && m.Length != nil {
 		return *m.Length
 	}
@@ -2469,19 +2769,23 @@ type FirmwareUpload struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *FirmwareUpload) Reset()                    { log.DebugLog() *m = FirmwareUpload{} }
-func (m *FirmwareUpload) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*FirmwareUpload) ProtoMessage()               { log.DebugLog()}
-func (*FirmwareUpload) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{62} }
+func (m *FirmwareUpload) Reset()                    { log.DebugLog() * m = FirmwareUpload{} }
+func (m *FirmwareUpload) String() string            { log.DebugLog()
+														return proto.CompactTextString(m) }
+func (*FirmwareUpload) ProtoMessage()               { log.DebugLog() }
+func (*FirmwareUpload) Descriptor() ([]byte, []int) { log.DebugLog()
+														return fileDescriptor1, []int{62} }
 
-func (m *FirmwareUpload) GetPayload() []byte { log.DebugLog()
+func (m *FirmwareUpload) GetPayload() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.Payload
 	}
 	return nil
 }
 
-func (m *FirmwareUpload) GetHash() []byte { log.DebugLog()
+func (m *FirmwareUpload) GetHash() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.Hash
 	}
@@ -2497,12 +2801,15 @@ type SelfTest struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *SelfTest) Reset()                    { log.DebugLog() *m = SelfTest{} }
-func (m *SelfTest) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*SelfTest) ProtoMessage()               { log.DebugLog()}
-func (*SelfTest) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{63} }
+func (m *SelfTest) Reset()                    { log.DebugLog() * m = SelfTest{} }
+func (m *SelfTest) String() string            { log.DebugLog()
+												  return proto.CompactTextString(m) }
+func (*SelfTest) ProtoMessage()               { log.DebugLog() }
+func (*SelfTest) Descriptor() ([]byte, []int) { log.DebugLog()
+												  return fileDescriptor1, []int{63} }
 
-func (m *SelfTest) GetPayload() []byte { log.DebugLog()
+func (m *SelfTest) GetPayload() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.Payload
 	}
@@ -2517,12 +2824,15 @@ type DebugLinkDecision struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *DebugLinkDecision) Reset()                    { log.DebugLog() *m = DebugLinkDecision{} }
-func (m *DebugLinkDecision) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*DebugLinkDecision) ProtoMessage()               { log.DebugLog()}
-func (*DebugLinkDecision) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{64} }
+func (m *DebugLinkDecision) Reset()                    { log.DebugLog() * m = DebugLinkDecision{} }
+func (m *DebugLinkDecision) String() string            { log.DebugLog()
+														   return proto.CompactTextString(m) }
+func (*DebugLinkDecision) ProtoMessage()               { log.DebugLog() }
+func (*DebugLinkDecision) Descriptor() ([]byte, []int) { log.DebugLog()
+														   return fileDescriptor1, []int{64} }
 
-func (m *DebugLinkDecision) GetYesNo() bool { log.DebugLog()
+func (m *DebugLinkDecision) GetYesNo() bool {
+	log.DebugLog()
 	if m != nil && m.YesNo != nil {
 		return *m.YesNo
 	}
@@ -2536,10 +2846,12 @@ type DebugLinkGetState struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *DebugLinkGetState) Reset()                    { log.DebugLog() *m = DebugLinkGetState{} }
-func (m *DebugLinkGetState) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*DebugLinkGetState) ProtoMessage()               { log.DebugLog()}
-func (*DebugLinkGetState) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{65} }
+func (m *DebugLinkGetState) Reset()                    { log.DebugLog() * m = DebugLinkGetState{} }
+func (m *DebugLinkGetState) String() string            { log.DebugLog()
+														   return proto.CompactTextString(m) }
+func (*DebugLinkGetState) ProtoMessage()               { log.DebugLog() }
+func (*DebugLinkGetState) Descriptor() ([]byte, []int) { log.DebugLog()
+														   return fileDescriptor1, []int{65} }
 
 // *
 // Response: Device current state
@@ -2558,75 +2870,87 @@ type DebugLinkState struct {
 	XXX_unrecognized     []byte      `json:"-"`
 }
 
-func (m *DebugLinkState) Reset()                    { log.DebugLog() *m = DebugLinkState{} }
-func (m *DebugLinkState) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*DebugLinkState) ProtoMessage()               { log.DebugLog()}
-func (*DebugLinkState) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{66} }
+func (m *DebugLinkState) Reset()                    { log.DebugLog() * m = DebugLinkState{} }
+func (m *DebugLinkState) String() string            { log.DebugLog()
+														return proto.CompactTextString(m) }
+func (*DebugLinkState) ProtoMessage()               { log.DebugLog() }
+func (*DebugLinkState) Descriptor() ([]byte, []int) { log.DebugLog()
+														return fileDescriptor1, []int{66} }
 
-func (m *DebugLinkState) GetLayout() []byte { log.DebugLog()
+func (m *DebugLinkState) GetLayout() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.Layout
 	}
 	return nil
 }
 
-func (m *DebugLinkState) GetPin() string { log.DebugLog()
+func (m *DebugLinkState) GetPin() string {
+	log.DebugLog()
 	if m != nil && m.Pin != nil {
 		return *m.Pin
 	}
 	return ""
 }
 
-func (m *DebugLinkState) GetMatrix() string { log.DebugLog()
+func (m *DebugLinkState) GetMatrix() string {
+	log.DebugLog()
 	if m != nil && m.Matrix != nil {
 		return *m.Matrix
 	}
 	return ""
 }
 
-func (m *DebugLinkState) GetMnemonic() string { log.DebugLog()
+func (m *DebugLinkState) GetMnemonic() string {
+	log.DebugLog()
 	if m != nil && m.Mnemonic != nil {
 		return *m.Mnemonic
 	}
 	return ""
 }
 
-func (m *DebugLinkState) GetNode() *HDNodeType { log.DebugLog()
+func (m *DebugLinkState) GetNode() *HDNodeType {
+	log.DebugLog()
 	if m != nil {
 		return m.Node
 	}
 	return nil
 }
 
-func (m *DebugLinkState) GetPassphraseProtection() bool { log.DebugLog()
+func (m *DebugLinkState) GetPassphraseProtection() bool {
+	log.DebugLog()
 	if m != nil && m.PassphraseProtection != nil {
 		return *m.PassphraseProtection
 	}
 	return false
 }
 
-func (m *DebugLinkState) GetResetWord() string { log.DebugLog()
+func (m *DebugLinkState) GetResetWord() string {
+	log.DebugLog()
 	if m != nil && m.ResetWord != nil {
 		return *m.ResetWord
 	}
 	return ""
 }
 
-func (m *DebugLinkState) GetResetEntropy() []byte { log.DebugLog()
+func (m *DebugLinkState) GetResetEntropy() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.ResetEntropy
 	}
 	return nil
 }
 
-func (m *DebugLinkState) GetRecoveryFakeWord() string { log.DebugLog()
+func (m *DebugLinkState) GetRecoveryFakeWord() string {
+	log.DebugLog()
 	if m != nil && m.RecoveryFakeWord != nil {
 		return *m.RecoveryFakeWord
 	}
 	return ""
 }
 
-func (m *DebugLinkState) GetRecoveryWordPos() uint32 { log.DebugLog()
+func (m *DebugLinkState) GetRecoveryWordPos() uint32 {
+	log.DebugLog()
 	if m != nil && m.RecoveryWordPos != nil {
 		return *m.RecoveryWordPos
 	}
@@ -2639,10 +2963,12 @@ type DebugLinkStop struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *DebugLinkStop) Reset()                    { log.DebugLog() *m = DebugLinkStop{} }
-func (m *DebugLinkStop) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*DebugLinkStop) ProtoMessage()               { log.DebugLog()}
-func (*DebugLinkStop) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{67} }
+func (m *DebugLinkStop) Reset()                    { log.DebugLog() * m = DebugLinkStop{} }
+func (m *DebugLinkStop) String() string            { log.DebugLog()
+													   return proto.CompactTextString(m) }
+func (*DebugLinkStop) ProtoMessage()               { log.DebugLog() }
+func (*DebugLinkStop) Descriptor() ([]byte, []int) { log.DebugLog()
+													   return fileDescriptor1, []int{67} }
 
 // *
 // Response: Device wants host to log event
@@ -2653,26 +2979,31 @@ type DebugLinkLog struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *DebugLinkLog) Reset()                    { log.DebugLog() *m = DebugLinkLog{} }
-func (m *DebugLinkLog) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*DebugLinkLog) ProtoMessage()               { log.DebugLog()}
-func (*DebugLinkLog) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{68} }
+func (m *DebugLinkLog) Reset()                    { log.DebugLog() * m = DebugLinkLog{} }
+func (m *DebugLinkLog) String() string            { log.DebugLog()
+													  return proto.CompactTextString(m) }
+func (*DebugLinkLog) ProtoMessage()               { log.DebugLog() }
+func (*DebugLinkLog) Descriptor() ([]byte, []int) { log.DebugLog()
+													  return fileDescriptor1, []int{68} }
 
-func (m *DebugLinkLog) GetLevel() uint32 { log.DebugLog()
+func (m *DebugLinkLog) GetLevel() uint32 {
+	log.DebugLog()
 	if m != nil && m.Level != nil {
 		return *m.Level
 	}
 	return 0
 }
 
-func (m *DebugLinkLog) GetBucket() string { log.DebugLog()
+func (m *DebugLinkLog) GetBucket() string {
+	log.DebugLog()
 	if m != nil && m.Bucket != nil {
 		return *m.Bucket
 	}
 	return ""
 }
 
-func (m *DebugLinkLog) GetText() string { log.DebugLog()
+func (m *DebugLinkLog) GetText() string {
+	log.DebugLog()
 	if m != nil && m.Text != nil {
 		return *m.Text
 	}
@@ -2688,19 +3019,23 @@ type DebugLinkMemoryRead struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *DebugLinkMemoryRead) Reset()                    { log.DebugLog() *m = DebugLinkMemoryRead{} }
-func (m *DebugLinkMemoryRead) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*DebugLinkMemoryRead) ProtoMessage()               { log.DebugLog()}
-func (*DebugLinkMemoryRead) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{69} }
+func (m *DebugLinkMemoryRead) Reset()                    { log.DebugLog() * m = DebugLinkMemoryRead{} }
+func (m *DebugLinkMemoryRead) String() string            { log.DebugLog()
+															 return proto.CompactTextString(m) }
+func (*DebugLinkMemoryRead) ProtoMessage()               { log.DebugLog() }
+func (*DebugLinkMemoryRead) Descriptor() ([]byte, []int) { log.DebugLog()
+															 return fileDescriptor1, []int{69} }
 
-func (m *DebugLinkMemoryRead) GetAddress() uint32 { log.DebugLog()
+func (m *DebugLinkMemoryRead) GetAddress() uint32 {
+	log.DebugLog()
 	if m != nil && m.Address != nil {
 		return *m.Address
 	}
 	return 0
 }
 
-func (m *DebugLinkMemoryRead) GetLength() uint32 { log.DebugLog()
+func (m *DebugLinkMemoryRead) GetLength() uint32 {
+	log.DebugLog()
 	if m != nil && m.Length != nil {
 		return *m.Length
 	}
@@ -2715,12 +3050,15 @@ type DebugLinkMemory struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *DebugLinkMemory) Reset()                    { log.DebugLog() *m = DebugLinkMemory{} }
-func (m *DebugLinkMemory) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*DebugLinkMemory) ProtoMessage()               { log.DebugLog()}
-func (*DebugLinkMemory) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{70} }
+func (m *DebugLinkMemory) Reset()                    { log.DebugLog() * m = DebugLinkMemory{} }
+func (m *DebugLinkMemory) String() string            { log.DebugLog()
+														 return proto.CompactTextString(m) }
+func (*DebugLinkMemory) ProtoMessage()               { log.DebugLog() }
+func (*DebugLinkMemory) Descriptor() ([]byte, []int) { log.DebugLog()
+														 return fileDescriptor1, []int{70} }
 
-func (m *DebugLinkMemory) GetMemory() []byte { log.DebugLog()
+func (m *DebugLinkMemory) GetMemory() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.Memory
 	}
@@ -2737,26 +3075,31 @@ type DebugLinkMemoryWrite struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *DebugLinkMemoryWrite) Reset()                    { log.DebugLog() *m = DebugLinkMemoryWrite{} }
-func (m *DebugLinkMemoryWrite) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*DebugLinkMemoryWrite) ProtoMessage()               { log.DebugLog()}
-func (*DebugLinkMemoryWrite) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{71} }
+func (m *DebugLinkMemoryWrite) Reset()                    { log.DebugLog() * m = DebugLinkMemoryWrite{} }
+func (m *DebugLinkMemoryWrite) String() string            { log.DebugLog()
+															  return proto.CompactTextString(m) }
+func (*DebugLinkMemoryWrite) ProtoMessage()               { log.DebugLog() }
+func (*DebugLinkMemoryWrite) Descriptor() ([]byte, []int) { log.DebugLog()
+															  return fileDescriptor1, []int{71} }
 
-func (m *DebugLinkMemoryWrite) GetAddress() uint32 { log.DebugLog()
+func (m *DebugLinkMemoryWrite) GetAddress() uint32 {
+	log.DebugLog()
 	if m != nil && m.Address != nil {
 		return *m.Address
 	}
 	return 0
 }
 
-func (m *DebugLinkMemoryWrite) GetMemory() []byte { log.DebugLog()
+func (m *DebugLinkMemoryWrite) GetMemory() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.Memory
 	}
 	return nil
 }
 
-func (m *DebugLinkMemoryWrite) GetFlash() bool { log.DebugLog()
+func (m *DebugLinkMemoryWrite) GetFlash() bool {
+	log.DebugLog()
 	if m != nil && m.Flash != nil {
 		return *m.Flash
 	}
@@ -2771,19 +3114,22 @@ type DebugLinkFlashErase struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *DebugLinkFlashErase) Reset()                    { log.DebugLog() *m = DebugLinkFlashErase{} }
-func (m *DebugLinkFlashErase) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*DebugLinkFlashErase) ProtoMessage()               { log.DebugLog()}
-func (*DebugLinkFlashErase) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor1, []int{72} }
+func (m *DebugLinkFlashErase) Reset()                    { log.DebugLog() * m = DebugLinkFlashErase{} }
+func (m *DebugLinkFlashErase) String() string            { log.DebugLog()
+															 return proto.CompactTextString(m) }
+func (*DebugLinkFlashErase) ProtoMessage()               { log.DebugLog() }
+func (*DebugLinkFlashErase) Descriptor() ([]byte, []int) { log.DebugLog()
+															 return fileDescriptor1, []int{72} }
 
-func (m *DebugLinkFlashErase) GetSector() uint32 { log.DebugLog()
+func (m *DebugLinkFlashErase) GetSector() uint32 {
+	log.DebugLog()
 	if m != nil && m.Sector != nil {
 		return *m.Sector
 	}
 	return 0
 }
 
-func init() { log.DebugLog()
+func init() {
 	proto.RegisterType((*Initialize)(nil), "Initialize")
 	proto.RegisterType((*GetFeatures)(nil), "GetFeatures")
 	proto.RegisterType((*Features)(nil), "Features")
@@ -2860,7 +3206,8 @@ func init() { log.DebugLog()
 	proto.RegisterEnum("MessageType", MessageType_name, MessageType_value)
 }
 
-func init() { log.DebugLog() proto.RegisterFile("messages.proto", fileDescriptor1) }
+func init() { log.DebugLog()
+				proto.RegisterFile("messages.proto", fileDescriptor1) }
 
 var fileDescriptor1 = []byte{
 	// 3424 bytes of a gzipped FileDescriptorProto

@@ -10,7 +10,7 @@ import (
 	"syscall"
 )
 
-func handleMountFusefsStderr(errCh chan<- error) func(line string) (ignore bool) { log.DebugLog()
+func handleMountFusefsStderr(errCh chan<- error) func(line string) (ignore bool) { 
 	return func(line string) (ignore bool) {
 		const (
 			noMountpointPrefix = `mount_fusefs: `
@@ -38,7 +38,7 @@ func handleMountFusefsStderr(errCh chan<- error) func(line string) (ignore bool)
 
 // isBoringMountFusefsError returns whether the Wait error is
 // uninteresting; exit status 1 is.
-func isBoringMountFusefsError(err error) bool { log.DebugLog()
+func isBoringMountFusefsError(err error) bool { 
 	if err, ok := err.(*exec.ExitError); ok && err.Exited() {
 		if status, ok := err.Sys().(syscall.WaitStatus); ok && status.ExitStatus() == 1 {
 			return true
@@ -47,7 +47,7 @@ func isBoringMountFusefsError(err error) bool { log.DebugLog()
 	return false
 }
 
-func mount(dir string, conf *mountConfig, ready chan<- struct{}, errp *error) (*os.File, error) { log.DebugLog()
+func mount(dir string, conf *mountConfig, ready chan<- struct{}, errp *error) (*os.File, error) { 
 	for k, v := range conf.options {
 		if strings.Contains(k, ",") || strings.Contains(v, ",") {
 			// Silly limitation but the mount helper does not

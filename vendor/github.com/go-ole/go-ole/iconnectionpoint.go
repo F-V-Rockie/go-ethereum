@@ -15,6 +15,6 @@ type IConnectionPointVtbl struct {
 	EnumConnections             uintptr
 }
 
-func (v *IConnectionPoint) VTable() *IConnectionPointVtbl { log.DebugLog()
+func (v *IConnectionPoint) VTable() *IConnectionPointVtbl { 
 	return (*IConnectionPointVtbl)(unsafe.Pointer(v.RawVTable))
 }

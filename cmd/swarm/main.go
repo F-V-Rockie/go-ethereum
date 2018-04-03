@@ -162,7 +162,7 @@ var (
 var defaultNodeConfig = node.DefaultConfig
 
 // This init function sets defaults so cmd/swarm can run alongside geth.
-func init() { log.DebugLog()
+func init() {
 	defaultNodeConfig.Name = clientIdentifier
 	defaultNodeConfig.Version = params.VersionWithCommit(gitCommit)
 	defaultNodeConfig.P2P.ListenAddr = ":30399"
@@ -174,7 +174,7 @@ func init() { log.DebugLog()
 var app = utils.NewApp(gitCommit, "Ethereum Swarm")
 
 // This init function creates the cli.App.
-func init() { log.DebugLog()
+func init() {
 	app.Action = bzzd
 	app.HideVersion = true // we have a command to print the version
 	app.Copyright = "Copyright 2013-2016 The go-ethereum Authors"

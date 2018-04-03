@@ -10,6 +10,6 @@ const (
 	errNoXattr = ENOATTR
 )
 
-func init() { log.DebugLog()
+func init() { 
 	errnoNames[errNoXattr] = "ENOATTR"
 }

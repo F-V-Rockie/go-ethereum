@@ -12,7 +12,7 @@ type recorder struct {
 	observer callObserver
 }
 
-func (n *recorder) call(msg []byte, timeout time.Duration) (result []byte, err error) { log.DebugLog()
+func (n *recorder) call(msg []byte, timeout time.Duration) (result []byte, err error) { 
 	result, err = n.child.call(msg, timeout)
 	n.observer.observeCall(msg, result, err)
 	return

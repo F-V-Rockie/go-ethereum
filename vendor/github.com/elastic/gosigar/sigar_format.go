@@ -11,7 +11,7 @@ import (
 )
 
 // Go version of apr_strfsize
-func FormatSize(size uint64) string { log.DebugLog()
+func FormatSize(size uint64) string { 
 	ord := []string{"K", "M", "G", "T", "P", "E"}
 	o := 0
 	buf := new(bytes.Buffer)
@@ -55,11 +55,11 @@ func FormatSize(size uint64) string { log.DebugLog()
 	return buf.String()
 }
 
-func FormatPercent(percent float64) string { log.DebugLog()
+func FormatPercent(percent float64) string { 
 	return strconv.FormatFloat(percent, 'f', -1, 64) + "%"
 }
 
-func (self *FileSystemUsage) UsePercent() float64 { log.DebugLog()
+func (self *FileSystemUsage) UsePercent() float64 { 
 	b_used := (self.Total - self.Free) / 1024
 	b_avail := self.Avail / 1024
 	utotal := b_used + b_avail
@@ -77,7 +77,7 @@ func (self *FileSystemUsage) UsePercent() float64 { log.DebugLog()
 	return 0.0
 }
 
-func (self *Uptime) Format() string { log.DebugLog()
+func (self *Uptime) Format() string { 
 	buf := new(bytes.Buffer)
 	w := bufio.NewWriter(buf)
 	uptime := uint64(self.Length)
@@ -103,7 +103,7 @@ func (self *Uptime) Format() string { log.DebugLog()
 	return buf.String()
 }
 
-func (self *ProcTime) FormatStartTime() string { log.DebugLog()
+func (self *ProcTime) FormatStartTime() string { 
 	if self.StartTime == 0 {
 		return "00:00"
 	}
@@ -115,7 +115,7 @@ func (self *ProcTime) FormatStartTime() string { log.DebugLog()
 	return start.Format(format)
 }
 
-func (self *ProcTime) FormatTotal() string { log.DebugLog()
+func (self *ProcTime) FormatTotal() string { 
 	t := self.Total / 1000
 	ss := t % 60
 	t /= 60

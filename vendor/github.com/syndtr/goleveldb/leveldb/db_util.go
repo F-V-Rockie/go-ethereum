@@ -25,7 +25,7 @@ type Reader interface {
 type Sizes []int64
 
 // Sum returns sum of the sizes.
-func (sizes Sizes) Sum() int64 { log.DebugLog()
+func (sizes Sizes) Sum() int64 { 
 	var sum int64
 	for _, size := range sizes {
 		sum += size
@@ -34,11 +34,11 @@ func (sizes Sizes) Sum() int64 { log.DebugLog()
 }
 
 // Logging.
-func (db *DB) log(v ...interface{})                 { log.DebugLog() db.s.log(v...) }
-func (db *DB) logf(format string, v ...interface{}) { log.DebugLog() db.s.logf(format, v...) }
+func (db *DB) log(v ...interface{})                 {  db.s.log(v...) }
+func (db *DB) logf(format string, v ...interface{}) {  db.s.logf(format, v...) }
 
 // Check and clean files.
-func (db *DB) checkAndCleanFiles() error { log.DebugLog()
+func (db *DB) checkAndCleanFiles() error { 
 	v := db.s.version()
 	defer v.release()
 

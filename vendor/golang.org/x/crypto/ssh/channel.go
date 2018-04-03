@@ -93,7 +93,7 @@ type Request struct {
 // Reply sends a response to a request. It must be called for all requests
 // where WantReply is true and is a no-op otherwise. The payload argument is
 // ignored for replies to channel-specific requests.
-func (r *Request) Reply(ok bool, payload []byte) error { log.DebugLog()
+func (r *Request) Reply(ok bool, payload []byte) error {
 	if !r.WantReply {
 		return nil
 	}
@@ -117,7 +117,7 @@ const (
 )
 
 // String converts the rejection reason to human readable form.
-func (r RejectionReason) String() string { log.DebugLog()
+func (r RejectionReason) String() string {
 	switch r {
 	case Prohibited:
 		return "administratively prohibited"
@@ -131,7 +131,7 @@ func (r RejectionReason) String() string { log.DebugLog()
 	return fmt.Sprintf("unknown reason %d", int(r))
 }
 
-func min(a uint32, b int) uint32 { log.DebugLog()
+func min(a uint32, b int) uint32 {
 	if a < uint32(b) {
 		return a
 	}
@@ -205,7 +205,7 @@ type channel struct {
 
 // writePacket sends a packet. If the packet is a channel close, it updates
 // sentClose. This method takes the lock c.writeMu.
-func (c *channel) writePacket(packet []byte) error { log.DebugLog()
+func (c *channel) writePacket(packet []byte) error {
 	c.writeMu.Lock()
 	if c.sentClose {
 		c.writeMu.Unlock()
@@ -217,7 +217,7 @@ func (c *channel) writePacket(packet []byte) error { log.DebugLog()
 	return err
 }
 
-func (c *channel) sendMessage(msg interface{}) error { log.DebugLog()
+func (c *channel) sendMessage(msg interface{}) error {
 	if debugMux {
 		log.Printf("send(%d): %#v", c.mux.chanList.offset, msg)
 	}
@@ -229,7 +229,7 @@ func (c *channel) sendMessage(msg interface{}) error { log.DebugLog()
 
 // WriteExtended writes data to a specific extended stream. These streams are
 // used, for example, for stderr.
-func (c *channel) WriteExtended(data []byte, extendedCode uint32) (n int, err error) { log.DebugLog()
+func (c *channel) WriteExtended(data []byte, extendedCode uint32) (n int, err error) {
 	if c.sentEOF {
 		return 0, io.EOF
 	}
@@ -283,7 +283,7 @@ func (c *channel) WriteExtended(data []byte, extendedCode uint32) (n int, err er
 	return n, err
 }
 
-func (c *channel) handleData(packet []byte) error { log.DebugLog()
+func (c *channel) handleData(packet []byte) error {
 	headerLen := 9
 	isExtendedData := packet[0] == msgChannelExtendedData
 	if isExtendedData {
@@ -332,7 +332,7 @@ func (c *channel) handleData(packet []byte) error { log.DebugLog()
 	return nil
 }
 
-func (c *channel) adjustWindow(n uint32) error { log.DebugLog()
+func (c *channel) adjustWindow(n uint32) error {
 	c.windowMu.Lock()
 	// Since myWindow is managed on our side, and can never exceed
 	// the initial window setting, we don't worry about overflow.
@@ -343,7 +343,7 @@ func (c *channel) adjustWindow(n uint32) error { log.DebugLog()
 	})
 }
 
-func (c *channel) ReadExtended(data []byte, extended uint32) (n int, err error) { log.DebugLog()
+func (c *channel) ReadExtended(data []byte, extended uint32) (n int, err error) {
 	switch extended {
 	case 1:
 		n, err = c.extPending.Read(data)
@@ -367,7 +367,7 @@ func (c *channel) ReadExtended(data []byte, extended uint32) (n int, err error) 
 	return n, err
 }
 
-func (c *channel) close() { log.DebugLog()
+func (c *channel) close() {
 	c.pending.eof()
 	c.extPending.eof()
 	close(c.msg)
@@ -384,7 +384,7 @@ func (c *channel) close() { log.DebugLog()
 // responseMessageReceived is called when a success or failure message is
 // received on a channel to check that such a message is reasonable for the
 // given channel.
-func (c *channel) responseMessageReceived() error { log.DebugLog()
+func (c *channel) responseMessageReceived() error {
 	if c.direction == channelInbound {
 		return errors.New("ssh: channel response message received on inbound channel")
 	}
@@ -395,7 +395,7 @@ func (c *channel) responseMessageReceived() error { log.DebugLog()
 	return nil
 }
 
-func (c *channel) handlePacket(packet []byte) error { log.DebugLog()
+func (c *channel) handlePacket(packet []byte) error {
 	switch packet[0] {
 	case msgChannelData, msgChannelExtendedData:
 		return c.handleData(packet)
@@ -454,7 +454,7 @@ func (c *channel) handlePacket(packet []byte) error { log.DebugLog()
 	return nil
 }
 
-func (m *mux) newChannel(chanType string, direction channelDirection, extraData []byte) *channel { log.DebugLog()
+func (m *mux) newChannel(chanType string, direction channelDirection, extraData []byte) *channel {
 	ch := &channel{
 		remoteWin:        window{Cond: newCond()},
 		myWindow:         channelWindowSize,
@@ -480,15 +480,15 @@ type extChannel struct {
 	ch   *channel
 }
 
-func (e *extChannel) Write(data []byte) (n int, err error) { log.DebugLog()
+func (e *extChannel) Write(data []byte) (n int, err error) {
 	return e.ch.WriteExtended(data, e.code)
 }
 
-func (e *extChannel) Read(data []byte) (n int, err error) { log.DebugLog()
+func (e *extChannel) Read(data []byte) (n int, err error) {
 	return e.ch.ReadExtended(data, e.code)
 }
 
-func (c *channel) Accept() (Channel, <-chan *Request, error) { log.DebugLog()
+func (c *channel) Accept() (Channel, <-chan *Request, error) {
 	if c.decided {
 		return nil, nil, errDecidedAlready
 	}
@@ -507,7 +507,7 @@ func (c *channel) Accept() (Channel, <-chan *Request, error) { log.DebugLog()
 	return c, c.incomingRequests, nil
 }
 
-func (ch *channel) Reject(reason RejectionReason, message string) error { log.DebugLog()
+func (ch *channel) Reject(reason RejectionReason, message string) error {
 	if ch.decided {
 		return errDecidedAlready
 	}
@@ -521,21 +521,21 @@ func (ch *channel) Reject(reason RejectionReason, message string) error { log.De
 	return ch.sendMessage(reject)
 }
 
-func (ch *channel) Read(data []byte) (int, error) { log.DebugLog()
+func (ch *channel) Read(data []byte) (int, error) {
 	if !ch.decided {
 		return 0, errUndecided
 	}
 	return ch.ReadExtended(data, 0)
 }
 
-func (ch *channel) Write(data []byte) (int, error) { log.DebugLog()
+func (ch *channel) Write(data []byte) (int, error) {
 	if !ch.decided {
 		return 0, errUndecided
 	}
 	return ch.WriteExtended(data, 0)
 }
 
-func (ch *channel) CloseWrite() error { log.DebugLog()
+func (ch *channel) CloseWrite() error {
 	if !ch.decided {
 		return errUndecided
 	}
@@ -544,7 +544,7 @@ func (ch *channel) CloseWrite() error { log.DebugLog()
 		PeersId: ch.remoteId})
 }
 
-func (ch *channel) Close() error { log.DebugLog()
+func (ch *channel) Close() error {
 	if !ch.decided {
 		return errUndecided
 	}
@@ -555,18 +555,18 @@ func (ch *channel) Close() error { log.DebugLog()
 
 // Extended returns an io.ReadWriter that sends and receives data on the given,
 // SSH extended stream. Such streams are used, for example, for stderr.
-func (ch *channel) Extended(code uint32) io.ReadWriter { log.DebugLog()
+func (ch *channel) Extended(code uint32) io.ReadWriter {
 	if !ch.decided {
 		return nil
 	}
 	return &extChannel{code, ch}
 }
 
-func (ch *channel) Stderr() io.ReadWriter { log.DebugLog()
+func (ch *channel) Stderr() io.ReadWriter {
 	return ch.Extended(1)
 }
 
-func (ch *channel) SendRequest(name string, wantReply bool, payload []byte) (bool, error) { log.DebugLog()
+func (ch *channel) SendRequest(name string, wantReply bool, payload []byte) (bool, error) {
 	if !ch.decided {
 		return false, errUndecided
 	}
@@ -606,7 +606,7 @@ func (ch *channel) SendRequest(name string, wantReply bool, payload []byte) (boo
 }
 
 // ackRequest either sends an ack or nack to the channel request.
-func (ch *channel) ackRequest(ok bool) error { log.DebugLog()
+func (ch *channel) ackRequest(ok bool) error {
 	if !ch.decided {
 		return errUndecided
 	}
@@ -624,10 +624,10 @@ func (ch *channel) ackRequest(ok bool) error { log.DebugLog()
 	return ch.sendMessage(msg)
 }
 
-func (ch *channel) ChannelType() string { log.DebugLog()
+func (ch *channel) ChannelType() string {
 	return ch.chanType
 }
 
-func (ch *channel) ExtraData() []byte { log.DebugLog()
+func (ch *channel) ExtraData() []byte {
 	return ch.extraData
 }

@@ -147,7 +147,7 @@ var (
 	}
 )
 
-func init() { log.DebugLog() 
+func init() {
 	oslog.SetPrefix("[Debug] ")
 	oslog.SetFlags(oslog.LstdFlags)
 

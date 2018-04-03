@@ -13,7 +13,7 @@ import (
 )
 
 // newTrigger returns implementation of trigger.
-func newTrigger(pthLkp map[string]*watched) trigger { log.DebugLog()
+func newTrigger(pthLkp map[string]*watched) trigger { 
 	return &kq{
 		pthLkp: pthLkp,
 		idLkp:  make(map[int]*watched),
@@ -42,19 +42,19 @@ type watched struct {
 }
 
 // Stop implements trigger.
-func (k *kq) Stop() (err error) { log.DebugLog()
+func (k *kq) Stop() (err error) { 
 	// trigger event used to interrupt Kevent call.
 	_, err = syscall.Write(k.pipefds[1], []byte{0x00})
 	return
 }
 
 // Close implements trigger.
-func (k *kq) Close() error { log.DebugLog()
+func (k *kq) Close() error { 
 	return syscall.Close(k.fd)
 }
 
 // NewWatched implements trigger.
-func (*kq) NewWatched(p string, fi os.FileInfo) (*watched, error) { log.DebugLog()
+func (*kq) NewWatched(p string, fi os.FileInfo) (*watched, error) { 
 	fd, err := syscall.Open(p, syscall.O_NONBLOCK|syscall.O_RDONLY, 0)
 	if err != nil {
 		return nil, err
@@ -66,18 +66,18 @@ func (*kq) NewWatched(p string, fi os.FileInfo) (*watched, error) { log.DebugLog
 }
 
 // Record implements trigger.
-func (k *kq) Record(w *watched) { log.DebugLog()
+func (k *kq) Record(w *watched) { 
 	k.idLkp[w.fd], k.pthLkp[w.p] = w, w
 }
 
 // Del implements trigger.
-func (k *kq) Del(w *watched) { log.DebugLog()
+func (k *kq) Del(w *watched) { 
 	syscall.Close(w.fd)
 	delete(k.idLkp, w.fd)
 	delete(k.pthLkp, w.p)
 }
 
-func inter2kq(n interface{}) syscall.Kevent_t { log.DebugLog()
+func inter2kq(n interface{}) syscall.Kevent_t { 
 	kq, ok := n.(syscall.Kevent_t)
 	if !ok {
 		panic(fmt.Sprintf("kqueue: type should be Kevent_t, %T instead", n))
@@ -86,7 +86,7 @@ func inter2kq(n interface{}) syscall.Kevent_t { log.DebugLog()
 }
 
 // Init implements trigger.
-func (k *kq) Init() (err error) { log.DebugLog()
+func (k *kq) Init() (err error) { 
 	if k.fd, err = syscall.Kqueue(); err != nil {
 		return
 	}
@@ -104,7 +104,7 @@ func (k *kq) Init() (err error) { log.DebugLog()
 }
 
 // Unwatch implements trigger.
-func (k *kq) Unwatch(w *watched) (err error) { log.DebugLog()
+func (k *kq) Unwatch(w *watched) (err error) { 
 	var kevn [1]syscall.Kevent_t
 	syscall.SetKevent(&kevn[0], w.fd, syscall.EVFILT_VNODE, syscall.EV_DELETE)
 
@@ -113,7 +113,7 @@ func (k *kq) Unwatch(w *watched) (err error) { log.DebugLog()
 }
 
 // Watch implements trigger.
-func (k *kq) Watch(fi os.FileInfo, w *watched, e int64) (err error) { log.DebugLog()
+func (k *kq) Watch(fi os.FileInfo, w *watched, e int64) (err error) { 
 	var kevn [1]syscall.Kevent_t
 	syscall.SetKevent(&kevn[0], w.fd, syscall.EVFILT_VNODE,
 		syscall.EV_ADD|syscall.EV_CLEAR)
@@ -124,7 +124,7 @@ func (k *kq) Watch(fi os.FileInfo, w *watched, e int64) (err error) { log.DebugL
 }
 
 // Wait implements trigger.
-func (k *kq) Wait() (interface{}, error) { log.DebugLog()
+func (k *kq) Wait() (interface{}, error) { 
 	var (
 		kevn [1]syscall.Kevent_t
 		err  error
@@ -136,7 +136,7 @@ func (k *kq) Wait() (interface{}, error) { log.DebugLog()
 }
 
 // Watched implements trigger.
-func (k *kq) Watched(n interface{}) (*watched, int64, error) { log.DebugLog()
+func (k *kq) Watched(n interface{}) (*watched, int64, error) { 
 	kevn, ok := n.(syscall.Kevent_t)
 	if !ok {
 		panic(fmt.Sprintf("kq: type should be syscall.Kevent_t, %T instead", kevn))
@@ -148,11 +148,11 @@ func (k *kq) Watched(n interface{}) (*watched, int64, error) { log.DebugLog()
 }
 
 // IsStop implements trigger.
-func (k *kq) IsStop(n interface{}, err error) bool { log.DebugLog()
+func (k *kq) IsStop(n interface{}, err error) bool { 
 	return int(inter2kq(n).Ident) == k.pipefds[0]
 }
 
-func init() { log.DebugLog()
+func init() { 
 	encode = func(e Event, dir bool) (o int64) {
 		// Create event is not supported by kqueue. Instead NoteWrite event will
 		// be registered for a directory. If this event will be reported on dir

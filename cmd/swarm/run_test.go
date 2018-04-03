@@ -36,7 +36,7 @@ import (
 	"github.com/ethereum/go-ethereum/swarm"
 )
 
-func init() { log.DebugLog()
+func init() {
 	// Run the app if we've been exec'd as "swarm-test" in runSwarm.
 	reexec.Register("swarm-test", func() {
 		if err := app.Run(os.Args); err != nil {

@@ -14,7 +14,7 @@ import (
 	"hash"
 )
 
-func init() { log.DebugLog()
+func init() { 
 	crypto.RegisterHash(crypto.RIPEMD160, New)
 }
 
@@ -40,24 +40,24 @@ type digest struct {
 	tc uint64          // total count of bytes processed
 }
 
-func (d *digest) Reset() { log.DebugLog()
+func (d *digest) Reset() { 
 	d.s[0], d.s[1], d.s[2], d.s[3], d.s[4] = _s0, _s1, _s2, _s3, _s4
 	d.nx = 0
 	d.tc = 0
 }
 
 // New returns a new hash.Hash computing the checksum.
-func New() hash.Hash { log.DebugLog()
+func New() hash.Hash { 
 	result := new(digest)
 	result.Reset()
 	return result
 }
 
-func (d *digest) Size() int { log.DebugLog() return Size }
+func (d *digest) Size() int {  return Size }
 
-func (d *digest) BlockSize() int { log.DebugLog() return BlockSize }
+func (d *digest) BlockSize() int {  return BlockSize }
 
-func (d *digest) Write(p []byte) (nn int, err error) { log.DebugLog()
+func (d *digest) Write(p []byte) (nn int, err error) { 
 	nn = len(p)
 	d.tc += uint64(nn)
 	if d.nx > 0 {
@@ -83,7 +83,7 @@ func (d *digest) Write(p []byte) (nn int, err error) { log.DebugLog()
 	return
 }
 
-func (d0 *digest) Sum(in []byte) []byte { log.DebugLog()
+func (d0 *digest) Sum(in []byte) []byte { 
 	// Make a copy of d0 so that caller can keep writing and summing.
 	d := *d0
 

@@ -8,7 +8,7 @@ import (
 	"unsafe"
 )
 
-func reflectQueryInterface(self interface{}, method uintptr, interfaceID *GUID, obj interface{}) (err error) { log.DebugLog()
+func reflectQueryInterface(self interface{}, method uintptr, interfaceID *GUID, obj interface{}) (err error) { 
 	selfValue := reflect.ValueOf(self).Elem()
 	objValue := reflect.ValueOf(obj).Elem()
 
@@ -24,7 +24,7 @@ func reflectQueryInterface(self interface{}, method uintptr, interfaceID *GUID, 
 	return
 }
 
-func queryInterface(unk *IUnknown, iid *GUID) (disp *IDispatch, err error) { log.DebugLog()
+func queryInterface(unk *IUnknown, iid *GUID) (disp *IDispatch, err error) { 
 	hr, _, _ := syscall.Syscall(
 		unk.VTable().QueryInterface,
 		3,
@@ -37,7 +37,7 @@ func queryInterface(unk *IUnknown, iid *GUID) (disp *IDispatch, err error) { log
 	return
 }
 
-func addRef(unk *IUnknown) int32 { log.DebugLog()
+func addRef(unk *IUnknown) int32 { 
 	ret, _, _ := syscall.Syscall(
 		unk.VTable().AddRef,
 		1,
@@ -47,7 +47,7 @@ func addRef(unk *IUnknown) int32 { log.DebugLog()
 	return int32(ret)
 }
 
-func release(unk *IUnknown) int32 { log.DebugLog()
+func release(unk *IUnknown) int32 { 
 	ret, _, _ := syscall.Syscall(
 		unk.VTable().Release,
 		1,

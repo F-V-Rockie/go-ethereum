@@ -43,44 +43,44 @@ var DefaultConfig = Config{
 	FieldToKey:    snakeCase,
 }
 
-func defaultNormFieldName(typ reflect.Type, s string) string { log.DebugLog()
+func defaultNormFieldName(typ reflect.Type, s string) string {
 	return strings.Replace(strings.ToLower(s), "_", "", -1)
 }
 
-func snakeCase(typ reflect.Type, s string) string { log.DebugLog()
+func snakeCase(typ reflect.Type, s string) string {
 	return stringutil.ToSnakeCase(s)
 }
 
-func defaultMissingField(typ reflect.Type, key string) error { log.DebugLog()
+func defaultMissingField(typ reflect.Type, key string) error {
 	return fmt.Errorf("field corresponding to `%s' is not defined in %v", key, typ)
 }
 
 // NewEncoder returns a new Encoder that writes to w.
 // It is shorthand for DefaultConfig.NewEncoder(w).
-func NewEncoder(w io.Writer) *Encoder { log.DebugLog()
+func NewEncoder(w io.Writer) *Encoder {
 	return DefaultConfig.NewEncoder(w)
 }
 
 // Marshal returns the TOML encoding of v.
 // It is shorthand for DefaultConfig.Marshal(v).
-func Marshal(v interface{}) ([]byte, error) { log.DebugLog()
+func Marshal(v interface{}) ([]byte, error) {
 	return DefaultConfig.Marshal(v)
 }
 
 // Unmarshal parses the TOML data and stores the result in the value pointed to by v.
 // It is shorthand for DefaultConfig.Unmarshal(data, v).
-func Unmarshal(data []byte, v interface{}) error { log.DebugLog()
+func Unmarshal(data []byte, v interface{}) error {
 	return DefaultConfig.Unmarshal(data, v)
 }
 
 // UnmarshalTable applies the contents of an ast.Table to the value pointed at by v.
 // It is shorthand for DefaultConfig.UnmarshalTable(t, v).
-func UnmarshalTable(t *ast.Table, v interface{}) error { log.DebugLog()
+func UnmarshalTable(t *ast.Table, v interface{}) error {
 	return DefaultConfig.UnmarshalTable(t, v)
 }
 
 // NewDecoder returns a new Decoder that reads from r.
 // It is shorthand for DefaultConfig.NewDecoder(r).
-func NewDecoder(r io.Reader) *Decoder { log.DebugLog()
+func NewDecoder(r io.Reader) *Decoder {
 	return DefaultConfig.NewDecoder(r)
 }

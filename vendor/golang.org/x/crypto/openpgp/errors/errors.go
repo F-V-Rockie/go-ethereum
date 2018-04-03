@@ -13,7 +13,7 @@ import (
 // invalid.
 type StructuralError string
 
-func (s StructuralError) Error() string { log.DebugLog()
+func (s StructuralError) Error() string { 
 	return "openpgp: invalid data: " + string(s)
 }
 
@@ -21,7 +21,7 @@ func (s StructuralError) Error() string { log.DebugLog()
 // makes use of currently unimplemented features.
 type UnsupportedError string
 
-func (s UnsupportedError) Error() string { log.DebugLog()
+func (s UnsupportedError) Error() string { 
 	return "openpgp: unsupported feature: " + string(s)
 }
 
@@ -29,7 +29,7 @@ func (s UnsupportedError) Error() string { log.DebugLog()
 // incorrect value.
 type InvalidArgumentError string
 
-func (i InvalidArgumentError) Error() string { log.DebugLog()
+func (i InvalidArgumentError) Error() string { 
 	return "openpgp: invalid argument: " + string(i)
 }
 
@@ -37,13 +37,13 @@ func (i InvalidArgumentError) Error() string { log.DebugLog()
 // validate.
 type SignatureError string
 
-func (b SignatureError) Error() string { log.DebugLog()
+func (b SignatureError) Error() string { 
 	return "openpgp: invalid signature: " + string(b)
 }
 
 type keyIncorrectError int
 
-func (ki keyIncorrectError) Error() string { log.DebugLog()
+func (ki keyIncorrectError) Error() string { 
 	return "openpgp: incorrect key"
 }
 
@@ -51,7 +51,7 @@ var ErrKeyIncorrect error = keyIncorrectError(0)
 
 type unknownIssuerError int
 
-func (unknownIssuerError) Error() string { log.DebugLog()
+func (unknownIssuerError) Error() string { 
 	return "openpgp: signature made by unknown entity"
 }
 
@@ -59,7 +59,7 @@ var ErrUnknownIssuer error = unknownIssuerError(0)
 
 type keyRevokedError int
 
-func (keyRevokedError) Error() string { log.DebugLog()
+func (keyRevokedError) Error() string { 
 	return "openpgp: signature made by revoked key"
 }
 
@@ -67,6 +67,6 @@ var ErrKeyRevoked error = keyRevokedError(0)
 
 type UnknownPacketTypeError uint8
 
-func (upte UnknownPacketTypeError) Error() string { log.DebugLog()
+func (upte UnknownPacketTypeError) Error() string { 
 	return "openpgp: unknown packet type: " + strconv.Itoa(int(upte))
 }

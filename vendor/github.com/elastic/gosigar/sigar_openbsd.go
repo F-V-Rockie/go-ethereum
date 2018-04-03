@@ -141,7 +141,7 @@ type Swapent struct {
 	sw_path     []byte
 }
 
-func (self *FileSystemList) Get() error { log.DebugLog()
+func (self *FileSystemList) Get() error { 
 	num, err := syscall.Getfsstat(nil, C.MNT_NOWAIT)
 	if err != nil {
 		return err
@@ -171,7 +171,7 @@ func (self *FileSystemList) Get() error { log.DebugLog()
 	return err
 }
 
-func (self *FileSystemUsage) Get(path string) error { log.DebugLog()
+func (self *FileSystemUsage) Get(path string) error { 
 	stat := syscall.Statfs_t{}
 	err := syscall.Statfs(path, &stat)
 	if err != nil {
@@ -188,11 +188,11 @@ func (self *FileSystemUsage) Get(path string) error { log.DebugLog()
 	return nil
 }
 
-func (self *FDUsage) Get() error { log.DebugLog()
+func (self *FDUsage) Get() error { 
 	return ErrNotImplemented{runtime.GOOS}
 }
 
-func (self *LoadAverage) Get() error { log.DebugLog()
+func (self *LoadAverage) Get() error { 
 	avg := []C.double{0, 0, 0}
 
 	C.getloadavg(&avg[0], C.int(len(avg)))
@@ -204,7 +204,7 @@ func (self *LoadAverage) Get() error { log.DebugLog()
 	return nil
 }
 
-func (self *Uptime) Get() error { log.DebugLog()
+func (self *Uptime) Get() error { 
 	tv := syscall.Timeval{}
 	mib := [2]int32{C.CTL_KERN, C.KERN_BOOTTIME}
 
@@ -228,7 +228,7 @@ func (self *Uptime) Get() error { log.DebugLog()
 	return nil
 }
 
-func (self *Mem) Get() error { log.DebugLog()
+func (self *Mem) Get() error { 
 	n := uintptr(0)
 
 	var uvmexp Uvmexp
@@ -267,7 +267,7 @@ func (self *Mem) Get() error { log.DebugLog()
 	return nil
 }
 
-func (self *Swap) Get() error { log.DebugLog()
+func (self *Swap) Get() error { 
 	nswap := C.swapctl(C.SWAP_NSWAP, unsafe.Pointer(uintptr(0)), 0)
 
 	// If there are no swap devices, nothing to do here.
@@ -294,7 +294,7 @@ func (self *Swap) Get() error { log.DebugLog()
 	return nil
 }
 
-func (self *Cpu) Get() error { log.DebugLog()
+func (self *Cpu) Get() error { 
 	load := [C.CPUSTATES]C.long{C.CP_USER, C.CP_NICE, C.CP_SYS, C.CP_INTR, C.CP_IDLE}
 
 	mib := [2]int32{C.CTL_KERN, C.KERN_CPTIME}
@@ -319,7 +319,7 @@ func (self *Cpu) Get() error { log.DebugLog()
 	return nil
 }
 
-func (self *CpuList) Get() error { log.DebugLog()
+func (self *CpuList) Get() error { 
 	mib := [2]int32{C.CTL_HW, C.HW_NCPU}
 	var ncpu int
 
@@ -349,39 +349,39 @@ func (self *CpuList) Get() error { log.DebugLog()
 	return nil
 }
 
-func (self *ProcList) Get() error { log.DebugLog()
+func (self *ProcList) Get() error { 
 	return nil
 }
 
-func (self *ProcArgs) Get(pid int) error { log.DebugLog()
+func (self *ProcArgs) Get(pid int) error { 
 	return nil
 }
 
-func (self *ProcEnv) Get(pid int) error { log.DebugLog()
+func (self *ProcEnv) Get(pid int) error { 
 	return ErrNotImplemented{runtime.GOOS}
 }
 
-func (self *ProcState) Get(pid int) error { log.DebugLog()
+func (self *ProcState) Get(pid int) error { 
 	return nil
 }
 
-func (self *ProcMem) Get(pid int) error { log.DebugLog()
+func (self *ProcMem) Get(pid int) error { 
 	return nil
 }
 
-func (self *ProcTime) Get(pid int) error { log.DebugLog()
+func (self *ProcTime) Get(pid int) error { 
 	return ErrNotImplemented{runtime.GOOS}
 }
 
-func (self *ProcExe) Get(pid int) error { log.DebugLog()
+func (self *ProcExe) Get(pid int) error { 
 	return nil
 }
 
-func (self *ProcFDUsage) Get(pid int) error { log.DebugLog()
+func (self *ProcFDUsage) Get(pid int) error { 
 	return ErrNotImplemented{runtime.GOOS}
 }
 
-func fillCpu(cpu *Cpu, load [C.CPUSTATES]C.long) { log.DebugLog()
+func fillCpu(cpu *Cpu, load [C.CPUSTATES]C.long) { 
 	cpu.User = uint64(load[0])
 	cpu.Nice = uint64(load[1])
 	cpu.Sys = uint64(load[2])
@@ -389,7 +389,7 @@ func fillCpu(cpu *Cpu, load [C.CPUSTATES]C.long) { log.DebugLog()
 	cpu.Idle = uint64(load[4])
 }
 
-func sysctlCptime(ncpu int, curcpu int, load *[C.CPUSTATES]C.long) error { log.DebugLog()
+func sysctlCptime(ncpu int, curcpu int, load *[C.CPUSTATES]C.long) error { 
 	var mib []int32
 
 	// Use the correct mib based on the number of CPUs and fill out the

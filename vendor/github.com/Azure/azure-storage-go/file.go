@@ -61,7 +61,7 @@ type FileRequestOptions struct {
 
 // getParameters, construct parameters for FileRequestOptions.
 // currently only timeout, but expecting to grow as functionality fills out.
-func (p FileRequestOptions) getParameters() url.Values { log.DebugLog()
+func (p FileRequestOptions) getParameters() url.Values { 
 	out := url.Values{}
 
 	if p.Timeout != 0 {
@@ -89,19 +89,19 @@ type FileRange struct {
 	End   uint64 `xml:"End"`
 }
 
-func (fr FileRange) String() string { log.DebugLog()
+func (fr FileRange) String() string { 
 	return fmt.Sprintf("bytes=%d-%d", fr.Start, fr.End)
 }
 
 // builds the complete file path for this file object
-func (f *File) buildPath() string { log.DebugLog()
+func (f *File) buildPath() string { 
 	return f.parent.buildPath() + "/" + f.Name
 }
 
 // ClearRange releases the specified range of space in a file.
 //
 // See https://msdn.microsoft.com/en-us/library/azure/dn194276.aspx
-func (f *File) ClearRange(fileRange FileRange) error { log.DebugLog()
+func (f *File) ClearRange(fileRange FileRange) error { 
 	headers, err := f.modifyRange(nil, fileRange, nil)
 	if err != nil {
 		return err
@@ -114,7 +114,7 @@ func (f *File) ClearRange(fileRange FileRange) error { log.DebugLog()
 // Create creates a new file or replaces an existing one.
 //
 // See https://msdn.microsoft.com/en-us/library/azure/dn194271.aspx
-func (f *File) Create(maxSize uint64) error { log.DebugLog()
+func (f *File) Create(maxSize uint64) error { 
 	if maxSize > oneTB {
 		return fmt.Errorf("max file size is 1TB")
 	}
@@ -137,7 +137,7 @@ func (f *File) Create(maxSize uint64) error { log.DebugLog()
 // CopyFile operation copied a file/blob from the sourceURL to the path provided.
 //
 // See https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/copy-file
-func (f *File) CopyFile(sourceURL string, options *FileRequestOptions) error { log.DebugLog()
+func (f *File) CopyFile(sourceURL string, options *FileRequestOptions) error { 
 	extraHeaders := map[string]string{
 		"x-ms-type":        "file",
 		"x-ms-copy-source": sourceURL,
@@ -160,14 +160,14 @@ func (f *File) CopyFile(sourceURL string, options *FileRequestOptions) error { l
 // Delete immediately removes this file from the storage account.
 //
 // See https://msdn.microsoft.com/en-us/library/azure/dn689085.aspx
-func (f *File) Delete() error { log.DebugLog()
+func (f *File) Delete() error { 
 	return f.fsc.deleteResource(f.buildPath(), resourceFile)
 }
 
 // DeleteIfExists removes this file if it exists.
 //
 // See https://msdn.microsoft.com/en-us/library/azure/dn689085.aspx
-func (f *File) DeleteIfExists() (bool, error) { log.DebugLog()
+func (f *File) DeleteIfExists() (bool, error) { 
 	resp, err := f.fsc.deleteResourceNoClose(f.buildPath(), resourceFile)
 	if resp != nil {
 		defer readAndCloseBody(resp.body)
@@ -181,7 +181,7 @@ func (f *File) DeleteIfExists() (bool, error) { log.DebugLog()
 // DownloadRangeToStream operation downloads the specified range of this file with optional MD5 hash.
 //
 // See https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/get-file
-func (f *File) DownloadRangeToStream(fileRange FileRange, getContentMD5 bool) (fs FileStream, err error) { log.DebugLog()
+func (f *File) DownloadRangeToStream(fileRange FileRange, getContentMD5 bool) (fs FileStream, err error) { 
 	if getContentMD5 && isRangeTooBig(fileRange) {
 		return fs, fmt.Errorf("must specify a range less than or equal to 4MB when getContentMD5 is true")
 	}
@@ -211,7 +211,7 @@ func (f *File) DownloadRangeToStream(fileRange FileRange, getContentMD5 bool) (f
 }
 
 // Exists returns true if this file exists.
-func (f *File) Exists() (bool, error) { log.DebugLog()
+func (f *File) Exists() (bool, error) { 
 	exists, headers, err := f.fsc.resourceExists(f.buildPath(), resourceFile)
 	if exists {
 		f.updateEtagAndLastModified(headers)
@@ -221,7 +221,7 @@ func (f *File) Exists() (bool, error) { log.DebugLog()
 }
 
 // FetchAttributes updates metadata and properties for this file.
-func (f *File) FetchAttributes() error { log.DebugLog()
+func (f *File) FetchAttributes() error { 
 	headers, err := f.fsc.getResourceHeaders(f.buildPath(), compNone, resourceFile, http.MethodHead)
 	if err != nil {
 		return err
@@ -234,7 +234,7 @@ func (f *File) FetchAttributes() error { log.DebugLog()
 }
 
 // returns true if the range is larger than 4MB
-func isRangeTooBig(fileRange FileRange) bool { log.DebugLog()
+func isRangeTooBig(fileRange FileRange) bool { 
 	if fileRange.End-fileRange.Start > fourMB {
 		return true
 	}
@@ -245,7 +245,7 @@ func isRangeTooBig(fileRange FileRange) bool { log.DebugLog()
 // ListRanges returns the list of valid ranges for this file.
 //
 // See https://msdn.microsoft.com/en-us/library/azure/dn166984.aspx
-func (f *File) ListRanges(listRange *FileRange) (*FileRanges, error) { log.DebugLog()
+func (f *File) ListRanges(listRange *FileRange) (*FileRanges, error) { 
 	params := url.Values{"comp": {"rangelist"}}
 
 	// add optional range to list
@@ -278,7 +278,7 @@ func (f *File) ListRanges(listRange *FileRange) (*FileRanges, error) { log.Debug
 }
 
 // modifies a range of bytes in this file
-func (f *File) modifyRange(bytes io.Reader, fileRange FileRange, contentMD5 *string) (http.Header, error) { log.DebugLog()
+func (f *File) modifyRange(bytes io.Reader, fileRange FileRange, contentMD5 *string) (http.Header, error) { 
 	if err := f.fsc.checkForStorageEmulator(); err != nil {
 		return nil, err
 	}
@@ -328,7 +328,7 @@ func (f *File) modifyRange(bytes io.Reader, fileRange FileRange, contentMD5 *str
 // applications either.
 //
 // See https://msdn.microsoft.com/en-us/library/azure/dn689097.aspx
-func (f *File) SetMetadata() error { log.DebugLog()
+func (f *File) SetMetadata() error { 
 	headers, err := f.fsc.setResourceHeaders(f.buildPath(), compMetadata, resourceFile, mergeMDIntoExtraHeaders(f.Metadata, nil))
 	if err != nil {
 		return err
@@ -346,7 +346,7 @@ func (f *File) SetMetadata() error { log.DebugLog()
 // applications either.
 //
 // See https://msdn.microsoft.com/en-us/library/azure/dn166975.aspx
-func (f *File) SetProperties() error { log.DebugLog()
+func (f *File) SetProperties() error { 
 	headers, err := f.fsc.setResourceHeaders(f.buildPath(), compProperties, resourceFile, headersFromStruct(f.Properties))
 	if err != nil {
 		return err
@@ -357,13 +357,13 @@ func (f *File) SetProperties() error { log.DebugLog()
 }
 
 // updates Etag and last modified date
-func (f *File) updateEtagAndLastModified(headers http.Header) { log.DebugLog()
+func (f *File) updateEtagAndLastModified(headers http.Header) { 
 	f.Properties.Etag = headers.Get("Etag")
 	f.Properties.LastModified = headers.Get("Last-Modified")
 }
 
 // updates Etag, last modified date and x-ms-copy-id
-func (f *File) updateEtagLastModifiedAndCopyHeaders(headers http.Header) { log.DebugLog()
+func (f *File) updateEtagLastModifiedAndCopyHeaders(headers http.Header) { 
 	f.Properties.Etag = headers.Get("Etag")
 	f.Properties.LastModified = headers.Get("Last-Modified")
 	f.FileCopyProperties.ID = headers.Get("X-Ms-Copy-Id")
@@ -371,7 +371,7 @@ func (f *File) updateEtagLastModifiedAndCopyHeaders(headers http.Header) { log.D
 }
 
 // updates file properties from the specified HTTP header
-func (f *File) updateProperties(header http.Header) { log.DebugLog()
+func (f *File) updateProperties(header http.Header) { 
 	size, err := strconv.ParseUint(header.Get("Content-Length"), 10, 64)
 	if err == nil {
 		f.Properties.Length = size
@@ -389,7 +389,7 @@ func (f *File) updateProperties(header http.Header) { log.DebugLog()
 // URL gets the canonical URL to this file.
 // This method does not create a publicly accessible URL if the file
 // is private and this method does not check if the file exists.
-func (f *File) URL() string { log.DebugLog()
+func (f *File) URL() string { 
 	return f.fsc.client.getEndpoint(fileServiceName, f.buildPath(), url.Values{})
 }
 
@@ -397,7 +397,7 @@ func (f *File) URL() string { log.DebugLog()
 // Note that the length of bytes must match (rangeEnd - rangeStart) + 1 with a maximum size of 4MB.
 //
 // See https://msdn.microsoft.com/en-us/library/azure/dn194276.aspx
-func (f *File) WriteRange(bytes io.Reader, fileRange FileRange, contentMD5 *string) error { log.DebugLog()
+func (f *File) WriteRange(bytes io.Reader, fileRange FileRange, contentMD5 *string) error { 
 	if bytes == nil {
 		return errors.New("bytes cannot be nil")
 	}

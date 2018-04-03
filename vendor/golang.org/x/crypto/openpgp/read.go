@@ -21,7 +21,7 @@ import (
 var SignatureType = "PGP SIGNATURE"
 
 // readArmored reads an armored block with the given type.
-func readArmored(r io.Reader, expectedType string) (body io.Reader, err error) { log.DebugLog()
+func readArmored(r io.Reader, expectedType string) (body io.Reader, err error) { 
 	block, err := armor.Decode(r)
 	if err != nil {
 		return
@@ -83,7 +83,7 @@ type keyEnvelopePair struct {
 // The given KeyRing should contain both public keys (for signature
 // verification) and, possibly encrypted, private keys for decrypting.
 // If config is nil, sensible defaults will be used.
-func ReadMessage(r io.Reader, keyring KeyRing, prompt PromptFunction, config *packet.Config) (md *MessageDetails, err error) { log.DebugLog()
+func ReadMessage(r io.Reader, keyring KeyRing, prompt PromptFunction, config *packet.Config) (md *MessageDetails, err error) { 
 	var p packet.Packet
 
 	var symKeys []*packet.SymmetricKeyEncrypted
@@ -222,7 +222,7 @@ FindKey:
 // readSignedMessage reads a possibly signed message if mdin is non-zero then
 // that structure is updated and returned. Otherwise a fresh MessageDetails is
 // used.
-func readSignedMessage(packets *packet.Reader, mdin *MessageDetails, keyring KeyRing) (md *MessageDetails, err error) { log.DebugLog()
+func readSignedMessage(packets *packet.Reader, mdin *MessageDetails, keyring KeyRing) (md *MessageDetails, err error) { 
 	if mdin == nil {
 		mdin = new(MessageDetails)
 	}
@@ -281,7 +281,7 @@ FindLiteralData:
 // should be preprocessed (i.e. to normalize line endings). Thus this function
 // returns two hashes. The second should be used to hash the message itself and
 // performs any needed preprocessing.
-func hashForSignature(hashId crypto.Hash, sigType packet.SignatureType) (hash.Hash, hash.Hash, error) { log.DebugLog()
+func hashForSignature(hashId crypto.Hash, sigType packet.SignatureType) (hash.Hash, hash.Hash, error) { 
 	if !hashId.Available() {
 		return nil, nil, errors.UnsupportedError("hash not available: " + strconv.Itoa(int(hashId)))
 	}
@@ -304,7 +304,7 @@ type checkReader struct {
 	md *MessageDetails
 }
 
-func (cr checkReader) Read(buf []byte) (n int, err error) { log.DebugLog()
+func (cr checkReader) Read(buf []byte) (n int, err error) { 
 	n, err = cr.md.LiteralData.Body.Read(buf)
 	if err == io.EOF {
 		mdcErr := cr.md.decrypted.Close()
@@ -324,7 +324,7 @@ type signatureCheckReader struct {
 	md             *MessageDetails
 }
 
-func (scr *signatureCheckReader) Read(buf []byte) (n int, err error) { log.DebugLog()
+func (scr *signatureCheckReader) Read(buf []byte) (n int, err error) { 
 	n, err = scr.md.LiteralData.Body.Read(buf)
 	scr.wrappedHash.Write(buf[:n])
 	if err == io.EOF {
@@ -360,7 +360,7 @@ func (scr *signatureCheckReader) Read(buf []byte) (n int, err error) { log.Debug
 // CheckDetachedSignature takes a signed file and a detached signature and
 // returns the signer if the signature is valid. If the signer isn't known,
 // ErrUnknownIssuer is returned.
-func CheckDetachedSignature(keyring KeyRing, signed, signature io.Reader) (signer *Entity, err error) { log.DebugLog()
+func CheckDetachedSignature(keyring KeyRing, signed, signature io.Reader) (signer *Entity, err error) { 
 	var issuerKeyId uint64
 	var hashFunc crypto.Hash
 	var sigType packet.SignatureType
@@ -432,7 +432,7 @@ func CheckDetachedSignature(keyring KeyRing, signed, signature io.Reader) (signe
 
 // CheckArmoredDetachedSignature performs the same actions as
 // CheckDetachedSignature but expects the signature to be armored.
-func CheckArmoredDetachedSignature(keyring KeyRing, signed, signature io.Reader) (signer *Entity, err error) { log.DebugLog()
+func CheckArmoredDetachedSignature(keyring KeyRing, signed, signature io.Reader) (signer *Entity, err error) { 
 	body, err := readArmored(signature, SignatureType)
 	if err != nil {
 		return

@@ -28,7 +28,7 @@ import (
 	"unsafe"
 )
 
-func (self *LoadAverage) Get() error { log.DebugLog()
+func (self *LoadAverage) Get() error {
 	avg := []C.double{0, 0, 0}
 
 	C.getloadavg(&avg[0], C.int(len(avg)))
@@ -40,7 +40,7 @@ func (self *LoadAverage) Get() error { log.DebugLog()
 	return nil
 }
 
-func (self *Uptime) Get() error { log.DebugLog()
+func (self *Uptime) Get() error {
 	tv := syscall.Timeval32{}
 
 	if err := sysctlbyname("kern.boottime", &tv); err != nil {
@@ -52,7 +52,7 @@ func (self *Uptime) Get() error { log.DebugLog()
 	return nil
 }
 
-func (self *Mem) Get() error { log.DebugLog()
+func (self *Mem) Get() error {
 	var vmstat C.vm_statistics_data_t
 
 	if err := sysctlbyname("hw.memsize", &self.Total); err != nil {
@@ -77,7 +77,7 @@ type xsw_usage struct {
 	Total, Avail, Used uint64
 }
 
-func (self *Swap) Get() error { log.DebugLog()
+func (self *Swap) Get() error {
 	sw_usage := xsw_usage{}
 
 	if err := sysctlbyname("vm.swapusage", &sw_usage); err != nil {
@@ -91,7 +91,7 @@ func (self *Swap) Get() error { log.DebugLog()
 	return nil
 }
 
-func (self *Cpu) Get() error { log.DebugLog()
+func (self *Cpu) Get() error {
 	var count C.mach_msg_type_number_t = C.HOST_CPU_LOAD_INFO_COUNT
 	var cpuload C.host_cpu_load_info_data_t
 
@@ -112,7 +112,7 @@ func (self *Cpu) Get() error { log.DebugLog()
 	return nil
 }
 
-func (self *CpuList) Get() error { log.DebugLog()
+func (self *CpuList) Get() error {
 	var count C.mach_msg_type_number_t
 	var cpuload *C.processor_cpu_load_info_data_t
 	var ncpu C.natural_t
@@ -165,11 +165,11 @@ func (self *CpuList) Get() error { log.DebugLog()
 	return nil
 }
 
-func (self *FDUsage) Get() error { log.DebugLog()
+func (self *FDUsage) Get() error {
 	return ErrNotImplemented{runtime.GOOS}
 }
 
-func (self *FileSystemList) Get() error { log.DebugLog()
+func (self *FileSystemList) Get() error {
 	num, err := syscall.Getfsstat(nil, C.MNT_NOWAIT)
 	if err != nil {
 		return err
@@ -199,7 +199,7 @@ func (self *FileSystemList) Get() error { log.DebugLog()
 	return err
 }
 
-func (self *ProcList) Get() error { log.DebugLog()
+func (self *ProcList) Get() error {
 	n := C.proc_listpids(C.PROC_ALL_PIDS, 0, nil, 0)
 	if n <= 0 {
 		return syscall.EINVAL
@@ -231,7 +231,7 @@ func (self *ProcList) Get() error { log.DebugLog()
 	return nil
 }
 
-func (self *ProcState) Get(pid int) error { log.DebugLog()
+func (self *ProcState) Get(pid int) error {
 	info := C.struct_proc_taskallinfo{}
 
 	if err := task_info(pid, &info); err != nil {
@@ -277,7 +277,7 @@ func (self *ProcState) Get(pid int) error { log.DebugLog()
 	return nil
 }
 
-func (self *ProcMem) Get(pid int) error { log.DebugLog()
+func (self *ProcMem) Get(pid int) error {
 	info := C.struct_proc_taskallinfo{}
 
 	if err := task_info(pid, &info); err != nil {
@@ -291,7 +291,7 @@ func (self *ProcMem) Get(pid int) error { log.DebugLog()
 	return nil
 }
 
-func (self *ProcTime) Get(pid int) error { log.DebugLog()
+func (self *ProcTime) Get(pid int) error {
 	info := C.struct_proc_taskallinfo{}
 
 	if err := task_info(pid, &info); err != nil {
@@ -312,7 +312,7 @@ func (self *ProcTime) Get(pid int) error { log.DebugLog()
 	return nil
 }
 
-func (self *ProcArgs) Get(pid int) error { log.DebugLog()
+func (self *ProcArgs) Get(pid int) error {
 	var args []string
 
 	argv := func(arg string) {
@@ -326,7 +326,7 @@ func (self *ProcArgs) Get(pid int) error { log.DebugLog()
 	return err
 }
 
-func (self *ProcEnv) Get(pid int) error { log.DebugLog()
+func (self *ProcEnv) Get(pid int) error {
 	if self.Vars == nil {
 		self.Vars = map[string]string{}
 	}
@@ -338,7 +338,7 @@ func (self *ProcEnv) Get(pid int) error { log.DebugLog()
 	return kern_procargs(pid, nil, nil, env)
 }
 
-func (self *ProcExe) Get(pid int) error { log.DebugLog()
+func (self *ProcExe) Get(pid int) error {
 	exe := func(arg string) {
 		self.Name = arg
 	}
@@ -346,7 +346,7 @@ func (self *ProcExe) Get(pid int) error { log.DebugLog()
 	return kern_procargs(pid, exe, nil, nil)
 }
 
-func (self *ProcFDUsage) Get(pid int) error { log.DebugLog()
+func (self *ProcFDUsage) Get(pid int) error {
 	return ErrNotImplemented{runtime.GOOS}
 }
 
@@ -446,7 +446,7 @@ func sysctl(mib []C.int, old *byte, oldlen *uintptr,
 	return
 }
 
-func vm_info(vmstat *C.vm_statistics_data_t) error { log.DebugLog()
+func vm_info(vmstat *C.vm_statistics_data_t) error {
 	var count C.mach_msg_type_number_t = C.HOST_VM_INFO_COUNT
 
 	status := C.host_statistics(
@@ -463,7 +463,7 @@ func vm_info(vmstat *C.vm_statistics_data_t) error { log.DebugLog()
 }
 
 // generic Sysctl buffer unmarshalling
-func sysctlbyname(name string, data interface{}) (err error) { log.DebugLog()
+func sysctlbyname(name string, data interface{}) (err error) {
 	val, err := syscall.Sysctl(name)
 	if err != nil {
 		return err
@@ -481,7 +481,7 @@ func sysctlbyname(name string, data interface{}) (err error) { log.DebugLog()
 	return binary.Read(bbuf, binary.LittleEndian, data)
 }
 
-func task_info(pid int, info *C.struct_proc_taskallinfo) error { log.DebugLog()
+func task_info(pid int, info *C.struct_proc_taskallinfo) error {
 	size := C.int(unsafe.Sizeof(*info))
 	ptr := unsafe.Pointer(info)
 

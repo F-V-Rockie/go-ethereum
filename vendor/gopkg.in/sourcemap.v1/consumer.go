@@ -15,7 +15,7 @@ type Consumer struct {
 	mappings      []mapping
 }
 
-func Parse(mapURL string, b []byte) (*Consumer, error) { log.DebugLog()
+func Parse(mapURL string, b []byte) (*Consumer, error) { 
 	smap := new(sourceMap)
 	err := json.Unmarshal(b, smap)
 	if err != nil {
@@ -63,11 +63,11 @@ func Parse(mapURL string, b []byte) (*Consumer, error) { log.DebugLog()
 	}, nil
 }
 
-func (c *Consumer) File() string { log.DebugLog()
+func (c *Consumer) File() string { 
 	return c.smap.File
 }
 
-func (c *Consumer) Source(genLine, genCol int) (source, name string, line, col int, ok bool) { log.DebugLog()
+func (c *Consumer) Source(genLine, genCol int) (source, name string, line, col int, ok bool) { 
 	i := sort.Search(len(c.mappings), func(i int) bool {
 		m := &c.mappings[i]
 		if m.genLine == genLine {
@@ -111,7 +111,7 @@ func (c *Consumer) Source(genLine, genCol int) (source, name string, line, col i
 	return
 }
 
-func (c *Consumer) absSource(source string) string { log.DebugLog()
+func (c *Consumer) absSource(source string) string { 
 	if path.IsAbs(source) {
 		return source
 	}

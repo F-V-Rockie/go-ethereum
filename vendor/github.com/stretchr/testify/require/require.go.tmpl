@@ -1,5 +1,5 @@
 {{.Comment}}
-func {{.DocInfo.Name}}(t TestingT, { log.DebugLog(){.Params}}) {
+func {{.DocInfo.Name}}(t TestingT, { {.Params}}) {
 	if !assert.{{.DocInfo.Name}}(t, {{.ForwardedParams}}) {
 		t.FailNow()
 	}

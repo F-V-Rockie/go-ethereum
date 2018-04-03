@@ -32,7 +32,7 @@ var (
 		`Minimal draft requirements (approved, contributed, provisional, unconfirmed).`)
 )
 
-func main() { log.DebugLog()
+func main() { 
 	gen.Init()
 
 	// Read the CLDR zip file.
@@ -149,7 +149,7 @@ func main() { log.DebugLog()
 
 // getIndex prints the subtag type and extracts its index of size nibble.
 // If the index is less than n nibbles, the result is prefixed with 0s.
-func getIndex(x interface{}, n int) string { log.DebugLog()
+func getIndex(x interface{}, n int) string { 
 	s := fmt.Sprintf("%#v", x) // s is of form Type{typeID: 0x00}
 	s = s[strings.Index(s, "0x")+2 : len(s)-1]
 	return strings.Repeat("0", n-len(s)) + s
@@ -157,6 +157,6 @@ func getIndex(x interface{}, n int) string { log.DebugLog()
 
 type byAlpha []language.Tag
 
-func (a byAlpha) Len() int           { log.DebugLog() return len(a) }
-func (a byAlpha) Swap(i, j int)      { log.DebugLog() a[i], a[j] = a[j], a[i] }
-func (a byAlpha) Less(i, j int) bool { log.DebugLog() return a[i].String() < a[j].String() }
+func (a byAlpha) Len() int           {  return len(a) }
+func (a byAlpha) Swap(i, j int)      {  a[i], a[j] = a[j], a[i] }
+func (a byAlpha) Less(i, j int) bool {  return a[i].String() < a[j].String() }

@@ -25,14 +25,14 @@ type OpaquePacket struct {
 	Contents []byte
 }
 
-func (op *OpaquePacket) parse(r io.Reader) (err error) { log.DebugLog()
+func (op *OpaquePacket) parse(r io.Reader) (err error) { 
 	op.Contents, err = ioutil.ReadAll(r)
 	return
 }
 
 // Serialize marshals the packet to a writer in its original form, including
 // the packet header.
-func (op *OpaquePacket) Serialize(w io.Writer) (err error) { log.DebugLog()
+func (op *OpaquePacket) Serialize(w io.Writer) (err error) { 
 	err = serializeHeader(w, packetType(op.Tag), len(op.Contents))
 	if err == nil {
 		_, err = w.Write(op.Contents)
@@ -43,7 +43,7 @@ func (op *OpaquePacket) Serialize(w io.Writer) (err error) { log.DebugLog()
 // Parse attempts to parse the opaque contents into a structure supported by
 // this package. If the packet is not known then the result will be another
 // OpaquePacket.
-func (op *OpaquePacket) Parse() (p Packet, err error) { log.DebugLog()
+func (op *OpaquePacket) Parse() (p Packet, err error) { 
 	hdr := bytes.NewBuffer(nil)
 	err = serializeHeader(hdr, packetType(op.Tag), len(op.Contents))
 	if err != nil {
@@ -63,12 +63,12 @@ type OpaqueReader struct {
 	r io.Reader
 }
 
-func NewOpaqueReader(r io.Reader) *OpaqueReader { log.DebugLog()
+func NewOpaqueReader(r io.Reader) *OpaqueReader { 
 	return &OpaqueReader{r: r}
 }
 
 // Read the next OpaquePacket.
-func (or *OpaqueReader) Next() (op *OpaquePacket, err error) { log.DebugLog()
+func (or *OpaqueReader) Next() (op *OpaquePacket, err error) { 
 	tag, _, contents, err := readHeader(or.r)
 	if err != nil {
 		return
@@ -90,7 +90,7 @@ type OpaqueSubpacket struct {
 
 // OpaqueSubpackets extracts opaque, unparsed OpenPGP subpackets from
 // their byte representation.
-func OpaqueSubpackets(contents []byte) (result []*OpaqueSubpacket, err error) { log.DebugLog()
+func OpaqueSubpackets(contents []byte) (result []*OpaqueSubpacket, err error) { 
 	var (
 		subHeaderLen int
 		subPacket    *OpaqueSubpacket
@@ -106,7 +106,7 @@ func OpaqueSubpackets(contents []byte) (result []*OpaqueSubpacket, err error) { 
 	return
 }
 
-func nextSubpacket(contents []byte) (subHeaderLen int, subPacket *OpaqueSubpacket, err error) { log.DebugLog()
+func nextSubpacket(contents []byte) (subHeaderLen int, subPacket *OpaqueSubpacket, err error) { 
 	// RFC 4880, section 5.2.3.1
 	var subLen uint32
 	if len(contents) < 1 {
@@ -150,7 +150,7 @@ Truncated:
 	return
 }
 
-func (osp *OpaqueSubpacket) Serialize(w io.Writer) (err error) { log.DebugLog()
+func (osp *OpaqueSubpacket) Serialize(w io.Writer) (err error) { 
 	buf := make([]byte, 6)
 	n := serializeSubpacketLength(buf, len(osp.Contents)+1)
 	buf[n] = osp.SubType

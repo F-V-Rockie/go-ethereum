@@ -18,7 +18,7 @@ var (
 	procWindowsGetStringRawBuffer = modcombase.NewProc("WindowsGetStringRawBuffer")
 )
 
-func RoInitialize(thread_type uint32) (err error) { log.DebugLog()
+func RoInitialize(thread_type uint32) (err error) { 
 	hr, _, _ := procRoInitialize.Call(uintptr(thread_type))
 	if hr != 0 {
 		err = NewError(hr)
@@ -26,7 +26,7 @@ func RoInitialize(thread_type uint32) (err error) { log.DebugLog()
 	return
 }
 
-func RoActivateInstance(clsid string) (ins *IInspectable, err error) { log.DebugLog()
+func RoActivateInstance(clsid string) (ins *IInspectable, err error) { 
 	hClsid, err := NewHString(clsid)
 	if err != nil {
 		return nil, err
@@ -42,7 +42,7 @@ func RoActivateInstance(clsid string) (ins *IInspectable, err error) { log.Debug
 	return
 }
 
-func RoGetActivationFactory(clsid string, iid *GUID) (ins *IInspectable, err error) { log.DebugLog()
+func RoGetActivationFactory(clsid string, iid *GUID) (ins *IInspectable, err error) { 
 	hClsid, err := NewHString(clsid)
 	if err != nil {
 		return nil, err
@@ -63,7 +63,7 @@ func RoGetActivationFactory(clsid string, iid *GUID) (ins *IInspectable, err err
 type HString uintptr
 
 // NewHString returns a new HString for Go string.
-func NewHString(s string) (hstring HString, err error) { log.DebugLog()
+func NewHString(s string) (hstring HString, err error) { 
 	u16 := syscall.StringToUTF16Ptr(s)
 	len := uint32(utf8.RuneCountInString(s))
 	hr, _, _ := procWindowsCreateString.Call(
@@ -77,7 +77,7 @@ func NewHString(s string) (hstring HString, err error) { log.DebugLog()
 }
 
 // DeleteHString deletes HString.
-func DeleteHString(hstring HString) (err error) { log.DebugLog()
+func DeleteHString(hstring HString) (err error) { 
 	hr, _, _ := procWindowsDeleteString.Call(uintptr(hstring))
 	if hr != 0 {
 		err = NewError(hr)
@@ -86,7 +86,7 @@ func DeleteHString(hstring HString) (err error) { log.DebugLog()
 }
 
 // String returns Go string value of HString.
-func (h HString) String() string { log.DebugLog()
+func (h HString) String() string { 
 	var u16buf uintptr
 	var u16len uint32
 	u16buf, _, _ = procWindowsGetStringRawBuffer.Call(

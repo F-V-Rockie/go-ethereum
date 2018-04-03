@@ -12,26 +12,26 @@ type Entry struct {
 	source func() string
 }
 
-func newEntry(source func() string) *Entry { log.DebugLog()
+func newEntry(source func() string) *Entry { 
 	return &Entry{
 		active: true,
 		source: source,
 	}
 }
 
-func (self *Entry) Enable() { log.DebugLog()
+func (self *Entry) Enable() { 
 	self.active = true
 }
 
-func (self *Entry) Disable() { log.DebugLog()
+func (self *Entry) Disable() { 
 	self.active = false
 }
 
-func (self Entry) Source() string { log.DebugLog()
+func (self Entry) Source() string { 
 	return self.source()
 }
 
-func Apply(callback func(Entry)) { log.DebugLog()
+func Apply(callback func(Entry)) { 
 	for _, entry := range registry {
 		if !entry.active {
 			continue
@@ -40,7 +40,7 @@ func Apply(callback func(Entry)) { log.DebugLog()
 	}
 }
 
-func Register(source func() string) *Entry { log.DebugLog()
+func Register(source func() string) *Entry { 
 	entry := newEntry(source)
 	registry = append(registry, entry)
 	return entry

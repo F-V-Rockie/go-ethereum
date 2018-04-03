@@ -22,64 +22,64 @@ type _property struct {
 	mode  _propertyMode
 }
 
-func (self _property) writable() bool { log.DebugLog()
+func (self _property) writable() bool { 
 	return self.mode&modeWriteMask == modeWriteMask&modeOnMask
 }
 
-func (self *_property) writeOn() { log.DebugLog()
+func (self *_property) writeOn() { 
 	self.mode = (self.mode & ^modeWriteMask) | (modeWriteMask & modeOnMask)
 }
 
-func (self *_property) writeOff() { log.DebugLog()
+func (self *_property) writeOff() { 
 	self.mode &= ^modeWriteMask
 }
 
-func (self *_property) writeClear() { log.DebugLog()
+func (self *_property) writeClear() { 
 	self.mode = (self.mode & ^modeWriteMask) | (modeWriteMask & modeSetMask)
 }
 
-func (self _property) writeSet() bool { log.DebugLog()
+func (self _property) writeSet() bool { 
 	return 0 == self.mode&modeWriteMask&modeSetMask
 }
 
-func (self _property) enumerable() bool { log.DebugLog()
+func (self _property) enumerable() bool { 
 	return self.mode&modeEnumerateMask == modeEnumerateMask&modeOnMask
 }
 
-func (self *_property) enumerateOn() { log.DebugLog()
+func (self *_property) enumerateOn() { 
 	self.mode = (self.mode & ^modeEnumerateMask) | (modeEnumerateMask & modeOnMask)
 }
 
-func (self *_property) enumerateOff() { log.DebugLog()
+func (self *_property) enumerateOff() { 
 	self.mode &= ^modeEnumerateMask
 }
 
-func (self _property) enumerateSet() bool { log.DebugLog()
+func (self _property) enumerateSet() bool { 
 	return 0 == self.mode&modeEnumerateMask&modeSetMask
 }
 
-func (self _property) configurable() bool { log.DebugLog()
+func (self _property) configurable() bool { 
 	return self.mode&modeConfigureMask == modeConfigureMask&modeOnMask
 }
 
-func (self *_property) configureOn() { log.DebugLog()
+func (self *_property) configureOn() { 
 	self.mode = (self.mode & ^modeConfigureMask) | (modeConfigureMask & modeOnMask)
 }
 
-func (self *_property) configureOff() { log.DebugLog()
+func (self *_property) configureOff() { 
 	self.mode &= ^modeConfigureMask
 }
 
-func (self _property) configureSet() bool { log.DebugLog()
+func (self _property) configureSet() bool { 
 	return 0 == self.mode&modeConfigureMask&modeSetMask
 }
 
-func (self _property) copy() *_property { log.DebugLog()
+func (self _property) copy() *_property { 
 	property := self
 	return &property
 }
 
-func (self _property) get(this *_object) Value { log.DebugLog()
+func (self _property) get(this *_object) Value { 
 	switch value := self.value.(type) {
 	case Value:
 		return value
@@ -91,12 +91,12 @@ func (self _property) get(this *_object) Value { log.DebugLog()
 	return Value{}
 }
 
-func (self _property) isAccessorDescriptor() bool { log.DebugLog()
+func (self _property) isAccessorDescriptor() bool { 
 	setGet, test := self.value.(_propertyGetSet)
 	return test && (setGet[0] != nil || setGet[1] != nil)
 }
 
-func (self _property) isDataDescriptor() bool { log.DebugLog()
+func (self _property) isDataDescriptor() bool { 
 	if self.writeSet() { // Either "On" or "Off"
 		return true
 	}
@@ -104,18 +104,18 @@ func (self _property) isDataDescriptor() bool { log.DebugLog()
 	return valid && !value.isEmpty()
 }
 
-func (self _property) isGenericDescriptor() bool { log.DebugLog()
+func (self _property) isGenericDescriptor() bool { 
 	return !(self.isDataDescriptor() || self.isAccessorDescriptor())
 }
 
-func (self _property) isEmpty() bool { log.DebugLog()
+func (self _property) isEmpty() bool { 
 	return self.mode == 0222 && self.isGenericDescriptor()
 }
 
 // _enumerableValue, _enumerableTrue, _enumerableFalse?
 // .enumerableValue() .enumerableExists()
 
-func toPropertyDescriptor(rt *_runtime, value Value) (descriptor _property) { log.DebugLog()
+func toPropertyDescriptor(rt *_runtime, value Value) (descriptor _property) { 
 	objectDescriptor := value._object()
 	if objectDescriptor == nil {
 		panic(rt.panicTypeError())
@@ -196,7 +196,7 @@ func toPropertyDescriptor(rt *_runtime, value Value) (descriptor _property) { lo
 	return
 }
 
-func (self *_runtime) fromPropertyDescriptor(descriptor _property) *_object { log.DebugLog()
+func (self *_runtime) fromPropertyDescriptor(descriptor _property) *_object { 
 	object := self.newObject()
 	if descriptor.isDataDescriptor() {
 		object.defineProperty("value", descriptor.value.(Value), 0111, false)

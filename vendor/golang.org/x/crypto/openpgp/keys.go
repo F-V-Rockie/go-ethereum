@@ -73,7 +73,7 @@ type KeyRing interface {
 
 // primaryIdentity returns the Identity marked as primary or the first identity
 // if none are so marked.
-func (e *Entity) primaryIdentity() *Identity { log.DebugLog()
+func (e *Entity) primaryIdentity() *Identity { 
 	var firstIdentity *Identity
 	for _, ident := range e.Identities {
 		if firstIdentity == nil {
@@ -88,7 +88,7 @@ func (e *Entity) primaryIdentity() *Identity { log.DebugLog()
 
 // encryptionKey returns the best candidate Key for encrypting a message to the
 // given Entity.
-func (e *Entity) encryptionKey(now time.Time) (Key, bool) { log.DebugLog()
+func (e *Entity) encryptionKey(now time.Time) (Key, bool) { 
 	candidateSubkey := -1
 
 	// Iterate the keys to find the newest key
@@ -126,7 +126,7 @@ func (e *Entity) encryptionKey(now time.Time) (Key, bool) { log.DebugLog()
 
 // signingKey return the best candidate Key for signing a message with this
 // Entity.
-func (e *Entity) signingKey(now time.Time) (Key, bool) { log.DebugLog()
+func (e *Entity) signingKey(now time.Time) (Key, bool) { 
 	candidateSubkey := -1
 
 	for i, subkey := range e.Subkeys {
@@ -159,7 +159,7 @@ func (e *Entity) signingKey(now time.Time) (Key, bool) { log.DebugLog()
 type EntityList []*Entity
 
 // KeysById returns the set of keys that have the given key id.
-func (el EntityList) KeysById(id uint64) (keys []Key) { log.DebugLog()
+func (el EntityList) KeysById(id uint64) (keys []Key) { 
 	for _, e := range el {
 		if e.PrimaryKey.KeyId == id {
 			var selfSig *packet.Signature
@@ -186,7 +186,7 @@ func (el EntityList) KeysById(id uint64) (keys []Key) { log.DebugLog()
 // KeysByIdAndUsage returns the set of keys with the given id that also meet
 // the key usage given by requiredUsage.  The requiredUsage is expressed as
 // the bitwise-OR of packet.KeyFlag* values.
-func (el EntityList) KeysByIdUsage(id uint64, requiredUsage byte) (keys []Key) { log.DebugLog()
+func (el EntityList) KeysByIdUsage(id uint64, requiredUsage byte) (keys []Key) { 
 	for _, key := range el.KeysById(id) {
 		if len(key.Entity.Revocations) > 0 {
 			continue
@@ -221,7 +221,7 @@ func (el EntityList) KeysByIdUsage(id uint64, requiredUsage byte) (keys []Key) {
 }
 
 // DecryptionKeys returns all private keys that are valid for decryption.
-func (el EntityList) DecryptionKeys() (keys []Key) { log.DebugLog()
+func (el EntityList) DecryptionKeys() (keys []Key) { 
 	for _, e := range el {
 		for _, subKey := range e.Subkeys {
 			if subKey.PrivateKey != nil && (!subKey.Sig.FlagsValid || subKey.Sig.FlagEncryptStorage || subKey.Sig.FlagEncryptCommunications) {
@@ -233,7 +233,7 @@ func (el EntityList) DecryptionKeys() (keys []Key) { log.DebugLog()
 }
 
 // ReadArmoredKeyRing reads one or more public/private keys from an armor keyring file.
-func ReadArmoredKeyRing(r io.Reader) (EntityList, error) { log.DebugLog()
+func ReadArmoredKeyRing(r io.Reader) (EntityList, error) { 
 	block, err := armor.Decode(r)
 	if err == io.EOF {
 		return nil, errors.InvalidArgumentError("no armored data found")
@@ -250,7 +250,7 @@ func ReadArmoredKeyRing(r io.Reader) (EntityList, error) { log.DebugLog()
 
 // ReadKeyRing reads one or more public/private keys. Unsupported keys are
 // ignored as long as at least a single valid key is found.
-func ReadKeyRing(r io.Reader) (el EntityList, err error) { log.DebugLog()
+func ReadKeyRing(r io.Reader) (el EntityList, err error) { 
 	packets := packet.NewReader(r)
 	var lastUnsupportedError error
 
@@ -288,7 +288,7 @@ func ReadKeyRing(r io.Reader) (el EntityList, err error) { log.DebugLog()
 
 // readToNextPublicKey reads packets until the start of the entity and leaves
 // the first packet of the new entity in the Reader.
-func readToNextPublicKey(packets *packet.Reader) (err error) { log.DebugLog()
+func readToNextPublicKey(packets *packet.Reader) (err error) { 
 	var p packet.Packet
 	for {
 		p, err = packets.Next()
@@ -311,7 +311,7 @@ func readToNextPublicKey(packets *packet.Reader) (err error) { log.DebugLog()
 
 // ReadEntity reads an entity (public key, identities, subkeys etc) from the
 // given Reader.
-func ReadEntity(packets *packet.Reader) (*Entity, error) { log.DebugLog()
+func ReadEntity(packets *packet.Reader) (*Entity, error) { 
 	e := new(Entity)
 	e.Identities = make(map[string]*Identity)
 
@@ -426,7 +426,7 @@ EachPacket:
 	return e, nil
 }
 
-func addSubkey(e *Entity, packets *packet.Reader, pub *packet.PublicKey, priv *packet.PrivateKey) error { log.DebugLog()
+func addSubkey(e *Entity, packets *packet.Reader, pub *packet.PublicKey, priv *packet.PrivateKey) error { 
 	var subKey Subkey
 	subKey.PublicKey = pub
 	subKey.PrivateKey = priv
@@ -459,7 +459,7 @@ const defaultRSAKeyBits = 2048
 // single identity composed of the given full name, comment and email, any of
 // which may be empty but must not contain any of "()<>\x00".
 // If config is nil, sensible defaults will be used.
-func NewEntity(name, comment, email string, config *packet.Config) (*Entity, error) { log.DebugLog()
+func NewEntity(name, comment, email string, config *packet.Config) (*Entity, error) { 
 	currentTime := config.Now()
 
 	bits := defaultRSAKeyBits
@@ -533,7 +533,7 @@ func NewEntity(name, comment, email string, config *packet.Config) (*Entity, err
 // the given Writer. For now, it must only be used on an Entity returned from
 // NewEntity.
 // If config is nil, sensible defaults will be used.
-func (e *Entity) SerializePrivate(w io.Writer, config *packet.Config) (err error) { log.DebugLog()
+func (e *Entity) SerializePrivate(w io.Writer, config *packet.Config) (err error) { 
 	err = e.PrivateKey.Serialize(w)
 	if err != nil {
 		return
@@ -571,7 +571,7 @@ func (e *Entity) SerializePrivate(w io.Writer, config *packet.Config) (err error
 
 // Serialize writes the public part of the given Entity to w. (No private
 // key material will be output).
-func (e *Entity) Serialize(w io.Writer) error { log.DebugLog()
+func (e *Entity) Serialize(w io.Writer) error { 
 	err := e.PrimaryKey.Serialize(w)
 	if err != nil {
 		return err
@@ -610,7 +610,7 @@ func (e *Entity) Serialize(w io.Writer) error { log.DebugLog()
 // e.Identities and the private key of signer must have been decrypted if
 // necessary.
 // If config is nil, sensible defaults will be used.
-func (e *Entity) SignIdentity(identity string, signer *Entity, config *packet.Config) error { log.DebugLog()
+func (e *Entity) SignIdentity(identity string, signer *Entity, config *packet.Config) error { 
 	if signer.PrivateKey == nil {
 		return errors.InvalidArgumentError("signing Entity must have a private key")
 	}

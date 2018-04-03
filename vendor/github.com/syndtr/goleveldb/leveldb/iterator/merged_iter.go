@@ -35,14 +35,14 @@ type mergedIterator struct {
 	releaser util.Releaser
 }
 
-func assertKey(key []byte) []byte { log.DebugLog()
+func assertKey(key []byte) []byte { 
 	if key == nil {
 		panic("leveldb/iterator: nil key")
 	}
 	return key
 }
 
-func (i *mergedIterator) iterErr(iter Iterator) bool { log.DebugLog()
+func (i *mergedIterator) iterErr(iter Iterator) bool { 
 	if err := iter.Error(); err != nil {
 		if i.errf != nil {
 			i.errf(err)
@@ -55,11 +55,11 @@ func (i *mergedIterator) iterErr(iter Iterator) bool { log.DebugLog()
 	return false
 }
 
-func (i *mergedIterator) Valid() bool { log.DebugLog()
+func (i *mergedIterator) Valid() bool { 
 	return i.err == nil && i.dir > dirEOI
 }
 
-func (i *mergedIterator) First() bool { log.DebugLog()
+func (i *mergedIterator) First() bool { 
 	if i.err != nil {
 		return false
 	} else if i.dir == dirReleased {
@@ -81,7 +81,7 @@ func (i *mergedIterator) First() bool { log.DebugLog()
 	return i.next()
 }
 
-func (i *mergedIterator) Last() bool { log.DebugLog()
+func (i *mergedIterator) Last() bool { 
 	if i.err != nil {
 		return false
 	} else if i.dir == dirReleased {
@@ -103,7 +103,7 @@ func (i *mergedIterator) Last() bool { log.DebugLog()
 	return i.prev()
 }
 
-func (i *mergedIterator) Seek(key []byte) bool { log.DebugLog()
+func (i *mergedIterator) Seek(key []byte) bool { 
 	if i.err != nil {
 		return false
 	} else if i.dir == dirReleased {
@@ -125,7 +125,7 @@ func (i *mergedIterator) Seek(key []byte) bool { log.DebugLog()
 	return i.next()
 }
 
-func (i *mergedIterator) next() bool { log.DebugLog()
+func (i *mergedIterator) next() bool { 
 	var key []byte
 	if i.dir == dirForward {
 		key = i.keys[i.index]
@@ -144,7 +144,7 @@ func (i *mergedIterator) next() bool { log.DebugLog()
 	return true
 }
 
-func (i *mergedIterator) Next() bool { log.DebugLog()
+func (i *mergedIterator) Next() bool { 
 	if i.dir == dirEOI || i.err != nil {
 		return false
 	} else if i.dir == dirReleased {
@@ -176,7 +176,7 @@ func (i *mergedIterator) Next() bool { log.DebugLog()
 	return i.next()
 }
 
-func (i *mergedIterator) prev() bool { log.DebugLog()
+func (i *mergedIterator) prev() bool { 
 	var key []byte
 	if i.dir == dirBackward {
 		key = i.keys[i.index]
@@ -195,7 +195,7 @@ func (i *mergedIterator) prev() bool { log.DebugLog()
 	return true
 }
 
-func (i *mergedIterator) Prev() bool { log.DebugLog()
+func (i *mergedIterator) Prev() bool { 
 	if i.dir == dirSOI || i.err != nil {
 		return false
 	} else if i.dir == dirReleased {
@@ -237,21 +237,21 @@ func (i *mergedIterator) Prev() bool { log.DebugLog()
 	return i.prev()
 }
 
-func (i *mergedIterator) Key() []byte { log.DebugLog()
+func (i *mergedIterator) Key() []byte { 
 	if i.err != nil || i.dir <= dirEOI {
 		return nil
 	}
 	return i.keys[i.index]
 }
 
-func (i *mergedIterator) Value() []byte { log.DebugLog()
+func (i *mergedIterator) Value() []byte { 
 	if i.err != nil || i.dir <= dirEOI {
 		return nil
 	}
 	return i.iters[i.index].Value()
 }
 
-func (i *mergedIterator) Release() { log.DebugLog()
+func (i *mergedIterator) Release() { 
 	if i.dir != dirReleased {
 		i.dir = dirReleased
 		for _, iter := range i.iters {
@@ -266,7 +266,7 @@ func (i *mergedIterator) Release() { log.DebugLog()
 	}
 }
 
-func (i *mergedIterator) SetReleaser(releaser util.Releaser) { log.DebugLog()
+func (i *mergedIterator) SetReleaser(releaser util.Releaser) { 
 	if i.dir == dirReleased {
 		panic(util.ErrReleased)
 	}
@@ -276,11 +276,11 @@ func (i *mergedIterator) SetReleaser(releaser util.Releaser) { log.DebugLog()
 	i.releaser = releaser
 }
 
-func (i *mergedIterator) Error() error { log.DebugLog()
+func (i *mergedIterator) Error() error { 
 	return i.err
 }
 
-func (i *mergedIterator) SetErrorCallback(f func(err error)) { log.DebugLog()
+func (i *mergedIterator) SetErrorCallback(f func(err error)) { 
 	i.errf = f
 }
 
@@ -294,7 +294,7 @@ func (i *mergedIterator) SetErrorCallback(f func(err error)) { log.DebugLog()
 // If strict is true the any 'corruption errors' (i.e errors.IsCorrupted(err) == true)
 // won't be ignored and will halt 'merged iterator', otherwise the iterator will
 // continue to the next 'input iterator'.
-func NewMergedIterator(iters []Iterator, cmp comparer.Comparer, strict bool) Iterator { log.DebugLog()
+func NewMergedIterator(iters []Iterator, cmp comparer.Comparer, strict bool) Iterator { 
 	return &mergedIterator{
 		iters:  iters,
 		cmp:    cmp,

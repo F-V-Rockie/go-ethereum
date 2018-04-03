@@ -10,15 +10,15 @@ import "bytes"
 
 type bytesComparer struct{}
 
-func (bytesComparer) Compare(a, b []byte) int { log.DebugLog()
+func (bytesComparer) Compare(a, b []byte) int { 
 	return bytes.Compare(a, b)
 }
 
-func (bytesComparer) Name() string { log.DebugLog()
+func (bytesComparer) Name() string { 
 	return "leveldb.BytewiseComparator"
 }
 
-func (bytesComparer) Separator(dst, a, b []byte) []byte { log.DebugLog()
+func (bytesComparer) Separator(dst, a, b []byte) []byte { 
 	i, n := 0, len(a)
 	if n > len(b) {
 		n = len(b)
@@ -35,7 +35,7 @@ func (bytesComparer) Separator(dst, a, b []byte) []byte { log.DebugLog()
 	return nil
 }
 
-func (bytesComparer) Successor(dst, b []byte) []byte { log.DebugLog()
+func (bytesComparer) Successor(dst, b []byte) []byte { 
 	for i, c := range b {
 		if c != 0xff {
 			dst = append(dst, b[:i+1]...)

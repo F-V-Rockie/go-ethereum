@@ -14,6 +14,6 @@ type IEnumVARIANTVtbl struct {
 	Clone uintptr
 }
 
-func (v *IEnumVARIANT) VTable() *IEnumVARIANTVtbl { log.DebugLog()
+func (v *IEnumVARIANT) VTable() *IEnumVARIANTVtbl { 
 	return (*IEnumVARIANTVtbl)(unsafe.Pointer(v.RawVTable))
 }

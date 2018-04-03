@@ -3,7 +3,7 @@ package oleutil
 import ole "github.com/go-ole/go-ole"
 
 // ClassIDFrom retrieves class ID whether given is program ID or application string.
-func ClassIDFrom(programID string) (classID *ole.GUID, err error) { log.DebugLog()
+func ClassIDFrom(programID string) (classID *ole.GUID, err error) { 
 	return ole.ClassIDFrom(programID)
 }
 
@@ -12,7 +12,7 @@ func ClassIDFrom(programID string) (classID *ole.GUID, err error) { log.DebugLog
 // Only supports IUnknown.
 //
 // Program ID can be either program ID or application string.
-func CreateObject(programID string) (unknown *ole.IUnknown, err error) { log.DebugLog()
+func CreateObject(programID string) (unknown *ole.IUnknown, err error) { 
 	classID, err := ole.ClassIDFrom(programID)
 	if err != nil {
 		return
@@ -32,7 +32,7 @@ func CreateObject(programID string) (unknown *ole.IUnknown, err error) { log.Deb
 // Only supports IUnknown.
 //
 // Program ID can be either program ID or application string.
-func GetActiveObject(programID string) (unknown *ole.IUnknown, err error) { log.DebugLog()
+func GetActiveObject(programID string) (unknown *ole.IUnknown, err error) { 
 	classID, err := ole.ClassIDFrom(programID)
 	if err != nil {
 		return
@@ -47,12 +47,12 @@ func GetActiveObject(programID string) (unknown *ole.IUnknown, err error) { log.
 }
 
 // CallMethod calls method on IDispatch with parameters.
-func CallMethod(disp *ole.IDispatch, name string, params ...interface{}) (result *ole.VARIANT, err error) { log.DebugLog()
+func CallMethod(disp *ole.IDispatch, name string, params ...interface{}) (result *ole.VARIANT, err error) { 
 	return disp.InvokeWithOptionalArgs(name, ole.DISPATCH_METHOD, params)
 }
 
 // MustCallMethod calls method on IDispatch with parameters or panics.
-func MustCallMethod(disp *ole.IDispatch, name string, params ...interface{}) (result *ole.VARIANT) { log.DebugLog()
+func MustCallMethod(disp *ole.IDispatch, name string, params ...interface{}) (result *ole.VARIANT) { 
 	r, err := CallMethod(disp, name, params...)
 	if err != nil {
 		panic(err.Error())
@@ -61,12 +61,12 @@ func MustCallMethod(disp *ole.IDispatch, name string, params ...interface{}) (re
 }
 
 // GetProperty retrieves property from IDispatch.
-func GetProperty(disp *ole.IDispatch, name string, params ...interface{}) (result *ole.VARIANT, err error) { log.DebugLog()
+func GetProperty(disp *ole.IDispatch, name string, params ...interface{}) (result *ole.VARIANT, err error) { 
 	return disp.InvokeWithOptionalArgs(name, ole.DISPATCH_PROPERTYGET, params)
 }
 
 // MustGetProperty retrieves property from IDispatch or panics.
-func MustGetProperty(disp *ole.IDispatch, name string, params ...interface{}) (result *ole.VARIANT) { log.DebugLog()
+func MustGetProperty(disp *ole.IDispatch, name string, params ...interface{}) (result *ole.VARIANT) { 
 	r, err := GetProperty(disp, name, params...)
 	if err != nil {
 		panic(err.Error())
@@ -75,12 +75,12 @@ func MustGetProperty(disp *ole.IDispatch, name string, params ...interface{}) (r
 }
 
 // PutProperty mutates property.
-func PutProperty(disp *ole.IDispatch, name string, params ...interface{}) (result *ole.VARIANT, err error) { log.DebugLog()
+func PutProperty(disp *ole.IDispatch, name string, params ...interface{}) (result *ole.VARIANT, err error) { 
 	return disp.InvokeWithOptionalArgs(name, ole.DISPATCH_PROPERTYPUT, params)
 }
 
 // MustPutProperty mutates property or panics.
-func MustPutProperty(disp *ole.IDispatch, name string, params ...interface{}) (result *ole.VARIANT) { log.DebugLog()
+func MustPutProperty(disp *ole.IDispatch, name string, params ...interface{}) (result *ole.VARIANT) { 
 	r, err := PutProperty(disp, name, params...)
 	if err != nil {
 		panic(err.Error())
@@ -89,12 +89,12 @@ func MustPutProperty(disp *ole.IDispatch, name string, params ...interface{}) (r
 }
 
 // PutPropertyRef mutates property reference.
-func PutPropertyRef(disp *ole.IDispatch, name string, params ...interface{}) (result *ole.VARIANT, err error) { log.DebugLog()
+func PutPropertyRef(disp *ole.IDispatch, name string, params ...interface{}) (result *ole.VARIANT, err error) { 
 	return disp.InvokeWithOptionalArgs(name, ole.DISPATCH_PROPERTYPUTREF, params)
 }
 
 // MustPutPropertyRef mutates property reference or panics.
-func MustPutPropertyRef(disp *ole.IDispatch, name string, params ...interface{}) (result *ole.VARIANT) { log.DebugLog()
+func MustPutPropertyRef(disp *ole.IDispatch, name string, params ...interface{}) (result *ole.VARIANT) { 
 	r, err := PutPropertyRef(disp, name, params...)
 	if err != nil {
 		panic(err.Error())
@@ -102,7 +102,7 @@ func MustPutPropertyRef(disp *ole.IDispatch, name string, params ...interface{})
 	return r
 }
 
-func ForEach(disp *ole.IDispatch, f func(v *ole.VARIANT) error) error { log.DebugLog()
+func ForEach(disp *ole.IDispatch, f func(v *ole.VARIANT) error) error { 
 	newEnum, err := disp.GetProperty("_NewEnum")
 	if err != nil {
 		return err

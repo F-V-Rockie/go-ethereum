@@ -67,70 +67,70 @@ type sessionRecord struct {
 	err     error
 }
 
-func (p *sessionRecord) has(rec int) bool { log.DebugLog()
+func (p *sessionRecord) has(rec int) bool { 
 	return p.hasRec&(1<<uint(rec)) != 0
 }
 
-func (p *sessionRecord) setComparer(name string) { log.DebugLog()
+func (p *sessionRecord) setComparer(name string) { 
 	p.hasRec |= 1 << recComparer
 	p.comparer = name
 }
 
-func (p *sessionRecord) setJournalNum(num int64) { log.DebugLog()
+func (p *sessionRecord) setJournalNum(num int64) { 
 	p.hasRec |= 1 << recJournalNum
 	p.journalNum = num
 }
 
-func (p *sessionRecord) setPrevJournalNum(num int64) { log.DebugLog()
+func (p *sessionRecord) setPrevJournalNum(num int64) { 
 	p.hasRec |= 1 << recPrevJournalNum
 	p.prevJournalNum = num
 }
 
-func (p *sessionRecord) setNextFileNum(num int64) { log.DebugLog()
+func (p *sessionRecord) setNextFileNum(num int64) { 
 	p.hasRec |= 1 << recNextFileNum
 	p.nextFileNum = num
 }
 
-func (p *sessionRecord) setSeqNum(num uint64) { log.DebugLog()
+func (p *sessionRecord) setSeqNum(num uint64) { 
 	p.hasRec |= 1 << recSeqNum
 	p.seqNum = num
 }
 
-func (p *sessionRecord) addCompPtr(level int, ikey internalKey) { log.DebugLog()
+func (p *sessionRecord) addCompPtr(level int, ikey internalKey) { 
 	p.hasRec |= 1 << recCompPtr
 	p.compPtrs = append(p.compPtrs, cpRecord{level, ikey})
 }
 
-func (p *sessionRecord) resetCompPtrs() { log.DebugLog()
+func (p *sessionRecord) resetCompPtrs() { 
 	p.hasRec &= ^(1 << recCompPtr)
 	p.compPtrs = p.compPtrs[:0]
 }
 
-func (p *sessionRecord) addTable(level int, num, size int64, imin, imax internalKey) { log.DebugLog()
+func (p *sessionRecord) addTable(level int, num, size int64, imin, imax internalKey) { 
 	p.hasRec |= 1 << recAddTable
 	p.addedTables = append(p.addedTables, atRecord{level, num, size, imin, imax})
 }
 
-func (p *sessionRecord) addTableFile(level int, t *tFile) { log.DebugLog()
+func (p *sessionRecord) addTableFile(level int, t *tFile) { 
 	p.addTable(level, t.fd.Num, t.size, t.imin, t.imax)
 }
 
-func (p *sessionRecord) resetAddedTables() { log.DebugLog()
+func (p *sessionRecord) resetAddedTables() { 
 	p.hasRec &= ^(1 << recAddTable)
 	p.addedTables = p.addedTables[:0]
 }
 
-func (p *sessionRecord) delTable(level int, num int64) { log.DebugLog()
+func (p *sessionRecord) delTable(level int, num int64) { 
 	p.hasRec |= 1 << recDelTable
 	p.deletedTables = append(p.deletedTables, dtRecord{level, num})
 }
 
-func (p *sessionRecord) resetDeletedTables() { log.DebugLog()
+func (p *sessionRecord) resetDeletedTables() { 
 	p.hasRec &= ^(1 << recDelTable)
 	p.deletedTables = p.deletedTables[:0]
 }
 
-func (p *sessionRecord) putUvarint(w io.Writer, x uint64) { log.DebugLog()
+func (p *sessionRecord) putUvarint(w io.Writer, x uint64) { 
 	if p.err != nil {
 		return
 	}
@@ -138,14 +138,14 @@ func (p *sessionRecord) putUvarint(w io.Writer, x uint64) { log.DebugLog()
 	_, p.err = w.Write(p.scratch[:n])
 }
 
-func (p *sessionRecord) putVarint(w io.Writer, x int64) { log.DebugLog()
+func (p *sessionRecord) putVarint(w io.Writer, x int64) { 
 	if x < 0 {
 		panic("invalid negative value")
 	}
 	p.putUvarint(w, uint64(x))
 }
 
-func (p *sessionRecord) putBytes(w io.Writer, x []byte) { log.DebugLog()
+func (p *sessionRecord) putBytes(w io.Writer, x []byte) { 
 	if p.err != nil {
 		return
 	}
@@ -156,7 +156,7 @@ func (p *sessionRecord) putBytes(w io.Writer, x []byte) { log.DebugLog()
 	_, p.err = w.Write(x)
 }
 
-func (p *sessionRecord) encode(w io.Writer) error { log.DebugLog()
+func (p *sessionRecord) encode(w io.Writer) error { 
 	p.err = nil
 	if p.has(recComparer) {
 		p.putUvarint(w, recComparer)
@@ -195,7 +195,7 @@ func (p *sessionRecord) encode(w io.Writer) error { log.DebugLog()
 	return p.err
 }
 
-func (p *sessionRecord) readUvarintMayEOF(field string, r io.ByteReader, mayEOF bool) uint64 { log.DebugLog()
+func (p *sessionRecord) readUvarintMayEOF(field string, r io.ByteReader, mayEOF bool) uint64 { 
 	if p.err != nil {
 		return 0
 	}
@@ -213,11 +213,11 @@ func (p *sessionRecord) readUvarintMayEOF(field string, r io.ByteReader, mayEOF 
 	return x
 }
 
-func (p *sessionRecord) readUvarint(field string, r io.ByteReader) uint64 { log.DebugLog()
+func (p *sessionRecord) readUvarint(field string, r io.ByteReader) uint64 { 
 	return p.readUvarintMayEOF(field, r, false)
 }
 
-func (p *sessionRecord) readVarint(field string, r io.ByteReader) int64 { log.DebugLog()
+func (p *sessionRecord) readVarint(field string, r io.ByteReader) int64 { 
 	x := int64(p.readUvarintMayEOF(field, r, false))
 	if x < 0 {
 		p.err = errors.NewErrCorrupted(storage.FileDesc{}, &ErrManifestCorrupted{field, "invalid negative value"})
@@ -225,7 +225,7 @@ func (p *sessionRecord) readVarint(field string, r io.ByteReader) int64 { log.De
 	return x
 }
 
-func (p *sessionRecord) readBytes(field string, r byteReader) []byte { log.DebugLog()
+func (p *sessionRecord) readBytes(field string, r byteReader) []byte { 
 	if p.err != nil {
 		return nil
 	}
@@ -244,7 +244,7 @@ func (p *sessionRecord) readBytes(field string, r byteReader) []byte { log.Debug
 	return x
 }
 
-func (p *sessionRecord) readLevel(field string, r io.ByteReader) int { log.DebugLog()
+func (p *sessionRecord) readLevel(field string, r io.ByteReader) int { 
 	if p.err != nil {
 		return 0
 	}
@@ -255,7 +255,7 @@ func (p *sessionRecord) readLevel(field string, r io.ByteReader) int { log.Debug
 	return int(x)
 }
 
-func (p *sessionRecord) decode(r io.Reader) error { log.DebugLog()
+func (p *sessionRecord) decode(r io.Reader) error { 
 	br, ok := r.(byteReader)
 	if !ok {
 		br = bufio.NewReader(r)

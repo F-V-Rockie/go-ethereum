@@ -13,15 +13,15 @@ type _stringObject interface {
 
 type _stringASCII string
 
-func (str _stringASCII) Length() int { log.DebugLog()
+func (str _stringASCII) Length() int { 
 	return len(str)
 }
 
-func (str _stringASCII) At(at int) rune { log.DebugLog()
+func (str _stringASCII) At(at int) rune { 
 	return rune(str[at])
 }
 
-func (str _stringASCII) String() string { log.DebugLog()
+func (str _stringASCII) String() string { 
 	return string(str)
 }
 
@@ -31,22 +31,22 @@ type _stringWide struct {
 	runes  []rune
 }
 
-func (str _stringWide) Length() int { log.DebugLog()
+func (str _stringWide) Length() int { 
 	return str.length
 }
 
-func (str _stringWide) At(at int) rune { log.DebugLog()
+func (str _stringWide) At(at int) rune { 
 	if str.runes == nil {
 		str.runes = []rune(str.string)
 	}
 	return str.runes[at]
 }
 
-func (str _stringWide) String() string { log.DebugLog()
+func (str _stringWide) String() string { 
 	return str.string
 }
 
-func _newStringObject(str string) _stringObject { log.DebugLog()
+func _newStringObject(str string) _stringObject { 
 	for i := 0; i < len(str); i++ {
 		if str[i] >= utf8.RuneSelf {
 			goto wide
@@ -62,14 +62,14 @@ wide:
 	}
 }
 
-func stringAt(str _stringObject, index int) rune { log.DebugLog()
+func stringAt(str _stringObject, index int) rune { 
 	if 0 <= index && index < str.Length() {
 		return str.At(index)
 	}
 	return utf8.RuneError
 }
 
-func (runtime *_runtime) newStringObject(value Value) *_object { log.DebugLog()
+func (runtime *_runtime) newStringObject(value Value) *_object { 
 	str := _newStringObject(value.string())
 
 	self := runtime.newClassObject("String")
@@ -79,14 +79,14 @@ func (runtime *_runtime) newStringObject(value Value) *_object { log.DebugLog()
 	return self
 }
 
-func (self *_object) stringValue() _stringObject { log.DebugLog()
+func (self *_object) stringValue() _stringObject { 
 	if str, ok := self.value.(_stringObject); ok {
 		return str
 	}
 	return nil
 }
 
-func stringEnumerate(self *_object, all bool, each func(string) bool) { log.DebugLog()
+func stringEnumerate(self *_object, all bool, each func(string) bool) { 
 	if str := self.stringValue(); str != nil {
 		length := str.Length()
 		for index := 0; index < length; index++ {
@@ -98,7 +98,7 @@ func stringEnumerate(self *_object, all bool, each func(string) bool) { log.Debu
 	objectEnumerate(self, all, each)
 }
 
-func stringGetOwnProperty(self *_object, name string) *_property { log.DebugLog()
+func stringGetOwnProperty(self *_object, name string) *_property { 
 	if property := objectGetOwnProperty(self, name); property != nil {
 		return property
 	}

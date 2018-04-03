@@ -33,7 +33,7 @@ const (
 // long-running operation. It will delay between requests for the duration specified in the
 // RetryAfter header or, if the header is absent, the passed delay. Polling may be canceled by
 // closing the optional channel on the http.Request.
-func DoPollForAsynchronous(delay time.Duration) autorest.SendDecorator { log.DebugLog()
+func DoPollForAsynchronous(delay time.Duration) autorest.SendDecorator { 
 	return func(s autorest.Sender) autorest.Sender {
 		return autorest.SenderFunc(func(r *http.Request) (resp *http.Response, err error) {
 			resp, err = s.Do(r)
@@ -73,15 +73,15 @@ func DoPollForAsynchronous(delay time.Duration) autorest.SendDecorator { log.Deb
 	}
 }
 
-func getAsyncOperation(resp *http.Response) string { log.DebugLog()
+func getAsyncOperation(resp *http.Response) string { 
 	return resp.Header.Get(http.CanonicalHeaderKey(headerAsyncOperation))
 }
 
-func hasSucceeded(state string) bool { log.DebugLog()
+func hasSucceeded(state string) bool { 
 	return state == operationSucceeded
 }
 
-func hasTerminated(state string) bool { log.DebugLog()
+func hasTerminated(state string) bool { 
 	switch state {
 	case operationCanceled, operationFailed, operationSucceeded:
 		return true
@@ -90,7 +90,7 @@ func hasTerminated(state string) bool { log.DebugLog()
 	}
 }
 
-func hasFailed(state string) bool { log.DebugLog()
+func hasFailed(state string) bool { 
 	return state == operationFailed
 }
 
@@ -115,15 +115,15 @@ type operationResource struct {
 	PercentComplete float64                `json:"percentComplete"`
 }
 
-func (or operationResource) state() string { log.DebugLog()
+func (or operationResource) state() string { 
 	return or.Status
 }
 
-func (or operationResource) hasSucceeded() bool { log.DebugLog()
+func (or operationResource) hasSucceeded() bool { 
 	return hasSucceeded(or.state())
 }
 
-func (or operationResource) hasTerminated() bool { log.DebugLog()
+func (or operationResource) hasTerminated() bool { 
 	return hasTerminated(or.state())
 }
 
@@ -136,19 +136,19 @@ type provisioningStatus struct {
 	ProvisioningError ServiceError           `json:"error,omitempty"`
 }
 
-func (ps provisioningStatus) state() string { log.DebugLog()
+func (ps provisioningStatus) state() string { 
 	return ps.Properties.ProvisioningState
 }
 
-func (ps provisioningStatus) hasSucceeded() bool { log.DebugLog()
+func (ps provisioningStatus) hasSucceeded() bool { 
 	return hasSucceeded(ps.state())
 }
 
-func (ps provisioningStatus) hasTerminated() bool { log.DebugLog()
+func (ps provisioningStatus) hasTerminated() bool { 
 	return hasTerminated(ps.state())
 }
 
-func (ps provisioningStatus) hasProvisioningError() bool { log.DebugLog()
+func (ps provisioningStatus) hasProvisioningError() bool { 
 	return ps.ProvisioningError != ServiceError{}
 }
 
@@ -168,19 +168,19 @@ type pollingState struct {
 	message        string
 }
 
-func (ps pollingState) hasSucceeded() bool { log.DebugLog()
+func (ps pollingState) hasSucceeded() bool { 
 	return hasSucceeded(ps.state)
 }
 
-func (ps pollingState) hasTerminated() bool { log.DebugLog()
+func (ps pollingState) hasTerminated() bool { 
 	return hasTerminated(ps.state)
 }
 
-func (ps pollingState) hasFailed() bool { log.DebugLog()
+func (ps pollingState) hasFailed() bool { 
 	return hasFailed(ps.state)
 }
 
-func (ps pollingState) Error() string { log.DebugLog()
+func (ps pollingState) Error() string { 
 	return fmt.Sprintf("Long running operation terminated with status '%s': Code=%q Message=%q", ps.state, ps.code, ps.message)
 }
 
@@ -191,7 +191,7 @@ func (ps pollingState) Error() string { log.DebugLog()
 //	status code. Subsequent requests will read an Azure OperationResource object if the
 //	service initially returned the Azure-AsyncOperation header. The responseFormat field notes
 //	the expected response format.
-func updatePollingState(resp *http.Response, ps *pollingState) error { log.DebugLog()
+func updatePollingState(resp *http.Response, ps *pollingState) error { 
 	// Determine the response shape
 	// -- The first response will always be a provisioningStatus response; only the polling requests,
 	//    depending on the header returned, may be something otherwise.
@@ -291,7 +291,7 @@ func updatePollingState(resp *http.Response, ps *pollingState) error { log.Debug
 	return nil
 }
 
-func newPollingRequest(resp *http.Response, ps pollingState) (*http.Request, error) { log.DebugLog()
+func newPollingRequest(resp *http.Response, ps pollingState) (*http.Request, error) { 
 	req := resp.Request
 	if req == nil {
 		return nil, autorest.NewError("azure", "newPollingRequest", "Azure Polling Error - Original HTTP request is missing")

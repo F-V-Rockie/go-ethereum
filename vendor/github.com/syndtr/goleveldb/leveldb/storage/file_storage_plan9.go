@@ -14,11 +14,11 @@ type plan9FileLock struct {
 	f *os.File
 }
 
-func (fl *plan9FileLock) release() error { log.DebugLog()
+func (fl *plan9FileLock) release() error { 
 	return fl.f.Close()
 }
 
-func newFileLock(path string, readOnly bool) (fl fileLock, err error) { log.DebugLog()
+func newFileLock(path string, readOnly bool) (fl fileLock, err error) { 
 	var (
 		flag int
 		perm os.FileMode
@@ -40,7 +40,7 @@ func newFileLock(path string, readOnly bool) (fl fileLock, err error) { log.Debu
 	return
 }
 
-func rename(oldpath, newpath string) error { log.DebugLog()
+func rename(oldpath, newpath string) error { 
 	if _, err := os.Stat(newpath); err == nil {
 		if err := os.Remove(newpath); err != nil {
 			return err
@@ -50,7 +50,7 @@ func rename(oldpath, newpath string) error { log.DebugLog()
 	return os.Rename(oldpath, newpath)
 }
 
-func syncDir(name string) error { log.DebugLog()
+func syncDir(name string) error { 
 	f, err := os.Open(name)
 	if err != nil {
 		return err

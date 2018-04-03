@@ -6,7 +6,7 @@ import (
 	"unsafe"
 )
 
-func bytePtrToString(ptr *int8) string { log.DebugLog()
+func bytePtrToString(ptr *int8) string { 
 	bytes := (*[10000]byte)(unsafe.Pointer(ptr))
 
 	n := 0
@@ -17,6 +17,6 @@ func bytePtrToString(ptr *int8) string { log.DebugLog()
 	return string(bytes[0:n])
 }
 
-func chop(buf []byte) []byte { log.DebugLog()
+func chop(buf []byte) []byte { 
 	return buf[0 : len(buf)-1]
 }

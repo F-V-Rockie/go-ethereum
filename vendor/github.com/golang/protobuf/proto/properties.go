@@ -106,7 +106,7 @@ type tagMap struct {
 // the tagMap slice rather than its map.
 const tagMapFastLimit = 1024
 
-func (p *tagMap) get(t int) (int, bool) { log.DebugLog()
+func (p *tagMap) get(t int) (int, bool) { 
 	if t > 0 && t < tagMapFastLimit {
 		if t >= len(p.fastTags) {
 			return 0, false
@@ -118,7 +118,7 @@ func (p *tagMap) get(t int) (int, bool) { log.DebugLog()
 	return fi, ok
 }
 
-func (p *tagMap) put(t int, fi int) { log.DebugLog()
+func (p *tagMap) put(t int, fi int) { 
 	if t > 0 && t < tagMapFastLimit {
 		for len(p.fastTags) < t+1 {
 			p.fastTags = append(p.fastTags, -1)
@@ -163,11 +163,11 @@ type OneofProperties struct {
 // Implement the sorting interface so we can sort the fields in tag order, as recommended by the spec.
 // See encode.go, (*Buffer).enc_struct.
 
-func (sp *StructProperties) Len() int { log.DebugLog() return len(sp.order) }
-func (sp *StructProperties) Less(i, j int) bool { log.DebugLog()
+func (sp *StructProperties) Len() int {  return len(sp.order) }
+func (sp *StructProperties) Less(i, j int) bool { 
 	return sp.Prop[sp.order[i]].Tag < sp.Prop[sp.order[j]].Tag
 }
-func (sp *StructProperties) Swap(i, j int) { log.DebugLog() sp.order[i], sp.order[j] = sp.order[j], sp.order[i] }
+func (sp *StructProperties) Swap(i, j int) {  sp.order[i], sp.order[j] = sp.order[j], sp.order[i] }
 
 // Properties represents the protocol-specific behavior of a single struct field.
 type Properties struct {
@@ -214,7 +214,7 @@ type Properties struct {
 }
 
 // String formats the properties in the protobuf struct field tag style.
-func (p *Properties) String() string { log.DebugLog()
+func (p *Properties) String() string { 
 	s := p.Wire
 	s = ","
 	s += strconv.Itoa(p.Tag)
@@ -250,7 +250,7 @@ func (p *Properties) String() string { log.DebugLog()
 }
 
 // Parse populates p by parsing a string in the protobuf struct field tag style.
-func (p *Properties) Parse(s string) { log.DebugLog()
+func (p *Properties) Parse(s string) { 
 	// "bytes,49,opt,name=foo,def=hello!"
 	fields := strings.Split(s, ",") // breaks def=, but handled below.
 	if len(fields) < 2 {
@@ -332,14 +332,14 @@ func (p *Properties) Parse(s string) { log.DebugLog()
 	}
 }
 
-func logNoSliceEnc(t1, t2 reflect.Type) { log.DebugLog()
+func logNoSliceEnc(t1, t2 reflect.Type) { 
 	fmt.Fprintf(os.Stderr, "proto: no slice oenc for %T = []%T\n", t1, t2)
 }
 
 var protoMessageType = reflect.TypeOf((*Message)(nil)).Elem()
 
 // Initialize the fields for encoding and decoding.
-func (p *Properties) setEncAndDec(typ reflect.Type, f *reflect.StructField, lockGetProp bool) { log.DebugLog()
+func (p *Properties) setEncAndDec(typ reflect.Type, f *reflect.StructField, lockGetProp bool) { 
 	p.enc = nil
 	p.dec = nil
 	p.size = nil
@@ -591,7 +591,7 @@ var (
 )
 
 // isMarshaler reports whether type t implements Marshaler.
-func isMarshaler(t reflect.Type) bool { log.DebugLog()
+func isMarshaler(t reflect.Type) bool { 
 	// We're checking for (likely) pointer-receiver methods
 	// so if t is not a pointer, something is very wrong.
 	// The calls above only invoke isMarshaler on pointer types.
@@ -602,7 +602,7 @@ func isMarshaler(t reflect.Type) bool { log.DebugLog()
 }
 
 // isUnmarshaler reports whether type t implements Unmarshaler.
-func isUnmarshaler(t reflect.Type) bool { log.DebugLog()
+func isUnmarshaler(t reflect.Type) bool { 
 	// We're checking for (likely) pointer-receiver methods
 	// so if t is not a pointer, something is very wrong.
 	// The calls above only invoke isUnmarshaler on pointer types.
@@ -613,11 +613,11 @@ func isUnmarshaler(t reflect.Type) bool { log.DebugLog()
 }
 
 // Init populates the properties from a protocol buffer struct tag.
-func (p *Properties) Init(typ reflect.Type, name, tag string, f *reflect.StructField) { log.DebugLog()
+func (p *Properties) Init(typ reflect.Type, name, tag string, f *reflect.StructField) { 
 	p.init(typ, name, tag, f, true)
 }
 
-func (p *Properties) init(typ reflect.Type, name, tag string, f *reflect.StructField, lockGetProp bool) { log.DebugLog()
+func (p *Properties) init(typ reflect.Type, name, tag string, f *reflect.StructField, lockGetProp bool) { 
 	// "bytes,49,opt,def=hello!"
 	p.Name = name
 	p.OrigName = name
@@ -638,7 +638,7 @@ var (
 
 // GetProperties returns the list of properties for the type represented by t.
 // t must represent a generated struct type of a protocol message.
-func GetProperties(t reflect.Type) *StructProperties { log.DebugLog()
+func GetProperties(t reflect.Type) *StructProperties { 
 	if t.Kind() != reflect.Struct {
 		panic("proto: type must have kind struct")
 	}
@@ -662,7 +662,7 @@ func GetProperties(t reflect.Type) *StructProperties { log.DebugLog()
 }
 
 // getPropertiesLocked requires that propertiesMu is held.
-func getPropertiesLocked(t reflect.Type) *StructProperties { log.DebugLog()
+func getPropertiesLocked(t reflect.Type) *StructProperties { 
 	if prop, ok := propertiesMap[t]; ok {
 		if collectStats {
 			stats.Chit++
@@ -780,7 +780,7 @@ func getPropertiesLocked(t reflect.Type) *StructProperties { log.DebugLog()
 }
 
 // Return the Properties object for the x[0]'th field of the structure.
-func propByIndex(t reflect.Type, x []int) *Properties { log.DebugLog()
+func propByIndex(t reflect.Type, x []int) *Properties { 
 	if len(x) != 1 {
 		fmt.Fprintf(os.Stderr, "proto: field index dimension %d (not 1) for type %s\n", len(x), t)
 		return nil
@@ -790,7 +790,7 @@ func propByIndex(t reflect.Type, x []int) *Properties { log.DebugLog()
 }
 
 // Get the address and type of a pointer to a struct from an interface.
-func getbase(pb Message) (t reflect.Type, b structPointer, err error) { log.DebugLog()
+func getbase(pb Message) (t reflect.Type, b structPointer, err error) { 
 	if pb == nil {
 		err = ErrNil
 		return
@@ -810,7 +810,7 @@ var enumValueMaps = make(map[string]map[string]int32)
 
 // RegisterEnum is called from the generated code to install the enum descriptor
 // maps into the global table to aid parsing text format protocol buffers.
-func RegisterEnum(typeName string, unusedNameMap map[int32]string, valueMap map[string]int32) { log.DebugLog()
+func RegisterEnum(typeName string, unusedNameMap map[int32]string, valueMap map[string]int32) { 
 	if _, ok := enumValueMaps[typeName]; ok {
 		panic("proto: duplicate enum registered: " + typeName)
 	}
@@ -819,7 +819,7 @@ func RegisterEnum(typeName string, unusedNameMap map[int32]string, valueMap map[
 
 // EnumValueMap returns the mapping from names to integers of the
 // enum type enumType, or a nil if not found.
-func EnumValueMap(enumType string) map[string]int32 { log.DebugLog()
+func EnumValueMap(enumType string) map[string]int32 { 
 	return enumValueMaps[enumType]
 }
 
@@ -832,7 +832,7 @@ var (
 
 // RegisterType is called from generated code and maps from the fully qualified
 // proto name to the type (pointer to struct) of the protocol buffer.
-func RegisterType(x Message, name string) { log.DebugLog()
+func RegisterType(x Message, name string) { 
 	if _, ok := protoTypes[name]; ok {
 		// TODO: Some day, make this a panic.
 		log.Printf("proto: duplicate proto type registered: %s", name)
@@ -844,7 +844,7 @@ func RegisterType(x Message, name string) { log.DebugLog()
 }
 
 // MessageName returns the fully-qualified proto name for the given message type.
-func MessageName(x Message) string { log.DebugLog()
+func MessageName(x Message) string { 
 	type xname interface {
 		XXX_MessageName() string
 	}
@@ -855,7 +855,7 @@ func MessageName(x Message) string { log.DebugLog()
 }
 
 // MessageType returns the message type (pointer to struct) for a named message.
-func MessageType(name string) reflect.Type { log.DebugLog() return protoTypes[name] }
+func MessageType(name string) reflect.Type {  return protoTypes[name] }
 
 // A registry of all linked proto files.
 var (
@@ -864,9 +864,9 @@ var (
 
 // RegisterFile is called from generated code and maps from the
 // full file name of a .proto file to its compressed FileDescriptorProto.
-func RegisterFile(filename string, fileDescriptor []byte) { log.DebugLog()
+func RegisterFile(filename string, fileDescriptor []byte) { 
 	protoFiles[filename] = fileDescriptor
 }
 
 // FileDescriptor returns the compressed FileDescriptorProto for a .proto file.
-func FileDescriptor(filename string) []byte { log.DebugLog() return protoFiles[filename] }
+func FileDescriptor(filename string) []byte {  return protoFiles[filename] }

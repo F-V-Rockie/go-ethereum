@@ -16,7 +16,7 @@ type SigningMethod interface {
 
 // Register the "alg" name and a factory function for signing method.
 // This is typically done during init() in the method's implementation
-func RegisterSigningMethod(alg string, f func() SigningMethod) { log.DebugLog()
+func RegisterSigningMethod(alg string, f func() SigningMethod) { 
 	signingMethodLock.Lock()
 	defer signingMethodLock.Unlock()
 
@@ -24,7 +24,7 @@ func RegisterSigningMethod(alg string, f func() SigningMethod) { log.DebugLog()
 }
 
 // Get a signing method from an "alg" string
-func GetSigningMethod(alg string) (method SigningMethod) { log.DebugLog()
+func GetSigningMethod(alg string) (method SigningMethod) { 
 	signingMethodLock.RLock()
 	defer signingMethodLock.RUnlock()
 

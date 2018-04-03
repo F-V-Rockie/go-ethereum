@@ -51,7 +51,7 @@ type CorsRule struct {
 	AllowedHeaders  string
 }
 
-func (c Client) getServiceProperties(service string, auth authentication) (*ServiceProperties, error) { log.DebugLog()
+func (c Client) getServiceProperties(service string, auth authentication) (*ServiceProperties, error) { 
 	query := url.Values{
 		"restype": {"service"},
 		"comp":    {"properties"},
@@ -78,7 +78,7 @@ func (c Client) getServiceProperties(service string, auth authentication) (*Serv
 	return &out, nil
 }
 
-func (c Client) setServiceProperties(props ServiceProperties, service string, auth authentication) error { log.DebugLog()
+func (c Client) setServiceProperties(props ServiceProperties, service string, auth authentication) error { 
 	query := url.Values{
 		"restype": {"service"},
 		"comp":    {"properties"},

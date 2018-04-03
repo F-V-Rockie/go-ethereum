@@ -30,7 +30,7 @@ var errInvalidBig5 = errors.New("traditionalchinese: invalid Big5 encoding")
 
 type big5Decoder struct{ transform.NopResetter }
 
-func (big5Decoder) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) { log.DebugLog()
+func (big5Decoder) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) { 
 	r, size, s := rune(0), 0, ""
 loop:
 	for ; nSrc < len(src); nSrc += size {
@@ -107,7 +107,7 @@ loop:
 
 type big5Encoder struct{ transform.NopResetter }
 
-func (big5Encoder) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) { log.DebugLog()
+func (big5Encoder) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) { 
 	r, size := rune(0), 0
 	for ; nSrc < len(src); nSrc += size {
 		r = rune(src[nSrc])
@@ -190,7 +190,7 @@ func (big5Encoder) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err e
 	return nDst, nSrc, err
 }
 
-func init() { log.DebugLog()
+func init() { 
 	// Check that the hard-coded encode switch covers all tables.
 	if numEncodeTables != 8 {
 		panic("bad numEncodeTables")

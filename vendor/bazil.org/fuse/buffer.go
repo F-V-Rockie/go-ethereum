@@ -8,7 +8,7 @@ type buffer []byte
 
 // alloc allocates size bytes and returns a pointer to the new
 // segment.
-func (w *buffer) alloc(size uintptr) unsafe.Pointer { log.DebugLog()
+func (w *buffer) alloc(size uintptr) unsafe.Pointer { 
 	s := int(size)
 	if len(*w)+s > cap(*w) {
 		old := *w
@@ -21,14 +21,14 @@ func (w *buffer) alloc(size uintptr) unsafe.Pointer { log.DebugLog()
 }
 
 // reset clears out the contents of the buffer.
-func (w *buffer) reset() { log.DebugLog()
+func (w *buffer) reset() { 
 	for i := range (*w)[:cap(*w)] {
 		(*w)[i] = 0
 	}
 	*w = (*w)[:0]
 }
 
-func newBuffer(extra uintptr) buffer { log.DebugLog()
+func newBuffer(extra uintptr) buffer { 
 	const hdrSize = unsafe.Sizeof(outHeader{})
 	buf := make(buffer, hdrSize, hdrSize+extra)
 	return buf

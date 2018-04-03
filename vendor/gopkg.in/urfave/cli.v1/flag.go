@@ -40,15 +40,15 @@ var FlagStringer FlagStringFunc = stringifyFlag
 // FlagsByName is a slice of Flag.
 type FlagsByName []Flag
 
-func (f FlagsByName) Len() int { log.DebugLog()
+func (f FlagsByName) Len() int { 
 	return len(f)
 }
 
-func (f FlagsByName) Less(i, j int) bool { log.DebugLog()
+func (f FlagsByName) Less(i, j int) bool { 
 	return f[i].GetName() < f[j].GetName()
 }
 
-func (f FlagsByName) Swap(i, j int) { log.DebugLog()
+func (f FlagsByName) Swap(i, j int) { 
 	f[i], f[j] = f[j], f[i]
 }
 
@@ -71,7 +71,7 @@ type errorableFlag interface {
 	ApplyWithError(*flag.FlagSet) error
 }
 
-func flagSet(name string, flags []Flag) (*flag.FlagSet, error) { log.DebugLog()
+func flagSet(name string, flags []Flag) (*flag.FlagSet, error) { 
 	set := flag.NewFlagSet(name, flag.ContinueOnError)
 
 	for _, f := range flags {
@@ -87,7 +87,7 @@ func flagSet(name string, flags []Flag) (*flag.FlagSet, error) { log.DebugLog()
 	return set, nil
 }
 
-func eachName(longName string, fn func(string)) { log.DebugLog()
+func eachName(longName string, fn func(string)) { 
 	parts := strings.Split(longName, ",")
 	for _, name := range parts {
 		name = strings.Trim(name, " ")
@@ -104,13 +104,13 @@ type Generic interface {
 // Apply takes the flagset and calls Set on the generic flag with the value
 // provided by the user for parsing by the flag
 // Ignores parsing errors
-func (f GenericFlag) Apply(set *flag.FlagSet) { log.DebugLog()
+func (f GenericFlag) Apply(set *flag.FlagSet) { 
 	f.ApplyWithError(set)
 }
 
 // ApplyWithError takes the flagset and calls Set on the generic flag with the value
 // provided by the user for parsing by the flag
-func (f GenericFlag) ApplyWithError(set *flag.FlagSet) error { log.DebugLog()
+func (f GenericFlag) ApplyWithError(set *flag.FlagSet) error { 
 	val := f.Value
 	if f.EnvVar != "" {
 		for _, envVar := range strings.Split(f.EnvVar, ",") {
@@ -135,34 +135,34 @@ func (f GenericFlag) ApplyWithError(set *flag.FlagSet) error { log.DebugLog()
 type StringSlice []string
 
 // Set appends the string value to the list of values
-func (f *StringSlice) Set(value string) error { log.DebugLog()
+func (f *StringSlice) Set(value string) error { 
 	*f = append(*f, value)
 	return nil
 }
 
 // String returns a readable representation of this value (for usage defaults)
-func (f *StringSlice) String() string { log.DebugLog()
+func (f *StringSlice) String() string { 
 	return fmt.Sprintf("%s", *f)
 }
 
 // Value returns the slice of strings set by this flag
-func (f *StringSlice) Value() []string { log.DebugLog()
+func (f *StringSlice) Value() []string { 
 	return *f
 }
 
 // Get returns the slice of strings set by this flag
-func (f *StringSlice) Get() interface{} { log.DebugLog()
+func (f *StringSlice) Get() interface{} { 
 	return *f
 }
 
 // Apply populates the flag given the flag set and environment
 // Ignores errors
-func (f StringSliceFlag) Apply(set *flag.FlagSet) { log.DebugLog()
+func (f StringSliceFlag) Apply(set *flag.FlagSet) { 
 	f.ApplyWithError(set)
 }
 
 // ApplyWithError populates the flag given the flag set and environment
-func (f StringSliceFlag) ApplyWithError(set *flag.FlagSet) error { log.DebugLog()
+func (f StringSliceFlag) ApplyWithError(set *flag.FlagSet) error { 
 	if f.EnvVar != "" {
 		for _, envVar := range strings.Split(f.EnvVar, ",") {
 			envVar = strings.TrimSpace(envVar)
@@ -194,7 +194,7 @@ func (f StringSliceFlag) ApplyWithError(set *flag.FlagSet) error { log.DebugLog(
 type IntSlice []int
 
 // Set parses the value into an integer and appends it to the list of values
-func (f *IntSlice) Set(value string) error { log.DebugLog()
+func (f *IntSlice) Set(value string) error { 
 	tmp, err := strconv.Atoi(value)
 	if err != nil {
 		return err
@@ -204,28 +204,28 @@ func (f *IntSlice) Set(value string) error { log.DebugLog()
 }
 
 // String returns a readable representation of this value (for usage defaults)
-func (f *IntSlice) String() string { log.DebugLog()
+func (f *IntSlice) String() string { 
 	return fmt.Sprintf("%#v", *f)
 }
 
 // Value returns the slice of ints set by this flag
-func (f *IntSlice) Value() []int { log.DebugLog()
+func (f *IntSlice) Value() []int { 
 	return *f
 }
 
 // Get returns the slice of ints set by this flag
-func (f *IntSlice) Get() interface{} { log.DebugLog()
+func (f *IntSlice) Get() interface{} { 
 	return *f
 }
 
 // Apply populates the flag given the flag set and environment
 // Ignores errors
-func (f IntSliceFlag) Apply(set *flag.FlagSet) { log.DebugLog()
+func (f IntSliceFlag) Apply(set *flag.FlagSet) { 
 	f.ApplyWithError(set)
 }
 
 // ApplyWithError populates the flag given the flag set and environment
-func (f IntSliceFlag) ApplyWithError(set *flag.FlagSet) error { log.DebugLog()
+func (f IntSliceFlag) ApplyWithError(set *flag.FlagSet) error { 
 	if f.EnvVar != "" {
 		for _, envVar := range strings.Split(f.EnvVar, ",") {
 			envVar = strings.TrimSpace(envVar)
@@ -257,7 +257,7 @@ func (f IntSliceFlag) ApplyWithError(set *flag.FlagSet) error { log.DebugLog()
 type Int64Slice []int64
 
 // Set parses the value into an integer and appends it to the list of values
-func (f *Int64Slice) Set(value string) error { log.DebugLog()
+func (f *Int64Slice) Set(value string) error { 
 	tmp, err := strconv.ParseInt(value, 10, 64)
 	if err != nil {
 		return err
@@ -267,28 +267,28 @@ func (f *Int64Slice) Set(value string) error { log.DebugLog()
 }
 
 // String returns a readable representation of this value (for usage defaults)
-func (f *Int64Slice) String() string { log.DebugLog()
+func (f *Int64Slice) String() string { 
 	return fmt.Sprintf("%#v", *f)
 }
 
 // Value returns the slice of ints set by this flag
-func (f *Int64Slice) Value() []int64 { log.DebugLog()
+func (f *Int64Slice) Value() []int64 { 
 	return *f
 }
 
 // Get returns the slice of ints set by this flag
-func (f *Int64Slice) Get() interface{} { log.DebugLog()
+func (f *Int64Slice) Get() interface{} { 
 	return *f
 }
 
 // Apply populates the flag given the flag set and environment
 // Ignores errors
-func (f Int64SliceFlag) Apply(set *flag.FlagSet) { log.DebugLog()
+func (f Int64SliceFlag) Apply(set *flag.FlagSet) { 
 	f.ApplyWithError(set)
 }
 
 // ApplyWithError populates the flag given the flag set and environment
-func (f Int64SliceFlag) ApplyWithError(set *flag.FlagSet) error { log.DebugLog()
+func (f Int64SliceFlag) ApplyWithError(set *flag.FlagSet) error { 
 	if f.EnvVar != "" {
 		for _, envVar := range strings.Split(f.EnvVar, ",") {
 			envVar = strings.TrimSpace(envVar)
@@ -317,12 +317,12 @@ func (f Int64SliceFlag) ApplyWithError(set *flag.FlagSet) error { log.DebugLog()
 
 // Apply populates the flag given the flag set and environment
 // Ignores errors
-func (f BoolFlag) Apply(set *flag.FlagSet) { log.DebugLog()
+func (f BoolFlag) Apply(set *flag.FlagSet) { 
 	f.ApplyWithError(set)
 }
 
 // ApplyWithError populates the flag given the flag set and environment
-func (f BoolFlag) ApplyWithError(set *flag.FlagSet) error { log.DebugLog()
+func (f BoolFlag) ApplyWithError(set *flag.FlagSet) error { 
 	val := false
 	if f.EnvVar != "" {
 		for _, envVar := range strings.Split(f.EnvVar, ",") {
@@ -357,12 +357,12 @@ func (f BoolFlag) ApplyWithError(set *flag.FlagSet) error { log.DebugLog()
 
 // Apply populates the flag given the flag set and environment
 // Ignores errors
-func (f BoolTFlag) Apply(set *flag.FlagSet) { log.DebugLog()
+func (f BoolTFlag) Apply(set *flag.FlagSet) { 
 	f.ApplyWithError(set)
 }
 
 // ApplyWithError populates the flag given the flag set and environment
-func (f BoolTFlag) ApplyWithError(set *flag.FlagSet) error { log.DebugLog()
+func (f BoolTFlag) ApplyWithError(set *flag.FlagSet) error { 
 	val := true
 	if f.EnvVar != "" {
 		for _, envVar := range strings.Split(f.EnvVar, ",") {
@@ -397,12 +397,12 @@ func (f BoolTFlag) ApplyWithError(set *flag.FlagSet) error { log.DebugLog()
 
 // Apply populates the flag given the flag set and environment
 // Ignores errors
-func (f StringFlag) Apply(set *flag.FlagSet) { log.DebugLog()
+func (f StringFlag) Apply(set *flag.FlagSet) { 
 	f.ApplyWithError(set)
 }
 
 // ApplyWithError populates the flag given the flag set and environment
-func (f StringFlag) ApplyWithError(set *flag.FlagSet) error { log.DebugLog()
+func (f StringFlag) ApplyWithError(set *flag.FlagSet) error { 
 	if f.EnvVar != "" {
 		for _, envVar := range strings.Split(f.EnvVar, ",") {
 			envVar = strings.TrimSpace(envVar)
@@ -426,12 +426,12 @@ func (f StringFlag) ApplyWithError(set *flag.FlagSet) error { log.DebugLog()
 
 // Apply populates the flag given the flag set and environment
 // Ignores errors
-func (f IntFlag) Apply(set *flag.FlagSet) { log.DebugLog()
+func (f IntFlag) Apply(set *flag.FlagSet) { 
 	f.ApplyWithError(set)
 }
 
 // ApplyWithError populates the flag given the flag set and environment
-func (f IntFlag) ApplyWithError(set *flag.FlagSet) error { log.DebugLog()
+func (f IntFlag) ApplyWithError(set *flag.FlagSet) error { 
 	if f.EnvVar != "" {
 		for _, envVar := range strings.Split(f.EnvVar, ",") {
 			envVar = strings.TrimSpace(envVar)
@@ -459,12 +459,12 @@ func (f IntFlag) ApplyWithError(set *flag.FlagSet) error { log.DebugLog()
 
 // Apply populates the flag given the flag set and environment
 // Ignores errors
-func (f Int64Flag) Apply(set *flag.FlagSet) { log.DebugLog()
+func (f Int64Flag) Apply(set *flag.FlagSet) { 
 	f.ApplyWithError(set)
 }
 
 // ApplyWithError populates the flag given the flag set and environment
-func (f Int64Flag) ApplyWithError(set *flag.FlagSet) error { log.DebugLog()
+func (f Int64Flag) ApplyWithError(set *flag.FlagSet) error { 
 	if f.EnvVar != "" {
 		for _, envVar := range strings.Split(f.EnvVar, ",") {
 			envVar = strings.TrimSpace(envVar)
@@ -493,12 +493,12 @@ func (f Int64Flag) ApplyWithError(set *flag.FlagSet) error { log.DebugLog()
 
 // Apply populates the flag given the flag set and environment
 // Ignores errors
-func (f UintFlag) Apply(set *flag.FlagSet) { log.DebugLog()
+func (f UintFlag) Apply(set *flag.FlagSet) { 
 	f.ApplyWithError(set)
 }
 
 // ApplyWithError populates the flag given the flag set and environment
-func (f UintFlag) ApplyWithError(set *flag.FlagSet) error { log.DebugLog()
+func (f UintFlag) ApplyWithError(set *flag.FlagSet) error { 
 	if f.EnvVar != "" {
 		for _, envVar := range strings.Split(f.EnvVar, ",") {
 			envVar = strings.TrimSpace(envVar)
@@ -527,12 +527,12 @@ func (f UintFlag) ApplyWithError(set *flag.FlagSet) error { log.DebugLog()
 
 // Apply populates the flag given the flag set and environment
 // Ignores errors
-func (f Uint64Flag) Apply(set *flag.FlagSet) { log.DebugLog()
+func (f Uint64Flag) Apply(set *flag.FlagSet) { 
 	f.ApplyWithError(set)
 }
 
 // ApplyWithError populates the flag given the flag set and environment
-func (f Uint64Flag) ApplyWithError(set *flag.FlagSet) error { log.DebugLog()
+func (f Uint64Flag) ApplyWithError(set *flag.FlagSet) error { 
 	if f.EnvVar != "" {
 		for _, envVar := range strings.Split(f.EnvVar, ",") {
 			envVar = strings.TrimSpace(envVar)
@@ -561,12 +561,12 @@ func (f Uint64Flag) ApplyWithError(set *flag.FlagSet) error { log.DebugLog()
 
 // Apply populates the flag given the flag set and environment
 // Ignores errors
-func (f DurationFlag) Apply(set *flag.FlagSet) { log.DebugLog()
+func (f DurationFlag) Apply(set *flag.FlagSet) { 
 	f.ApplyWithError(set)
 }
 
 // ApplyWithError populates the flag given the flag set and environment
-func (f DurationFlag) ApplyWithError(set *flag.FlagSet) error { log.DebugLog()
+func (f DurationFlag) ApplyWithError(set *flag.FlagSet) error { 
 	if f.EnvVar != "" {
 		for _, envVar := range strings.Split(f.EnvVar, ",") {
 			envVar = strings.TrimSpace(envVar)
@@ -595,12 +595,12 @@ func (f DurationFlag) ApplyWithError(set *flag.FlagSet) error { log.DebugLog()
 
 // Apply populates the flag given the flag set and environment
 // Ignores errors
-func (f Float64Flag) Apply(set *flag.FlagSet) { log.DebugLog()
+func (f Float64Flag) Apply(set *flag.FlagSet) { 
 	f.ApplyWithError(set)
 }
 
 // ApplyWithError populates the flag given the flag set and environment
-func (f Float64Flag) ApplyWithError(set *flag.FlagSet) error { log.DebugLog()
+func (f Float64Flag) ApplyWithError(set *flag.FlagSet) error { 
 	if f.EnvVar != "" {
 		for _, envVar := range strings.Split(f.EnvVar, ",") {
 			envVar = strings.TrimSpace(envVar)
@@ -627,7 +627,7 @@ func (f Float64Flag) ApplyWithError(set *flag.FlagSet) error { log.DebugLog()
 	return nil
 }
 
-func visibleFlags(fl []Flag) []Flag { log.DebugLog()
+func visibleFlags(fl []Flag) []Flag { 
 	visible := []Flag{}
 	for _, flag := range fl {
 		field := flagValue(flag).FieldByName("Hidden")
@@ -638,7 +638,7 @@ func visibleFlags(fl []Flag) []Flag { log.DebugLog()
 	return visible
 }
 
-func prefixFor(name string) (prefix string) { log.DebugLog()
+func prefixFor(name string) (prefix string) { 
 	if len(name) == 1 {
 		prefix = "-"
 	} else {
@@ -649,7 +649,7 @@ func prefixFor(name string) (prefix string) { log.DebugLog()
 }
 
 // Returns the placeholder, if any, and the unquoted usage string.
-func unquoteUsage(usage string) (string, string) { log.DebugLog()
+func unquoteUsage(usage string) (string, string) { 
 	for i := 0; i < len(usage); i++ {
 		if usage[i] == '`' {
 			for j := i + 1; j < len(usage); j++ {
@@ -665,7 +665,7 @@ func unquoteUsage(usage string) (string, string) { log.DebugLog()
 	return "", usage
 }
 
-func prefixedNames(fullName, placeholder string) string { log.DebugLog()
+func prefixedNames(fullName, placeholder string) string { 
 	var prefixed string
 	parts := strings.Split(fullName, ",")
 	for i, name := range parts {
@@ -681,7 +681,7 @@ func prefixedNames(fullName, placeholder string) string { log.DebugLog()
 	return prefixed
 }
 
-func withEnvHint(envVar, str string) string { log.DebugLog()
+func withEnvHint(envVar, str string) string { 
 	envText := ""
 	if envVar != "" {
 		prefix := "$"
@@ -697,7 +697,7 @@ func withEnvHint(envVar, str string) string { log.DebugLog()
 	return str + envText
 }
 
-func flagValue(f Flag) reflect.Value { log.DebugLog()
+func flagValue(f Flag) reflect.Value { 
 	fv := reflect.ValueOf(f)
 	for fv.Kind() == reflect.Ptr {
 		fv = reflect.Indirect(fv)
@@ -705,7 +705,7 @@ func flagValue(f Flag) reflect.Value { log.DebugLog()
 	return fv
 }
 
-func stringifyFlag(f Flag) string { log.DebugLog()
+func stringifyFlag(f Flag) string { 
 	fv := flagValue(f)
 
 	switch f.(type) {
@@ -748,7 +748,7 @@ func stringifyFlag(f Flag) string { log.DebugLog()
 		fmt.Sprintf("%s\t%s", prefixedNames(fv.FieldByName("Name").String(), placeholder), usageWithDefault))
 }
 
-func stringifyIntSliceFlag(f IntSliceFlag) string { log.DebugLog()
+func stringifyIntSliceFlag(f IntSliceFlag) string { 
 	defaultVals := []string{}
 	if f.Value != nil && len(f.Value.Value()) > 0 {
 		for _, i := range f.Value.Value() {
@@ -759,7 +759,7 @@ func stringifyIntSliceFlag(f IntSliceFlag) string { log.DebugLog()
 	return stringifySliceFlag(f.Usage, f.Name, defaultVals)
 }
 
-func stringifyInt64SliceFlag(f Int64SliceFlag) string { log.DebugLog()
+func stringifyInt64SliceFlag(f Int64SliceFlag) string { 
 	defaultVals := []string{}
 	if f.Value != nil && len(f.Value.Value()) > 0 {
 		for _, i := range f.Value.Value() {
@@ -770,7 +770,7 @@ func stringifyInt64SliceFlag(f Int64SliceFlag) string { log.DebugLog()
 	return stringifySliceFlag(f.Usage, f.Name, defaultVals)
 }
 
-func stringifyStringSliceFlag(f StringSliceFlag) string { log.DebugLog()
+func stringifyStringSliceFlag(f StringSliceFlag) string { 
 	defaultVals := []string{}
 	if f.Value != nil && len(f.Value.Value()) > 0 {
 		for _, s := range f.Value.Value() {
@@ -783,7 +783,7 @@ func stringifyStringSliceFlag(f StringSliceFlag) string { log.DebugLog()
 	return stringifySliceFlag(f.Usage, f.Name, defaultVals)
 }
 
-func stringifySliceFlag(usage, name string, defaultVals []string) string { log.DebugLog()
+func stringifySliceFlag(usage, name string, defaultVals []string) string { 
 	placeholder, usage := unquoteUsage(usage)
 	if placeholder == "" {
 		placeholder = defaultPlaceholder

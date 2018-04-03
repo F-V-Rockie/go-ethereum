@@ -15,7 +15,7 @@ import (
 	"github.com/syndtr/goleveldb/leveldb/util"
 )
 
-func (db *DB) writeJournal(batches []*Batch, seq uint64, sync bool) error { log.DebugLog()
+func (db *DB) writeJournal(batches []*Batch, seq uint64, sync bool) error { 
 	wr, err := db.journal.Next()
 	if err != nil {
 		return err
@@ -32,7 +32,7 @@ func (db *DB) writeJournal(batches []*Batch, seq uint64, sync bool) error { log.
 	return nil
 }
 
-func (db *DB) rotateMem(n int, wait bool) (mem *memDB, err error) { log.DebugLog()
+func (db *DB) rotateMem(n int, wait bool) (mem *memDB, err error) { 
 	retryLimit := 3
 retry:
 	// Wait for pending memdb compaction.
@@ -63,7 +63,7 @@ retry:
 	return
 }
 
-func (db *DB) flush(n int) (mdb *memDB, mdbFree int, err error) { log.DebugLog()
+func (db *DB) flush(n int) (mdb *memDB, mdbFree int, err error) { 
 	delayed := false
 	slowdownTrigger := db.s.o.GetWriteL0SlowdownTrigger()
 	pauseTrigger := db.s.o.GetWriteL0PauseTrigger()
@@ -133,7 +133,7 @@ type writeMerge struct {
 	key, value []byte
 }
 
-func (db *DB) unlockWrite(overflow bool, merged int, err error) { log.DebugLog()
+func (db *DB) unlockWrite(overflow bool, merged int, err error) { 
 	for i := 0; i < merged; i++ {
 		db.writeAckC <- err
 	}
@@ -147,7 +147,7 @@ func (db *DB) unlockWrite(overflow bool, merged int, err error) { log.DebugLog()
 }
 
 // ourBatch is batch that we can modify.
-func (db *DB) writeLocked(batch, ourBatch *Batch, merge, sync bool) error { log.DebugLog()
+func (db *DB) writeLocked(batch, ourBatch *Batch, merge, sync bool) error { 
 	// Try to flush memdb. This method would also trying to throttle writes
 	// if it is too fast and compaction cannot catch-up.
 	mdb, mdbFree, err := db.flush(batch.internalLen)
@@ -256,7 +256,7 @@ func (db *DB) writeLocked(batch, ourBatch *Batch, merge, sync bool) error { log.
 //
 // It is safe to modify the contents of the arguments after Write returns but
 // not before. Write will not modify content of the batch.
-func (db *DB) Write(batch *Batch, wo *opt.WriteOptions) error { log.DebugLog()
+func (db *DB) Write(batch *Batch, wo *opt.WriteOptions) error { 
 	if err := db.ok(); err != nil || batch == nil || batch.Len() == 0 {
 		return err
 	}
@@ -313,7 +313,7 @@ func (db *DB) Write(batch *Batch, wo *opt.WriteOptions) error { log.DebugLog()
 	return db.writeLocked(batch, nil, merge, sync)
 }
 
-func (db *DB) putRec(kt keyType, key, value []byte, wo *opt.WriteOptions) error { log.DebugLog()
+func (db *DB) putRec(kt keyType, key, value []byte, wo *opt.WriteOptions) error { 
 	if err := db.ok(); err != nil {
 		return err
 	}
@@ -364,7 +364,7 @@ func (db *DB) putRec(kt keyType, key, value []byte, wo *opt.WriteOptions) error 
 //
 // It is safe to modify the contents of the arguments after Put returns but not
 // before.
-func (db *DB) Put(key, value []byte, wo *opt.WriteOptions) error { log.DebugLog()
+func (db *DB) Put(key, value []byte, wo *opt.WriteOptions) error { 
 	return db.putRec(keyTypeVal, key, value, wo)
 }
 
@@ -373,11 +373,11 @@ func (db *DB) Put(key, value []byte, wo *opt.WriteOptions) error { log.DebugLog(
 //
 // It is safe to modify the contents of the arguments after Delete returns but
 // not before.
-func (db *DB) Delete(key []byte, wo *opt.WriteOptions) error { log.DebugLog()
+func (db *DB) Delete(key []byte, wo *opt.WriteOptions) error { 
 	return db.putRec(keyTypeDel, key, nil, wo)
 }
 
-func isMemOverlaps(icmp *iComparer, mem *memdb.DB, min, max []byte) bool { log.DebugLog()
+func isMemOverlaps(icmp *iComparer, mem *memdb.DB, min, max []byte) bool { 
 	iter := mem.NewIterator(nil)
 	defer iter.Release()
 	return (max == nil || (iter.First() && icmp.uCompare(max, internalKey(iter.Key()).ukey()) >= 0)) &&
@@ -393,7 +393,7 @@ func isMemOverlaps(icmp *iComparer, mem *memdb.DB, min, max []byte) bool { log.D
 // A nil Range.Start is treated as a key before all keys in the DB.
 // And a nil Range.Limit is treated as a key after all keys in the DB.
 // Therefore if both is nil then it will compact entire DB.
-func (db *DB) CompactRange(r util.Range) error { log.DebugLog()
+func (db *DB) CompactRange(r util.Range) error { 
 	if err := db.ok(); err != nil {
 		return err
 	}
@@ -432,7 +432,7 @@ func (db *DB) CompactRange(r util.Range) error { log.DebugLog()
 }
 
 // SetReadOnly makes DB read-only. It will stay read-only until reopened.
-func (db *DB) SetReadOnly() error { log.DebugLog()
+func (db *DB) SetReadOnly() error { 
 	if err := db.ok(); err != nil {
 		return err
 	}

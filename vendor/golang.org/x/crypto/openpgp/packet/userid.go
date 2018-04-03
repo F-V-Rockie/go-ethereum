@@ -19,7 +19,7 @@ type UserId struct {
 	Name, Comment, Email string
 }
 
-func hasInvalidCharacters(s string) bool { log.DebugLog()
+func hasInvalidCharacters(s string) bool { 
 	for _, c := range s {
 		switch c {
 		case '(', ')', '<', '>', 0:
@@ -31,7 +31,7 @@ func hasInvalidCharacters(s string) bool { log.DebugLog()
 
 // NewUserId returns a UserId or nil if any of the arguments contain invalid
 // characters. The invalid characters are '\x00', '(', ')', '<' and '>'
-func NewUserId(name, comment, email string) *UserId { log.DebugLog()
+func NewUserId(name, comment, email string) *UserId { 
 	// RFC 4880 doesn't deal with the structure of userid strings; the
 	// name, comment and email form is just a convention. However, there's
 	// no convention about escaping the metacharacters and GPG just refuses
@@ -64,7 +64,7 @@ func NewUserId(name, comment, email string) *UserId { log.DebugLog()
 	return uid
 }
 
-func (uid *UserId) parse(r io.Reader) (err error) { log.DebugLog()
+func (uid *UserId) parse(r io.Reader) (err error) { 
 	// RFC 4880, section 5.11
 	b, err := ioutil.ReadAll(r)
 	if err != nil {
@@ -77,7 +77,7 @@ func (uid *UserId) parse(r io.Reader) (err error) { log.DebugLog()
 
 // Serialize marshals uid to w in the form of an OpenPGP packet, including
 // header.
-func (uid *UserId) Serialize(w io.Writer) error { log.DebugLog()
+func (uid *UserId) Serialize(w io.Writer) error { 
 	err := serializeHeader(w, packetTypeUserId, len(uid.Id))
 	if err != nil {
 		return err
@@ -88,7 +88,7 @@ func (uid *UserId) Serialize(w io.Writer) error { log.DebugLog()
 
 // parseUserId extracts the name, comment and email from a user id string that
 // is formatted as "Full Name (Comment) <email@example.com>".
-func parseUserId(id string) (name, comment, email string) { log.DebugLog()
+func parseUserId(id string) (name, comment, email string) { 
 	var n, c, e struct {
 		start, end int
 	}

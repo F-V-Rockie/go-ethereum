@@ -69,7 +69,7 @@ Equality is defined in this way:
 
 The return value is undefined if a and b are not protocol buffers.
 */
-func Equal(a, b Message) bool { log.DebugLog()
+func Equal(a, b Message) bool { 
 	if a == nil || b == nil {
 		return a == b
 	}
@@ -93,7 +93,7 @@ func Equal(a, b Message) bool { log.DebugLog()
 }
 
 // v1 and v2 are known to have the same type.
-func equalStruct(v1, v2 reflect.Value) bool { log.DebugLog()
+func equalStruct(v1, v2 reflect.Value) bool { 
 	sprop := GetProperties(v1.Type())
 	for i := 0; i < v1.NumField(); i++ {
 		f := v1.Type().Field(i)
@@ -155,7 +155,7 @@ func equalStruct(v1, v2 reflect.Value) bool { log.DebugLog()
 
 // v1 and v2 are known to have the same type.
 // prop may be nil.
-func equalAny(v1, v2 reflect.Value, prop *Properties) bool { log.DebugLog()
+func equalAny(v1, v2 reflect.Value, prop *Properties) bool { 
 	if v1.Type() == protoMessageType {
 		m1, _ := v1.Interface().(Message)
 		m2, _ := v2.Interface().(Message)
@@ -242,13 +242,13 @@ func equalAny(v1, v2 reflect.Value, prop *Properties) bool { log.DebugLog()
 
 // base is the struct type that the extensions are based on.
 // x1 and x2 are InternalExtensions.
-func equalExtensions(base reflect.Type, x1, x2 XXX_InternalExtensions) bool { log.DebugLog()
+func equalExtensions(base reflect.Type, x1, x2 XXX_InternalExtensions) bool { 
 	em1, _ := x1.extensionsRead()
 	em2, _ := x2.extensionsRead()
 	return equalExtMap(base, em1, em2)
 }
 
-func equalExtMap(base reflect.Type, em1, em2 map[int32]Extension) bool { log.DebugLog()
+func equalExtMap(base reflect.Type, em1, em2 map[int32]Extension) bool { 
 	if len(em1) != len(em2) {
 		return false
 	}

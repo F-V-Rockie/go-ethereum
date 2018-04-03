@@ -17,23 +17,23 @@ import (
 // struct{}, since vars of this type must have distinct addresses.
 type emptyCtx int
 
-func (*emptyCtx) Deadline() (deadline time.Time, ok bool) { log.DebugLog()
+func (*emptyCtx) Deadline() (deadline time.Time, ok bool) { 
 	return
 }
 
-func (*emptyCtx) Done() <-chan struct{} { log.DebugLog()
+func (*emptyCtx) Done() <-chan struct{} { 
 	return nil
 }
 
-func (*emptyCtx) Err() error { log.DebugLog()
+func (*emptyCtx) Err() error { 
 	return nil
 }
 
-func (*emptyCtx) Value(key interface{}) interface{} { log.DebugLog()
+func (*emptyCtx) Value(key interface{}) interface{} { 
 	return nil
 }
 
-func (e *emptyCtx) String() string { log.DebugLog()
+func (e *emptyCtx) String() string { 
 	switch e {
 	case background:
 		return "context.Background"
@@ -61,14 +61,14 @@ var DeadlineExceeded = errors.New("context deadline exceeded")
 //
 // Canceling this context releases resources associated with it, so code should
 // call cancel as soon as the operations running in this Context complete.
-func WithCancel(parent Context) (ctx Context, cancel CancelFunc) { log.DebugLog()
+func WithCancel(parent Context) (ctx Context, cancel CancelFunc) { 
 	c := newCancelCtx(parent)
 	propagateCancel(parent, c)
 	return c, func() { c.cancel(true, Canceled) }
 }
 
 // newCancelCtx returns an initialized cancelCtx.
-func newCancelCtx(parent Context) *cancelCtx { log.DebugLog()
+func newCancelCtx(parent Context) *cancelCtx { 
 	return &cancelCtx{
 		Context: parent,
 		done:    make(chan struct{}),
@@ -76,7 +76,7 @@ func newCancelCtx(parent Context) *cancelCtx { log.DebugLog()
 }
 
 // propagateCancel arranges for child to be canceled when parent is.
-func propagateCancel(parent Context, child canceler) { log.DebugLog()
+func propagateCancel(parent Context, child canceler) { 
 	if parent.Done() == nil {
 		return // parent is never canceled
 	}
@@ -106,7 +106,7 @@ func propagateCancel(parent Context, child canceler) { log.DebugLog()
 // parentCancelCtx follows a chain of parent references until it finds a
 // *cancelCtx. This function understands how each of the concrete types in this
 // package represents its parent.
-func parentCancelCtx(parent Context) (*cancelCtx, bool) { log.DebugLog()
+func parentCancelCtx(parent Context) (*cancelCtx, bool) { 
 	for {
 		switch c := parent.(type) {
 		case *cancelCtx:
@@ -122,7 +122,7 @@ func parentCancelCtx(parent Context) (*cancelCtx, bool) { log.DebugLog()
 }
 
 // removeChild removes a context from its parent.
-func removeChild(parent Context, child canceler) { log.DebugLog()
+func removeChild(parent Context, child canceler) { 
 	p, ok := parentCancelCtx(parent)
 	if !ok {
 		return
@@ -153,23 +153,23 @@ type cancelCtx struct {
 	err      error             // set to non-nil by the first cancel call
 }
 
-func (c *cancelCtx) Done() <-chan struct{} { log.DebugLog()
+func (c *cancelCtx) Done() <-chan struct{} { 
 	return c.done
 }
 
-func (c *cancelCtx) Err() error { log.DebugLog()
+func (c *cancelCtx) Err() error { 
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	return c.err
 }
 
-func (c *cancelCtx) String() string { log.DebugLog()
+func (c *cancelCtx) String() string { 
 	return fmt.Sprintf("%v.WithCancel", c.Context)
 }
 
 // cancel closes c.done, cancels each of c's children, and, if
 // removeFromParent is true, removes c from its parent's children.
-func (c *cancelCtx) cancel(removeFromParent bool, err error) { log.DebugLog()
+func (c *cancelCtx) cancel(removeFromParent bool, err error) { 
 	if err == nil {
 		panic("context: internal error: missing cancel error")
 	}
@@ -201,7 +201,7 @@ func (c *cancelCtx) cancel(removeFromParent bool, err error) { log.DebugLog()
 //
 // Canceling this context releases resources associated with it, so code should
 // call cancel as soon as the operations running in this Context complete.
-func WithDeadline(parent Context, deadline time.Time) (Context, CancelFunc) { log.DebugLog()
+func WithDeadline(parent Context, deadline time.Time) (Context, CancelFunc) { 
 	if cur, ok := parent.Deadline(); ok && cur.Before(deadline) {
 		// The current deadline is already sooner than the new one.
 		return WithCancel(parent)
@@ -236,15 +236,15 @@ type timerCtx struct {
 	deadline time.Time
 }
 
-func (c *timerCtx) Deadline() (deadline time.Time, ok bool) { log.DebugLog()
+func (c *timerCtx) Deadline() (deadline time.Time, ok bool) { 
 	return c.deadline, true
 }
 
-func (c *timerCtx) String() string { log.DebugLog()
+func (c *timerCtx) String() string { 
 	return fmt.Sprintf("%v.WithDeadline(%s [%s])", c.cancelCtx.Context, c.deadline, c.deadline.Sub(time.Now()))
 }
 
-func (c *timerCtx) cancel(removeFromParent bool, err error) { log.DebugLog()
+func (c *timerCtx) cancel(removeFromParent bool, err error) { 
 	c.cancelCtx.cancel(false, err)
 	if removeFromParent {
 		// Remove this timerCtx from its parent cancelCtx's children.
@@ -268,7 +268,7 @@ func (c *timerCtx) cancel(removeFromParent bool, err error) { log.DebugLog()
 // 		defer cancel()  // releases resources if slowOperation completes before timeout elapses
 // 		return slowOperation(ctx)
 // 	}
-func WithTimeout(parent Context, timeout time.Duration) (Context, CancelFunc) { log.DebugLog()
+func WithTimeout(parent Context, timeout time.Duration) (Context, CancelFunc) { 
 	return WithDeadline(parent, time.Now().Add(timeout))
 }
 
@@ -277,7 +277,7 @@ func WithTimeout(parent Context, timeout time.Duration) (Context, CancelFunc) { 
 //
 // Use context Values only for request-scoped data that transits processes and
 // APIs, not for passing optional parameters to functions.
-func WithValue(parent Context, key interface{}, val interface{}) Context { log.DebugLog()
+func WithValue(parent Context, key interface{}, val interface{}) Context { 
 	return &valueCtx{parent, key, val}
 }
 
@@ -288,11 +288,11 @@ type valueCtx struct {
 	key, val interface{}
 }
 
-func (c *valueCtx) String() string { log.DebugLog()
+func (c *valueCtx) String() string { 
 	return fmt.Sprintf("%v.WithValue(%#v, %#v)", c.Context, c.key, c.val)
 }
 
-func (c *valueCtx) Value(key interface{}) interface{} { log.DebugLog()
+func (c *valueCtx) Value(key interface{}) interface{} { 
 	if c.key == key {
 		return c.val
 	}

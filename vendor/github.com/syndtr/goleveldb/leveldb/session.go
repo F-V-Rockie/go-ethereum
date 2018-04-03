@@ -25,11 +25,11 @@ type ErrManifestCorrupted struct {
 	Reason string
 }
 
-func (e *ErrManifestCorrupted) Error() string { log.DebugLog()
+func (e *ErrManifestCorrupted) Error() string { 
 	return fmt.Sprintf("leveldb: manifest corrupted (field '%s'): %s", e.Field, e.Reason)
 }
 
-func newErrManifestCorrupted(fd storage.FileDesc, field, reason string) error { log.DebugLog()
+func newErrManifestCorrupted(fd storage.FileDesc, field, reason string) error { 
 	return errors.NewErrCorrupted(fd, &ErrManifestCorrupted{field, reason})
 }
 
@@ -59,7 +59,7 @@ type session struct {
 }
 
 // Creates new initialized session instance.
-func newSession(stor storage.Storage, o *opt.Options) (s *session, err error) { log.DebugLog()
+func newSession(stor storage.Storage, o *opt.Options) (s *session, err error) { 
 	if stor == nil {
 		return nil, os.ErrInvalid
 	}
@@ -80,7 +80,7 @@ func newSession(stor storage.Storage, o *opt.Options) (s *session, err error) { 
 }
 
 // Close session.
-func (s *session) close() { log.DebugLog()
+func (s *session) close() { 
 	s.tops.close()
 	if s.manifest != nil {
 		s.manifest.Close()
@@ -94,18 +94,18 @@ func (s *session) close() { log.DebugLog()
 }
 
 // Release session lock.
-func (s *session) release() { log.DebugLog()
+func (s *session) release() { 
 	s.storLock.Unlock()
 }
 
 // Create a new database session; need external synchronization.
-func (s *session) create() error { log.DebugLog()
+func (s *session) create() error { 
 	// create manifest
 	return s.newManifest(nil, nil)
 }
 
 // Recover a database session; need external synchronization.
-func (s *session) recover() (err error) { log.DebugLog()
+func (s *session) recover() (err error) { 
 	defer func() {
 		if os.IsNotExist(err) {
 			// Don't return os.ErrNotExist if the underlying storage contains
@@ -187,7 +187,7 @@ func (s *session) recover() (err error) { log.DebugLog()
 }
 
 // Commit session; need external synchronization.
-func (s *session) commit(r *sessionRecord) (err error) { log.DebugLog()
+func (s *session) commit(r *sessionRecord) (err error) { 
 	v := s.version()
 	defer v.release()
 

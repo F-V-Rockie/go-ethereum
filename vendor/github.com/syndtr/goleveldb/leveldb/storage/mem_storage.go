@@ -18,7 +18,7 @@ type memStorageLock struct {
 	ms *memStorage
 }
 
-func (lock *memStorageLock) Unlock() { log.DebugLog()
+func (lock *memStorageLock) Unlock() { 
 	ms := lock.ms
 	ms.mu.Lock()
 	defer ms.mu.Unlock()
@@ -37,13 +37,13 @@ type memStorage struct {
 }
 
 // NewMemStorage returns a new memory-backed storage implementation.
-func NewMemStorage() Storage { log.DebugLog()
+func NewMemStorage() Storage { 
 	return &memStorage{
 		files: make(map[uint64]*memFile),
 	}
 }
 
-func (ms *memStorage) Lock() (Locker, error) { log.DebugLog()
+func (ms *memStorage) Lock() (Locker, error) { 
 	ms.mu.Lock()
 	defer ms.mu.Unlock()
 	if ms.slock != nil {
@@ -53,9 +53,9 @@ func (ms *memStorage) Lock() (Locker, error) { log.DebugLog()
 	return ms.slock, nil
 }
 
-func (*memStorage) Log(str string) { log.DebugLog()}
+func (*memStorage) Log(str string) { }
 
-func (ms *memStorage) SetMeta(fd FileDesc) error { log.DebugLog()
+func (ms *memStorage) SetMeta(fd FileDesc) error { 
 	if !FileDescOk(fd) {
 		return ErrInvalidFile
 	}
@@ -66,7 +66,7 @@ func (ms *memStorage) SetMeta(fd FileDesc) error { log.DebugLog()
 	return nil
 }
 
-func (ms *memStorage) GetMeta() (FileDesc, error) { log.DebugLog()
+func (ms *memStorage) GetMeta() (FileDesc, error) { 
 	ms.mu.Lock()
 	defer ms.mu.Unlock()
 	if ms.meta.Zero() {
@@ -75,7 +75,7 @@ func (ms *memStorage) GetMeta() (FileDesc, error) { log.DebugLog()
 	return ms.meta, nil
 }
 
-func (ms *memStorage) List(ft FileType) ([]FileDesc, error) { log.DebugLog()
+func (ms *memStorage) List(ft FileType) ([]FileDesc, error) { 
 	ms.mu.Lock()
 	var fds []FileDesc
 	for x := range ms.files {
@@ -88,7 +88,7 @@ func (ms *memStorage) List(ft FileType) ([]FileDesc, error) { log.DebugLog()
 	return fds, nil
 }
 
-func (ms *memStorage) Open(fd FileDesc) (Reader, error) { log.DebugLog()
+func (ms *memStorage) Open(fd FileDesc) (Reader, error) { 
 	if !FileDescOk(fd) {
 		return nil, ErrInvalidFile
 	}
@@ -105,7 +105,7 @@ func (ms *memStorage) Open(fd FileDesc) (Reader, error) { log.DebugLog()
 	return nil, os.ErrNotExist
 }
 
-func (ms *memStorage) Create(fd FileDesc) (Writer, error) { log.DebugLog()
+func (ms *memStorage) Create(fd FileDesc) (Writer, error) { 
 	if !FileDescOk(fd) {
 		return nil, ErrInvalidFile
 	}
@@ -127,7 +127,7 @@ func (ms *memStorage) Create(fd FileDesc) (Writer, error) { log.DebugLog()
 	return &memWriter{memFile: m, ms: ms}, nil
 }
 
-func (ms *memStorage) Remove(fd FileDesc) error { log.DebugLog()
+func (ms *memStorage) Remove(fd FileDesc) error { 
 	if !FileDescOk(fd) {
 		return ErrInvalidFile
 	}
@@ -142,7 +142,7 @@ func (ms *memStorage) Remove(fd FileDesc) error { log.DebugLog()
 	return os.ErrNotExist
 }
 
-func (ms *memStorage) Rename(oldfd, newfd FileDesc) error { log.DebugLog()
+func (ms *memStorage) Rename(oldfd, newfd FileDesc) error { 
 	if FileDescOk(oldfd) || FileDescOk(newfd) {
 		return ErrInvalidFile
 	}
@@ -167,7 +167,7 @@ func (ms *memStorage) Rename(oldfd, newfd FileDesc) error { log.DebugLog()
 	return nil
 }
 
-func (*memStorage) Close() error { log.DebugLog() return nil }
+func (*memStorage) Close() error {  return nil }
 
 type memFile struct {
 	bytes.Buffer
@@ -181,7 +181,7 @@ type memReader struct {
 	closed bool
 }
 
-func (mr *memReader) Close() error { log.DebugLog()
+func (mr *memReader) Close() error { 
 	mr.ms.mu.Lock()
 	defer mr.ms.mu.Unlock()
 	if mr.closed {
@@ -197,9 +197,9 @@ type memWriter struct {
 	closed bool
 }
 
-func (*memWriter) Sync() error { log.DebugLog() return nil }
+func (*memWriter) Sync() error {  return nil }
 
-func (mw *memWriter) Close() error { log.DebugLog()
+func (mw *memWriter) Close() error { 
 	mw.ms.mu.Lock()
 	defer mw.ms.mu.Unlock()
 	if mw.closed {
@@ -209,10 +209,10 @@ func (mw *memWriter) Close() error { log.DebugLog()
 	return nil
 }
 
-func packFile(fd FileDesc) uint64 { log.DebugLog()
+func packFile(fd FileDesc) uint64 { 
 	return uint64(fd.Num)<<typeShift | uint64(fd.Type)
 }
 
-func unpackFile(x uint64) FileDesc { log.DebugLog()
+func unpackFile(x uint64) FileDesc { 
 	return FileDesc{FileType(x) & TypeAll, int64(x >> typeShift)}
 }

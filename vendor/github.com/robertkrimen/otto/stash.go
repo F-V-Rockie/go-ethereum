@@ -34,11 +34,11 @@ type _objectStash struct {
 	object   *_object
 }
 
-func (self *_objectStash) runtime() *_runtime { log.DebugLog()
+func (self *_objectStash) runtime() *_runtime { 
 	return self._runtime
 }
 
-func (runtime *_runtime) newObjectStash(object *_object, outer _stash) *_objectStash { log.DebugLog()
+func (runtime *_runtime) newObjectStash(object *_object, outer _stash) *_objectStash { 
 	if object == nil {
 		object = runtime.newBaseObject()
 		object.class = "environment"
@@ -50,7 +50,7 @@ func (runtime *_runtime) newObjectStash(object *_object, outer _stash) *_objectS
 	}
 }
 
-func (in *_objectStash) clone(clone *_clone) _stash { log.DebugLog()
+func (in *_objectStash) clone(clone *_clone) _stash { 
 	out, exists := clone.objectStash(in)
 	if exists {
 		return out
@@ -63,11 +63,11 @@ func (in *_objectStash) clone(clone *_clone) _stash { log.DebugLog()
 	return out
 }
 
-func (self *_objectStash) hasBinding(name string) bool { log.DebugLog()
+func (self *_objectStash) hasBinding(name string) bool { 
 	return self.object.hasProperty(name)
 }
 
-func (self *_objectStash) createBinding(name string, deletable bool, value Value) { log.DebugLog()
+func (self *_objectStash) createBinding(name string, deletable bool, value Value) { 
 	if self.object.hasProperty(name) {
 		panic(hereBeDragons())
 	}
@@ -79,11 +79,11 @@ func (self *_objectStash) createBinding(name string, deletable bool, value Value
 	self.object.defineProperty(name, value, mode, false)
 }
 
-func (self *_objectStash) setBinding(name string, value Value, strict bool) { log.DebugLog()
+func (self *_objectStash) setBinding(name string, value Value, strict bool) { 
 	self.object.put(name, value, strict)
 }
 
-func (self *_objectStash) setValue(name string, value Value, throw bool) { log.DebugLog()
+func (self *_objectStash) setValue(name string, value Value, throw bool) { 
 	if !self.hasBinding(name) {
 		self.createBinding(name, true, value) // Configurable by default
 	} else {
@@ -91,7 +91,7 @@ func (self *_objectStash) setValue(name string, value Value, throw bool) { log.D
 	}
 }
 
-func (self *_objectStash) getBinding(name string, throw bool) Value { log.DebugLog()
+func (self *_objectStash) getBinding(name string, throw bool) Value { 
 	if self.object.hasProperty(name) {
 		return self.object.get(name)
 	}
@@ -101,15 +101,15 @@ func (self *_objectStash) getBinding(name string, throw bool) Value { log.DebugL
 	return Value{}
 }
 
-func (self *_objectStash) deleteBinding(name string) bool { log.DebugLog()
+func (self *_objectStash) deleteBinding(name string) bool { 
 	return self.object.delete(name, false)
 }
 
-func (self *_objectStash) outer() _stash { log.DebugLog()
+func (self *_objectStash) outer() _stash { 
 	return self._outer
 }
 
-func (self *_objectStash) newReference(name string, strict bool, at _at) _reference { log.DebugLog()
+func (self *_objectStash) newReference(name string, strict bool, at _at) _reference { 
 	return newPropertyReference(self._runtime, self.object, name, strict, at)
 }
 
@@ -130,7 +130,7 @@ type _dclProperty struct {
 	readable  bool
 }
 
-func (runtime *_runtime) newDeclarationStash(outer _stash) *_dclStash { log.DebugLog()
+func (runtime *_runtime) newDeclarationStash(outer _stash) *_dclStash { 
 	return &_dclStash{
 		_runtime: runtime,
 		_outer:   outer,
@@ -138,7 +138,7 @@ func (runtime *_runtime) newDeclarationStash(outer _stash) *_dclStash { log.Debu
 	}
 }
 
-func (in *_dclStash) clone(clone *_clone) _stash { log.DebugLog()
+func (in *_dclStash) clone(clone *_clone) _stash { 
 	out, exists := clone.dclStash(in)
 	if exists {
 		return out
@@ -155,16 +155,16 @@ func (in *_dclStash) clone(clone *_clone) _stash { log.DebugLog()
 	return out
 }
 
-func (self *_dclStash) hasBinding(name string) bool { log.DebugLog()
+func (self *_dclStash) hasBinding(name string) bool { 
 	_, exists := self.property[name]
 	return exists
 }
 
-func (self *_dclStash) runtime() *_runtime { log.DebugLog()
+func (self *_dclStash) runtime() *_runtime { 
 	return self._runtime
 }
 
-func (self *_dclStash) createBinding(name string, deletable bool, value Value) { log.DebugLog()
+func (self *_dclStash) createBinding(name string, deletable bool, value Value) { 
 	_, exists := self.property[name]
 	if exists {
 		panic(fmt.Errorf("createBinding: %s: already exists", name))
@@ -177,7 +177,7 @@ func (self *_dclStash) createBinding(name string, deletable bool, value Value) {
 	}
 }
 
-func (self *_dclStash) setBinding(name string, value Value, strict bool) { log.DebugLog()
+func (self *_dclStash) setBinding(name string, value Value, strict bool) { 
 	property, exists := self.property[name]
 	if !exists {
 		panic(fmt.Errorf("setBinding: %s: missing", name))
@@ -190,7 +190,7 @@ func (self *_dclStash) setBinding(name string, value Value, strict bool) { log.D
 	}
 }
 
-func (self *_dclStash) setValue(name string, value Value, throw bool) { log.DebugLog()
+func (self *_dclStash) setValue(name string, value Value, throw bool) { 
 	if !self.hasBinding(name) {
 		self.createBinding(name, false, value) // NOT deletable by default
 	} else {
@@ -199,7 +199,7 @@ func (self *_dclStash) setValue(name string, value Value, throw bool) { log.Debu
 }
 
 // FIXME This is called a __lot__
-func (self *_dclStash) getBinding(name string, throw bool) Value { log.DebugLog()
+func (self *_dclStash) getBinding(name string, throw bool) Value { 
 	property, exists := self.property[name]
 	if !exists {
 		panic(fmt.Errorf("getBinding: %s: missing", name))
@@ -213,7 +213,7 @@ func (self *_dclStash) getBinding(name string, throw bool) Value { log.DebugLog(
 	return property.value
 }
 
-func (self *_dclStash) deleteBinding(name string) bool { log.DebugLog()
+func (self *_dclStash) deleteBinding(name string) bool { 
 	property, exists := self.property[name]
 	if !exists {
 		return true
@@ -225,11 +225,11 @@ func (self *_dclStash) deleteBinding(name string) bool { log.DebugLog()
 	return true
 }
 
-func (self *_dclStash) outer() _stash { log.DebugLog()
+func (self *_dclStash) outer() _stash { 
 	return self._outer
 }
 
-func (self *_dclStash) newReference(name string, strict bool, _ _at) _reference { log.DebugLog()
+func (self *_dclStash) newReference(name string, strict bool, _ _at) _reference { 
 	return &_stashReference{
 		name: name,
 		base: self,
@@ -246,7 +246,7 @@ type _fnStash struct {
 	indexOfArgumentName map[string]string
 }
 
-func (runtime *_runtime) newFunctionStash(outer _stash) *_fnStash { log.DebugLog()
+func (runtime *_runtime) newFunctionStash(outer _stash) *_fnStash { 
 	return &_fnStash{
 		_dclStash: _dclStash{
 			_runtime: runtime,
@@ -256,7 +256,7 @@ func (runtime *_runtime) newFunctionStash(outer _stash) *_fnStash { log.DebugLog
 	}
 }
 
-func (in *_fnStash) clone(clone *_clone) _stash { log.DebugLog()
+func (in *_fnStash) clone(clone *_clone) _stash { 
 	out, exists := clone.fnStash(in)
 	if exists {
 		return out
@@ -274,7 +274,7 @@ func (in *_fnStash) clone(clone *_clone) _stash { log.DebugLog()
 	return out
 }
 
-func getStashProperties(stash _stash) (keys []string) { log.DebugLog()
+func getStashProperties(stash _stash) (keys []string) { 
 	switch vars := stash.(type) {
 	case *_dclStash:
 		for k := range vars.property {

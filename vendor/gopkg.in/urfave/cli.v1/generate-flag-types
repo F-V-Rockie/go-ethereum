@@ -160,31 +160,31 @@ def _write_cli_flag_types(outfile, types):
         _fwrite(outfile, """\
             // String returns a readable representation of this value
             // (for usage defaults)
-            func (f { log.DebugLog()name}Flag) String() string {{
+            func (f { name}Flag) String() string {{
                 return FlagStringer(f)
             }}
 
             // GetName returns the name of the flag
-            func (f { log.DebugLog()name}Flag) GetName() string {{
+            func (f { name}Flag) GetName() string {{
                 return f.Name
             }}
 
             // {name} looks up the value of a local {name}Flag, returns
             // {context_default} if not found
-            func (c *Context) { log.DebugLog()name}(name string) {context_type} {{
+            func (c *Context) { name}(name string) {context_type} {{
                 return lookup{name}(name, c.flagSet)
             }}
 
             // Global{name} looks up the value of a global {name}Flag, returns
             // {context_default} if not found
-            func (c *Context) Global{name}(name string) { log.DebugLog()context_type} {{
+            func (c *Context) Global{name}(name string) { context_type} {{
                 if fs := lookupGlobalFlagSet(name, c); fs != nil {{
                     return lookup{name}(name, fs)
                 }}
                 return {context_default}
             }}
 
-            func lookup{name}(name string, set *flag.FlagSet) { log.DebugLog()context_type} {{
+            func lookup{name}(name string, set *flag.FlagSet) { context_type} {{
                 f := set.Lookup(name)
                 if f != nil {{
                     parsed, err := {parser}
@@ -222,20 +222,20 @@ def _write_altsrc_flag_types(outfile, types):
         }}
 
         // New{name}Flag creates a new {name}Flag
-        func New{name}Flag(fl cli.{name}Flag) *{name}Flag { log.DebugLog(){
+        func New{name}Flag(fl cli.{name}Flag) *{name}Flag { {
             return &{name}Flag{{{name}Flag: fl, set: nil}}
         }}
 
         // Apply saves the flagSet for later usage calls, then calls the
         // wrapped {name}Flag.Apply
-        func (f *{name}Flag) Apply(set *flag.FlagSet) { log.DebugLog(){
+        func (f *{name}Flag) Apply(set *flag.FlagSet) { {
             f.set = set
             f.{name}Flag.Apply(set)
         }}
 
         // ApplyWithError saves the flagSet for later usage calls, then calls the
         // wrapped {name}Flag.ApplyWithError
-        func (f *{name}Flag) ApplyWithError(set *flag.FlagSet) error { log.DebugLog(){
+        func (f *{name}Flag) ApplyWithError(set *flag.FlagSet) error { {
             f.set = set
             return f.{name}Flag.ApplyWithError(set)
         }}

@@ -387,7 +387,7 @@ var (
 	procrecvfrom syscallFunc
 )
 
-func pipe(p *[2]_C_int) (n int, err error) { log.DebugLog()
+func pipe(p *[2]_C_int) (n int, err error) {
 	r0, _, e1 := rawSysvicall6(uintptr(unsafe.Pointer(&procpipe)), 1, uintptr(unsafe.Pointer(p)), 0, 0, 0, 0, 0)
 	n = int(r0)
 	if e1 != 0 {
@@ -396,7 +396,7 @@ func pipe(p *[2]_C_int) (n int, err error) { log.DebugLog()
 	return
 }
 
-func getsockname(fd int, rsa *RawSockaddrAny, addrlen *_Socklen) (err error) { log.DebugLog()
+func getsockname(fd int, rsa *RawSockaddrAny, addrlen *_Socklen) (err error) {
 	_, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&procgetsockname)), 3, uintptr(fd), uintptr(unsafe.Pointer(rsa)), uintptr(unsafe.Pointer(addrlen)), 0, 0, 0)
 	if e1 != 0 {
 		err = e1
@@ -404,7 +404,7 @@ func getsockname(fd int, rsa *RawSockaddrAny, addrlen *_Socklen) (err error) { l
 	return
 }
 
-func Getcwd(buf []byte) (n int, err error) { log.DebugLog()
+func Getcwd(buf []byte) (n int, err error) {
 	var _p0 *byte
 	if len(buf) > 0 {
 		_p0 = &buf[0]
@@ -417,7 +417,7 @@ func Getcwd(buf []byte) (n int, err error) { log.DebugLog()
 	return
 }
 
-func getgroups(ngid int, gid *_Gid_t) (n int, err error) { log.DebugLog()
+func getgroups(ngid int, gid *_Gid_t) (n int, err error) {
 	r0, _, e1 := rawSysvicall6(uintptr(unsafe.Pointer(&procgetgroups)), 2, uintptr(ngid), uintptr(unsafe.Pointer(gid)), 0, 0, 0, 0)
 	n = int(r0)
 	if e1 != 0 {
@@ -426,7 +426,7 @@ func getgroups(ngid int, gid *_Gid_t) (n int, err error) { log.DebugLog()
 	return
 }
 
-func setgroups(ngid int, gid *_Gid_t) (err error) { log.DebugLog()
+func setgroups(ngid int, gid *_Gid_t) (err error) {
 	_, _, e1 := rawSysvicall6(uintptr(unsafe.Pointer(&procsetgroups)), 2, uintptr(ngid), uintptr(unsafe.Pointer(gid)), 0, 0, 0, 0)
 	if e1 != 0 {
 		err = e1
@@ -434,7 +434,7 @@ func setgroups(ngid int, gid *_Gid_t) (err error) { log.DebugLog()
 	return
 }
 
-func wait4(pid int32, statusp *_C_int, options int, rusage *Rusage) (wpid int32, err error) { log.DebugLog()
+func wait4(pid int32, statusp *_C_int, options int, rusage *Rusage) (wpid int32, err error) {
 	r0, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&procwait4)), 4, uintptr(pid), uintptr(unsafe.Pointer(statusp)), uintptr(options), uintptr(unsafe.Pointer(rusage)), 0, 0)
 	wpid = int32(r0)
 	if e1 != 0 {
@@ -443,7 +443,7 @@ func wait4(pid int32, statusp *_C_int, options int, rusage *Rusage) (wpid int32,
 	return
 }
 
-func gethostname(buf []byte) (n int, err error) { log.DebugLog()
+func gethostname(buf []byte) (n int, err error) {
 	var _p0 *byte
 	if len(buf) > 0 {
 		_p0 = &buf[0]
@@ -456,7 +456,7 @@ func gethostname(buf []byte) (n int, err error) { log.DebugLog()
 	return
 }
 
-func utimes(path string, times *[2]Timeval) (err error) { log.DebugLog()
+func utimes(path string, times *[2]Timeval) (err error) {
 	var _p0 *byte
 	_p0, err = BytePtrFromString(path)
 	if err != nil {
@@ -469,7 +469,7 @@ func utimes(path string, times *[2]Timeval) (err error) { log.DebugLog()
 	return
 }
 
-func utimensat(fd int, path string, times *[2]Timespec, flag int) (err error) { log.DebugLog()
+func utimensat(fd int, path string, times *[2]Timespec, flag int) (err error) {
 	var _p0 *byte
 	_p0, err = BytePtrFromString(path)
 	if err != nil {
@@ -482,7 +482,7 @@ func utimensat(fd int, path string, times *[2]Timespec, flag int) (err error) { 
 	return
 }
 
-func fcntl(fd int, cmd int, arg int) (val int, err error) { log.DebugLog()
+func fcntl(fd int, cmd int, arg int) (val int, err error) {
 	r0, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&procfcntl)), 3, uintptr(fd), uintptr(cmd), uintptr(arg), 0, 0, 0)
 	val = int(r0)
 	if e1 != 0 {
@@ -491,7 +491,7 @@ func fcntl(fd int, cmd int, arg int) (val int, err error) { log.DebugLog()
 	return
 }
 
-func futimesat(fildes int, path *byte, times *[2]Timeval) (err error) { log.DebugLog()
+func futimesat(fildes int, path *byte, times *[2]Timeval) (err error) {
 	_, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&procfutimesat)), 3, uintptr(fildes), uintptr(unsafe.Pointer(path)), uintptr(unsafe.Pointer(times)), 0, 0, 0)
 	if e1 != 0 {
 		err = e1
@@ -499,7 +499,7 @@ func futimesat(fildes int, path *byte, times *[2]Timeval) (err error) { log.Debu
 	return
 }
 
-func accept(s int, rsa *RawSockaddrAny, addrlen *_Socklen) (fd int, err error) { log.DebugLog()
+func accept(s int, rsa *RawSockaddrAny, addrlen *_Socklen) (fd int, err error) {
 	r0, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&procaccept)), 3, uintptr(s), uintptr(unsafe.Pointer(rsa)), uintptr(unsafe.Pointer(addrlen)), 0, 0, 0)
 	fd = int(r0)
 	if e1 != 0 {
@@ -508,7 +508,7 @@ func accept(s int, rsa *RawSockaddrAny, addrlen *_Socklen) (fd int, err error) {
 	return
 }
 
-func recvmsg(s int, msg *Msghdr, flags int) (n int, err error) { log.DebugLog()
+func recvmsg(s int, msg *Msghdr, flags int) (n int, err error) {
 	r0, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&proc__xnet_recvmsg)), 3, uintptr(s), uintptr(unsafe.Pointer(msg)), uintptr(flags), 0, 0, 0)
 	n = int(r0)
 	if e1 != 0 {
@@ -517,7 +517,7 @@ func recvmsg(s int, msg *Msghdr, flags int) (n int, err error) { log.DebugLog()
 	return
 }
 
-func sendmsg(s int, msg *Msghdr, flags int) (n int, err error) { log.DebugLog()
+func sendmsg(s int, msg *Msghdr, flags int) (n int, err error) {
 	r0, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&proc__xnet_sendmsg)), 3, uintptr(s), uintptr(unsafe.Pointer(msg)), uintptr(flags), 0, 0, 0)
 	n = int(r0)
 	if e1 != 0 {
@@ -526,7 +526,7 @@ func sendmsg(s int, msg *Msghdr, flags int) (n int, err error) { log.DebugLog()
 	return
 }
 
-func acct(path *byte) (err error) { log.DebugLog()
+func acct(path *byte) (err error) {
 	_, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&procacct)), 1, uintptr(unsafe.Pointer(path)), 0, 0, 0, 0, 0)
 	if e1 != 0 {
 		err = e1
@@ -534,25 +534,25 @@ func acct(path *byte) (err error) { log.DebugLog()
 	return
 }
 
-func __makedev(version int, major uint, minor uint) (val uint64) { log.DebugLog()
+func __makedev(version int, major uint, minor uint) (val uint64) {
 	r0, _, _ := sysvicall6(uintptr(unsafe.Pointer(&proc__makedev)), 3, uintptr(version), uintptr(major), uintptr(minor), 0, 0, 0)
 	val = uint64(r0)
 	return
 }
 
-func __major(version int, dev uint64) (val uint) { log.DebugLog()
+func __major(version int, dev uint64) (val uint) {
 	r0, _, _ := sysvicall6(uintptr(unsafe.Pointer(&proc__major)), 2, uintptr(version), uintptr(dev), 0, 0, 0, 0)
 	val = uint(r0)
 	return
 }
 
-func __minor(version int, dev uint64) (val uint) { log.DebugLog()
+func __minor(version int, dev uint64) (val uint) {
 	r0, _, _ := sysvicall6(uintptr(unsafe.Pointer(&proc__minor)), 2, uintptr(version), uintptr(dev), 0, 0, 0, 0)
 	val = uint(r0)
 	return
 }
 
-func ioctl(fd int, req uint, arg uintptr) (err error) { log.DebugLog()
+func ioctl(fd int, req uint, arg uintptr) (err error) {
 	_, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&procioctl)), 3, uintptr(fd), uintptr(req), uintptr(arg), 0, 0, 0)
 	if e1 != 0 {
 		err = e1
@@ -560,7 +560,7 @@ func ioctl(fd int, req uint, arg uintptr) (err error) { log.DebugLog()
 	return
 }
 
-func poll(fds *PollFd, nfds int, timeout int) (n int, err error) { log.DebugLog()
+func poll(fds *PollFd, nfds int, timeout int) (n int, err error) {
 	r0, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&procpoll)), 3, uintptr(unsafe.Pointer(fds)), uintptr(nfds), uintptr(timeout), 0, 0, 0)
 	n = int(r0)
 	if e1 != 0 {
@@ -569,7 +569,7 @@ func poll(fds *PollFd, nfds int, timeout int) (n int, err error) { log.DebugLog(
 	return
 }
 
-func Access(path string, mode uint32) (err error) { log.DebugLog()
+func Access(path string, mode uint32) (err error) {
 	var _p0 *byte
 	_p0, err = BytePtrFromString(path)
 	if err != nil {
@@ -582,7 +582,7 @@ func Access(path string, mode uint32) (err error) { log.DebugLog()
 	return
 }
 
-func Adjtime(delta *Timeval, olddelta *Timeval) (err error) { log.DebugLog()
+func Adjtime(delta *Timeval, olddelta *Timeval) (err error) {
 	_, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&procAdjtime)), 2, uintptr(unsafe.Pointer(delta)), uintptr(unsafe.Pointer(olddelta)), 0, 0, 0, 0)
 	if e1 != 0 {
 		err = e1
@@ -590,7 +590,7 @@ func Adjtime(delta *Timeval, olddelta *Timeval) (err error) { log.DebugLog()
 	return
 }
 
-func Chdir(path string) (err error) { log.DebugLog()
+func Chdir(path string) (err error) {
 	var _p0 *byte
 	_p0, err = BytePtrFromString(path)
 	if err != nil {
@@ -603,7 +603,7 @@ func Chdir(path string) (err error) { log.DebugLog()
 	return
 }
 
-func Chmod(path string, mode uint32) (err error) { log.DebugLog()
+func Chmod(path string, mode uint32) (err error) {
 	var _p0 *byte
 	_p0, err = BytePtrFromString(path)
 	if err != nil {
@@ -616,7 +616,7 @@ func Chmod(path string, mode uint32) (err error) { log.DebugLog()
 	return
 }
 
-func Chown(path string, uid int, gid int) (err error) { log.DebugLog()
+func Chown(path string, uid int, gid int) (err error) {
 	var _p0 *byte
 	_p0, err = BytePtrFromString(path)
 	if err != nil {
@@ -629,7 +629,7 @@ func Chown(path string, uid int, gid int) (err error) { log.DebugLog()
 	return
 }
 
-func Chroot(path string) (err error) { log.DebugLog()
+func Chroot(path string) (err error) {
 	var _p0 *byte
 	_p0, err = BytePtrFromString(path)
 	if err != nil {
@@ -642,7 +642,7 @@ func Chroot(path string) (err error) { log.DebugLog()
 	return
 }
 
-func Close(fd int) (err error) { log.DebugLog()
+func Close(fd int) (err error) {
 	_, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&procClose)), 1, uintptr(fd), 0, 0, 0, 0, 0)
 	if e1 != 0 {
 		err = e1
@@ -650,7 +650,7 @@ func Close(fd int) (err error) { log.DebugLog()
 	return
 }
 
-func Creat(path string, mode uint32) (fd int, err error) { log.DebugLog()
+func Creat(path string, mode uint32) (fd int, err error) {
 	var _p0 *byte
 	_p0, err = BytePtrFromString(path)
 	if err != nil {
@@ -664,7 +664,7 @@ func Creat(path string, mode uint32) (fd int, err error) { log.DebugLog()
 	return
 }
 
-func Dup(fd int) (nfd int, err error) { log.DebugLog()
+func Dup(fd int) (nfd int, err error) {
 	r0, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&procDup)), 1, uintptr(fd), 0, 0, 0, 0, 0)
 	nfd = int(r0)
 	if e1 != 0 {
@@ -673,7 +673,7 @@ func Dup(fd int) (nfd int, err error) { log.DebugLog()
 	return
 }
 
-func Dup2(oldfd int, newfd int) (err error) { log.DebugLog()
+func Dup2(oldfd int, newfd int) (err error) {
 	_, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&procDup2)), 2, uintptr(oldfd), uintptr(newfd), 0, 0, 0, 0)
 	if e1 != 0 {
 		err = e1
@@ -681,12 +681,12 @@ func Dup2(oldfd int, newfd int) (err error) { log.DebugLog()
 	return
 }
 
-func Exit(code int) { log.DebugLog()
+func Exit(code int) {
 	sysvicall6(uintptr(unsafe.Pointer(&procExit)), 1, uintptr(code), 0, 0, 0, 0, 0)
 	return
 }
 
-func Fchdir(fd int) (err error) { log.DebugLog()
+func Fchdir(fd int) (err error) {
 	_, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&procFchdir)), 1, uintptr(fd), 0, 0, 0, 0, 0)
 	if e1 != 0 {
 		err = e1
@@ -694,7 +694,7 @@ func Fchdir(fd int) (err error) { log.DebugLog()
 	return
 }
 
-func Fchmod(fd int, mode uint32) (err error) { log.DebugLog()
+func Fchmod(fd int, mode uint32) (err error) {
 	_, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&procFchmod)), 2, uintptr(fd), uintptr(mode), 0, 0, 0, 0)
 	if e1 != 0 {
 		err = e1
@@ -702,7 +702,7 @@ func Fchmod(fd int, mode uint32) (err error) { log.DebugLog()
 	return
 }
 
-func Fchmodat(dirfd int, path string, mode uint32, flags int) (err error) { log.DebugLog()
+func Fchmodat(dirfd int, path string, mode uint32, flags int) (err error) {
 	var _p0 *byte
 	_p0, err = BytePtrFromString(path)
 	if err != nil {
@@ -715,7 +715,7 @@ func Fchmodat(dirfd int, path string, mode uint32, flags int) (err error) { log.
 	return
 }
 
-func Fchown(fd int, uid int, gid int) (err error) { log.DebugLog()
+func Fchown(fd int, uid int, gid int) (err error) {
 	_, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&procFchown)), 3, uintptr(fd), uintptr(uid), uintptr(gid), 0, 0, 0)
 	if e1 != 0 {
 		err = e1
@@ -723,7 +723,7 @@ func Fchown(fd int, uid int, gid int) (err error) { log.DebugLog()
 	return
 }
 
-func Fchownat(dirfd int, path string, uid int, gid int, flags int) (err error) { log.DebugLog()
+func Fchownat(dirfd int, path string, uid int, gid int, flags int) (err error) {
 	var _p0 *byte
 	_p0, err = BytePtrFromString(path)
 	if err != nil {
@@ -736,7 +736,7 @@ func Fchownat(dirfd int, path string, uid int, gid int, flags int) (err error) {
 	return
 }
 
-func Fdatasync(fd int) (err error) { log.DebugLog()
+func Fdatasync(fd int) (err error) {
 	_, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&procFdatasync)), 1, uintptr(fd), 0, 0, 0, 0, 0)
 	if e1 != 0 {
 		err = e1
@@ -744,7 +744,7 @@ func Fdatasync(fd int) (err error) { log.DebugLog()
 	return
 }
 
-func Flock(fd int, how int) (err error) { log.DebugLog()
+func Flock(fd int, how int) (err error) {
 	_, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&procFlock)), 2, uintptr(fd), uintptr(how), 0, 0, 0, 0)
 	if e1 != 0 {
 		err = e1
@@ -752,7 +752,7 @@ func Flock(fd int, how int) (err error) { log.DebugLog()
 	return
 }
 
-func Fpathconf(fd int, name int) (val int, err error) { log.DebugLog()
+func Fpathconf(fd int, name int) (val int, err error) {
 	r0, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&procFpathconf)), 2, uintptr(fd), uintptr(name), 0, 0, 0, 0)
 	val = int(r0)
 	if e1 != 0 {
@@ -761,7 +761,7 @@ func Fpathconf(fd int, name int) (val int, err error) { log.DebugLog()
 	return
 }
 
-func Fstat(fd int, stat *Stat_t) (err error) { log.DebugLog()
+func Fstat(fd int, stat *Stat_t) (err error) {
 	_, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&procFstat)), 2, uintptr(fd), uintptr(unsafe.Pointer(stat)), 0, 0, 0, 0)
 	if e1 != 0 {
 		err = e1
@@ -769,7 +769,7 @@ func Fstat(fd int, stat *Stat_t) (err error) { log.DebugLog()
 	return
 }
 
-func Fstatvfs(fd int, vfsstat *Statvfs_t) (err error) { log.DebugLog()
+func Fstatvfs(fd int, vfsstat *Statvfs_t) (err error) {
 	_, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&procFstatvfs)), 2, uintptr(fd), uintptr(unsafe.Pointer(vfsstat)), 0, 0, 0, 0)
 	if e1 != 0 {
 		err = e1
@@ -777,7 +777,7 @@ func Fstatvfs(fd int, vfsstat *Statvfs_t) (err error) { log.DebugLog()
 	return
 }
 
-func Getdents(fd int, buf []byte, basep *uintptr) (n int, err error) { log.DebugLog()
+func Getdents(fd int, buf []byte, basep *uintptr) (n int, err error) {
 	var _p0 *byte
 	if len(buf) > 0 {
 		_p0 = &buf[0]
@@ -790,19 +790,19 @@ func Getdents(fd int, buf []byte, basep *uintptr) (n int, err error) { log.Debug
 	return
 }
 
-func Getgid() (gid int) { log.DebugLog()
+func Getgid() (gid int) {
 	r0, _, _ := rawSysvicall6(uintptr(unsafe.Pointer(&procGetgid)), 0, 0, 0, 0, 0, 0, 0)
 	gid = int(r0)
 	return
 }
 
-func Getpid() (pid int) { log.DebugLog()
+func Getpid() (pid int) {
 	r0, _, _ := rawSysvicall6(uintptr(unsafe.Pointer(&procGetpid)), 0, 0, 0, 0, 0, 0, 0)
 	pid = int(r0)
 	return
 }
 
-func Getpgid(pid int) (pgid int, err error) { log.DebugLog()
+func Getpgid(pid int) (pgid int, err error) {
 	r0, _, e1 := rawSysvicall6(uintptr(unsafe.Pointer(&procGetpgid)), 1, uintptr(pid), 0, 0, 0, 0, 0)
 	pgid = int(r0)
 	if e1 != 0 {
@@ -811,7 +811,7 @@ func Getpgid(pid int) (pgid int, err error) { log.DebugLog()
 	return
 }
 
-func Getpgrp() (pgid int, err error) { log.DebugLog()
+func Getpgrp() (pgid int, err error) {
 	r0, _, e1 := rawSysvicall6(uintptr(unsafe.Pointer(&procGetpgrp)), 0, 0, 0, 0, 0, 0, 0)
 	pgid = int(r0)
 	if e1 != 0 {
@@ -820,25 +820,25 @@ func Getpgrp() (pgid int, err error) { log.DebugLog()
 	return
 }
 
-func Geteuid() (euid int) { log.DebugLog()
+func Geteuid() (euid int) {
 	r0, _, _ := sysvicall6(uintptr(unsafe.Pointer(&procGeteuid)), 0, 0, 0, 0, 0, 0, 0)
 	euid = int(r0)
 	return
 }
 
-func Getegid() (egid int) { log.DebugLog()
+func Getegid() (egid int) {
 	r0, _, _ := sysvicall6(uintptr(unsafe.Pointer(&procGetegid)), 0, 0, 0, 0, 0, 0, 0)
 	egid = int(r0)
 	return
 }
 
-func Getppid() (ppid int) { log.DebugLog()
+func Getppid() (ppid int) {
 	r0, _, _ := sysvicall6(uintptr(unsafe.Pointer(&procGetppid)), 0, 0, 0, 0, 0, 0, 0)
 	ppid = int(r0)
 	return
 }
 
-func Getpriority(which int, who int) (n int, err error) { log.DebugLog()
+func Getpriority(which int, who int) (n int, err error) {
 	r0, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&procGetpriority)), 2, uintptr(which), uintptr(who), 0, 0, 0, 0)
 	n = int(r0)
 	if e1 != 0 {
@@ -847,7 +847,7 @@ func Getpriority(which int, who int) (n int, err error) { log.DebugLog()
 	return
 }
 
-func Getrlimit(which int, lim *Rlimit) (err error) { log.DebugLog()
+func Getrlimit(which int, lim *Rlimit) (err error) {
 	_, _, e1 := rawSysvicall6(uintptr(unsafe.Pointer(&procGetrlimit)), 2, uintptr(which), uintptr(unsafe.Pointer(lim)), 0, 0, 0, 0)
 	if e1 != 0 {
 		err = e1
@@ -855,7 +855,7 @@ func Getrlimit(which int, lim *Rlimit) (err error) { log.DebugLog()
 	return
 }
 
-func Getrusage(who int, rusage *Rusage) (err error) { log.DebugLog()
+func Getrusage(who int, rusage *Rusage) (err error) {
 	_, _, e1 := rawSysvicall6(uintptr(unsafe.Pointer(&procGetrusage)), 2, uintptr(who), uintptr(unsafe.Pointer(rusage)), 0, 0, 0, 0)
 	if e1 != 0 {
 		err = e1
@@ -863,7 +863,7 @@ func Getrusage(who int, rusage *Rusage) (err error) { log.DebugLog()
 	return
 }
 
-func Gettimeofday(tv *Timeval) (err error) { log.DebugLog()
+func Gettimeofday(tv *Timeval) (err error) {
 	_, _, e1 := rawSysvicall6(uintptr(unsafe.Pointer(&procGettimeofday)), 1, uintptr(unsafe.Pointer(tv)), 0, 0, 0, 0, 0)
 	if e1 != 0 {
 		err = e1
@@ -871,13 +871,13 @@ func Gettimeofday(tv *Timeval) (err error) { log.DebugLog()
 	return
 }
 
-func Getuid() (uid int) { log.DebugLog()
+func Getuid() (uid int) {
 	r0, _, _ := rawSysvicall6(uintptr(unsafe.Pointer(&procGetuid)), 0, 0, 0, 0, 0, 0, 0)
 	uid = int(r0)
 	return
 }
 
-func Kill(pid int, signum syscall.Signal) (err error) { log.DebugLog()
+func Kill(pid int, signum syscall.Signal) (err error) {
 	_, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&procKill)), 2, uintptr(pid), uintptr(signum), 0, 0, 0, 0)
 	if e1 != 0 {
 		err = e1
@@ -885,7 +885,7 @@ func Kill(pid int, signum syscall.Signal) (err error) { log.DebugLog()
 	return
 }
 
-func Lchown(path string, uid int, gid int) (err error) { log.DebugLog()
+func Lchown(path string, uid int, gid int) (err error) {
 	var _p0 *byte
 	_p0, err = BytePtrFromString(path)
 	if err != nil {
@@ -898,7 +898,7 @@ func Lchown(path string, uid int, gid int) (err error) { log.DebugLog()
 	return
 }
 
-func Link(path string, link string) (err error) { log.DebugLog()
+func Link(path string, link string) (err error) {
 	var _p0 *byte
 	_p0, err = BytePtrFromString(path)
 	if err != nil {
@@ -916,7 +916,7 @@ func Link(path string, link string) (err error) { log.DebugLog()
 	return
 }
 
-func Listen(s int, backlog int) (err error) { log.DebugLog()
+func Listen(s int, backlog int) (err error) {
 	_, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&proc__xnet_llisten)), 2, uintptr(s), uintptr(backlog), 0, 0, 0, 0)
 	if e1 != 0 {
 		err = e1
@@ -924,7 +924,7 @@ func Listen(s int, backlog int) (err error) { log.DebugLog()
 	return
 }
 
-func Lstat(path string, stat *Stat_t) (err error) { log.DebugLog()
+func Lstat(path string, stat *Stat_t) (err error) {
 	var _p0 *byte
 	_p0, err = BytePtrFromString(path)
 	if err != nil {
@@ -937,7 +937,7 @@ func Lstat(path string, stat *Stat_t) (err error) { log.DebugLog()
 	return
 }
 
-func Madvise(b []byte, advice int) (err error) { log.DebugLog()
+func Madvise(b []byte, advice int) (err error) {
 	var _p0 *byte
 	if len(b) > 0 {
 		_p0 = &b[0]
@@ -949,7 +949,7 @@ func Madvise(b []byte, advice int) (err error) { log.DebugLog()
 	return
 }
 
-func Mkdir(path string, mode uint32) (err error) { log.DebugLog()
+func Mkdir(path string, mode uint32) (err error) {
 	var _p0 *byte
 	_p0, err = BytePtrFromString(path)
 	if err != nil {
@@ -962,7 +962,7 @@ func Mkdir(path string, mode uint32) (err error) { log.DebugLog()
 	return
 }
 
-func Mkdirat(dirfd int, path string, mode uint32) (err error) { log.DebugLog()
+func Mkdirat(dirfd int, path string, mode uint32) (err error) {
 	var _p0 *byte
 	_p0, err = BytePtrFromString(path)
 	if err != nil {
@@ -975,7 +975,7 @@ func Mkdirat(dirfd int, path string, mode uint32) (err error) { log.DebugLog()
 	return
 }
 
-func Mkfifo(path string, mode uint32) (err error) { log.DebugLog()
+func Mkfifo(path string, mode uint32) (err error) {
 	var _p0 *byte
 	_p0, err = BytePtrFromString(path)
 	if err != nil {
@@ -988,7 +988,7 @@ func Mkfifo(path string, mode uint32) (err error) { log.DebugLog()
 	return
 }
 
-func Mkfifoat(dirfd int, path string, mode uint32) (err error) { log.DebugLog()
+func Mkfifoat(dirfd int, path string, mode uint32) (err error) {
 	var _p0 *byte
 	_p0, err = BytePtrFromString(path)
 	if err != nil {
@@ -1001,7 +1001,7 @@ func Mkfifoat(dirfd int, path string, mode uint32) (err error) { log.DebugLog()
 	return
 }
 
-func Mknod(path string, mode uint32, dev int) (err error) { log.DebugLog()
+func Mknod(path string, mode uint32, dev int) (err error) {
 	var _p0 *byte
 	_p0, err = BytePtrFromString(path)
 	if err != nil {
@@ -1014,7 +1014,7 @@ func Mknod(path string, mode uint32, dev int) (err error) { log.DebugLog()
 	return
 }
 
-func Mknodat(dirfd int, path string, mode uint32, dev int) (err error) { log.DebugLog()
+func Mknodat(dirfd int, path string, mode uint32, dev int) (err error) {
 	var _p0 *byte
 	_p0, err = BytePtrFromString(path)
 	if err != nil {
@@ -1027,7 +1027,7 @@ func Mknodat(dirfd int, path string, mode uint32, dev int) (err error) { log.Deb
 	return
 }
 
-func Mlock(b []byte) (err error) { log.DebugLog()
+func Mlock(b []byte) (err error) {
 	var _p0 *byte
 	if len(b) > 0 {
 		_p0 = &b[0]
@@ -1039,7 +1039,7 @@ func Mlock(b []byte) (err error) { log.DebugLog()
 	return
 }
 
-func Mlockall(flags int) (err error) { log.DebugLog()
+func Mlockall(flags int) (err error) {
 	_, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&procMlockall)), 1, uintptr(flags), 0, 0, 0, 0, 0)
 	if e1 != 0 {
 		err = e1
@@ -1047,7 +1047,7 @@ func Mlockall(flags int) (err error) { log.DebugLog()
 	return
 }
 
-func Mprotect(b []byte, prot int) (err error) { log.DebugLog()
+func Mprotect(b []byte, prot int) (err error) {
 	var _p0 *byte
 	if len(b) > 0 {
 		_p0 = &b[0]
@@ -1059,7 +1059,7 @@ func Mprotect(b []byte, prot int) (err error) { log.DebugLog()
 	return
 }
 
-func Msync(b []byte, flags int) (err error) { log.DebugLog()
+func Msync(b []byte, flags int) (err error) {
 	var _p0 *byte
 	if len(b) > 0 {
 		_p0 = &b[0]
@@ -1071,7 +1071,7 @@ func Msync(b []byte, flags int) (err error) { log.DebugLog()
 	return
 }
 
-func Munlock(b []byte) (err error) { log.DebugLog()
+func Munlock(b []byte) (err error) {
 	var _p0 *byte
 	if len(b) > 0 {
 		_p0 = &b[0]
@@ -1083,7 +1083,7 @@ func Munlock(b []byte) (err error) { log.DebugLog()
 	return
 }
 
-func Munlockall() (err error) { log.DebugLog()
+func Munlockall() (err error) {
 	_, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&procMunlockall)), 0, 0, 0, 0, 0, 0, 0)
 	if e1 != 0 {
 		err = e1
@@ -1091,7 +1091,7 @@ func Munlockall() (err error) { log.DebugLog()
 	return
 }
 
-func Nanosleep(time *Timespec, leftover *Timespec) (err error) { log.DebugLog()
+func Nanosleep(time *Timespec, leftover *Timespec) (err error) {
 	_, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&procNanosleep)), 2, uintptr(unsafe.Pointer(time)), uintptr(unsafe.Pointer(leftover)), 0, 0, 0, 0)
 	if e1 != 0 {
 		err = e1
@@ -1099,7 +1099,7 @@ func Nanosleep(time *Timespec, leftover *Timespec) (err error) { log.DebugLog()
 	return
 }
 
-func Open(path string, mode int, perm uint32) (fd int, err error) { log.DebugLog()
+func Open(path string, mode int, perm uint32) (fd int, err error) {
 	var _p0 *byte
 	_p0, err = BytePtrFromString(path)
 	if err != nil {
@@ -1113,7 +1113,7 @@ func Open(path string, mode int, perm uint32) (fd int, err error) { log.DebugLog
 	return
 }
 
-func Openat(dirfd int, path string, flags int, mode uint32) (fd int, err error) { log.DebugLog()
+func Openat(dirfd int, path string, flags int, mode uint32) (fd int, err error) {
 	var _p0 *byte
 	_p0, err = BytePtrFromString(path)
 	if err != nil {
@@ -1127,7 +1127,7 @@ func Openat(dirfd int, path string, flags int, mode uint32) (fd int, err error) 
 	return
 }
 
-func Pathconf(path string, name int) (val int, err error) { log.DebugLog()
+func Pathconf(path string, name int) (val int, err error) {
 	var _p0 *byte
 	_p0, err = BytePtrFromString(path)
 	if err != nil {
@@ -1141,7 +1141,7 @@ func Pathconf(path string, name int) (val int, err error) { log.DebugLog()
 	return
 }
 
-func Pause() (err error) { log.DebugLog()
+func Pause() (err error) {
 	_, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&procPause)), 0, 0, 0, 0, 0, 0, 0)
 	if e1 != 0 {
 		err = e1
@@ -1149,7 +1149,7 @@ func Pause() (err error) { log.DebugLog()
 	return
 }
 
-func Pread(fd int, p []byte, offset int64) (n int, err error) { log.DebugLog()
+func Pread(fd int, p []byte, offset int64) (n int, err error) {
 	var _p0 *byte
 	if len(p) > 0 {
 		_p0 = &p[0]
@@ -1162,7 +1162,7 @@ func Pread(fd int, p []byte, offset int64) (n int, err error) { log.DebugLog()
 	return
 }
 
-func Pwrite(fd int, p []byte, offset int64) (n int, err error) { log.DebugLog()
+func Pwrite(fd int, p []byte, offset int64) (n int, err error) {
 	var _p0 *byte
 	if len(p) > 0 {
 		_p0 = &p[0]
@@ -1175,7 +1175,7 @@ func Pwrite(fd int, p []byte, offset int64) (n int, err error) { log.DebugLog()
 	return
 }
 
-func read(fd int, p []byte) (n int, err error) { log.DebugLog()
+func read(fd int, p []byte) (n int, err error) {
 	var _p0 *byte
 	if len(p) > 0 {
 		_p0 = &p[0]
@@ -1188,7 +1188,7 @@ func read(fd int, p []byte) (n int, err error) { log.DebugLog()
 	return
 }
 
-func Readlink(path string, buf []byte) (n int, err error) { log.DebugLog()
+func Readlink(path string, buf []byte) (n int, err error) {
 	var _p0 *byte
 	_p0, err = BytePtrFromString(path)
 	if err != nil {
@@ -1206,7 +1206,7 @@ func Readlink(path string, buf []byte) (n int, err error) { log.DebugLog()
 	return
 }
 
-func Rename(from string, to string) (err error) { log.DebugLog()
+func Rename(from string, to string) (err error) {
 	var _p0 *byte
 	_p0, err = BytePtrFromString(from)
 	if err != nil {
@@ -1224,7 +1224,7 @@ func Rename(from string, to string) (err error) { log.DebugLog()
 	return
 }
 
-func Renameat(olddirfd int, oldpath string, newdirfd int, newpath string) (err error) { log.DebugLog()
+func Renameat(olddirfd int, oldpath string, newdirfd int, newpath string) (err error) {
 	var _p0 *byte
 	_p0, err = BytePtrFromString(oldpath)
 	if err != nil {
@@ -1242,7 +1242,7 @@ func Renameat(olddirfd int, oldpath string, newdirfd int, newpath string) (err e
 	return
 }
 
-func Rmdir(path string) (err error) { log.DebugLog()
+func Rmdir(path string) (err error) {
 	var _p0 *byte
 	_p0, err = BytePtrFromString(path)
 	if err != nil {
@@ -1255,7 +1255,7 @@ func Rmdir(path string) (err error) { log.DebugLog()
 	return
 }
 
-func Seek(fd int, offset int64, whence int) (newoffset int64, err error) { log.DebugLog()
+func Seek(fd int, offset int64, whence int) (newoffset int64, err error) {
 	r0, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&proclseek)), 3, uintptr(fd), uintptr(offset), uintptr(whence), 0, 0, 0)
 	newoffset = int64(r0)
 	if e1 != 0 {
@@ -1264,7 +1264,7 @@ func Seek(fd int, offset int64, whence int) (newoffset int64, err error) { log.D
 	return
 }
 
-func Setegid(egid int) (err error) { log.DebugLog()
+func Setegid(egid int) (err error) {
 	_, _, e1 := rawSysvicall6(uintptr(unsafe.Pointer(&procSetegid)), 1, uintptr(egid), 0, 0, 0, 0, 0)
 	if e1 != 0 {
 		err = e1
@@ -1272,7 +1272,7 @@ func Setegid(egid int) (err error) { log.DebugLog()
 	return
 }
 
-func Seteuid(euid int) (err error) { log.DebugLog()
+func Seteuid(euid int) (err error) {
 	_, _, e1 := rawSysvicall6(uintptr(unsafe.Pointer(&procSeteuid)), 1, uintptr(euid), 0, 0, 0, 0, 0)
 	if e1 != 0 {
 		err = e1
@@ -1280,7 +1280,7 @@ func Seteuid(euid int) (err error) { log.DebugLog()
 	return
 }
 
-func Setgid(gid int) (err error) { log.DebugLog()
+func Setgid(gid int) (err error) {
 	_, _, e1 := rawSysvicall6(uintptr(unsafe.Pointer(&procSetgid)), 1, uintptr(gid), 0, 0, 0, 0, 0)
 	if e1 != 0 {
 		err = e1
@@ -1288,7 +1288,7 @@ func Setgid(gid int) (err error) { log.DebugLog()
 	return
 }
 
-func Sethostname(p []byte) (err error) { log.DebugLog()
+func Sethostname(p []byte) (err error) {
 	var _p0 *byte
 	if len(p) > 0 {
 		_p0 = &p[0]
@@ -1300,7 +1300,7 @@ func Sethostname(p []byte) (err error) { log.DebugLog()
 	return
 }
 
-func Setpgid(pid int, pgid int) (err error) { log.DebugLog()
+func Setpgid(pid int, pgid int) (err error) {
 	_, _, e1 := rawSysvicall6(uintptr(unsafe.Pointer(&procSetpgid)), 2, uintptr(pid), uintptr(pgid), 0, 0, 0, 0)
 	if e1 != 0 {
 		err = e1
@@ -1308,7 +1308,7 @@ func Setpgid(pid int, pgid int) (err error) { log.DebugLog()
 	return
 }
 
-func Setpriority(which int, who int, prio int) (err error) { log.DebugLog()
+func Setpriority(which int, who int, prio int) (err error) {
 	_, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&procSetpriority)), 3, uintptr(which), uintptr(who), uintptr(prio), 0, 0, 0)
 	if e1 != 0 {
 		err = e1
@@ -1316,7 +1316,7 @@ func Setpriority(which int, who int, prio int) (err error) { log.DebugLog()
 	return
 }
 
-func Setregid(rgid int, egid int) (err error) { log.DebugLog()
+func Setregid(rgid int, egid int) (err error) {
 	_, _, e1 := rawSysvicall6(uintptr(unsafe.Pointer(&procSetregid)), 2, uintptr(rgid), uintptr(egid), 0, 0, 0, 0)
 	if e1 != 0 {
 		err = e1
@@ -1324,7 +1324,7 @@ func Setregid(rgid int, egid int) (err error) { log.DebugLog()
 	return
 }
 
-func Setreuid(ruid int, euid int) (err error) { log.DebugLog()
+func Setreuid(ruid int, euid int) (err error) {
 	_, _, e1 := rawSysvicall6(uintptr(unsafe.Pointer(&procSetreuid)), 2, uintptr(ruid), uintptr(euid), 0, 0, 0, 0)
 	if e1 != 0 {
 		err = e1
@@ -1332,7 +1332,7 @@ func Setreuid(ruid int, euid int) (err error) { log.DebugLog()
 	return
 }
 
-func Setrlimit(which int, lim *Rlimit) (err error) { log.DebugLog()
+func Setrlimit(which int, lim *Rlimit) (err error) {
 	_, _, e1 := rawSysvicall6(uintptr(unsafe.Pointer(&procSetrlimit)), 2, uintptr(which), uintptr(unsafe.Pointer(lim)), 0, 0, 0, 0)
 	if e1 != 0 {
 		err = e1
@@ -1340,7 +1340,7 @@ func Setrlimit(which int, lim *Rlimit) (err error) { log.DebugLog()
 	return
 }
 
-func Setsid() (pid int, err error) { log.DebugLog()
+func Setsid() (pid int, err error) {
 	r0, _, e1 := rawSysvicall6(uintptr(unsafe.Pointer(&procSetsid)), 0, 0, 0, 0, 0, 0, 0)
 	pid = int(r0)
 	if e1 != 0 {
@@ -1349,7 +1349,7 @@ func Setsid() (pid int, err error) { log.DebugLog()
 	return
 }
 
-func Setuid(uid int) (err error) { log.DebugLog()
+func Setuid(uid int) (err error) {
 	_, _, e1 := rawSysvicall6(uintptr(unsafe.Pointer(&procSetuid)), 1, uintptr(uid), 0, 0, 0, 0, 0)
 	if e1 != 0 {
 		err = e1
@@ -1357,7 +1357,7 @@ func Setuid(uid int) (err error) { log.DebugLog()
 	return
 }
 
-func Shutdown(s int, how int) (err error) { log.DebugLog()
+func Shutdown(s int, how int) (err error) {
 	_, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&procshutdown)), 2, uintptr(s), uintptr(how), 0, 0, 0, 0)
 	if e1 != 0 {
 		err = e1
@@ -1365,7 +1365,7 @@ func Shutdown(s int, how int) (err error) { log.DebugLog()
 	return
 }
 
-func Stat(path string, stat *Stat_t) (err error) { log.DebugLog()
+func Stat(path string, stat *Stat_t) (err error) {
 	var _p0 *byte
 	_p0, err = BytePtrFromString(path)
 	if err != nil {
@@ -1378,7 +1378,7 @@ func Stat(path string, stat *Stat_t) (err error) { log.DebugLog()
 	return
 }
 
-func Statvfs(path string, vfsstat *Statvfs_t) (err error) { log.DebugLog()
+func Statvfs(path string, vfsstat *Statvfs_t) (err error) {
 	var _p0 *byte
 	_p0, err = BytePtrFromString(path)
 	if err != nil {
@@ -1391,7 +1391,7 @@ func Statvfs(path string, vfsstat *Statvfs_t) (err error) { log.DebugLog()
 	return
 }
 
-func Symlink(path string, link string) (err error) { log.DebugLog()
+func Symlink(path string, link string) (err error) {
 	var _p0 *byte
 	_p0, err = BytePtrFromString(path)
 	if err != nil {
@@ -1409,7 +1409,7 @@ func Symlink(path string, link string) (err error) { log.DebugLog()
 	return
 }
 
-func Sync() (err error) { log.DebugLog()
+func Sync() (err error) {
 	_, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&procSync)), 0, 0, 0, 0, 0, 0, 0)
 	if e1 != 0 {
 		err = e1
@@ -1417,7 +1417,7 @@ func Sync() (err error) { log.DebugLog()
 	return
 }
 
-func Times(tms *Tms) (ticks uintptr, err error) { log.DebugLog()
+func Times(tms *Tms) (ticks uintptr, err error) {
 	r0, _, e1 := rawSysvicall6(uintptr(unsafe.Pointer(&procTimes)), 1, uintptr(unsafe.Pointer(tms)), 0, 0, 0, 0, 0)
 	ticks = uintptr(r0)
 	if e1 != 0 {
@@ -1426,7 +1426,7 @@ func Times(tms *Tms) (ticks uintptr, err error) { log.DebugLog()
 	return
 }
 
-func Truncate(path string, length int64) (err error) { log.DebugLog()
+func Truncate(path string, length int64) (err error) {
 	var _p0 *byte
 	_p0, err = BytePtrFromString(path)
 	if err != nil {
@@ -1439,7 +1439,7 @@ func Truncate(path string, length int64) (err error) { log.DebugLog()
 	return
 }
 
-func Fsync(fd int) (err error) { log.DebugLog()
+func Fsync(fd int) (err error) {
 	_, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&procFsync)), 1, uintptr(fd), 0, 0, 0, 0, 0)
 	if e1 != 0 {
 		err = e1
@@ -1447,7 +1447,7 @@ func Fsync(fd int) (err error) { log.DebugLog()
 	return
 }
 
-func Ftruncate(fd int, length int64) (err error) { log.DebugLog()
+func Ftruncate(fd int, length int64) (err error) {
 	_, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&procFtruncate)), 2, uintptr(fd), uintptr(length), 0, 0, 0, 0)
 	if e1 != 0 {
 		err = e1
@@ -1455,13 +1455,13 @@ func Ftruncate(fd int, length int64) (err error) { log.DebugLog()
 	return
 }
 
-func Umask(mask int) (oldmask int) { log.DebugLog()
+func Umask(mask int) (oldmask int) {
 	r0, _, _ := sysvicall6(uintptr(unsafe.Pointer(&procUmask)), 1, uintptr(mask), 0, 0, 0, 0, 0)
 	oldmask = int(r0)
 	return
 }
 
-func Uname(buf *Utsname) (err error) { log.DebugLog()
+func Uname(buf *Utsname) (err error) {
 	_, _, e1 := rawSysvicall6(uintptr(unsafe.Pointer(&procUname)), 1, uintptr(unsafe.Pointer(buf)), 0, 0, 0, 0, 0)
 	if e1 != 0 {
 		err = e1
@@ -1469,7 +1469,7 @@ func Uname(buf *Utsname) (err error) { log.DebugLog()
 	return
 }
 
-func Unmount(target string, flags int) (err error) { log.DebugLog()
+func Unmount(target string, flags int) (err error) {
 	var _p0 *byte
 	_p0, err = BytePtrFromString(target)
 	if err != nil {
@@ -1482,7 +1482,7 @@ func Unmount(target string, flags int) (err error) { log.DebugLog()
 	return
 }
 
-func Unlink(path string) (err error) { log.DebugLog()
+func Unlink(path string) (err error) {
 	var _p0 *byte
 	_p0, err = BytePtrFromString(path)
 	if err != nil {
@@ -1495,7 +1495,7 @@ func Unlink(path string) (err error) { log.DebugLog()
 	return
 }
 
-func Unlinkat(dirfd int, path string, flags int) (err error) { log.DebugLog()
+func Unlinkat(dirfd int, path string, flags int) (err error) {
 	var _p0 *byte
 	_p0, err = BytePtrFromString(path)
 	if err != nil {
@@ -1508,7 +1508,7 @@ func Unlinkat(dirfd int, path string, flags int) (err error) { log.DebugLog()
 	return
 }
 
-func Ustat(dev int, ubuf *Ustat_t) (err error) { log.DebugLog()
+func Ustat(dev int, ubuf *Ustat_t) (err error) {
 	_, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&procUstat)), 2, uintptr(dev), uintptr(unsafe.Pointer(ubuf)), 0, 0, 0, 0)
 	if e1 != 0 {
 		err = e1
@@ -1516,7 +1516,7 @@ func Ustat(dev int, ubuf *Ustat_t) (err error) { log.DebugLog()
 	return
 }
 
-func Utime(path string, buf *Utimbuf) (err error) { log.DebugLog()
+func Utime(path string, buf *Utimbuf) (err error) {
 	var _p0 *byte
 	_p0, err = BytePtrFromString(path)
 	if err != nil {
@@ -1529,7 +1529,7 @@ func Utime(path string, buf *Utimbuf) (err error) { log.DebugLog()
 	return
 }
 
-func bind(s int, addr unsafe.Pointer, addrlen _Socklen) (err error) { log.DebugLog()
+func bind(s int, addr unsafe.Pointer, addrlen _Socklen) (err error) {
 	_, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&proc__xnet_bind)), 3, uintptr(s), uintptr(addr), uintptr(addrlen), 0, 0, 0)
 	if e1 != 0 {
 		err = e1
@@ -1537,7 +1537,7 @@ func bind(s int, addr unsafe.Pointer, addrlen _Socklen) (err error) { log.DebugL
 	return
 }
 
-func connect(s int, addr unsafe.Pointer, addrlen _Socklen) (err error) { log.DebugLog()
+func connect(s int, addr unsafe.Pointer, addrlen _Socklen) (err error) {
 	_, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&proc__xnet_connect)), 3, uintptr(s), uintptr(addr), uintptr(addrlen), 0, 0, 0)
 	if e1 != 0 {
 		err = e1
@@ -1545,7 +1545,7 @@ func connect(s int, addr unsafe.Pointer, addrlen _Socklen) (err error) { log.Deb
 	return
 }
 
-func mmap(addr uintptr, length uintptr, prot int, flag int, fd int, pos int64) (ret uintptr, err error) { log.DebugLog()
+func mmap(addr uintptr, length uintptr, prot int, flag int, fd int, pos int64) (ret uintptr, err error) {
 	r0, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&procmmap)), 6, uintptr(addr), uintptr(length), uintptr(prot), uintptr(flag), uintptr(fd), uintptr(pos))
 	ret = uintptr(r0)
 	if e1 != 0 {
@@ -1554,7 +1554,7 @@ func mmap(addr uintptr, length uintptr, prot int, flag int, fd int, pos int64) (
 	return
 }
 
-func munmap(addr uintptr, length uintptr) (err error) { log.DebugLog()
+func munmap(addr uintptr, length uintptr) (err error) {
 	_, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&procmunmap)), 2, uintptr(addr), uintptr(length), 0, 0, 0, 0)
 	if e1 != 0 {
 		err = e1
@@ -1562,7 +1562,7 @@ func munmap(addr uintptr, length uintptr) (err error) { log.DebugLog()
 	return
 }
 
-func sendto(s int, buf []byte, flags int, to unsafe.Pointer, addrlen _Socklen) (err error) { log.DebugLog()
+func sendto(s int, buf []byte, flags int, to unsafe.Pointer, addrlen _Socklen) (err error) {
 	var _p0 *byte
 	if len(buf) > 0 {
 		_p0 = &buf[0]
@@ -1574,7 +1574,7 @@ func sendto(s int, buf []byte, flags int, to unsafe.Pointer, addrlen _Socklen) (
 	return
 }
 
-func socket(domain int, typ int, proto int) (fd int, err error) { log.DebugLog()
+func socket(domain int, typ int, proto int) (fd int, err error) {
 	r0, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&proc__xnet_socket)), 3, uintptr(domain), uintptr(typ), uintptr(proto), 0, 0, 0)
 	fd = int(r0)
 	if e1 != 0 {
@@ -1583,7 +1583,7 @@ func socket(domain int, typ int, proto int) (fd int, err error) { log.DebugLog()
 	return
 }
 
-func socketpair(domain int, typ int, proto int, fd *[2]int32) (err error) { log.DebugLog()
+func socketpair(domain int, typ int, proto int, fd *[2]int32) (err error) {
 	_, _, e1 := rawSysvicall6(uintptr(unsafe.Pointer(&proc__xnet_socketpair)), 4, uintptr(domain), uintptr(typ), uintptr(proto), uintptr(unsafe.Pointer(fd)), 0, 0)
 	if e1 != 0 {
 		err = e1
@@ -1591,7 +1591,7 @@ func socketpair(domain int, typ int, proto int, fd *[2]int32) (err error) { log.
 	return
 }
 
-func write(fd int, p []byte) (n int, err error) { log.DebugLog()
+func write(fd int, p []byte) (n int, err error) {
 	var _p0 *byte
 	if len(p) > 0 {
 		_p0 = &p[0]
@@ -1604,7 +1604,7 @@ func write(fd int, p []byte) (n int, err error) { log.DebugLog()
 	return
 }
 
-func getsockopt(s int, level int, name int, val unsafe.Pointer, vallen *_Socklen) (err error) { log.DebugLog()
+func getsockopt(s int, level int, name int, val unsafe.Pointer, vallen *_Socklen) (err error) {
 	_, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&proc__xnet_getsockopt)), 5, uintptr(s), uintptr(level), uintptr(name), uintptr(val), uintptr(unsafe.Pointer(vallen)), 0)
 	if e1 != 0 {
 		err = e1
@@ -1612,7 +1612,7 @@ func getsockopt(s int, level int, name int, val unsafe.Pointer, vallen *_Socklen
 	return
 }
 
-func getpeername(fd int, rsa *RawSockaddrAny, addrlen *_Socklen) (err error) { log.DebugLog()
+func getpeername(fd int, rsa *RawSockaddrAny, addrlen *_Socklen) (err error) {
 	_, _, e1 := rawSysvicall6(uintptr(unsafe.Pointer(&procgetpeername)), 3, uintptr(fd), uintptr(unsafe.Pointer(rsa)), uintptr(unsafe.Pointer(addrlen)), 0, 0, 0)
 	if e1 != 0 {
 		err = e1
@@ -1620,7 +1620,7 @@ func getpeername(fd int, rsa *RawSockaddrAny, addrlen *_Socklen) (err error) { l
 	return
 }
 
-func setsockopt(s int, level int, name int, val unsafe.Pointer, vallen uintptr) (err error) { log.DebugLog()
+func setsockopt(s int, level int, name int, val unsafe.Pointer, vallen uintptr) (err error) {
 	_, _, e1 := sysvicall6(uintptr(unsafe.Pointer(&procsetsockopt)), 5, uintptr(s), uintptr(level), uintptr(name), uintptr(val), uintptr(vallen), 0)
 	if e1 != 0 {
 		err = e1
@@ -1628,7 +1628,7 @@ func setsockopt(s int, level int, name int, val unsafe.Pointer, vallen uintptr) 
 	return
 }
 
-func recvfrom(fd int, p []byte, flags int, from *RawSockaddrAny, fromlen *_Socklen) (n int, err error) { log.DebugLog()
+func recvfrom(fd int, p []byte, flags int, from *RawSockaddrAny, fromlen *_Socklen) (n int, err error) {
 	var _p0 *byte
 	if len(p) > 0 {
 		_p0 = &p[0]

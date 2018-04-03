@@ -25,7 +25,7 @@ import (
 	"github.com/ethereum/go-ethereum/log"
 )
 
-func init() { log.DebugLog()
+func init() {
 	// Initialize the logger
 	log.Root().SetHandler(log.LvlFilterHandler(log.LvlInfo, log.StreamHandler(os.Stderr, log.TerminalFormat(false))))
 

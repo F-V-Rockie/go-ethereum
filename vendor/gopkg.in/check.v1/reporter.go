@@ -17,18 +17,18 @@ type outputWriter struct {
 	Verbose              bool
 }
 
-func newOutputWriter(writer io.Writer, stream, verbose bool) *outputWriter { log.DebugLog()
+func newOutputWriter(writer io.Writer, stream, verbose bool) *outputWriter { 
 	return &outputWriter{writer: writer, Stream: stream, Verbose: verbose}
 }
 
-func (ow *outputWriter) Write(content []byte) (n int, err error) { log.DebugLog()
+func (ow *outputWriter) Write(content []byte) (n int, err error) { 
 	ow.m.Lock()
 	n, err = ow.writer.Write(content)
 	ow.m.Unlock()
 	return
 }
 
-func (ow *outputWriter) WriteCallStarted(label string, c *C) { log.DebugLog()
+func (ow *outputWriter) WriteCallStarted(label string, c *C) { 
 	if ow.Stream {
 		header := renderCallHeader(label, c, "", "\n")
 		ow.m.Lock()
@@ -37,7 +37,7 @@ func (ow *outputWriter) WriteCallStarted(label string, c *C) { log.DebugLog()
 	}
 }
 
-func (ow *outputWriter) WriteCallProblem(label string, c *C) { log.DebugLog()
+func (ow *outputWriter) WriteCallProblem(label string, c *C) { 
 	var prefix string
 	if !ow.Stream {
 		prefix = "\n-----------------------------------" +
@@ -53,7 +53,7 @@ func (ow *outputWriter) WriteCallProblem(label string, c *C) { log.DebugLog()
 	ow.m.Unlock()
 }
 
-func (ow *outputWriter) WriteCallSuccess(label string, c *C) { log.DebugLog()
+func (ow *outputWriter) WriteCallSuccess(label string, c *C) { 
 	if ow.Stream || (ow.Verbose && c.kind == testKd) {
 		// TODO Use a buffer here.
 		var suffix string
@@ -81,7 +81,7 @@ func (ow *outputWriter) WriteCallSuccess(label string, c *C) { log.DebugLog()
 	}
 }
 
-func renderCallHeader(label string, c *C, prefix, suffix string) string { log.DebugLog()
+func renderCallHeader(label string, c *C, prefix, suffix string) string { 
 	pc := c.method.PC()
 	return fmt.Sprintf("%s%s: %s: %s%s", prefix, label, niceFuncPath(pc),
 		niceFuncName(pc), suffix)

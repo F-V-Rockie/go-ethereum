@@ -95,7 +95,7 @@ var (
 	ringAddrs = make([]common.Address, len(ringKeys))
 )
 
-func init() { log.DebugLog()
+func init() {
 	ringKeys[0] = benchRootKey
 	ringAddrs[0] = benchRootAddr
 	for i := 1; i < len(ringKeys); i++ {

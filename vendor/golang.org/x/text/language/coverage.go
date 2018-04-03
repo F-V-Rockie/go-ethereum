@@ -43,7 +43,7 @@ type allSubtags struct{}
 // Regions returns the list of supported regions. As all regions are in a
 // consecutive range, it simply returns a slice of numbers in increasing order.
 // The "undefined" region is not returned.
-func (s allSubtags) Regions() []Region { log.DebugLog()
+func (s allSubtags) Regions() []Region { 
 	reg := make([]Region, numRegions)
 	for i := range reg {
 		reg[i] = Region{regionID(i + 1)}
@@ -54,7 +54,7 @@ func (s allSubtags) Regions() []Region { log.DebugLog()
 // Scripts returns the list of supported scripts. As all scripts are in a
 // consecutive range, it simply returns a slice of numbers in increasing order.
 // The "undefined" script is not returned.
-func (s allSubtags) Scripts() []Script { log.DebugLog()
+func (s allSubtags) Scripts() []Script { 
 	scr := make([]Script, numScripts)
 	for i := range scr {
 		scr[i] = Script{scriptID(i + 1)}
@@ -64,7 +64,7 @@ func (s allSubtags) Scripts() []Script { log.DebugLog()
 
 // BaseLanguages returns the list of all supported base languages. It generates
 // the list by traversing the internal structures.
-func (s allSubtags) BaseLanguages() []Base { log.DebugLog()
+func (s allSubtags) BaseLanguages() []Base { 
 	base := make([]Base, 0, numLanguages)
 	for i := 0; i < langNoIndexOffset; i++ {
 		// We included "und" already for the value 0.
@@ -86,7 +86,7 @@ func (s allSubtags) BaseLanguages() []Base { log.DebugLog()
 }
 
 // Tags always returns nil.
-func (s allSubtags) Tags() []Tag { log.DebugLog()
+func (s allSubtags) Tags() []Tag { 
 	return nil
 }
 
@@ -102,7 +102,7 @@ type coverage struct {
 	regions func() []Region
 }
 
-func (s *coverage) Tags() []Tag { log.DebugLog()
+func (s *coverage) Tags() []Tag { 
 	if s.tags == nil {
 		return nil
 	}
@@ -112,21 +112,21 @@ func (s *coverage) Tags() []Tag { log.DebugLog()
 // bases implements sort.Interface and is used to sort base languages.
 type bases []Base
 
-func (b bases) Len() int { log.DebugLog()
+func (b bases) Len() int { 
 	return len(b)
 }
 
-func (b bases) Swap(i, j int) { log.DebugLog()
+func (b bases) Swap(i, j int) { 
 	b[i], b[j] = b[j], b[i]
 }
 
-func (b bases) Less(i, j int) bool { log.DebugLog()
+func (b bases) Less(i, j int) bool { 
 	return b[i].langID < b[j].langID
 }
 
 // BaseLanguages returns the result from calling s.bases if it is specified or
 // otherwise derives the set of supported base languages from tags.
-func (s *coverage) BaseLanguages() []Base { log.DebugLog()
+func (s *coverage) BaseLanguages() []Base { 
 	if s.bases == nil {
 		tags := s.Tags()
 		if len(tags) == 0 {
@@ -149,14 +149,14 @@ func (s *coverage) BaseLanguages() []Base { log.DebugLog()
 	return s.bases()
 }
 
-func (s *coverage) Scripts() []Script { log.DebugLog()
+func (s *coverage) Scripts() []Script { 
 	if s.scripts == nil {
 		return nil
 	}
 	return s.scripts()
 }
 
-func (s *coverage) Regions() []Region { log.DebugLog()
+func (s *coverage) Regions() []Region { 
 	if s.regions == nil {
 		return nil
 	}
@@ -169,7 +169,7 @@ func (s *coverage) Regions() []Region { log.DebugLog()
 // Base, Script or Region. The returned Coverage derives the value for Bases
 // from Tags if no func or slice for []Base is specified. For other unspecified
 // types the returned Coverage will return nil for the respective methods.
-func NewCoverage(list ...interface{}) Coverage { log.DebugLog()
+func NewCoverage(list ...interface{}) Coverage { 
 	s := &coverage{}
 	for _, x := range list {
 		switch v := x.(type) {

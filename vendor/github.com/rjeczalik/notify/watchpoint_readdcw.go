@@ -10,7 +10,7 @@ package notify
 // notify package logic. If one of FileAction* masks is detected, this function
 // adds corresponding FileNotifyChange* values. This allows non registered
 // FileAction* events to be passed on.
-func eventmask(ei EventInfo, extra Event) (e Event) { log.DebugLog()
+func eventmask(ei EventInfo, extra Event) (e Event) { 
 	if e = ei.Event() | extra; e&fileActionAll != 0 {
 		if ev, ok := ei.(*event); ok {
 			switch ev.ftype {
@@ -33,6 +33,6 @@ func eventmask(ei EventInfo, extra Event) (e Event) { log.DebugLog()
 //   - for internal events, when additionally both event and set have omit bit set
 //
 // Internal events must not be sent to user channels and vice versa.
-func matches(set, event Event) bool { log.DebugLog()
+func matches(set, event Event) bool { 
 	return (set&omit)^(event&omit) == 0 && (set&event == event || set&fileNotifyChangeModified&event != 0)
 }

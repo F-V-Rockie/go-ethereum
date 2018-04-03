@@ -20,88 +20,88 @@ var (
 	localLoc = time.Local
 )
 
-func MarshalUi1(v uint8) (string, error) { log.DebugLog()
+func MarshalUi1(v uint8) (string, error) { 
 	return strconv.FormatUint(uint64(v), 10), nil
 }
 
-func UnmarshalUi1(s string) (uint8, error) { log.DebugLog()
+func UnmarshalUi1(s string) (uint8, error) { 
 	v, err := strconv.ParseUint(s, 10, 8)
 	return uint8(v), err
 }
 
-func MarshalUi2(v uint16) (string, error) { log.DebugLog()
+func MarshalUi2(v uint16) (string, error) { 
 	return strconv.FormatUint(uint64(v), 10), nil
 }
 
-func UnmarshalUi2(s string) (uint16, error) { log.DebugLog()
+func UnmarshalUi2(s string) (uint16, error) { 
 	v, err := strconv.ParseUint(s, 10, 16)
 	return uint16(v), err
 }
 
-func MarshalUi4(v uint32) (string, error) { log.DebugLog()
+func MarshalUi4(v uint32) (string, error) { 
 	return strconv.FormatUint(uint64(v), 10), nil
 }
 
-func UnmarshalUi4(s string) (uint32, error) { log.DebugLog()
+func UnmarshalUi4(s string) (uint32, error) { 
 	v, err := strconv.ParseUint(s, 10, 32)
 	return uint32(v), err
 }
 
-func MarshalI1(v int8) (string, error) { log.DebugLog()
+func MarshalI1(v int8) (string, error) { 
 	return strconv.FormatInt(int64(v), 10), nil
 }
 
-func UnmarshalI1(s string) (int8, error) { log.DebugLog()
+func UnmarshalI1(s string) (int8, error) { 
 	v, err := strconv.ParseInt(s, 10, 8)
 	return int8(v), err
 }
 
-func MarshalI2(v int16) (string, error) { log.DebugLog()
+func MarshalI2(v int16) (string, error) { 
 	return strconv.FormatInt(int64(v), 10), nil
 }
 
-func UnmarshalI2(s string) (int16, error) { log.DebugLog()
+func UnmarshalI2(s string) (int16, error) { 
 	v, err := strconv.ParseInt(s, 10, 16)
 	return int16(v), err
 }
 
-func MarshalI4(v int32) (string, error) { log.DebugLog()
+func MarshalI4(v int32) (string, error) { 
 	return strconv.FormatInt(int64(v), 10), nil
 }
 
-func UnmarshalI4(s string) (int32, error) { log.DebugLog()
+func UnmarshalI4(s string) (int32, error) { 
 	v, err := strconv.ParseInt(s, 10, 32)
 	return int32(v), err
 }
 
-func MarshalInt(v int64) (string, error) { log.DebugLog()
+func MarshalInt(v int64) (string, error) { 
 	return strconv.FormatInt(v, 10), nil
 }
 
-func UnmarshalInt(s string) (int64, error) { log.DebugLog()
+func UnmarshalInt(s string) (int64, error) { 
 	return strconv.ParseInt(s, 10, 64)
 }
 
-func MarshalR4(v float32) (string, error) { log.DebugLog()
+func MarshalR4(v float32) (string, error) { 
 	return strconv.FormatFloat(float64(v), 'G', -1, 32), nil
 }
 
-func UnmarshalR4(s string) (float32, error) { log.DebugLog()
+func UnmarshalR4(s string) (float32, error) { 
 	v, err := strconv.ParseFloat(s, 32)
 	return float32(v), err
 }
 
-func MarshalR8(v float64) (string, error) { log.DebugLog()
+func MarshalR8(v float64) (string, error) { 
 	return strconv.FormatFloat(v, 'G', -1, 64), nil
 }
 
-func UnmarshalR8(s string) (float64, error) { log.DebugLog()
+func UnmarshalR8(s string) (float64, error) { 
 	v, err := strconv.ParseFloat(s, 64)
 	return float64(v), err
 }
 
 // MarshalFixed14_4 marshals float64 to SOAP "fixed.14.4" type.
-func MarshalFixed14_4(v float64) (string, error) { log.DebugLog()
+func MarshalFixed14_4(v float64) (string, error) { 
 	if v >= 1e14 || v <= -1e14 {
 		return "", fmt.Errorf("soap fixed14.4: value %v out of bounds", v)
 	}
@@ -109,7 +109,7 @@ func MarshalFixed14_4(v float64) (string, error) { log.DebugLog()
 }
 
 // UnmarshalFixed14_4 unmarshals float64 from SOAP "fixed.14.4" type.
-func UnmarshalFixed14_4(s string) (float64, error) { log.DebugLog()
+func UnmarshalFixed14_4(s string) (float64, error) { 
 	v, err := strconv.ParseFloat(s, 64)
 	if err != nil {
 		return 0, err
@@ -121,7 +121,7 @@ func UnmarshalFixed14_4(s string) (float64, error) { log.DebugLog()
 }
 
 // MarshalChar marshals rune to SOAP "char" type.
-func MarshalChar(v rune) (string, error) { log.DebugLog()
+func MarshalChar(v rune) (string, error) { 
 	if v == 0 {
 		return "", errors.New("soap char: rune 0 is not allowed")
 	}
@@ -129,7 +129,7 @@ func MarshalChar(v rune) (string, error) { log.DebugLog()
 }
 
 // UnmarshalChar unmarshals rune from SOAP "char" type.
-func UnmarshalChar(s string) (rune, error) { log.DebugLog()
+func UnmarshalChar(s string) (rune, error) { 
 	if len(s) == 0 {
 		return 0, errors.New("soap char: got empty string")
 	}
@@ -140,15 +140,15 @@ func UnmarshalChar(s string) (rune, error) { log.DebugLog()
 	return r, nil
 }
 
-func MarshalString(v string) (string, error) { log.DebugLog()
+func MarshalString(v string) (string, error) { 
 	return v, nil
 }
 
-func UnmarshalString(v string) (string, error) { log.DebugLog()
+func UnmarshalString(v string) (string, error) { 
 	return v, nil
 }
 
-func parseInt(s string, err *error) int { log.DebugLog()
+func parseInt(s string, err *error) int { 
 	v, parseErr := strconv.ParseInt(s, 10, 64)
 	if parseErr != nil {
 		*err = parseErr
@@ -163,7 +163,7 @@ var dateRegexps = []*regexp.Regexp{
 	regexp.MustCompile(`^(\d{4})(?:(\d{2})(?:(\d{2}))?)?$`),
 }
 
-func parseDateParts(s string) (year, month, day int, err error) { log.DebugLog()
+func parseDateParts(s string) (year, month, day int, err error) { 
 	var parts []string
 	for _, re := range dateRegexps {
 		parts = re.FindStringSubmatch(s)
@@ -200,7 +200,7 @@ var timeRegexps = []*regexp.Regexp{
 	regexp.MustCompile(`^(\d{2})(?:(\d{2})(?:(\d{2}))?)?$`),
 }
 
-func parseTimeParts(s string) (hour, minute, second int, err error) { log.DebugLog()
+func parseTimeParts(s string) (hour, minute, second int, err error) { 
 	var parts []string
 	for _, re := range timeRegexps {
 		parts = re.FindStringSubmatch(s)
@@ -231,7 +231,7 @@ func parseTimeParts(s string) (hour, minute, second int, err error) { log.DebugL
 // (+|-)hh[[:]mm]
 var timezoneRegexp = regexp.MustCompile(`^([+-])(\d{2})(?::?(\d{2}))?$`)
 
-func parseTimezone(s string) (offset int, err error) { log.DebugLog()
+func parseTimezone(s string) (offset int, err error) { 
 	if s == "Z" {
 		return 0, nil
 	}
@@ -263,7 +263,7 @@ var completeDateTimeZoneRegexp = regexp.MustCompile(`^([^T]+)(?:T([^-+Z]+)(.+)?)
 // correct, it merely splits on certain delimiters.
 // e.g "2010-09-08T12:15:10+0700" => "2010-09-08", "12:15:10", "+0700".
 // Timezone can only be present if time is also present.
-func splitCompleteDateTimeZone(s string) (dateStr, timeStr, zoneStr string, err error) { log.DebugLog()
+func splitCompleteDateTimeZone(s string) (dateStr, timeStr, zoneStr string, err error) { 
 	parts := completeDateTimeZoneRegexp.FindStringSubmatch(s)
 	if parts == nil {
 		err = fmt.Errorf("soap date/time/zone: value %q is not in ISO8601 datetime format", s)
@@ -277,7 +277,7 @@ func splitCompleteDateTimeZone(s string) (dateStr, timeStr, zoneStr string, err 
 
 // MarshalDate marshals time.Time to SOAP "date" type. Note that this converts
 // to local time, and discards the time-of-day components.
-func MarshalDate(v time.Time) (string, error) { log.DebugLog()
+func MarshalDate(v time.Time) (string, error) { 
 	return v.In(localLoc).Format("2006-01-02"), nil
 }
 
@@ -285,7 +285,7 @@ var dateFmts = []string{"2006-01-02", "20060102"}
 
 // UnmarshalDate unmarshals time.Time from SOAP "date" type. This outputs the
 // date as midnight in the local time zone.
-func UnmarshalDate(s string) (time.Time, error) { log.DebugLog()
+func UnmarshalDate(s string) (time.Time, error) { 
 	year, month, day, err := parseDateParts(s)
 	if err != nil {
 		return time.Time{}, err
@@ -309,7 +309,7 @@ type TimeOfDay struct {
 }
 
 // MarshalTimeOfDay marshals TimeOfDay to the "time" type.
-func MarshalTimeOfDay(v TimeOfDay) (string, error) { log.DebugLog()
+func MarshalTimeOfDay(v TimeOfDay) (string, error) { 
 	d := int64(v.FromMidnight / time.Second)
 	hour := d / 3600
 	d = d % 3600
@@ -320,7 +320,7 @@ func MarshalTimeOfDay(v TimeOfDay) (string, error) { log.DebugLog()
 }
 
 // UnmarshalTimeOfDay unmarshals TimeOfDay from the "time" type.
-func UnmarshalTimeOfDay(s string) (TimeOfDay, error) { log.DebugLog()
+func UnmarshalTimeOfDay(s string) (TimeOfDay, error) { 
 	t, err := UnmarshalTimeOfDayTz(s)
 	if err != nil {
 		return TimeOfDay{}, err
@@ -331,7 +331,7 @@ func UnmarshalTimeOfDay(s string) (TimeOfDay, error) { log.DebugLog()
 }
 
 // MarshalTimeOfDayTz marshals TimeOfDay to the "time.tz" type.
-func MarshalTimeOfDayTz(v TimeOfDay) (string, error) { log.DebugLog()
+func MarshalTimeOfDayTz(v TimeOfDay) (string, error) { 
 	d := int64(v.FromMidnight / time.Second)
 	hour := d / 3600
 	d = d % 3600
@@ -357,7 +357,7 @@ func MarshalTimeOfDayTz(v TimeOfDay) (string, error) { log.DebugLog()
 }
 
 // UnmarshalTimeOfDayTz unmarshals TimeOfDay from the "time.tz" type.
-func UnmarshalTimeOfDayTz(s string) (tod TimeOfDay, err error) { log.DebugLog()
+func UnmarshalTimeOfDayTz(s string) (tod TimeOfDay, err error) { 
 	zoneIndex := strings.IndexAny(s, "Z+-")
 	var timePart string
 	var hasOffset bool
@@ -395,13 +395,13 @@ func UnmarshalTimeOfDayTz(s string) (tod TimeOfDay, err error) { log.DebugLog()
 
 // MarshalDateTime marshals time.Time to SOAP "dateTime" type. Note that this
 // converts to local time.
-func MarshalDateTime(v time.Time) (string, error) { log.DebugLog()
+func MarshalDateTime(v time.Time) (string, error) { 
 	return v.In(localLoc).Format("2006-01-02T15:04:05"), nil
 }
 
 // UnmarshalDateTime unmarshals time.Time from the SOAP "dateTime" type. This
 // returns a value in the local timezone.
-func UnmarshalDateTime(s string) (result time.Time, err error) { log.DebugLog()
+func UnmarshalDateTime(s string) (result time.Time, err error) { 
 	dateStr, timeStr, zoneStr, err := splitCompleteDateTimeZone(s)
 	if err != nil {
 		return
@@ -430,13 +430,13 @@ func UnmarshalDateTime(s string) (result time.Time, err error) { log.DebugLog()
 }
 
 // MarshalDateTimeTz marshals time.Time to SOAP "dateTime.tz" type.
-func MarshalDateTimeTz(v time.Time) (string, error) { log.DebugLog()
+func MarshalDateTimeTz(v time.Time) (string, error) { 
 	return v.Format("2006-01-02T15:04:05-07:00"), nil
 }
 
 // UnmarshalDateTimeTz unmarshals time.Time from the SOAP "dateTime.tz" type.
 // This returns a value in the local timezone when the timezone is unspecified.
-func UnmarshalDateTimeTz(s string) (result time.Time, err error) { log.DebugLog()
+func UnmarshalDateTimeTz(s string) (result time.Time, err error) { 
 	dateStr, timeStr, zoneStr, err := splitCompleteDateTimeZone(s)
 	if err != nil {
 		return
@@ -470,7 +470,7 @@ func UnmarshalDateTimeTz(s string) (result time.Time, err error) { log.DebugLog(
 }
 
 // MarshalBoolean marshals bool to SOAP "boolean" type.
-func MarshalBoolean(v bool) (string, error) { log.DebugLog()
+func MarshalBoolean(v bool) (string, error) { 
 	if v {
 		return "1", nil
 	}
@@ -478,7 +478,7 @@ func MarshalBoolean(v bool) (string, error) { log.DebugLog()
 }
 
 // UnmarshalBoolean unmarshals bool from the SOAP "boolean" type.
-func UnmarshalBoolean(s string) (bool, error) { log.DebugLog()
+func UnmarshalBoolean(s string) (bool, error) { 
 	switch s {
 	case "0", "false", "no":
 		return false, nil
@@ -489,31 +489,31 @@ func UnmarshalBoolean(s string) (bool, error) { log.DebugLog()
 }
 
 // MarshalBinBase64 marshals []byte to SOAP "bin.base64" type.
-func MarshalBinBase64(v []byte) (string, error) { log.DebugLog()
+func MarshalBinBase64(v []byte) (string, error) { 
 	return base64.StdEncoding.EncodeToString(v), nil
 }
 
 // UnmarshalBinBase64 unmarshals []byte from the SOAP "bin.base64" type.
-func UnmarshalBinBase64(s string) ([]byte, error) { log.DebugLog()
+func UnmarshalBinBase64(s string) ([]byte, error) { 
 	return base64.StdEncoding.DecodeString(s)
 }
 
 // MarshalBinHex marshals []byte to SOAP "bin.hex" type.
-func MarshalBinHex(v []byte) (string, error) { log.DebugLog()
+func MarshalBinHex(v []byte) (string, error) { 
 	return hex.EncodeToString(v), nil
 }
 
 // UnmarshalBinHex unmarshals []byte from the SOAP "bin.hex" type.
-func UnmarshalBinHex(s string) ([]byte, error) { log.DebugLog()
+func UnmarshalBinHex(s string) ([]byte, error) { 
 	return hex.DecodeString(s)
 }
 
 // MarshalURI marshals *url.URL to SOAP "uri" type.
-func MarshalURI(v *url.URL) (string, error) { log.DebugLog()
+func MarshalURI(v *url.URL) (string, error) { 
 	return v.String(), nil
 }
 
 // UnmarshalURI unmarshals *url.URL from the SOAP "uri" type.
-func UnmarshalURI(s string) (*url.URL, error) { log.DebugLog()
+func UnmarshalURI(s string) (*url.URL, error) { 
 	return url.Parse(s)
 }

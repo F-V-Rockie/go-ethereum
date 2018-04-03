@@ -15,21 +15,21 @@ import (
 	"time"
 )
 
-func (c Client) computeHmac256(message string) string { log.DebugLog()
+func (c Client) computeHmac256(message string) string { 
 	h := hmac.New(sha256.New, c.accountKey)
 	h.Write([]byte(message))
 	return base64.StdEncoding.EncodeToString(h.Sum(nil))
 }
 
-func currentTimeRfc1123Formatted() string { log.DebugLog()
+func currentTimeRfc1123Formatted() string { 
 	return timeRfc1123Formatted(time.Now().UTC())
 }
 
-func timeRfc1123Formatted(t time.Time) string { log.DebugLog()
+func timeRfc1123Formatted(t time.Time) string { 
 	return t.Format(http.TimeFormat)
 }
 
-func mergeParams(v1, v2 url.Values) url.Values { log.DebugLog()
+func mergeParams(v1, v2 url.Values) url.Values { 
 	out := url.Values{}
 	for k, v := range v1 {
 		out[k] = v
@@ -46,7 +46,7 @@ func mergeParams(v1, v2 url.Values) url.Values { log.DebugLog()
 	return out
 }
 
-func prepareBlockListRequest(blocks []Block) string { log.DebugLog()
+func prepareBlockListRequest(blocks []Block) string { 
 	s := `<?xml version="1.0" encoding="utf-8"?><BlockList>`
 	for _, v := range blocks {
 		s += fmt.Sprintf("<%s>%s</%s>", v.Status, v.ID, v.Status)
@@ -55,7 +55,7 @@ func prepareBlockListRequest(blocks []Block) string { log.DebugLog()
 	return s
 }
 
-func xmlUnmarshal(body io.Reader, v interface{}) error { log.DebugLog()
+func xmlUnmarshal(body io.Reader, v interface{}) error { 
 	data, err := ioutil.ReadAll(body)
 	if err != nil {
 		return err
@@ -63,7 +63,7 @@ func xmlUnmarshal(body io.Reader, v interface{}) error { log.DebugLog()
 	return xml.Unmarshal(data, v)
 }
 
-func xmlMarshal(v interface{}) (io.Reader, int, error) { log.DebugLog()
+func xmlMarshal(v interface{}) (io.Reader, int, error) { 
 	b, err := xml.Marshal(v)
 	if err != nil {
 		return nil, 0, err
@@ -71,7 +71,7 @@ func xmlMarshal(v interface{}) (io.Reader, int, error) { log.DebugLog()
 	return bytes.NewReader(b), len(b), nil
 }
 
-func headersFromStruct(v interface{}) map[string]string { log.DebugLog()
+func headersFromStruct(v interface{}) map[string]string { 
 	headers := make(map[string]string)
 	value := reflect.ValueOf(v)
 	for i := 0; i < value.NumField(); i++ {

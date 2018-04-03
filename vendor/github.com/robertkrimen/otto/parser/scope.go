@@ -15,22 +15,22 @@ type _scope struct {
 	labels []string
 }
 
-func (self *_parser) openScope() { log.DebugLog()
+func (self *_parser) openScope() { 
 	self.scope = &_scope{
 		outer:   self.scope,
 		allowIn: true,
 	}
 }
 
-func (self *_parser) closeScope() { log.DebugLog()
+func (self *_parser) closeScope() { 
 	self.scope = self.scope.outer
 }
 
-func (self *_scope) declare(declaration ast.Declaration) { log.DebugLog()
+func (self *_scope) declare(declaration ast.Declaration) { 
 	self.declarationList = append(self.declarationList, declaration)
 }
 
-func (self *_scope) hasLabel(name string) bool { log.DebugLog()
+func (self *_scope) hasLabel(name string) bool { 
 	for _, label := range self.labels {
 		if label == name {
 			return true

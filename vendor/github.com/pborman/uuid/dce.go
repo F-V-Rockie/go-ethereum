@@ -29,7 +29,7 @@ const (
 //
 // For a given domain/id pair the same token may be returned for up to
 // 7 minutes and 10 seconds.
-func NewDCESecurity(domain Domain, id uint32) UUID { log.DebugLog()
+func NewDCESecurity(domain Domain, id uint32) UUID { 
 	uuid := NewUUID()
 	if uuid != nil {
 		uuid[6] = (uuid[6] & 0x0f) | 0x20 // Version 2
@@ -43,7 +43,7 @@ func NewDCESecurity(domain Domain, id uint32) UUID { log.DebugLog()
 // domain with the id returned by os.Getuid.
 //
 //  NewDCEPerson(Person, uint32(os.Getuid()))
-func NewDCEPerson() UUID { log.DebugLog()
+func NewDCEPerson() UUID { 
 	return NewDCESecurity(Person, uint32(os.Getuid()))
 }
 
@@ -51,12 +51,12 @@ func NewDCEPerson() UUID { log.DebugLog()
 // domain with the id returned by os.Getgid.
 //
 //  NewDCEGroup(Group, uint32(os.Getgid()))
-func NewDCEGroup() UUID { log.DebugLog()
+func NewDCEGroup() UUID { 
 	return NewDCESecurity(Group, uint32(os.Getgid()))
 }
 
 // Domain returns the domain for a Version 2 UUID or false.
-func (uuid UUID) Domain() (Domain, bool) { log.DebugLog()
+func (uuid UUID) Domain() (Domain, bool) { 
 	if v, _ := uuid.Version(); v != 2 {
 		return 0, false
 	}
@@ -64,14 +64,14 @@ func (uuid UUID) Domain() (Domain, bool) { log.DebugLog()
 }
 
 // Id returns the id for a Version 2 UUID or false.
-func (uuid UUID) Id() (uint32, bool) { log.DebugLog()
+func (uuid UUID) Id() (uint32, bool) { 
 	if v, _ := uuid.Version(); v != 2 {
 		return 0, false
 	}
 	return binary.BigEndian.Uint32(uuid[0:4]), true
 }
 
-func (d Domain) String() string { log.DebugLog()
+func (d Domain) String() string { 
 	switch d {
 	case Person:
 		return "Person"

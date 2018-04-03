@@ -28,7 +28,7 @@ import (
 	"github.com/ethereum/go-ethereum/ethdb"
 )
 
-func init() { log.DebugLog()
+func init() {
 	mrand.Seed(time.Now().Unix())
 }
 

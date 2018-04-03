@@ -110,7 +110,7 @@ type ErrCorrupted struct {
 	Reason string
 }
 
-func (e *ErrCorrupted) Error() string { log.DebugLog()
+func (e *ErrCorrupted) Error() string { 
 	return fmt.Sprintf("leveldb/journal: block/chunk corrupted: %s (%d bytes)", e.Reason, e.Size)
 }
 
@@ -149,7 +149,7 @@ type Reader struct {
 // NewReader returns a new reader. The dropper may be nil, and if
 // strict is true then corrupted or invalid chunk will halt the journal
 // reader entirely.
-func NewReader(r io.Reader, dropper Dropper, strict, checksum bool) *Reader { log.DebugLog()
+func NewReader(r io.Reader, dropper Dropper, strict, checksum bool) *Reader { 
 	return &Reader{
 		r:        r,
 		dropper:  dropper,
@@ -161,7 +161,7 @@ func NewReader(r io.Reader, dropper Dropper, strict, checksum bool) *Reader { lo
 
 var errSkip = errors.New("leveldb/journal: skipped")
 
-func (r *Reader) corrupt(n int, reason string, skip bool) error { log.DebugLog()
+func (r *Reader) corrupt(n int, reason string, skip bool) error { 
 	if r.dropper != nil {
 		r.dropper.Drop(&ErrCorrupted{n, reason})
 	}
@@ -174,7 +174,7 @@ func (r *Reader) corrupt(n int, reason string, skip bool) error { log.DebugLog()
 
 // nextChunk sets r.buf[r.i:r.j] to hold the next chunk's payload, reading the
 // next block into the buffer if necessary.
-func (r *Reader) nextChunk(first bool) error { log.DebugLog()
+func (r *Reader) nextChunk(first bool) error { 
 	for {
 		if r.j+headerSize <= r.n {
 			checksum := binary.LittleEndian.Uint32(r.buf[r.j+0 : r.j+4])
@@ -245,7 +245,7 @@ func (r *Reader) nextChunk(first bool) error { log.DebugLog()
 // more journals. The reader returned becomes stale after the next Next call,
 // and should no longer be used. If strict is false, the reader will returns
 // io.ErrUnexpectedEOF error when found corrupted journal.
-func (r *Reader) Next() (io.Reader, error) { log.DebugLog()
+func (r *Reader) Next() (io.Reader, error) { 
 	r.seq++
 	if r.err != nil {
 		return nil, r.err
@@ -263,7 +263,7 @@ func (r *Reader) Next() (io.Reader, error) { log.DebugLog()
 
 // Reset resets the journal reader, allows reuse of the journal reader. Reset returns
 // last accumulated error.
-func (r *Reader) Reset(reader io.Reader, dropper Dropper, strict, checksum bool) error { log.DebugLog()
+func (r *Reader) Reset(reader io.Reader, dropper Dropper, strict, checksum bool) error { 
 	r.seq++
 	err := r.err
 	r.r = reader
@@ -284,7 +284,7 @@ type singleReader struct {
 	err error
 }
 
-func (x *singleReader) Read(p []byte) (int, error) { log.DebugLog()
+func (x *singleReader) Read(p []byte) (int, error) { 
 	r := x.r
 	if r.seq != x.seq {
 		return 0, errors.New("leveldb/journal: stale reader")
@@ -312,7 +312,7 @@ func (x *singleReader) Read(p []byte) (int, error) { log.DebugLog()
 	return n, nil
 }
 
-func (x *singleReader) ReadByte() (byte, error) { log.DebugLog()
+func (x *singleReader) ReadByte() (byte, error) { 
 	r := x.r
 	if r.seq != x.seq {
 		return 0, errors.New("leveldb/journal: stale reader")
@@ -365,7 +365,7 @@ type Writer struct {
 }
 
 // NewWriter returns a new Writer.
-func NewWriter(w io.Writer) *Writer { log.DebugLog()
+func NewWriter(w io.Writer) *Writer { 
 	f, _ := w.(flusher)
 	return &Writer{
 		w: w,
@@ -374,7 +374,7 @@ func NewWriter(w io.Writer) *Writer { log.DebugLog()
 }
 
 // fillHeader fills in the header for the pending chunk.
-func (w *Writer) fillHeader(last bool) { log.DebugLog()
+func (w *Writer) fillHeader(last bool) { 
 	if w.i+headerSize > w.j || w.j > blockSize {
 		panic("leveldb/journal: bad writer state")
 	}
@@ -397,7 +397,7 @@ func (w *Writer) fillHeader(last bool) { log.DebugLog()
 
 // writeBlock writes the buffered block to the underlying writer, and reserves
 // space for the next chunk's header.
-func (w *Writer) writeBlock() { log.DebugLog()
+func (w *Writer) writeBlock() { 
 	_, w.err = w.w.Write(w.buf[w.written:])
 	w.i = 0
 	w.j = headerSize
@@ -406,7 +406,7 @@ func (w *Writer) writeBlock() { log.DebugLog()
 
 // writePending finishes the current journal and writes the buffer to the
 // underlying writer.
-func (w *Writer) writePending() { log.DebugLog()
+func (w *Writer) writePending() { 
 	if w.err != nil {
 		return
 	}
@@ -419,7 +419,7 @@ func (w *Writer) writePending() { log.DebugLog()
 }
 
 // Close finishes the current journal and closes the writer.
-func (w *Writer) Close() error { log.DebugLog()
+func (w *Writer) Close() error { 
 	w.seq++
 	w.writePending()
 	if w.err != nil {
@@ -431,7 +431,7 @@ func (w *Writer) Close() error { log.DebugLog()
 
 // Flush finishes the current journal, writes to the underlying writer, and
 // flushes it if that writer implements interface{ Flush() error }.
-func (w *Writer) Flush() error { log.DebugLog()
+func (w *Writer) Flush() error { 
 	w.seq++
 	w.writePending()
 	if w.err != nil {
@@ -446,7 +446,7 @@ func (w *Writer) Flush() error { log.DebugLog()
 
 // Reset resets the journal writer, allows reuse of the journal writer. Reset
 // will also closes the journal writer if not already.
-func (w *Writer) Reset(writer io.Writer) (err error) { log.DebugLog()
+func (w *Writer) Reset(writer io.Writer) (err error) { 
 	w.seq++
 	if w.err == nil {
 		w.writePending()
@@ -465,7 +465,7 @@ func (w *Writer) Reset(writer io.Writer) (err error) { log.DebugLog()
 
 // Next returns a writer for the next journal. The writer returned becomes stale
 // after the next Close, Flush or Next call, and should no longer be used.
-func (w *Writer) Next() (io.Writer, error) { log.DebugLog()
+func (w *Writer) Next() (io.Writer, error) { 
 	w.seq++
 	if w.err != nil {
 		return nil, w.err
@@ -496,7 +496,7 @@ type singleWriter struct {
 	seq int
 }
 
-func (x singleWriter) Write(p []byte) (int, error) { log.DebugLog()
+func (x singleWriter) Write(p []byte) (int, error) { 
 	w := x.w
 	if w.seq != x.seq {
 		return 0, errors.New("leveldb/journal: stale writer")

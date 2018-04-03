@@ -28,7 +28,7 @@ var (
 	_VT_index_8 = [...]uint8{0, 10}
 )
 
-func (i VT) String() string { log.DebugLog()
+func (i VT) String() string { 
 	switch {
 	case 0 <= i && i <= 14:
 		return _VT_name_0[_VT_index_0[i]:_VT_index_0[i+1]]

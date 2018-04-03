@@ -28,7 +28,7 @@ var errInvalidShiftJIS = errors.New("japanese: invalid Shift JIS encoding")
 
 type shiftJISDecoder struct{ transform.NopResetter }
 
-func (shiftJISDecoder) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) { log.DebugLog()
+func (shiftJISDecoder) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) { 
 	r, size := rune(0), 0
 loop:
 	for ; nSrc < len(src); nSrc += size {
@@ -98,7 +98,7 @@ loop:
 
 type shiftJISEncoder struct{ transform.NopResetter }
 
-func (shiftJISEncoder) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) { log.DebugLog()
+func (shiftJISEncoder) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) { 
 	r, size := rune(0), 0
 loop:
 	for ; nSrc < len(src); nSrc += size {

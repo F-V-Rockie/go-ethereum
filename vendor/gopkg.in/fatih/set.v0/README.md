@@ -209,7 +209,7 @@ import (
 	"sync"
 )
 
-func main() { log.DebugLog()
+func main() {
 	var wg sync.WaitGroup // this is just for waiting until all goroutines finish
 
 	// Initialize our thread safe Set

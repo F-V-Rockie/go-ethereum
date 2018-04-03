@@ -51,7 +51,7 @@ type Query struct {
 }
 
 // ParseConnectionString will parse a string to create a valid connection URL
-func ParseConnectionString(path string, ssl bool) (url.URL, error) { log.DebugLog()
+func ParseConnectionString(path string, ssl bool) (url.URL, error) { 
 	var host string
 	var port int
 
@@ -102,7 +102,7 @@ type Config struct {
 }
 
 // NewConfig will create a config to be used in connecting to the client
-func NewConfig() Config { log.DebugLog()
+func NewConfig() Config { 
 	return Config{
 		Timeout: DefaultTimeout,
 	}
@@ -134,7 +134,7 @@ const (
 )
 
 // NewClient will instantiate and return a connected client to issue commands to the server.
-func NewClient(c Config) (*Client, error) { log.DebugLog()
+func NewClient(c Config) (*Client, error) { 
 	tlsConfig := &tls.Config{
 		InsecureSkipVerify: c.UnsafeSsl,
 	}
@@ -168,24 +168,24 @@ func NewClient(c Config) (*Client, error) { log.DebugLog()
 }
 
 // SetAuth will update the username and passwords
-func (c *Client) SetAuth(u, p string) { log.DebugLog()
+func (c *Client) SetAuth(u, p string) { 
 	c.username = u
 	c.password = p
 }
 
 // SetPrecision will update the precision
-func (c *Client) SetPrecision(precision string) { log.DebugLog()
+func (c *Client) SetPrecision(precision string) { 
 	c.precision = precision
 }
 
 // Query sends a command to the server and returns the Response
-func (c *Client) Query(q Query) (*Response, error) { log.DebugLog()
+func (c *Client) Query(q Query) (*Response, error) { 
 	return c.QueryContext(context.Background(), q)
 }
 
 // QueryContext sends a command to the server and returns the Response
 // It uses a context that can be cancelled by the command line client
-func (c *Client) QueryContext(ctx context.Context, q Query) (*Response, error) { log.DebugLog()
+func (c *Client) QueryContext(ctx context.Context, q Query) (*Response, error) { 
 	u := c.url
 
 	u.Path = "query"
@@ -262,7 +262,7 @@ func (c *Client) QueryContext(ctx context.Context, q Query) (*Response, error) {
 // Write takes BatchPoints and allows for writing of multiple points with defaults
 // If successful, error is nil and Response is nil
 // If an error occurs, Response may contain additional information if populated.
-func (c *Client) Write(bp BatchPoints) (*Response, error) { log.DebugLog()
+func (c *Client) Write(bp BatchPoints) (*Response, error) { 
 	u := c.url
 	u.Path = "write"
 
@@ -340,7 +340,7 @@ func (c *Client) Write(bp BatchPoints) (*Response, error) { log.DebugLog()
 // WriteLineProtocol takes a string with line returns to delimit each write
 // If successful, error is nil and Response is nil
 // If an error occurs, Response may contain additional information if populated.
-func (c *Client) WriteLineProtocol(data, database, retentionPolicy, precision, writeConsistency string) (*Response, error) { log.DebugLog()
+func (c *Client) WriteLineProtocol(data, database, retentionPolicy, precision, writeConsistency string) (*Response, error) { 
 	u := c.url
 	u.Path = "write"
 
@@ -385,7 +385,7 @@ func (c *Client) WriteLineProtocol(data, database, retentionPolicy, precision, w
 
 // Ping will check to see if the server is up
 // Ping returns how long the request took, the version of the server it connected to, and an error if one occurred.
-func (c *Client) Ping() (time.Duration, string, error) { log.DebugLog()
+func (c *Client) Ping() (time.Duration, string, error) { 
 	now := time.Now()
 	u := c.url
 	u.Path = "ping"
@@ -425,7 +425,7 @@ type Result struct {
 }
 
 // MarshalJSON encodes the result into JSON.
-func (r *Result) MarshalJSON() ([]byte, error) { log.DebugLog()
+func (r *Result) MarshalJSON() ([]byte, error) { 
 	// Define a struct that outputs "error" as a string.
 	var o struct {
 		Series   []models.Row `json:"series,omitempty"`
@@ -444,7 +444,7 @@ func (r *Result) MarshalJSON() ([]byte, error) { log.DebugLog()
 }
 
 // UnmarshalJSON decodes the data into the Result struct
-func (r *Result) UnmarshalJSON(b []byte) error { log.DebugLog()
+func (r *Result) UnmarshalJSON(b []byte) error { 
 	var o struct {
 		Series   []models.Row `json:"series,omitempty"`
 		Messages []*Message   `json:"messages,omitempty"`
@@ -472,7 +472,7 @@ type Response struct {
 }
 
 // MarshalJSON encodes the response into JSON.
-func (r *Response) MarshalJSON() ([]byte, error) { log.DebugLog()
+func (r *Response) MarshalJSON() ([]byte, error) { 
 	// Define a struct that outputs "error" as a string.
 	var o struct {
 		Results []Result `json:"results,omitempty"`
@@ -489,7 +489,7 @@ func (r *Response) MarshalJSON() ([]byte, error) { log.DebugLog()
 }
 
 // UnmarshalJSON decodes the data into the Response struct
-func (r *Response) UnmarshalJSON(b []byte) error { log.DebugLog()
+func (r *Response) UnmarshalJSON(b []byte) error { 
 	var o struct {
 		Results []Result `json:"results,omitempty"`
 		Err     string   `json:"error,omitempty"`
@@ -510,7 +510,7 @@ func (r *Response) UnmarshalJSON(b []byte) error { log.DebugLog()
 
 // Error returns the first error from any statement.
 // Returns nil if no errors occurred on any statements.
-func (r *Response) Error() error { log.DebugLog()
+func (r *Response) Error() error { 
 	if r.Err != nil {
 		return r.Err
 	}
@@ -529,7 +529,7 @@ type duplexReader struct {
 	w io.Writer
 }
 
-func (r *duplexReader) Read(p []byte) (n int, err error) { log.DebugLog()
+func (r *duplexReader) Read(p []byte) (n int, err error) { 
 	n, err = r.r.Read(p)
 	if err == nil {
 		r.w.Write(p[:n])
@@ -546,7 +546,7 @@ type ChunkedResponse struct {
 }
 
 // NewChunkedResponse reads a stream and produces responses from the stream.
-func NewChunkedResponse(r io.Reader) *ChunkedResponse { log.DebugLog()
+func NewChunkedResponse(r io.Reader) *ChunkedResponse { 
 	resp := &ChunkedResponse{}
 	resp.duplex = &duplexReader{r: r, w: &resp.buf}
 	resp.dec = json.NewDecoder(resp.duplex)
@@ -555,7 +555,7 @@ func NewChunkedResponse(r io.Reader) *ChunkedResponse { log.DebugLog()
 }
 
 // NextResponse reads the next line of the stream and returns a response.
-func (r *ChunkedResponse) NextResponse() (*Response, error) { log.DebugLog()
+func (r *ChunkedResponse) NextResponse() (*Response, error) { 
 	var response Response
 	if err := r.dec.Decode(&response); err != nil {
 		if err == io.EOF {
@@ -587,7 +587,7 @@ type Point struct {
 // MarshalJSON will format the time in RFC3339Nano
 // Precision is also ignored as it is only used for writing, not reading
 // Or another way to say it is we always send back in nanosecond precision
-func (p *Point) MarshalJSON() ([]byte, error) { log.DebugLog()
+func (p *Point) MarshalJSON() ([]byte, error) { 
 	point := struct {
 		Measurement string                 `json:"measurement,omitempty"`
 		Tags        map[string]string      `json:"tags,omitempty"`
@@ -609,7 +609,7 @@ func (p *Point) MarshalJSON() ([]byte, error) { log.DebugLog()
 
 // MarshalString renders string representation of a Point with specified
 // precision. The default precision is nanoseconds.
-func (p *Point) MarshalString() string { log.DebugLog()
+func (p *Point) MarshalString() string { 
 	pt, err := models.NewPoint(p.Measurement, models.NewTags(p.Tags), p.Fields, p.Time)
 	if err != nil {
 		return "# ERROR: " + err.Error() + " " + p.Measurement
@@ -621,7 +621,7 @@ func (p *Point) MarshalString() string { log.DebugLog()
 }
 
 // UnmarshalJSON decodes the data into the Point struct
-func (p *Point) UnmarshalJSON(b []byte) error { log.DebugLog()
+func (p *Point) UnmarshalJSON(b []byte) error { 
 	var normal struct {
 		Measurement string                 `json:"measurement"`
 		Tags        map[string]string      `json:"tags"`
@@ -679,7 +679,7 @@ func (p *Point) UnmarshalJSON(b []byte) error { log.DebugLog()
 }
 
 // Remove any notion of json.Number
-func normalizeFields(fields map[string]interface{}) map[string]interface{} { log.DebugLog()
+func normalizeFields(fields map[string]interface{}) map[string]interface{} { 
 	newFields := map[string]interface{}{}
 
 	for k, v := range fields {
@@ -715,7 +715,7 @@ type BatchPoints struct {
 }
 
 // UnmarshalJSON decodes the data into the BatchPoints struct
-func (bp *BatchPoints) UnmarshalJSON(b []byte) error { log.DebugLog()
+func (bp *BatchPoints) UnmarshalJSON(b []byte) error { 
 	var normal struct {
 		Points          []Point           `json:"points"`
 		Database        string            `json:"database"`
@@ -774,7 +774,7 @@ func (bp *BatchPoints) UnmarshalJSON(b []byte) error { log.DebugLog()
 // utility functions
 
 // Addr provides the current url as a string of the server the client is connected to.
-func (c *Client) Addr() string { log.DebugLog()
+func (c *Client) Addr() string { 
 	if c.unixSocket != "" {
 		return c.unixSocket
 	}
@@ -782,7 +782,7 @@ func (c *Client) Addr() string { log.DebugLog()
 }
 
 // checkPointTypes ensures no unsupported types are submitted to influxdb, returning error if they are found.
-func checkPointTypes(p Point) error { log.DebugLog()
+func checkPointTypes(p Point) error { 
 	for _, v := range p.Fields {
 		switch v.(type) {
 		case int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64, float32, float64, bool, string, nil:
@@ -797,7 +797,7 @@ func checkPointTypes(p Point) error { log.DebugLog()
 // helper functions
 
 // EpochToTime takes a unix epoch time and uses precision to return back a time.Time
-func EpochToTime(epoch int64, precision string) (time.Time, error) { log.DebugLog()
+func EpochToTime(epoch int64, precision string) (time.Time, error) { 
 	if precision == "" {
 		precision = "s"
 	}
@@ -822,7 +822,7 @@ func EpochToTime(epoch int64, precision string) (time.Time, error) { log.DebugLo
 }
 
 // SetPrecision will round a time to the specified precision
-func SetPrecision(t time.Time, precision string) time.Time { log.DebugLog()
+func SetPrecision(t time.Time, precision string) time.Time { 
 	switch precision {
 	case "n":
 	case "u":

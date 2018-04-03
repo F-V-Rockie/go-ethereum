@@ -142,30 +142,30 @@ type Tag struct {
 
 // Make is a convenience wrapper for Parse that omits the error.
 // In case of an error, a sensible default is returned.
-func Make(s string) Tag { log.DebugLog()
+func Make(s string) Tag { 
 	return Default.Make(s)
 }
 
 // Make is a convenience wrapper for c.Parse that omits the error.
 // In case of an error, a sensible default is returned.
-func (c CanonType) Make(s string) Tag { log.DebugLog()
+func (c CanonType) Make(s string) Tag { 
 	t, _ := c.Parse(s)
 	return t
 }
 
 // Raw returns the raw base language, script and region, without making an
 // attempt to infer their values.
-func (t Tag) Raw() (b Base, s Script, r Region) { log.DebugLog()
+func (t Tag) Raw() (b Base, s Script, r Region) { 
 	return Base{t.lang}, Script{t.script}, Region{t.region}
 }
 
 // equalTags compares language, script and region subtags only.
-func (t Tag) equalTags(a Tag) bool { log.DebugLog()
+func (t Tag) equalTags(a Tag) bool { 
 	return t.lang == a.lang && t.script == a.script && t.region == a.region
 }
 
 // IsRoot returns true if t is equal to language "und".
-func (t Tag) IsRoot() bool { log.DebugLog()
+func (t Tag) IsRoot() bool { 
 	if int(t.pVariant) < len(t.str) {
 		return false
 	}
@@ -173,7 +173,7 @@ func (t Tag) IsRoot() bool { log.DebugLog()
 }
 
 // private reports whether the Tag consists solely of a private use tag.
-func (t Tag) private() bool { log.DebugLog()
+func (t Tag) private() bool { 
 	return t.str != "" && t.pVariant == 0
 }
 
@@ -226,7 +226,7 @@ const (
 
 // canonicalize returns the canonicalized equivalent of the tag and
 // whether there was any change.
-func (t Tag) canonicalize(c CanonType) (Tag, bool) { log.DebugLog()
+func (t Tag) canonicalize(c CanonType) (Tag, bool) { 
 	if c == Raw {
 		return t, false
 	}
@@ -299,7 +299,7 @@ func (t Tag) canonicalize(c CanonType) (Tag, bool) { log.DebugLog()
 }
 
 // Canonicalize returns the canonicalized equivalent of the tag.
-func (c CanonType) Canonicalize(t Tag) (Tag, error) { log.DebugLog()
+func (c CanonType) Canonicalize(t Tag) (Tag, error) { 
 	t, changed := t.canonicalize(c)
 	if changed {
 		t.remakeString()
@@ -323,14 +323,14 @@ const (
 
 var confName = []string{"No", "Low", "High", "Exact"}
 
-func (c Confidence) String() string { log.DebugLog()
+func (c Confidence) String() string { 
 	return confName[c]
 }
 
 // remakeString is used to update t.str in case lang, script or region changed.
 // It is assumed that pExt and pVariant still point to the start of the
 // respective parts.
-func (t *Tag) remakeString() { log.DebugLog()
+func (t *Tag) remakeString() { 
 	if t.str == "" {
 		return
 	}
@@ -362,7 +362,7 @@ func (t *Tag) remakeString() { log.DebugLog()
 // genCoreBytes writes a string for the base languages, script and region tags
 // to the given buffer and returns the number of bytes written. It will never
 // write more than maxCoreSize bytes.
-func (t *Tag) genCoreBytes(buf []byte) int { log.DebugLog()
+func (t *Tag) genCoreBytes(buf []byte) int { 
 	n := t.lang.stringToBuf(buf[:])
 	if t.script != 0 {
 		n += copy(buf[n:], "-")
@@ -376,7 +376,7 @@ func (t *Tag) genCoreBytes(buf []byte) int { log.DebugLog()
 }
 
 // String returns the canonical string representation of the language tag.
-func (t Tag) String() string { log.DebugLog()
+func (t Tag) String() string { 
 	if t.str != "" {
 		return t.str
 	}
@@ -390,7 +390,7 @@ func (t Tag) String() string { log.DebugLog()
 // Base returns the base language of the language tag. If the base language is
 // unspecified, an attempt will be made to infer it from the context.
 // It uses a variant of CLDR's Add Likely Subtags algorithm. This is subject to change.
-func (t Tag) Base() (Base, Confidence) { log.DebugLog()
+func (t Tag) Base() (Base, Confidence) { 
 	if t.lang != 0 {
 		return Base{t.lang}, Exact
 	}
@@ -418,7 +418,7 @@ func (t Tag) Base() (Base, Confidence) { log.DebugLog()
 // almost exclusively used for Afrikaans, but Arabic has been used for some texts
 // in the past.  Also, the script that is commonly used may change over time.
 // It uses a variant of CLDR's Add Likely Subtags algorithm. This is subject to change.
-func (t Tag) Script() (Script, Confidence) { log.DebugLog()
+func (t Tag) Script() (Script, Confidence) { 
 	if t.script != 0 {
 		return Script{t.script}, Exact
 	}
@@ -449,7 +449,7 @@ func (t Tag) Script() (Script, Confidence) { log.DebugLog()
 // Region returns the region for the language tag. If it was not explicitly given, it will
 // infer a most likely candidate from the context.
 // It uses a variant of CLDR's Add Likely Subtags algorithm. This is subject to change.
-func (t Tag) Region() (Region, Confidence) { log.DebugLog()
+func (t Tag) Region() (Region, Confidence) { 
 	if t.region != 0 {
 		return Region{t.region}, Exact
 	}
@@ -465,7 +465,7 @@ func (t Tag) Region() (Region, Confidence) { log.DebugLog()
 
 // Variant returns the variants specified explicitly for this language tag.
 // or nil if no variant was specified.
-func (t Tag) Variants() []Variant { log.DebugLog()
+func (t Tag) Variants() []Variant { 
 	v := []Variant{}
 	if int(t.pVariant) < int(t.pExt) {
 		for x, str := "", t.str[t.pVariant:t.pExt]; str != ""; {
@@ -479,7 +479,7 @@ func (t Tag) Variants() []Variant { log.DebugLog()
 // Parent returns the CLDR parent of t. In CLDR, missing fields in data for a
 // specific language are substituted with fields from the parent language.
 // The parent for a language may change for newer versions of CLDR.
-func (t Tag) Parent() Tag { log.DebugLog()
+func (t Tag) Parent() Tag { 
 	if t.str != "" {
 		// Strip the variants and extensions.
 		t, _ = Raw.Compose(t.Raw())
@@ -533,7 +533,7 @@ func (t Tag) Parent() Tag { log.DebugLog()
 }
 
 // returns token t and the rest of the string.
-func nextToken(s string) (t, tail string) { log.DebugLog()
+func nextToken(s string) (t, tail string) { 
 	p := strings.Index(s[1:], "-")
 	if p == -1 {
 		return s[1:], ""
@@ -549,12 +549,12 @@ type Extension struct {
 
 // String returns the string representation of the extension, including the
 // type tag.
-func (e Extension) String() string { log.DebugLog()
+func (e Extension) String() string { 
 	return e.s
 }
 
 // ParseExtension parses s as an extension and returns it on success.
-func ParseExtension(s string) (e Extension, err error) { log.DebugLog()
+func ParseExtension(s string) (e Extension, err error) { 
 	scan := makeScannerString(s)
 	var end int
 	if n := len(scan.token); n != 1 {
@@ -570,7 +570,7 @@ func ParseExtension(s string) (e Extension, err error) { log.DebugLog()
 
 // Type returns the one-byte extension type of e. It returns 0 for the zero
 // exception.
-func (e Extension) Type() byte { log.DebugLog()
+func (e Extension) Type() byte { 
 	if e.s == "" {
 		return 0
 	}
@@ -578,14 +578,14 @@ func (e Extension) Type() byte { log.DebugLog()
 }
 
 // Tokens returns the list of tokens of e.
-func (e Extension) Tokens() []string { log.DebugLog()
+func (e Extension) Tokens() []string { 
 	return strings.Split(e.s, "-")
 }
 
 // Extension returns the extension of type x for tag t. It will return
 // false for ok if t does not have the requested extension. The returned
 // extension will be invalid in this case.
-func (t Tag) Extension(x byte) (ext Extension, ok bool) { log.DebugLog()
+func (t Tag) Extension(x byte) (ext Extension, ok bool) { 
 	for i := int(t.pExt); i < len(t.str)-1; {
 		var ext string
 		i, ext = getExtension(t.str, i)
@@ -597,7 +597,7 @@ func (t Tag) Extension(x byte) (ext Extension, ok bool) { log.DebugLog()
 }
 
 // Extensions returns all extensions of t.
-func (t Tag) Extensions() []Extension { log.DebugLog()
+func (t Tag) Extensions() []Extension { 
 	e := []Extension{}
 	for i := int(t.pExt); i < len(t.str)-1; {
 		var ext string
@@ -611,7 +611,7 @@ func (t Tag) Extensions() []Extension { log.DebugLog()
 // are of the allowed values defined for the Unicode locale extension ('u') in
 // http://www.unicode.org/reports/tr35/#Unicode_Language_and_Locale_Identifiers.
 // TypeForKey will traverse the inheritance chain to get the correct value.
-func (t Tag) TypeForKey(key string) string { log.DebugLog()
+func (t Tag) TypeForKey(key string) string { 
 	if start, end, _ := t.findTypeForKey(key); end != start {
 		return t.str[start:end]
 	}
@@ -627,7 +627,7 @@ var (
 // are of the allowed values defined for the Unicode locale extension ('u') in
 // http://www.unicode.org/reports/tr35/#Unicode_Language_and_Locale_Identifiers.
 // An empty value removes an existing pair with the same key.
-func (t Tag) SetTypeForKey(key, value string) (Tag, error) { log.DebugLog()
+func (t Tag) SetTypeForKey(key, value string) (Tag, error) { 
 	if t.private() {
 		return t, errPrivateUse
 	}
@@ -707,7 +707,7 @@ func (t Tag) SetTypeForKey(key, value string) (Tag, error) { log.DebugLog()
 // wasn't found. The hasExt return value reports whether an -u extension was present.
 // Note: the extensions are typically very small and are likely to contain
 // only one key-type pair.
-func (t Tag) findTypeForKey(key string) (start, end int, hasExt bool) { log.DebugLog()
+func (t Tag) findTypeForKey(key string) (start, end int, hasExt bool) { 
 	p := int(t.pExt)
 	if len(key) != 2 || p == len(t.str) || p == 0 {
 		return p, p, false
@@ -775,7 +775,7 @@ func (t Tag) findTypeForKey(key string) (start, end int, hasExt bool) { log.Debu
 // and should not be stored in persistent storage. Extensions, except for the
 // 'va' type of the 'u' extension, are ignored. It will return 0, false if no
 // compact tag exists, where 0 is the index for the root language (Und).
-func CompactIndex(t Tag) (index int, ok bool) { log.DebugLog()
+func CompactIndex(t Tag) (index int, ok bool) { 
 	// TODO: perhaps give more frequent tags a lower index.
 	// TODO: we could make the indexes stable. This will excluded some
 	//       possibilities for optimization, so don't do this quite yet.
@@ -826,7 +826,7 @@ type Base struct {
 // ParseBase parses a 2- or 3-letter ISO 639 code.
 // It returns a ValueError if s is a well-formed but unknown language identifier
 // or another error if another error occurred.
-func ParseBase(s string) (Base, error) { log.DebugLog()
+func ParseBase(s string) (Base, error) { 
 	if n := len(s); n < 2 || 3 < n {
 		return Base{}, errSyntax
 	}
@@ -844,7 +844,7 @@ type Script struct {
 // ParseScript parses a 4-letter ISO 15924 code.
 // It returns a ValueError if s is a well-formed but unknown script identifier
 // or another error if another error occurred.
-func ParseScript(s string) (Script, error) { log.DebugLog()
+func ParseScript(s string) (Script, error) { 
 	if len(s) != 4 {
 		return Script{}, errSyntax
 	}
@@ -860,7 +860,7 @@ type Region struct {
 
 // EncodeM49 returns the Region for the given UN M.49 code.
 // It returns an error if r is not a valid code.
-func EncodeM49(r int) (Region, error) { log.DebugLog()
+func EncodeM49(r int) (Region, error) { 
 	rid, err := getRegionM49(r)
 	return Region{rid}, err
 }
@@ -868,7 +868,7 @@ func EncodeM49(r int) (Region, error) { log.DebugLog()
 // ParseRegion parses a 2- or 3-letter ISO 3166-1 or a UN M.49 code.
 // It returns a ValueError if s is a well-formed but unknown region identifier
 // or another error if another error occurred.
-func ParseRegion(s string) (Region, error) { log.DebugLog()
+func ParseRegion(s string) (Region, error) { 
 	if n := len(s); n < 2 || 3 < n {
 		return Region{}, errSyntax
 	}
@@ -879,7 +879,7 @@ func ParseRegion(s string) (Region, error) { log.DebugLog()
 
 // IsCountry returns whether this region is a country or autonomous area. This
 // includes non-standard definitions from CLDR.
-func (r Region) IsCountry() bool { log.DebugLog()
+func (r Region) IsCountry() bool { 
 	if r.regionID == 0 || r.IsGroup() || r.IsPrivateUse() && r.regionID != _XK {
 		return false
 	}
@@ -888,7 +888,7 @@ func (r Region) IsCountry() bool { log.DebugLog()
 
 // IsGroup returns whether this region defines a collection of regions. This
 // includes non-standard definitions from CLDR.
-func (r Region) IsGroup() bool { log.DebugLog()
+func (r Region) IsGroup() bool { 
 	if r.regionID == 0 {
 		return false
 	}
@@ -897,11 +897,11 @@ func (r Region) IsGroup() bool { log.DebugLog()
 
 // Contains returns whether Region c is contained by Region r. It returns true
 // if c == r.
-func (r Region) Contains(c Region) bool { log.DebugLog()
+func (r Region) Contains(c Region) bool { 
 	return r.regionID.contains(c.regionID)
 }
 
-func (r regionID) contains(c regionID) bool { log.DebugLog()
+func (r regionID) contains(c regionID) bool { 
 	if r == c {
 		return true
 	}
@@ -932,7 +932,7 @@ var errNoTLD = errors.New("language: region is not a valid ccTLD")
 // canonical form with a ccTLD. To get that ccTLD canonicalize r first. The
 // region will already be canonicalized it was obtained from a Tag that was
 // obtained using any of the default methods.
-func (r Region) TLD() (Region, error) { log.DebugLog()
+func (r Region) TLD() (Region, error) { 
 	// See http://en.wikipedia.org/wiki/Country_code_top-level_domain for the
 	// difference between ISO 3166-1 and IANA ccTLD.
 	if r.regionID == _GB {
@@ -947,7 +947,7 @@ func (r Region) TLD() (Region, error) { log.DebugLog()
 // Canonicalize returns the region or a possible replacement if the region is
 // deprecated. It will not return a replacement for deprecated regions that
 // are split into multiple regions.
-func (r Region) Canonicalize() Region { log.DebugLog()
+func (r Region) Canonicalize() Region { 
 	if cr := normRegion(r.regionID); cr != 0 {
 		return Region{cr}
 	}
@@ -961,7 +961,7 @@ type Variant struct {
 
 // ParseVariant parses and returns a Variant. An error is returned if s is not
 // a valid variant.
-func ParseVariant(s string) (Variant, error) { log.DebugLog()
+func ParseVariant(s string) (Variant, error) { 
 	s = strings.ToLower(s)
 	if _, ok := variantIndex[s]; ok {
 		return Variant{s}, nil
@@ -970,6 +970,6 @@ func ParseVariant(s string) (Variant, error) { log.DebugLog()
 }
 
 // String returns the string representation of the variant.
-func (v Variant) String() string { log.DebugLog()
+func (v Variant) String() string { 
 	return v.variant
 }

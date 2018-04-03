@@ -36,7 +36,7 @@ const (
 	headerRange             = "Range"
 )
 
-func (c *Client) addAuthorizationHeader(verb, url string, headers map[string]string, auth authentication) (map[string]string, error) { log.DebugLog()
+func (c *Client) addAuthorizationHeader(verb, url string, headers map[string]string, auth authentication) (map[string]string, error) { 
 	authHeader, err := c.getSharedKey(verb, url, headers, auth)
 	if err != nil {
 		return nil, err
@@ -45,7 +45,7 @@ func (c *Client) addAuthorizationHeader(verb, url string, headers map[string]str
 	return headers, nil
 }
 
-func (c *Client) getSharedKey(verb, url string, headers map[string]string, auth authentication) (string, error) { log.DebugLog()
+func (c *Client) getSharedKey(verb, url string, headers map[string]string, auth authentication) (string, error) { 
 	canRes, err := c.buildCanonicalizedResource(url, auth)
 	if err != nil {
 		return "", err
@@ -58,7 +58,7 @@ func (c *Client) getSharedKey(verb, url string, headers map[string]string, auth 
 	return c.createAuthorizationHeader(canString, auth), nil
 }
 
-func (c *Client) buildCanonicalizedResource(uri string, auth authentication) (string, error) { log.DebugLog()
+func (c *Client) buildCanonicalizedResource(uri string, auth authentication) (string, error) { 
 	errMsg := "buildCanonicalizedResource error: %s"
 	u, err := url.Parse(uri)
 	if err != nil {
@@ -111,13 +111,13 @@ func (c *Client) buildCanonicalizedResource(uri string, auth authentication) (st
 	return string(cr.Bytes()), nil
 }
 
-func (c *Client) getCanonicalizedAccountName() string { log.DebugLog()
+func (c *Client) getCanonicalizedAccountName() string { 
 	// since we may be trying to access a secondary storage account, we need to
 	// remove the -secondary part of the storage name
 	return strings.TrimSuffix(c.accountName, "-secondary")
 }
 
-func buildCanonicalizedString(verb string, headers map[string]string, canonicalizedResource string, auth authentication) (string, error) { log.DebugLog()
+func buildCanonicalizedString(verb string, headers map[string]string, canonicalizedResource string, auth authentication) (string, error) { 
 	contentLength := headers[headerContentLength]
 	if contentLength == "0" {
 		contentLength = ""
@@ -177,7 +177,7 @@ func buildCanonicalizedString(verb string, headers map[string]string, canonicali
 	return canString, nil
 }
 
-func buildCanonicalizedHeader(headers map[string]string) string { log.DebugLog()
+func buildCanonicalizedHeader(headers map[string]string) string { 
 	cm := make(map[string]string)
 
 	for k, v := range headers {
@@ -210,7 +210,7 @@ func buildCanonicalizedHeader(headers map[string]string) string { log.DebugLog()
 	return strings.TrimSuffix(string(ch.Bytes()), "\n")
 }
 
-func (c *Client) createAuthorizationHeader(canonicalizedString string, auth authentication) string { log.DebugLog()
+func (c *Client) createAuthorizationHeader(canonicalizedString string, auth authentication) string { 
 	signature := c.computeHmac256(canonicalizedString)
 	var key string
 	switch auth {

@@ -98,11 +98,11 @@ var ColorMap = map[string]Attribute{
 	"par.label.bg": ColorWhite,
 }
 
-func ThemeAttr(name string) Attribute { log.DebugLog()
+func ThemeAttr(name string) Attribute { 
 	return lookUpAttr(ColorMap, name)
 }
 
-func lookUpAttr(clrmap map[string]Attribute, name string) Attribute { log.DebugLog()
+func lookUpAttr(clrmap map[string]Attribute, name string) Attribute { 
 
 	a, ok := clrmap[name]
 	if ok {
@@ -122,7 +122,7 @@ func lookUpAttr(clrmap map[string]Attribute, name string) Attribute { log.DebugL
 }
 
 // 0<=r,g,b <= 5
-func ColorRGB(r, g, b int) Attribute { log.DebugLog()
+func ColorRGB(r, g, b int) Attribute { 
 	within := func(n int) int {
 		if n < 0 {
 			return 0

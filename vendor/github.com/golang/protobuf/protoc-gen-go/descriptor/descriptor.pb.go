@@ -121,15 +121,15 @@ var FieldDescriptorProto_Type_value = map[string]int32{
 	"TYPE_SINT64":   18,
 }
 
-func (x FieldDescriptorProto_Type) Enum() *FieldDescriptorProto_Type { log.DebugLog()
+func (x FieldDescriptorProto_Type) Enum() *FieldDescriptorProto_Type { 
 	p := new(FieldDescriptorProto_Type)
 	*p = x
 	return p
 }
-func (x FieldDescriptorProto_Type) String() string { log.DebugLog()
+func (x FieldDescriptorProto_Type) String() string { 
 	return proto.EnumName(FieldDescriptorProto_Type_name, int32(x))
 }
-func (x *FieldDescriptorProto_Type) UnmarshalJSON(data []byte) error { log.DebugLog()
+func (x *FieldDescriptorProto_Type) UnmarshalJSON(data []byte) error { 
 	value, err := proto.UnmarshalJSONEnum(FieldDescriptorProto_Type_value, data, "FieldDescriptorProto_Type")
 	if err != nil {
 		return err
@@ -137,7 +137,7 @@ func (x *FieldDescriptorProto_Type) UnmarshalJSON(data []byte) error { log.Debug
 	*x = FieldDescriptorProto_Type(value)
 	return nil
 }
-func (FieldDescriptorProto_Type) EnumDescriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor0, []int{3, 0} }
+func (FieldDescriptorProto_Type) EnumDescriptor() ([]byte, []int) {  return fileDescriptor0, []int{3, 0} }
 
 type FieldDescriptorProto_Label int32
 
@@ -159,15 +159,15 @@ var FieldDescriptorProto_Label_value = map[string]int32{
 	"LABEL_REPEATED": 3,
 }
 
-func (x FieldDescriptorProto_Label) Enum() *FieldDescriptorProto_Label { log.DebugLog()
+func (x FieldDescriptorProto_Label) Enum() *FieldDescriptorProto_Label { 
 	p := new(FieldDescriptorProto_Label)
 	*p = x
 	return p
 }
-func (x FieldDescriptorProto_Label) String() string { log.DebugLog()
+func (x FieldDescriptorProto_Label) String() string { 
 	return proto.EnumName(FieldDescriptorProto_Label_name, int32(x))
 }
-func (x *FieldDescriptorProto_Label) UnmarshalJSON(data []byte) error { log.DebugLog()
+func (x *FieldDescriptorProto_Label) UnmarshalJSON(data []byte) error { 
 	value, err := proto.UnmarshalJSONEnum(FieldDescriptorProto_Label_value, data, "FieldDescriptorProto_Label")
 	if err != nil {
 		return err
@@ -175,7 +175,7 @@ func (x *FieldDescriptorProto_Label) UnmarshalJSON(data []byte) error { log.Debu
 	*x = FieldDescriptorProto_Label(value)
 	return nil
 }
-func (FieldDescriptorProto_Label) EnumDescriptor() ([]byte, []int) { log.DebugLog()
+func (FieldDescriptorProto_Label) EnumDescriptor() ([]byte, []int) { 
 	return fileDescriptor0, []int{3, 1}
 }
 
@@ -200,15 +200,15 @@ var FileOptions_OptimizeMode_value = map[string]int32{
 	"LITE_RUNTIME": 3,
 }
 
-func (x FileOptions_OptimizeMode) Enum() *FileOptions_OptimizeMode { log.DebugLog()
+func (x FileOptions_OptimizeMode) Enum() *FileOptions_OptimizeMode { 
 	p := new(FileOptions_OptimizeMode)
 	*p = x
 	return p
 }
-func (x FileOptions_OptimizeMode) String() string { log.DebugLog()
+func (x FileOptions_OptimizeMode) String() string { 
 	return proto.EnumName(FileOptions_OptimizeMode_name, int32(x))
 }
-func (x *FileOptions_OptimizeMode) UnmarshalJSON(data []byte) error { log.DebugLog()
+func (x *FileOptions_OptimizeMode) UnmarshalJSON(data []byte) error { 
 	value, err := proto.UnmarshalJSONEnum(FileOptions_OptimizeMode_value, data, "FileOptions_OptimizeMode")
 	if err != nil {
 		return err
@@ -216,7 +216,7 @@ func (x *FileOptions_OptimizeMode) UnmarshalJSON(data []byte) error { log.DebugL
 	*x = FileOptions_OptimizeMode(value)
 	return nil
 }
-func (FileOptions_OptimizeMode) EnumDescriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor0, []int{9, 0} }
+func (FileOptions_OptimizeMode) EnumDescriptor() ([]byte, []int) {  return fileDescriptor0, []int{9, 0} }
 
 type FieldOptions_CType int32
 
@@ -238,15 +238,15 @@ var FieldOptions_CType_value = map[string]int32{
 	"STRING_PIECE": 2,
 }
 
-func (x FieldOptions_CType) Enum() *FieldOptions_CType { log.DebugLog()
+func (x FieldOptions_CType) Enum() *FieldOptions_CType { 
 	p := new(FieldOptions_CType)
 	*p = x
 	return p
 }
-func (x FieldOptions_CType) String() string { log.DebugLog()
+func (x FieldOptions_CType) String() string { 
 	return proto.EnumName(FieldOptions_CType_name, int32(x))
 }
-func (x *FieldOptions_CType) UnmarshalJSON(data []byte) error { log.DebugLog()
+func (x *FieldOptions_CType) UnmarshalJSON(data []byte) error { 
 	value, err := proto.UnmarshalJSONEnum(FieldOptions_CType_value, data, "FieldOptions_CType")
 	if err != nil {
 		return err
@@ -254,7 +254,7 @@ func (x *FieldOptions_CType) UnmarshalJSON(data []byte) error { log.DebugLog()
 	*x = FieldOptions_CType(value)
 	return nil
 }
-func (FieldOptions_CType) EnumDescriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor0, []int{11, 0} }
+func (FieldOptions_CType) EnumDescriptor() ([]byte, []int) {  return fileDescriptor0, []int{11, 0} }
 
 type FieldOptions_JSType int32
 
@@ -278,15 +278,15 @@ var FieldOptions_JSType_value = map[string]int32{
 	"JS_NUMBER": 2,
 }
 
-func (x FieldOptions_JSType) Enum() *FieldOptions_JSType { log.DebugLog()
+func (x FieldOptions_JSType) Enum() *FieldOptions_JSType { 
 	p := new(FieldOptions_JSType)
 	*p = x
 	return p
 }
-func (x FieldOptions_JSType) String() string { log.DebugLog()
+func (x FieldOptions_JSType) String() string { 
 	return proto.EnumName(FieldOptions_JSType_name, int32(x))
 }
-func (x *FieldOptions_JSType) UnmarshalJSON(data []byte) error { log.DebugLog()
+func (x *FieldOptions_JSType) UnmarshalJSON(data []byte) error { 
 	value, err := proto.UnmarshalJSONEnum(FieldOptions_JSType_value, data, "FieldOptions_JSType")
 	if err != nil {
 		return err
@@ -294,7 +294,7 @@ func (x *FieldOptions_JSType) UnmarshalJSON(data []byte) error { log.DebugLog()
 	*x = FieldOptions_JSType(value)
 	return nil
 }
-func (FieldOptions_JSType) EnumDescriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor0, []int{11, 1} }
+func (FieldOptions_JSType) EnumDescriptor() ([]byte, []int) {  return fileDescriptor0, []int{11, 1} }
 
 // Is this method side-effect-free (or safe in HTTP parlance), or idempotent,
 // or neither? HTTP based RPC implementation may choose GET verb for safe
@@ -318,15 +318,15 @@ var MethodOptions_IdempotencyLevel_value = map[string]int32{
 	"IDEMPOTENT":          2,
 }
 
-func (x MethodOptions_IdempotencyLevel) Enum() *MethodOptions_IdempotencyLevel { log.DebugLog()
+func (x MethodOptions_IdempotencyLevel) Enum() *MethodOptions_IdempotencyLevel { 
 	p := new(MethodOptions_IdempotencyLevel)
 	*p = x
 	return p
 }
-func (x MethodOptions_IdempotencyLevel) String() string { log.DebugLog()
+func (x MethodOptions_IdempotencyLevel) String() string { 
 	return proto.EnumName(MethodOptions_IdempotencyLevel_name, int32(x))
 }
-func (x *MethodOptions_IdempotencyLevel) UnmarshalJSON(data []byte) error { log.DebugLog()
+func (x *MethodOptions_IdempotencyLevel) UnmarshalJSON(data []byte) error { 
 	value, err := proto.UnmarshalJSONEnum(MethodOptions_IdempotencyLevel_value, data, "MethodOptions_IdempotencyLevel")
 	if err != nil {
 		return err
@@ -334,7 +334,7 @@ func (x *MethodOptions_IdempotencyLevel) UnmarshalJSON(data []byte) error { log.
 	*x = MethodOptions_IdempotencyLevel(value)
 	return nil
 }
-func (MethodOptions_IdempotencyLevel) EnumDescriptor() ([]byte, []int) { log.DebugLog()
+func (MethodOptions_IdempotencyLevel) EnumDescriptor() ([]byte, []int) { 
 	return fileDescriptor0, []int{16, 0}
 }
 
@@ -345,12 +345,12 @@ type FileDescriptorSet struct {
 	XXX_unrecognized []byte                 `json:"-"`
 }
 
-func (m *FileDescriptorSet) Reset()                    { log.DebugLog() *m = FileDescriptorSet{} }
-func (m *FileDescriptorSet) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*FileDescriptorSet) ProtoMessage()               { log.DebugLog()}
-func (*FileDescriptorSet) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor0, []int{0} }
+func (m *FileDescriptorSet) Reset()                    {  *m = FileDescriptorSet{} }
+func (m *FileDescriptorSet) String() string            {  return proto.CompactTextString(m) }
+func (*FileDescriptorSet) ProtoMessage()               { }
+func (*FileDescriptorSet) Descriptor() ([]byte, []int) {  return fileDescriptor0, []int{0} }
 
-func (m *FileDescriptorSet) GetFile() []*FileDescriptorProto { log.DebugLog()
+func (m *FileDescriptorSet) GetFile() []*FileDescriptorProto { 
 	if m != nil {
 		return m.File
 	}
@@ -385,89 +385,89 @@ type FileDescriptorProto struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *FileDescriptorProto) Reset()                    { log.DebugLog() *m = FileDescriptorProto{} }
-func (m *FileDescriptorProto) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*FileDescriptorProto) ProtoMessage()               { log.DebugLog()}
-func (*FileDescriptorProto) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor0, []int{1} }
+func (m *FileDescriptorProto) Reset()                    {  *m = FileDescriptorProto{} }
+func (m *FileDescriptorProto) String() string            {  return proto.CompactTextString(m) }
+func (*FileDescriptorProto) ProtoMessage()               { }
+func (*FileDescriptorProto) Descriptor() ([]byte, []int) {  return fileDescriptor0, []int{1} }
 
-func (m *FileDescriptorProto) GetName() string { log.DebugLog()
+func (m *FileDescriptorProto) GetName() string { 
 	if m != nil && m.Name != nil {
 		return *m.Name
 	}
 	return ""
 }
 
-func (m *FileDescriptorProto) GetPackage() string { log.DebugLog()
+func (m *FileDescriptorProto) GetPackage() string { 
 	if m != nil && m.Package != nil {
 		return *m.Package
 	}
 	return ""
 }
 
-func (m *FileDescriptorProto) GetDependency() []string { log.DebugLog()
+func (m *FileDescriptorProto) GetDependency() []string { 
 	if m != nil {
 		return m.Dependency
 	}
 	return nil
 }
 
-func (m *FileDescriptorProto) GetPublicDependency() []int32 { log.DebugLog()
+func (m *FileDescriptorProto) GetPublicDependency() []int32 { 
 	if m != nil {
 		return m.PublicDependency
 	}
 	return nil
 }
 
-func (m *FileDescriptorProto) GetWeakDependency() []int32 { log.DebugLog()
+func (m *FileDescriptorProto) GetWeakDependency() []int32 { 
 	if m != nil {
 		return m.WeakDependency
 	}
 	return nil
 }
 
-func (m *FileDescriptorProto) GetMessageType() []*DescriptorProto { log.DebugLog()
+func (m *FileDescriptorProto) GetMessageType() []*DescriptorProto { 
 	if m != nil {
 		return m.MessageType
 	}
 	return nil
 }
 
-func (m *FileDescriptorProto) GetEnumType() []*EnumDescriptorProto { log.DebugLog()
+func (m *FileDescriptorProto) GetEnumType() []*EnumDescriptorProto { 
 	if m != nil {
 		return m.EnumType
 	}
 	return nil
 }
 
-func (m *FileDescriptorProto) GetService() []*ServiceDescriptorProto { log.DebugLog()
+func (m *FileDescriptorProto) GetService() []*ServiceDescriptorProto { 
 	if m != nil {
 		return m.Service
 	}
 	return nil
 }
 
-func (m *FileDescriptorProto) GetExtension() []*FieldDescriptorProto { log.DebugLog()
+func (m *FileDescriptorProto) GetExtension() []*FieldDescriptorProto { 
 	if m != nil {
 		return m.Extension
 	}
 	return nil
 }
 
-func (m *FileDescriptorProto) GetOptions() *FileOptions { log.DebugLog()
+func (m *FileDescriptorProto) GetOptions() *FileOptions { 
 	if m != nil {
 		return m.Options
 	}
 	return nil
 }
 
-func (m *FileDescriptorProto) GetSourceCodeInfo() *SourceCodeInfo { log.DebugLog()
+func (m *FileDescriptorProto) GetSourceCodeInfo() *SourceCodeInfo { 
 	if m != nil {
 		return m.SourceCodeInfo
 	}
 	return nil
 }
 
-func (m *FileDescriptorProto) GetSyntax() string { log.DebugLog()
+func (m *FileDescriptorProto) GetSyntax() string { 
 	if m != nil && m.Syntax != nil {
 		return *m.Syntax
 	}
@@ -491,75 +491,75 @@ type DescriptorProto struct {
 	XXX_unrecognized []byte   `json:"-"`
 }
 
-func (m *DescriptorProto) Reset()                    { log.DebugLog() *m = DescriptorProto{} }
-func (m *DescriptorProto) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*DescriptorProto) ProtoMessage()               { log.DebugLog()}
-func (*DescriptorProto) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor0, []int{2} }
+func (m *DescriptorProto) Reset()                    {  *m = DescriptorProto{} }
+func (m *DescriptorProto) String() string            {  return proto.CompactTextString(m) }
+func (*DescriptorProto) ProtoMessage()               { }
+func (*DescriptorProto) Descriptor() ([]byte, []int) {  return fileDescriptor0, []int{2} }
 
-func (m *DescriptorProto) GetName() string { log.DebugLog()
+func (m *DescriptorProto) GetName() string { 
 	if m != nil && m.Name != nil {
 		return *m.Name
 	}
 	return ""
 }
 
-func (m *DescriptorProto) GetField() []*FieldDescriptorProto { log.DebugLog()
+func (m *DescriptorProto) GetField() []*FieldDescriptorProto { 
 	if m != nil {
 		return m.Field
 	}
 	return nil
 }
 
-func (m *DescriptorProto) GetExtension() []*FieldDescriptorProto { log.DebugLog()
+func (m *DescriptorProto) GetExtension() []*FieldDescriptorProto { 
 	if m != nil {
 		return m.Extension
 	}
 	return nil
 }
 
-func (m *DescriptorProto) GetNestedType() []*DescriptorProto { log.DebugLog()
+func (m *DescriptorProto) GetNestedType() []*DescriptorProto { 
 	if m != nil {
 		return m.NestedType
 	}
 	return nil
 }
 
-func (m *DescriptorProto) GetEnumType() []*EnumDescriptorProto { log.DebugLog()
+func (m *DescriptorProto) GetEnumType() []*EnumDescriptorProto { 
 	if m != nil {
 		return m.EnumType
 	}
 	return nil
 }
 
-func (m *DescriptorProto) GetExtensionRange() []*DescriptorProto_ExtensionRange { log.DebugLog()
+func (m *DescriptorProto) GetExtensionRange() []*DescriptorProto_ExtensionRange { 
 	if m != nil {
 		return m.ExtensionRange
 	}
 	return nil
 }
 
-func (m *DescriptorProto) GetOneofDecl() []*OneofDescriptorProto { log.DebugLog()
+func (m *DescriptorProto) GetOneofDecl() []*OneofDescriptorProto { 
 	if m != nil {
 		return m.OneofDecl
 	}
 	return nil
 }
 
-func (m *DescriptorProto) GetOptions() *MessageOptions { log.DebugLog()
+func (m *DescriptorProto) GetOptions() *MessageOptions { 
 	if m != nil {
 		return m.Options
 	}
 	return nil
 }
 
-func (m *DescriptorProto) GetReservedRange() []*DescriptorProto_ReservedRange { log.DebugLog()
+func (m *DescriptorProto) GetReservedRange() []*DescriptorProto_ReservedRange { 
 	if m != nil {
 		return m.ReservedRange
 	}
 	return nil
 }
 
-func (m *DescriptorProto) GetReservedName() []string { log.DebugLog()
+func (m *DescriptorProto) GetReservedName() []string { 
 	if m != nil {
 		return m.ReservedName
 	}
@@ -572,21 +572,21 @@ type DescriptorProto_ExtensionRange struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *DescriptorProto_ExtensionRange) Reset()         { log.DebugLog() *m = DescriptorProto_ExtensionRange{} }
-func (m *DescriptorProto_ExtensionRange) String() string { log.DebugLog() return proto.CompactTextString(m) }
-func (*DescriptorProto_ExtensionRange) ProtoMessage()    { log.DebugLog()}
-func (*DescriptorProto_ExtensionRange) Descriptor() ([]byte, []int) { log.DebugLog()
+func (m *DescriptorProto_ExtensionRange) Reset()         {  *m = DescriptorProto_ExtensionRange{} }
+func (m *DescriptorProto_ExtensionRange) String() string {  return proto.CompactTextString(m) }
+func (*DescriptorProto_ExtensionRange) ProtoMessage()    { }
+func (*DescriptorProto_ExtensionRange) Descriptor() ([]byte, []int) { 
 	return fileDescriptor0, []int{2, 0}
 }
 
-func (m *DescriptorProto_ExtensionRange) GetStart() int32 { log.DebugLog()
+func (m *DescriptorProto_ExtensionRange) GetStart() int32 { 
 	if m != nil && m.Start != nil {
 		return *m.Start
 	}
 	return 0
 }
 
-func (m *DescriptorProto_ExtensionRange) GetEnd() int32 { log.DebugLog()
+func (m *DescriptorProto_ExtensionRange) GetEnd() int32 { 
 	if m != nil && m.End != nil {
 		return *m.End
 	}
@@ -602,21 +602,21 @@ type DescriptorProto_ReservedRange struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *DescriptorProto_ReservedRange) Reset()         { log.DebugLog() *m = DescriptorProto_ReservedRange{} }
-func (m *DescriptorProto_ReservedRange) String() string { log.DebugLog() return proto.CompactTextString(m) }
-func (*DescriptorProto_ReservedRange) ProtoMessage()    { log.DebugLog()}
-func (*DescriptorProto_ReservedRange) Descriptor() ([]byte, []int) { log.DebugLog()
+func (m *DescriptorProto_ReservedRange) Reset()         {  *m = DescriptorProto_ReservedRange{} }
+func (m *DescriptorProto_ReservedRange) String() string {  return proto.CompactTextString(m) }
+func (*DescriptorProto_ReservedRange) ProtoMessage()    { }
+func (*DescriptorProto_ReservedRange) Descriptor() ([]byte, []int) { 
 	return fileDescriptor0, []int{2, 1}
 }
 
-func (m *DescriptorProto_ReservedRange) GetStart() int32 { log.DebugLog()
+func (m *DescriptorProto_ReservedRange) GetStart() int32 { 
 	if m != nil && m.Start != nil {
 		return *m.Start
 	}
 	return 0
 }
 
-func (m *DescriptorProto_ReservedRange) GetEnd() int32 { log.DebugLog()
+func (m *DescriptorProto_ReservedRange) GetEnd() int32 { 
 	if m != nil && m.End != nil {
 		return *m.End
 	}
@@ -658,75 +658,75 @@ type FieldDescriptorProto struct {
 	XXX_unrecognized []byte        `json:"-"`
 }
 
-func (m *FieldDescriptorProto) Reset()                    { log.DebugLog() *m = FieldDescriptorProto{} }
-func (m *FieldDescriptorProto) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*FieldDescriptorProto) ProtoMessage()               { log.DebugLog()}
-func (*FieldDescriptorProto) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor0, []int{3} }
+func (m *FieldDescriptorProto) Reset()                    {  *m = FieldDescriptorProto{} }
+func (m *FieldDescriptorProto) String() string            {  return proto.CompactTextString(m) }
+func (*FieldDescriptorProto) ProtoMessage()               { }
+func (*FieldDescriptorProto) Descriptor() ([]byte, []int) {  return fileDescriptor0, []int{3} }
 
-func (m *FieldDescriptorProto) GetName() string { log.DebugLog()
+func (m *FieldDescriptorProto) GetName() string { 
 	if m != nil && m.Name != nil {
 		return *m.Name
 	}
 	return ""
 }
 
-func (m *FieldDescriptorProto) GetNumber() int32 { log.DebugLog()
+func (m *FieldDescriptorProto) GetNumber() int32 { 
 	if m != nil && m.Number != nil {
 		return *m.Number
 	}
 	return 0
 }
 
-func (m *FieldDescriptorProto) GetLabel() FieldDescriptorProto_Label { log.DebugLog()
+func (m *FieldDescriptorProto) GetLabel() FieldDescriptorProto_Label { 
 	if m != nil && m.Label != nil {
 		return *m.Label
 	}
 	return FieldDescriptorProto_LABEL_OPTIONAL
 }
 
-func (m *FieldDescriptorProto) GetType() FieldDescriptorProto_Type { log.DebugLog()
+func (m *FieldDescriptorProto) GetType() FieldDescriptorProto_Type { 
 	if m != nil && m.Type != nil {
 		return *m.Type
 	}
 	return FieldDescriptorProto_TYPE_DOUBLE
 }
 
-func (m *FieldDescriptorProto) GetTypeName() string { log.DebugLog()
+func (m *FieldDescriptorProto) GetTypeName() string { 
 	if m != nil && m.TypeName != nil {
 		return *m.TypeName
 	}
 	return ""
 }
 
-func (m *FieldDescriptorProto) GetExtendee() string { log.DebugLog()
+func (m *FieldDescriptorProto) GetExtendee() string { 
 	if m != nil && m.Extendee != nil {
 		return *m.Extendee
 	}
 	return ""
 }
 
-func (m *FieldDescriptorProto) GetDefaultValue() string { log.DebugLog()
+func (m *FieldDescriptorProto) GetDefaultValue() string { 
 	if m != nil && m.DefaultValue != nil {
 		return *m.DefaultValue
 	}
 	return ""
 }
 
-func (m *FieldDescriptorProto) GetOneofIndex() int32 { log.DebugLog()
+func (m *FieldDescriptorProto) GetOneofIndex() int32 { 
 	if m != nil && m.OneofIndex != nil {
 		return *m.OneofIndex
 	}
 	return 0
 }
 
-func (m *FieldDescriptorProto) GetJsonName() string { log.DebugLog()
+func (m *FieldDescriptorProto) GetJsonName() string { 
 	if m != nil && m.JsonName != nil {
 		return *m.JsonName
 	}
 	return ""
 }
 
-func (m *FieldDescriptorProto) GetOptions() *FieldOptions { log.DebugLog()
+func (m *FieldDescriptorProto) GetOptions() *FieldOptions { 
 	if m != nil {
 		return m.Options
 	}
@@ -740,19 +740,19 @@ type OneofDescriptorProto struct {
 	XXX_unrecognized []byte        `json:"-"`
 }
 
-func (m *OneofDescriptorProto) Reset()                    { log.DebugLog() *m = OneofDescriptorProto{} }
-func (m *OneofDescriptorProto) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*OneofDescriptorProto) ProtoMessage()               { log.DebugLog()}
-func (*OneofDescriptorProto) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor0, []int{4} }
+func (m *OneofDescriptorProto) Reset()                    {  *m = OneofDescriptorProto{} }
+func (m *OneofDescriptorProto) String() string            {  return proto.CompactTextString(m) }
+func (*OneofDescriptorProto) ProtoMessage()               { }
+func (*OneofDescriptorProto) Descriptor() ([]byte, []int) {  return fileDescriptor0, []int{4} }
 
-func (m *OneofDescriptorProto) GetName() string { log.DebugLog()
+func (m *OneofDescriptorProto) GetName() string { 
 	if m != nil && m.Name != nil {
 		return *m.Name
 	}
 	return ""
 }
 
-func (m *OneofDescriptorProto) GetOptions() *OneofOptions { log.DebugLog()
+func (m *OneofDescriptorProto) GetOptions() *OneofOptions { 
 	if m != nil {
 		return m.Options
 	}
@@ -767,26 +767,26 @@ type EnumDescriptorProto struct {
 	XXX_unrecognized []byte                      `json:"-"`
 }
 
-func (m *EnumDescriptorProto) Reset()                    { log.DebugLog() *m = EnumDescriptorProto{} }
-func (m *EnumDescriptorProto) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*EnumDescriptorProto) ProtoMessage()               { log.DebugLog()}
-func (*EnumDescriptorProto) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor0, []int{5} }
+func (m *EnumDescriptorProto) Reset()                    {  *m = EnumDescriptorProto{} }
+func (m *EnumDescriptorProto) String() string            {  return proto.CompactTextString(m) }
+func (*EnumDescriptorProto) ProtoMessage()               { }
+func (*EnumDescriptorProto) Descriptor() ([]byte, []int) {  return fileDescriptor0, []int{5} }
 
-func (m *EnumDescriptorProto) GetName() string { log.DebugLog()
+func (m *EnumDescriptorProto) GetName() string { 
 	if m != nil && m.Name != nil {
 		return *m.Name
 	}
 	return ""
 }
 
-func (m *EnumDescriptorProto) GetValue() []*EnumValueDescriptorProto { log.DebugLog()
+func (m *EnumDescriptorProto) GetValue() []*EnumValueDescriptorProto { 
 	if m != nil {
 		return m.Value
 	}
 	return nil
 }
 
-func (m *EnumDescriptorProto) GetOptions() *EnumOptions { log.DebugLog()
+func (m *EnumDescriptorProto) GetOptions() *EnumOptions { 
 	if m != nil {
 		return m.Options
 	}
@@ -801,26 +801,26 @@ type EnumValueDescriptorProto struct {
 	XXX_unrecognized []byte            `json:"-"`
 }
 
-func (m *EnumValueDescriptorProto) Reset()                    { log.DebugLog() *m = EnumValueDescriptorProto{} }
-func (m *EnumValueDescriptorProto) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*EnumValueDescriptorProto) ProtoMessage()               { log.DebugLog()}
-func (*EnumValueDescriptorProto) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor0, []int{6} }
+func (m *EnumValueDescriptorProto) Reset()                    {  *m = EnumValueDescriptorProto{} }
+func (m *EnumValueDescriptorProto) String() string            {  return proto.CompactTextString(m) }
+func (*EnumValueDescriptorProto) ProtoMessage()               { }
+func (*EnumValueDescriptorProto) Descriptor() ([]byte, []int) {  return fileDescriptor0, []int{6} }
 
-func (m *EnumValueDescriptorProto) GetName() string { log.DebugLog()
+func (m *EnumValueDescriptorProto) GetName() string { 
 	if m != nil && m.Name != nil {
 		return *m.Name
 	}
 	return ""
 }
 
-func (m *EnumValueDescriptorProto) GetNumber() int32 { log.DebugLog()
+func (m *EnumValueDescriptorProto) GetNumber() int32 { 
 	if m != nil && m.Number != nil {
 		return *m.Number
 	}
 	return 0
 }
 
-func (m *EnumValueDescriptorProto) GetOptions() *EnumValueOptions { log.DebugLog()
+func (m *EnumValueDescriptorProto) GetOptions() *EnumValueOptions { 
 	if m != nil {
 		return m.Options
 	}
@@ -835,26 +835,26 @@ type ServiceDescriptorProto struct {
 	XXX_unrecognized []byte                   `json:"-"`
 }
 
-func (m *ServiceDescriptorProto) Reset()                    { log.DebugLog() *m = ServiceDescriptorProto{} }
-func (m *ServiceDescriptorProto) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*ServiceDescriptorProto) ProtoMessage()               { log.DebugLog()}
-func (*ServiceDescriptorProto) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor0, []int{7} }
+func (m *ServiceDescriptorProto) Reset()                    {  *m = ServiceDescriptorProto{} }
+func (m *ServiceDescriptorProto) String() string            {  return proto.CompactTextString(m) }
+func (*ServiceDescriptorProto) ProtoMessage()               { }
+func (*ServiceDescriptorProto) Descriptor() ([]byte, []int) {  return fileDescriptor0, []int{7} }
 
-func (m *ServiceDescriptorProto) GetName() string { log.DebugLog()
+func (m *ServiceDescriptorProto) GetName() string { 
 	if m != nil && m.Name != nil {
 		return *m.Name
 	}
 	return ""
 }
 
-func (m *ServiceDescriptorProto) GetMethod() []*MethodDescriptorProto { log.DebugLog()
+func (m *ServiceDescriptorProto) GetMethod() []*MethodDescriptorProto { 
 	if m != nil {
 		return m.Method
 	}
 	return nil
 }
 
-func (m *ServiceDescriptorProto) GetOptions() *ServiceOptions { log.DebugLog()
+func (m *ServiceDescriptorProto) GetOptions() *ServiceOptions { 
 	if m != nil {
 		return m.Options
 	}
@@ -876,50 +876,50 @@ type MethodDescriptorProto struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *MethodDescriptorProto) Reset()                    { log.DebugLog() *m = MethodDescriptorProto{} }
-func (m *MethodDescriptorProto) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*MethodDescriptorProto) ProtoMessage()               { log.DebugLog()}
-func (*MethodDescriptorProto) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor0, []int{8} }
+func (m *MethodDescriptorProto) Reset()                    {  *m = MethodDescriptorProto{} }
+func (m *MethodDescriptorProto) String() string            {  return proto.CompactTextString(m) }
+func (*MethodDescriptorProto) ProtoMessage()               { }
+func (*MethodDescriptorProto) Descriptor() ([]byte, []int) {  return fileDescriptor0, []int{8} }
 
 const Default_MethodDescriptorProto_ClientStreaming bool = false
 const Default_MethodDescriptorProto_ServerStreaming bool = false
 
-func (m *MethodDescriptorProto) GetName() string { log.DebugLog()
+func (m *MethodDescriptorProto) GetName() string { 
 	if m != nil && m.Name != nil {
 		return *m.Name
 	}
 	return ""
 }
 
-func (m *MethodDescriptorProto) GetInputType() string { log.DebugLog()
+func (m *MethodDescriptorProto) GetInputType() string { 
 	if m != nil && m.InputType != nil {
 		return *m.InputType
 	}
 	return ""
 }
 
-func (m *MethodDescriptorProto) GetOutputType() string { log.DebugLog()
+func (m *MethodDescriptorProto) GetOutputType() string { 
 	if m != nil && m.OutputType != nil {
 		return *m.OutputType
 	}
 	return ""
 }
 
-func (m *MethodDescriptorProto) GetOptions() *MethodOptions { log.DebugLog()
+func (m *MethodDescriptorProto) GetOptions() *MethodOptions { 
 	if m != nil {
 		return m.Options
 	}
 	return nil
 }
 
-func (m *MethodDescriptorProto) GetClientStreaming() bool { log.DebugLog()
+func (m *MethodDescriptorProto) GetClientStreaming() bool { 
 	if m != nil && m.ClientStreaming != nil {
 		return *m.ClientStreaming
 	}
 	return Default_MethodDescriptorProto_ClientStreaming
 }
 
-func (m *MethodDescriptorProto) GetServerStreaming() bool { log.DebugLog()
+func (m *MethodDescriptorProto) GetServerStreaming() bool { 
 	if m != nil && m.ServerStreaming != nil {
 		return *m.ServerStreaming
 	}
@@ -1001,16 +1001,16 @@ type FileOptions struct {
 	XXX_unrecognized             []byte `json:"-"`
 }
 
-func (m *FileOptions) Reset()                    { log.DebugLog() *m = FileOptions{} }
-func (m *FileOptions) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*FileOptions) ProtoMessage()               { log.DebugLog()}
-func (*FileOptions) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor0, []int{9} }
+func (m *FileOptions) Reset()                    {  *m = FileOptions{} }
+func (m *FileOptions) String() string            {  return proto.CompactTextString(m) }
+func (*FileOptions) ProtoMessage()               { }
+func (*FileOptions) Descriptor() ([]byte, []int) {  return fileDescriptor0, []int{9} }
 
 var extRange_FileOptions = []proto.ExtensionRange{
 	{1000, 536870911},
 }
 
-func (*FileOptions) ExtensionRangeArray() []proto.ExtensionRange { log.DebugLog()
+func (*FileOptions) ExtensionRangeArray() []proto.ExtensionRange { 
 	return extRange_FileOptions
 }
 
@@ -1023,119 +1023,119 @@ const Default_FileOptions_PyGenericServices bool = false
 const Default_FileOptions_Deprecated bool = false
 const Default_FileOptions_CcEnableArenas bool = false
 
-func (m *FileOptions) GetJavaPackage() string { log.DebugLog()
+func (m *FileOptions) GetJavaPackage() string { 
 	if m != nil && m.JavaPackage != nil {
 		return *m.JavaPackage
 	}
 	return ""
 }
 
-func (m *FileOptions) GetJavaOuterClassname() string { log.DebugLog()
+func (m *FileOptions) GetJavaOuterClassname() string { 
 	if m != nil && m.JavaOuterClassname != nil {
 		return *m.JavaOuterClassname
 	}
 	return ""
 }
 
-func (m *FileOptions) GetJavaMultipleFiles() bool { log.DebugLog()
+func (m *FileOptions) GetJavaMultipleFiles() bool { 
 	if m != nil && m.JavaMultipleFiles != nil {
 		return *m.JavaMultipleFiles
 	}
 	return Default_FileOptions_JavaMultipleFiles
 }
 
-func (m *FileOptions) GetJavaGenerateEqualsAndHash() bool { log.DebugLog()
+func (m *FileOptions) GetJavaGenerateEqualsAndHash() bool { 
 	if m != nil && m.JavaGenerateEqualsAndHash != nil {
 		return *m.JavaGenerateEqualsAndHash
 	}
 	return false
 }
 
-func (m *FileOptions) GetJavaStringCheckUtf8() bool { log.DebugLog()
+func (m *FileOptions) GetJavaStringCheckUtf8() bool { 
 	if m != nil && m.JavaStringCheckUtf8 != nil {
 		return *m.JavaStringCheckUtf8
 	}
 	return Default_FileOptions_JavaStringCheckUtf8
 }
 
-func (m *FileOptions) GetOptimizeFor() FileOptions_OptimizeMode { log.DebugLog()
+func (m *FileOptions) GetOptimizeFor() FileOptions_OptimizeMode { 
 	if m != nil && m.OptimizeFor != nil {
 		return *m.OptimizeFor
 	}
 	return Default_FileOptions_OptimizeFor
 }
 
-func (m *FileOptions) GetGoPackage() string { log.DebugLog()
+func (m *FileOptions) GetGoPackage() string { 
 	if m != nil && m.GoPackage != nil {
 		return *m.GoPackage
 	}
 	return ""
 }
 
-func (m *FileOptions) GetCcGenericServices() bool { log.DebugLog()
+func (m *FileOptions) GetCcGenericServices() bool { 
 	if m != nil && m.CcGenericServices != nil {
 		return *m.CcGenericServices
 	}
 	return Default_FileOptions_CcGenericServices
 }
 
-func (m *FileOptions) GetJavaGenericServices() bool { log.DebugLog()
+func (m *FileOptions) GetJavaGenericServices() bool { 
 	if m != nil && m.JavaGenericServices != nil {
 		return *m.JavaGenericServices
 	}
 	return Default_FileOptions_JavaGenericServices
 }
 
-func (m *FileOptions) GetPyGenericServices() bool { log.DebugLog()
+func (m *FileOptions) GetPyGenericServices() bool { 
 	if m != nil && m.PyGenericServices != nil {
 		return *m.PyGenericServices
 	}
 	return Default_FileOptions_PyGenericServices
 }
 
-func (m *FileOptions) GetDeprecated() bool { log.DebugLog()
+func (m *FileOptions) GetDeprecated() bool { 
 	if m != nil && m.Deprecated != nil {
 		return *m.Deprecated
 	}
 	return Default_FileOptions_Deprecated
 }
 
-func (m *FileOptions) GetCcEnableArenas() bool { log.DebugLog()
+func (m *FileOptions) GetCcEnableArenas() bool { 
 	if m != nil && m.CcEnableArenas != nil {
 		return *m.CcEnableArenas
 	}
 	return Default_FileOptions_CcEnableArenas
 }
 
-func (m *FileOptions) GetObjcClassPrefix() string { log.DebugLog()
+func (m *FileOptions) GetObjcClassPrefix() string { 
 	if m != nil && m.ObjcClassPrefix != nil {
 		return *m.ObjcClassPrefix
 	}
 	return ""
 }
 
-func (m *FileOptions) GetCsharpNamespace() string { log.DebugLog()
+func (m *FileOptions) GetCsharpNamespace() string { 
 	if m != nil && m.CsharpNamespace != nil {
 		return *m.CsharpNamespace
 	}
 	return ""
 }
 
-func (m *FileOptions) GetSwiftPrefix() string { log.DebugLog()
+func (m *FileOptions) GetSwiftPrefix() string { 
 	if m != nil && m.SwiftPrefix != nil {
 		return *m.SwiftPrefix
 	}
 	return ""
 }
 
-func (m *FileOptions) GetPhpClassPrefix() string { log.DebugLog()
+func (m *FileOptions) GetPhpClassPrefix() string { 
 	if m != nil && m.PhpClassPrefix != nil {
 		return *m.PhpClassPrefix
 	}
 	return ""
 }
 
-func (m *FileOptions) GetUninterpretedOption() []*UninterpretedOption { log.DebugLog()
+func (m *FileOptions) GetUninterpretedOption() []*UninterpretedOption { 
 	if m != nil {
 		return m.UninterpretedOption
 	}
@@ -1199,16 +1199,16 @@ type MessageOptions struct {
 	XXX_unrecognized             []byte `json:"-"`
 }
 
-func (m *MessageOptions) Reset()                    { log.DebugLog() *m = MessageOptions{} }
-func (m *MessageOptions) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*MessageOptions) ProtoMessage()               { log.DebugLog()}
-func (*MessageOptions) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor0, []int{10} }
+func (m *MessageOptions) Reset()                    {  *m = MessageOptions{} }
+func (m *MessageOptions) String() string            {  return proto.CompactTextString(m) }
+func (*MessageOptions) ProtoMessage()               { }
+func (*MessageOptions) Descriptor() ([]byte, []int) {  return fileDescriptor0, []int{10} }
 
 var extRange_MessageOptions = []proto.ExtensionRange{
 	{1000, 536870911},
 }
 
-func (*MessageOptions) ExtensionRangeArray() []proto.ExtensionRange { log.DebugLog()
+func (*MessageOptions) ExtensionRangeArray() []proto.ExtensionRange { 
 	return extRange_MessageOptions
 }
 
@@ -1216,35 +1216,35 @@ const Default_MessageOptions_MessageSetWireFormat bool = false
 const Default_MessageOptions_NoStandardDescriptorAccessor bool = false
 const Default_MessageOptions_Deprecated bool = false
 
-func (m *MessageOptions) GetMessageSetWireFormat() bool { log.DebugLog()
+func (m *MessageOptions) GetMessageSetWireFormat() bool { 
 	if m != nil && m.MessageSetWireFormat != nil {
 		return *m.MessageSetWireFormat
 	}
 	return Default_MessageOptions_MessageSetWireFormat
 }
 
-func (m *MessageOptions) GetNoStandardDescriptorAccessor() bool { log.DebugLog()
+func (m *MessageOptions) GetNoStandardDescriptorAccessor() bool { 
 	if m != nil && m.NoStandardDescriptorAccessor != nil {
 		return *m.NoStandardDescriptorAccessor
 	}
 	return Default_MessageOptions_NoStandardDescriptorAccessor
 }
 
-func (m *MessageOptions) GetDeprecated() bool { log.DebugLog()
+func (m *MessageOptions) GetDeprecated() bool { 
 	if m != nil && m.Deprecated != nil {
 		return *m.Deprecated
 	}
 	return Default_MessageOptions_Deprecated
 }
 
-func (m *MessageOptions) GetMapEntry() bool { log.DebugLog()
+func (m *MessageOptions) GetMapEntry() bool { 
 	if m != nil && m.MapEntry != nil {
 		return *m.MapEntry
 	}
 	return false
 }
 
-func (m *MessageOptions) GetUninterpretedOption() []*UninterpretedOption { log.DebugLog()
+func (m *MessageOptions) GetUninterpretedOption() []*UninterpretedOption { 
 	if m != nil {
 		return m.UninterpretedOption
 	}
@@ -1315,16 +1315,16 @@ type FieldOptions struct {
 	XXX_unrecognized             []byte `json:"-"`
 }
 
-func (m *FieldOptions) Reset()                    { log.DebugLog() *m = FieldOptions{} }
-func (m *FieldOptions) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*FieldOptions) ProtoMessage()               { log.DebugLog()}
-func (*FieldOptions) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor0, []int{11} }
+func (m *FieldOptions) Reset()                    {  *m = FieldOptions{} }
+func (m *FieldOptions) String() string            {  return proto.CompactTextString(m) }
+func (*FieldOptions) ProtoMessage()               { }
+func (*FieldOptions) Descriptor() ([]byte, []int) {  return fileDescriptor0, []int{11} }
 
 var extRange_FieldOptions = []proto.ExtensionRange{
 	{1000, 536870911},
 }
 
-func (*FieldOptions) ExtensionRangeArray() []proto.ExtensionRange { log.DebugLog()
+func (*FieldOptions) ExtensionRangeArray() []proto.ExtensionRange { 
 	return extRange_FieldOptions
 }
 
@@ -1334,49 +1334,49 @@ const Default_FieldOptions_Lazy bool = false
 const Default_FieldOptions_Deprecated bool = false
 const Default_FieldOptions_Weak bool = false
 
-func (m *FieldOptions) GetCtype() FieldOptions_CType { log.DebugLog()
+func (m *FieldOptions) GetCtype() FieldOptions_CType { 
 	if m != nil && m.Ctype != nil {
 		return *m.Ctype
 	}
 	return Default_FieldOptions_Ctype
 }
 
-func (m *FieldOptions) GetPacked() bool { log.DebugLog()
+func (m *FieldOptions) GetPacked() bool { 
 	if m != nil && m.Packed != nil {
 		return *m.Packed
 	}
 	return false
 }
 
-func (m *FieldOptions) GetJstype() FieldOptions_JSType { log.DebugLog()
+func (m *FieldOptions) GetJstype() FieldOptions_JSType { 
 	if m != nil && m.Jstype != nil {
 		return *m.Jstype
 	}
 	return Default_FieldOptions_Jstype
 }
 
-func (m *FieldOptions) GetLazy() bool { log.DebugLog()
+func (m *FieldOptions) GetLazy() bool { 
 	if m != nil && m.Lazy != nil {
 		return *m.Lazy
 	}
 	return Default_FieldOptions_Lazy
 }
 
-func (m *FieldOptions) GetDeprecated() bool { log.DebugLog()
+func (m *FieldOptions) GetDeprecated() bool { 
 	if m != nil && m.Deprecated != nil {
 		return *m.Deprecated
 	}
 	return Default_FieldOptions_Deprecated
 }
 
-func (m *FieldOptions) GetWeak() bool { log.DebugLog()
+func (m *FieldOptions) GetWeak() bool { 
 	if m != nil && m.Weak != nil {
 		return *m.Weak
 	}
 	return Default_FieldOptions_Weak
 }
 
-func (m *FieldOptions) GetUninterpretedOption() []*UninterpretedOption { log.DebugLog()
+func (m *FieldOptions) GetUninterpretedOption() []*UninterpretedOption { 
 	if m != nil {
 		return m.UninterpretedOption
 	}
@@ -1390,20 +1390,20 @@ type OneofOptions struct {
 	XXX_unrecognized             []byte `json:"-"`
 }
 
-func (m *OneofOptions) Reset()                    { log.DebugLog() *m = OneofOptions{} }
-func (m *OneofOptions) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*OneofOptions) ProtoMessage()               { log.DebugLog()}
-func (*OneofOptions) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor0, []int{12} }
+func (m *OneofOptions) Reset()                    {  *m = OneofOptions{} }
+func (m *OneofOptions) String() string            {  return proto.CompactTextString(m) }
+func (*OneofOptions) ProtoMessage()               { }
+func (*OneofOptions) Descriptor() ([]byte, []int) {  return fileDescriptor0, []int{12} }
 
 var extRange_OneofOptions = []proto.ExtensionRange{
 	{1000, 536870911},
 }
 
-func (*OneofOptions) ExtensionRangeArray() []proto.ExtensionRange { log.DebugLog()
+func (*OneofOptions) ExtensionRangeArray() []proto.ExtensionRange { 
 	return extRange_OneofOptions
 }
 
-func (m *OneofOptions) GetUninterpretedOption() []*UninterpretedOption { log.DebugLog()
+func (m *OneofOptions) GetUninterpretedOption() []*UninterpretedOption { 
 	if m != nil {
 		return m.UninterpretedOption
 	}
@@ -1425,36 +1425,36 @@ type EnumOptions struct {
 	XXX_unrecognized             []byte `json:"-"`
 }
 
-func (m *EnumOptions) Reset()                    { log.DebugLog() *m = EnumOptions{} }
-func (m *EnumOptions) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*EnumOptions) ProtoMessage()               { log.DebugLog()}
-func (*EnumOptions) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor0, []int{13} }
+func (m *EnumOptions) Reset()                    {  *m = EnumOptions{} }
+func (m *EnumOptions) String() string            {  return proto.CompactTextString(m) }
+func (*EnumOptions) ProtoMessage()               { }
+func (*EnumOptions) Descriptor() ([]byte, []int) {  return fileDescriptor0, []int{13} }
 
 var extRange_EnumOptions = []proto.ExtensionRange{
 	{1000, 536870911},
 }
 
-func (*EnumOptions) ExtensionRangeArray() []proto.ExtensionRange { log.DebugLog()
+func (*EnumOptions) ExtensionRangeArray() []proto.ExtensionRange { 
 	return extRange_EnumOptions
 }
 
 const Default_EnumOptions_Deprecated bool = false
 
-func (m *EnumOptions) GetAllowAlias() bool { log.DebugLog()
+func (m *EnumOptions) GetAllowAlias() bool { 
 	if m != nil && m.AllowAlias != nil {
 		return *m.AllowAlias
 	}
 	return false
 }
 
-func (m *EnumOptions) GetDeprecated() bool { log.DebugLog()
+func (m *EnumOptions) GetDeprecated() bool { 
 	if m != nil && m.Deprecated != nil {
 		return *m.Deprecated
 	}
 	return Default_EnumOptions_Deprecated
 }
 
-func (m *EnumOptions) GetUninterpretedOption() []*UninterpretedOption { log.DebugLog()
+func (m *EnumOptions) GetUninterpretedOption() []*UninterpretedOption { 
 	if m != nil {
 		return m.UninterpretedOption
 	}
@@ -1473,29 +1473,29 @@ type EnumValueOptions struct {
 	XXX_unrecognized             []byte `json:"-"`
 }
 
-func (m *EnumValueOptions) Reset()                    { log.DebugLog() *m = EnumValueOptions{} }
-func (m *EnumValueOptions) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*EnumValueOptions) ProtoMessage()               { log.DebugLog()}
-func (*EnumValueOptions) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor0, []int{14} }
+func (m *EnumValueOptions) Reset()                    {  *m = EnumValueOptions{} }
+func (m *EnumValueOptions) String() string            {  return proto.CompactTextString(m) }
+func (*EnumValueOptions) ProtoMessage()               { }
+func (*EnumValueOptions) Descriptor() ([]byte, []int) {  return fileDescriptor0, []int{14} }
 
 var extRange_EnumValueOptions = []proto.ExtensionRange{
 	{1000, 536870911},
 }
 
-func (*EnumValueOptions) ExtensionRangeArray() []proto.ExtensionRange { log.DebugLog()
+func (*EnumValueOptions) ExtensionRangeArray() []proto.ExtensionRange { 
 	return extRange_EnumValueOptions
 }
 
 const Default_EnumValueOptions_Deprecated bool = false
 
-func (m *EnumValueOptions) GetDeprecated() bool { log.DebugLog()
+func (m *EnumValueOptions) GetDeprecated() bool { 
 	if m != nil && m.Deprecated != nil {
 		return *m.Deprecated
 	}
 	return Default_EnumValueOptions_Deprecated
 }
 
-func (m *EnumValueOptions) GetUninterpretedOption() []*UninterpretedOption { log.DebugLog()
+func (m *EnumValueOptions) GetUninterpretedOption() []*UninterpretedOption { 
 	if m != nil {
 		return m.UninterpretedOption
 	}
@@ -1514,29 +1514,29 @@ type ServiceOptions struct {
 	XXX_unrecognized             []byte `json:"-"`
 }
 
-func (m *ServiceOptions) Reset()                    { log.DebugLog() *m = ServiceOptions{} }
-func (m *ServiceOptions) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*ServiceOptions) ProtoMessage()               { log.DebugLog()}
-func (*ServiceOptions) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor0, []int{15} }
+func (m *ServiceOptions) Reset()                    {  *m = ServiceOptions{} }
+func (m *ServiceOptions) String() string            {  return proto.CompactTextString(m) }
+func (*ServiceOptions) ProtoMessage()               { }
+func (*ServiceOptions) Descriptor() ([]byte, []int) {  return fileDescriptor0, []int{15} }
 
 var extRange_ServiceOptions = []proto.ExtensionRange{
 	{1000, 536870911},
 }
 
-func (*ServiceOptions) ExtensionRangeArray() []proto.ExtensionRange { log.DebugLog()
+func (*ServiceOptions) ExtensionRangeArray() []proto.ExtensionRange { 
 	return extRange_ServiceOptions
 }
 
 const Default_ServiceOptions_Deprecated bool = false
 
-func (m *ServiceOptions) GetDeprecated() bool { log.DebugLog()
+func (m *ServiceOptions) GetDeprecated() bool { 
 	if m != nil && m.Deprecated != nil {
 		return *m.Deprecated
 	}
 	return Default_ServiceOptions_Deprecated
 }
 
-func (m *ServiceOptions) GetUninterpretedOption() []*UninterpretedOption { log.DebugLog()
+func (m *ServiceOptions) GetUninterpretedOption() []*UninterpretedOption { 
 	if m != nil {
 		return m.UninterpretedOption
 	}
@@ -1556,37 +1556,37 @@ type MethodOptions struct {
 	XXX_unrecognized             []byte `json:"-"`
 }
 
-func (m *MethodOptions) Reset()                    { log.DebugLog() *m = MethodOptions{} }
-func (m *MethodOptions) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*MethodOptions) ProtoMessage()               { log.DebugLog()}
-func (*MethodOptions) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor0, []int{16} }
+func (m *MethodOptions) Reset()                    {  *m = MethodOptions{} }
+func (m *MethodOptions) String() string            {  return proto.CompactTextString(m) }
+func (*MethodOptions) ProtoMessage()               { }
+func (*MethodOptions) Descriptor() ([]byte, []int) {  return fileDescriptor0, []int{16} }
 
 var extRange_MethodOptions = []proto.ExtensionRange{
 	{1000, 536870911},
 }
 
-func (*MethodOptions) ExtensionRangeArray() []proto.ExtensionRange { log.DebugLog()
+func (*MethodOptions) ExtensionRangeArray() []proto.ExtensionRange { 
 	return extRange_MethodOptions
 }
 
 const Default_MethodOptions_Deprecated bool = false
 const Default_MethodOptions_IdempotencyLevel MethodOptions_IdempotencyLevel = MethodOptions_IDEMPOTENCY_UNKNOWN
 
-func (m *MethodOptions) GetDeprecated() bool { log.DebugLog()
+func (m *MethodOptions) GetDeprecated() bool { 
 	if m != nil && m.Deprecated != nil {
 		return *m.Deprecated
 	}
 	return Default_MethodOptions_Deprecated
 }
 
-func (m *MethodOptions) GetIdempotencyLevel() MethodOptions_IdempotencyLevel { log.DebugLog()
+func (m *MethodOptions) GetIdempotencyLevel() MethodOptions_IdempotencyLevel { 
 	if m != nil && m.IdempotencyLevel != nil {
 		return *m.IdempotencyLevel
 	}
 	return Default_MethodOptions_IdempotencyLevel
 }
 
-func (m *MethodOptions) GetUninterpretedOption() []*UninterpretedOption { log.DebugLog()
+func (m *MethodOptions) GetUninterpretedOption() []*UninterpretedOption { 
 	if m != nil {
 		return m.UninterpretedOption
 	}
@@ -1612,54 +1612,54 @@ type UninterpretedOption struct {
 	XXX_unrecognized []byte   `json:"-"`
 }
 
-func (m *UninterpretedOption) Reset()                    { log.DebugLog() *m = UninterpretedOption{} }
-func (m *UninterpretedOption) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*UninterpretedOption) ProtoMessage()               { log.DebugLog()}
-func (*UninterpretedOption) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor0, []int{17} }
+func (m *UninterpretedOption) Reset()                    {  *m = UninterpretedOption{} }
+func (m *UninterpretedOption) String() string            {  return proto.CompactTextString(m) }
+func (*UninterpretedOption) ProtoMessage()               { }
+func (*UninterpretedOption) Descriptor() ([]byte, []int) {  return fileDescriptor0, []int{17} }
 
-func (m *UninterpretedOption) GetName() []*UninterpretedOption_NamePart { log.DebugLog()
+func (m *UninterpretedOption) GetName() []*UninterpretedOption_NamePart { 
 	if m != nil {
 		return m.Name
 	}
 	return nil
 }
 
-func (m *UninterpretedOption) GetIdentifierValue() string { log.DebugLog()
+func (m *UninterpretedOption) GetIdentifierValue() string { 
 	if m != nil && m.IdentifierValue != nil {
 		return *m.IdentifierValue
 	}
 	return ""
 }
 
-func (m *UninterpretedOption) GetPositiveIntValue() uint64 { log.DebugLog()
+func (m *UninterpretedOption) GetPositiveIntValue() uint64 { 
 	if m != nil && m.PositiveIntValue != nil {
 		return *m.PositiveIntValue
 	}
 	return 0
 }
 
-func (m *UninterpretedOption) GetNegativeIntValue() int64 { log.DebugLog()
+func (m *UninterpretedOption) GetNegativeIntValue() int64 { 
 	if m != nil && m.NegativeIntValue != nil {
 		return *m.NegativeIntValue
 	}
 	return 0
 }
 
-func (m *UninterpretedOption) GetDoubleValue() float64 { log.DebugLog()
+func (m *UninterpretedOption) GetDoubleValue() float64 { 
 	if m != nil && m.DoubleValue != nil {
 		return *m.DoubleValue
 	}
 	return 0
 }
 
-func (m *UninterpretedOption) GetStringValue() []byte { log.DebugLog()
+func (m *UninterpretedOption) GetStringValue() []byte { 
 	if m != nil {
 		return m.StringValue
 	}
 	return nil
 }
 
-func (m *UninterpretedOption) GetAggregateValue() string { log.DebugLog()
+func (m *UninterpretedOption) GetAggregateValue() string { 
 	if m != nil && m.AggregateValue != nil {
 		return *m.AggregateValue
 	}
@@ -1677,21 +1677,21 @@ type UninterpretedOption_NamePart struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *UninterpretedOption_NamePart) Reset()         { log.DebugLog() *m = UninterpretedOption_NamePart{} }
-func (m *UninterpretedOption_NamePart) String() string { log.DebugLog() return proto.CompactTextString(m) }
-func (*UninterpretedOption_NamePart) ProtoMessage()    { log.DebugLog()}
-func (*UninterpretedOption_NamePart) Descriptor() ([]byte, []int) { log.DebugLog()
+func (m *UninterpretedOption_NamePart) Reset()         {  *m = UninterpretedOption_NamePart{} }
+func (m *UninterpretedOption_NamePart) String() string {  return proto.CompactTextString(m) }
+func (*UninterpretedOption_NamePart) ProtoMessage()    { }
+func (*UninterpretedOption_NamePart) Descriptor() ([]byte, []int) { 
 	return fileDescriptor0, []int{17, 0}
 }
 
-func (m *UninterpretedOption_NamePart) GetNamePart() string { log.DebugLog()
+func (m *UninterpretedOption_NamePart) GetNamePart() string { 
 	if m != nil && m.NamePart != nil {
 		return *m.NamePart
 	}
 	return ""
 }
 
-func (m *UninterpretedOption_NamePart) GetIsExtension() bool { log.DebugLog()
+func (m *UninterpretedOption_NamePart) GetIsExtension() bool { 
 	if m != nil && m.IsExtension != nil {
 		return *m.IsExtension
 	}
@@ -1748,12 +1748,12 @@ type SourceCodeInfo struct {
 	XXX_unrecognized []byte                     `json:"-"`
 }
 
-func (m *SourceCodeInfo) Reset()                    { log.DebugLog() *m = SourceCodeInfo{} }
-func (m *SourceCodeInfo) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*SourceCodeInfo) ProtoMessage()               { log.DebugLog()}
-func (*SourceCodeInfo) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor0, []int{18} }
+func (m *SourceCodeInfo) Reset()                    {  *m = SourceCodeInfo{} }
+func (m *SourceCodeInfo) String() string            {  return proto.CompactTextString(m) }
+func (*SourceCodeInfo) ProtoMessage()               { }
+func (*SourceCodeInfo) Descriptor() ([]byte, []int) {  return fileDescriptor0, []int{18} }
 
-func (m *SourceCodeInfo) GetLocation() []*SourceCodeInfo_Location { log.DebugLog()
+func (m *SourceCodeInfo) GetLocation() []*SourceCodeInfo_Location { 
 	if m != nil {
 		return m.Location
 	}
@@ -1844,40 +1844,40 @@ type SourceCodeInfo_Location struct {
 	XXX_unrecognized        []byte   `json:"-"`
 }
 
-func (m *SourceCodeInfo_Location) Reset()                    { log.DebugLog() *m = SourceCodeInfo_Location{} }
-func (m *SourceCodeInfo_Location) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*SourceCodeInfo_Location) ProtoMessage()               { log.DebugLog()}
-func (*SourceCodeInfo_Location) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor0, []int{18, 0} }
+func (m *SourceCodeInfo_Location) Reset()                    {  *m = SourceCodeInfo_Location{} }
+func (m *SourceCodeInfo_Location) String() string            {  return proto.CompactTextString(m) }
+func (*SourceCodeInfo_Location) ProtoMessage()               { }
+func (*SourceCodeInfo_Location) Descriptor() ([]byte, []int) {  return fileDescriptor0, []int{18, 0} }
 
-func (m *SourceCodeInfo_Location) GetPath() []int32 { log.DebugLog()
+func (m *SourceCodeInfo_Location) GetPath() []int32 { 
 	if m != nil {
 		return m.Path
 	}
 	return nil
 }
 
-func (m *SourceCodeInfo_Location) GetSpan() []int32 { log.DebugLog()
+func (m *SourceCodeInfo_Location) GetSpan() []int32 { 
 	if m != nil {
 		return m.Span
 	}
 	return nil
 }
 
-func (m *SourceCodeInfo_Location) GetLeadingComments() string { log.DebugLog()
+func (m *SourceCodeInfo_Location) GetLeadingComments() string { 
 	if m != nil && m.LeadingComments != nil {
 		return *m.LeadingComments
 	}
 	return ""
 }
 
-func (m *SourceCodeInfo_Location) GetTrailingComments() string { log.DebugLog()
+func (m *SourceCodeInfo_Location) GetTrailingComments() string { 
 	if m != nil && m.TrailingComments != nil {
 		return *m.TrailingComments
 	}
 	return ""
 }
 
-func (m *SourceCodeInfo_Location) GetLeadingDetachedComments() []string { log.DebugLog()
+func (m *SourceCodeInfo_Location) GetLeadingDetachedComments() []string { 
 	if m != nil {
 		return m.LeadingDetachedComments
 	}
@@ -1894,12 +1894,12 @@ type GeneratedCodeInfo struct {
 	XXX_unrecognized []byte                          `json:"-"`
 }
 
-func (m *GeneratedCodeInfo) Reset()                    { log.DebugLog() *m = GeneratedCodeInfo{} }
-func (m *GeneratedCodeInfo) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*GeneratedCodeInfo) ProtoMessage()               { log.DebugLog()}
-func (*GeneratedCodeInfo) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor0, []int{19} }
+func (m *GeneratedCodeInfo) Reset()                    {  *m = GeneratedCodeInfo{} }
+func (m *GeneratedCodeInfo) String() string            {  return proto.CompactTextString(m) }
+func (*GeneratedCodeInfo) ProtoMessage()               { }
+func (*GeneratedCodeInfo) Descriptor() ([]byte, []int) {  return fileDescriptor0, []int{19} }
 
-func (m *GeneratedCodeInfo) GetAnnotation() []*GeneratedCodeInfo_Annotation { log.DebugLog()
+func (m *GeneratedCodeInfo) GetAnnotation() []*GeneratedCodeInfo_Annotation { 
 	if m != nil {
 		return m.Annotation
 	}
@@ -1922,42 +1922,42 @@ type GeneratedCodeInfo_Annotation struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *GeneratedCodeInfo_Annotation) Reset()         { log.DebugLog() *m = GeneratedCodeInfo_Annotation{} }
-func (m *GeneratedCodeInfo_Annotation) String() string { log.DebugLog() return proto.CompactTextString(m) }
-func (*GeneratedCodeInfo_Annotation) ProtoMessage()    { log.DebugLog()}
-func (*GeneratedCodeInfo_Annotation) Descriptor() ([]byte, []int) { log.DebugLog()
+func (m *GeneratedCodeInfo_Annotation) Reset()         {  *m = GeneratedCodeInfo_Annotation{} }
+func (m *GeneratedCodeInfo_Annotation) String() string {  return proto.CompactTextString(m) }
+func (*GeneratedCodeInfo_Annotation) ProtoMessage()    { }
+func (*GeneratedCodeInfo_Annotation) Descriptor() ([]byte, []int) { 
 	return fileDescriptor0, []int{19, 0}
 }
 
-func (m *GeneratedCodeInfo_Annotation) GetPath() []int32 { log.DebugLog()
+func (m *GeneratedCodeInfo_Annotation) GetPath() []int32 { 
 	if m != nil {
 		return m.Path
 	}
 	return nil
 }
 
-func (m *GeneratedCodeInfo_Annotation) GetSourceFile() string { log.DebugLog()
+func (m *GeneratedCodeInfo_Annotation) GetSourceFile() string { 
 	if m != nil && m.SourceFile != nil {
 		return *m.SourceFile
 	}
 	return ""
 }
 
-func (m *GeneratedCodeInfo_Annotation) GetBegin() int32 { log.DebugLog()
+func (m *GeneratedCodeInfo_Annotation) GetBegin() int32 { 
 	if m != nil && m.Begin != nil {
 		return *m.Begin
 	}
 	return 0
 }
 
-func (m *GeneratedCodeInfo_Annotation) GetEnd() int32 { log.DebugLog()
+func (m *GeneratedCodeInfo_Annotation) GetEnd() int32 { 
 	if m != nil && m.End != nil {
 		return *m.End
 	}
 	return 0
 }
 
-func init() { log.DebugLog()
+func init() { 
 	proto.RegisterType((*FileDescriptorSet)(nil), "google.protobuf.FileDescriptorSet")
 	proto.RegisterType((*FileDescriptorProto)(nil), "google.protobuf.FileDescriptorProto")
 	proto.RegisterType((*DescriptorProto)(nil), "google.protobuf.DescriptorProto")
@@ -1991,7 +1991,7 @@ func init() { log.DebugLog()
 	proto.RegisterEnum("google.protobuf.MethodOptions_IdempotencyLevel", MethodOptions_IdempotencyLevel_name, MethodOptions_IdempotencyLevel_value)
 }
 
-func init() { log.DebugLog() proto.RegisterFile("google/protobuf/descriptor.proto", fileDescriptor0) }
+func init() {  proto.RegisterFile("google/protobuf/descriptor.proto", fileDescriptor0) }
 
 var fileDescriptor0 = []byte{
 	// 2460 bytes of a gzipped FileDescriptorProto

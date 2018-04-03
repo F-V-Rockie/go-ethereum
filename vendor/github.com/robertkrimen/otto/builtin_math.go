@@ -7,27 +7,27 @@ import (
 
 // Math
 
-func builtinMath_abs(call FunctionCall) Value { log.DebugLog()
+func builtinMath_abs(call FunctionCall) Value { 
 	number := call.Argument(0).float64()
 	return toValue_float64(math.Abs(number))
 }
 
-func builtinMath_acos(call FunctionCall) Value { log.DebugLog()
+func builtinMath_acos(call FunctionCall) Value { 
 	number := call.Argument(0).float64()
 	return toValue_float64(math.Acos(number))
 }
 
-func builtinMath_asin(call FunctionCall) Value { log.DebugLog()
+func builtinMath_asin(call FunctionCall) Value { 
 	number := call.Argument(0).float64()
 	return toValue_float64(math.Asin(number))
 }
 
-func builtinMath_atan(call FunctionCall) Value { log.DebugLog()
+func builtinMath_atan(call FunctionCall) Value { 
 	number := call.Argument(0).float64()
 	return toValue_float64(math.Atan(number))
 }
 
-func builtinMath_atan2(call FunctionCall) Value { log.DebugLog()
+func builtinMath_atan2(call FunctionCall) Value { 
 	y := call.Argument(0).float64()
 	if math.IsNaN(y) {
 		return NaNValue()
@@ -39,32 +39,32 @@ func builtinMath_atan2(call FunctionCall) Value { log.DebugLog()
 	return toValue_float64(math.Atan2(y, x))
 }
 
-func builtinMath_cos(call FunctionCall) Value { log.DebugLog()
+func builtinMath_cos(call FunctionCall) Value { 
 	number := call.Argument(0).float64()
 	return toValue_float64(math.Cos(number))
 }
 
-func builtinMath_ceil(call FunctionCall) Value { log.DebugLog()
+func builtinMath_ceil(call FunctionCall) Value { 
 	number := call.Argument(0).float64()
 	return toValue_float64(math.Ceil(number))
 }
 
-func builtinMath_exp(call FunctionCall) Value { log.DebugLog()
+func builtinMath_exp(call FunctionCall) Value { 
 	number := call.Argument(0).float64()
 	return toValue_float64(math.Exp(number))
 }
 
-func builtinMath_floor(call FunctionCall) Value { log.DebugLog()
+func builtinMath_floor(call FunctionCall) Value { 
 	number := call.Argument(0).float64()
 	return toValue_float64(math.Floor(number))
 }
 
-func builtinMath_log(call FunctionCall) Value { log.DebugLog()
+func builtinMath_log(call FunctionCall) Value { 
 	number := call.Argument(0).float64()
 	return toValue_float64(math.Log(number))
 }
 
-func builtinMath_max(call FunctionCall) Value { log.DebugLog()
+func builtinMath_max(call FunctionCall) Value { 
 	switch len(call.ArgumentList) {
 	case 0:
 		return negativeInfinityValue()
@@ -85,7 +85,7 @@ func builtinMath_max(call FunctionCall) Value { log.DebugLog()
 	return toValue_float64(result)
 }
 
-func builtinMath_min(call FunctionCall) Value { log.DebugLog()
+func builtinMath_min(call FunctionCall) Value { 
 	switch len(call.ArgumentList) {
 	case 0:
 		return positiveInfinityValue()
@@ -106,7 +106,7 @@ func builtinMath_min(call FunctionCall) Value { log.DebugLog()
 	return toValue_float64(result)
 }
 
-func builtinMath_pow(call FunctionCall) Value { log.DebugLog()
+func builtinMath_pow(call FunctionCall) Value { 
 	// TODO Make sure this works according to the specification (15.8.2.13)
 	x := call.Argument(0).float64()
 	y := call.Argument(1).float64()
@@ -116,7 +116,7 @@ func builtinMath_pow(call FunctionCall) Value { log.DebugLog()
 	return toValue_float64(math.Pow(x, y))
 }
 
-func builtinMath_random(call FunctionCall) Value { log.DebugLog()
+func builtinMath_random(call FunctionCall) Value { 
 	var v float64
 	if call.runtime.random != nil {
 		v = call.runtime.random()
@@ -126,7 +126,7 @@ func builtinMath_random(call FunctionCall) Value { log.DebugLog()
 	return toValue_float64(v)
 }
 
-func builtinMath_round(call FunctionCall) Value { log.DebugLog()
+func builtinMath_round(call FunctionCall) Value { 
 	number := call.Argument(0).float64()
 	value := math.Floor(number + 0.5)
 	if value == 0 {
@@ -135,17 +135,17 @@ func builtinMath_round(call FunctionCall) Value { log.DebugLog()
 	return toValue_float64(value)
 }
 
-func builtinMath_sin(call FunctionCall) Value { log.DebugLog()
+func builtinMath_sin(call FunctionCall) Value { 
 	number := call.Argument(0).float64()
 	return toValue_float64(math.Sin(number))
 }
 
-func builtinMath_sqrt(call FunctionCall) Value { log.DebugLog()
+func builtinMath_sqrt(call FunctionCall) Value { 
 	number := call.Argument(0).float64()
 	return toValue_float64(math.Sqrt(number))
 }
 
-func builtinMath_tan(call FunctionCall) Value { log.DebugLog()
+func builtinMath_tan(call FunctionCall) Value { 
 	number := call.Argument(0).float64()
 	return toValue_float64(math.Tan(number))
 }

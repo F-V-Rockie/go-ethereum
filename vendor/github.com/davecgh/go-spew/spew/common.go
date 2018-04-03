@@ -69,7 +69,7 @@ var hexDigits = "0123456789abcdef"
 
 // catchPanic handles any panics that might occur during the handleMethods
 // calls.
-func catchPanic(w io.Writer, v reflect.Value) { log.DebugLog()
+func catchPanic(w io.Writer, v reflect.Value) { 
 	if err := recover(); err != nil {
 		w.Write(panicBytes)
 		fmt.Fprintf(w, "%v", err)
@@ -82,7 +82,7 @@ func catchPanic(w io.Writer, v reflect.Value) { log.DebugLog()
 //
 // It handles panics in any called methods by catching and displaying the error
 // as the formatted value.
-func handleMethods(cs *ConfigState, w io.Writer, v reflect.Value) (handled bool) { log.DebugLog()
+func handleMethods(cs *ConfigState, w io.Writer, v reflect.Value) (handled bool) { 
 	// We need an interface to check if the type implements the error or
 	// Stringer interface.  However, the reflect package won't give us an
 	// interface on certain things like unexported struct fields in order
@@ -141,7 +141,7 @@ func handleMethods(cs *ConfigState, w io.Writer, v reflect.Value) (handled bool)
 }
 
 // printBool outputs a boolean value as true or false to Writer w.
-func printBool(w io.Writer, val bool) { log.DebugLog()
+func printBool(w io.Writer, val bool) { 
 	if val {
 		w.Write(trueBytes)
 	} else {
@@ -150,24 +150,24 @@ func printBool(w io.Writer, val bool) { log.DebugLog()
 }
 
 // printInt outputs a signed integer value to Writer w.
-func printInt(w io.Writer, val int64, base int) { log.DebugLog()
+func printInt(w io.Writer, val int64, base int) { 
 	w.Write([]byte(strconv.FormatInt(val, base)))
 }
 
 // printUint outputs an unsigned integer value to Writer w.
-func printUint(w io.Writer, val uint64, base int) { log.DebugLog()
+func printUint(w io.Writer, val uint64, base int) { 
 	w.Write([]byte(strconv.FormatUint(val, base)))
 }
 
 // printFloat outputs a floating point value using the specified precision,
 // which is expected to be 32 or 64bit, to Writer w.
-func printFloat(w io.Writer, val float64, precision int) { log.DebugLog()
+func printFloat(w io.Writer, val float64, precision int) { 
 	w.Write([]byte(strconv.FormatFloat(val, 'g', -1, precision)))
 }
 
 // printComplex outputs a complex value using the specified float precision
 // for the real and imaginary parts to Writer w.
-func printComplex(w io.Writer, c complex128, floatPrecision int) { log.DebugLog()
+func printComplex(w io.Writer, c complex128, floatPrecision int) { 
 	r := real(c)
 	w.Write(openParenBytes)
 	w.Write([]byte(strconv.FormatFloat(r, 'g', -1, floatPrecision)))
@@ -182,7 +182,7 @@ func printComplex(w io.Writer, c complex128, floatPrecision int) { log.DebugLog(
 
 // printHexPtr outputs a uintptr formatted as hexidecimal with a leading '0x'
 // prefix to Writer w.
-func printHexPtr(w io.Writer, p uintptr) { log.DebugLog()
+func printHexPtr(w io.Writer, p uintptr) { 
 	// Null pointer.
 	num := uint64(p)
 	if num == 0 {
@@ -225,7 +225,7 @@ type valuesSorter struct {
 // newValuesSorter initializes a valuesSorter instance, which holds a set of
 // surrogate keys on which the data should be sorted.  It uses flags in
 // ConfigState to decide if and how to populate those surrogate keys.
-func newValuesSorter(values []reflect.Value, cs *ConfigState) sort.Interface { log.DebugLog()
+func newValuesSorter(values []reflect.Value, cs *ConfigState) sort.Interface { 
 	vs := &valuesSorter{values: values, cs: cs}
 	if canSortSimply(vs.values[0].Kind()) {
 		return vs
@@ -253,7 +253,7 @@ func newValuesSorter(values []reflect.Value, cs *ConfigState) sort.Interface { l
 // canSortSimply tests whether a reflect.Kind is a primitive that can be sorted
 // directly, or whether it should be considered for sorting by surrogate keys
 // (if the ConfigState allows it).
-func canSortSimply(kind reflect.Kind) bool { log.DebugLog()
+func canSortSimply(kind reflect.Kind) bool { 
 	// This switch parallels valueSortLess, except for the default case.
 	switch kind {
 	case reflect.Bool:
@@ -276,13 +276,13 @@ func canSortSimply(kind reflect.Kind) bool { log.DebugLog()
 
 // Len returns the number of values in the slice.  It is part of the
 // sort.Interface implementation.
-func (s *valuesSorter) Len() int { log.DebugLog()
+func (s *valuesSorter) Len() int { 
 	return len(s.values)
 }
 
 // Swap swaps the values at the passed indices.  It is part of the
 // sort.Interface implementation.
-func (s *valuesSorter) Swap(i, j int) { log.DebugLog()
+func (s *valuesSorter) Swap(i, j int) { 
 	s.values[i], s.values[j] = s.values[j], s.values[i]
 	if s.strings != nil {
 		s.strings[i], s.strings[j] = s.strings[j], s.strings[i]
@@ -292,7 +292,7 @@ func (s *valuesSorter) Swap(i, j int) { log.DebugLog()
 // valueSortLess returns whether the first value should sort before the second
 // value.  It is used by valueSorter.Less as part of the sort.Interface
 // implementation.
-func valueSortLess(a, b reflect.Value) bool { log.DebugLog()
+func valueSortLess(a, b reflect.Value) bool { 
 	switch a.Kind() {
 	case reflect.Bool:
 		return !a.Bool() && b.Bool()
@@ -323,7 +323,7 @@ func valueSortLess(a, b reflect.Value) bool { log.DebugLog()
 
 // Less returns whether the value at index i should sort before the
 // value at index j.  It is part of the sort.Interface implementation.
-func (s *valuesSorter) Less(i, j int) bool { log.DebugLog()
+func (s *valuesSorter) Less(i, j int) bool { 
 	if s.strings == nil {
 		return valueSortLess(s.values[i], s.values[j])
 	}
@@ -333,7 +333,7 @@ func (s *valuesSorter) Less(i, j int) bool { log.DebugLog()
 // sortValues is a sort function that handles both native types and any type that
 // can be converted to error or Stringer.  Other inputs are sorted according to
 // their Value.String() value to ensure display stability.
-func sortValues(values []reflect.Value, cs *ConfigState) { log.DebugLog()
+func sortValues(values []reflect.Value, cs *ConfigState) { 
 	if len(values) == 0 {
 		return
 	}

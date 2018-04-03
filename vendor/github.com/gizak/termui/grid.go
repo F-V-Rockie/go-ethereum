@@ -26,7 +26,7 @@ type Row struct {
 }
 
 // calculate and set the underlying layout tree's x, y, height and width.
-func (r *Row) calcLayout() { log.DebugLog()
+func (r *Row) calcLayout() { 
 	r.assignWidth(r.Width)
 	r.Height = r.solveHeight()
 	r.assignX(r.X)
@@ -34,16 +34,16 @@ func (r *Row) calcLayout() { log.DebugLog()
 }
 
 // tell if the node is leaf in the tree.
-func (r *Row) isLeaf() bool { log.DebugLog()
+func (r *Row) isLeaf() bool { 
 	return r.Cols == nil || len(r.Cols) == 0
 }
 
-func (r *Row) isRenderableLeaf() bool { log.DebugLog()
+func (r *Row) isRenderableLeaf() bool { 
 	return r.isLeaf() && r.Widget != nil
 }
 
 // assign widgets' (and their parent rows') width recursively.
-func (r *Row) assignWidth(w int) { log.DebugLog()
+func (r *Row) assignWidth(w int) { 
 	r.SetWidth(w)
 
 	accW := 0                            // acc span and offset
@@ -71,7 +71,7 @@ func (r *Row) assignWidth(w int) { log.DebugLog()
 
 // bottom up calc and set rows' (and their widgets') height,
 // return r's total height.
-func (r *Row) solveHeight() int { log.DebugLog()
+func (r *Row) solveHeight() int { 
 	if r.isRenderableLeaf() {
 		r.Height = r.Widget.GetHeight()
 		return r.Widget.GetHeight()
@@ -96,7 +96,7 @@ func (r *Row) solveHeight() int { log.DebugLog()
 }
 
 // recursively assign x position for r tree.
-func (r *Row) assignX(x int) { log.DebugLog()
+func (r *Row) assignX(x int) { 
 	r.SetX(x)
 
 	if !r.isLeaf() {
@@ -112,7 +112,7 @@ func (r *Row) assignX(x int) { log.DebugLog()
 }
 
 // recursively assign y position to r.
-func (r *Row) assignY(y int) { log.DebugLog()
+func (r *Row) assignY(y int) { 
 	r.SetY(y)
 
 	if r.isLeaf() {
@@ -130,12 +130,12 @@ func (r *Row) assignY(y int) { log.DebugLog()
 }
 
 // GetHeight implements GridBufferer interface.
-func (r Row) GetHeight() int { log.DebugLog()
+func (r Row) GetHeight() int { 
 	return r.Height
 }
 
 // SetX implements GridBufferer interface.
-func (r *Row) SetX(x int) { log.DebugLog()
+func (r *Row) SetX(x int) { 
 	r.X = x
 	if r.Widget != nil {
 		r.Widget.SetX(x)
@@ -143,7 +143,7 @@ func (r *Row) SetX(x int) { log.DebugLog()
 }
 
 // SetY implements GridBufferer interface.
-func (r *Row) SetY(y int) { log.DebugLog()
+func (r *Row) SetY(y int) { 
 	r.Y = y
 	if r.Widget != nil {
 		r.Widget.SetY(y)
@@ -151,7 +151,7 @@ func (r *Row) SetY(y int) { log.DebugLog()
 }
 
 // SetWidth implements GridBufferer interface.
-func (r *Row) SetWidth(w int) { log.DebugLog()
+func (r *Row) SetWidth(w int) { 
 	r.Width = w
 	if r.Widget != nil {
 		r.Widget.SetWidth(w)
@@ -160,7 +160,7 @@ func (r *Row) SetWidth(w int) { log.DebugLog()
 
 // Buffer implements Bufferer interface,
 // recursively merge all widgets buffer
-func (r *Row) Buffer() Buffer { log.DebugLog()
+func (r *Row) Buffer() Buffer { 
 	merged := NewBuffer()
 
 	if r.isRenderableLeaf() {
@@ -212,24 +212,24 @@ type Grid struct {
 }
 
 // NewGrid returns *Grid with given rows.
-func NewGrid(rows ...*Row) *Grid { log.DebugLog()
+func NewGrid(rows ...*Row) *Grid { 
 	return &Grid{Rows: rows}
 }
 
 // AddRows appends given rows to Grid.
-func (g *Grid) AddRows(rs ...*Row) { log.DebugLog()
+func (g *Grid) AddRows(rs ...*Row) { 
 	g.Rows = append(g.Rows, rs...)
 }
 
 // NewRow creates a new row out of given columns.
-func NewRow(cols ...*Row) *Row { log.DebugLog()
+func NewRow(cols ...*Row) *Row { 
 	rs := &Row{Span: 12, Cols: cols}
 	return rs
 }
 
 // NewCol accepts: widgets are LayoutBufferer or widgets is A NewRow.
 // Note that if multiple widgets are provided, they will stack up in the col.
-func NewCol(span, offset int, widgets ...GridBufferer) *Row { log.DebugLog()
+func NewCol(span, offset int, widgets ...GridBufferer) *Row { 
 	r := &Row{Span: span, Offset: offset}
 
 	if widgets != nil && len(widgets) == 1 {
@@ -255,7 +255,7 @@ func NewCol(span, offset int, widgets ...GridBufferer) *Row { log.DebugLog()
 }
 
 // Align calculate each rows' layout.
-func (g *Grid) Align() { log.DebugLog()
+func (g *Grid) Align() { 
 	h := 0
 	for _, r := range g.Rows {
 		r.SetWidth(g.Width)
@@ -267,7 +267,7 @@ func (g *Grid) Align() { log.DebugLog()
 }
 
 // Buffer implments Bufferer interface.
-func (g Grid) Buffer() Buffer { log.DebugLog()
+func (g Grid) Buffer() Buffer { 
 	buf := NewBuffer()
 
 	for _, r := range g.Rows {

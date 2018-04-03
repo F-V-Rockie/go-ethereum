@@ -19,7 +19,7 @@ var (
 	SigningMethodRS512 *SigningMethodRSA
 )
 
-func init() { log.DebugLog()
+func init() { 
 	// RS256
 	SigningMethodRS256 = &SigningMethodRSA{"RS256", crypto.SHA256}
 	RegisterSigningMethod(SigningMethodRS256.Alg(), func() SigningMethod {
@@ -39,13 +39,13 @@ func init() { log.DebugLog()
 	})
 }
 
-func (m *SigningMethodRSA) Alg() string { log.DebugLog()
+func (m *SigningMethodRSA) Alg() string { 
 	return m.Name
 }
 
 // Implements the Verify method from SigningMethod
 // For this signing method, must be an rsa.PublicKey structure.
-func (m *SigningMethodRSA) Verify(signingString, signature string, key interface{}) error { log.DebugLog()
+func (m *SigningMethodRSA) Verify(signingString, signature string, key interface{}) error { 
 	var err error
 
 	// Decode the signature
@@ -74,7 +74,7 @@ func (m *SigningMethodRSA) Verify(signingString, signature string, key interface
 
 // Implements the Sign method from SigningMethod
 // For this signing method, must be an rsa.PrivateKey structure.
-func (m *SigningMethodRSA) Sign(signingString string, key interface{}) (string, error) { log.DebugLog()
+func (m *SigningMethodRSA) Sign(signingString string, key interface{}) (string, error) { 
 	var rsaKey *rsa.PrivateKey
 	var ok bool
 

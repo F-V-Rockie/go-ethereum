@@ -286,7 +286,7 @@ func (BitCurve *BitCurve) Unmarshal(data []byte) (x, y *big.Int) { log.DebugLog(
 
 var theCurve = new(BitCurve)
 
-func init() { log.DebugLog()
+func init() {
 	// See SEC 2 section 2.7.1
 	// curve parameters taken from:
 	// http://www.secg.org/collateral/sec2_final.pdf

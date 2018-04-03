@@ -42,7 +42,7 @@ type testgeth struct {
 	Etherbase string
 }
 
-func init() { log.DebugLog()
+func init() {
 	// Run the app if we've been exec'd as "geth-test" in runGeth.
 	reexec.Register("geth-test", func() {
 		if err := app.Run(os.Args); err != nil {

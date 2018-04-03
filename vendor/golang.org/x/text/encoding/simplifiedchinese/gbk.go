@@ -50,7 +50,7 @@ type gbkDecoder struct {
 	gb18030 bool
 }
 
-func (d gbkDecoder) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) { log.DebugLog()
+func (d gbkDecoder) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) { 
 	r, size := rune(0), 0
 loop:
 	for ; nSrc < len(src); nSrc += size {
@@ -160,7 +160,7 @@ type gbkEncoder struct {
 	gb18030 bool
 }
 
-func (e gbkEncoder) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) { log.DebugLog()
+func (e gbkEncoder) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) { 
 	r, r2, size := rune(0), rune(0), 0
 	for ; nSrc < len(src); nSrc += size {
 		r = rune(src[nSrc])
@@ -273,7 +273,7 @@ func (e gbkEncoder) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err 
 	return nDst, nSrc, err
 }
 
-func init() { log.DebugLog()
+func init() { 
 	// Check that the hard-coded encode switch covers all tables.
 	if numEncodeTables != 5 {
 		panic("bad numEncodeTables")

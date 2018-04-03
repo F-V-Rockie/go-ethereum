@@ -94,7 +94,7 @@ var Flags = []cli.Flag{
 
 var glogger *log.GlogHandler
 
-func init() { log.DebugLog()
+func init() {
 	usecolor := term.IsTty(os.Stderr.Fd()) && os.Getenv("TERM") != "dumb"
 	output := io.Writer(os.Stderr)
 	if usecolor {

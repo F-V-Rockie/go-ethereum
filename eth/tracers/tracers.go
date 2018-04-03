@@ -37,7 +37,7 @@ func camel(str string) string { log.DebugLog()
 }
 
 // init retrieves the JavaScript transaction tracers included in go-ethereum.
-func init() { log.DebugLog()
+func init() {
 	for _, file := range tracers.AssetNames() {
 		name := camel(strings.TrimSuffix(file, ".js"))
 		all[name] = string(tracers.MustAsset(file))

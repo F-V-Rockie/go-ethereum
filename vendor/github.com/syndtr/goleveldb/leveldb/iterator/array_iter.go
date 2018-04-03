@@ -43,11 +43,11 @@ type basicArrayIterator struct {
 	err   error
 }
 
-func (i *basicArrayIterator) Valid() bool { log.DebugLog()
+func (i *basicArrayIterator) Valid() bool { 
 	return i.pos >= 0 && i.pos < i.array.Len() && !i.Released()
 }
 
-func (i *basicArrayIterator) First() bool { log.DebugLog()
+func (i *basicArrayIterator) First() bool { 
 	if i.Released() {
 		i.err = ErrIterReleased
 		return false
@@ -61,7 +61,7 @@ func (i *basicArrayIterator) First() bool { log.DebugLog()
 	return true
 }
 
-func (i *basicArrayIterator) Last() bool { log.DebugLog()
+func (i *basicArrayIterator) Last() bool { 
 	if i.Released() {
 		i.err = ErrIterReleased
 		return false
@@ -76,7 +76,7 @@ func (i *basicArrayIterator) Last() bool { log.DebugLog()
 	return true
 }
 
-func (i *basicArrayIterator) Seek(key []byte) bool { log.DebugLog()
+func (i *basicArrayIterator) Seek(key []byte) bool { 
 	if i.Released() {
 		i.err = ErrIterReleased
 		return false
@@ -94,7 +94,7 @@ func (i *basicArrayIterator) Seek(key []byte) bool { log.DebugLog()
 	return true
 }
 
-func (i *basicArrayIterator) Next() bool { log.DebugLog()
+func (i *basicArrayIterator) Next() bool { 
 	if i.Released() {
 		i.err = ErrIterReleased
 		return false
@@ -108,7 +108,7 @@ func (i *basicArrayIterator) Next() bool { log.DebugLog()
 	return true
 }
 
-func (i *basicArrayIterator) Prev() bool { log.DebugLog()
+func (i *basicArrayIterator) Prev() bool { 
 	if i.Released() {
 		i.err = ErrIterReleased
 		return false
@@ -122,7 +122,7 @@ func (i *basicArrayIterator) Prev() bool { log.DebugLog()
 	return true
 }
 
-func (i *basicArrayIterator) Error() error { log.DebugLog() return i.err }
+func (i *basicArrayIterator) Error() error {  return i.err }
 
 type arrayIterator struct {
 	basicArrayIterator
@@ -131,7 +131,7 @@ type arrayIterator struct {
 	key, value []byte
 }
 
-func (i *arrayIterator) updateKV() { log.DebugLog()
+func (i *arrayIterator) updateKV() { 
 	if i.pos == i.basicArrayIterator.pos {
 		return
 	}
@@ -144,12 +144,12 @@ func (i *arrayIterator) updateKV() { log.DebugLog()
 	}
 }
 
-func (i *arrayIterator) Key() []byte { log.DebugLog()
+func (i *arrayIterator) Key() []byte { 
 	i.updateKV()
 	return i.key
 }
 
-func (i *arrayIterator) Value() []byte { log.DebugLog()
+func (i *arrayIterator) Value() []byte { 
 	i.updateKV()
 	return i.value
 }
@@ -159,7 +159,7 @@ type arrayIteratorIndexer struct {
 	array ArrayIndexer
 }
 
-func (i *arrayIteratorIndexer) Get() Iterator { log.DebugLog()
+func (i *arrayIteratorIndexer) Get() Iterator { 
 	if i.Valid() {
 		return i.array.Get(i.basicArrayIterator.pos)
 	}
@@ -167,7 +167,7 @@ func (i *arrayIteratorIndexer) Get() Iterator { log.DebugLog()
 }
 
 // NewArrayIterator returns an iterator from the given array.
-func NewArrayIterator(array Array) Iterator { log.DebugLog()
+func NewArrayIterator(array Array) Iterator { 
 	return &arrayIterator{
 		basicArrayIterator: basicArrayIterator{array: array, pos: -1},
 		array:              array,
@@ -176,7 +176,7 @@ func NewArrayIterator(array Array) Iterator { log.DebugLog()
 }
 
 // NewArrayIndexer returns an index iterator from the given array.
-func NewArrayIndexer(array ArrayIndexer) IteratorIndexer { log.DebugLog()
+func NewArrayIndexer(array ArrayIndexer) IteratorIndexer { 
 	return &arrayIteratorIndexer{
 		basicArrayIterator: basicArrayIterator{array: array, pos: -1},
 		array:              array,

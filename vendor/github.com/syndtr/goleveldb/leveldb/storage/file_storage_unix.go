@@ -17,14 +17,14 @@ type unixFileLock struct {
 	f *os.File
 }
 
-func (fl *unixFileLock) release() error { log.DebugLog()
+func (fl *unixFileLock) release() error { 
 	if err := setFileLock(fl.f, false, false); err != nil {
 		return err
 	}
 	return fl.f.Close()
 }
 
-func newFileLock(path string, readOnly bool) (fl fileLock, err error) { log.DebugLog()
+func newFileLock(path string, readOnly bool) (fl fileLock, err error) { 
 	var flag int
 	if readOnly {
 		flag = os.O_RDONLY
@@ -47,7 +47,7 @@ func newFileLock(path string, readOnly bool) (fl fileLock, err error) { log.Debu
 	return
 }
 
-func setFileLock(f *os.File, readOnly, lock bool) error { log.DebugLog()
+func setFileLock(f *os.File, readOnly, lock bool) error { 
 	how := syscall.LOCK_UN
 	if lock {
 		if readOnly {
@@ -59,11 +59,11 @@ func setFileLock(f *os.File, readOnly, lock bool) error { log.DebugLog()
 	return syscall.Flock(int(f.Fd()), how|syscall.LOCK_NB)
 }
 
-func rename(oldpath, newpath string) error { log.DebugLog()
+func rename(oldpath, newpath string) error { 
 	return os.Rename(oldpath, newpath)
 }
 
-func isErrInvalid(err error) bool { log.DebugLog()
+func isErrInvalid(err error) bool { 
 	if err == os.ErrInvalid {
 		return true
 	}
@@ -73,7 +73,7 @@ func isErrInvalid(err error) bool { log.DebugLog()
 	return false
 }
 
-func syncDir(name string) error { log.DebugLog()
+func syncDir(name string) error { 
 	f, err := os.Open(name)
 	if err != nil {
 		return err

@@ -43,7 +43,7 @@ type Options struct {
 // Note that filename's directory influences which imports can be chosen,
 // so it is important that filename be accurate.
 // To process data ``as if'' it were in filename, pass the data as a non-nil src.
-func Process(filename string, src []byte, opt *Options) ([]byte, error) { log.DebugLog()
+func Process(filename string, src []byte, opt *Options) ([]byte, error) { 
 	if opt == nil {
 		opt = &Options{Comments: true, TabIndent: true, TabWidth: 8}
 	}
@@ -110,7 +110,7 @@ func Process(filename string, src []byte, opt *Options) ([]byte, error) { log.De
 
 // parse parses src, which was read from filename,
 // as a Go source file or statement list.
-func parse(fset *token.FileSet, filename string, src []byte, opt *Options) (*ast.File, func(orig, src []byte) []byte, error) { log.DebugLog()
+func parse(fset *token.FileSet, filename string, src []byte, opt *Options) (*ast.File, func(orig, src []byte) []byte, error) { 
 	parserMode := parser.Mode(0)
 	if opt.Comments {
 		parserMode |= parser.ParseComments
@@ -186,7 +186,7 @@ func parse(fset *token.FileSet, filename string, src []byte, opt *Options) (*ast
 
 // containsMainFunc checks if a file contains a function declaration with the
 // function signature 'func main()'
-func containsMainFunc(file *ast.File) bool { log.DebugLog()
+func containsMainFunc(file *ast.File) bool { 
 	for _, decl := range file.Decls {
 		if f, ok := decl.(*ast.FuncDecl); ok {
 			if f.Name.Name != "main" {
@@ -208,7 +208,7 @@ func containsMainFunc(file *ast.File) bool { log.DebugLog()
 	return false
 }
 
-func cutSpace(b []byte) (before, middle, after []byte) { log.DebugLog()
+func cutSpace(b []byte) (before, middle, after []byte) { 
 	i := 0
 	for i < len(b) && (b[i] == ' ' || b[i] == '\t' || b[i] == '\n') {
 		i++
@@ -229,7 +229,7 @@ func cutSpace(b []byte) (before, middle, after []byte) { log.DebugLog()
 //    to every non-blank line in src.
 // 3) matchSpace copies the trailing space from orig and uses it in place
 //   of src's trailing space.
-func matchSpace(orig []byte, src []byte) []byte { log.DebugLog()
+func matchSpace(orig []byte, src []byte) []byte { 
 	before, _, after := cutSpace(orig)
 	i := bytes.LastIndex(before, []byte{'\n'})
 	before, indent := before[:i+1], before[i+1:]
@@ -256,7 +256,7 @@ func matchSpace(orig []byte, src []byte) []byte { log.DebugLog()
 
 var impLine = regexp.MustCompile(`^\s+(?:[\w\.]+\s+)?"(.+)"`)
 
-func addImportSpaces(r io.Reader, breaks []string) []byte { log.DebugLog()
+func addImportSpaces(r io.Reader, breaks []string) []byte { 
 	var out bytes.Buffer
 	sc := bufio.NewScanner(r)
 	inImports := false

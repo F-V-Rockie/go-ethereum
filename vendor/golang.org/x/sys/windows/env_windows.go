@@ -8,18 +8,18 @@ package windows
 
 import "syscall"
 
-func Getenv(key string) (value string, found bool) { log.DebugLog()
+func Getenv(key string) (value string, found bool) { 
 	return syscall.Getenv(key)
 }
 
-func Setenv(key, value string) error { log.DebugLog()
+func Setenv(key, value string) error { 
 	return syscall.Setenv(key, value)
 }
 
-func Clearenv() { log.DebugLog()
+func Clearenv() { 
 	syscall.Clearenv()
 }
 
-func Environ() []string { log.DebugLog()
+func Environ() []string { 
 	return syscall.Environ()
 }

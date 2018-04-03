@@ -31,7 +31,7 @@ import (
 	"github.com/ethereum/go-ethereum/p2p/discover"
 )
 
-func init() { log.DebugLog()
+func init() {
 	// log.Root().SetHandler(log.LvlFilterHandler(log.LvlError, log.StreamHandler(os.Stderr, log.TerminalFormat(false))))
 }
 

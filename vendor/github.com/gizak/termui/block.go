@@ -25,7 +25,7 @@ type Vline struct {
 }
 
 // Buffer draws a horizontal line.
-func (l Hline) Buffer() Buffer { log.DebugLog()
+func (l Hline) Buffer() Buffer { 
 	if l.Len <= 0 {
 		return NewBuffer()
 	}
@@ -33,7 +33,7 @@ func (l Hline) Buffer() Buffer { log.DebugLog()
 }
 
 // Buffer draws a vertical line.
-func (l Vline) Buffer() Buffer { log.DebugLog()
+func (l Vline) Buffer() Buffer { 
 	if l.Len <= 0 {
 		return NewBuffer()
 	}
@@ -41,7 +41,7 @@ func (l Vline) Buffer() Buffer { log.DebugLog()
 }
 
 // Buffer draws a box border.
-func (b Block) drawBorder(buf Buffer) { log.DebugLog()
+func (b Block) drawBorder(buf Buffer) { 
 	if !b.Border {
 		return
 	}
@@ -83,7 +83,7 @@ func (b Block) drawBorder(buf Buffer) { log.DebugLog()
 	}
 }
 
-func (b Block) drawBorderLabel(buf Buffer) { log.DebugLog()
+func (b Block) drawBorderLabel(buf Buffer) { 
 	maxTxtW := b.area.Dx() - 2
 	tx := DTrimTxCls(DefaultTxBuilder.Build(b.BorderLabel, b.BorderLabelFg, b.BorderLabelBg), maxTxtW)
 
@@ -124,7 +124,7 @@ type Block struct {
 }
 
 // NewBlock returns a *Block which inherits styles from current theme.
-func NewBlock() *Block { log.DebugLog()
+func NewBlock() *Block { 
 	b := Block{}
 	b.Display = true
 	b.Border = true
@@ -144,12 +144,12 @@ func NewBlock() *Block { log.DebugLog()
 	return &b
 }
 
-func (b Block) Id() string { log.DebugLog()
+func (b Block) Id() string { 
 	return b.id
 }
 
 // Align computes box model
-func (b *Block) Align() { log.DebugLog()
+func (b *Block) Align() { 
 	// outer
 	b.area.Min.X = 0
 	b.area.Min.Y = 0
@@ -184,14 +184,14 @@ func (b *Block) Align() { log.DebugLog()
 
 // InnerBounds returns the internal bounds of the block after aligning and
 // calculating the padding and border, if any.
-func (b *Block) InnerBounds() image.Rectangle { log.DebugLog()
+func (b *Block) InnerBounds() image.Rectangle { 
 	b.Align()
 	return b.innerArea
 }
 
 // Buffer implements Bufferer interface.
 // Draw background and border (if any).
-func (b *Block) Buffer() Buffer { log.DebugLog()
+func (b *Block) Buffer() Buffer { 
 	b.Align()
 
 	buf := NewBuffer()
@@ -206,35 +206,35 @@ func (b *Block) Buffer() Buffer { log.DebugLog()
 
 // GetHeight implements GridBufferer.
 // It returns current height of the block.
-func (b Block) GetHeight() int { log.DebugLog()
+func (b Block) GetHeight() int { 
 	return b.Height
 }
 
 // SetX implements GridBufferer interface, which sets block's x position.
-func (b *Block) SetX(x int) { log.DebugLog()
+func (b *Block) SetX(x int) { 
 	b.X = x
 }
 
 // SetY implements GridBufferer interface, it sets y position for block.
-func (b *Block) SetY(y int) { log.DebugLog()
+func (b *Block) SetY(y int) { 
 	b.Y = y
 }
 
 // SetWidth implements GridBuffer interface, it sets block's width.
-func (b *Block) SetWidth(w int) { log.DebugLog()
+func (b *Block) SetWidth(w int) { 
 	b.Width = w
 }
 
-func (b Block) InnerWidth() int { log.DebugLog()
+func (b Block) InnerWidth() int { 
 	return b.innerArea.Dx()
 }
 
-func (b Block) InnerHeight() int { log.DebugLog()
+func (b Block) InnerHeight() int { 
 	return b.innerArea.Dy()
 }
 
-func (b Block) InnerX() int { log.DebugLog()
+func (b Block) InnerX() int { 
 	return b.innerArea.Min.X
 }
 
-func (b Block) InnerY() int { log.DebugLog() return b.innerArea.Min.Y }
+func (b Block) InnerY() int {  return b.innerArea.Min.Y }

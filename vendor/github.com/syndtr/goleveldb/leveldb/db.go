@@ -83,7 +83,7 @@ type DB struct {
 	closer io.Closer
 }
 
-func openDB(s *session) (*DB, error) { log.DebugLog()
+func openDB(s *session) (*DB, error) { 
 	s.log("db@open opening")
 	start := time.Now()
 	db := &DB{
@@ -167,7 +167,7 @@ func openDB(s *session) (*DB, error) { log.DebugLog()
 //
 // The returned DB instance is safe for concurrent use.
 // The DB must be closed after use, by calling Close method.
-func Open(stor storage.Storage, o *opt.Options) (db *DB, err error) { log.DebugLog()
+func Open(stor storage.Storage, o *opt.Options) (db *DB, err error) { 
 	s, err := newSession(stor, o)
 	if err != nil {
 		return
@@ -210,7 +210,7 @@ func Open(stor storage.Storage, o *opt.Options) (db *DB, err error) { log.DebugL
 //
 // The returned DB instance is safe for concurrent use.
 // The DB must be closed after use, by calling Close method.
-func OpenFile(path string, o *opt.Options) (db *DB, err error) { log.DebugLog()
+func OpenFile(path string, o *opt.Options) (db *DB, err error) { 
 	stor, err := storage.OpenFile(path, o.GetReadOnly())
 	if err != nil {
 		return
@@ -231,7 +231,7 @@ func OpenFile(path string, o *opt.Options) (db *DB, err error) { log.DebugLog()
 //
 // The returned DB instance is safe for concurrent use.
 // The DB must be closed after use, by calling Close method.
-func Recover(stor storage.Storage, o *opt.Options) (db *DB, err error) { log.DebugLog()
+func Recover(stor storage.Storage, o *opt.Options) (db *DB, err error) { 
 	s, err := newSession(stor, o)
 	if err != nil {
 		return
@@ -260,7 +260,7 @@ func Recover(stor storage.Storage, o *opt.Options) (db *DB, err error) { log.Deb
 //
 // The returned DB instance is safe for concurrent use.
 // The DB must be closed after use, by calling Close method.
-func RecoverFile(path string, o *opt.Options) (db *DB, err error) { log.DebugLog()
+func RecoverFile(path string, o *opt.Options) (db *DB, err error) { 
 	stor, err := storage.OpenFile(path, false)
 	if err != nil {
 		return
@@ -274,7 +274,7 @@ func RecoverFile(path string, o *opt.Options) (db *DB, err error) { log.DebugLog
 	return
 }
 
-func recoverTable(s *session, o *opt.Options) error { log.DebugLog()
+func recoverTable(s *session, o *opt.Options) error { 
 	o = dupOptions(o)
 	// Mask StrictReader, lets StrictRecovery doing its job.
 	o.Strict &= ^opt.StrictReader
@@ -470,7 +470,7 @@ func recoverTable(s *session, o *opt.Options) error { log.DebugLog()
 	return s.commit(rec)
 }
 
-func (db *DB) recoverJournal() error { log.DebugLog()
+func (db *DB) recoverJournal() error { 
 	// Get all journals and sort it by file number.
 	rawFds, err := db.s.stor.List(storage.TypeJournal)
 	if err != nil {
@@ -633,7 +633,7 @@ func (db *DB) recoverJournal() error { log.DebugLog()
 	return nil
 }
 
-func (db *DB) recoverJournalRO() error { log.DebugLog()
+func (db *DB) recoverJournalRO() error { 
 	// Get all journals and sort it by file number.
 	rawFds, err := db.s.stor.List(storage.TypeJournal)
 	if err != nil {
@@ -732,7 +732,7 @@ func (db *DB) recoverJournalRO() error { log.DebugLog()
 	return nil
 }
 
-func memGet(mdb *memdb.DB, ikey internalKey, icmp *iComparer) (ok bool, mv []byte, err error) { log.DebugLog()
+func memGet(mdb *memdb.DB, ikey internalKey, icmp *iComparer) (ok bool, mv []byte, err error) { 
 	mk, mv, err := mdb.Find(ikey)
 	if err == nil {
 		ukey, _, kt, kerr := parseInternalKey(mk)
@@ -753,7 +753,7 @@ func memGet(mdb *memdb.DB, ikey internalKey, icmp *iComparer) (ok bool, mv []byt
 	return
 }
 
-func (db *DB) get(auxm *memdb.DB, auxt tFiles, key []byte, seq uint64, ro *opt.ReadOptions) (value []byte, err error) { log.DebugLog()
+func (db *DB) get(auxm *memdb.DB, auxt tFiles, key []byte, seq uint64, ro *opt.ReadOptions) (value []byte, err error) { 
 	ikey := makeInternalKey(nil, key, seq, keyTypeSeek)
 
 	if auxm != nil {
@@ -784,14 +784,14 @@ func (db *DB) get(auxm *memdb.DB, auxt tFiles, key []byte, seq uint64, ro *opt.R
 	return
 }
 
-func nilIfNotFound(err error) error { log.DebugLog()
+func nilIfNotFound(err error) error { 
 	if err == ErrNotFound {
 		return nil
 	}
 	return err
 }
 
-func (db *DB) has(auxm *memdb.DB, auxt tFiles, key []byte, seq uint64, ro *opt.ReadOptions) (ret bool, err error) { log.DebugLog()
+func (db *DB) has(auxm *memdb.DB, auxt tFiles, key []byte, seq uint64, ro *opt.ReadOptions) (ret bool, err error) { 
 	ikey := makeInternalKey(nil, key, seq, keyTypeSeek)
 
 	if auxm != nil {
@@ -833,7 +833,7 @@ func (db *DB) has(auxm *memdb.DB, auxt tFiles, key []byte, seq uint64, ro *opt.R
 // The returned slice is its own copy, it is safe to modify the contents
 // of the returned slice.
 // It is safe to modify the contents of the argument after Get returns.
-func (db *DB) Get(key []byte, ro *opt.ReadOptions) (value []byte, err error) { log.DebugLog()
+func (db *DB) Get(key []byte, ro *opt.ReadOptions) (value []byte, err error) { 
 	err = db.ok()
 	if err != nil {
 		return
@@ -847,7 +847,7 @@ func (db *DB) Get(key []byte, ro *opt.ReadOptions) (value []byte, err error) { l
 // Has returns true if the DB does contains the given key.
 //
 // It is safe to modify the contents of the argument after Has returns.
-func (db *DB) Has(key []byte, ro *opt.ReadOptions) (ret bool, err error) { log.DebugLog()
+func (db *DB) Has(key []byte, ro *opt.ReadOptions) (ret bool, err error) { 
 	err = db.ok()
 	if err != nil {
 		return
@@ -874,7 +874,7 @@ func (db *DB) Has(key []byte, ro *opt.ReadOptions) (ret bool, err error) { log.D
 // The iterator must be released after use, by calling Release method.
 //
 // Also read Iterator documentation of the leveldb/iterator package.
-func (db *DB) NewIterator(slice *util.Range, ro *opt.ReadOptions) iterator.Iterator { log.DebugLog()
+func (db *DB) NewIterator(slice *util.Range, ro *opt.ReadOptions) iterator.Iterator { 
 	if err := db.ok(); err != nil {
 		return iterator.NewEmptyIterator(err)
 	}
@@ -891,7 +891,7 @@ func (db *DB) NewIterator(slice *util.Range, ro *opt.ReadOptions) iterator.Itera
 // content of snapshot are guaranteed to be consistent.
 //
 // The snapshot must be released after use, by calling Release method.
-func (db *DB) GetSnapshot() (*Snapshot, error) { log.DebugLog()
+func (db *DB) GetSnapshot() (*Snapshot, error) { 
 	if err := db.ok(); err != nil {
 		return nil, err
 	}
@@ -922,7 +922,7 @@ func (db *DB) GetSnapshot() (*Snapshot, error) { log.DebugLog()
 //		Returns number of alive snapshots.
 //	leveldb.aliveiters
 //		Returns number of alive iterators.
-func (db *DB) GetProperty(name string) (value string, err error) { log.DebugLog()
+func (db *DB) GetProperty(name string) (value string, err error) { 
 	err = db.ok()
 	if err != nil {
 		return
@@ -1002,7 +1002,7 @@ func (db *DB) GetProperty(name string) (value string, err error) { log.DebugLog(
 // data compresses by a factor of ten, the returned sizes will be one-tenth
 // the size of the corresponding user data size.
 // The results may not include the sizes of recently written data.
-func (db *DB) SizeOf(ranges []util.Range) (Sizes, error) { log.DebugLog()
+func (db *DB) SizeOf(ranges []util.Range) (Sizes, error) { 
 	if err := db.ok(); err != nil {
 		return nil, err
 	}
@@ -1038,7 +1038,7 @@ func (db *DB) SizeOf(ranges []util.Range) (Sizes, error) { log.DebugLog()
 // It is not safe to close a DB until all outstanding iterators are released.
 // It is valid to call Close multiple times. Other methods should not be
 // called after the DB has been closed.
-func (db *DB) Close() error { log.DebugLog()
+func (db *DB) Close() error { 
 	if !db.setClosed() {
 		return ErrClosed
 	}

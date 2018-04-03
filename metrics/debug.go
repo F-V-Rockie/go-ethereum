@@ -71,6 +71,6 @@ func RegisterDebugGCStats(r Registry) { log.DebugLog()
 
 // Allocate an initial slice for gcStats.Pause to avoid allocations during
 // normal operation.
-func init() { log.DebugLog()
+func init() {
 	gcStats.Pause = make([]time.Duration, 11)
 }

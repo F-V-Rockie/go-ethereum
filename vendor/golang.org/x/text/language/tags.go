@@ -8,7 +8,7 @@ package language
 
 // MustParse is like Parse, but panics if the given BCP 47 tag cannot be parsed.
 // It simplifies safe initialization of Tag values.
-func MustParse(s string) Tag { log.DebugLog()
+func MustParse(s string) Tag { 
 	t, err := Parse(s)
 	if err != nil {
 		panic(err)
@@ -18,7 +18,7 @@ func MustParse(s string) Tag { log.DebugLog()
 
 // MustParse is like Parse, but panics if the given BCP 47 tag cannot be parsed.
 // It simplifies safe initialization of Tag values.
-func (c CanonType) MustParse(s string) Tag { log.DebugLog()
+func (c CanonType) MustParse(s string) Tag { 
 	t, err := c.Parse(s)
 	if err != nil {
 		panic(err)
@@ -28,7 +28,7 @@ func (c CanonType) MustParse(s string) Tag { log.DebugLog()
 
 // MustParseBase is like ParseBase, but panics if the given base cannot be parsed.
 // It simplifies safe initialization of Base values.
-func MustParseBase(s string) Base { log.DebugLog()
+func MustParseBase(s string) Base { 
 	b, err := ParseBase(s)
 	if err != nil {
 		panic(err)
@@ -38,7 +38,7 @@ func MustParseBase(s string) Base { log.DebugLog()
 
 // MustParseScript is like ParseScript, but panics if the given script cannot be
 // parsed. It simplifies safe initialization of Script values.
-func MustParseScript(s string) Script { log.DebugLog()
+func MustParseScript(s string) Script { 
 	scr, err := ParseScript(s)
 	if err != nil {
 		panic(err)
@@ -48,7 +48,7 @@ func MustParseScript(s string) Script { log.DebugLog()
 
 // MustParseRegion is like ParseRegion, but panics if the given region cannot be
 // parsed. It simplifies safe initialization of Region values.
-func MustParseRegion(s string) Region { log.DebugLog()
+func MustParseRegion(s string) Region { 
 	r, err := ParseRegion(s)
 	if err != nil {
 		panic(err)

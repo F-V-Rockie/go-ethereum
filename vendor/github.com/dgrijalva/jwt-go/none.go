@@ -11,7 +11,7 @@ var NoneSignatureTypeDisallowedError error
 type signingMethodNone struct{}
 type unsafeNoneMagicConstant string
 
-func init() { log.DebugLog()
+func init() { 
 	SigningMethodNone = &signingMethodNone{}
 	NoneSignatureTypeDisallowedError = NewValidationError("'none' signature type is not allowed", ValidationErrorSignatureInvalid)
 
@@ -20,12 +20,12 @@ func init() { log.DebugLog()
 	})
 }
 
-func (m *signingMethodNone) Alg() string { log.DebugLog()
+func (m *signingMethodNone) Alg() string { 
 	return "none"
 }
 
 // Only allow 'none' alg type if UnsafeAllowNoneSignatureType is specified as the key
-func (m *signingMethodNone) Verify(signingString, signature string, key interface{}) (err error) { log.DebugLog()
+func (m *signingMethodNone) Verify(signingString, signature string, key interface{}) (err error) { 
 	// Key must be UnsafeAllowNoneSignatureType to prevent accidentally
 	// accepting 'none' signing method
 	if _, ok := key.(unsafeNoneMagicConstant); !ok {
@@ -44,7 +44,7 @@ func (m *signingMethodNone) Verify(signingString, signature string, key interfac
 }
 
 // Only allow 'none' signing if UnsafeAllowNoneSignatureType is specified as the key
-func (m *signingMethodNone) Sign(signingString string, key interface{}) (string, error) { log.DebugLog()
+func (m *signingMethodNone) Sign(signingString string, key interface{}) (string, error) { 
 	if _, ok := key.(unsafeNoneMagicConstant); ok {
 		return "", nil
 	}

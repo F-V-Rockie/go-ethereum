@@ -35,7 +35,7 @@ type DetailedError struct {
 
 // NewError creates a new Error conforming object from the passed packageType, method, and
 // message. message is treated as a format string to which the optional args apply.
-func NewError(packageType string, method string, message string, args ...interface{}) DetailedError { log.DebugLog()
+func NewError(packageType string, method string, message string, args ...interface{}) DetailedError { 
 	return NewErrorWithError(nil, packageType, method, nil, message, args...)
 }
 
@@ -43,7 +43,7 @@ func NewError(packageType string, method string, message string, args ...interfa
 // packageType, method, statusCode of the given resp (UndefinedStatusCode if
 // resp is nil), and message. message is treated as a format string to which the
 // optional args apply.
-func NewErrorWithResponse(packageType string, method string, resp *http.Response, message string, args ...interface{}) DetailedError { log.DebugLog()
+func NewErrorWithResponse(packageType string, method string, resp *http.Response, message string, args ...interface{}) DetailedError { 
 	return NewErrorWithError(nil, packageType, method, resp, message, args...)
 }
 
@@ -51,7 +51,7 @@ func NewErrorWithResponse(packageType string, method string, resp *http.Response
 // passed packageType, method, statusCode of the given resp (UndefinedStatusCode
 // if resp is nil), message, and original error. message is treated as a format
 // string to which the optional args apply.
-func NewErrorWithError(original error, packageType string, method string, resp *http.Response, message string, args ...interface{}) DetailedError { log.DebugLog()
+func NewErrorWithError(original error, packageType string, method string, resp *http.Response, message string, args ...interface{}) DetailedError { 
 	if v, ok := original.(DetailedError); ok {
 		return v
 	}
@@ -72,7 +72,7 @@ func NewErrorWithError(original error, packageType string, method string, resp *
 
 // Error returns a formatted containing all available details (i.e., PackageType, Method,
 // StatusCode, Message, and original error (if any)).
-func (e DetailedError) Error() string { log.DebugLog()
+func (e DetailedError) Error() string { 
 	if e.Original == nil {
 		return fmt.Sprintf("%s#%s: %s: StatusCode=%d", e.PackageType, e.Method, e.Message, e.StatusCode)
 	}

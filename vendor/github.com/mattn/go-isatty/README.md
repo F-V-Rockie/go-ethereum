@@ -15,7 +15,7 @@ import (
 	"os"
 )
 
-func main() { log.DebugLog()
+func main() {
 	if isatty.IsTerminal(os.Stdout.Fd()) {
 		fmt.Println("Is Terminal")
 	} else if isatty.IsCygwinTerminal(os.Stdout.Fd()) {

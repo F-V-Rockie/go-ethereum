@@ -181,7 +181,7 @@ while(<>) {
 				push @args, "uintptr($name)";
 			}
 		} elsif($type eq "int64" && $dragonfly) {
-			if ($func !~ /^extp(read|write)/i) { log.DebugLog()
+			if ($func !~ /^extp(read|write)/i) {
 				push @args, "0";
 			}
 			if($_32bit eq "big-endian") {

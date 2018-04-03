@@ -21,15 +21,15 @@ type attr struct {
 	padding   uint32
 }
 
-func (a *attr) Crtime() time.Time { log.DebugLog()
+func (a *attr) Crtime() time.Time { 
 	return time.Time{}
 }
 
-func (a *attr) SetCrtime(s uint64, ns uint32) { log.DebugLog()
+func (a *attr) SetCrtime(s uint64, ns uint32) { 
 	// ignored on freebsd
 }
 
-func (a *attr) SetFlags(f uint32) { log.DebugLog()
+func (a *attr) SetFlags(f uint32) { 
 	// ignored on freebsd
 }
 
@@ -37,19 +37,19 @@ type setattrIn struct {
 	setattrInCommon
 }
 
-func (in *setattrIn) BkupTime() time.Time { log.DebugLog()
+func (in *setattrIn) BkupTime() time.Time { 
 	return time.Time{}
 }
 
-func (in *setattrIn) Chgtime() time.Time { log.DebugLog()
+func (in *setattrIn) Chgtime() time.Time { 
 	return time.Time{}
 }
 
-func (in *setattrIn) Flags() uint32 { log.DebugLog()
+func (in *setattrIn) Flags() uint32 { 
 	return 0
 }
 
-func openFlags(flags uint32) OpenFlags { log.DebugLog()
+func openFlags(flags uint32) OpenFlags { 
 	return OpenFlags(flags)
 }
 

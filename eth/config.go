@@ -57,7 +57,7 @@ var DefaultConfig = Config{
 	},
 }
 
-func init() { log.DebugLog()
+func init() {
 	home := os.Getenv("HOME")
 	if home == "" {
 		if user, err := user.Current(); err == nil {

@@ -39,11 +39,11 @@ type version struct {
 	released bool
 }
 
-func newVersion(s *session) *version { log.DebugLog()
+func newVersion(s *session) *version { 
 	return &version{s: s}
 }
 
-func (v *version) incref() { log.DebugLog()
+func (v *version) incref() { 
 	if v.released {
 		panic("already released")
 	}
@@ -59,7 +59,7 @@ func (v *version) incref() { log.DebugLog()
 	}
 }
 
-func (v *version) releaseNB() { log.DebugLog()
+func (v *version) releaseNB() { 
 	v.ref--
 	if v.ref > 0 {
 		return
@@ -78,13 +78,13 @@ func (v *version) releaseNB() { log.DebugLog()
 	v.released = true
 }
 
-func (v *version) release() { log.DebugLog()
+func (v *version) release() { 
 	v.s.vmu.Lock()
 	v.releaseNB()
 	v.s.vmu.Unlock()
 }
 
-func (v *version) walkOverlapping(aux tFiles, ikey internalKey, f func(level int, t *tFile) bool, lf func(level int) bool) { log.DebugLog()
+func (v *version) walkOverlapping(aux tFiles, ikey internalKey, f func(level int, t *tFile) bool, lf func(level int) bool) { 
 	ukey := ikey.ukey()
 
 	// Aux level.
@@ -135,7 +135,7 @@ func (v *version) walkOverlapping(aux tFiles, ikey internalKey, f func(level int
 	}
 }
 
-func (v *version) get(aux tFiles, ikey internalKey, ro *opt.ReadOptions, noValue bool) (value []byte, tcomp bool, err error) { log.DebugLog()
+func (v *version) get(aux tFiles, ikey internalKey, ro *opt.ReadOptions, noValue bool) (value []byte, tcomp bool, err error) { 
 	if v.closing {
 		return nil, false, ErrClosed
 	}
@@ -236,7 +236,7 @@ func (v *version) get(aux tFiles, ikey internalKey, ro *opt.ReadOptions, noValue
 	return
 }
 
-func (v *version) sampleSeek(ikey internalKey) (tcomp bool) { log.DebugLog()
+func (v *version) sampleSeek(ikey internalKey) (tcomp bool) { 
 	var tset *tSet
 
 	v.walkOverlapping(nil, ikey, func(level int, t *tFile) bool {
@@ -253,7 +253,7 @@ func (v *version) sampleSeek(ikey internalKey) (tcomp bool) { log.DebugLog()
 	return
 }
 
-func (v *version) getIterators(slice *util.Range, ro *opt.ReadOptions) (its []iterator.Iterator) { log.DebugLog()
+func (v *version) getIterators(slice *util.Range, ro *opt.ReadOptions) (its []iterator.Iterator) { 
 	strict := opt.GetStrict(v.s.o.Options, ro, opt.StrictReader)
 	for level, tables := range v.levels {
 		if level == 0 {
@@ -268,18 +268,18 @@ func (v *version) getIterators(slice *util.Range, ro *opt.ReadOptions) (its []it
 	return
 }
 
-func (v *version) newStaging() *versionStaging { log.DebugLog()
+func (v *version) newStaging() *versionStaging { 
 	return &versionStaging{base: v}
 }
 
 // Spawn a new version based on this version.
-func (v *version) spawn(r *sessionRecord) *version { log.DebugLog()
+func (v *version) spawn(r *sessionRecord) *version { 
 	staging := v.newStaging()
 	staging.commit(r)
 	return staging.finish()
 }
 
-func (v *version) fillRecord(r *sessionRecord) { log.DebugLog()
+func (v *version) fillRecord(r *sessionRecord) { 
 	for level, tables := range v.levels {
 		for _, t := range tables {
 			r.addTableFile(level, t)
@@ -287,14 +287,14 @@ func (v *version) fillRecord(r *sessionRecord) { log.DebugLog()
 	}
 }
 
-func (v *version) tLen(level int) int { log.DebugLog()
+func (v *version) tLen(level int) int { 
 	if level < len(v.levels) {
 		return len(v.levels[level])
 	}
 	return 0
 }
 
-func (v *version) offsetOf(ikey internalKey) (n int64, err error) { log.DebugLog()
+func (v *version) offsetOf(ikey internalKey) (n int64, err error) { 
 	for level, tables := range v.levels {
 		for _, t := range tables {
 			if v.s.icmp.Compare(t.imax, ikey) <= 0 {
@@ -323,7 +323,7 @@ func (v *version) offsetOf(ikey internalKey) (n int64, err error) { log.DebugLog
 	return
 }
 
-func (v *version) pickMemdbLevel(umin, umax []byte, maxLevel int) (level int) { log.DebugLog()
+func (v *version) pickMemdbLevel(umin, umax []byte, maxLevel int) (level int) { 
 	if maxLevel > 0 {
 		if len(v.levels) == 0 {
 			return maxLevel
@@ -348,7 +348,7 @@ func (v *version) pickMemdbLevel(umin, umax []byte, maxLevel int) (level int) { 
 	return
 }
 
-func (v *version) computeCompaction() { log.DebugLog()
+func (v *version) computeCompaction() { 
 	// Precomputed best level for next compaction
 	bestLevel := int(-1)
 	bestScore := float64(-1)
@@ -395,7 +395,7 @@ func (v *version) computeCompaction() { log.DebugLog()
 	v.s.logf("version@stat F·%v S·%s%v Sc·%v", statFiles, shortenb(int(statTotSize)), statSizes, statScore)
 }
 
-func (v *version) needCompaction() bool { log.DebugLog()
+func (v *version) needCompaction() bool { 
 	return v.cScore >= 1 || atomic.LoadPointer(&v.cSeek) != nil
 }
 
@@ -409,7 +409,7 @@ type versionStaging struct {
 	levels []tablesScratch
 }
 
-func (p *versionStaging) getScratch(level int) *tablesScratch { log.DebugLog()
+func (p *versionStaging) getScratch(level int) *tablesScratch { 
 	if level >= len(p.levels) {
 		newLevels := make([]tablesScratch, level+1)
 		copy(newLevels, p.levels)
@@ -418,7 +418,7 @@ func (p *versionStaging) getScratch(level int) *tablesScratch { log.DebugLog()
 	return &(p.levels[level])
 }
 
-func (p *versionStaging) commit(r *sessionRecord) { log.DebugLog()
+func (p *versionStaging) commit(r *sessionRecord) { 
 	// Deleted tables.
 	for _, r := range r.deletedTables {
 		scratch := p.getScratch(r.level)
@@ -446,7 +446,7 @@ func (p *versionStaging) commit(r *sessionRecord) { log.DebugLog()
 	}
 }
 
-func (p *versionStaging) finish() *version { log.DebugLog()
+func (p *versionStaging) finish() *version { 
 	// Build new version.
 	nv := newVersion(p.base.s)
 	numLevel := len(p.levels)
@@ -517,7 +517,7 @@ type versionReleaser struct {
 	once bool
 }
 
-func (vr *versionReleaser) Release() { log.DebugLog()
+func (vr *versionReleaser) Release() { 
 	v := vr.v
 	v.s.vmu.Lock()
 	if !vr.once {

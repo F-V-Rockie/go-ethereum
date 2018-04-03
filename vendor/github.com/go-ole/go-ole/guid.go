@@ -113,7 +113,7 @@ type GUID struct {
 //  {XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX}
 //
 // The conversion of the supplied string is not case-sensitive.
-func NewGUID(guid string) *GUID { log.DebugLog()
+func NewGUID(guid string) *GUID { 
 	d := []byte(guid)
 	var d1, d2, d3, d4a, d4b []byte
 
@@ -155,7 +155,7 @@ func NewGUID(guid string) *GUID { log.DebugLog()
 	return nil
 }
 
-func decodeHexUint32(src []byte) (value uint32, ok bool) { log.DebugLog()
+func decodeHexUint32(src []byte) (value uint32, ok bool) { 
 	var b1, b2, b3, b4 byte
 	var ok1, ok2, ok3, ok4 bool
 	b1, ok1 = decodeHexByte(src[0], src[1])
@@ -167,7 +167,7 @@ func decodeHexUint32(src []byte) (value uint32, ok bool) { log.DebugLog()
 	return
 }
 
-func decodeHexUint16(src []byte) (value uint16, ok bool) { log.DebugLog()
+func decodeHexUint16(src []byte) (value uint16, ok bool) { 
 	var b1, b2 byte
 	var ok1, ok2 bool
 	b1, ok1 = decodeHexByte(src[0], src[1])
@@ -177,7 +177,7 @@ func decodeHexUint16(src []byte) (value uint16, ok bool) { log.DebugLog()
 	return
 }
 
-func decodeHexByte64(s1 []byte, s2 []byte) (value [8]byte, ok bool) { log.DebugLog()
+func decodeHexByte64(s1 []byte, s2 []byte) (value [8]byte, ok bool) { 
 	var ok1, ok2, ok3, ok4, ok5, ok6, ok7, ok8 bool
 	value[0], ok1 = decodeHexByte(s1[0], s1[1])
 	value[1], ok2 = decodeHexByte(s1[2], s1[3])
@@ -191,7 +191,7 @@ func decodeHexByte64(s1 []byte, s2 []byte) (value [8]byte, ok bool) { log.DebugL
 	return
 }
 
-func decodeHexByte(c1, c2 byte) (value byte, ok bool) { log.DebugLog()
+func decodeHexByte(c1, c2 byte) (value byte, ok bool) { 
 	var n1, n2 byte
 	var ok1, ok2 bool
 	n1, ok1 = decodeHexChar(c1)
@@ -201,7 +201,7 @@ func decodeHexByte(c1, c2 byte) (value byte, ok bool) { log.DebugLog()
 	return
 }
 
-func decodeHexChar(c byte) (byte, bool) { log.DebugLog()
+func decodeHexChar(c byte) (byte, bool) { 
 	switch {
 	case '0' <= c && c <= '9':
 		return c - '0', true
@@ -221,7 +221,7 @@ func decodeHexChar(c byte) (byte, bool) { log.DebugLog()
 // If the GUID is nil, the string representation of an empty GUID is returned:
 //
 //  {00000000-0000-0000-0000-000000000000}
-func (guid *GUID) String() string { log.DebugLog()
+func (guid *GUID) String() string { 
 	if guid == nil {
 		return emptyGUID
 	}
@@ -241,7 +241,7 @@ func (guid *GUID) String() string { log.DebugLog()
 	return string(c[:])
 }
 
-func putUint32Hex(b []byte, v uint32) { log.DebugLog()
+func putUint32Hex(b []byte, v uint32) { 
 	b[0] = hextable[byte(v>>24)>>4]
 	b[1] = hextable[byte(v>>24)&0x0f]
 	b[2] = hextable[byte(v>>16)>>4]
@@ -252,14 +252,14 @@ func putUint32Hex(b []byte, v uint32) { log.DebugLog()
 	b[7] = hextable[byte(v)&0x0f]
 }
 
-func putUint16Hex(b []byte, v uint16) { log.DebugLog()
+func putUint16Hex(b []byte, v uint16) { 
 	b[0] = hextable[byte(v>>8)>>4]
 	b[1] = hextable[byte(v>>8)&0x0f]
 	b[2] = hextable[byte(v)>>4]
 	b[3] = hextable[byte(v)&0x0f]
 }
 
-func putByteHex(dst, src []byte) { log.DebugLog()
+func putByteHex(dst, src []byte) { 
 	for i := 0; i < len(src); i++ {
 		dst[i*2] = hextable[src[i]>>4]
 		dst[i*2+1] = hextable[src[i]&0x0f]
@@ -269,7 +269,7 @@ func putByteHex(dst, src []byte) { log.DebugLog()
 // IsEqualGUID compares two GUID.
 //
 // Not constant time comparison.
-func IsEqualGUID(guid1 *GUID, guid2 *GUID) bool { log.DebugLog()
+func IsEqualGUID(guid1 *GUID, guid2 *GUID) bool { 
 	return guid1.Data1 == guid2.Data1 &&
 		guid1.Data2 == guid2.Data2 &&
 		guid1.Data3 == guid2.Data3 &&

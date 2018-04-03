@@ -96,9 +96,9 @@ It has these top-level messages:
 */
 package trezor
 
-import proto "github.com/golang/protobuf/proto"
-import fmt "fmt"
-import math "math"
+import "github.com/golang/protobuf/proto"
+import "fmt"
+import "math"
 import google_protobuf "github.com/golang/protobuf/protoc-gen-go/descriptor"
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -161,15 +161,18 @@ var FailureType_value = map[string]int32{
 	"Failure_FirmwareError":     99,
 }
 
-func (x FailureType) Enum() *FailureType { log.DebugLog()
+func (x FailureType) Enum() *FailureType {
+	log.DebugLog()
 	p := new(FailureType)
 	*p = x
 	return p
 }
-func (x FailureType) String() string { log.DebugLog()
+func (x FailureType) String() string {
+	log.DebugLog()
 	return proto.EnumName(FailureType_name, int32(x))
 }
-func (x *FailureType) UnmarshalJSON(data []byte) error { log.DebugLog()
+func (x *FailureType) UnmarshalJSON(data []byte) error {
+	log.DebugLog()
 	value, err := proto.UnmarshalJSONEnum(FailureType_value, data, "FailureType")
 	if err != nil {
 		return err
@@ -177,7 +180,8 @@ func (x *FailureType) UnmarshalJSON(data []byte) error { log.DebugLog()
 	*x = FailureType(value)
 	return nil
 }
-func (FailureType) EnumDescriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor0, []int{0} }
+func (FailureType) EnumDescriptor() ([]byte, []int) { log.DebugLog()
+														return fileDescriptor0, []int{0} }
 
 // *
 // Type of script which will be used for transaction output
@@ -210,15 +214,18 @@ var OutputScriptType_value = map[string]int32{
 	"PAYTOP2SHWITNESS": 5,
 }
 
-func (x OutputScriptType) Enum() *OutputScriptType { log.DebugLog()
+func (x OutputScriptType) Enum() *OutputScriptType {
+	log.DebugLog()
 	p := new(OutputScriptType)
 	*p = x
 	return p
 }
-func (x OutputScriptType) String() string { log.DebugLog()
+func (x OutputScriptType) String() string {
+	log.DebugLog()
 	return proto.EnumName(OutputScriptType_name, int32(x))
 }
-func (x *OutputScriptType) UnmarshalJSON(data []byte) error { log.DebugLog()
+func (x *OutputScriptType) UnmarshalJSON(data []byte) error {
+	log.DebugLog()
 	value, err := proto.UnmarshalJSONEnum(OutputScriptType_value, data, "OutputScriptType")
 	if err != nil {
 		return err
@@ -226,7 +233,8 @@ func (x *OutputScriptType) UnmarshalJSON(data []byte) error { log.DebugLog()
 	*x = OutputScriptType(value)
 	return nil
 }
-func (OutputScriptType) EnumDescriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor0, []int{1} }
+func (OutputScriptType) EnumDescriptor() ([]byte, []int) { log.DebugLog()
+															 return fileDescriptor0, []int{1} }
 
 // *
 // Type of script which will be used for transaction output
@@ -256,15 +264,18 @@ var InputScriptType_value = map[string]int32{
 	"SPENDP2SHWITNESS": 4,
 }
 
-func (x InputScriptType) Enum() *InputScriptType { log.DebugLog()
+func (x InputScriptType) Enum() *InputScriptType {
+	log.DebugLog()
 	p := new(InputScriptType)
 	*p = x
 	return p
 }
-func (x InputScriptType) String() string { log.DebugLog()
+func (x InputScriptType) String() string {
+	log.DebugLog()
 	return proto.EnumName(InputScriptType_name, int32(x))
 }
-func (x *InputScriptType) UnmarshalJSON(data []byte) error { log.DebugLog()
+func (x *InputScriptType) UnmarshalJSON(data []byte) error {
+	log.DebugLog()
 	value, err := proto.UnmarshalJSONEnum(InputScriptType_value, data, "InputScriptType")
 	if err != nil {
 		return err
@@ -272,7 +283,8 @@ func (x *InputScriptType) UnmarshalJSON(data []byte) error { log.DebugLog()
 	*x = InputScriptType(value)
 	return nil
 }
-func (InputScriptType) EnumDescriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor0, []int{2} }
+func (InputScriptType) EnumDescriptor() ([]byte, []int) { log.DebugLog()
+															return fileDescriptor0, []int{2} }
 
 // *
 // Type of information required by transaction signing process
@@ -302,15 +314,18 @@ var RequestType_value = map[string]int32{
 	"TXEXTRADATA": 4,
 }
 
-func (x RequestType) Enum() *RequestType { log.DebugLog()
+func (x RequestType) Enum() *RequestType {
+	log.DebugLog()
 	p := new(RequestType)
 	*p = x
 	return p
 }
-func (x RequestType) String() string { log.DebugLog()
+func (x RequestType) String() string {
+	log.DebugLog()
 	return proto.EnumName(RequestType_name, int32(x))
 }
-func (x *RequestType) UnmarshalJSON(data []byte) error { log.DebugLog()
+func (x *RequestType) UnmarshalJSON(data []byte) error {
+	log.DebugLog()
 	value, err := proto.UnmarshalJSONEnum(RequestType_value, data, "RequestType")
 	if err != nil {
 		return err
@@ -318,7 +333,8 @@ func (x *RequestType) UnmarshalJSON(data []byte) error { log.DebugLog()
 	*x = RequestType(value)
 	return nil
 }
-func (RequestType) EnumDescriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor0, []int{3} }
+func (RequestType) EnumDescriptor() ([]byte, []int) { log.DebugLog()
+														return fileDescriptor0, []int{3} }
 
 // *
 // Type of button request
@@ -366,15 +382,18 @@ var ButtonRequestType_value = map[string]int32{
 	"ButtonRequest_PublicKey":        11,
 }
 
-func (x ButtonRequestType) Enum() *ButtonRequestType { log.DebugLog()
+func (x ButtonRequestType) Enum() *ButtonRequestType {
+	log.DebugLog()
 	p := new(ButtonRequestType)
 	*p = x
 	return p
 }
-func (x ButtonRequestType) String() string { log.DebugLog()
+func (x ButtonRequestType) String() string {
+	log.DebugLog()
 	return proto.EnumName(ButtonRequestType_name, int32(x))
 }
-func (x *ButtonRequestType) UnmarshalJSON(data []byte) error { log.DebugLog()
+func (x *ButtonRequestType) UnmarshalJSON(data []byte) error {
+	log.DebugLog()
 	value, err := proto.UnmarshalJSONEnum(ButtonRequestType_value, data, "ButtonRequestType")
 	if err != nil {
 		return err
@@ -382,7 +401,8 @@ func (x *ButtonRequestType) UnmarshalJSON(data []byte) error { log.DebugLog()
 	*x = ButtonRequestType(value)
 	return nil
 }
-func (ButtonRequestType) EnumDescriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor0, []int{4} }
+func (ButtonRequestType) EnumDescriptor() ([]byte, []int) { log.DebugLog()
+															  return fileDescriptor0, []int{4} }
 
 // *
 // Type of PIN request
@@ -406,15 +426,18 @@ var PinMatrixRequestType_value = map[string]int32{
 	"PinMatrixRequestType_NewSecond": 3,
 }
 
-func (x PinMatrixRequestType) Enum() *PinMatrixRequestType { log.DebugLog()
+func (x PinMatrixRequestType) Enum() *PinMatrixRequestType {
+	log.DebugLog()
 	p := new(PinMatrixRequestType)
 	*p = x
 	return p
 }
-func (x PinMatrixRequestType) String() string { log.DebugLog()
+func (x PinMatrixRequestType) String() string {
+	log.DebugLog()
 	return proto.EnumName(PinMatrixRequestType_name, int32(x))
 }
-func (x *PinMatrixRequestType) UnmarshalJSON(data []byte) error { log.DebugLog()
+func (x *PinMatrixRequestType) UnmarshalJSON(data []byte) error {
+	log.DebugLog()
 	value, err := proto.UnmarshalJSONEnum(PinMatrixRequestType_value, data, "PinMatrixRequestType")
 	if err != nil {
 		return err
@@ -422,7 +445,8 @@ func (x *PinMatrixRequestType) UnmarshalJSON(data []byte) error { log.DebugLog()
 	*x = PinMatrixRequestType(value)
 	return nil
 }
-func (PinMatrixRequestType) EnumDescriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor0, []int{5} }
+func (PinMatrixRequestType) EnumDescriptor() ([]byte, []int) { log.DebugLog()
+																 return fileDescriptor0, []int{5} }
 
 // *
 // Type of recovery procedure. These should be used as bitmask, e.g.,
@@ -450,15 +474,18 @@ var RecoveryDeviceType_value = map[string]int32{
 	"RecoveryDeviceType_Matrix":         1,
 }
 
-func (x RecoveryDeviceType) Enum() *RecoveryDeviceType { log.DebugLog()
+func (x RecoveryDeviceType) Enum() *RecoveryDeviceType {
+	log.DebugLog()
 	p := new(RecoveryDeviceType)
 	*p = x
 	return p
 }
-func (x RecoveryDeviceType) String() string { log.DebugLog()
+func (x RecoveryDeviceType) String() string {
+	log.DebugLog()
 	return proto.EnumName(RecoveryDeviceType_name, int32(x))
 }
-func (x *RecoveryDeviceType) UnmarshalJSON(data []byte) error { log.DebugLog()
+func (x *RecoveryDeviceType) UnmarshalJSON(data []byte) error {
+	log.DebugLog()
 	value, err := proto.UnmarshalJSONEnum(RecoveryDeviceType_value, data, "RecoveryDeviceType")
 	if err != nil {
 		return err
@@ -466,7 +493,8 @@ func (x *RecoveryDeviceType) UnmarshalJSON(data []byte) error { log.DebugLog()
 	*x = RecoveryDeviceType(value)
 	return nil
 }
-func (RecoveryDeviceType) EnumDescriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor0, []int{6} }
+func (RecoveryDeviceType) EnumDescriptor() ([]byte, []int) { log.DebugLog()
+															   return fileDescriptor0, []int{6} }
 
 // *
 // Type of Recovery Word request
@@ -490,15 +518,18 @@ var WordRequestType_value = map[string]int32{
 	"WordRequestType_Matrix6": 2,
 }
 
-func (x WordRequestType) Enum() *WordRequestType { log.DebugLog()
+func (x WordRequestType) Enum() *WordRequestType {
+	log.DebugLog()
 	p := new(WordRequestType)
 	*p = x
 	return p
 }
-func (x WordRequestType) String() string { log.DebugLog()
+func (x WordRequestType) String() string {
+	log.DebugLog()
 	return proto.EnumName(WordRequestType_name, int32(x))
 }
-func (x *WordRequestType) UnmarshalJSON(data []byte) error { log.DebugLog()
+func (x *WordRequestType) UnmarshalJSON(data []byte) error {
+	log.DebugLog()
 	value, err := proto.UnmarshalJSONEnum(WordRequestType_value, data, "WordRequestType")
 	if err != nil {
 		return err
@@ -506,7 +537,8 @@ func (x *WordRequestType) UnmarshalJSON(data []byte) error { log.DebugLog()
 	*x = WordRequestType(value)
 	return nil
 }
-func (WordRequestType) EnumDescriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor0, []int{7} }
+func (WordRequestType) EnumDescriptor() ([]byte, []int) { log.DebugLog()
+															return fileDescriptor0, []int{7} }
 
 // *
 // Structure representing BIP32 (hierarchical deterministic) node
@@ -525,47 +557,55 @@ type HDNodeType struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *HDNodeType) Reset()                    { log.DebugLog() *m = HDNodeType{} }
-func (m *HDNodeType) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*HDNodeType) ProtoMessage()               { log.DebugLog()}
-func (*HDNodeType) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor0, []int{0} }
+func (m *HDNodeType) Reset()                    { log.DebugLog() * m = HDNodeType{} }
+func (m *HDNodeType) String() string            { log.DebugLog()
+													return proto.CompactTextString(m) }
+func (*HDNodeType) ProtoMessage()               { log.DebugLog() }
+func (*HDNodeType) Descriptor() ([]byte, []int) { log.DebugLog()
+													return fileDescriptor0, []int{0} }
 
-func (m *HDNodeType) GetDepth() uint32 { log.DebugLog()
+func (m *HDNodeType) GetDepth() uint32 {
+	log.DebugLog()
 	if m != nil && m.Depth != nil {
 		return *m.Depth
 	}
 	return 0
 }
 
-func (m *HDNodeType) GetFingerprint() uint32 { log.DebugLog()
+func (m *HDNodeType) GetFingerprint() uint32 {
+	log.DebugLog()
 	if m != nil && m.Fingerprint != nil {
 		return *m.Fingerprint
 	}
 	return 0
 }
 
-func (m *HDNodeType) GetChildNum() uint32 { log.DebugLog()
+func (m *HDNodeType) GetChildNum() uint32 {
+	log.DebugLog()
 	if m != nil && m.ChildNum != nil {
 		return *m.ChildNum
 	}
 	return 0
 }
 
-func (m *HDNodeType) GetChainCode() []byte { log.DebugLog()
+func (m *HDNodeType) GetChainCode() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.ChainCode
 	}
 	return nil
 }
 
-func (m *HDNodeType) GetPrivateKey() []byte { log.DebugLog()
+func (m *HDNodeType) GetPrivateKey() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.PrivateKey
 	}
 	return nil
 }
 
-func (m *HDNodeType) GetPublicKey() []byte { log.DebugLog()
+func (m *HDNodeType) GetPublicKey() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.PublicKey
 	}
@@ -578,19 +618,23 @@ type HDNodePathType struct {
 	XXX_unrecognized []byte      `json:"-"`
 }
 
-func (m *HDNodePathType) Reset()                    { log.DebugLog() *m = HDNodePathType{} }
-func (m *HDNodePathType) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*HDNodePathType) ProtoMessage()               { log.DebugLog()}
-func (*HDNodePathType) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor0, []int{1} }
+func (m *HDNodePathType) Reset()                    { log.DebugLog() * m = HDNodePathType{} }
+func (m *HDNodePathType) String() string            { log.DebugLog()
+														return proto.CompactTextString(m) }
+func (*HDNodePathType) ProtoMessage()               { log.DebugLog() }
+func (*HDNodePathType) Descriptor() ([]byte, []int) { log.DebugLog()
+														return fileDescriptor0, []int{1} }
 
-func (m *HDNodePathType) GetNode() *HDNodeType { log.DebugLog()
+func (m *HDNodePathType) GetNode() *HDNodeType {
+	log.DebugLog()
 	if m != nil {
 		return m.Node
 	}
 	return nil
 }
 
-func (m *HDNodePathType) GetAddressN() []uint32 { log.DebugLog()
+func (m *HDNodePathType) GetAddressN() []uint32 {
+	log.DebugLog()
 	if m != nil {
 		return m.AddressN
 	}
@@ -614,80 +658,92 @@ type CoinType struct {
 	XXX_unrecognized    []byte  `json:"-"`
 }
 
-func (m *CoinType) Reset()                    { log.DebugLog() *m = CoinType{} }
-func (m *CoinType) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*CoinType) ProtoMessage()               { log.DebugLog()}
-func (*CoinType) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor0, []int{2} }
+func (m *CoinType) Reset()                    { log.DebugLog() * m = CoinType{} }
+func (m *CoinType) String() string            { log.DebugLog()
+												  return proto.CompactTextString(m) }
+func (*CoinType) ProtoMessage()               { log.DebugLog() }
+func (*CoinType) Descriptor() ([]byte, []int) { log.DebugLog()
+												  return fileDescriptor0, []int{2} }
 
 const Default_CoinType_AddressType uint32 = 0
 const Default_CoinType_AddressTypeP2Sh uint32 = 5
 const Default_CoinType_XpubMagic uint32 = 76067358
 const Default_CoinType_XprvMagic uint32 = 76066276
 
-func (m *CoinType) GetCoinName() string { log.DebugLog()
+func (m *CoinType) GetCoinName() string {
+	log.DebugLog()
 	if m != nil && m.CoinName != nil {
 		return *m.CoinName
 	}
 	return ""
 }
 
-func (m *CoinType) GetCoinShortcut() string { log.DebugLog()
+func (m *CoinType) GetCoinShortcut() string {
+	log.DebugLog()
 	if m != nil && m.CoinShortcut != nil {
 		return *m.CoinShortcut
 	}
 	return ""
 }
 
-func (m *CoinType) GetAddressType() uint32 { log.DebugLog()
+func (m *CoinType) GetAddressType() uint32 {
+	log.DebugLog()
 	if m != nil && m.AddressType != nil {
 		return *m.AddressType
 	}
 	return Default_CoinType_AddressType
 }
 
-func (m *CoinType) GetMaxfeeKb() uint64 { log.DebugLog()
+func (m *CoinType) GetMaxfeeKb() uint64 {
+	log.DebugLog()
 	if m != nil && m.MaxfeeKb != nil {
 		return *m.MaxfeeKb
 	}
 	return 0
 }
 
-func (m *CoinType) GetAddressTypeP2Sh() uint32 { log.DebugLog()
+func (m *CoinType) GetAddressTypeP2Sh() uint32 {
+	log.DebugLog()
 	if m != nil && m.AddressTypeP2Sh != nil {
 		return *m.AddressTypeP2Sh
 	}
 	return Default_CoinType_AddressTypeP2Sh
 }
 
-func (m *CoinType) GetSignedMessageHeader() string { log.DebugLog()
+func (m *CoinType) GetSignedMessageHeader() string {
+	log.DebugLog()
 	if m != nil && m.SignedMessageHeader != nil {
 		return *m.SignedMessageHeader
 	}
 	return ""
 }
 
-func (m *CoinType) GetXpubMagic() uint32 { log.DebugLog()
+func (m *CoinType) GetXpubMagic() uint32 {
+	log.DebugLog()
 	if m != nil && m.XpubMagic != nil {
 		return *m.XpubMagic
 	}
 	return Default_CoinType_XpubMagic
 }
 
-func (m *CoinType) GetXprvMagic() uint32 { log.DebugLog()
+func (m *CoinType) GetXprvMagic() uint32 {
+	log.DebugLog()
 	if m != nil && m.XprvMagic != nil {
 		return *m.XprvMagic
 	}
 	return Default_CoinType_XprvMagic
 }
 
-func (m *CoinType) GetSegwit() bool { log.DebugLog()
+func (m *CoinType) GetSegwit() bool {
+	log.DebugLog()
 	if m != nil && m.Segwit != nil {
 		return *m.Segwit
 	}
 	return false
 }
 
-func (m *CoinType) GetForkid() uint32 { log.DebugLog()
+func (m *CoinType) GetForkid() uint32 {
+	log.DebugLog()
 	if m != nil && m.Forkid != nil {
 		return *m.Forkid
 	}
@@ -704,26 +760,31 @@ type MultisigRedeemScriptType struct {
 	XXX_unrecognized []byte            `json:"-"`
 }
 
-func (m *MultisigRedeemScriptType) Reset()                    { log.DebugLog() *m = MultisigRedeemScriptType{} }
-func (m *MultisigRedeemScriptType) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*MultisigRedeemScriptType) ProtoMessage()               { log.DebugLog()}
-func (*MultisigRedeemScriptType) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor0, []int{3} }
+func (m *MultisigRedeemScriptType) Reset()                    { log.DebugLog() * m = MultisigRedeemScriptType{} }
+func (m *MultisigRedeemScriptType) String() string            { log.DebugLog()
+																  return proto.CompactTextString(m) }
+func (*MultisigRedeemScriptType) ProtoMessage()               { log.DebugLog() }
+func (*MultisigRedeemScriptType) Descriptor() ([]byte, []int) { log.DebugLog()
+																  return fileDescriptor0, []int{3} }
 
-func (m *MultisigRedeemScriptType) GetPubkeys() []*HDNodePathType { log.DebugLog()
+func (m *MultisigRedeemScriptType) GetPubkeys() []*HDNodePathType {
+	log.DebugLog()
 	if m != nil {
 		return m.Pubkeys
 	}
 	return nil
 }
 
-func (m *MultisigRedeemScriptType) GetSignatures() [][]byte { log.DebugLog()
+func (m *MultisigRedeemScriptType) GetSignatures() [][]byte {
+	log.DebugLog()
 	if m != nil {
 		return m.Signatures
 	}
 	return nil
 }
 
-func (m *MultisigRedeemScriptType) GetM() uint32 { log.DebugLog()
+func (m *MultisigRedeemScriptType) GetM() uint32 {
+	log.DebugLog()
 	if m != nil && m.M != nil {
 		return *m.M
 	}
@@ -746,64 +807,74 @@ type TxInputType struct {
 	XXX_unrecognized []byte                    `json:"-"`
 }
 
-func (m *TxInputType) Reset()                    { log.DebugLog() *m = TxInputType{} }
-func (m *TxInputType) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*TxInputType) ProtoMessage()               { log.DebugLog()}
-func (*TxInputType) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor0, []int{4} }
+func (m *TxInputType) Reset()                    { log.DebugLog() * m = TxInputType{} }
+func (m *TxInputType) String() string            { log.DebugLog()
+													 return proto.CompactTextString(m) }
+func (*TxInputType) ProtoMessage()               { log.DebugLog() }
+func (*TxInputType) Descriptor() ([]byte, []int) { log.DebugLog()
+													 return fileDescriptor0, []int{4} }
 
 const Default_TxInputType_Sequence uint32 = 4294967295
 const Default_TxInputType_ScriptType InputScriptType = InputScriptType_SPENDADDRESS
 
-func (m *TxInputType) GetAddressN() []uint32 { log.DebugLog()
+func (m *TxInputType) GetAddressN() []uint32 {
+	log.DebugLog()
 	if m != nil {
 		return m.AddressN
 	}
 	return nil
 }
 
-func (m *TxInputType) GetPrevHash() []byte { log.DebugLog()
+func (m *TxInputType) GetPrevHash() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.PrevHash
 	}
 	return nil
 }
 
-func (m *TxInputType) GetPrevIndex() uint32 { log.DebugLog()
+func (m *TxInputType) GetPrevIndex() uint32 {
+	log.DebugLog()
 	if m != nil && m.PrevIndex != nil {
 		return *m.PrevIndex
 	}
 	return 0
 }
 
-func (m *TxInputType) GetScriptSig() []byte { log.DebugLog()
+func (m *TxInputType) GetScriptSig() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.ScriptSig
 	}
 	return nil
 }
 
-func (m *TxInputType) GetSequence() uint32 { log.DebugLog()
+func (m *TxInputType) GetSequence() uint32 {
+	log.DebugLog()
 	if m != nil && m.Sequence != nil {
 		return *m.Sequence
 	}
 	return Default_TxInputType_Sequence
 }
 
-func (m *TxInputType) GetScriptType() InputScriptType { log.DebugLog()
+func (m *TxInputType) GetScriptType() InputScriptType {
+	log.DebugLog()
 	if m != nil && m.ScriptType != nil {
 		return *m.ScriptType
 	}
 	return Default_TxInputType_ScriptType
 }
 
-func (m *TxInputType) GetMultisig() *MultisigRedeemScriptType { log.DebugLog()
+func (m *TxInputType) GetMultisig() *MultisigRedeemScriptType {
+	log.DebugLog()
 	if m != nil {
 		return m.Multisig
 	}
 	return nil
 }
 
-func (m *TxInputType) GetAmount() uint64 { log.DebugLog()
+func (m *TxInputType) GetAmount() uint64 {
+	log.DebugLog()
 	if m != nil && m.Amount != nil {
 		return *m.Amount
 	}
@@ -824,47 +895,55 @@ type TxOutputType struct {
 	XXX_unrecognized []byte                    `json:"-"`
 }
 
-func (m *TxOutputType) Reset()                    { log.DebugLog() *m = TxOutputType{} }
-func (m *TxOutputType) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*TxOutputType) ProtoMessage()               { log.DebugLog()}
-func (*TxOutputType) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor0, []int{5} }
+func (m *TxOutputType) Reset()                    { log.DebugLog() * m = TxOutputType{} }
+func (m *TxOutputType) String() string            { log.DebugLog()
+													  return proto.CompactTextString(m) }
+func (*TxOutputType) ProtoMessage()               { log.DebugLog() }
+func (*TxOutputType) Descriptor() ([]byte, []int) { log.DebugLog()
+													  return fileDescriptor0, []int{5} }
 
-func (m *TxOutputType) GetAddress() string { log.DebugLog()
+func (m *TxOutputType) GetAddress() string {
+	log.DebugLog()
 	if m != nil && m.Address != nil {
 		return *m.Address
 	}
 	return ""
 }
 
-func (m *TxOutputType) GetAddressN() []uint32 { log.DebugLog()
+func (m *TxOutputType) GetAddressN() []uint32 {
+	log.DebugLog()
 	if m != nil {
 		return m.AddressN
 	}
 	return nil
 }
 
-func (m *TxOutputType) GetAmount() uint64 { log.DebugLog()
+func (m *TxOutputType) GetAmount() uint64 {
+	log.DebugLog()
 	if m != nil && m.Amount != nil {
 		return *m.Amount
 	}
 	return 0
 }
 
-func (m *TxOutputType) GetScriptType() OutputScriptType { log.DebugLog()
+func (m *TxOutputType) GetScriptType() OutputScriptType {
+	log.DebugLog()
 	if m != nil && m.ScriptType != nil {
 		return *m.ScriptType
 	}
 	return OutputScriptType_PAYTOADDRESS
 }
 
-func (m *TxOutputType) GetMultisig() *MultisigRedeemScriptType { log.DebugLog()
+func (m *TxOutputType) GetMultisig() *MultisigRedeemScriptType {
+	log.DebugLog()
 	if m != nil {
 		return m.Multisig
 	}
 	return nil
 }
 
-func (m *TxOutputType) GetOpReturnData() []byte { log.DebugLog()
+func (m *TxOutputType) GetOpReturnData() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.OpReturnData
 	}
@@ -880,19 +959,23 @@ type TxOutputBinType struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *TxOutputBinType) Reset()                    { log.DebugLog() *m = TxOutputBinType{} }
-func (m *TxOutputBinType) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*TxOutputBinType) ProtoMessage()               { log.DebugLog()}
-func (*TxOutputBinType) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor0, []int{6} }
+func (m *TxOutputBinType) Reset()                    { log.DebugLog() * m = TxOutputBinType{} }
+func (m *TxOutputBinType) String() string            { log.DebugLog()
+														 return proto.CompactTextString(m) }
+func (*TxOutputBinType) ProtoMessage()               { log.DebugLog() }
+func (*TxOutputBinType) Descriptor() ([]byte, []int) { log.DebugLog()
+														 return fileDescriptor0, []int{6} }
 
-func (m *TxOutputBinType) GetAmount() uint64 { log.DebugLog()
+func (m *TxOutputBinType) GetAmount() uint64 {
+	log.DebugLog()
 	if m != nil && m.Amount != nil {
 		return *m.Amount
 	}
 	return 0
 }
 
-func (m *TxOutputBinType) GetScriptPubkey() []byte { log.DebugLog()
+func (m *TxOutputBinType) GetScriptPubkey() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.ScriptPubkey
 	}
@@ -915,68 +998,79 @@ type TransactionType struct {
 	XXX_unrecognized []byte             `json:"-"`
 }
 
-func (m *TransactionType) Reset()                    { log.DebugLog() *m = TransactionType{} }
-func (m *TransactionType) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*TransactionType) ProtoMessage()               { log.DebugLog()}
-func (*TransactionType) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor0, []int{7} }
+func (m *TransactionType) Reset()                    { log.DebugLog() * m = TransactionType{} }
+func (m *TransactionType) String() string            { log.DebugLog()
+														 return proto.CompactTextString(m) }
+func (*TransactionType) ProtoMessage()               { log.DebugLog() }
+func (*TransactionType) Descriptor() ([]byte, []int) { log.DebugLog()
+														 return fileDescriptor0, []int{7} }
 
-func (m *TransactionType) GetVersion() uint32 { log.DebugLog()
+func (m *TransactionType) GetVersion() uint32 {
+	log.DebugLog()
 	if m != nil && m.Version != nil {
 		return *m.Version
 	}
 	return 0
 }
 
-func (m *TransactionType) GetInputs() []*TxInputType { log.DebugLog()
+func (m *TransactionType) GetInputs() []*TxInputType {
+	log.DebugLog()
 	if m != nil {
 		return m.Inputs
 	}
 	return nil
 }
 
-func (m *TransactionType) GetBinOutputs() []*TxOutputBinType { log.DebugLog()
+func (m *TransactionType) GetBinOutputs() []*TxOutputBinType {
+	log.DebugLog()
 	if m != nil {
 		return m.BinOutputs
 	}
 	return nil
 }
 
-func (m *TransactionType) GetOutputs() []*TxOutputType { log.DebugLog()
+func (m *TransactionType) GetOutputs() []*TxOutputType {
+	log.DebugLog()
 	if m != nil {
 		return m.Outputs
 	}
 	return nil
 }
 
-func (m *TransactionType) GetLockTime() uint32 { log.DebugLog()
+func (m *TransactionType) GetLockTime() uint32 {
+	log.DebugLog()
 	if m != nil && m.LockTime != nil {
 		return *m.LockTime
 	}
 	return 0
 }
 
-func (m *TransactionType) GetInputsCnt() uint32 { log.DebugLog()
+func (m *TransactionType) GetInputsCnt() uint32 {
+	log.DebugLog()
 	if m != nil && m.InputsCnt != nil {
 		return *m.InputsCnt
 	}
 	return 0
 }
 
-func (m *TransactionType) GetOutputsCnt() uint32 { log.DebugLog()
+func (m *TransactionType) GetOutputsCnt() uint32 {
+	log.DebugLog()
 	if m != nil && m.OutputsCnt != nil {
 		return *m.OutputsCnt
 	}
 	return 0
 }
 
-func (m *TransactionType) GetExtraData() []byte { log.DebugLog()
+func (m *TransactionType) GetExtraData() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.ExtraData
 	}
 	return nil
 }
 
-func (m *TransactionType) GetExtraDataLen() uint32 { log.DebugLog()
+func (m *TransactionType) GetExtraDataLen() uint32 {
+	log.DebugLog()
 	if m != nil && m.ExtraDataLen != nil {
 		return *m.ExtraDataLen
 	}
@@ -994,33 +1088,39 @@ type TxRequestDetailsType struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *TxRequestDetailsType) Reset()                    { log.DebugLog() *m = TxRequestDetailsType{} }
-func (m *TxRequestDetailsType) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*TxRequestDetailsType) ProtoMessage()               { log.DebugLog()}
-func (*TxRequestDetailsType) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor0, []int{8} }
+func (m *TxRequestDetailsType) Reset()                    { log.DebugLog() * m = TxRequestDetailsType{} }
+func (m *TxRequestDetailsType) String() string            { log.DebugLog()
+															  return proto.CompactTextString(m) }
+func (*TxRequestDetailsType) ProtoMessage()               { log.DebugLog() }
+func (*TxRequestDetailsType) Descriptor() ([]byte, []int) { log.DebugLog()
+															  return fileDescriptor0, []int{8} }
 
-func (m *TxRequestDetailsType) GetRequestIndex() uint32 { log.DebugLog()
+func (m *TxRequestDetailsType) GetRequestIndex() uint32 {
+	log.DebugLog()
 	if m != nil && m.RequestIndex != nil {
 		return *m.RequestIndex
 	}
 	return 0
 }
 
-func (m *TxRequestDetailsType) GetTxHash() []byte { log.DebugLog()
+func (m *TxRequestDetailsType) GetTxHash() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.TxHash
 	}
 	return nil
 }
 
-func (m *TxRequestDetailsType) GetExtraDataLen() uint32 { log.DebugLog()
+func (m *TxRequestDetailsType) GetExtraDataLen() uint32 {
+	log.DebugLog()
 	if m != nil && m.ExtraDataLen != nil {
 		return *m.ExtraDataLen
 	}
 	return 0
 }
 
-func (m *TxRequestDetailsType) GetExtraDataOffset() uint32 { log.DebugLog()
+func (m *TxRequestDetailsType) GetExtraDataOffset() uint32 {
+	log.DebugLog()
 	if m != nil && m.ExtraDataOffset != nil {
 		return *m.ExtraDataOffset
 	}
@@ -1037,26 +1137,31 @@ type TxRequestSerializedType struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *TxRequestSerializedType) Reset()                    { log.DebugLog() *m = TxRequestSerializedType{} }
-func (m *TxRequestSerializedType) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*TxRequestSerializedType) ProtoMessage()               { log.DebugLog()}
-func (*TxRequestSerializedType) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor0, []int{9} }
+func (m *TxRequestSerializedType) Reset()                    { log.DebugLog() * m = TxRequestSerializedType{} }
+func (m *TxRequestSerializedType) String() string            { log.DebugLog()
+																 return proto.CompactTextString(m) }
+func (*TxRequestSerializedType) ProtoMessage()               { log.DebugLog() }
+func (*TxRequestSerializedType) Descriptor() ([]byte, []int) { log.DebugLog()
+																 return fileDescriptor0, []int{9} }
 
-func (m *TxRequestSerializedType) GetSignatureIndex() uint32 { log.DebugLog()
+func (m *TxRequestSerializedType) GetSignatureIndex() uint32 {
+	log.DebugLog()
 	if m != nil && m.SignatureIndex != nil {
 		return *m.SignatureIndex
 	}
 	return 0
 }
 
-func (m *TxRequestSerializedType) GetSignature() []byte { log.DebugLog()
+func (m *TxRequestSerializedType) GetSignature() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.Signature
 	}
 	return nil
 }
 
-func (m *TxRequestSerializedType) GetSerializedTx() []byte { log.DebugLog()
+func (m *TxRequestSerializedType) GetSerializedTx() []byte {
+	log.DebugLog()
 	if m != nil {
 		return m.SerializedTx
 	}
@@ -1076,49 +1181,57 @@ type IdentityType struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *IdentityType) Reset()                    { log.DebugLog() *m = IdentityType{} }
-func (m *IdentityType) String() string            { log.DebugLog() return proto.CompactTextString(m) }
-func (*IdentityType) ProtoMessage()               { log.DebugLog()}
-func (*IdentityType) Descriptor() ([]byte, []int) { log.DebugLog() return fileDescriptor0, []int{10} }
+func (m *IdentityType) Reset()                    { log.DebugLog() * m = IdentityType{} }
+func (m *IdentityType) String() string            { log.DebugLog()
+													  return proto.CompactTextString(m) }
+func (*IdentityType) ProtoMessage()               { log.DebugLog() }
+func (*IdentityType) Descriptor() ([]byte, []int) { log.DebugLog()
+													  return fileDescriptor0, []int{10} }
 
 const Default_IdentityType_Index uint32 = 0
 
-func (m *IdentityType) GetProto() string { log.DebugLog()
+func (m *IdentityType) GetProto() string {
+	log.DebugLog()
 	if m != nil && m.Proto != nil {
 		return *m.Proto
 	}
 	return ""
 }
 
-func (m *IdentityType) GetUser() string { log.DebugLog()
+func (m *IdentityType) GetUser() string {
+	log.DebugLog()
 	if m != nil && m.User != nil {
 		return *m.User
 	}
 	return ""
 }
 
-func (m *IdentityType) GetHost() string { log.DebugLog()
+func (m *IdentityType) GetHost() string {
+	log.DebugLog()
 	if m != nil && m.Host != nil {
 		return *m.Host
 	}
 	return ""
 }
 
-func (m *IdentityType) GetPort() string { log.DebugLog()
+func (m *IdentityType) GetPort() string {
+	log.DebugLog()
 	if m != nil && m.Port != nil {
 		return *m.Port
 	}
 	return ""
 }
 
-func (m *IdentityType) GetPath() string { log.DebugLog()
+func (m *IdentityType) GetPath() string {
+	log.DebugLog()
 	if m != nil && m.Path != nil {
 		return *m.Path
 	}
 	return ""
 }
 
-func (m *IdentityType) GetIndex() uint32 { log.DebugLog()
+func (m *IdentityType) GetIndex() uint32 {
+	log.DebugLog()
 	if m != nil && m.Index != nil {
 		return *m.Index
 	}
@@ -1179,7 +1292,7 @@ var E_WireBootloader = &proto.ExtensionDesc{
 	Filename:      "types.proto",
 }
 
-func init() { log.DebugLog()
+func init() {
 	proto.RegisterType((*HDNodeType)(nil), "HDNodeType")
 	proto.RegisterType((*HDNodePathType)(nil), "HDNodePathType")
 	proto.RegisterType((*CoinType)(nil), "CoinType")
@@ -1207,7 +1320,8 @@ func init() { log.DebugLog()
 	proto.RegisterExtension(E_WireBootloader)
 }
 
-func init() { log.DebugLog() proto.RegisterFile("types.proto", fileDescriptor0) }
+func init() { log.DebugLog()
+				proto.RegisterFile("types.proto", fileDescriptor0) }
 
 var fileDescriptor0 = []byte{
 	// 1899 bytes of a gzipped FileDescriptorProto

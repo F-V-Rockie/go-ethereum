@@ -38,13 +38,13 @@ type TwoQueueCache struct {
 
 // New2Q creates a new TwoQueueCache using the default
 // values for the parameters.
-func New2Q(size int) (*TwoQueueCache, error) { log.DebugLog()
+func New2Q(size int) (*TwoQueueCache, error) { 
 	return New2QParams(size, Default2QRecentRatio, Default2QGhostEntries)
 }
 
 // New2QParams creates a new TwoQueueCache using the provided
 // parameter values.
-func New2QParams(size int, recentRatio float64, ghostRatio float64) (*TwoQueueCache, error) { log.DebugLog()
+func New2QParams(size int, recentRatio float64, ghostRatio float64) (*TwoQueueCache, error) { 
 	if size <= 0 {
 		return nil, fmt.Errorf("invalid size")
 	}
@@ -84,7 +84,7 @@ func New2QParams(size int, recentRatio float64, ghostRatio float64) (*TwoQueueCa
 	return c, nil
 }
 
-func (c *TwoQueueCache) Get(key interface{}) (interface{}, bool) { log.DebugLog()
+func (c *TwoQueueCache) Get(key interface{}) (interface{}, bool) { 
 	c.lock.Lock()
 	defer c.lock.Unlock()
 
@@ -105,7 +105,7 @@ func (c *TwoQueueCache) Get(key interface{}) (interface{}, bool) { log.DebugLog(
 	return nil, false
 }
 
-func (c *TwoQueueCache) Add(key, value interface{}) { log.DebugLog()
+func (c *TwoQueueCache) Add(key, value interface{}) { 
 	c.lock.Lock()
 	defer c.lock.Unlock()
 
@@ -140,7 +140,7 @@ func (c *TwoQueueCache) Add(key, value interface{}) { log.DebugLog()
 }
 
 // ensureSpace is used to ensure we have space in the cache
-func (c *TwoQueueCache) ensureSpace(recentEvict bool) { log.DebugLog()
+func (c *TwoQueueCache) ensureSpace(recentEvict bool) { 
 	// If we have space, nothing to do
 	recentLen := c.recent.Len()
 	freqLen := c.frequent.Len()
@@ -160,13 +160,13 @@ func (c *TwoQueueCache) ensureSpace(recentEvict bool) { log.DebugLog()
 	c.frequent.RemoveOldest()
 }
 
-func (c *TwoQueueCache) Len() int { log.DebugLog()
+func (c *TwoQueueCache) Len() int { 
 	c.lock.RLock()
 	defer c.lock.RUnlock()
 	return c.recent.Len() + c.frequent.Len()
 }
 
-func (c *TwoQueueCache) Keys() []interface{} { log.DebugLog()
+func (c *TwoQueueCache) Keys() []interface{} { 
 	c.lock.RLock()
 	defer c.lock.RUnlock()
 	k1 := c.frequent.Keys()
@@ -174,7 +174,7 @@ func (c *TwoQueueCache) Keys() []interface{} { log.DebugLog()
 	return append(k1, k2...)
 }
 
-func (c *TwoQueueCache) Remove(key interface{}) { log.DebugLog()
+func (c *TwoQueueCache) Remove(key interface{}) { 
 	c.lock.Lock()
 	defer c.lock.Unlock()
 	if c.frequent.Remove(key) {
@@ -188,7 +188,7 @@ func (c *TwoQueueCache) Remove(key interface{}) { log.DebugLog()
 	}
 }
 
-func (c *TwoQueueCache) Purge() { log.DebugLog()
+func (c *TwoQueueCache) Purge() { 
 	c.lock.Lock()
 	defer c.lock.Unlock()
 	c.recent.Purge()
@@ -196,13 +196,13 @@ func (c *TwoQueueCache) Purge() { log.DebugLog()
 	c.recentEvict.Purge()
 }
 
-func (c *TwoQueueCache) Contains(key interface{}) bool { log.DebugLog()
+func (c *TwoQueueCache) Contains(key interface{}) bool { 
 	c.lock.RLock()
 	defer c.lock.RUnlock()
 	return c.frequent.Contains(key) || c.recent.Contains(key)
 }
 
-func (c *TwoQueueCache) Peek(key interface{}) (interface{}, bool) { log.DebugLog()
+func (c *TwoQueueCache) Peek(key interface{}) (interface{}, bool) { 
 	c.lock.RLock()
 	defer c.lock.RUnlock()
 	if val, ok := c.frequent.Peek(key); ok {

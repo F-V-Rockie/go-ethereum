@@ -58,17 +58,17 @@ package unix
 //sys	sendmsg(s int, msg *Msghdr, flags int) (n int, err error)
 //sys	mmap(addr uintptr, length uintptr, prot int, flags int, fd int, offset int64) (xaddr uintptr, err error)
 
-func Ioperm(from int, num int, on int) (err error) { log.DebugLog()
+func Ioperm(from int, num int, on int) (err error) { 
 	return ENOSYS
 }
 
-func Iopl(level int) (err error) { log.DebugLog()
+func Iopl(level int) (err error) { 
 	return ENOSYS
 }
 
 //sysnb	Gettimeofday(tv *Timeval) (err error)
 
-func Time(t *Time_t) (tt Time_t, err error) { log.DebugLog()
+func Time(t *Time_t) (tt Time_t, err error) { 
 	var tv Timeval
 	err = Gettimeofday(&tv)
 	if err != nil {
@@ -82,33 +82,33 @@ func Time(t *Time_t) (tt Time_t, err error) { log.DebugLog()
 
 //sys	Utime(path string, buf *Utimbuf) (err error)
 
-func setTimespec(sec, nsec int64) Timespec { log.DebugLog()
+func setTimespec(sec, nsec int64) Timespec { 
 	return Timespec{Sec: sec, Nsec: nsec}
 }
 
-func setTimeval(sec, usec int64) Timeval { log.DebugLog()
+func setTimeval(sec, usec int64) Timeval { 
 	return Timeval{Sec: sec, Usec: int32(usec)}
 }
 
-func (r *PtraceRegs) PC() uint64 { log.DebugLog() return r.Tpc }
+func (r *PtraceRegs) PC() uint64 {  return r.Tpc }
 
-func (r *PtraceRegs) SetPC(pc uint64) { log.DebugLog() r.Tpc = pc }
+func (r *PtraceRegs) SetPC(pc uint64) {  r.Tpc = pc }
 
-func (iov *Iovec) SetLen(length int) { log.DebugLog()
+func (iov *Iovec) SetLen(length int) { 
 	iov.Len = uint64(length)
 }
 
-func (msghdr *Msghdr) SetControllen(length int) { log.DebugLog()
+func (msghdr *Msghdr) SetControllen(length int) { 
 	msghdr.Controllen = uint64(length)
 }
 
-func (cmsg *Cmsghdr) SetLen(length int) { log.DebugLog()
+func (cmsg *Cmsghdr) SetLen(length int) { 
 	cmsg.Len = uint64(length)
 }
 
 //sysnb pipe(p *[2]_C_int) (err error)
 
-func Pipe(p []int) (err error) { log.DebugLog()
+func Pipe(p []int) (err error) { 
 	if len(p) != 2 {
 		return EINVAL
 	}
@@ -121,7 +121,7 @@ func Pipe(p []int) (err error) { log.DebugLog()
 
 //sysnb pipe2(p *[2]_C_int, flags int) (err error)
 
-func Pipe2(p []int, flags int) (err error) { log.DebugLog()
+func Pipe2(p []int, flags int) (err error) { 
 	if len(p) != 2 {
 		return EINVAL
 	}
@@ -134,7 +134,7 @@ func Pipe2(p []int, flags int) (err error) { log.DebugLog()
 
 //sys	poll(fds *PollFd, nfds int, timeout int) (n int, err error)
 
-func Poll(fds []PollFd, timeout int) (n int, err error) { log.DebugLog()
+func Poll(fds []PollFd, timeout int) (n int, err error) { 
 	if len(fds) == 0 {
 		return poll(nil, 0, timeout)
 	}

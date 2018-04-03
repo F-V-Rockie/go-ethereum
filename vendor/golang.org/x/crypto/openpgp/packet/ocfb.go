@@ -31,7 +31,7 @@ const (
 // cipher.Block's block size. Resync determines if the "resynchronization step"
 // from RFC 4880, 13.9 step 7 is performed. Different parts of OpenPGP vary on
 // this point.
-func NewOCFBEncrypter(block cipher.Block, randData []byte, resync OCFBResyncOption) (cipher.Stream, []byte) { log.DebugLog()
+func NewOCFBEncrypter(block cipher.Block, randData []byte, resync OCFBResyncOption) (cipher.Stream, []byte) { 
 	blockSize := block.BlockSize()
 	if len(randData) != blockSize {
 		return nil, nil
@@ -63,7 +63,7 @@ func NewOCFBEncrypter(block cipher.Block, randData []byte, resync OCFBResyncOpti
 	return x, prefix
 }
 
-func (x *ocfbEncrypter) XORKeyStream(dst, src []byte) { log.DebugLog()
+func (x *ocfbEncrypter) XORKeyStream(dst, src []byte) { 
 	for i := 0; i < len(src); i++ {
 		if x.outUsed == len(x.fre) {
 			x.b.Encrypt(x.fre, x.fre)
@@ -89,7 +89,7 @@ type ocfbDecrypter struct {
 // successful exit, blockSize+2 bytes of decrypted data are written into
 // prefix. Resync determines if the "resynchronization step" from RFC 4880,
 // 13.9 step 7 is performed. Different parts of OpenPGP vary on this point.
-func NewOCFBDecrypter(block cipher.Block, prefix []byte, resync OCFBResyncOption) cipher.Stream { log.DebugLog()
+func NewOCFBDecrypter(block cipher.Block, prefix []byte, resync OCFBResyncOption) cipher.Stream { 
 	blockSize := block.BlockSize()
 	if len(prefix) != blockSize+2 {
 		return nil
@@ -128,7 +128,7 @@ func NewOCFBDecrypter(block cipher.Block, prefix []byte, resync OCFBResyncOption
 	return x
 }
 
-func (x *ocfbDecrypter) XORKeyStream(dst, src []byte) { log.DebugLog()
+func (x *ocfbDecrypter) XORKeyStream(dst, src []byte) { 
 	for i := 0; i < len(src); i++ {
 		if x.outUsed == len(x.fre) {
 			x.b.Encrypt(x.fre, x.fre)

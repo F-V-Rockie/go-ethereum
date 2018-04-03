@@ -19,7 +19,7 @@ var (
 // NodeInterface returns the name of the interface from which the NodeID was
 // derived.  The interface "user" is returned if the NodeID was set by
 // SetNodeID.
-func NodeInterface() string { log.DebugLog()
+func NodeInterface() string { 
 	defer nodeMu.Unlock()
 	nodeMu.Lock()
 	return ifname
@@ -31,13 +31,13 @@ func NodeInterface() string { log.DebugLog()
 // is returned.
 //
 // SetNodeInterface never fails when name is "".
-func SetNodeInterface(name string) bool { log.DebugLog()
+func SetNodeInterface(name string) bool { 
 	defer nodeMu.Unlock()
 	nodeMu.Lock()
 	return setNodeInterface(name)
 }
 
-func setNodeInterface(name string) bool { log.DebugLog()
+func setNodeInterface(name string) bool { 
 	if interfaces == nil {
 		var err error
 		interfaces, err = net.Interfaces()
@@ -70,7 +70,7 @@ func setNodeInterface(name string) bool { log.DebugLog()
 
 // NodeID returns a slice of a copy of the current Node ID, setting the Node ID
 // if not already set.
-func NodeID() []byte { log.DebugLog()
+func NodeID() []byte { 
 	defer nodeMu.Unlock()
 	nodeMu.Lock()
 	if nodeID == nil {
@@ -84,7 +84,7 @@ func NodeID() []byte { log.DebugLog()
 // SetNodeID sets the Node ID to be used for Version 1 UUIDs.  The first 6 bytes
 // of id are used.  If id is less than 6 bytes then false is returned and the
 // Node ID is not set.
-func SetNodeID(id []byte) bool { log.DebugLog()
+func SetNodeID(id []byte) bool { 
 	defer nodeMu.Unlock()
 	nodeMu.Lock()
 	if setNodeID(id) {
@@ -94,7 +94,7 @@ func SetNodeID(id []byte) bool { log.DebugLog()
 	return false
 }
 
-func setNodeID(id []byte) bool { log.DebugLog()
+func setNodeID(id []byte) bool { 
 	if len(id) < 6 {
 		return false
 	}
@@ -107,7 +107,7 @@ func setNodeID(id []byte) bool { log.DebugLog()
 
 // NodeID returns the 6 byte node id encoded in uuid.  It returns nil if uuid is
 // not valid.  The NodeID is only well defined for version 1 and 2 UUIDs.
-func (uuid UUID) NodeID() []byte { log.DebugLog()
+func (uuid UUID) NodeID() []byte { 
 	if len(uuid) != 16 {
 		return nil
 	}

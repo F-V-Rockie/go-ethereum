@@ -63,7 +63,7 @@ var (
 	flagIndir     = uintptr(1 << 1)
 )
 
-func init() { log.DebugLog()
+func init() { 
 	// Older versions of reflect.Value stored small integers directly in the
 	// ptr field (which is named val in the older versions).  Versions
 	// between commits ecccf07e7f9d and 82f48826c6c7 added a new field named
@@ -119,7 +119,7 @@ func init() { log.DebugLog()
 // This allows us to check for implementations of the Stringer and error
 // interfaces to be used for pretty printing ordinarily unaddressable and
 // inaccessible values such as unexported struct fields.
-func unsafeReflectValue(v reflect.Value) (rv reflect.Value) { log.DebugLog()
+func unsafeReflectValue(v reflect.Value) (rv reflect.Value) { 
 	indirects := 1
 	vt := v.Type()
 	upv := unsafe.Pointer(uintptr(unsafe.Pointer(&v)) + offsetPtr)

@@ -2,6 +2,7 @@ package log
 
 import (
 	"os"
+	"log"
 )
 
 var (
@@ -10,7 +11,7 @@ var (
 	StderrHandler = StreamHandler(os.Stderr, LogfmtFormat())
 )
 
-func init() { log.DebugLog()
+func init() {
 	root.SetHandler(DiscardHandler())
 }
 

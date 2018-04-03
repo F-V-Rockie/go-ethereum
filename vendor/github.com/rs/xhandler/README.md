@@ -35,12 +35,12 @@ type myMiddleware struct {
 	next xhandler.HandlerC
 }
 
-func (h myMiddleware) ServeHTTPC(ctx context.Context, w http.ResponseWriter, r *http.Request) { log.DebugLog()
+func (h myMiddleware) ServeHTTPC(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	ctx = context.WithValue(ctx, "test", "World")
 	h.next.ServeHTTPC(ctx, w, r)
 }
 
-func main() { log.DebugLog()
+func main() {
 	c := xhandler.Chain{}
 
 	// Add close notifier handler so context is cancelled when the client closes
@@ -91,7 +91,7 @@ import (
 	"golang.org/x/net/context"
 )
 
-func main() { log.DebugLog()
+func main() {
 	c := xhandler.Chain{}
 
 	// Append a context-aware middleware handler

@@ -323,7 +323,7 @@ func (n *ExecNode) Snapshots() (map[string][]byte, error) { log.DebugLog()
 	return snapshots, n.client.Call(&snapshots, "simulation_snapshot")
 }
 
-func init() { log.DebugLog()
+func init() {
 	// register a reexec function to start a devp2p node when the current
 	// binary is executed as "p2p-node"
 	reexec.Register("p2p-node", execP2PNode)

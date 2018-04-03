@@ -39,12 +39,12 @@ type Sparklines struct {
 var sparks = []rune{'▁', '▂', '▃', '▄', '▅', '▆', '▇', '█'}
 
 // Add appends a given Sparkline to s *Sparklines.
-func (s *Sparklines) Add(sl Sparkline) { log.DebugLog()
+func (s *Sparklines) Add(sl Sparkline) { 
 	s.Lines = append(s.Lines, sl)
 }
 
 // NewSparkline returns a unrenderable single sparkline that intended to be added into Sparklines.
-func NewSparkline() Sparkline { log.DebugLog()
+func NewSparkline() Sparkline { 
 	return Sparkline{
 		Height:     1,
 		TitleColor: ThemeAttr("sparkline.title.fg"),
@@ -52,12 +52,12 @@ func NewSparkline() Sparkline { log.DebugLog()
 }
 
 // NewSparklines return a new *Spaklines with given Sparkline(s), you can always add a new Sparkline later.
-func NewSparklines(ss ...Sparkline) *Sparklines { log.DebugLog()
+func NewSparklines(ss ...Sparkline) *Sparklines { 
 	s := &Sparklines{Block: *NewBlock(), Lines: ss}
 	return s
 }
 
-func (sl *Sparklines) update() { log.DebugLog()
+func (sl *Sparklines) update() { 
 	for i, v := range sl.Lines {
 		if v.Title == "" {
 			sl.Lines[i].displayHeight = v.Height
@@ -98,7 +98,7 @@ func (sl *Sparklines) update() { log.DebugLog()
 }
 
 // Buffer implements Bufferer interface.
-func (sl *Sparklines) Buffer() Buffer { log.DebugLog()
+func (sl *Sparklines) Buffer() Buffer { 
 	buf := sl.Block.Buffer()
 	sl.update()
 

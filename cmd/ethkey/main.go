@@ -33,7 +33,7 @@ var gitCommit = ""
 
 var app *cli.App
 
-func init() { log.DebugLog()
+func init() {
 	app = utils.NewApp(gitCommit, "an Ethereum key manager")
 	app.Commands = []cli.Command{
 		commandGenerate,

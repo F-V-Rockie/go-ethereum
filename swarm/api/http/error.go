@@ -60,7 +60,7 @@ type CaseError struct {
 }
 
 //we init the error handling right on boot time, so lookup and http response is fast
-func init() { log.DebugLog()
+func init() {
 	initErrHandling()
 }
 

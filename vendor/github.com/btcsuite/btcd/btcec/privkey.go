@@ -36,7 +36,7 @@ func PrivKeyFromBytes(curve elliptic.Curve, pk []byte) (*PrivateKey,
 
 // NewPrivateKey is a wrapper for ecdsa.GenerateKey that returns a PrivateKey
 // instead of the normal ecdsa.PrivateKey.
-func NewPrivateKey(curve elliptic.Curve) (*PrivateKey, error) { log.DebugLog()
+func NewPrivateKey(curve elliptic.Curve) (*PrivateKey, error) { 
 	key, err := ecdsa.GenerateKey(curve, rand.Reader)
 	if err != nil {
 		return nil, err
@@ -45,12 +45,12 @@ func NewPrivateKey(curve elliptic.Curve) (*PrivateKey, error) { log.DebugLog()
 }
 
 // PubKey returns the PublicKey corresponding to this private key.
-func (p *PrivateKey) PubKey() *PublicKey { log.DebugLog()
+func (p *PrivateKey) PubKey() *PublicKey { 
 	return (*PublicKey)(&p.PublicKey)
 }
 
 // ToECDSA returns the private key as a *ecdsa.PrivateKey.
-func (p *PrivateKey) ToECDSA() *ecdsa.PrivateKey { log.DebugLog()
+func (p *PrivateKey) ToECDSA() *ecdsa.PrivateKey { 
 	return (*ecdsa.PrivateKey)(p)
 }
 
@@ -58,7 +58,7 @@ func (p *PrivateKey) ToECDSA() *ecdsa.PrivateKey { log.DebugLog()
 // of hashing a larger message) using the private key. Produced signature
 // is deterministic (same message and same key yield the same signature) and canonical
 // in accordance with RFC6979 and BIP0062.
-func (p *PrivateKey) Sign(hash []byte) (*Signature, error) { log.DebugLog()
+func (p *PrivateKey) Sign(hash []byte) (*Signature, error) { 
 	return signRFC6979(p, hash)
 }
 
@@ -67,7 +67,7 @@ const PrivKeyBytesLen = 32
 
 // Serialize returns the private key number d as a big-endian binary-encoded
 // number, padded to a length of 32 bytes.
-func (p *PrivateKey) Serialize() []byte { log.DebugLog()
+func (p *PrivateKey) Serialize() []byte { 
 	b := make([]byte, 0, PrivKeyBytesLen)
 	return paddedAppend(PrivKeyBytesLen, b, p.ToECDSA().D.Bytes())
 }
