@@ -77,7 +77,7 @@ const HistoryLimit = 1000
 
 // ReadHistory reads scrollback history from r. Returns the number of lines
 // read, and any read error (except io.EOF).
-func (s *State) ReadHistory(r io.Reader) (num int, err error) { 
+func (s *State) ReadHistory(r io.Reader) (num int, err error) {
 	s.historyMutex.Lock()
 	defer s.historyMutex.Unlock()
 
@@ -113,7 +113,7 @@ func (s *State) ReadHistory(r io.Reader) (num int, err error) {
 // from another goroutine while Prompt is in progress.
 // This exception is to facilitate the saving of the history buffer
 // during an unexpected exit (for example, due to Ctrl-C being invoked)
-func (s *State) WriteHistory(w io.Writer) (num int, err error) { 
+func (s *State) WriteHistory(w io.Writer) (num int, err error) {
 	s.historyMutex.RLock()
 	defer s.historyMutex.RUnlock()
 
@@ -129,7 +129,7 @@ func (s *State) WriteHistory(w io.Writer) (num int, err error) {
 
 // AppendHistory appends an entry to the scrollback history. AppendHistory
 // should be called iff Prompt returns a valid command.
-func (s *State) AppendHistory(item string) { 
+func (s *State) AppendHistory(item string) {
 	s.historyMutex.Lock()
 	defer s.historyMutex.Unlock()
 
@@ -145,14 +145,14 @@ func (s *State) AppendHistory(item string) {
 }
 
 // ClearHistory clears the scroollback history.
-func (s *State) ClearHistory() { 
+func (s *State) ClearHistory() {
 	s.historyMutex.Lock()
 	defer s.historyMutex.Unlock()
 	s.history = nil
 }
 
 // Returns the history lines starting with prefix
-func (s *State) getHistoryByPrefix(prefix string) (ph []string) { 
+func (s *State) getHistoryByPrefix(prefix string) (ph []string) {
 	for _, h := range s.history {
 		if strings.HasPrefix(h, prefix) {
 			ph = append(ph, h)
@@ -162,7 +162,7 @@ func (s *State) getHistoryByPrefix(prefix string) (ph []string) {
 }
 
 // Returns the history lines matching the intelligent search
-func (s *State) getHistoryByPattern(pattern string) (ph []string, pos []int) { 
+func (s *State) getHistoryByPattern(pattern string) (ph []string, pos []int) {
 	if pattern == "" {
 		return
 	}
@@ -189,7 +189,7 @@ type WordCompleter func(line string, pos int) (head string, completions []string
 
 // SetCompleter sets the completion function that Liner will call to
 // fetch completion candidates when the user presses tab.
-func (s *State) SetCompleter(f Completer) { 
+func (s *State) SetCompleter(f Completer) {
 	if f == nil {
 		s.completer = nil
 		return
@@ -201,7 +201,7 @@ func (s *State) SetCompleter(f Completer) {
 
 // SetWordCompleter sets the completion function that Liner will call to
 // fetch completion candidates when the user presses tab.
-func (s *State) SetWordCompleter(f WordCompleter) { 
+func (s *State) SetWordCompleter(f WordCompleter) {
 	s.completer = f
 }
 
@@ -210,7 +210,7 @@ func (s *State) SetWordCompleter(f WordCompleter) {
 // through the list of candidates at the prompt.  TabPrints will print
 // the available completion candidates to the screen similar to BASH
 // and GNU Readline
-func (s *State) SetTabCompletionStyle(tabStyle TabStyle) { 
+func (s *State) SetTabCompletionStyle(tabStyle TabStyle) {
 	s.tabStyle = tabStyle
 }
 
@@ -224,12 +224,12 @@ type ModeApplier interface {
 // ErrPromptAborted when Ctrl-C is pressed. The default is false (will not
 // return when Ctrl-C is pressed). Unsupported terminals typically raise SIGINT
 // (and Prompt does not return) regardless of the value passed to SetCtrlCAborts.
-func (s *State) SetCtrlCAborts(aborts bool) { 
+func (s *State) SetCtrlCAborts(aborts bool) {
 	s.ctrlCAborts = aborts
 }
 
 // SetMultiLineMode sets whether line is auto-wrapped. The default is false (single line).
-func (s *State) SetMultiLineMode(mlmode bool) { 
+func (s *State) SetMultiLineMode(mlmode bool) {
 	s.multiLineMode = mlmode
 }
 
@@ -239,11 +239,11 @@ type ShouldRestart func(err error) bool
 
 // SetShouldRestart sets the restart function that Liner will call to determine
 // whether to retry the call to, or return the error returned by, readNext.
-func (s *State) SetShouldRestart(f ShouldRestart) { 
+func (s *State) SetShouldRestart(f ShouldRestart) {
 	s.shouldRestart = f
 }
 
-func (s *State) promptUnsupported(p string) (string, error) { 
+func (s *State) promptUnsupported(p string) (string, error) {
 	if !s.inputRedirected || !s.terminalSupported {
 		fmt.Print(p)
 	}

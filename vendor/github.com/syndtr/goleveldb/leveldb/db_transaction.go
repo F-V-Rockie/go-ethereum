@@ -37,7 +37,7 @@ type Transaction struct {
 // The returned slice is its own copy, it is safe to modify the contents
 // of the returned slice.
 // It is safe to modify the contents of the argument after Get returns.
-func (tr *Transaction) Get(key []byte, ro *opt.ReadOptions) ([]byte, error) { 
+func (tr *Transaction) Get(key []byte, ro *opt.ReadOptions) ([]byte, error) {
 	tr.lk.RLock()
 	defer tr.lk.RUnlock()
 	if tr.closed {
@@ -49,7 +49,7 @@ func (tr *Transaction) Get(key []byte, ro *opt.ReadOptions) ([]byte, error) {
 // Has returns true if the DB does contains the given key.
 //
 // It is safe to modify the contents of the argument after Has returns.
-func (tr *Transaction) Has(key []byte, ro *opt.ReadOptions) (bool, error) { 
+func (tr *Transaction) Has(key []byte, ro *opt.ReadOptions) (bool, error) {
 	tr.lk.RLock()
 	defer tr.lk.RUnlock()
 	if tr.closed {
@@ -72,7 +72,7 @@ func (tr *Transaction) Has(key []byte, ro *opt.ReadOptions) (bool, error) {
 // The iterator must be released after use, by calling Release method.
 //
 // Also read Iterator documentation of the leveldb/iterator package.
-func (tr *Transaction) NewIterator(slice *util.Range, ro *opt.ReadOptions) iterator.Iterator { 
+func (tr *Transaction) NewIterator(slice *util.Range, ro *opt.ReadOptions) iterator.Iterator {
 	tr.lk.RLock()
 	defer tr.lk.RUnlock()
 	if tr.closed {
@@ -82,7 +82,7 @@ func (tr *Transaction) NewIterator(slice *util.Range, ro *opt.ReadOptions) itera
 	return tr.db.newIterator(tr.mem, tr.tables, tr.seq, slice, ro)
 }
 
-func (tr *Transaction) flush() error { 
+func (tr *Transaction) flush() error {
 	// Flush memdb.
 	if tr.mem.Len() != 0 {
 		tr.stats.startTimer()
@@ -108,7 +108,7 @@ func (tr *Transaction) flush() error {
 	return nil
 }
 
-func (tr *Transaction) put(kt keyType, key, value []byte) error { 
+func (tr *Transaction) put(kt keyType, key, value []byte) error {
 	tr.ikScratch = makeInternalKey(tr.ikScratch, key, tr.seq+1, kt)
 	if tr.mem.Free() < len(tr.ikScratch)+len(value) {
 		if err := tr.flush(); err != nil {
@@ -128,7 +128,7 @@ func (tr *Transaction) put(kt keyType, key, value []byte) error {
 // writes 10 same keys, then those 10 same keys are in the transaction.
 //
 // It is safe to modify the contents of the arguments after Put returns.
-func (tr *Transaction) Put(key, value []byte, wo *opt.WriteOptions) error { 
+func (tr *Transaction) Put(key, value []byte, wo *opt.WriteOptions) error {
 	tr.lk.Lock()
 	defer tr.lk.Unlock()
 	if tr.closed {
@@ -142,7 +142,7 @@ func (tr *Transaction) Put(key, value []byte, wo *opt.WriteOptions) error {
 // writes 10 same keys, then those 10 same keys are in the transaction.
 //
 // It is safe to modify the contents of the arguments after Delete returns.
-func (tr *Transaction) Delete(key []byte, wo *opt.WriteOptions) error { 
+func (tr *Transaction) Delete(key []byte, wo *opt.WriteOptions) error {
 	tr.lk.Lock()
 	defer tr.lk.Unlock()
 	if tr.closed {
@@ -157,7 +157,7 @@ func (tr *Transaction) Delete(key []byte, wo *opt.WriteOptions) error {
 // writes 10 same keys, then those 10 same keys are in the transaction.
 //
 // It is safe to modify the contents of the arguments after Write returns.
-func (tr *Transaction) Write(b *Batch, wo *opt.WriteOptions) error { 
+func (tr *Transaction) Write(b *Batch, wo *opt.WriteOptions) error {
 	if b == nil || b.Len() == 0 {
 		return nil
 	}
@@ -172,7 +172,7 @@ func (tr *Transaction) Write(b *Batch, wo *opt.WriteOptions) error {
 	})
 }
 
-func (tr *Transaction) setDone() { 
+func (tr *Transaction) setDone() {
 	tr.closed = true
 	tr.db.tr = nil
 	tr.mem.decref()
@@ -183,7 +183,7 @@ func (tr *Transaction) setDone() {
 // not committed, it can then either be retried or discarded.
 //
 // Other methods should not be called after transaction has been committed.
-func (tr *Transaction) Commit() error { 
+func (tr *Transaction) Commit() error {
 	if err := tr.db.ok(); err != nil {
 		return err
 	}
@@ -244,7 +244,7 @@ func (tr *Transaction) Commit() error {
 	return nil
 }
 
-func (tr *Transaction) discard() { 
+func (tr *Transaction) discard() {
 	// Discard transaction.
 	for _, t := range tr.tables {
 		tr.db.logf("transaction@discard @%d", t.fd.Num)
@@ -257,7 +257,7 @@ func (tr *Transaction) discard() {
 // Discard discards the transaction.
 //
 // Other methods should not be called after transaction has been discarded.
-func (tr *Transaction) Discard() { 
+func (tr *Transaction) Discard() {
 	tr.lk.Lock()
 	if !tr.closed {
 		tr.discard()
@@ -266,7 +266,7 @@ func (tr *Transaction) Discard() {
 	tr.lk.Unlock()
 }
 
-func (db *DB) waitCompaction() error { 
+func (db *DB) waitCompaction() error {
 	if db.s.tLen(0) >= db.s.o.GetWriteL0PauseTrigger() {
 		return db.compTriggerWait(db.tcompCmdC)
 	}
@@ -284,7 +284,7 @@ func (db *DB) waitCompaction() error {
 // The transaction must be closed once done, either by committing or discarding
 // the transaction.
 // Closing the DB will discard open transaction.
-func (db *DB) OpenTransaction() (*Transaction, error) { 
+func (db *DB) OpenTransaction() (*Transaction, error) {
 	if err := db.ok(); err != nil {
 		return nil, err
 	}

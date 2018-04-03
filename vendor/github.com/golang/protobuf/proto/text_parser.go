@@ -53,7 +53,7 @@ type ParseError struct {
 	Offset  int // 0-based byte offset from start of input
 }
 
-func (p *ParseError) Error() string { 
+func (p *ParseError) Error() string {
 	if p.Line == 1 {
 		// show offset only for first line
 		return fmt.Sprintf("line 1.%d: %v", p.Offset, p.Message)
@@ -69,7 +69,7 @@ type token struct {
 	unquoted string // the unquoted version of value, if it was a quoted string
 }
 
-func (t *token) String() string { 
+func (t *token) String() string {
 	if t.err == nil {
 		return fmt.Sprintf("%q (line=%d, offset=%d)", t.value, t.line, t.offset)
 	}
@@ -84,7 +84,7 @@ type textParser struct {
 	cur          token
 }
 
-func newTextParser(s string) *textParser { 
+func newTextParser(s string) *textParser {
 	p := new(textParser)
 	p.s = s
 	p.line = 1
@@ -92,7 +92,7 @@ func newTextParser(s string) *textParser {
 	return p
 }
 
-func (p *textParser) errorf(format string, a ...interface{}) *ParseError { 
+func (p *textParser) errorf(format string, a ...interface{}) *ParseError {
 	pe := &ParseError{fmt.Sprintf(format, a...), p.cur.line, p.cur.offset}
 	p.cur.err = pe
 	p.done = true
@@ -100,7 +100,7 @@ func (p *textParser) errorf(format string, a ...interface{}) *ParseError {
 }
 
 // Numbers and identifiers are matched by [-+._A-Za-z0-9]
-func isIdentOrNumberChar(c byte) bool { 
+func isIdentOrNumberChar(c byte) bool {
 	switch {
 	case 'A' <= c && c <= 'Z', 'a' <= c && c <= 'z':
 		return true
@@ -114,7 +114,7 @@ func isIdentOrNumberChar(c byte) bool {
 	return false
 }
 
-func isWhitespace(c byte) bool { 
+func isWhitespace(c byte) bool {
 	switch c {
 	case ' ', '\t', '\n', '\r':
 		return true
@@ -122,7 +122,7 @@ func isWhitespace(c byte) bool {
 	return false
 }
 
-func isQuote(c byte) bool { 
+func isQuote(c byte) bool {
 	switch c {
 	case '"', '\'':
 		return true
@@ -130,7 +130,7 @@ func isQuote(c byte) bool {
 	return false
 }
 
-func (p *textParser) skipWhitespace() { 
+func (p *textParser) skipWhitespace() {
 	i := 0
 	for i < len(p.s) && (isWhitespace(p.s[i]) || p.s[i] == '#') {
 		if p.s[i] == '#' {
@@ -154,7 +154,7 @@ func (p *textParser) skipWhitespace() {
 	}
 }
 
-func (p *textParser) advance() { 
+func (p *textParser) advance() {
 	// Skip whitespace
 	p.skipWhitespace()
 	if p.done {
@@ -209,7 +209,7 @@ var (
 	errBadHex  = errors.New("proto: bad hexadecimal")
 )
 
-func unquoteC(s string, quote rune) (string, error) { 
+func unquoteC(s string, quote rune) (string, error) {
 	// This is based on C++'s tokenizer.cc.
 	// Despite its name, this is *not* parsing C syntax.
 	// For instance, "\0" is an invalid quoted string.
@@ -252,7 +252,7 @@ func unquoteC(s string, quote rune) (string, error) {
 	return string(buf), nil
 }
 
-func unescape(s string) (ch string, tail string, err error) { 
+func unescape(s string) (ch string, tail string, err error) {
 	r, n := utf8.DecodeRuneInString(s)
 	if r == utf8.RuneError && n == 1 {
 		return "", "", errBadUTF8
@@ -319,7 +319,7 @@ func unescape(s string) (ch string, tail string, err error) {
 }
 
 // Adapted from src/pkg/strconv/quote.go.
-func unhex(b byte) (v byte, ok bool) { 
+func unhex(b byte) (v byte, ok bool) {
 	switch {
 	case '0' <= b && b <= '9':
 		return b - '0', true
@@ -333,10 +333,10 @@ func unhex(b byte) (v byte, ok bool) {
 
 // Back off the parser by one token. Can only be done between calls to next().
 // It makes the next advance() a no-op.
-func (p *textParser) back() {  p.backed = true }
+func (p *textParser) back() { p.backed = true }
 
 // Advances the parser and returns the new current token.
-func (p *textParser) next() *token { 
+func (p *textParser) next() *token {
 	if p.backed || p.done {
 		p.backed = false
 		return &p.cur
@@ -366,7 +366,7 @@ func (p *textParser) next() *token {
 	return &p.cur
 }
 
-func (p *textParser) consumeToken(s string) error { 
+func (p *textParser) consumeToken(s string) error {
 	tok := p.next()
 	if tok.err != nil {
 		return tok.err
@@ -379,7 +379,7 @@ func (p *textParser) consumeToken(s string) error {
 }
 
 // Return a RequiredNotSetError indicating which required field was not set.
-func (p *textParser) missingRequiredFieldError(sv reflect.Value) *RequiredNotSetError { 
+func (p *textParser) missingRequiredFieldError(sv reflect.Value) *RequiredNotSetError {
 	st := sv.Type()
 	sprops := GetProperties(st)
 	for i := 0; i < st.NumField(); i++ {
@@ -396,7 +396,7 @@ func (p *textParser) missingRequiredFieldError(sv reflect.Value) *RequiredNotSet
 }
 
 // Returns the index in the struct for the named field, as well as the parsed tag properties.
-func structFieldByName(sprops *StructProperties, name string) (int, *Properties, bool) { 
+func structFieldByName(sprops *StructProperties, name string) (int, *Properties, bool) {
 	i, ok := sprops.decoderOrigNames[name]
 	if ok {
 		return i, sprops.Prop[i], true
@@ -406,7 +406,7 @@ func structFieldByName(sprops *StructProperties, name string) (int, *Properties,
 
 // Consume a ':' from the input stream (if the next token is a colon),
 // returning an error if a colon is needed but not present.
-func (p *textParser) checkForColon(props *Properties, typ reflect.Type) *ParseError { 
+func (p *textParser) checkForColon(props *Properties, typ reflect.Type) *ParseError {
 	tok := p.next()
 	if tok.err != nil {
 		return tok.err
@@ -446,7 +446,7 @@ func (p *textParser) checkForColon(props *Properties, typ reflect.Type) *ParseEr
 	return nil
 }
 
-func (p *textParser) readStruct(sv reflect.Value, terminator string) error { 
+func (p *textParser) readStruct(sv reflect.Value, terminator string) error {
 	st := sv.Type()
 	sprops := GetProperties(st)
 	reqCount := sprops.reqCount
@@ -705,7 +705,7 @@ func (p *textParser) readStruct(sv reflect.Value, terminator string) error {
 
 // consumeExtName consumes extension name or expanded Any type URL and the
 // following ']'. It returns the name or URL consumed.
-func (p *textParser) consumeExtName() (string, error) { 
+func (p *textParser) consumeExtName() (string, error) {
 	tok := p.next()
 	if tok.err != nil {
 		return "", tok.err
@@ -734,7 +734,7 @@ func (p *textParser) consumeExtName() (string, error) {
 
 // consumeOptionalSeparator consumes an optional semicolon or comma.
 // It is used in readStruct to provide backward compatibility.
-func (p *textParser) consumeOptionalSeparator() error { 
+func (p *textParser) consumeOptionalSeparator() error {
 	tok := p.next()
 	if tok.err != nil {
 		return tok.err
@@ -745,7 +745,7 @@ func (p *textParser) consumeOptionalSeparator() error {
 	return nil
 }
 
-func (p *textParser) readAny(v reflect.Value, props *Properties) error { 
+func (p *textParser) readAny(v reflect.Value, props *Properties) error {
 	tok := p.next()
 	if tok.err != nil {
 		return tok.err
@@ -881,7 +881,7 @@ func (p *textParser) readAny(v reflect.Value, props *Properties) error {
 // before starting to unmarshal, so any existing data in pb is always removed.
 // If a required field is not set and no other error occurs,
 // UnmarshalText returns *RequiredNotSetError.
-func UnmarshalText(s string, pb Message) error { 
+func UnmarshalText(s string, pb Message) error {
 	if um, ok := pb.(encoding.TextUnmarshaler); ok {
 		err := um.UnmarshalText([]byte(s))
 		return err

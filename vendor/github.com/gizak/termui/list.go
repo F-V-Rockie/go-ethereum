@@ -38,7 +38,7 @@ type List struct {
 }
 
 // NewList returns a new *List with current theme.
-func NewList() *List { 
+func NewList() *List {
 	l := &List{Block: *NewBlock()}
 	l.Overflow = "hidden"
 	l.ItemFgColor = ThemeAttr("list.item.fg")
@@ -47,7 +47,7 @@ func NewList() *List {
 }
 
 // Buffer implements Bufferer interface.
-func (l *List) Buffer() Buffer { 
+func (l *List) Buffer() Buffer {
 	buf := l.Block.Buffer()
 
 	switch l.Overflow {

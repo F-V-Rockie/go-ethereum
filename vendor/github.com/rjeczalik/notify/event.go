@@ -34,7 +34,7 @@ const (
 const internal = recursive | omit
 
 // String implements fmt.Stringer interface.
-func (e Event) String() string { 
+func (e Event) String() string {
 	var s []string
 	for _, strmap := range []map[Event]string{estr, osestr} {
 		for ev, str := range strmap {
@@ -119,7 +119,7 @@ var _ fmt.Stringer = (*event)(nil)
 var _ isDirer = (*event)(nil)
 
 // String implements fmt.Stringer interface.
-func (e *event) String() string { 
+func (e *event) String() string {
 	return e.Event().String() + `: "` + e.Path() + `"`
 }
 

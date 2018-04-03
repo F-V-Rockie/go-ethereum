@@ -35,6 +35,7 @@ package whisperv6
 import (
 	"fmt"
 	"time"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // Whisper protocol parameters
@@ -81,7 +82,8 @@ const (
 
 type unknownVersionError uint64
 
-func (e unknownVersionError) Error() string { log.DebugLog()
+func (e unknownVersionError) Error() string {
+	log.DebugLog()
 	return fmt.Sprintf("invalid envelope version %d", uint64(e))
 }
 

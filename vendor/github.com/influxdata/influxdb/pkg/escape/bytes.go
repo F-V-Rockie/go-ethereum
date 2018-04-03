@@ -16,7 +16,7 @@ var Codes = map[byte][]byte{
 }
 
 // Bytes escapes characters on the input slice, as defined by Codes.
-func Bytes(in []byte) []byte { 
+func Bytes(in []byte) []byte {
 	for b, esc := range Codes {
 		in = bytes.Replace(in, []byte{b}, esc, -1)
 	}
@@ -27,7 +27,7 @@ const escapeChars = `," =`
 
 // IsEscaped returns whether b has any escaped characters,
 // i.e. whether b seems to have been processed by Bytes.
-func IsEscaped(b []byte) bool { 
+func IsEscaped(b []byte) bool {
 	for len(b) > 0 {
 		i := bytes.IndexByte(b, '\\')
 		if i < 0 {
@@ -44,7 +44,7 @@ func IsEscaped(b []byte) bool {
 
 // AppendUnescaped appends the unescaped version of src to dst
 // and returns the resulting slice.
-func AppendUnescaped(dst, src []byte) []byte { 
+func AppendUnescaped(dst, src []byte) []byte {
 	var pos int
 	for len(src) > 0 {
 		next := bytes.IndexByte(src[pos:], '\\')
@@ -67,7 +67,7 @@ func AppendUnescaped(dst, src []byte) []byte {
 }
 
 // Unescape returns a new slice containing the unescaped version of in.
-func Unescape(in []byte) []byte { 
+func Unescape(in []byte) []byte {
 	if len(in) == 0 {
 		return nil
 	}

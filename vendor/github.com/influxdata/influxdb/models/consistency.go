@@ -32,7 +32,7 @@ var (
 )
 
 // ParseConsistencyLevel converts a consistency level string to the corresponding ConsistencyLevel const.
-func ParseConsistencyLevel(level string) (ConsistencyLevel, error) { 
+func ParseConsistencyLevel(level string) (ConsistencyLevel, error) {
 	switch strings.ToLower(level) {
 	case "any":
 		return ConsistencyLevelAny, nil

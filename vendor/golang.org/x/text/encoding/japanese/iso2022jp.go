@@ -23,11 +23,11 @@ var iso2022JP = internal.Encoding{
 	identifier.ISO2022JP,
 }
 
-func iso2022JPNewDecoder() transform.Transformer { 
+func iso2022JPNewDecoder() transform.Transformer {
 	return new(iso2022JPDecoder)
 }
 
-func iso2022JPNewEncoder() transform.Transformer { 
+func iso2022JPNewEncoder() transform.Transformer {
 	return new(iso2022JPEncoder)
 }
 
@@ -44,11 +44,11 @@ const asciiEsc = 0x1b
 
 type iso2022JPDecoder int
 
-func (d *iso2022JPDecoder) Reset() { 
+func (d *iso2022JPDecoder) Reset() {
 	*d = asciiState
 }
 
-func (d *iso2022JPDecoder) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) { 
+func (d *iso2022JPDecoder) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) {
 	r, size := rune(0), 0
 loop:
 	for ; nSrc < len(src); nSrc += size {
@@ -142,11 +142,11 @@ loop:
 
 type iso2022JPEncoder int
 
-func (e *iso2022JPEncoder) Reset() { 
+func (e *iso2022JPEncoder) Reset() {
 	*e = asciiState
 }
 
-func (e *iso2022JPEncoder) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) { 
+func (e *iso2022JPEncoder) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) {
 	r, size := rune(0), 0
 	for ; nSrc < len(src); nSrc += size {
 		r = rune(src[nSrc])

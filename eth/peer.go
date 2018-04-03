@@ -28,6 +28,7 @@ import (
 	"github.com/ethereum/go-ethereum/p2p"
 	"github.com/ethereum/go-ethereum/rlp"
 	"gopkg.in/fatih/set.v0"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 var (
@@ -67,7 +68,8 @@ type peer struct {
 	knownBlocks *set.Set // Set of block hashes known to be known by this peer
 }
 
-func newPeer(version int, p *p2p.Peer, rw p2p.MsgReadWriter) *peer { log.DebugLog()
+func newPeer(version int, p *p2p.Peer, rw p2p.MsgReadWriter) *peer {
+	log.DebugLog()
 	id := p.ID()
 
 	return &peer{
@@ -81,7 +83,8 @@ func newPeer(version int, p *p2p.Peer, rw p2p.MsgReadWriter) *peer { log.DebugLo
 }
 
 // Info gathers and returns a collection of metadata known about a peer.
-func (p *peer) Info() *PeerInfo { log.DebugLog()
+func (p *peer) Info() *PeerInfo {
+	log.DebugLog()
 	hash, td := p.Head()
 
 	return &PeerInfo{
@@ -93,7 +96,8 @@ func (p *peer) Info() *PeerInfo { log.DebugLog()
 
 // Head retrieves a copy of the current head hash and total difficulty of the
 // peer.
-func (p *peer) Head() (hash common.Hash, td *big.Int) { log.DebugLog()
+func (p *peer) Head() (hash common.Hash, td *big.Int) {
+	log.DebugLog()
 	p.lock.RLock()
 	defer p.lock.RUnlock()
 
@@ -102,7 +106,8 @@ func (p *peer) Head() (hash common.Hash, td *big.Int) { log.DebugLog()
 }
 
 // SetHead updates the head hash and total difficulty of the peer.
-func (p *peer) SetHead(hash common.Hash, td *big.Int) { log.DebugLog()
+func (p *peer) SetHead(hash common.Hash, td *big.Int) {
+	log.DebugLog()
 	p.lock.Lock()
 	defer p.lock.Unlock()
 
@@ -112,7 +117,8 @@ func (p *peer) SetHead(hash common.Hash, td *big.Int) { log.DebugLog()
 
 // MarkBlock marks a block as known for the peer, ensuring that the block will
 // never be propagated to this particular peer.
-func (p *peer) MarkBlock(hash common.Hash) { log.DebugLog()
+func (p *peer) MarkBlock(hash common.Hash) {
+	log.DebugLog()
 	// If we reached the memory allowance, drop a previously known block hash
 	for p.knownBlocks.Size() >= maxKnownBlocks {
 		p.knownBlocks.Pop()
@@ -122,7 +128,8 @@ func (p *peer) MarkBlock(hash common.Hash) { log.DebugLog()
 
 // MarkTransaction marks a transaction as known for the peer, ensuring that it
 // will never be propagated to this particular peer.
-func (p *peer) MarkTransaction(hash common.Hash) { log.DebugLog()
+func (p *peer) MarkTransaction(hash common.Hash) {
+	log.DebugLog()
 	// If we reached the memory allowance, drop a previously known transaction hash
 	for p.knownTxs.Size() >= maxKnownTxs {
 		p.knownTxs.Pop()
@@ -132,7 +139,8 @@ func (p *peer) MarkTransaction(hash common.Hash) { log.DebugLog()
 
 // SendTransactions sends transactions to the peer and includes the hashes
 // in its transaction hash set for future reference.
-func (p *peer) SendTransactions(txs types.Transactions) error { log.DebugLog()
+func (p *peer) SendTransactions(txs types.Transactions) error {
+	log.DebugLog()
 	for _, tx := range txs {
 		p.knownTxs.Add(tx.Hash())
 	}
@@ -141,7 +149,8 @@ func (p *peer) SendTransactions(txs types.Transactions) error { log.DebugLog()
 
 // SendNewBlockHashes announces the availability of a number of blocks through
 // a hash notification.
-func (p *peer) SendNewBlockHashes(hashes []common.Hash, numbers []uint64) error { log.DebugLog()
+func (p *peer) SendNewBlockHashes(hashes []common.Hash, numbers []uint64) error {
+	log.DebugLog()
 	for _, hash := range hashes {
 		p.knownBlocks.Add(hash)
 	}
@@ -154,83 +163,96 @@ func (p *peer) SendNewBlockHashes(hashes []common.Hash, numbers []uint64) error 
 }
 
 // SendNewBlock propagates an entire block to a remote peer.
-func (p *peer) SendNewBlock(block *types.Block, td *big.Int) error { log.DebugLog()
+func (p *peer) SendNewBlock(block *types.Block, td *big.Int) error {
+	log.DebugLog()
 	p.knownBlocks.Add(block.Hash())
 	return p2p.Send(p.rw, NewBlockMsg, []interface{}{block, td})
 }
 
 // SendBlockHeaders sends a batch of block headers to the remote peer.
-func (p *peer) SendBlockHeaders(headers []*types.Header) error { log.DebugLog()
+func (p *peer) SendBlockHeaders(headers []*types.Header) error {
+	log.DebugLog()
 	return p2p.Send(p.rw, BlockHeadersMsg, headers)
 }
 
 // SendBlockBodies sends a batch of block contents to the remote peer.
-func (p *peer) SendBlockBodies(bodies []*blockBody) error { log.DebugLog()
+func (p *peer) SendBlockBodies(bodies []*blockBody) error {
+	log.DebugLog()
 	return p2p.Send(p.rw, BlockBodiesMsg, blockBodiesData(bodies))
 }
 
 // SendBlockBodiesRLP sends a batch of block contents to the remote peer from
 // an already RLP encoded format.
-func (p *peer) SendBlockBodiesRLP(bodies []rlp.RawValue) error { log.DebugLog()
+func (p *peer) SendBlockBodiesRLP(bodies []rlp.RawValue) error {
+	log.DebugLog()
 	return p2p.Send(p.rw, BlockBodiesMsg, bodies)
 }
 
 // SendNodeDataRLP sends a batch of arbitrary internal data, corresponding to the
 // hashes requested.
-func (p *peer) SendNodeData(data [][]byte) error { log.DebugLog()
+func (p *peer) SendNodeData(data [][]byte) error {
+	log.DebugLog()
 	return p2p.Send(p.rw, NodeDataMsg, data)
 }
 
 // SendReceiptsRLP sends a batch of transaction receipts, corresponding to the
 // ones requested from an already RLP encoded format.
-func (p *peer) SendReceiptsRLP(receipts []rlp.RawValue) error { log.DebugLog()
+func (p *peer) SendReceiptsRLP(receipts []rlp.RawValue) error {
+	log.DebugLog()
 	return p2p.Send(p.rw, ReceiptsMsg, receipts)
 }
 
 // RequestOneHeader is a wrapper around the header query functions to fetch a
 // single header. It is used solely by the fetcher.
-func (p *peer) RequestOneHeader(hash common.Hash) error { log.DebugLog()
+func (p *peer) RequestOneHeader(hash common.Hash) error {
+	log.DebugLog()
 	p.Log().Debug("Fetching single header", "hash", hash)
 	return p2p.Send(p.rw, GetBlockHeadersMsg, &getBlockHeadersData{Origin: hashOrNumber{Hash: hash}, Amount: uint64(1), Skip: uint64(0), Reverse: false})
 }
 
 // RequestHeadersByHash fetches a batch of blocks' headers corresponding to the
 // specified header query, based on the hash of an origin block.
-func (p *peer) RequestHeadersByHash(origin common.Hash, amount int, skip int, reverse bool) error { log.DebugLog()
+func (p *peer) RequestHeadersByHash(origin common.Hash, amount int, skip int, reverse bool) error {
+	log.DebugLog()
 	p.Log().Debug("Fetching batch of headers", "count", amount, "fromhash", origin, "skip", skip, "reverse", reverse)
 	return p2p.Send(p.rw, GetBlockHeadersMsg, &getBlockHeadersData{Origin: hashOrNumber{Hash: origin}, Amount: uint64(amount), Skip: uint64(skip), Reverse: reverse})
 }
 
 // RequestHeadersByNumber fetches a batch of blocks' headers corresponding to the
 // specified header query, based on the number of an origin block.
-func (p *peer) RequestHeadersByNumber(origin uint64, amount int, skip int, reverse bool) error { log.DebugLog()
+func (p *peer) RequestHeadersByNumber(origin uint64, amount int, skip int, reverse bool) error {
+	log.DebugLog()
 	p.Log().Debug("Fetching batch of headers", "count", amount, "fromnum", origin, "skip", skip, "reverse", reverse)
 	return p2p.Send(p.rw, GetBlockHeadersMsg, &getBlockHeadersData{Origin: hashOrNumber{Number: origin}, Amount: uint64(amount), Skip: uint64(skip), Reverse: reverse})
 }
 
 // RequestBodies fetches a batch of blocks' bodies corresponding to the hashes
 // specified.
-func (p *peer) RequestBodies(hashes []common.Hash) error { log.DebugLog()
+func (p *peer) RequestBodies(hashes []common.Hash) error {
+	log.DebugLog()
 	p.Log().Debug("Fetching batch of block bodies", "count", len(hashes))
 	return p2p.Send(p.rw, GetBlockBodiesMsg, hashes)
 }
 
 // RequestNodeData fetches a batch of arbitrary data from a node's known state
 // data, corresponding to the specified hashes.
-func (p *peer) RequestNodeData(hashes []common.Hash) error { log.DebugLog()
+func (p *peer) RequestNodeData(hashes []common.Hash) error {
+	log.DebugLog()
 	p.Log().Debug("Fetching batch of state data", "count", len(hashes))
 	return p2p.Send(p.rw, GetNodeDataMsg, hashes)
 }
 
 // RequestReceipts fetches a batch of transaction receipts from a remote node.
-func (p *peer) RequestReceipts(hashes []common.Hash) error { log.DebugLog()
+func (p *peer) RequestReceipts(hashes []common.Hash) error {
+	log.DebugLog()
 	p.Log().Debug("Fetching batch of receipts", "count", len(hashes))
 	return p2p.Send(p.rw, GetReceiptsMsg, hashes)
 }
 
 // Handshake executes the eth protocol handshake, negotiating version number,
 // network IDs, difficulties, head and genesis blocks.
-func (p *peer) Handshake(network uint64, td *big.Int, head common.Hash, genesis common.Hash) error { log.DebugLog()
+func (p *peer) Handshake(network uint64, td *big.Int, head common.Hash, genesis common.Hash) error {
+	log.DebugLog()
 	// Send out own handshake in a new thread
 	errc := make(chan error, 2)
 	var status statusData // safe to read after two values have been received from errc
@@ -263,7 +285,8 @@ func (p *peer) Handshake(network uint64, td *big.Int, head common.Hash, genesis 
 	return nil
 }
 
-func (p *peer) readStatus(network uint64, status *statusData, genesis common.Hash) (err error) { log.DebugLog()
+func (p *peer) readStatus(network uint64, status *statusData, genesis common.Hash) (err error) {
+	log.DebugLog()
 	msg, err := p.rw.ReadMsg()
 	if err != nil {
 		return err
@@ -291,7 +314,8 @@ func (p *peer) readStatus(network uint64, status *statusData, genesis common.Has
 }
 
 // String implements fmt.Stringer.
-func (p *peer) String() string { log.DebugLog()
+func (p *peer) String() string {
+	log.DebugLog()
 	return fmt.Sprintf("Peer %s [%s]", p.id,
 		fmt.Sprintf("eth/%2d", p.version),
 	)
@@ -306,7 +330,8 @@ type peerSet struct {
 }
 
 // newPeerSet creates a new peer set to track the active participants.
-func newPeerSet() *peerSet { log.DebugLog()
+func newPeerSet() *peerSet {
+	log.DebugLog()
 	return &peerSet{
 		peers: make(map[string]*peer),
 	}
@@ -314,7 +339,8 @@ func newPeerSet() *peerSet { log.DebugLog()
 
 // Register injects a new peer into the working set, or returns an error if the
 // peer is already known.
-func (ps *peerSet) Register(p *peer) error { log.DebugLog()
+func (ps *peerSet) Register(p *peer) error {
+	log.DebugLog()
 	ps.lock.Lock()
 	defer ps.lock.Unlock()
 
@@ -330,7 +356,8 @@ func (ps *peerSet) Register(p *peer) error { log.DebugLog()
 
 // Unregister removes a remote peer from the active set, disabling any further
 // actions to/from that particular entity.
-func (ps *peerSet) Unregister(id string) error { log.DebugLog()
+func (ps *peerSet) Unregister(id string) error {
+	log.DebugLog()
 	ps.lock.Lock()
 	defer ps.lock.Unlock()
 
@@ -342,7 +369,8 @@ func (ps *peerSet) Unregister(id string) error { log.DebugLog()
 }
 
 // Peer retrieves the registered peer with the given id.
-func (ps *peerSet) Peer(id string) *peer { log.DebugLog()
+func (ps *peerSet) Peer(id string) *peer {
+	log.DebugLog()
 	ps.lock.RLock()
 	defer ps.lock.RUnlock()
 
@@ -350,7 +378,8 @@ func (ps *peerSet) Peer(id string) *peer { log.DebugLog()
 }
 
 // Len returns if the current number of peers in the set.
-func (ps *peerSet) Len() int { log.DebugLog()
+func (ps *peerSet) Len() int {
+	log.DebugLog()
 	ps.lock.RLock()
 	defer ps.lock.RUnlock()
 
@@ -359,7 +388,8 @@ func (ps *peerSet) Len() int { log.DebugLog()
 
 // PeersWithoutBlock retrieves a list of peers that do not have a given block in
 // their set of known hashes.
-func (ps *peerSet) PeersWithoutBlock(hash common.Hash) []*peer { log.DebugLog()
+func (ps *peerSet) PeersWithoutBlock(hash common.Hash) []*peer {
+	log.DebugLog()
 	ps.lock.RLock()
 	defer ps.lock.RUnlock()
 
@@ -374,7 +404,8 @@ func (ps *peerSet) PeersWithoutBlock(hash common.Hash) []*peer { log.DebugLog()
 
 // PeersWithoutTx retrieves a list of peers that do not have a given transaction
 // in their set of known hashes.
-func (ps *peerSet) PeersWithoutTx(hash common.Hash) []*peer { log.DebugLog()
+func (ps *peerSet) PeersWithoutTx(hash common.Hash) []*peer {
+	log.DebugLog()
 	ps.lock.RLock()
 	defer ps.lock.RUnlock()
 
@@ -388,7 +419,8 @@ func (ps *peerSet) PeersWithoutTx(hash common.Hash) []*peer { log.DebugLog()
 }
 
 // BestPeer retrieves the known peer with the currently highest total difficulty.
-func (ps *peerSet) BestPeer() *peer { log.DebugLog()
+func (ps *peerSet) BestPeer() *peer {
+	log.DebugLog()
 	ps.lock.RLock()
 	defer ps.lock.RUnlock()
 
@@ -406,7 +438,8 @@ func (ps *peerSet) BestPeer() *peer { log.DebugLog()
 
 // Close disconnects all peers.
 // No new peers can be registered after Close has returned.
-func (ps *peerSet) Close() { log.DebugLog()
+func (ps *peerSet) Close() {
+	log.DebugLog()
 	ps.lock.Lock()
 	defer ps.lock.Unlock()
 

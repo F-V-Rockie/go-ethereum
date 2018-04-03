@@ -26,6 +26,7 @@ import (
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/event"
 	"github.com/ethereum/go-ethereum/rlp"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // Constants to match up protocol versions and messages
@@ -67,7 +68,7 @@ const (
 type errCode int
 
 const (
-	ErrMsgTooLarge = iota
+	ErrMsgTooLarge             = iota
 	ErrDecode
 	ErrInvalidMsgCode
 	ErrProtocolVersionMismatch
@@ -78,7 +79,8 @@ const (
 	ErrSuspendedPeer
 )
 
-func (e errCode) String() string { log.DebugLog()
+func (e errCode) String() string {
+	log.DebugLog()
 	return errorToString[int(e)]
 }
 
@@ -139,7 +141,8 @@ type hashOrNumber struct {
 
 // EncodeRLP is a specialized encoder for hashOrNumber to encode only one of the
 // two contained union fields.
-func (hn *hashOrNumber) EncodeRLP(w io.Writer) error { log.DebugLog()
+func (hn *hashOrNumber) EncodeRLP(w io.Writer) error {
+	log.DebugLog()
 	if hn.Hash == (common.Hash{}) {
 		return rlp.Encode(w, hn.Number)
 	}
@@ -151,7 +154,8 @@ func (hn *hashOrNumber) EncodeRLP(w io.Writer) error { log.DebugLog()
 
 // DecodeRLP is a specialized decoder for hashOrNumber to decode the contents
 // into either a block hash or a block number.
-func (hn *hashOrNumber) DecodeRLP(s *rlp.Stream) error { log.DebugLog()
+func (hn *hashOrNumber) DecodeRLP(s *rlp.Stream) error {
+	log.DebugLog()
 	_, size, _ := s.Kind()
 	origin, err := s.Raw()
 	if err == nil {

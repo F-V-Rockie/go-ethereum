@@ -100,7 +100,7 @@ type ServerConfig struct {
 // AddHostKey adds a private key as a host key. If an existing host
 // key exists with the same algorithm, it is overwritten. Each server
 // config must have at least one host key.
-func (s *ServerConfig) AddHostKey(key Signer) { 
+func (s *ServerConfig) AddHostKey(key Signer) {
 	for i, k := range s.hostKeys {
 		if k.PublicKey().Type() == key.PublicKey().Type() {
 			s.hostKeys[i] = key
@@ -131,7 +131,7 @@ type pubKeyCache struct {
 }
 
 // get returns the result for a given user/algo/key tuple.
-func (c *pubKeyCache) get(user string, pubKeyData []byte) (cachedPubKey, bool) { 
+func (c *pubKeyCache) get(user string, pubKeyData []byte) (cachedPubKey, bool) {
 	for _, k := range c.keys {
 		if k.user == user && bytes.Equal(k.pubKeyData, pubKeyData) {
 			return k, true
@@ -141,7 +141,7 @@ func (c *pubKeyCache) get(user string, pubKeyData []byte) (cachedPubKey, bool) {
 }
 
 // add adds the given tuple to the cache.
-func (c *pubKeyCache) add(candidate cachedPubKey) { 
+func (c *pubKeyCache) add(candidate cachedPubKey) {
 	if len(c.keys) < maxCachedPubKeys {
 		c.keys = append(c.keys, candidate)
 	}
@@ -162,7 +162,7 @@ type ServerConn struct {
 // unsuccessful, it closes the connection and returns an error.  The
 // Request and NewChannel channels must be serviced, or the connection
 // will hang.
-func NewServerConn(c net.Conn, config *ServerConfig) (*ServerConn, <-chan NewChannel, <-chan *Request, error) { 
+func NewServerConn(c net.Conn, config *ServerConfig) (*ServerConn, <-chan NewChannel, <-chan *Request, error) {
 	fullConf := *config
 	fullConf.SetDefaults()
 	if fullConf.MaxAuthTries == 0 {
@@ -182,7 +182,7 @@ func NewServerConn(c net.Conn, config *ServerConfig) (*ServerConn, <-chan NewCha
 
 // signAndMarshal signs the data with the appropriate algorithm,
 // and serializes the result in SSH wire format.
-func signAndMarshal(k Signer, rand io.Reader, data []byte) ([]byte, error) { 
+func signAndMarshal(k Signer, rand io.Reader, data []byte) ([]byte, error) {
 	sig, err := k.Sign(rand, data)
 	if err != nil {
 		return nil, err
@@ -192,7 +192,7 @@ func signAndMarshal(k Signer, rand io.Reader, data []byte) ([]byte, error) {
 }
 
 // handshake performs key exchange and user authentication.
-func (s *connection) serverHandshake(config *ServerConfig) (*Permissions, error) { 
+func (s *connection) serverHandshake(config *ServerConfig) (*Permissions, error) {
 	if len(config.hostKeys) == 0 {
 		return nil, errors.New("ssh: server has no host keys")
 	}
@@ -249,7 +249,7 @@ func (s *connection) serverHandshake(config *ServerConfig) (*Permissions, error)
 	return perms, err
 }
 
-func isAcceptableAlgo(algo string) bool { 
+func isAcceptableAlgo(algo string) bool {
 	switch algo {
 	case KeyAlgoRSA, KeyAlgoDSA, KeyAlgoECDSA256, KeyAlgoECDSA384, KeyAlgoECDSA521, KeyAlgoED25519,
 		CertAlgoRSAv01, CertAlgoDSAv01, CertAlgoECDSA256v01, CertAlgoECDSA384v01, CertAlgoECDSA521v01:
@@ -258,7 +258,7 @@ func isAcceptableAlgo(algo string) bool {
 	return false
 }
 
-func checkSourceAddress(addr net.Addr, sourceAddrs string) error { 
+func checkSourceAddress(addr net.Addr, sourceAddrs string) error {
 	if addr == nil {
 		return errors.New("ssh: no address known for client, but source-address match required")
 	}
@@ -297,7 +297,7 @@ type ServerAuthError struct {
 	Errors []error
 }
 
-func (l ServerAuthError) Error() string { 
+func (l ServerAuthError) Error() string {
 	var errs []string
 	for _, err := range l.Errors {
 		errs = append(errs, err.Error())
@@ -305,7 +305,7 @@ func (l ServerAuthError) Error() string {
 	return "[" + strings.Join(errs, ", ") + "]"
 }
 
-func (s *connection) serverAuthenticate(config *ServerConfig) (*Permissions, error) { 
+func (s *connection) serverAuthenticate(config *ServerConfig) (*Permissions, error) {
 	sessionID := s.transport.getSessionID()
 	var cache pubKeyCache
 	var perms *Permissions
@@ -513,7 +513,7 @@ type sshClientKeyboardInteractive struct {
 	*connection
 }
 
-func (c *sshClientKeyboardInteractive) Challenge(user, instruction string, questions []string, echos []bool) (answers []string, err error) { 
+func (c *sshClientKeyboardInteractive) Challenge(user, instruction string, questions []string, echos []bool) (answers []string, err error) {
 	if len(questions) != len(echos) {
 		return nil, errors.New("ssh: echos and questions must have equal length")
 	}

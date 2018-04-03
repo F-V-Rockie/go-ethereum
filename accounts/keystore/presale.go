@@ -29,10 +29,12 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/pborman/uuid"
 	"golang.org/x/crypto/pbkdf2"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // creates a Key and stores that in the given KeyStore by decrypting a presale key JSON
-func importPreSaleKey(keyStore keyStore, keyJSON []byte, password string) (accounts.Account, *Key, error) { log.DebugLog()
+func importPreSaleKey(keyStore keyStore, keyJSON []byte, password string) (accounts.Account, *Key, error) {
+	log.DebugLog()
 	key, err := decryptPreSaleKey(keyJSON, password)
 	if err != nil {
 		return accounts.Account{}, nil, err
@@ -43,7 +45,8 @@ func importPreSaleKey(keyStore keyStore, keyJSON []byte, password string) (accou
 	return a, key, err
 }
 
-func decryptPreSaleKey(fileContent []byte, password string) (key *Key, err error) { log.DebugLog()
+func decryptPreSaleKey(fileContent []byte, password string) (key *Key, err error) {
+	log.DebugLog()
 	preSaleKeyStruct := struct {
 		EncSeed string
 		EthAddr string
@@ -92,7 +95,8 @@ func decryptPreSaleKey(fileContent []byte, password string) (key *Key, err error
 	return key, err
 }
 
-func aesCTRXOR(key, inText, iv []byte) ([]byte, error) { log.DebugLog()
+func aesCTRXOR(key, inText, iv []byte) ([]byte, error) {
+	log.DebugLog()
 	// AES-128 is selected due to size of encryptKey.
 	aesBlock, err := aes.NewCipher(key)
 	if err != nil {
@@ -104,7 +108,8 @@ func aesCTRXOR(key, inText, iv []byte) ([]byte, error) { log.DebugLog()
 	return outText, err
 }
 
-func aesCBCDecrypt(key, cipherText, iv []byte) ([]byte, error) { log.DebugLog()
+func aesCBCDecrypt(key, cipherText, iv []byte) ([]byte, error) {
+	log.DebugLog()
 	aesBlock, err := aes.NewCipher(key)
 	if err != nil {
 		return nil, err
@@ -120,7 +125,8 @@ func aesCBCDecrypt(key, cipherText, iv []byte) ([]byte, error) { log.DebugLog()
 }
 
 // From https://leanpub.com/gocrypto/read#leanpub-auto-block-cipher-modes
-func pkcs7Unpad(in []byte) []byte { log.DebugLog()
+func pkcs7Unpad(in []byte) []byte {
+	log.DebugLog()
 	if len(in) == 0 {
 		return nil
 	}

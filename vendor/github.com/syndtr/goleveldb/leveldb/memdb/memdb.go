@@ -35,7 +35,7 @@ type dbIter struct {
 	err        error
 }
 
-func (i *dbIter) fill(checkStart, checkLimit bool) bool { 
+func (i *dbIter) fill(checkStart, checkLimit bool) bool {
 	if i.node != 0 {
 		n := i.p.nodeData[i.node]
 		m := n + i.p.nodeData[i.node+nKey]
@@ -58,11 +58,11 @@ bail:
 	return false
 }
 
-func (i *dbIter) Valid() bool { 
+func (i *dbIter) Valid() bool {
 	return i.node != 0
 }
 
-func (i *dbIter) First() bool { 
+func (i *dbIter) First() bool {
 	if i.Released() {
 		i.err = ErrIterReleased
 		return false
@@ -79,7 +79,7 @@ func (i *dbIter) First() bool {
 	return i.fill(false, true)
 }
 
-func (i *dbIter) Last() bool { 
+func (i *dbIter) Last() bool {
 	if i.Released() {
 		i.err = ErrIterReleased
 		return false
@@ -96,7 +96,7 @@ func (i *dbIter) Last() bool {
 	return i.fill(true, false)
 }
 
-func (i *dbIter) Seek(key []byte) bool { 
+func (i *dbIter) Seek(key []byte) bool {
 	if i.Released() {
 		i.err = ErrIterReleased
 		return false
@@ -112,7 +112,7 @@ func (i *dbIter) Seek(key []byte) bool {
 	return i.fill(false, true)
 }
 
-func (i *dbIter) Next() bool { 
+func (i *dbIter) Next() bool {
 	if i.Released() {
 		i.err = ErrIterReleased
 		return false
@@ -131,7 +131,7 @@ func (i *dbIter) Next() bool {
 	return i.fill(false, true)
 }
 
-func (i *dbIter) Prev() bool { 
+func (i *dbIter) Prev() bool {
 	if i.Released() {
 		i.err = ErrIterReleased
 		return false
@@ -150,17 +150,17 @@ func (i *dbIter) Prev() bool {
 	return i.fill(true, false)
 }
 
-func (i *dbIter) Key() []byte { 
+func (i *dbIter) Key() []byte {
 	return i.key
 }
 
-func (i *dbIter) Value() []byte { 
+func (i *dbIter) Value() []byte {
 	return i.value
 }
 
-func (i *dbIter) Error() error {  return i.err }
+func (i *dbIter) Error() error { return i.err }
 
-func (i *dbIter) Release() { 
+func (i *dbIter) Release() {
 	if !i.Released() {
 		i.p = nil
 		i.node = 0
@@ -198,7 +198,7 @@ type DB struct {
 	kvSize    int
 }
 
-func (p *DB) randHeight() (h int) { 
+func (p *DB) randHeight() (h int) {
 	const branching = 4
 	h = 1
 	for h < tMaxHeight && p.rnd.Int()%branching == 0 {
@@ -208,7 +208,7 @@ func (p *DB) randHeight() (h int) {
 }
 
 // Must hold RW-lock if prev == true, as it use shared prevNode slice.
-func (p *DB) findGE(key []byte, prev bool) (int, bool) { 
+func (p *DB) findGE(key []byte, prev bool) (int, bool) {
 	node := 0
 	h := p.maxHeight - 1
 	for {
@@ -235,7 +235,7 @@ func (p *DB) findGE(key []byte, prev bool) (int, bool) {
 	}
 }
 
-func (p *DB) findLT(key []byte) int { 
+func (p *DB) findLT(key []byte) int {
 	node := 0
 	h := p.maxHeight - 1
 	for {
@@ -253,7 +253,7 @@ func (p *DB) findLT(key []byte) int {
 	return node
 }
 
-func (p *DB) findLast() int { 
+func (p *DB) findLast() int {
 	node := 0
 	h := p.maxHeight - 1
 	for {
@@ -274,7 +274,7 @@ func (p *DB) findLast() int {
 // for that key; a DB is not a multi-map.
 //
 // It is safe to modify the contents of the arguments after Put returns.
-func (p *DB) Put(key []byte, value []byte) error { 
+func (p *DB) Put(key []byte, value []byte) error {
 	p.mu.Lock()
 	defer p.mu.Unlock()
 
@@ -318,7 +318,7 @@ func (p *DB) Put(key []byte, value []byte) error {
 // the DB does not contain the key.
 //
 // It is safe to modify the contents of the arguments after Delete returns.
-func (p *DB) Delete(key []byte) error { 
+func (p *DB) Delete(key []byte) error {
 	p.mu.Lock()
 	defer p.mu.Unlock()
 
@@ -341,7 +341,7 @@ func (p *DB) Delete(key []byte) error {
 // Contains returns true if the given key are in the DB.
 //
 // It is safe to modify the contents of the arguments after Contains returns.
-func (p *DB) Contains(key []byte) bool { 
+func (p *DB) Contains(key []byte) bool {
 	p.mu.RLock()
 	_, exact := p.findGE(key, false)
 	p.mu.RUnlock()
@@ -353,7 +353,7 @@ func (p *DB) Contains(key []byte) bool {
 //
 // The caller should not modify the contents of the returned slice, but
 // it is safe to modify the contents of the argument after Get returns.
-func (p *DB) Get(key []byte) (value []byte, err error) { 
+func (p *DB) Get(key []byte) (value []byte, err error) {
 	p.mu.RLock()
 	if node, exact := p.findGE(key, false); exact {
 		o := p.nodeData[node] + p.nodeData[node+nKey]
@@ -371,7 +371,7 @@ func (p *DB) Get(key []byte) (value []byte, err error) {
 //
 // The caller should not modify the contents of the returned slice, but
 // it is safe to modify the contents of the argument after Find returns.
-func (p *DB) Find(key []byte) (rkey, value []byte, err error) { 
+func (p *DB) Find(key []byte) (rkey, value []byte, err error) {
 	p.mu.RLock()
 	if node, _ := p.findGE(key, false); node != 0 {
 		n := p.nodeData[node]
@@ -400,12 +400,12 @@ func (p *DB) Find(key []byte) (rkey, value []byte, err error) {
 // The iterator must be released after use, by calling Release method.
 //
 // Also read Iterator documentation of the leveldb/iterator package.
-func (p *DB) NewIterator(slice *util.Range) iterator.Iterator { 
+func (p *DB) NewIterator(slice *util.Range) iterator.Iterator {
 	return &dbIter{p: p, slice: slice}
 }
 
 // Capacity returns keys/values buffer capacity.
-func (p *DB) Capacity() int { 
+func (p *DB) Capacity() int {
 	p.mu.RLock()
 	defer p.mu.RUnlock()
 	return cap(p.kvData)
@@ -414,28 +414,28 @@ func (p *DB) Capacity() int {
 // Size returns sum of keys and values length. Note that deleted
 // key/value will not be accounted for, but it will still consume
 // the buffer, since the buffer is append only.
-func (p *DB) Size() int { 
+func (p *DB) Size() int {
 	p.mu.RLock()
 	defer p.mu.RUnlock()
 	return p.kvSize
 }
 
 // Free returns keys/values free buffer before need to grow.
-func (p *DB) Free() int { 
+func (p *DB) Free() int {
 	p.mu.RLock()
 	defer p.mu.RUnlock()
 	return cap(p.kvData) - len(p.kvData)
 }
 
 // Len returns the number of entries in the DB.
-func (p *DB) Len() int { 
+func (p *DB) Len() int {
 	p.mu.RLock()
 	defer p.mu.RUnlock()
 	return p.n
 }
 
 // Reset resets the DB to initial empty state. Allows reuse the buffer.
-func (p *DB) Reset() { 
+func (p *DB) Reset() {
 	p.mu.Lock()
 	p.rnd = rand.New(rand.NewSource(0xdeadbeef))
 	p.maxHeight = 1
@@ -462,7 +462,7 @@ func (p *DB) Reset() {
 // reclaim KV buffer.
 //
 // The returned DB instance is safe for concurrent use.
-func New(cmp comparer.BasicComparer, capacity int) *DB { 
+func New(cmp comparer.BasicComparer, capacity int) *DB {
 	p := &DB{
 		cmp:       cmp,
 		rnd:       rand.New(rand.NewSource(0xdeadbeef)),

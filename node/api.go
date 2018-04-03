@@ -28,6 +28,7 @@ import (
 	"github.com/ethereum/go-ethereum/p2p"
 	"github.com/ethereum/go-ethereum/p2p/discover"
 	"github.com/ethereum/go-ethereum/rpc"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // PrivateAdminAPI is the collection of administrative API methods exposed only
@@ -38,13 +39,15 @@ type PrivateAdminAPI struct {
 
 // NewPrivateAdminAPI creates a new API definition for the private admin methods
 // of the node itself.
-func NewPrivateAdminAPI(node *Node) *PrivateAdminAPI { log.DebugLog()
+func NewPrivateAdminAPI(node *Node) *PrivateAdminAPI {
+	log.DebugLog()
 	return &PrivateAdminAPI{node: node}
 }
 
 // AddPeer requests connecting to a remote node, and also maintaining the new
 // connection at all times, even reconnecting if it is lost.
-func (api *PrivateAdminAPI) AddPeer(url string) (bool, error) { log.DebugLog()
+func (api *PrivateAdminAPI) AddPeer(url string) (bool, error) {
+	log.DebugLog()
 	// Make sure the server is running, fail otherwise
 	server := api.node.Server()
 	if server == nil {
@@ -60,7 +63,8 @@ func (api *PrivateAdminAPI) AddPeer(url string) (bool, error) { log.DebugLog()
 }
 
 // RemovePeer disconnects from a a remote node if the connection exists
-func (api *PrivateAdminAPI) RemovePeer(url string) (bool, error) { log.DebugLog()
+func (api *PrivateAdminAPI) RemovePeer(url string) (bool, error) {
+	log.DebugLog()
 	// Make sure the server is running, fail otherwise
 	server := api.node.Server()
 	if server == nil {
@@ -77,7 +81,8 @@ func (api *PrivateAdminAPI) RemovePeer(url string) (bool, error) { log.DebugLog(
 
 // PeerEvents creates an RPC subscription which receives peer events from the
 // node's p2p.Server
-func (api *PrivateAdminAPI) PeerEvents(ctx context.Context) (*rpc.Subscription, error) { log.DebugLog()
+func (api *PrivateAdminAPI) PeerEvents(ctx context.Context) (*rpc.Subscription, error) {
+	log.DebugLog()
 	// Make sure the server is running, fail otherwise
 	server := api.node.Server()
 	if server == nil {
@@ -114,7 +119,8 @@ func (api *PrivateAdminAPI) PeerEvents(ctx context.Context) (*rpc.Subscription, 
 }
 
 // StartRPC starts the HTTP RPC API server.
-func (api *PrivateAdminAPI) StartRPC(host *string, port *int, cors *string, apis *string, vhosts *string) (bool, error) { log.DebugLog()
+func (api *PrivateAdminAPI) StartRPC(host *string, port *int, cors *string, apis *string, vhosts *string) (bool, error) {
+	log.DebugLog()
 	api.node.lock.Lock()
 	defer api.node.lock.Unlock()
 
@@ -164,7 +170,8 @@ func (api *PrivateAdminAPI) StartRPC(host *string, port *int, cors *string, apis
 }
 
 // StopRPC terminates an already running HTTP RPC API endpoint.
-func (api *PrivateAdminAPI) StopRPC() (bool, error) { log.DebugLog()
+func (api *PrivateAdminAPI) StopRPC() (bool, error) {
+	log.DebugLog()
 	api.node.lock.Lock()
 	defer api.node.lock.Unlock()
 
@@ -176,7 +183,8 @@ func (api *PrivateAdminAPI) StopRPC() (bool, error) { log.DebugLog()
 }
 
 // StartWS starts the websocket RPC API server.
-func (api *PrivateAdminAPI) StartWS(host *string, port *int, allowedOrigins *string, apis *string) (bool, error) { log.DebugLog()
+func (api *PrivateAdminAPI) StartWS(host *string, port *int, allowedOrigins *string, apis *string) (bool, error) {
+	log.DebugLog()
 	api.node.lock.Lock()
 	defer api.node.lock.Unlock()
 
@@ -218,7 +226,8 @@ func (api *PrivateAdminAPI) StartWS(host *string, port *int, allowedOrigins *str
 }
 
 // StopRPC terminates an already running websocket RPC API endpoint.
-func (api *PrivateAdminAPI) StopWS() (bool, error) { log.DebugLog()
+func (api *PrivateAdminAPI) StopWS() (bool, error) {
+	log.DebugLog()
 	api.node.lock.Lock()
 	defer api.node.lock.Unlock()
 
@@ -237,13 +246,15 @@ type PublicAdminAPI struct {
 
 // NewPublicAdminAPI creates a new API definition for the public admin methods
 // of the node itself.
-func NewPublicAdminAPI(node *Node) *PublicAdminAPI { log.DebugLog()
+func NewPublicAdminAPI(node *Node) *PublicAdminAPI {
+	log.DebugLog()
 	return &PublicAdminAPI{node: node}
 }
 
 // Peers retrieves all the information we know about each individual peer at the
 // protocol granularity.
-func (api *PublicAdminAPI) Peers() ([]*p2p.PeerInfo, error) { log.DebugLog()
+func (api *PublicAdminAPI) Peers() ([]*p2p.PeerInfo, error) {
+	log.DebugLog()
 	server := api.node.Server()
 	if server == nil {
 		return nil, ErrNodeStopped
@@ -253,7 +264,8 @@ func (api *PublicAdminAPI) Peers() ([]*p2p.PeerInfo, error) { log.DebugLog()
 
 // NodeInfo retrieves all the information we know about the host node at the
 // protocol granularity.
-func (api *PublicAdminAPI) NodeInfo() (*p2p.NodeInfo, error) { log.DebugLog()
+func (api *PublicAdminAPI) NodeInfo() (*p2p.NodeInfo, error) {
+	log.DebugLog()
 	server := api.node.Server()
 	if server == nil {
 		return nil, ErrNodeStopped
@@ -262,7 +274,8 @@ func (api *PublicAdminAPI) NodeInfo() (*p2p.NodeInfo, error) { log.DebugLog()
 }
 
 // Datadir retrieves the current data directory the node is using.
-func (api *PublicAdminAPI) Datadir() string { log.DebugLog()
+func (api *PublicAdminAPI) Datadir() string {
+	log.DebugLog()
 	return api.node.DataDir()
 }
 
@@ -274,12 +287,14 @@ type PublicDebugAPI struct {
 
 // NewPublicDebugAPI creates a new API definition for the public debug methods
 // of the node itself.
-func NewPublicDebugAPI(node *Node) *PublicDebugAPI { log.DebugLog()
+func NewPublicDebugAPI(node *Node) *PublicDebugAPI {
+	log.DebugLog()
 	return &PublicDebugAPI{node: node}
 }
 
 // Metrics retrieves all the known system metric collected by the node.
-func (api *PublicDebugAPI) Metrics(raw bool) (map[string]interface{}, error) { log.DebugLog()
+func (api *PublicDebugAPI) Metrics(raw bool) (map[string]interface{}, error) {
+	log.DebugLog()
 	// Create a rate formatter
 	units := []string{"", "K", "M", "G", "T", "E", "P"}
 	round := func(value float64, prec int) string {
@@ -387,17 +402,20 @@ type PublicWeb3API struct {
 }
 
 // NewPublicWeb3API creates a new Web3Service instance
-func NewPublicWeb3API(stack *Node) *PublicWeb3API { log.DebugLog()
+func NewPublicWeb3API(stack *Node) *PublicWeb3API {
+	log.DebugLog()
 	return &PublicWeb3API{stack}
 }
 
 // ClientVersion returns the node name
-func (s *PublicWeb3API) ClientVersion() string { log.DebugLog()
+func (s *PublicWeb3API) ClientVersion() string {
+	log.DebugLog()
 	return s.stack.Server().Name
 }
 
 // Sha3 applies the ethereum sha3 implementation on the input.
 // It assumes the input is hex encoded.
-func (s *PublicWeb3API) Sha3(input hexutil.Bytes) hexutil.Bytes { log.DebugLog()
+func (s *PublicWeb3API) Sha3(input hexutil.Bytes) hexutil.Bytes {
+	log.DebugLog()
 	return crypto.Keccak256(input)
 }

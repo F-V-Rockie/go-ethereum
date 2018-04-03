@@ -39,7 +39,7 @@ type CompressionConfig struct {
 	Level int
 }
 
-func (c *Compressed) parse(r io.Reader) error { 
+func (c *Compressed) parse(r io.Reader) error {
 	var buf [1]byte
 	_, err := readFull(r, buf[:])
 	if err != nil {
@@ -69,11 +69,11 @@ type compressedWriteCloser struct {
 	c  io.WriteCloser // Compressor
 }
 
-func (cwc compressedWriteCloser) Write(p []byte) (int, error) { 
+func (cwc compressedWriteCloser) Write(p []byte) (int, error) {
 	return cwc.c.Write(p)
 }
 
-func (cwc compressedWriteCloser) Close() (err error) { 
+func (cwc compressedWriteCloser) Close() (err error) {
 	err = cwc.c.Close()
 	if err != nil {
 		return err
@@ -87,7 +87,7 @@ func (cwc compressedWriteCloser) Close() (err error) {
 // can be written and which MUST be closed on completion. If cc is
 // nil, sensible defaults will be used to configure the compression
 // algorithm.
-func SerializeCompressed(w io.WriteCloser, algo CompressionAlgo, cc *CompressionConfig) (literaldata io.WriteCloser, err error) { 
+func SerializeCompressed(w io.WriteCloser, algo CompressionAlgo, cc *CompressionConfig) (literaldata io.WriteCloser, err error) {
 	compressed, err := serializeStreamHeader(w, packetTypeCompressed)
 	if err != nil {
 		return

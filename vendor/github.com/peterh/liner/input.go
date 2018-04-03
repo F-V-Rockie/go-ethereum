@@ -31,7 +31,7 @@ type State struct {
 
 // NewLiner initializes a new *State, and sets the terminal into raw mode. To
 // restore the terminal to its previous state, call State.Close().
-func NewLiner() *State { 
+func NewLiner() *State {
 	var s State
 	s.r = bufio.NewReader(os.Stdin)
 
@@ -70,7 +70,7 @@ func NewLiner() *State {
 
 var errTimedOut = errors.New("timeout")
 
-func (s *State) startPrompt() { 
+func (s *State) startPrompt() {
 	if s.terminalSupported {
 		if m, err := TerminalMode(); err == nil {
 			s.defaultMode = *m.(*termios)
@@ -82,11 +82,11 @@ func (s *State) startPrompt() {
 	s.restartPrompt()
 }
 
-func (s *State) inputWaiting() bool { 
+func (s *State) inputWaiting() bool {
 	return len(s.next) > 0
 }
 
-func (s *State) restartPrompt() { 
+func (s *State) restartPrompt() {
 	next := make(chan nexter, 200)
 	go func() {
 		for {
@@ -103,13 +103,13 @@ func (s *State) restartPrompt() {
 	s.next = next
 }
 
-func (s *State) stopPrompt() { 
+func (s *State) stopPrompt() {
 	if s.terminalSupported {
 		s.defaultMode.ApplyMode()
 	}
 }
 
-func (s *State) nextPending(timeout <-chan time.Time) (rune, error) { 
+func (s *State) nextPending(timeout <-chan time.Time) (rune, error) {
 	select {
 	case thing, ok := <-s.next:
 		if !ok {
@@ -127,7 +127,7 @@ func (s *State) nextPending(timeout <-chan time.Time) (rune, error) {
 	}
 }
 
-func (s *State) readNext() (interface{}, error) { 
+func (s *State) readNext() (interface{}, error) {
 	if len(s.pending) > 0 {
 		rv := s.pending[0]
 		s.pending = s.pending[1:]
@@ -345,7 +345,7 @@ func (s *State) readNext() (interface{}, error) {
 }
 
 // Close returns the terminal to its previous mode
-func (s *State) Close() error { 
+func (s *State) Close() error {
 	signal.Stop(s.winch)
 	if !s.inputRedirected {
 		s.origMode.ApplyMode()
@@ -358,7 +358,7 @@ func (s *State) Close() error {
 // fallback for input.
 // Note that TerminalSupported does not check all factors that may
 // cause liner to not fully support the terminal (such as stdin redirection)
-func TerminalSupported() bool { 
+func TerminalSupported() bool {
 	bad := map[string]bool{"": true, "dumb": true, "cons25": true}
 	return !bad[strings.ToLower(os.Getenv("TERM"))]
 }

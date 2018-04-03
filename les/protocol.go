@@ -31,6 +31,7 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/crypto/secp256k1"
 	"github.com/ethereum/go-ethereum/rlp"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // Constants to match up protocol versions and messages
@@ -85,7 +86,7 @@ const (
 type errCode int
 
 const (
-	ErrMsgTooLarge = iota
+	ErrMsgTooLarge             = iota
 	ErrDecode
 	ErrInvalidMsgCode
 	ErrProtocolVersionMismatch
@@ -102,7 +103,8 @@ const (
 	ErrMissingKey
 )
 
-func (e errCode) String() string { log.DebugLog()
+func (e errCode) String() string {
+	log.DebugLog()
 	return errorToString[int(e)]
 }
 
@@ -140,14 +142,16 @@ type announceData struct {
 }
 
 // sign adds a signature to the block announcement by the given privKey
-func (a *announceData) sign(privKey *ecdsa.PrivateKey) { log.DebugLog()
+func (a *announceData) sign(privKey *ecdsa.PrivateKey) {
+	log.DebugLog()
 	rlp, _ := rlp.EncodeToBytes(announceBlock{a.Hash, a.Number, a.Td})
 	sig, _ := crypto.Sign(crypto.Keccak256(rlp), privKey)
 	a.Update = a.Update.add("sign", sig)
 }
 
 // checkSignature verifies if the block announcement has a valid signature by the given pubKey
-func (a *announceData) checkSignature(pubKey *ecdsa.PublicKey) error { log.DebugLog()
+func (a *announceData) checkSignature(pubKey *ecdsa.PublicKey) error {
+	log.DebugLog()
 	var sig []byte
 	if err := a.Update.decode().get("sign", &sig); err != nil {
 		return err
@@ -187,7 +191,8 @@ type hashOrNumber struct {
 
 // EncodeRLP is a specialized encoder for hashOrNumber to encode only one of the
 // two contained union fields.
-func (hn *hashOrNumber) EncodeRLP(w io.Writer) error { log.DebugLog()
+func (hn *hashOrNumber) EncodeRLP(w io.Writer) error {
+	log.DebugLog()
 	if hn.Hash == (common.Hash{}) {
 		return rlp.Encode(w, hn.Number)
 	}
@@ -199,7 +204,8 @@ func (hn *hashOrNumber) EncodeRLP(w io.Writer) error { log.DebugLog()
 
 // DecodeRLP is a specialized decoder for hashOrNumber to decode the contents
 // into either a block hash or a block number.
-func (hn *hashOrNumber) DecodeRLP(s *rlp.Stream) error { log.DebugLog()
+func (hn *hashOrNumber) DecodeRLP(s *rlp.Stream) error {
+	log.DebugLog()
 	_, size, _ := s.Kind()
 	origin, err := s.Raw()
 	if err == nil {

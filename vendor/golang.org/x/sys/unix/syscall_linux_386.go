@@ -364,9 +364,9 @@ func Statfs(path string, buf *Statfs_t) (err error) {
 	return
 }
 
-func (r *PtraceRegs) PC() uint64 {  return uint64(uint32(r.Eip)) }
+func (r *PtraceRegs) PC() uint64 { return uint64(uint32(r.Eip)) }
 
-func (r *PtraceRegs) SetPC(pc uint64) {  r.Eip = int32(pc) }
+func (r *PtraceRegs) SetPC(pc uint64) { r.Eip = int32(pc) }
 
 func (iov *Iovec) SetLen(length int) {
 	iov.Len = uint32(length)

@@ -3,7 +3,10 @@
 
 package metrics
 
-import "runtime"
+import (
+	"runtime"
+	"github.com/ethereum/go-ethereum/log"
+)
 
 func numCgoCall() int64 { log.DebugLog()
 	return runtime.NumCgoCall()

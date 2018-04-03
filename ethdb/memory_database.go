@@ -21,6 +21,7 @@ import (
 	"sync"
 
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 /*
@@ -31,19 +32,22 @@ type MemDatabase struct {
 	lock sync.RWMutex
 }
 
-func NewMemDatabase() (*MemDatabase, error) { log.DebugLog()
+func NewMemDatabase() (*MemDatabase, error) {
+	log.DebugLog()
 	return &MemDatabase{
 		db: make(map[string][]byte),
 	}, nil
 }
 
-func NewMemDatabaseWithCap(size int) (*MemDatabase, error) { log.DebugLog()
+func NewMemDatabaseWithCap(size int) (*MemDatabase, error) {
+	log.DebugLog()
 	return &MemDatabase{
 		db: make(map[string][]byte, size),
 	}, nil
 }
 
-func (db *MemDatabase) Put(key []byte, value []byte) error { log.DebugLog()
+func (db *MemDatabase) Put(key []byte, value []byte) error {
+	log.DebugLog()
 	db.lock.Lock()
 	defer db.lock.Unlock()
 
@@ -51,7 +55,8 @@ func (db *MemDatabase) Put(key []byte, value []byte) error { log.DebugLog()
 	return nil
 }
 
-func (db *MemDatabase) Has(key []byte) (bool, error) { log.DebugLog()
+func (db *MemDatabase) Has(key []byte) (bool, error) {
+	log.DebugLog()
 	db.lock.RLock()
 	defer db.lock.RUnlock()
 
@@ -59,7 +64,8 @@ func (db *MemDatabase) Has(key []byte) (bool, error) { log.DebugLog()
 	return ok, nil
 }
 
-func (db *MemDatabase) Get(key []byte) ([]byte, error) { log.DebugLog()
+func (db *MemDatabase) Get(key []byte) ([]byte, error) {
+	log.DebugLog()
 	db.lock.RLock()
 	defer db.lock.RUnlock()
 
@@ -69,7 +75,8 @@ func (db *MemDatabase) Get(key []byte) ([]byte, error) { log.DebugLog()
 	return nil, errors.New("not found")
 }
 
-func (db *MemDatabase) Keys() [][]byte { log.DebugLog()
+func (db *MemDatabase) Keys() [][]byte {
+	log.DebugLog()
 	db.lock.RLock()
 	defer db.lock.RUnlock()
 
@@ -80,7 +87,8 @@ func (db *MemDatabase) Keys() [][]byte { log.DebugLog()
 	return keys
 }
 
-func (db *MemDatabase) Delete(key []byte) error { log.DebugLog()
+func (db *MemDatabase) Delete(key []byte) error {
+	log.DebugLog()
 	db.lock.Lock()
 	defer db.lock.Unlock()
 
@@ -88,13 +96,15 @@ func (db *MemDatabase) Delete(key []byte) error { log.DebugLog()
 	return nil
 }
 
-func (db *MemDatabase) Close() { log.DebugLog()}
+func (db *MemDatabase) Close() { log.DebugLog() }
 
-func (db *MemDatabase) NewBatch() Batch { log.DebugLog()
+func (db *MemDatabase) NewBatch() Batch {
+	log.DebugLog()
 	return &memBatch{db: db}
 }
 
-func (db *MemDatabase) Len() int { log.DebugLog() return len(db.db) }
+func (db *MemDatabase) Len() int { log.DebugLog()
+									 return len(db.db) }
 
 type kv struct{ k, v []byte }
 
@@ -104,13 +114,15 @@ type memBatch struct {
 	size   int
 }
 
-func (b *memBatch) Put(key, value []byte) error { log.DebugLog()
+func (b *memBatch) Put(key, value []byte) error {
+	log.DebugLog()
 	b.writes = append(b.writes, kv{common.CopyBytes(key), common.CopyBytes(value)})
 	b.size += len(value)
 	return nil
 }
 
-func (b *memBatch) Write() error { log.DebugLog()
+func (b *memBatch) Write() error {
+	log.DebugLog()
 	b.db.lock.Lock()
 	defer b.db.lock.Unlock()
 
@@ -120,11 +132,13 @@ func (b *memBatch) Write() error { log.DebugLog()
 	return nil
 }
 
-func (b *memBatch) ValueSize() int { log.DebugLog()
+func (b *memBatch) ValueSize() int {
+	log.DebugLog()
 	return b.size
 }
 
-func (b *memBatch) Reset() { log.DebugLog()
+func (b *memBatch) Reset() {
+	log.DebugLog()
 	b.writes = b.writes[:0]
 	b.size = 0
 }

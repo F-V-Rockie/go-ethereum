@@ -109,24 +109,24 @@ type emptyIterator struct {
 	err error
 }
 
-func (i *emptyIterator) rErr() { 
+func (i *emptyIterator) rErr() {
 	if i.err == nil && i.Released() {
 		i.err = ErrIterReleased
 	}
 }
 
-func (*emptyIterator) Valid() bool            {  return false }
-func (i *emptyIterator) First() bool          {  i.rErr(); return false }
-func (i *emptyIterator) Last() bool           {  i.rErr(); return false }
-func (i *emptyIterator) Seek(key []byte) bool {  i.rErr(); return false }
-func (i *emptyIterator) Next() bool           {  i.rErr(); return false }
-func (i *emptyIterator) Prev() bool           {  i.rErr(); return false }
-func (*emptyIterator) Key() []byte            {  return nil }
-func (*emptyIterator) Value() []byte          {  return nil }
-func (i *emptyIterator) Error() error         {  return i.err }
+func (*emptyIterator) Valid() bool            { return false }
+func (i *emptyIterator) First() bool          { i.rErr(); return false }
+func (i *emptyIterator) Last() bool           { i.rErr(); return false }
+func (i *emptyIterator) Seek(key []byte) bool { i.rErr(); return false }
+func (i *emptyIterator) Next() bool           { i.rErr(); return false }
+func (i *emptyIterator) Prev() bool           { i.rErr(); return false }
+func (*emptyIterator) Key() []byte            { return nil }
+func (*emptyIterator) Value() []byte          { return nil }
+func (i *emptyIterator) Error() error         { return i.err }
 
 // NewEmptyIterator creates an empty iterator. The err parameter can be
 // nil, but if not nil the given err will be returned by Error method.
-func NewEmptyIterator(err error) Iterator { 
+func NewEmptyIterator(err error) Iterator {
 	return &emptyIterator{err: err}
 }

@@ -21,7 +21,7 @@ const (
 	AlignCenter = AlignCenterVertical | AlignCenterHorizontal
 )
 
-func AlignArea(parent, child image.Rectangle, a Align) image.Rectangle { 
+func AlignArea(parent, child image.Rectangle, a Align) image.Rectangle {
 	w, h := child.Dx(), child.Dy()
 
 	// parent center
@@ -62,7 +62,7 @@ func AlignArea(parent, child image.Rectangle, a Align) image.Rectangle {
 	return child
 }
 
-func MoveArea(a image.Rectangle, dx, dy int) image.Rectangle { 
+func MoveArea(a image.Rectangle, dx, dy int) image.Rectangle {
 	a.Min.X += dx
 	a.Max.X += dx
 	a.Min.Y += dy
@@ -73,6 +73,6 @@ func MoveArea(a image.Rectangle, dx, dy int) image.Rectangle {
 var termWidth int
 var termHeight int
 
-func TermRect() image.Rectangle { 
+func TermRect() image.Rectangle {
 	return image.Rect(0, 0, termWidth, termHeight)
 }

@@ -22,10 +22,12 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/rlp"
 	"github.com/ethereum/go-ethereum/trie"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // NewStateSync create a new state trie download scheduler.
-func NewStateSync(root common.Hash, database trie.DatabaseReader) *trie.TrieSync { log.DebugLog()
+func NewStateSync(root common.Hash, database trie.DatabaseReader) *trie.TrieSync {
+	log.DebugLog()
 	var syncer *trie.TrieSync
 	callback := func(leaf []byte, parent common.Hash) error {
 		var obj Account

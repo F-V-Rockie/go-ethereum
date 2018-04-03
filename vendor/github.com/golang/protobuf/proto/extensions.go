@@ -74,24 +74,24 @@ type extensionAdapter struct {
 	extendableProtoV1
 }
 
-func (e extensionAdapter) extensionsWrite() map[int32]Extension { 
+func (e extensionAdapter) extensionsWrite() map[int32]Extension {
 	return e.ExtensionMap()
 }
 
-func (e extensionAdapter) extensionsRead() (map[int32]Extension, sync.Locker) { 
+func (e extensionAdapter) extensionsRead() (map[int32]Extension, sync.Locker) {
 	return e.ExtensionMap(), notLocker{}
 }
 
 // notLocker is a sync.Locker whose Lock and Unlock methods are nops.
 type notLocker struct{}
 
-func (n notLocker) Lock()   { }
-func (n notLocker) Unlock() { }
+func (n notLocker) Lock()   {}
+func (n notLocker) Unlock() {}
 
 // extendable returns the extendableProto interface for the given generated proto message.
 // If the proto message has the old extension format, it returns a wrapper that implements
 // the extendableProto interface.
-func extendable(p interface{}) (extendableProto, bool) { 
+func extendable(p interface{}) (extendableProto, bool) {
 	if ep, ok := p.(extendableProto); ok {
 		return ep, ok
 	}
@@ -123,7 +123,7 @@ type XXX_InternalExtensions struct {
 }
 
 // extensionsWrite returns the extension map, creating it on first use.
-func (e *XXX_InternalExtensions) extensionsWrite() map[int32]Extension { 
+func (e *XXX_InternalExtensions) extensionsWrite() map[int32]Extension {
 	if e.p == nil {
 		e.p = new(struct {
 			mu           sync.Mutex
@@ -136,7 +136,7 @@ func (e *XXX_InternalExtensions) extensionsWrite() map[int32]Extension {
 
 // extensionsRead returns the extensions map for read-only use.  It may be nil.
 // The caller must hold the returned mutex's lock when accessing Elements within the map.
-func (e *XXX_InternalExtensions) extensionsRead() (map[int32]Extension, sync.Locker) { 
+func (e *XXX_InternalExtensions) extensionsRead() (map[int32]Extension, sync.Locker) {
 	if e.p == nil {
 		return nil, nil
 	}
@@ -157,7 +157,7 @@ type ExtensionDesc struct {
 	Filename      string      // name of the file in which the extension is defined
 }
 
-func (ed *ExtensionDesc) repeated() bool { 
+func (ed *ExtensionDesc) repeated() bool {
 	t := reflect.TypeOf(ed.ExtensionType)
 	return t.Kind() == reflect.Slice && t.Elem().Kind() != reflect.Uint8
 }
@@ -178,7 +178,7 @@ type Extension struct {
 }
 
 // SetRawExtension is for testing only.
-func SetRawExtension(base Message, id int32, b []byte) { 
+func SetRawExtension(base Message, id int32, b []byte) {
 	epb, ok := extendable(base)
 	if !ok {
 		return
@@ -188,7 +188,7 @@ func SetRawExtension(base Message, id int32, b []byte) {
 }
 
 // isExtensionField returns true iff the given field number is in an extension range.
-func isExtensionField(pb extendableProto, field int32) bool { 
+func isExtensionField(pb extendableProto, field int32) bool {
 	for _, er := range pb.ExtensionRangeArray() {
 		if er.Start <= field && field <= er.End {
 			return true
@@ -198,7 +198,7 @@ func isExtensionField(pb extendableProto, field int32) bool {
 }
 
 // checkExtensionTypes checks that the given extension is valid for pb.
-func checkExtensionTypes(pb extendableProto, extension *ExtensionDesc) error { 
+func checkExtensionTypes(pb extendableProto, extension *ExtensionDesc) error {
 	var pbi interface{} = pb
 	// Check the extended type.
 	if ea, ok := pbi.(extensionAdapter); ok {
@@ -227,7 +227,7 @@ var extProp = struct {
 	m: make(map[extPropKey]*Properties),
 }
 
-func extensionProperties(ed *ExtensionDesc) *Properties { 
+func extensionProperties(ed *ExtensionDesc) *Properties {
 	key := extPropKey{base: reflect.TypeOf(ed.ExtendedType), field: ed.Field}
 
 	extProp.RLock()
@@ -251,7 +251,7 @@ func extensionProperties(ed *ExtensionDesc) *Properties {
 }
 
 // encode encodes any unmarshaled (unencoded) extensions in e.
-func encodeExtensions(e *XXX_InternalExtensions) error { 
+func encodeExtensions(e *XXX_InternalExtensions) error {
 	m, mu := e.extensionsRead()
 	if m == nil {
 		return nil // fast path
@@ -262,7 +262,7 @@ func encodeExtensions(e *XXX_InternalExtensions) error {
 }
 
 // encode encodes any unmarshaled (unencoded) extensions in e.
-func encodeExtensionsMap(m map[int32]Extension) error { 
+func encodeExtensionsMap(m map[int32]Extension) error {
 	for k, e := range m {
 		if e.value == nil || e.desc == nil {
 			// Extension is only in its encoded form.
@@ -290,7 +290,7 @@ func encodeExtensionsMap(m map[int32]Extension) error {
 	return nil
 }
 
-func extensionsSize(e *XXX_InternalExtensions) (n int) { 
+func extensionsSize(e *XXX_InternalExtensions) (n int) {
 	m, mu := e.extensionsRead()
 	if m == nil {
 		return 0
@@ -300,7 +300,7 @@ func extensionsSize(e *XXX_InternalExtensions) (n int) {
 	return extensionsMapSize(m)
 }
 
-func extensionsMapSize(m map[int32]Extension) (n int) { 
+func extensionsMapSize(m map[int32]Extension) (n int) {
 	for _, e := range m {
 		if e.value == nil || e.desc == nil {
 			// Extension is only in its encoded form.
@@ -325,7 +325,7 @@ func extensionsMapSize(m map[int32]Extension) (n int) {
 }
 
 // HasExtension returns whether the given extension is present in pb.
-func HasExtension(pb Message, extension *ExtensionDesc) bool { 
+func HasExtension(pb Message, extension *ExtensionDesc) bool {
 	// TODO: Check types, field numbers, etc.?
 	epb, ok := extendable(pb)
 	if !ok {
@@ -342,7 +342,7 @@ func HasExtension(pb Message, extension *ExtensionDesc) bool {
 }
 
 // ClearExtension removes the given extension from pb.
-func ClearExtension(pb Message, extension *ExtensionDesc) { 
+func ClearExtension(pb Message, extension *ExtensionDesc) {
 	epb, ok := extendable(pb)
 	if !ok {
 		return
@@ -354,7 +354,7 @@ func ClearExtension(pb Message, extension *ExtensionDesc) {
 
 // GetExtension parses and returns the given extension of pb.
 // If the extension is not present and has no default value it returns ErrMissingExtension.
-func GetExtension(pb Message, extension *ExtensionDesc) (interface{}, error) { 
+func GetExtension(pb Message, extension *ExtensionDesc) (interface{}, error) {
 	epb, ok := extendable(pb)
 	if !ok {
 		return nil, errors.New("proto: not an extendable proto")
@@ -404,7 +404,7 @@ func GetExtension(pb Message, extension *ExtensionDesc) (interface{}, error) {
 
 // defaultExtensionValue returns the default value for extension.
 // If no default for an extension is defined ErrMissingExtension is returned.
-func defaultExtensionValue(extension *ExtensionDesc) (interface{}, error) { 
+func defaultExtensionValue(extension *ExtensionDesc) (interface{}, error) {
 	t := reflect.TypeOf(extension.ExtensionType)
 	props := extensionProperties(extension)
 
@@ -438,7 +438,7 @@ func defaultExtensionValue(extension *ExtensionDesc) (interface{}, error) {
 }
 
 // decodeExtension decodes an extension encoded in b.
-func decodeExtension(b []byte, extension *ExtensionDesc) (interface{}, error) { 
+func decodeExtension(b []byte, extension *ExtensionDesc) (interface{}, error) {
 	o := NewBuffer(b)
 
 	t := reflect.TypeOf(extension.ExtensionType)
@@ -472,7 +472,7 @@ func decodeExtension(b []byte, extension *ExtensionDesc) (interface{}, error) {
 
 // GetExtensions returns a slice of the extensions present in pb that are also listed in es.
 // The returned slice has the same length as es; missing extensions will appear as nil elements.
-func GetExtensions(pb Message, es []*ExtensionDesc) (extensions []interface{}, err error) { 
+func GetExtensions(pb Message, es []*ExtensionDesc) (extensions []interface{}, err error) {
 	epb, ok := extendable(pb)
 	if !ok {
 		return nil, errors.New("proto: not an extendable proto")
@@ -493,7 +493,7 @@ func GetExtensions(pb Message, es []*ExtensionDesc) (extensions []interface{}, e
 // ExtensionDescs returns a new slice containing pb's extension descriptors, in undefined order.
 // For non-registered extensions, ExtensionDescs returns an incomplete descriptor containing
 // just the Field field, which defines the extension's field number.
-func ExtensionDescs(pb Message) ([]*ExtensionDesc, error) { 
+func ExtensionDescs(pb Message) ([]*ExtensionDesc, error) {
 	epb, ok := extendable(pb)
 	if !ok {
 		return nil, fmt.Errorf("proto: %T is not an extendable proto.Message", pb)
@@ -522,7 +522,7 @@ func ExtensionDescs(pb Message) ([]*ExtensionDesc, error) {
 }
 
 // SetExtension sets the specified extension of pb to the specified value.
-func SetExtension(pb Message, extension *ExtensionDesc, value interface{}) error { 
+func SetExtension(pb Message, extension *ExtensionDesc, value interface{}) error {
 	epb, ok := extendable(pb)
 	if !ok {
 		return errors.New("proto: not an extendable proto")
@@ -549,7 +549,7 @@ func SetExtension(pb Message, extension *ExtensionDesc, value interface{}) error
 }
 
 // ClearAllExtensions clears all extensions from pb.
-func ClearAllExtensions(pb Message) { 
+func ClearAllExtensions(pb Message) {
 	epb, ok := extendable(pb)
 	if !ok {
 		return
@@ -566,7 +566,7 @@ func ClearAllExtensions(pb Message) {
 var extensionMaps = make(map[reflect.Type]map[int32]*ExtensionDesc)
 
 // RegisterExtension is called from the generated code.
-func RegisterExtension(desc *ExtensionDesc) { 
+func RegisterExtension(desc *ExtensionDesc) {
 	st := reflect.TypeOf(desc.ExtendedType).Elem()
 	m := extensionMaps[st]
 	if m == nil {
@@ -582,6 +582,6 @@ func RegisterExtension(desc *ExtensionDesc) {
 // RegisteredExtensions returns a map of the registered extensions of a
 // protocol buffer struct, indexed by the extension number.
 // The argument pb should be a nil pointer to the struct type.
-func RegisteredExtensions(pb Message) map[int32]*ExtensionDesc { 
+func RegisteredExtensions(pb Message) map[int32]*ExtensionDesc {
 	return extensionMaps[reflect.TypeOf(pb).Elem()]
 }

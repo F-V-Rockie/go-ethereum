@@ -85,7 +85,7 @@ var getattrFlagsNames = []flagName{
 	{uint32(GetattrFh), "GetattrFh"},
 }
 
-func (fl GetattrFlags) String() string { 
+func (fl GetattrFlags) String() string {
 	return flagString(uint32(fl), getattrFlagsNames)
 }
 
@@ -114,22 +114,22 @@ const (
 	SetattrFlags    SetattrValid = 1 << 31
 )
 
-func (fl SetattrValid) Mode() bool      {  return fl&SetattrMode != 0 }
-func (fl SetattrValid) Uid() bool       {  return fl&SetattrUid != 0 }
-func (fl SetattrValid) Gid() bool       {  return fl&SetattrGid != 0 }
-func (fl SetattrValid) Size() bool      {  return fl&SetattrSize != 0 }
-func (fl SetattrValid) Atime() bool     {  return fl&SetattrAtime != 0 }
-func (fl SetattrValid) Mtime() bool     {  return fl&SetattrMtime != 0 }
-func (fl SetattrValid) Handle() bool    {  return fl&SetattrHandle != 0 }
-func (fl SetattrValid) AtimeNow() bool  {  return fl&SetattrAtimeNow != 0 }
-func (fl SetattrValid) MtimeNow() bool  {  return fl&SetattrMtimeNow != 0 }
-func (fl SetattrValid) LockOwner() bool {  return fl&SetattrLockOwner != 0 }
-func (fl SetattrValid) Crtime() bool    {  return fl&SetattrCrtime != 0 }
-func (fl SetattrValid) Chgtime() bool   {  return fl&SetattrChgtime != 0 }
-func (fl SetattrValid) Bkuptime() bool  {  return fl&SetattrBkuptime != 0 }
-func (fl SetattrValid) Flags() bool     {  return fl&SetattrFlags != 0 }
+func (fl SetattrValid) Mode() bool      { return fl&SetattrMode != 0 }
+func (fl SetattrValid) Uid() bool       { return fl&SetattrUid != 0 }
+func (fl SetattrValid) Gid() bool       { return fl&SetattrGid != 0 }
+func (fl SetattrValid) Size() bool      { return fl&SetattrSize != 0 }
+func (fl SetattrValid) Atime() bool     { return fl&SetattrAtime != 0 }
+func (fl SetattrValid) Mtime() bool     { return fl&SetattrMtime != 0 }
+func (fl SetattrValid) Handle() bool    { return fl&SetattrHandle != 0 }
+func (fl SetattrValid) AtimeNow() bool  { return fl&SetattrAtimeNow != 0 }
+func (fl SetattrValid) MtimeNow() bool  { return fl&SetattrMtimeNow != 0 }
+func (fl SetattrValid) LockOwner() bool { return fl&SetattrLockOwner != 0 }
+func (fl SetattrValid) Crtime() bool    { return fl&SetattrCrtime != 0 }
+func (fl SetattrValid) Chgtime() bool   { return fl&SetattrChgtime != 0 }
+func (fl SetattrValid) Bkuptime() bool  { return fl&SetattrBkuptime != 0 }
+func (fl SetattrValid) Flags() bool     { return fl&SetattrFlags != 0 }
 
-func (fl SetattrValid) String() string { 
+func (fl SetattrValid) String() string {
 	return flagString(uint32(fl), setattrValidNames)
 }
 
@@ -178,7 +178,7 @@ const OpenAccessModeMask OpenFlags = syscall.O_ACCMODE
 // example, os.O_WRONLY | os.O_APPEND.
 type OpenFlags uint32
 
-func (fl OpenFlags) String() string { 
+func (fl OpenFlags) String() string {
 	// O_RDONLY, O_RWONLY, O_RDWR are not flags
 	s := accModeName(fl & OpenAccessModeMask)
 	flags := uint32(fl &^ OpenAccessModeMask)
@@ -189,21 +189,21 @@ func (fl OpenFlags) String() string {
 }
 
 // Return true if OpenReadOnly is set.
-func (fl OpenFlags) IsReadOnly() bool { 
+func (fl OpenFlags) IsReadOnly() bool {
 	return fl&OpenAccessModeMask == OpenReadOnly
 }
 
 // Return true if OpenWriteOnly is set.
-func (fl OpenFlags) IsWriteOnly() bool { 
+func (fl OpenFlags) IsWriteOnly() bool {
 	return fl&OpenAccessModeMask == OpenWriteOnly
 }
 
 // Return true if OpenReadWrite is set.
-func (fl OpenFlags) IsReadWrite() bool { 
+func (fl OpenFlags) IsReadWrite() bool {
 	return fl&OpenAccessModeMask == OpenReadWrite
 }
 
-func accModeName(flags OpenFlags) string { 
+func accModeName(flags OpenFlags) string {
 	switch flags {
 	case OpenReadOnly:
 		return "OpenReadOnly"
@@ -238,7 +238,7 @@ const (
 	OpenPurgeUBC  OpenResponseFlags = 1 << 31 // OS X
 )
 
-func (fl OpenResponseFlags) String() string { 
+func (fl OpenResponseFlags) String() string {
 	return flagString(uint32(fl), openResponseFlagNames)
 }
 
@@ -309,11 +309,11 @@ var initFlagNames = []flagName{
 	{uint32(InitXtimes), "InitXtimes"},
 }
 
-func (fl InitFlags) String() string { 
+func (fl InitFlags) String() string {
 	return flagString(uint32(fl), initFlagNames)
 }
 
-func flagString(f uint32, names []flagName) string { 
+func flagString(f uint32, names []flagName) string {
 	var s string
 
 	if f == 0 {
@@ -339,7 +339,7 @@ const (
 	ReleaseFlush ReleaseFlags = 1 << 0
 )
 
-func (fl ReleaseFlags) String() string { 
+func (fl ReleaseFlags) String() string {
 	return flagString(uint32(fl), releaseFlagNames)
 }
 
@@ -404,7 +404,7 @@ type entryOut struct {
 	Attr           attr
 }
 
-func entryOutSize(p Protocol) uintptr { 
+func entryOutSize(p Protocol) uintptr {
 	switch {
 	case p.LT(Protocol{7, 9}):
 		return unsafe.Offsetof(entryOut{}.Attr) + unsafe.Offsetof(entryOut{}.Attr.Blksize)
@@ -430,7 +430,7 @@ type attrOut struct {
 	Attr          attr
 }
 
-func attrOutSize(p Protocol) uintptr { 
+func attrOutSize(p Protocol) uintptr {
 	switch {
 	case p.LT(Protocol{7, 9}):
 		return unsafe.Offsetof(attrOut{}.Attr) + unsafe.Offsetof(attrOut{}.Attr.Blksize)
@@ -455,7 +455,7 @@ type mknodIn struct {
 	// "filename\x00" follows.
 }
 
-func mknodInSize(p Protocol) uintptr { 
+func mknodInSize(p Protocol) uintptr {
 	switch {
 	case p.LT(Protocol{7, 12}):
 		return unsafe.Offsetof(mknodIn{}.Umask)
@@ -470,7 +470,7 @@ type mkdirIn struct {
 	// filename follows
 }
 
-func mkdirInSize(p Protocol) uintptr { 
+func mkdirInSize(p Protocol) uintptr {
 	switch {
 	case p.LT(Protocol{7, 12}):
 		return unsafe.Offsetof(mkdirIn{}.Umask) + 4
@@ -533,7 +533,7 @@ type createIn struct {
 	_     uint32
 }
 
-func createInSize(p Protocol) uintptr { 
+func createInSize(p Protocol) uintptr {
 	switch {
 	case p.LT(Protocol{7, 12}):
 		return unsafe.Offsetof(createIn{}.Umask)
@@ -566,7 +566,7 @@ type readIn struct {
 	_         uint32
 }
 
-func readInSize(p Protocol) uintptr { 
+func readInSize(p Protocol) uintptr {
 	switch {
 	case p.LT(Protocol{7, 9}):
 		return unsafe.Offsetof(readIn{}.ReadFlags) + 4
@@ -587,7 +587,7 @@ var readFlagNames = []flagName{
 	{uint32(ReadLockOwner), "ReadLockOwner"},
 }
 
-func (fl ReadFlags) String() string { 
+func (fl ReadFlags) String() string {
 	return flagString(uint32(fl), readFlagNames)
 }
 
@@ -601,7 +601,7 @@ type writeIn struct {
 	_          uint32
 }
 
-func writeInSize(p Protocol) uintptr { 
+func writeInSize(p Protocol) uintptr {
 	switch {
 	case p.LT(Protocol{7, 9}):
 		return unsafe.Offsetof(writeIn{}.LockOwner)
@@ -629,7 +629,7 @@ var writeFlagNames = []flagName{
 	{uint32(WriteLockOwner), "WriteLockOwner"},
 }
 
-func (fl WriteFlags) String() string { 
+func (fl WriteFlags) String() string {
 	return flagString(uint32(fl), writeFlagNames)
 }
 
@@ -650,7 +650,7 @@ type setxattrInCommon struct {
 	Flags uint32
 }
 
-func (setxattrInCommon) position() uint32 { 
+func (setxattrInCommon) position() uint32 {
 	return 0
 }
 
@@ -659,7 +659,7 @@ type getxattrInCommon struct {
 	_    uint32
 }
 
-func (getxattrInCommon) position() uint32 { 
+func (getxattrInCommon) position() uint32 {
 	return 0
 }
 
@@ -676,7 +676,7 @@ type lkIn struct {
 	_       uint32
 }
 
-func lkInSize(p Protocol) uintptr { 
+func lkInSize(p Protocol) uintptr {
 	switch {
 	case p.LT(Protocol{7, 9}):
 		return unsafe.Offsetof(lkIn{}.LkFlags)

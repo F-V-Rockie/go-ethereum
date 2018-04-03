@@ -13,7 +13,7 @@ import (
 )
 
 // newTrigger returns implementation of trigger.
-func newTrigger(pthLkp map[string]*watched) trigger { 
+func newTrigger(pthLkp map[string]*watched) trigger {
 	return &fen{
 		pthLkp: pthLkp,
 		cf:     newCfen(),
@@ -37,31 +37,31 @@ type watched struct {
 }
 
 // Stop implements trigger.
-func (f *fen) Stop() error { 
+func (f *fen) Stop() error {
 	return f.cf.portAlert(f.p)
 }
 
 // Close implements trigger.
-func (f *fen) Close() (err error) { 
+func (f *fen) Close() (err error) {
 	return syscall.Close(f.p)
 }
 
 // NewWatched implements trigger.
-func (*fen) NewWatched(p string, fi os.FileInfo) (*watched, error) { 
+func (*fen) NewWatched(p string, fi os.FileInfo) (*watched, error) {
 	return &watched{trgWatched{p: p, fi: fi}}, nil
 }
 
 // Record implements trigger.
-func (f *fen) Record(w *watched) { 
+func (f *fen) Record(w *watched) {
 	f.pthLkp[w.p] = w
 }
 
 // Del implements trigger.
-func (f *fen) Del(w *watched) { 
+func (f *fen) Del(w *watched) {
 	delete(f.pthLkp, w.p)
 }
 
-func inter2pe(n interface{}) PortEvent { 
+func inter2pe(n interface{}) PortEvent {
 	pe, ok := n.(PortEvent)
 	if !ok {
 		panic(fmt.Sprintf("fen: type should be PortEvent, %T instead", n))
@@ -70,7 +70,7 @@ func inter2pe(n interface{}) PortEvent {
 }
 
 // Watched implements trigger.
-func (f *fen) Watched(n interface{}) (*watched, int64, error) { 
+func (f *fen) Watched(n interface{}) (*watched, int64, error) {
 	pe := inter2pe(n)
 	fo, ok := pe.PortevObject.(*FileObj)
 	if !ok || fo == nil {
@@ -84,12 +84,12 @@ func (f *fen) Watched(n interface{}) (*watched, int64, error) {
 }
 
 // init initializes FEN.
-func (f *fen) Init() (err error) { 
+func (f *fen) Init() (err error) {
 	f.p, err = f.cf.portCreate()
 	return
 }
 
-func fi2fo(fi os.FileInfo, p string) FileObj { 
+func fi2fo(fi os.FileInfo, p string) FileObj {
 	st, ok := fi.Sys().(*syscall.Stat_t)
 	if !ok {
 		panic(fmt.Sprintf("fen: type should be *syscall.Stat_t, %T instead", st))
@@ -98,17 +98,17 @@ func fi2fo(fi os.FileInfo, p string) FileObj {
 }
 
 // Unwatch implements trigger.
-func (f *fen) Unwatch(w *watched) error { 
+func (f *fen) Unwatch(w *watched) error {
 	return f.cf.portDissociate(f.p, FileObj{Name: w.p})
 }
 
 // Watch implements trigger.
-func (f *fen) Watch(fi os.FileInfo, w *watched, e int64) error { 
+func (f *fen) Watch(fi os.FileInfo, w *watched, e int64) error {
 	return f.cf.portAssociate(f.p, fi2fo(fi, w.p), int(e))
 }
 
 // Wait implements trigger.
-func (f *fen) Wait() (interface{}, error) { 
+func (f *fen) Wait() (interface{}, error) {
 	var (
 		pe  PortEvent
 		err error
@@ -118,11 +118,11 @@ func (f *fen) Wait() (interface{}, error) {
 }
 
 // IsStop implements trigger.
-func (f *fen) IsStop(n interface{}, err error) bool { 
+func (f *fen) IsStop(n interface{}, err error) bool {
 	return err == syscall.EBADF || inter2pe(n).PortevSource == srcAlert
 }
 
-func init() { 
+func init() {
 	encode = func(e Event, dir bool) (o int64) {
 		// Create event is not supported by FEN. Instead FileModified event will
 		// be registered. If this event will be reported on dir which is to be

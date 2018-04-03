@@ -6,12 +6,14 @@ import (
 	"encoding/json"
 
 	"github.com/ethereum/go-ethereum/common/hexutil"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 var _ = (*criteriaOverride)(nil)
 
 // MarshalJSON marshals type Criteria to a json string
-func (c Criteria) MarshalJSON() ([]byte, error) { log.DebugLog()
+func (c Criteria) MarshalJSON() ([]byte, error) {
+	log.DebugLog()
 	type Criteria struct {
 		SymKeyID     string        `json:"symKeyID"`
 		PrivateKeyID string        `json:"privateKeyID"`
@@ -31,7 +33,8 @@ func (c Criteria) MarshalJSON() ([]byte, error) { log.DebugLog()
 }
 
 // UnmarshalJSON unmarshals type Criteria to a json string
-func (c *Criteria) UnmarshalJSON(input []byte) error { log.DebugLog()
+func (c *Criteria) UnmarshalJSON(input []byte) error {
+	log.DebugLog()
 	type Criteria struct {
 		SymKeyID     *string        `json:"symKeyID"`
 		PrivateKeyID *string        `json:"privateKeyID"`

@@ -31,7 +31,7 @@ type Comment struct {
 }
 
 // NewComment creates a new comment
-func NewComment(text string, idx file.Idx) *Comment { 
+func NewComment(text string, idx file.Idx) *Comment {
 	comment := &Comment{
 		Begin:    idx,
 		Text:     text,
@@ -42,7 +42,7 @@ func NewComment(text string, idx file.Idx) *Comment {
 }
 
 // String returns a stringified version of the position
-func (cp CommentPosition) String() string { 
+func (cp CommentPosition) String() string {
 	switch cp {
 	case LEADING:
 		return "Leading"
@@ -70,7 +70,7 @@ func (cp CommentPosition) String() string {
 }
 
 // String returns a stringified version of the comment
-func (c Comment) String() string { 
+func (c Comment) String() string {
 	return fmt.Sprintf("Comment: %v", c.Text)
 }
 
@@ -93,7 +93,7 @@ type Comments struct {
 	afterBlock bool
 }
 
-func NewComments() *Comments { 
+func NewComments() *Comments {
 	comments := &Comments{
 		CommentMap: CommentMap{},
 	}
@@ -101,13 +101,13 @@ func NewComments() *Comments {
 	return comments
 }
 
-func (c *Comments) String() string { 
+func (c *Comments) String() string {
 	return fmt.Sprintf("NODE: %v, Comments: %v, Future: %v(LINEBREAK:%v)", c.Current, len(c.Comments), len(c.future), c.wasLineBreak)
 }
 
 // FetchAll returns all the currently scanned comments,
 // including those from the next line
-func (c *Comments) FetchAll() []*Comment { 
+func (c *Comments) FetchAll() []*Comment {
 	defer func() {
 		c.Comments = nil
 		c.future = nil
@@ -117,7 +117,7 @@ func (c *Comments) FetchAll() []*Comment {
 }
 
 // Fetch returns all the currently scanned comments
-func (c *Comments) Fetch() []*Comment { 
+func (c *Comments) Fetch() []*Comment {
 	defer func() {
 		c.Comments = nil
 	}()
@@ -126,24 +126,24 @@ func (c *Comments) Fetch() []*Comment {
 }
 
 // ResetLineBreak marks the beginning of a new statement
-func (c *Comments) ResetLineBreak() { 
+func (c *Comments) ResetLineBreak() {
 	c.wasLineBreak = false
 }
 
 // MarkPrimary will mark the context as processing a primary expression
-func (c *Comments) MarkPrimary() { 
+func (c *Comments) MarkPrimary() {
 	c.primary = true
 	c.wasLineBreak = false
 }
 
 // AfterBlock will mark the context as being after a block.
-func (c *Comments) AfterBlock() { 
+func (c *Comments) AfterBlock() {
 	c.afterBlock = true
 }
 
 // AddComment adds a comment to the view.
 // Depending on the context, comments are added normally or as post line break.
-func (c *Comments) AddComment(comment *Comment) { 
+func (c *Comments) AddComment(comment *Comment) {
 	if c.primary {
 		if !c.wasLineBreak {
 			c.Comments = append(c.Comments, comment)
@@ -160,7 +160,7 @@ func (c *Comments) AddComment(comment *Comment) {
 }
 
 // MarkComments will mark the found comments as the given position.
-func (c *Comments) MarkComments(position CommentPosition) { 
+func (c *Comments) MarkComments(position CommentPosition) {
 	for _, comment := range c.Comments {
 		if comment.Position == TBD {
 			comment.Position = position
@@ -175,7 +175,7 @@ func (c *Comments) MarkComments(position CommentPosition) {
 
 // Unset the current node and apply the comments to the current expression.
 // Resets context variables.
-func (c *Comments) Unset() { 
+func (c *Comments) Unset() {
 	if c.Current != nil {
 		c.applyComments(c.Current, c.Current, TRAILING)
 		c.Current = nil
@@ -188,7 +188,7 @@ func (c *Comments) Unset() {
 // SetExpression sets the current expression.
 // It is applied the found comments, unless the previous expression has not been unset.
 // It is skipped if the node is already set or if it is a part of the previous node.
-func (c *Comments) SetExpression(node Expression) { 
+func (c *Comments) SetExpression(node Expression) {
 	// Skipping same node
 	if c.Current == node {
 		return
@@ -205,13 +205,13 @@ func (c *Comments) SetExpression(node Expression) {
 }
 
 // PostProcessNode applies all found comments to the given node
-func (c *Comments) PostProcessNode(node Node) { 
+func (c *Comments) PostProcessNode(node Node) {
 	c.applyComments(node, nil, TRAILING)
 }
 
 // applyComments applies both the comments and the future comments to the given node and the previous one,
 // based on the context.
-func (c *Comments) applyComments(node, previous Node, position CommentPosition) { 
+func (c *Comments) applyComments(node, previous Node, position CommentPosition) {
 	if previous != nil {
 		c.CommentMap.AddComments(previous, c.Comments, position)
 		c.Comments = nil
@@ -228,7 +228,7 @@ func (c *Comments) applyComments(node, previous Node, position CommentPosition) 
 }
 
 // AtLineBreak will mark a line break
-func (c *Comments) AtLineBreak() { 
+func (c *Comments) AtLineBreak() {
 	c.wasLineBreak = true
 }
 
@@ -236,7 +236,7 @@ func (c *Comments) AtLineBreak() {
 type CommentMap map[Node][]*Comment
 
 // AddComment adds a single comment to the map
-func (cm CommentMap) AddComment(node Node, comment *Comment) { 
+func (cm CommentMap) AddComment(node Node, comment *Comment) {
 	list := cm[node]
 	list = append(list, comment)
 
@@ -244,7 +244,7 @@ func (cm CommentMap) AddComment(node Node, comment *Comment) {
 }
 
 // AddComments adds a slice of comments, given a node and an updated position
-func (cm CommentMap) AddComments(node Node, comments []*Comment, position CommentPosition) { 
+func (cm CommentMap) AddComments(node Node, comments []*Comment, position CommentPosition) {
 	for _, comment := range comments {
 		if comment.Position == TBD {
 			comment.Position = position
@@ -254,7 +254,7 @@ func (cm CommentMap) AddComments(node Node, comments []*Comment, position Commen
 }
 
 // Size returns the size of the map
-func (cm CommentMap) Size() int { 
+func (cm CommentMap) Size() int {
 	size := 0
 	for _, comments := range cm {
 		size += len(comments)
@@ -264,7 +264,7 @@ func (cm CommentMap) Size() int {
 }
 
 // MoveComments moves comments with a given position from a node to another
-func (cm CommentMap) MoveComments(from, to Node, position CommentPosition) { 
+func (cm CommentMap) MoveComments(from, to Node, position CommentPosition) {
 	for i, c := range cm[from] {
 		if c.Position == position {
 			cm.AddComment(to, c)

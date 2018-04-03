@@ -32,7 +32,7 @@ const (
 
 var expirationBase time.Time
 
-func init() { 
+func init() {
 	expirationBase, _ = time.Parse(time.RFC3339, tokenBaseDate)
 }
 
@@ -54,7 +54,7 @@ type Token struct {
 }
 
 // Expires returns the time.Time when the Token expires.
-func (t Token) Expires() time.Time { 
+func (t Token) Expires() time.Time {
 	s, err := strconv.Atoi(t.ExpiresOn)
 	if err != nil {
 		s = -3600
@@ -63,19 +63,19 @@ func (t Token) Expires() time.Time {
 }
 
 // IsExpired returns true if the Token is expired, false otherwise.
-func (t Token) IsExpired() bool { 
+func (t Token) IsExpired() bool {
 	return t.WillExpireIn(0)
 }
 
 // WillExpireIn returns true if the Token will expire after the passed time.Duration interval
 // from now, false otherwise.
-func (t Token) WillExpireIn(d time.Duration) bool { 
+func (t Token) WillExpireIn(d time.Duration) bool {
 	return !t.Expires().After(time.Now().Add(d))
 }
 
 // WithAuthorization returns a PrepareDecorator that adds an HTTP Authorization header whose
 // value is "Bearer " followed by the AccessToken of the Token.
-func (t *Token) WithAuthorization() autorest.PrepareDecorator { 
+func (t *Token) WithAuthorization() autorest.PrepareDecorator {
 	return func(p autorest.Preparer) autorest.Preparer {
 		return autorest.PreparerFunc(func(r *http.Request) (*http.Request, error) {
 			return (autorest.WithBearerAuthorization(t.AccessToken)(p)).Prepare(r)
@@ -90,7 +90,7 @@ type ServicePrincipalNoSecret struct {
 
 // SetAuthenticationValues is a method of the interface ServicePrincipalSecret
 // It only returns an error for the ServicePrincipalNoSecret type
-func (noSecret *ServicePrincipalNoSecret) SetAuthenticationValues(spt *ServicePrincipalToken, v *url.Values) error { 
+func (noSecret *ServicePrincipalNoSecret) SetAuthenticationValues(spt *ServicePrincipalToken, v *url.Values) error {
 	return fmt.Errorf("Manually created ServicePrincipalToken does not contain secret material to retrieve a new access token")
 }
 
@@ -107,7 +107,7 @@ type ServicePrincipalTokenSecret struct {
 
 // SetAuthenticationValues is a method of the interface ServicePrincipalSecret.
 // It will populate the form submitted during oAuth Token Acquisition using the client_secret.
-func (tokenSecret *ServicePrincipalTokenSecret) SetAuthenticationValues(spt *ServicePrincipalToken, v *url.Values) error { 
+func (tokenSecret *ServicePrincipalTokenSecret) SetAuthenticationValues(spt *ServicePrincipalToken, v *url.Values) error {
 	v.Set("client_secret", tokenSecret.ClientSecret)
 	return nil
 }
@@ -119,7 +119,7 @@ type ServicePrincipalCertificateSecret struct {
 }
 
 // SignJwt returns the JWT signed with the certificate's private key.
-func (secret *ServicePrincipalCertificateSecret) SignJwt(spt *ServicePrincipalToken) (string, error) { 
+func (secret *ServicePrincipalCertificateSecret) SignJwt(spt *ServicePrincipalToken) (string, error) {
 	hasher := sha1.New()
 	_, err := hasher.Write(secret.Certificate.Raw)
 	if err != nil {
@@ -152,7 +152,7 @@ func (secret *ServicePrincipalCertificateSecret) SignJwt(spt *ServicePrincipalTo
 
 // SetAuthenticationValues is a method of the interface ServicePrincipalSecret.
 // It will populate the form submitted during oAuth Token Acquisition using a JWT signed with a certificate.
-func (secret *ServicePrincipalCertificateSecret) SetAuthenticationValues(spt *ServicePrincipalToken, v *url.Values) error { 
+func (secret *ServicePrincipalCertificateSecret) SetAuthenticationValues(spt *ServicePrincipalToken, v *url.Values) error {
 	jwt, err := secret.SignJwt(spt)
 	if err != nil {
 		return err
@@ -179,7 +179,7 @@ type ServicePrincipalToken struct {
 }
 
 // NewServicePrincipalTokenWithSecret create a ServicePrincipalToken using the supplied ServicePrincipalSecret implementation.
-func NewServicePrincipalTokenWithSecret(oauthConfig OAuthConfig, id string, resource string, secret ServicePrincipalSecret, callbacks ...TokenRefreshCallback) (*ServicePrincipalToken, error) { 
+func NewServicePrincipalTokenWithSecret(oauthConfig OAuthConfig, id string, resource string, secret ServicePrincipalSecret, callbacks ...TokenRefreshCallback) (*ServicePrincipalToken, error) {
 	spt := &ServicePrincipalToken{
 		oauthConfig:      oauthConfig,
 		secret:           secret,
@@ -194,7 +194,7 @@ func NewServicePrincipalTokenWithSecret(oauthConfig OAuthConfig, id string, reso
 }
 
 // NewServicePrincipalTokenFromManualToken creates a ServicePrincipalToken using the supplied token
-func NewServicePrincipalTokenFromManualToken(oauthConfig OAuthConfig, clientID string, resource string, token Token, callbacks ...TokenRefreshCallback) (*ServicePrincipalToken, error) { 
+func NewServicePrincipalTokenFromManualToken(oauthConfig OAuthConfig, clientID string, resource string, token Token, callbacks ...TokenRefreshCallback) (*ServicePrincipalToken, error) {
 	spt, err := NewServicePrincipalTokenWithSecret(
 		oauthConfig,
 		clientID,
@@ -212,7 +212,7 @@ func NewServicePrincipalTokenFromManualToken(oauthConfig OAuthConfig, clientID s
 
 // NewServicePrincipalToken creates a ServicePrincipalToken from the supplied Service Principal
 // credentials scoped to the named resource.
-func NewServicePrincipalToken(oauthConfig OAuthConfig, clientID string, secret string, resource string, callbacks ...TokenRefreshCallback) (*ServicePrincipalToken, error) { 
+func NewServicePrincipalToken(oauthConfig OAuthConfig, clientID string, secret string, resource string, callbacks ...TokenRefreshCallback) (*ServicePrincipalToken, error) {
 	return NewServicePrincipalTokenWithSecret(
 		oauthConfig,
 		clientID,
@@ -225,7 +225,7 @@ func NewServicePrincipalToken(oauthConfig OAuthConfig, clientID string, secret s
 }
 
 // NewServicePrincipalTokenFromCertificate create a ServicePrincipalToken from the supplied pkcs12 bytes.
-func NewServicePrincipalTokenFromCertificate(oauthConfig OAuthConfig, clientID string, certificate *x509.Certificate, privateKey *rsa.PrivateKey, resource string, callbacks ...TokenRefreshCallback) (*ServicePrincipalToken, error) { 
+func NewServicePrincipalTokenFromCertificate(oauthConfig OAuthConfig, clientID string, certificate *x509.Certificate, privateKey *rsa.PrivateKey, resource string, callbacks ...TokenRefreshCallback) (*ServicePrincipalToken, error) {
 	return NewServicePrincipalTokenWithSecret(
 		oauthConfig,
 		clientID,
@@ -240,7 +240,7 @@ func NewServicePrincipalTokenFromCertificate(oauthConfig OAuthConfig, clientID s
 
 // EnsureFresh will refresh the token if it will expire within the refresh window (as set by
 // RefreshWithin).
-func (spt *ServicePrincipalToken) EnsureFresh() error { 
+func (spt *ServicePrincipalToken) EnsureFresh() error {
 	if spt.WillExpireIn(spt.refreshWithin) {
 		return spt.Refresh()
 	}
@@ -248,7 +248,7 @@ func (spt *ServicePrincipalToken) EnsureFresh() error {
 }
 
 // InvokeRefreshCallbacks calls any TokenRefreshCallbacks that were added to the SPT during initialization
-func (spt *ServicePrincipalToken) InvokeRefreshCallbacks(token Token) error { 
+func (spt *ServicePrincipalToken) InvokeRefreshCallbacks(token Token) error {
 	if spt.refreshCallbacks != nil {
 		for _, callback := range spt.refreshCallbacks {
 			err := callback(spt.Token)
@@ -262,16 +262,16 @@ func (spt *ServicePrincipalToken) InvokeRefreshCallbacks(token Token) error {
 }
 
 // Refresh obtains a fresh token for the Service Principal.
-func (spt *ServicePrincipalToken) Refresh() error { 
+func (spt *ServicePrincipalToken) Refresh() error {
 	return spt.refreshInternal(spt.resource)
 }
 
 // RefreshExchange refreshes the token, but for a different resource.
-func (spt *ServicePrincipalToken) RefreshExchange(resource string) error { 
+func (spt *ServicePrincipalToken) RefreshExchange(resource string) error {
 	return spt.refreshInternal(resource)
 }
 
-func (spt *ServicePrincipalToken) refreshInternal(resource string) error { 
+func (spt *ServicePrincipalToken) refreshInternal(resource string) error {
 	v := url.Values{}
 	v.Set("client_id", spt.clientID)
 	v.Set("resource", resource)
@@ -323,20 +323,20 @@ func (spt *ServicePrincipalToken) refreshInternal(resource string) error {
 }
 
 // SetAutoRefresh enables or disables automatic refreshing of stale tokens.
-func (spt *ServicePrincipalToken) SetAutoRefresh(autoRefresh bool) { 
+func (spt *ServicePrincipalToken) SetAutoRefresh(autoRefresh bool) {
 	spt.autoRefresh = autoRefresh
 }
 
 // SetRefreshWithin sets the interval within which if the token will expire, EnsureFresh will
 // refresh the token.
-func (spt *ServicePrincipalToken) SetRefreshWithin(d time.Duration) { 
+func (spt *ServicePrincipalToken) SetRefreshWithin(d time.Duration) {
 	spt.refreshWithin = d
 	return
 }
 
 // SetSender sets the autorest.Sender used when obtaining the Service Principal token. An
 // undecorated http.Client is used by default.
-func (spt *ServicePrincipalToken) SetSender(s autorest.Sender) { 
+func (spt *ServicePrincipalToken) SetSender(s autorest.Sender) {
 	spt.sender = s
 }
 
@@ -346,7 +346,7 @@ func (spt *ServicePrincipalToken) SetSender(s autorest.Sender) {
 // By default, the token will automatically refresh if nearly expired (as determined by the
 // RefreshWithin interval). Use the AutoRefresh method to enable or disable automatically refreshing
 // tokens.
-func (spt *ServicePrincipalToken) WithAuthorization() autorest.PrepareDecorator { 
+func (spt *ServicePrincipalToken) WithAuthorization() autorest.PrepareDecorator {
 	return func(p autorest.Preparer) autorest.Preparer {
 		return autorest.PreparerFunc(func(r *http.Request) (*http.Request, error) {
 			if spt.autoRefresh {

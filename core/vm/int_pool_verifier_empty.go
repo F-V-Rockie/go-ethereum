@@ -18,6 +18,8 @@
 
 package vm
 
+import "github.com/ethereum/go-ethereum/log"
+
 const verifyPool = false
 
-func verifyIntegerPool(ip *intPool) { log.DebugLog()}
+func verifyIntegerPool(ip *intPool) { log.DebugLog() }

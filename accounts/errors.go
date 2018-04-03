@@ -19,6 +19,7 @@ package accounts
 import (
 	"errors"
 	"fmt"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // ErrUnknownAccount is returned for any requested operation for which no backend
@@ -56,13 +57,15 @@ type AuthNeededError struct {
 
 // NewAuthNeededError creates a new authentication error with the extra details
 // about the needed fields set.
-func NewAuthNeededError(needed string) error { log.DebugLog()
+func NewAuthNeededError(needed string) error {
+	log.DebugLog()
 	return &AuthNeededError{
 		Needed: needed,
 	}
 }
 
 // Error implements the standard error interface.
-func (err *AuthNeededError) Error() string { log.DebugLog()
+func (err *AuthNeededError) Error() string {
+	log.DebugLog()
 	return fmt.Sprintf("authentication needed: %s", err.Needed)
 }

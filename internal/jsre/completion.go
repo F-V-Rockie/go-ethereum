@@ -21,6 +21,7 @@ import (
 	"strings"
 
 	"github.com/robertkrimen/otto"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // CompleteKeywords returns potential continuations for the given line. Since line is

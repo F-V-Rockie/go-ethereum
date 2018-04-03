@@ -20,6 +20,7 @@ import (
 	"errors"
 
 	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // errSectionOutOfBounds is returned if the user tried to add more bloom filters
@@ -36,7 +37,8 @@ type Generator struct {
 
 // NewGenerator creates a rotated bloom generator that can iteratively fill a
 // batched bloom filter's bits.
-func NewGenerator(sections uint) (*Generator, error) { log.DebugLog()
+func NewGenerator(sections uint) (*Generator, error) {
+	log.DebugLog()
 	if sections%8 != 0 {
 		return nil, errors.New("section count not multiple of 8")
 	}
@@ -49,7 +51,8 @@ func NewGenerator(sections uint) (*Generator, error) { log.DebugLog()
 
 // AddBloom takes a single bloom filter and sets the corresponding bit column
 // in memory accordingly.
-func (b *Generator) AddBloom(index uint, bloom types.Bloom) error { log.DebugLog()
+func (b *Generator) AddBloom(index uint, bloom types.Bloom) error {
+	log.DebugLog()
 	// Make sure we're not adding more bloom filters than our capacity
 	if b.nextBit >= b.sections {
 		return errSectionOutOfBounds
@@ -76,7 +79,8 @@ func (b *Generator) AddBloom(index uint, bloom types.Bloom) error { log.DebugLog
 
 // Bitset returns the bit vector belonging to the given bit index after all
 // blooms have been added.
-func (b *Generator) Bitset(idx uint) ([]byte, error) { log.DebugLog()
+func (b *Generator) Bitset(idx uint) ([]byte, error) {
+	log.DebugLog()
 	if b.nextBit != b.sections {
 		return nil, errors.New("bloom not fully generated yet")
 	}

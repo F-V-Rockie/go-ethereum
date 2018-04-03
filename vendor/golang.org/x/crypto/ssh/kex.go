@@ -57,7 +57,7 @@ type handshakeMagics struct {
 	clientKexInit, serverKexInit []byte
 }
 
-func (m *handshakeMagics) write(w io.Writer) { 
+func (m *handshakeMagics) write(w io.Writer) {
 	writeString(w, m.clientVersion)
 	writeString(w, m.serverVersion)
 	writeString(w, m.clientKexInit)
@@ -80,14 +80,14 @@ type dhGroup struct {
 	g, p, pMinus1 *big.Int
 }
 
-func (group *dhGroup) diffieHellman(theirPublic, myPrivate *big.Int) (*big.Int, error) { 
+func (group *dhGroup) diffieHellman(theirPublic, myPrivate *big.Int) (*big.Int, error) {
 	if theirPublic.Cmp(bigOne) <= 0 || theirPublic.Cmp(group.pMinus1) >= 0 {
 		return nil, errors.New("ssh: DH parameter out of bounds")
 	}
 	return new(big.Int).Exp(theirPublic, myPrivate, group.p), nil
 }
 
-func (group *dhGroup) Client(c packetConn, randSource io.Reader, magics *handshakeMagics) (*kexResult, error) { 
+func (group *dhGroup) Client(c packetConn, randSource io.Reader, magics *handshakeMagics) (*kexResult, error) {
 	hashFunc := crypto.SHA1
 
 	var x *big.Int
@@ -142,7 +142,7 @@ func (group *dhGroup) Client(c packetConn, randSource io.Reader, magics *handsha
 	}, nil
 }
 
-func (group *dhGroup) Server(c packetConn, randSource io.Reader, magics *handshakeMagics, priv Signer) (result *kexResult, err error) { 
+func (group *dhGroup) Server(c packetConn, randSource io.Reader, magics *handshakeMagics, priv Signer) (result *kexResult, err error) {
 	hashFunc := crypto.SHA1
 	packet, err := c.readPacket()
 	if err != nil {
@@ -213,7 +213,7 @@ type ecdh struct {
 	curve elliptic.Curve
 }
 
-func (kex *ecdh) Client(c packetConn, rand io.Reader, magics *handshakeMagics) (*kexResult, error) { 
+func (kex *ecdh) Client(c packetConn, rand io.Reader, magics *handshakeMagics) (*kexResult, error) {
 	ephKey, err := ecdsa.GenerateKey(kex.curve, rand)
 	if err != nil {
 		return nil, err
@@ -265,7 +265,7 @@ func (kex *ecdh) Client(c packetConn, rand io.Reader, magics *handshakeMagics) (
 }
 
 // unmarshalECKey parses and checks an EC key.
-func unmarshalECKey(curve elliptic.Curve, pubkey []byte) (x, y *big.Int, err error) { 
+func unmarshalECKey(curve elliptic.Curve, pubkey []byte) (x, y *big.Int, err error) {
 	x, y = elliptic.Unmarshal(curve, pubkey)
 	if x == nil {
 		return nil, nil, errors.New("ssh: elliptic.Unmarshal failure")
@@ -278,7 +278,7 @@ func unmarshalECKey(curve elliptic.Curve, pubkey []byte) (x, y *big.Int, err err
 
 // validateECPublicKey checks that the point is a valid public key for
 // the given curve. See [SEC1], 3.2.2
-func validateECPublicKey(curve elliptic.Curve, x, y *big.Int) bool { 
+func validateECPublicKey(curve elliptic.Curve, x, y *big.Int) bool {
 	if x.Sign() == 0 && y.Sign() == 0 {
 		return false
 	}
@@ -306,7 +306,7 @@ func validateECPublicKey(curve elliptic.Curve, x, y *big.Int) bool {
 	return true
 }
 
-func (kex *ecdh) Server(c packetConn, rand io.Reader, magics *handshakeMagics, priv Signer) (result *kexResult, err error) { 
+func (kex *ecdh) Server(c packetConn, rand io.Reader, magics *handshakeMagics, priv Signer) (result *kexResult, err error) {
 	packet, err := c.readPacket()
 	if err != nil {
 		return nil, err
@@ -378,7 +378,7 @@ func (kex *ecdh) Server(c packetConn, rand io.Reader, magics *handshakeMagics, p
 
 var kexAlgoMap = map[string]kexAlgorithm{}
 
-func init() { 
+func init() {
 	// This is the group called diffie-hellman-group1-sha1 in RFC
 	// 4253 and Oakley Group 2 in RFC 2409.
 	p, _ := new(big.Int).SetString("FFFFFFFFFFFFFFFFC90FDAA22168C234C4C6628B80DC1CD129024E088A67CC74020BBEA63B139B22514A08798E3404DDEF9519B3CD3A431B302B0A6DF25F14374FE1356D6D51C245E485B576625E7EC6F44C42E9A637ED6B0BFF5CB6F406B7EDEE386BFB5A899FA5AE9F24117C4B1FE649286651ECE65381FFFFFFFFFFFFFFFF", 16)
@@ -414,7 +414,7 @@ type curve25519KeyPair struct {
 	pub  [32]byte
 }
 
-func (kp *curve25519KeyPair) generate(rand io.Reader) error { 
+func (kp *curve25519KeyPair) generate(rand io.Reader) error {
 	if _, err := io.ReadFull(rand, kp.priv[:]); err != nil {
 		return err
 	}
@@ -427,7 +427,7 @@ func (kp *curve25519KeyPair) generate(rand io.Reader) error {
 // wrong order.
 var curve25519Zeros [32]byte
 
-func (kex *curve25519sha256) Client(c packetConn, rand io.Reader, magics *handshakeMagics) (*kexResult, error) { 
+func (kex *curve25519sha256) Client(c packetConn, rand io.Reader, magics *handshakeMagics) (*kexResult, error) {
 	var kp curve25519KeyPair
 	if err := kp.generate(rand); err != nil {
 		return nil, err
@@ -476,7 +476,7 @@ func (kex *curve25519sha256) Client(c packetConn, rand io.Reader, magics *handsh
 	}, nil
 }
 
-func (kex *curve25519sha256) Server(c packetConn, rand io.Reader, magics *handshakeMagics, priv Signer) (result *kexResult, err error) { 
+func (kex *curve25519sha256) Server(c packetConn, rand io.Reader, magics *handshakeMagics, priv Signer) (result *kexResult, err error) {
 	packet, err := c.readPacket()
 	if err != nil {
 		return

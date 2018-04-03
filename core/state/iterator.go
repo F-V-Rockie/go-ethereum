@@ -23,6 +23,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/rlp"
 	"github.com/ethereum/go-ethereum/trie"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // NodeIterator is an iterator to traverse the entire state trie post-order,
@@ -44,7 +45,8 @@ type NodeIterator struct {
 }
 
 // NewNodeIterator creates an post-order state node iterator.
-func NewNodeIterator(state *StateDB) *NodeIterator { log.DebugLog()
+func NewNodeIterator(state *StateDB) *NodeIterator {
+	log.DebugLog()
 	return &NodeIterator{
 		state: state,
 	}
@@ -53,7 +55,8 @@ func NewNodeIterator(state *StateDB) *NodeIterator { log.DebugLog()
 // Next moves the iterator to the next node, returning whether there are any
 // further nodes. In case of an internal error this method returns false and
 // sets the Error field to the encountered failure.
-func (it *NodeIterator) Next() bool { log.DebugLog()
+func (it *NodeIterator) Next() bool {
+	log.DebugLog()
 	// If the iterator failed previously, don't do anything
 	if it.Error != nil {
 		return false
@@ -67,7 +70,8 @@ func (it *NodeIterator) Next() bool { log.DebugLog()
 }
 
 // step moves the iterator to the next entry of the state trie.
-func (it *NodeIterator) step() error { log.DebugLog()
+func (it *NodeIterator) step() error {
+	log.DebugLog()
 	// Abort if we reached the end of the iteration
 	if it.state == nil {
 		return nil
@@ -130,7 +134,8 @@ func (it *NodeIterator) step() error { log.DebugLog()
 
 // retrieve pulls and caches the current state entry the iterator is traversing.
 // The method returns whether there are any more data left for inspection.
-func (it *NodeIterator) retrieve() bool { log.DebugLog()
+func (it *NodeIterator) retrieve() bool {
+	log.DebugLog()
 	// Clear out any previously set values
 	it.Hash = common.Hash{}
 

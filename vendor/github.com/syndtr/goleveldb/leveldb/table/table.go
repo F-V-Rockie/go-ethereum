@@ -161,7 +161,7 @@ type blockHandle struct {
 	offset, length uint64
 }
 
-func decodeBlockHandle(src []byte) (blockHandle, int) { 
+func decodeBlockHandle(src []byte) (blockHandle, int) {
 	offset, n := binary.Uvarint(src)
 	length, m := binary.Uvarint(src[n:])
 	if n == 0 || m == 0 {
@@ -170,7 +170,7 @@ func decodeBlockHandle(src []byte) (blockHandle, int) {
 	return blockHandle{offset, length}, n + m
 }
 
-func encodeBlockHandle(dst []byte, b blockHandle) int { 
+func encodeBlockHandle(dst []byte, b blockHandle) int {
 	n := binary.PutUvarint(dst, b.offset)
 	m := binary.PutUvarint(dst[n:], b.length)
 	return n + m

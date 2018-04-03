@@ -20,6 +20,7 @@ import (
 	"fmt"
 
 	"github.com/ethereum/go-ethereum/p2p/discover"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // Protocol represents a P2P subprotocol implementation.
@@ -54,7 +55,8 @@ type Protocol struct {
 	PeerInfo func(id discover.NodeID) interface{}
 }
 
-func (p Protocol) cap() Cap { log.DebugLog()
+func (p Protocol) cap() Cap {
+	log.DebugLog()
 	return Cap{p.Name, p.Version}
 }
 
@@ -64,18 +66,23 @@ type Cap struct {
 	Version uint
 }
 
-func (cap Cap) RlpData() interface{} { log.DebugLog()
+func (cap Cap) RlpData() interface{} {
+	log.DebugLog()
 	return []interface{}{cap.Name, cap.Version}
 }
 
-func (cap Cap) String() string { log.DebugLog()
+func (cap Cap) String() string {
+	log.DebugLog()
 	return fmt.Sprintf("%s/%d", cap.Name, cap.Version)
 }
 
 type capsByNameAndVersion []Cap
 
-func (cs capsByNameAndVersion) Len() int      { log.DebugLog() return len(cs) }
-func (cs capsByNameAndVersion) Swap(i, j int) { log.DebugLog() cs[i], cs[j] = cs[j], cs[i] }
-func (cs capsByNameAndVersion) Less(i, j int) bool { log.DebugLog()
+func (cs capsByNameAndVersion) Len() int      { log.DebugLog()
+												  return len(cs) }
+func (cs capsByNameAndVersion) Swap(i, j int) { log.DebugLog()
+												  cs[i], cs[j] = cs[j], cs[i] }
+func (cs capsByNameAndVersion) Less(i, j int) bool {
+	log.DebugLog()
 	return cs[i].Name < cs[j].Name || (cs[i].Name == cs[j].Name && cs[i].Version < cs[j].Version)
 }

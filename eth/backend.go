@@ -94,14 +94,16 @@ type Ethereum struct {
 	lock sync.RWMutex // Protects the variadic fields (e.g. gas price and etherbase)
 }
 
-func (s *Ethereum) AddLesServer(ls LesServer) { log.DebugLog()
+func (s *Ethereum) AddLesServer(ls LesServer) {
+	log.DebugLog()
 	s.lesServer = ls
 	ls.SetBloomBitsIndexer(s.bloomIndexer)
 }
 
 // New creates a new Ethereum object (including the
 // initialisation of the common Ethereum object)
-func New(ctx *node.ServiceContext, config *Config) (*Ethereum, error) { log.DebugLog()
+func New(ctx *node.ServiceContext, config *Config) (*Ethereum, error) {
+	log.DebugLog()
 	if config.SyncMode == downloader.LightSync {
 		return nil, errors.New("can't run eth.Ethereum in light sync mode, use les.LightEthereum")
 	}
@@ -181,7 +183,8 @@ func New(ctx *node.ServiceContext, config *Config) (*Ethereum, error) { log.Debu
 	return eth, nil
 }
 
-func makeExtraData(extra []byte) []byte { log.DebugLog()
+func makeExtraData(extra []byte) []byte {
+	log.DebugLog()
 	if len(extra) == 0 {
 		// create default extradata
 		extra, _ = rlp.EncodeToBytes([]interface{}{
@@ -199,7 +202,8 @@ func makeExtraData(extra []byte) []byte { log.DebugLog()
 }
 
 // CreateDB creates the chain database.
-func CreateDB(ctx *node.ServiceContext, config *Config, name string) (ethdb.Database, error) { log.DebugLog()
+func CreateDB(ctx *node.ServiceContext, config *Config, name string) (ethdb.Database, error) {
+	log.DebugLog()
 	db, err := ctx.OpenDatabase(name, config.DatabaseCache, config.DatabaseHandles)
 	if err != nil {
 		return nil, err
@@ -211,7 +215,8 @@ func CreateDB(ctx *node.ServiceContext, config *Config, name string) (ethdb.Data
 }
 
 // CreateConsensusEngine creates the required type of consensus engine instance for an Ethereum service
-func CreateConsensusEngine(ctx *node.ServiceContext, config *ethash.Config, chainConfig *params.ChainConfig, db ethdb.Database) consensus.Engine { log.DebugLog()
+func CreateConsensusEngine(ctx *node.ServiceContext, config *ethash.Config, chainConfig *params.ChainConfig, db ethdb.Database) consensus.Engine {
+	log.DebugLog()
 	// If proof-of-authority is requested, set it up
 	if chainConfig.Clique != nil {
 		return clique.New(chainConfig.Clique, db)
@@ -243,7 +248,8 @@ func CreateConsensusEngine(ctx *node.ServiceContext, config *ethash.Config, chai
 
 // APIs returns the collection of RPC services the ethereum package offers.
 // NOTE, some of these services probably need to be moved to somewhere else.
-func (s *Ethereum) APIs() []rpc.API { log.DebugLog()
+func (s *Ethereum) APIs() []rpc.API {
+	log.DebugLog()
 	apis := ethapi.GetAPIs(s.ApiBackend)
 
 	// Append any APIs exposed explicitly by the consensus engine
@@ -298,11 +304,13 @@ func (s *Ethereum) APIs() []rpc.API { log.DebugLog()
 	}...)
 }
 
-func (s *Ethereum) ResetWithGenesisBlock(gb *types.Block) { log.DebugLog()
+func (s *Ethereum) ResetWithGenesisBlock(gb *types.Block) {
+	log.DebugLog()
 	s.blockchain.ResetWithGenesisBlock(gb)
 }
 
-func (s *Ethereum) Etherbase() (eb common.Address, err error) { log.DebugLog()
+func (s *Ethereum) Etherbase() (eb common.Address, err error) {
+	log.DebugLog()
 	s.lock.RLock()
 	etherbase := s.etherbase
 	s.lock.RUnlock()
@@ -326,7 +334,8 @@ func (s *Ethereum) Etherbase() (eb common.Address, err error) { log.DebugLog()
 }
 
 // set in js console via admin interface or wrapper from cli flags
-func (self *Ethereum) SetEtherbase(etherbase common.Address) { log.DebugLog()
+func (self *Ethereum) SetEtherbase(etherbase common.Address) {
+	log.DebugLog()
 	self.lock.Lock()
 	self.etherbase = etherbase
 	self.lock.Unlock()
@@ -334,7 +343,8 @@ func (self *Ethereum) SetEtherbase(etherbase common.Address) { log.DebugLog()
 	self.miner.SetEtherbase(etherbase)
 }
 
-func (s *Ethereum) StartMining(local bool) error { log.DebugLog()
+func (s *Ethereum) StartMining(local bool) error {
+	log.DebugLog()
 	eb, err := s.Etherbase()
 	if err != nil {
 		log.Error("Cannot start mining without etherbase", "err", err)
@@ -359,24 +369,38 @@ func (s *Ethereum) StartMining(local bool) error { log.DebugLog()
 	return nil
 }
 
-func (s *Ethereum) StopMining()         { log.DebugLog() s.miner.Stop() }
-func (s *Ethereum) IsMining() bool      { log.DebugLog() return s.miner.Mining() }
-func (s *Ethereum) Miner() *miner.Miner { log.DebugLog() return s.miner }
+func (s *Ethereum) StopMining()         { log.DebugLog()
+											s.miner.Stop() }
+func (s *Ethereum) IsMining() bool      { log.DebugLog()
+											return s.miner.Mining() }
+func (s *Ethereum) Miner() *miner.Miner { log.DebugLog()
+											return s.miner }
 
-func (s *Ethereum) AccountManager() *accounts.Manager  { log.DebugLog() return s.accountManager }
-func (s *Ethereum) BlockChain() *core.BlockChain       { log.DebugLog() return s.blockchain }
-func (s *Ethereum) TxPool() *core.TxPool               { log.DebugLog() return s.txPool }
-func (s *Ethereum) EventMux() *event.TypeMux           { log.DebugLog() return s.eventMux }
-func (s *Ethereum) Engine() consensus.Engine           { log.DebugLog() return s.engine }
-func (s *Ethereum) ChainDb() ethdb.Database            { log.DebugLog() return s.chainDb }
-func (s *Ethereum) IsListening() bool                  { log.DebugLog() return true } // Always listening
-func (s *Ethereum) EthVersion() int                    { log.DebugLog() return int(s.protocolManager.SubProtocols[0].Version) }
-func (s *Ethereum) NetVersion() uint64                 { log.DebugLog() return s.networkId }
-func (s *Ethereum) Downloader() *downloader.Downloader { log.DebugLog() return s.protocolManager.downloader }
+func (s *Ethereum) AccountManager() *accounts.Manager  { log.DebugLog()
+														   return s.accountManager }
+func (s *Ethereum) BlockChain() *core.BlockChain       { log.DebugLog()
+														   return s.blockchain }
+func (s *Ethereum) TxPool() *core.TxPool               { log.DebugLog()
+														   return s.txPool }
+func (s *Ethereum) EventMux() *event.TypeMux           { log.DebugLog()
+														   return s.eventMux }
+func (s *Ethereum) Engine() consensus.Engine           { log.DebugLog()
+														   return s.engine }
+func (s *Ethereum) ChainDb() ethdb.Database            { log.DebugLog()
+														   return s.chainDb }
+func (s *Ethereum) IsListening() bool                  { log.DebugLog()
+														   return true } // Always listening
+func (s *Ethereum) EthVersion() int                    { log.DebugLog()
+														   return int(s.protocolManager.SubProtocols[0].Version) }
+func (s *Ethereum) NetVersion() uint64                 { log.DebugLog()
+														   return s.networkId }
+func (s *Ethereum) Downloader() *downloader.Downloader { log.DebugLog()
+														   return s.protocolManager.downloader }
 
 // Protocols implements node.Service, returning all the currently configured
 // network protocols to start.
-func (s *Ethereum) Protocols() []p2p.Protocol { log.DebugLog()
+func (s *Ethereum) Protocols() []p2p.Protocol {
+	log.DebugLog()
 	if s.lesServer == nil {
 		return s.protocolManager.SubProtocols
 	}
@@ -385,7 +409,8 @@ func (s *Ethereum) Protocols() []p2p.Protocol { log.DebugLog()
 
 // Start implements node.Service, starting all internal goroutines needed by the
 // Ethereum protocol implementation.
-func (s *Ethereum) Start(srvr *p2p.Server) error { log.DebugLog()
+func (s *Ethereum) Start(srvr *p2p.Server) error {
+	log.DebugLog()
 	// Start the bloom bits servicing goroutines
 	s.startBloomHandlers()
 
@@ -410,7 +435,8 @@ func (s *Ethereum) Start(srvr *p2p.Server) error { log.DebugLog()
 
 // Stop implements node.Service, terminating all internal goroutines used by the
 // Ethereum protocol.
-func (s *Ethereum) Stop() error { log.DebugLog()
+func (s *Ethereum) Stop() error {
+	log.DebugLog()
 	if s.stopDbUpgrade != nil {
 		s.stopDbUpgrade()
 	}

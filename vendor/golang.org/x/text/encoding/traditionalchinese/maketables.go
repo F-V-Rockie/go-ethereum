@@ -130,11 +130,11 @@ type interval struct {
 	low, high int
 }
 
-func (i interval) len() int {  return i.high - i.low }
+func (i interval) len() int { return i.high - i.low }
 
 // byDecreasingLength sorts intervals by decreasing length.
 type byDecreasingLength []interval
 
-func (b byDecreasingLength) Len() int           {  return len(b) }
-func (b byDecreasingLength) Less(i, j int) bool {  return b[i].len() > b[j].len() }
-func (b byDecreasingLength) Swap(i, j int)      {  b[i], b[j] = b[j], b[i] }
+func (b byDecreasingLength) Len() int           { return len(b) }
+func (b byDecreasingLength) Less(i, j int) bool { return b[i].len() > b[j].len() }
+func (b byDecreasingLength) Swap(i, j int)      { b[i], b[j] = b[j], b[i] }

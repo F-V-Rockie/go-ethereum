@@ -24,6 +24,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto/sha3"
 	"github.com/ethereum/go-ethereum/rlp"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 type hasher struct {
@@ -41,19 +42,22 @@ var hasherPool = sync.Pool{
 	},
 }
 
-func newHasher(cachegen, cachelimit uint16, onleaf LeafCallback) *hasher { log.DebugLog()
+func newHasher(cachegen, cachelimit uint16, onleaf LeafCallback) *hasher {
+	log.DebugLog()
 	h := hasherPool.Get().(*hasher)
 	h.cachegen, h.cachelimit, h.onleaf = cachegen, cachelimit, onleaf
 	return h
 }
 
-func returnHasherToPool(h *hasher) { log.DebugLog()
+func returnHasherToPool(h *hasher) {
+	log.DebugLog()
 	hasherPool.Put(h)
 }
 
 // hash collapses a node down into a hash node, also returning a copy of the
 // original node initialized with the computed hash to replace the original one.
-func (h *hasher) hash(n node, db *Database, force bool) (node, node, error) { log.DebugLog()
+func (h *hasher) hash(n node, db *Database, force bool) (node, node, error) {
+	log.DebugLog()
 	// If we're not storing the node, just hashing, use available cached data
 	if hash, dirty := n.cache(); hash != nil {
 		if db == nil {
@@ -100,7 +104,8 @@ func (h *hasher) hash(n node, db *Database, force bool) (node, node, error) { lo
 // hashChildren replaces the children of a node with their hashes if the encoded
 // size of the child is larger than a hash, returning the collapsed node as well
 // as a replacement for the original node with the child hashes cached in.
-func (h *hasher) hashChildren(original node, db *Database) (node, node, error) { log.DebugLog()
+func (h *hasher) hashChildren(original node, db *Database) (node, node, error) {
+	log.DebugLog()
 	var err error
 
 	switch n := original.(type) {
@@ -150,7 +155,8 @@ func (h *hasher) hashChildren(original node, db *Database) (node, node, error) {
 // store hashes the node n and if we have a storage layer specified, it writes
 // the key/value pair to it and tracks any node->child references as well as any
 // node->external trie references.
-func (h *hasher) store(n node, db *Database, force bool) (node, error) { log.DebugLog()
+func (h *hasher) store(n node, db *Database, force bool) (node, error) {
+	log.DebugLog()
 	// Don't store hashes or empty nodes.
 	if _, isHash := n.(hashNode); n == nil || isHash {
 		return n, nil

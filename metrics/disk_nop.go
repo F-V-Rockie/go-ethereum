@@ -18,7 +18,10 @@
 
 package metrics
 
-import "errors"
+import (
+	"errors"
+	"github.com/ethereum/go-ethereum/log"
+)
 
 // ReadDiskStats retrieves the disk IO stats belonging to the current process.
 func ReadDiskStats(stats *DiskStats) error { log.DebugLog()

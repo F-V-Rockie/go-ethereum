@@ -98,7 +98,7 @@ type trg struct {
 }
 
 // newWatcher returns new watcher's implementation.
-func newWatcher(c chan<- EventInfo) watcher { 
+func newWatcher(c chan<- EventInfo) watcher {
 	t := &trg{
 		s:      make(chan struct{}, 1),
 		pthLkp: make(map[string]*watched, 0),
@@ -113,7 +113,7 @@ func newWatcher(c chan<- EventInfo) watcher {
 }
 
 // Close implements watcher.
-func (t *trg) Close() (err error) { 
+func (t *trg) Close() (err error) {
 	t.Lock()
 	if err = t.t.Stop(); err != nil {
 		t.Unlock()
@@ -139,14 +139,14 @@ func (t *trg) Close() (err error) {
 }
 
 // send reported events one by one through chan.
-func (t *trg) send(evn []event) { 
+func (t *trg) send(evn []event) {
 	for i := range evn {
 		t.c <- &evn[i]
 	}
 }
 
 // singlewatch starts to watch given p file/directory.
-func (t *trg) singlewatch(p string, e Event, direct mode, fi os.FileInfo) (err error) { 
+func (t *trg) singlewatch(p string, e Event, direct mode, fi os.FileInfo) (err error) {
 	w, ok := t.pthLkp[p]
 	if !ok {
 		if w, err = t.t.NewWatched(p, fi); err != nil {
@@ -174,7 +174,7 @@ func (t *trg) singlewatch(p string, e Event, direct mode, fi os.FileInfo) (err e
 
 // decode converts event received from native to notify.Event
 // representation taking into account requested events (w).
-func decode(o int64, w Event) (e Event) { 
+func decode(o int64, w Event) (e Event) {
 	for f, n := range nat2not {
 		if o&int64(f) != 0 {
 			if w&f != 0 {
@@ -189,7 +189,7 @@ func decode(o int64, w Event) (e Event) {
 	return
 }
 
-func (t *trg) watch(p string, e Event, fi os.FileInfo) error { 
+func (t *trg) watch(p string, e Event, fi os.FileInfo) error {
 	if err := t.singlewatch(p, e, dir, fi); err != nil {
 		if err != errAlreadyWatched {
 			return err
@@ -213,7 +213,7 @@ func (t *trg) watch(p string, e Event, fi os.FileInfo) error {
 }
 
 // walk runs f func on each file/dir from p directory.
-func (t *trg) walk(p string, fn func(os.FileInfo) error) error { 
+func (t *trg) walk(p string, fn func(os.FileInfo) error) error {
 	fp, err := os.Open(p)
 	if err != nil {
 		return err
@@ -231,7 +231,7 @@ func (t *trg) walk(p string, fn func(os.FileInfo) error) error {
 	return nil
 }
 
-func (t *trg) unwatch(p string, fi os.FileInfo) error { 
+func (t *trg) unwatch(p string, fi os.FileInfo) error {
 	if fi.IsDir() {
 		err := t.walk(p, func(fi os.FileInfo) error {
 			err := t.singleunwatch(filepath.Join(p, fi.Name()), ndir)
@@ -248,7 +248,7 @@ func (t *trg) unwatch(p string, fi os.FileInfo) error {
 }
 
 // Watch implements Watcher interface.
-func (t *trg) Watch(p string, e Event) error { 
+func (t *trg) Watch(p string, e Event) error {
 	fi, err := os.Stat(p)
 	if err != nil {
 		return err
@@ -260,7 +260,7 @@ func (t *trg) Watch(p string, e Event) error {
 }
 
 // Unwatch implements Watcher interface.
-func (t *trg) Unwatch(p string) error { 
+func (t *trg) Unwatch(p string) error {
 	fi, err := os.Stat(p)
 	if err != nil {
 		return err
@@ -274,7 +274,7 @@ func (t *trg) Unwatch(p string) error {
 // Rewatch implements Watcher interface.
 //
 // TODO(rjeczalik): This is a naive hack. Rewrite might help.
-func (t *trg) Rewatch(p string, _, e Event) error { 
+func (t *trg) Rewatch(p string, _, e Event) error {
 	fi, err := os.Stat(p)
 	if err != nil {
 		return err
@@ -289,12 +289,12 @@ func (t *trg) Rewatch(p string, _, e Event) error {
 	return nil
 }
 
-func (*trg) file(w *watched, n interface{}, e Event) (evn []event) { 
+func (*trg) file(w *watched, n interface{}, e Event) (evn []event) {
 	evn = append(evn, event{w.p, e, w.fi.IsDir(), n})
 	return
 }
 
-func (t *trg) dir(w *watched, n interface{}, e, ge Event) (evn []event) { 
+func (t *trg) dir(w *watched, n interface{}, e, ge Event) (evn []event) {
 	// If it's dir and delete we have to send it and continue, because
 	// other processing relies on opening (in this case not existing) dir.
 	// Events for contents of this dir are reported by native impl.
@@ -360,7 +360,7 @@ const (
 )
 
 // unwatch stops watching p file/directory.
-func (t *trg) singleunwatch(p string, direct mode) error { 
+func (t *trg) singleunwatch(p string, direct mode) error {
 	w, ok := t.pthLkp[p]
 	if !ok {
 		return errNotWatched
@@ -391,7 +391,7 @@ func (t *trg) singleunwatch(p string, direct mode) error {
 	return nil
 }
 
-func (t *trg) monitor() { 
+func (t *trg) monitor() {
 	var (
 		n   interface{}
 		err error
@@ -411,7 +411,7 @@ func (t *trg) monitor() {
 }
 
 // process event returned by native call.
-func (t *trg) process(n interface{}) (evn []event) { 
+func (t *trg) process(n interface{}) (evn []event) {
 	t.Lock()
 	w, ge, err := t.t.Watched(n)
 	if err != nil {

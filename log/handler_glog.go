@@ -51,7 +51,7 @@ type GlogHandler struct {
 
 // NewGlogHandler creates a new log handler with filtering functionality similar
 // to Google's glog logger. The returned handler implements Handler.
-func NewGlogHandler(h Handler) *GlogHandler { log.DebugLog()
+func NewGlogHandler(h Handler) *GlogHandler {
 	return &GlogHandler{
 		origin: h,
 	}
@@ -66,7 +66,7 @@ type pattern struct {
 
 // Verbosity sets the glog verbosity ceiling. The verbosity of individual packages
 // and source files can be raised using Vmodule.
-func (h *GlogHandler) Verbosity(level Lvl) { log.DebugLog()
+func (h *GlogHandler) Verbosity(level Lvl) {
 	atomic.StoreUint32(&h.level, uint32(level))
 }
 
@@ -85,7 +85,7 @@ func (h *GlogHandler) Verbosity(level Lvl) { log.DebugLog()
 //
 //  pattern="foo/*=3"
 //   sets V to 3 in all files of any packages whose import path contains "foo"
-func (h *GlogHandler) Vmodule(ruleset string) error { log.DebugLog()
+func (h *GlogHandler) Vmodule(ruleset string) error {
 	var filter []pattern
 	for _, rule := range strings.Split(ruleset, ",") {
 		// Empty strings such as from a trailing comma can be ignored
@@ -143,7 +143,7 @@ func (h *GlogHandler) Vmodule(ruleset string) error { log.DebugLog()
 // log whenever execution hits that statement.
 //
 // Unlike with Vmodule, the ".go" must be present.
-func (h *GlogHandler) BacktraceAt(location string) error { log.DebugLog()
+func (h *GlogHandler) BacktraceAt(location string) error {
 	// Ensure the backtrace location contains two non-empty elements
 	parts := strings.Split(location, ":")
 	if len(parts) != 2 {
@@ -173,7 +173,7 @@ func (h *GlogHandler) BacktraceAt(location string) error { log.DebugLog()
 
 // Log implements Handler.Log, filtering a log record through the global, local
 // and backtrace filters, finally emitting it if either allow it through.
-func (h *GlogHandler) Log(r *Record) error { log.DebugLog()
+func (h *GlogHandler) Log(r *Record) error {
 	// If backtracing is requested, check whether this is the callsite
 	if atomic.LoadUint32(&h.backtrace) > 0 {
 		// Everything below here is slow. Although we could cache the call sites the

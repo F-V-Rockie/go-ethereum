@@ -95,25 +95,32 @@ type lightPeerWrapper struct {
 	peer LightPeer
 }
 
-func (w *lightPeerWrapper) Head() (common.Hash, *big.Int) { log.DebugLog() return w.peer.Head() }
-func (w *lightPeerWrapper) RequestHeadersByHash(h common.Hash, amount int, skip int, reverse bool) error { log.DebugLog()
+func (w *lightPeerWrapper) Head() (common.Hash, *big.Int) { log.DebugLog()
+															  return w.peer.Head() }
+func (w *lightPeerWrapper) RequestHeadersByHash(h common.Hash, amount int, skip int, reverse bool) error {
+	log.DebugLog()
 	return w.peer.RequestHeadersByHash(h, amount, skip, reverse)
 }
-func (w *lightPeerWrapper) RequestHeadersByNumber(i uint64, amount int, skip int, reverse bool) error { log.DebugLog()
+func (w *lightPeerWrapper) RequestHeadersByNumber(i uint64, amount int, skip int, reverse bool) error {
+	log.DebugLog()
 	return w.peer.RequestHeadersByNumber(i, amount, skip, reverse)
 }
-func (w *lightPeerWrapper) RequestBodies([]common.Hash) error { log.DebugLog()
+func (w *lightPeerWrapper) RequestBodies([]common.Hash) error {
+	log.DebugLog()
 	panic("RequestBodies not supported in light client mode sync")
 }
-func (w *lightPeerWrapper) RequestReceipts([]common.Hash) error { log.DebugLog()
+func (w *lightPeerWrapper) RequestReceipts([]common.Hash) error {
+	log.DebugLog()
 	panic("RequestReceipts not supported in light client mode sync")
 }
-func (w *lightPeerWrapper) RequestNodeData([]common.Hash) error { log.DebugLog()
+func (w *lightPeerWrapper) RequestNodeData([]common.Hash) error {
+	log.DebugLog()
 	panic("RequestNodeData not supported in light client mode sync")
 }
 
 // newPeerConnection creates a new downloader peer.
-func newPeerConnection(id string, version int, peer Peer, logger log.Logger) *peerConnection { log.DebugLog()
+func newPeerConnection(id string, version int, peer Peer, logger log.Logger) *peerConnection {
+	log.DebugLog()
 	return &peerConnection{
 		id:      id,
 		lacking: make(map[common.Hash]struct{}),
@@ -126,7 +133,8 @@ func newPeerConnection(id string, version int, peer Peer, logger log.Logger) *pe
 }
 
 // Reset clears the internal state of a peer entity.
-func (p *peerConnection) Reset() { log.DebugLog()
+func (p *peerConnection) Reset() {
+	log.DebugLog()
 	p.lock.Lock()
 	defer p.lock.Unlock()
 
@@ -144,7 +152,8 @@ func (p *peerConnection) Reset() { log.DebugLog()
 }
 
 // FetchHeaders sends a header retrieval request to the remote peer.
-func (p *peerConnection) FetchHeaders(from uint64, count int) error { log.DebugLog()
+func (p *peerConnection) FetchHeaders(from uint64, count int) error {
+	log.DebugLog()
 	// Sanity check the protocol version
 	if p.version < 62 {
 		panic(fmt.Sprintf("header fetch [eth/62+] requested on eth/%d", p.version))
@@ -162,7 +171,8 @@ func (p *peerConnection) FetchHeaders(from uint64, count int) error { log.DebugL
 }
 
 // FetchBodies sends a block body retrieval request to the remote peer.
-func (p *peerConnection) FetchBodies(request *fetchRequest) error { log.DebugLog()
+func (p *peerConnection) FetchBodies(request *fetchRequest) error {
+	log.DebugLog()
 	// Sanity check the protocol version
 	if p.version < 62 {
 		panic(fmt.Sprintf("body fetch [eth/62+] requested on eth/%d", p.version))
@@ -184,7 +194,8 @@ func (p *peerConnection) FetchBodies(request *fetchRequest) error { log.DebugLog
 }
 
 // FetchReceipts sends a receipt retrieval request to the remote peer.
-func (p *peerConnection) FetchReceipts(request *fetchRequest) error { log.DebugLog()
+func (p *peerConnection) FetchReceipts(request *fetchRequest) error {
+	log.DebugLog()
 	// Sanity check the protocol version
 	if p.version < 63 {
 		panic(fmt.Sprintf("body fetch [eth/63+] requested on eth/%d", p.version))
@@ -206,7 +217,8 @@ func (p *peerConnection) FetchReceipts(request *fetchRequest) error { log.DebugL
 }
 
 // FetchNodeData sends a node state data retrieval request to the remote peer.
-func (p *peerConnection) FetchNodeData(hashes []common.Hash) error { log.DebugLog()
+func (p *peerConnection) FetchNodeData(hashes []common.Hash) error {
+	log.DebugLog()
 	// Sanity check the protocol version
 	if p.version < 63 {
 		panic(fmt.Sprintf("node data fetch [eth/63+] requested on eth/%d", p.version))
@@ -225,41 +237,47 @@ func (p *peerConnection) FetchNodeData(hashes []common.Hash) error { log.DebugLo
 // SetHeadersIdle sets the peer to idle, allowing it to execute new header retrieval
 // requests. Its estimated header retrieval throughput is updated with that measured
 // just now.
-func (p *peerConnection) SetHeadersIdle(delivered int) { log.DebugLog()
+func (p *peerConnection) SetHeadersIdle(delivered int) {
+	log.DebugLog()
 	p.setIdle(p.headerStarted, delivered, &p.headerThroughput, &p.headerIdle)
 }
 
 // SetBlocksIdle sets the peer to idle, allowing it to execute new block retrieval
 // requests. Its estimated block retrieval throughput is updated with that measured
 // just now.
-func (p *peerConnection) SetBlocksIdle(delivered int) { log.DebugLog()
+func (p *peerConnection) SetBlocksIdle(delivered int) {
+	log.DebugLog()
 	p.setIdle(p.blockStarted, delivered, &p.blockThroughput, &p.blockIdle)
 }
 
 // SetBodiesIdle sets the peer to idle, allowing it to execute block body retrieval
 // requests. Its estimated body retrieval throughput is updated with that measured
 // just now.
-func (p *peerConnection) SetBodiesIdle(delivered int) { log.DebugLog()
+func (p *peerConnection) SetBodiesIdle(delivered int) {
+	log.DebugLog()
 	p.setIdle(p.blockStarted, delivered, &p.blockThroughput, &p.blockIdle)
 }
 
 // SetReceiptsIdle sets the peer to idle, allowing it to execute new receipt
 // retrieval requests. Its estimated receipt retrieval throughput is updated
 // with that measured just now.
-func (p *peerConnection) SetReceiptsIdle(delivered int) { log.DebugLog()
+func (p *peerConnection) SetReceiptsIdle(delivered int) {
+	log.DebugLog()
 	p.setIdle(p.receiptStarted, delivered, &p.receiptThroughput, &p.receiptIdle)
 }
 
 // SetNodeDataIdle sets the peer to idle, allowing it to execute new state trie
 // data retrieval requests. Its estimated state retrieval throughput is updated
 // with that measured just now.
-func (p *peerConnection) SetNodeDataIdle(delivered int) { log.DebugLog()
+func (p *peerConnection) SetNodeDataIdle(delivered int) {
+	log.DebugLog()
 	p.setIdle(p.stateStarted, delivered, &p.stateThroughput, &p.stateIdle)
 }
 
 // setIdle sets the peer to idle, allowing it to execute new retrieval requests.
 // Its estimated retrieval throughput is updated with that measured just now.
-func (p *peerConnection) setIdle(started time.Time, delivered int, throughput *float64, idle *int32) { log.DebugLog()
+func (p *peerConnection) setIdle(started time.Time, delivered int, throughput *float64, idle *int32) {
+	log.DebugLog()
 	// Irrelevant of the scaling, make sure the peer ends up idle
 	defer atomic.StoreInt32(idle, 0)
 
@@ -286,7 +304,8 @@ func (p *peerConnection) setIdle(started time.Time, delivered int, throughput *f
 
 // HeaderCapacity retrieves the peers header download allowance based on its
 // previously discovered throughput.
-func (p *peerConnection) HeaderCapacity(targetRTT time.Duration) int { log.DebugLog()
+func (p *peerConnection) HeaderCapacity(targetRTT time.Duration) int {
+	log.DebugLog()
 	p.lock.RLock()
 	defer p.lock.RUnlock()
 
@@ -295,7 +314,8 @@ func (p *peerConnection) HeaderCapacity(targetRTT time.Duration) int { log.Debug
 
 // BlockCapacity retrieves the peers block download allowance based on its
 // previously discovered throughput.
-func (p *peerConnection) BlockCapacity(targetRTT time.Duration) int { log.DebugLog()
+func (p *peerConnection) BlockCapacity(targetRTT time.Duration) int {
+	log.DebugLog()
 	p.lock.RLock()
 	defer p.lock.RUnlock()
 
@@ -304,7 +324,8 @@ func (p *peerConnection) BlockCapacity(targetRTT time.Duration) int { log.DebugL
 
 // ReceiptCapacity retrieves the peers receipt download allowance based on its
 // previously discovered throughput.
-func (p *peerConnection) ReceiptCapacity(targetRTT time.Duration) int { log.DebugLog()
+func (p *peerConnection) ReceiptCapacity(targetRTT time.Duration) int {
+	log.DebugLog()
 	p.lock.RLock()
 	defer p.lock.RUnlock()
 
@@ -313,7 +334,8 @@ func (p *peerConnection) ReceiptCapacity(targetRTT time.Duration) int { log.Debu
 
 // NodeDataCapacity retrieves the peers state download allowance based on its
 // previously discovered throughput.
-func (p *peerConnection) NodeDataCapacity(targetRTT time.Duration) int { log.DebugLog()
+func (p *peerConnection) NodeDataCapacity(targetRTT time.Duration) int {
+	log.DebugLog()
 	p.lock.RLock()
 	defer p.lock.RUnlock()
 
@@ -323,7 +345,8 @@ func (p *peerConnection) NodeDataCapacity(targetRTT time.Duration) int { log.Deb
 // MarkLacking appends a new entity to the set of items (blocks, receipts, states)
 // that a peer is known not to have (i.e. have been requested before). If the
 // set reaches its maximum allowed capacity, items are randomly dropped off.
-func (p *peerConnection) MarkLacking(hash common.Hash) { log.DebugLog()
+func (p *peerConnection) MarkLacking(hash common.Hash) {
+	log.DebugLog()
 	p.lock.Lock()
 	defer p.lock.Unlock()
 
@@ -338,7 +361,8 @@ func (p *peerConnection) MarkLacking(hash common.Hash) { log.DebugLog()
 
 // Lacks retrieves whether the hash of a blockchain item is on the peers lacking
 // list (i.e. whether we know that the peer does not have it).
-func (p *peerConnection) Lacks(hash common.Hash) bool { log.DebugLog()
+func (p *peerConnection) Lacks(hash common.Hash) bool {
+	log.DebugLog()
 	p.lock.RLock()
 	defer p.lock.RUnlock()
 
@@ -356,25 +380,29 @@ type peerSet struct {
 }
 
 // newPeerSet creates a new peer set top track the active download sources.
-func newPeerSet() *peerSet { log.DebugLog()
+func newPeerSet() *peerSet {
+	log.DebugLog()
 	return &peerSet{
 		peers: make(map[string]*peerConnection),
 	}
 }
 
 // SubscribeNewPeers subscribes to peer arrival events.
-func (ps *peerSet) SubscribeNewPeers(ch chan<- *peerConnection) event.Subscription { log.DebugLog()
+func (ps *peerSet) SubscribeNewPeers(ch chan<- *peerConnection) event.Subscription {
+	log.DebugLog()
 	return ps.newPeerFeed.Subscribe(ch)
 }
 
 // SubscribePeerDrops subscribes to peer departure events.
-func (ps *peerSet) SubscribePeerDrops(ch chan<- *peerConnection) event.Subscription { log.DebugLog()
+func (ps *peerSet) SubscribePeerDrops(ch chan<- *peerConnection) event.Subscription {
+	log.DebugLog()
 	return ps.peerDropFeed.Subscribe(ch)
 }
 
 // Reset iterates over the current peer set, and resets each of the known peers
 // to prepare for a next batch of block retrieval.
-func (ps *peerSet) Reset() { log.DebugLog()
+func (ps *peerSet) Reset() {
+	log.DebugLog()
 	ps.lock.RLock()
 	defer ps.lock.RUnlock()
 
@@ -389,7 +417,8 @@ func (ps *peerSet) Reset() { log.DebugLog()
 // The method also sets the starting throughput values of the new peer to the
 // average of all existing peers, to give it a realistic chance of being used
 // for data retrievals.
-func (ps *peerSet) Register(p *peerConnection) error { log.DebugLog()
+func (ps *peerSet) Register(p *peerConnection) error {
+	log.DebugLog()
 	// Retrieve the current median RTT as a sane default
 	p.rtt = ps.medianRTT()
 
@@ -424,7 +453,8 @@ func (ps *peerSet) Register(p *peerConnection) error { log.DebugLog()
 
 // Unregister removes a remote peer from the active set, disabling any further
 // actions to/from that particular entity.
-func (ps *peerSet) Unregister(id string) error { log.DebugLog()
+func (ps *peerSet) Unregister(id string) error {
+	log.DebugLog()
 	ps.lock.Lock()
 	p, ok := ps.peers[id]
 	if !ok {
@@ -439,7 +469,8 @@ func (ps *peerSet) Unregister(id string) error { log.DebugLog()
 }
 
 // Peer retrieves the registered peer with the given id.
-func (ps *peerSet) Peer(id string) *peerConnection { log.DebugLog()
+func (ps *peerSet) Peer(id string) *peerConnection {
+	log.DebugLog()
 	ps.lock.RLock()
 	defer ps.lock.RUnlock()
 
@@ -447,7 +478,8 @@ func (ps *peerSet) Peer(id string) *peerConnection { log.DebugLog()
 }
 
 // Len returns if the current number of peers in the set.
-func (ps *peerSet) Len() int { log.DebugLog()
+func (ps *peerSet) Len() int {
+	log.DebugLog()
 	ps.lock.RLock()
 	defer ps.lock.RUnlock()
 
@@ -455,7 +487,8 @@ func (ps *peerSet) Len() int { log.DebugLog()
 }
 
 // AllPeers retrieves a flat list of all the peers within the set.
-func (ps *peerSet) AllPeers() []*peerConnection { log.DebugLog()
+func (ps *peerSet) AllPeers() []*peerConnection {
+	log.DebugLog()
 	ps.lock.RLock()
 	defer ps.lock.RUnlock()
 
@@ -468,7 +501,8 @@ func (ps *peerSet) AllPeers() []*peerConnection { log.DebugLog()
 
 // HeaderIdlePeers retrieves a flat list of all the currently header-idle peers
 // within the active peer set, ordered by their reputation.
-func (ps *peerSet) HeaderIdlePeers() ([]*peerConnection, int) { log.DebugLog()
+func (ps *peerSet) HeaderIdlePeers() ([]*peerConnection, int) {
+	log.DebugLog()
 	idle := func(p *peerConnection) bool {
 		return atomic.LoadInt32(&p.headerIdle) == 0
 	}
@@ -482,7 +516,8 @@ func (ps *peerSet) HeaderIdlePeers() ([]*peerConnection, int) { log.DebugLog()
 
 // BodyIdlePeers retrieves a flat list of all the currently body-idle peers within
 // the active peer set, ordered by their reputation.
-func (ps *peerSet) BodyIdlePeers() ([]*peerConnection, int) { log.DebugLog()
+func (ps *peerSet) BodyIdlePeers() ([]*peerConnection, int) {
+	log.DebugLog()
 	idle := func(p *peerConnection) bool {
 		return atomic.LoadInt32(&p.blockIdle) == 0
 	}
@@ -496,7 +531,8 @@ func (ps *peerSet) BodyIdlePeers() ([]*peerConnection, int) { log.DebugLog()
 
 // ReceiptIdlePeers retrieves a flat list of all the currently receipt-idle peers
 // within the active peer set, ordered by their reputation.
-func (ps *peerSet) ReceiptIdlePeers() ([]*peerConnection, int) { log.DebugLog()
+func (ps *peerSet) ReceiptIdlePeers() ([]*peerConnection, int) {
+	log.DebugLog()
 	idle := func(p *peerConnection) bool {
 		return atomic.LoadInt32(&p.receiptIdle) == 0
 	}
@@ -510,7 +546,8 @@ func (ps *peerSet) ReceiptIdlePeers() ([]*peerConnection, int) { log.DebugLog()
 
 // NodeDataIdlePeers retrieves a flat list of all the currently node-data-idle
 // peers within the active peer set, ordered by their reputation.
-func (ps *peerSet) NodeDataIdlePeers() ([]*peerConnection, int) { log.DebugLog()
+func (ps *peerSet) NodeDataIdlePeers() ([]*peerConnection, int) {
+	log.DebugLog()
 	idle := func(p *peerConnection) bool {
 		return atomic.LoadInt32(&p.stateIdle) == 0
 	}
@@ -525,7 +562,8 @@ func (ps *peerSet) NodeDataIdlePeers() ([]*peerConnection, int) { log.DebugLog()
 // idlePeers retrieves a flat list of all currently idle peers satisfying the
 // protocol version constraints, using the provided function to check idleness.
 // The resulting set of peers are sorted by their measure throughput.
-func (ps *peerSet) idlePeers(minProtocol, maxProtocol int, idleCheck func(*peerConnection) bool, throughput func(*peerConnection) float64) ([]*peerConnection, int) { log.DebugLog()
+func (ps *peerSet) idlePeers(minProtocol, maxProtocol int, idleCheck func(*peerConnection) bool, throughput func(*peerConnection) float64) ([]*peerConnection, int) {
+	log.DebugLog()
 	ps.lock.RLock()
 	defer ps.lock.RUnlock()
 
@@ -550,7 +588,8 @@ func (ps *peerSet) idlePeers(minProtocol, maxProtocol int, idleCheck func(*peerC
 
 // medianRTT returns the median RTT of the peerset, considering only the tuning
 // peers if there are more peers available.
-func (ps *peerSet) medianRTT() time.Duration { log.DebugLog()
+func (ps *peerSet) medianRTT() time.Duration {
+	log.DebugLog()
 	// Gather all the currnetly measured round trip times
 	ps.lock.RLock()
 	defer ps.lock.RUnlock()

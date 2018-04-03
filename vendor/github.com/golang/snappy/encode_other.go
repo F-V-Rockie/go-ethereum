@@ -6,12 +6,12 @@
 
 package snappy
 
-func load32(b []byte, i int) uint32 { 
+func load32(b []byte, i int) uint32 {
 	b = b[i : i+4 : len(b)] // Help the compiler eliminate bounds checks on the next line.
 	return uint32(b[0]) | uint32(b[1])<<8 | uint32(b[2])<<16 | uint32(b[3])<<24
 }
 
-func load64(b []byte, i int) uint64 { 
+func load64(b []byte, i int) uint64 {
 	b = b[i : i+8 : len(b)] // Help the compiler eliminate bounds checks on the next line.
 	return uint64(b[0]) | uint64(b[1])<<8 | uint64(b[2])<<16 | uint64(b[3])<<24 |
 		uint64(b[4])<<32 | uint64(b[5])<<40 | uint64(b[6])<<48 | uint64(b[7])<<56
@@ -22,7 +22,7 @@ func load64(b []byte, i int) uint64 {
 // It assumes that:
 //	dst is long enough to hold the encoded bytes
 //	1 <= len(lit) && len(lit) <= 65536
-func emitLiteral(dst, lit []byte) int { 
+func emitLiteral(dst, lit []byte) int {
 	i, n := 0, uint(len(lit)-1)
 	switch {
 	case n < 60:
@@ -47,7 +47,7 @@ func emitLiteral(dst, lit []byte) int {
 //	dst is long enough to hold the encoded bytes
 //	1 <= offset && offset <= 65535
 //	4 <= length && length <= 65535
-func emitCopy(dst []byte, offset, length int) int { 
+func emitCopy(dst []byte, offset, length int) int {
 	i := 0
 	// The maximum length for a single tagCopy1 or tagCopy2 op is 64 bytes. The
 	// threshold for this loop is a little higher (at 68 = 64 + 4), and the
@@ -92,13 +92,13 @@ func emitCopy(dst []byte, offset, length int) int {
 //
 // It assumes that:
 //	0 <= i && i < j && j <= len(src)
-func extendMatch(src []byte, i, j int) int { 
+func extendMatch(src []byte, i, j int) int {
 	for ; j < len(src) && src[i] == src[j]; i, j = i+1, j+1 {
 	}
 	return j
 }
 
-func hash(u, shift uint32) uint32 { 
+func hash(u, shift uint32) uint32 {
 	return (u * 0x1e35a7bd) >> shift
 }
 
@@ -109,7 +109,7 @@ func hash(u, shift uint32) uint32 {
 // It also assumes that:
 //	len(dst) >= MaxEncodedLen(len(src)) &&
 // 	minNonLiteralBlockSize <= len(src) && len(src) <= maxBlockSize
-func encodeBlock(dst, src []byte) (d int) { 
+func encodeBlock(dst, src []byte) (d int) {
 	// Initialize the hash table. Its size ranges from 1<<8 to 1<<14 inclusive.
 	// The table element type is uint16, as s < sLimit and sLimit < len(src)
 	// and len(src) <= maxBlockSize and maxBlockSize == 65536.

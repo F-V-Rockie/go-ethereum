@@ -21,6 +21,7 @@ import (
 	"time"
 
 	"github.com/aristanetworks/goarista/monotime"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 type AbsTime time.Duration // absolute monotonic time

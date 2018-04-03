@@ -8,11 +8,13 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 var _ = (*logMarshaling)(nil)
 
-func (l Log) MarshalJSON() ([]byte, error) { log.DebugLog()
+func (l Log) MarshalJSON() ([]byte, error) {
+	log.DebugLog()
 	type Log struct {
 		Address     common.Address `json:"address" gencodec:"required"`
 		Topics      []common.Hash  `json:"topics" gencodec:"required"`
@@ -37,7 +39,8 @@ func (l Log) MarshalJSON() ([]byte, error) { log.DebugLog()
 	return json.Marshal(&enc)
 }
 
-func (l *Log) UnmarshalJSON(input []byte) error { log.DebugLog()
+func (l *Log) UnmarshalJSON(input []byte) error {
+	log.DebugLog()
 	type Log struct {
 		Address     *common.Address `json:"address" gencodec:"required"`
 		Topics      []common.Hash   `json:"topics" gencodec:"required"`

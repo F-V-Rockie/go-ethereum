@@ -21,6 +21,7 @@ import (
 	"strings"
 
 	"github.com/peterh/liner"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // Stdin holds the stdin line reader (also using stdout for printing prompts).
@@ -79,7 +80,8 @@ type terminalPrompter struct {
 
 // newTerminalPrompter creates a liner based user input prompter working off the
 // standard input and output streams.
-func newTerminalPrompter() *terminalPrompter { log.DebugLog()
+func newTerminalPrompter() *terminalPrompter {
+	log.DebugLog()
 	p := new(terminalPrompter)
 	// Get the original mode before calling NewLiner.
 	// This is usually regular "cooked" mode where characters echo.
@@ -104,7 +106,8 @@ func newTerminalPrompter() *terminalPrompter { log.DebugLog()
 
 // PromptInput displays the given prompt to the user and requests some textual
 // data to be entered, returning the input of the user.
-func (p *terminalPrompter) PromptInput(prompt string) (string, error) { log.DebugLog()
+func (p *terminalPrompter) PromptInput(prompt string) (string, error) {
+	log.DebugLog()
 	if p.supported {
 		p.rawMode.ApplyMode()
 		defer p.normalMode.ApplyMode()
@@ -122,7 +125,8 @@ func (p *terminalPrompter) PromptInput(prompt string) (string, error) { log.Debu
 // PromptPassword displays the given prompt to the user and requests some textual
 // data to be entered, but one which must not be echoed out into the terminal.
 // The method returns the input provided by the user.
-func (p *terminalPrompter) PromptPassword(prompt string) (passwd string, err error) { log.DebugLog()
+func (p *terminalPrompter) PromptPassword(prompt string) (passwd string, err error) {
+	log.DebugLog()
 	if p.supported {
 		p.rawMode.ApplyMode()
 		defer p.normalMode.ApplyMode()
@@ -141,7 +145,8 @@ func (p *terminalPrompter) PromptPassword(prompt string) (passwd string, err err
 
 // PromptConfirm displays the given prompt to the user and requests a boolean
 // choice to be made, returning that choice.
-func (p *terminalPrompter) PromptConfirm(prompt string) (bool, error) { log.DebugLog()
+func (p *terminalPrompter) PromptConfirm(prompt string) (bool, error) {
+	log.DebugLog()
 	input, err := p.Prompt(prompt + " [y/N] ")
 	if len(input) > 0 && strings.ToUpper(input[:1]) == "Y" {
 		return true, nil
@@ -151,22 +156,26 @@ func (p *terminalPrompter) PromptConfirm(prompt string) (bool, error) { log.Debu
 
 // SetHistory sets the the input scrollback history that the prompter will allow
 // the user to scroll back to.
-func (p *terminalPrompter) SetHistory(history []string) { log.DebugLog()
+func (p *terminalPrompter) SetHistory(history []string) {
+	log.DebugLog()
 	p.State.ReadHistory(strings.NewReader(strings.Join(history, "\n")))
 }
 
 // AppendHistory appends an entry to the scrollback history.
-func (p *terminalPrompter) AppendHistory(command string) { log.DebugLog()
+func (p *terminalPrompter) AppendHistory(command string) {
+	log.DebugLog()
 	p.State.AppendHistory(command)
 }
 
 // ClearHistory clears the entire history
-func (p *terminalPrompter) ClearHistory() { log.DebugLog()
+func (p *terminalPrompter) ClearHistory() {
+	log.DebugLog()
 	p.State.ClearHistory()
 }
 
 // SetWordCompleter sets the completion function that the prompter will call to
 // fetch completion candidates when the user presses tab.
-func (p *terminalPrompter) SetWordCompleter(completer WordCompleter) { log.DebugLog()
+func (p *terminalPrompter) SetWordCompleter(completer WordCompleter) {
+	log.DebugLog()
 	p.State.SetWordCompleter(liner.WordCompleter(completer))
 }

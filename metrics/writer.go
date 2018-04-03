@@ -5,11 +5,13 @@ import (
 	"io"
 	"sort"
 	"time"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // Write sorts writes each metric in the given registry periodically to the
 // given io.Writer.
-func Write(r Registry, d time.Duration, w io.Writer) { log.DebugLog()
+func Write(r Registry, d time.Duration, w io.Writer) {
+	log.DebugLog()
 	for range time.Tick(d) {
 		WriteOnce(r, w)
 	}
@@ -17,7 +19,8 @@ func Write(r Registry, d time.Duration, w io.Writer) { log.DebugLog()
 
 // WriteOnce sorts and writes metrics in the given registry to the given
 // io.Writer.
-func WriteOnce(r Registry, w io.Writer) { log.DebugLog()
+func WriteOnce(r Registry, w io.Writer) {
+	log.DebugLog()
 	var namedMetrics namedMetricSlice
 	r.Each(func(name string, i interface{}) {
 		namedMetrics = append(namedMetrics, namedMetric{name, i})
@@ -91,10 +94,13 @@ type namedMetric struct {
 // namedMetricSlice is a slice of namedMetrics that implements sort.Interface.
 type namedMetricSlice []namedMetric
 
-func (nms namedMetricSlice) Len() int { log.DebugLog() return len(nms) }
+func (nms namedMetricSlice) Len() int { log.DebugLog()
+										  return len(nms) }
 
-func (nms namedMetricSlice) Swap(i, j int) { log.DebugLog() nms[i], nms[j] = nms[j], nms[i] }
+func (nms namedMetricSlice) Swap(i, j int) { log.DebugLog()
+											   nms[i], nms[j] = nms[j], nms[i] }
 
-func (nms namedMetricSlice) Less(i, j int) bool { log.DebugLog()
+func (nms namedMetricSlice) Less(i, j int) bool {
+	log.DebugLog()
 	return nms[i].name < nms[j].name
 }

@@ -14,7 +14,7 @@ import (
 )
 
 // AddImport adds the import path to the file f, if absent.
-func AddImport(fset *token.FileSet, f *ast.File, ipath string) (added bool) { 
+func AddImport(fset *token.FileSet, f *ast.File, ipath string) (added bool) {
 	return AddNamedImport(fset, f, "", ipath)
 }
 
@@ -25,7 +25,7 @@ func AddImport(fset *token.FileSet, f *ast.File, ipath string) (added bool) {
 //	AddNamedImport(fset, f, "pathpkg", "path")
 // adds
 //	import pathpkg "path"
-func AddNamedImport(fset *token.FileSet, f *ast.File, name, ipath string) (added bool) { 
+func AddNamedImport(fset *token.FileSet, f *ast.File, name, ipath string) (added bool) {
 	if imports(f, ipath) {
 		return false
 	}
@@ -176,12 +176,12 @@ func AddNamedImport(fset *token.FileSet, f *ast.File, name, ipath string) (added
 }
 
 // DeleteImport deletes the import path from the file f, if present.
-func DeleteImport(fset *token.FileSet, f *ast.File, path string) (deleted bool) { 
+func DeleteImport(fset *token.FileSet, f *ast.File, path string) (deleted bool) {
 	return DeleteNamedImport(fset, f, "", path)
 }
 
 // DeleteNamedImport deletes the import with the given name and path from the file f, if present.
-func DeleteNamedImport(fset *token.FileSet, f *ast.File, name, path string) (deleted bool) { 
+func DeleteNamedImport(fset *token.FileSet, f *ast.File, name, path string) (deleted bool) {
 	var delspecs []*ast.ImportSpec
 	var delcomments []*ast.CommentGroup
 
@@ -309,7 +309,7 @@ func DeleteNamedImport(fset *token.FileSet, f *ast.File, name, path string) (del
 }
 
 // RewriteImport rewrites any import of path oldPath to path newPath.
-func RewriteImport(fset *token.FileSet, f *ast.File, oldPath, newPath string) (rewrote bool) { 
+func RewriteImport(fset *token.FileSet, f *ast.File, oldPath, newPath string) (rewrote bool) {
 	for _, imp := range f.Imports {
 		if importPath(imp) == oldPath {
 			rewrote = true
@@ -323,7 +323,7 @@ func RewriteImport(fset *token.FileSet, f *ast.File, oldPath, newPath string) (r
 }
 
 // UsesImport reports whether a given import is used.
-func UsesImport(f *ast.File, path string) (used bool) { 
+func UsesImport(f *ast.File, path string) (used bool) {
 	spec := importSpec(f, path)
 	if spec == nil {
 		return
@@ -357,19 +357,19 @@ func UsesImport(f *ast.File, path string) (used bool) {
 
 type visitFn func(node ast.Node)
 
-func (fn visitFn) Visit(node ast.Node) ast.Visitor { 
+func (fn visitFn) Visit(node ast.Node) ast.Visitor {
 	fn(node)
 	return fn
 }
 
 // imports returns true if f imports path.
-func imports(f *ast.File, path string) bool { 
+func imports(f *ast.File, path string) bool {
 	return importSpec(f, path) != nil
 }
 
 // importSpec returns the import spec if f imports path,
 // or nil otherwise.
-func importSpec(f *ast.File, path string) *ast.ImportSpec { 
+func importSpec(f *ast.File, path string) *ast.ImportSpec {
 	for _, s := range f.Imports {
 		if importPath(s) == path {
 			return s
@@ -380,7 +380,7 @@ func importSpec(f *ast.File, path string) *ast.ImportSpec {
 
 // importPath returns the unquoted import path of s,
 // or "" if the path is not properly quoted.
-func importPath(s *ast.ImportSpec) string { 
+func importPath(s *ast.ImportSpec) string {
 	t, err := strconv.Unquote(s.Path.Value)
 	if err == nil {
 		return t
@@ -389,7 +389,7 @@ func importPath(s *ast.ImportSpec) string {
 }
 
 // declImports reports whether gen contains an import of path.
-func declImports(gen *ast.GenDecl, path string) bool { 
+func declImports(gen *ast.GenDecl, path string) bool {
 	if gen.Tok != token.IMPORT {
 		return false
 	}
@@ -403,7 +403,7 @@ func declImports(gen *ast.GenDecl, path string) bool {
 }
 
 // matchLen returns the length of the longest path segment prefix shared by x and y.
-func matchLen(x, y string) int { 
+func matchLen(x, y string) int {
 	n := 0
 	for i := 0; i < len(x) && i < len(y) && x[i] == y[i]; i++ {
 		if x[i] == '/' {
@@ -414,13 +414,13 @@ func matchLen(x, y string) int {
 }
 
 // isTopName returns true if n is a top-level unresolved identifier with the given name.
-func isTopName(n ast.Expr, name string) bool { 
+func isTopName(n ast.Expr, name string) bool {
 	id, ok := n.(*ast.Ident)
 	return ok && id.Name == name && id.Obj == nil
 }
 
 // Imports returns the file imports grouped by paragraph.
-func Imports(fset *token.FileSet, f *ast.File) [][]*ast.ImportSpec { 
+func Imports(fset *token.FileSet, f *ast.File) [][]*ast.ImportSpec {
 	var groups [][]*ast.ImportSpec
 
 	for _, decl := range f.Decls {

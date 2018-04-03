@@ -17,12 +17,12 @@ import (
 const maxInt = int(^uint(0) >> 1)
 
 // blockCopy copies n numbers from src into dst.
-func blockCopy(dst, src []uint32, n int) { 
+func blockCopy(dst, src []uint32, n int) {
 	copy(dst, src[:n])
 }
 
 // blockXOR XORs numbers from dst with n numbers from src.
-func blockXOR(dst, src []uint32, n int) { 
+func blockXOR(dst, src []uint32, n int) {
 	for i, v := range src[:n] {
 		dst[i] ^= v
 	}
@@ -30,7 +30,7 @@ func blockXOR(dst, src []uint32, n int) {
 
 // salsaXOR applies Salsa20/8 to the XOR of 16 numbers from tmp and in,
 // and puts the result into both both tmp and out.
-func salsaXOR(tmp *[16]uint32, in, out []uint32) { 
+func salsaXOR(tmp *[16]uint32, in, out []uint32) {
 	w0 := tmp[0] ^ in[0]
 	w1 := tmp[1] ^ in[1]
 	w2 := tmp[2] ^ in[2]
@@ -159,7 +159,7 @@ func salsaXOR(tmp *[16]uint32, in, out []uint32) {
 	out[15], tmp[15] = x15, x15
 }
 
-func blockMix(tmp *[16]uint32, in, out []uint32, r int) { 
+func blockMix(tmp *[16]uint32, in, out []uint32, r int) {
 	blockCopy(tmp[:], in[(2*r-1)*16:], 16)
 	for i := 0; i < 2*r; i += 2 {
 		salsaXOR(tmp, in[i*16:], out[i*8:])
@@ -167,12 +167,12 @@ func blockMix(tmp *[16]uint32, in, out []uint32, r int) {
 	}
 }
 
-func integer(b []uint32, r int) uint64 { 
+func integer(b []uint32, r int) uint64 {
 	j := (2*r - 1) * 16
 	return uint64(b[j]) | uint64(b[j+1])<<32
 }
 
-func smix(b []byte, r, N int, v, xy []uint32) { 
+func smix(b []byte, r, N int, v, xy []uint32) {
 	var tmp [16]uint32
 	x := xy
 	y := xy[32*r:]
@@ -224,7 +224,7 @@ func smix(b []byte, r, N int, v, xy []uint32) {
 // and p=1. The parameters N, r, and p should be increased as memory latency and
 // CPU parallelism increases; consider setting N to the highest power of 2 you
 // can derive within 100 milliseconds. Remember to get a good random salt.
-func Key(password, salt []byte, N, r, p, keyLen int) ([]byte, error) { 
+func Key(password, salt []byte, N, r, p, keyLen int) ([]byte, error) {
 	if N <= 1 || N&(N-1) != 0 {
 		return nil, errors.New("scrypt: N must be > 1 and a power of 2")
 	}

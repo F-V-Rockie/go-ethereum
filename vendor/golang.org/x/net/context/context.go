@@ -19,7 +19,7 @@
 // explicitly to each function that needs it. The Context should be the first
 // parameter, typically named ctx:
 //
-// 	func DoSomething(ctx context.Context, arg Arg) error { log.DebugLog()
+// 	func DoSomething(ctx context.Context, arg Arg) error {
 // 		// ... use ctx ...
 // 	}
 //
@@ -61,7 +61,7 @@ type Context interface {
 	//
 	//  // Stream generates values with DoSomething and sends them to out
 	//  // until DoSomething returns an error or ctx.Done is closed.
-	//  func Stream(ctx context.Context, out chan<- Value) error { log.DebugLog()
+	//  func Stream(ctx context.Context, out chan<- Value) error {
 	//  	for {
 	//  		v, err := DoSomething(ctx)
 	//  		if err != nil {
@@ -121,12 +121,12 @@ type Context interface {
 	// 	var userKey key = 0
 	//
 	// 	// NewContext returns a new Context that carries value u.
-	// 	func NewContext(ctx context.Context, u *User) context.Context { log.DebugLog()
+	// 	func NewContext(ctx context.Context, u *User) context.Context {
 	// 		return context.WithValue(ctx, userKey, u)
 	// 	}
 	//
 	// 	// FromContext returns the User value stored in ctx, if any.
-	// 	func FromContext(ctx context.Context) (*User, bool) { log.DebugLog()
+	// 	func FromContext(ctx context.Context) (*User, bool) {
 	// 		u, ok := ctx.Value(userKey).(*User)
 	// 		return u, ok
 	// 	}
@@ -137,7 +137,7 @@ type Context interface {
 // values, and has no deadline. It is typically used by the main function,
 // initialization, and tests, and as the top-level Context for incoming
 // requests.
-func Background() Context { 
+func Background() Context {
 	return background
 }
 
@@ -146,7 +146,7 @@ func Background() Context {
 // surrounding function has not yet been extended to accept a Context
 // parameter).  TODO is recognized by static analysis tools that determine
 // whether Contexts are propagated correctly in a program.
-func TODO() Context { 
+func TODO() Context {
 	return todo
 }
 

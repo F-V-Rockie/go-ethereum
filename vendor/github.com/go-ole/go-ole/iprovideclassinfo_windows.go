@@ -7,7 +7,7 @@ import (
 	"unsafe"
 )
 
-func getClassInfo(disp *IProvideClassInfo) (tinfo *ITypeInfo, err error) { 
+func getClassInfo(disp *IProvideClassInfo) (tinfo *ITypeInfo, err error) {
 	hr, _, _ := syscall.Syscall(
 		disp.VTable().GetClassInfo,
 		2,

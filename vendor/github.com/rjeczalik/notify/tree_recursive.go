@@ -7,7 +7,7 @@ package notify
 import "sync"
 
 // watchAdd TODO(rjeczalik)
-func watchAdd(nd node, c chan<- EventInfo, e Event) eventDiff { 
+func watchAdd(nd node, c chan<- EventInfo, e Event) eventDiff {
 	diff := nd.Watch.Add(c, e)
 	if wp := nd.Child[""].Watch; len(wp) != 0 {
 		e = wp.Total()
@@ -21,7 +21,7 @@ func watchAdd(nd node, c chan<- EventInfo, e Event) eventDiff {
 }
 
 // watchAddInactive TODO(rjeczalik)
-func watchAddInactive(nd node, c chan<- EventInfo, e Event) eventDiff { 
+func watchAddInactive(nd node, c chan<- EventInfo, e Event) eventDiff {
 	wp := nd.Child[""].Watch
 	if wp == nil {
 		wp = make(watchpoint)
@@ -38,7 +38,7 @@ func watchAddInactive(nd node, c chan<- EventInfo, e Event) eventDiff {
 }
 
 // watchCopy TODO(rjeczalik)
-func watchCopy(src, dst node) { 
+func watchCopy(src, dst node) {
 	for c, e := range src.Watch {
 		if c == nil {
 			continue
@@ -57,7 +57,7 @@ func watchCopy(src, dst node) {
 }
 
 // watchDel TODO(rjeczalik)
-func watchDel(nd node, c chan<- EventInfo, e Event) eventDiff { 
+func watchDel(nd node, c chan<- EventInfo, e Event) eventDiff {
 	diff := nd.Watch.Del(c, e)
 	if wp := nd.Child[""].Watch; len(wp) != 0 {
 		diffInactive := wp.Del(c, e)
@@ -73,7 +73,7 @@ func watchDel(nd node, c chan<- EventInfo, e Event) eventDiff {
 }
 
 // watchTotal TODO(rjeczalik)
-func watchTotal(nd node) Event { 
+func watchTotal(nd node) Event {
 	e := nd.Watch.Total()
 	if wp := nd.Child[""].Watch; len(wp) != 0 {
 		e |= wp.Total()
@@ -82,7 +82,7 @@ func watchTotal(nd node) Event {
 }
 
 // watchIsRecursive TODO(rjeczalik)
-func watchIsRecursive(nd node) bool { 
+func watchIsRecursive(nd node) bool {
 	ok := nd.Watch.IsRecursive()
 	// TODO(rjeczalik): add a test for len(wp) != 0 change the condition.
 	if wp := nd.Child[""].Watch; len(wp) != 0 {
@@ -107,7 +107,7 @@ type recursiveTree struct {
 }
 
 // newRecursiveTree TODO(rjeczalik)
-func newRecursiveTree(w recursiveWatcher, c chan EventInfo) *recursiveTree { 
+func newRecursiveTree(w recursiveWatcher, c chan EventInfo) *recursiveTree {
 	t := &recursiveTree{
 		root: root{nd: newnode("")},
 		w: struct {
@@ -121,7 +121,7 @@ func newRecursiveTree(w recursiveWatcher, c chan EventInfo) *recursiveTree {
 }
 
 // dispatch TODO(rjeczalik)
-func (t *recursiveTree) dispatch() { 
+func (t *recursiveTree) dispatch() {
 	for ei := range t.c {
 		dbgprintf("dispatching %v on %q", ei.Event(), ei.Path())
 		go func(ei EventInfo) {
@@ -153,7 +153,7 @@ func (t *recursiveTree) dispatch() {
 }
 
 // Watch TODO(rjeczalik)
-func (t *recursiveTree) Watch(path string, c chan<- EventInfo, events ...Event) error { 
+func (t *recursiveTree) Watch(path string, c chan<- EventInfo, events ...Event) error {
 	if c == nil {
 		panic("notify: Watch using nil channel")
 	}
@@ -303,7 +303,7 @@ func (t *recursiveTree) Watch(path string, c chan<- EventInfo, events ...Event) 
 // TODO(rjeczalik): Split parent watchpoint - transfer watches to children
 // if parent is no longer needed. This carries a risk that underlying
 // watcher calls could fail - reconsider if it's worth the effort.
-func (t *recursiveTree) Stop(c chan<- EventInfo) { 
+func (t *recursiveTree) Stop(c chan<- EventInfo) {
 	var err error
 	fn := func(nd node) (e error) {
 		diff := watchDel(nd, c, all)
@@ -347,7 +347,7 @@ func (t *recursiveTree) Stop(c chan<- EventInfo) {
 }
 
 // Close TODO(rjeczalik)
-func (t *recursiveTree) Close() error { 
+func (t *recursiveTree) Close() error {
 	err := t.w.Close()
 	close(t.c)
 	return err

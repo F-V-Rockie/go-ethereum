@@ -22,6 +22,7 @@ import (
 	"net"
 	"os"
 	"syscall"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 const _WSAEMSGSIZE = syscall.Errno(10040)

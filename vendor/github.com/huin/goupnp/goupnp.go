@@ -33,7 +33,7 @@ type ContextError struct {
 	Err     error
 }
 
-func (err ContextError) Error() string { 
+func (err ContextError) Error() string {
 	return fmt.Sprintf("%s: %v", err.Context, err.Err)
 }
 
@@ -57,7 +57,7 @@ type MaybeRootDevice struct {
 // "urn:schemas-upnp-org:service:...". A single error is returned for errors
 // while attempting to send the query. An error or RootDevice is returned for
 // each discovered RootDevice.
-func DiscoverDevices(searchTarget string) ([]MaybeRootDevice, error) { 
+func DiscoverDevices(searchTarget string) ([]MaybeRootDevice, error) {
 	httpu, err := httpu.NewHTTPUClient()
 	if err != nil {
 		return nil, err
@@ -87,7 +87,7 @@ func DiscoverDevices(searchTarget string) ([]MaybeRootDevice, error) {
 	return results, nil
 }
 
-func DeviceByURL(loc *url.URL) (*RootDevice, error) { 
+func DeviceByURL(loc *url.URL) (*RootDevice, error) {
 	locStr := loc.String()
 	root := new(RootDevice)
 	if err := requestXml(locStr, DeviceXMLNamespace, root); err != nil {
@@ -107,7 +107,7 @@ func DeviceByURL(loc *url.URL) (*RootDevice, error) {
 	return root, nil
 }
 
-func requestXml(url string, defaultSpace string, doc interface{}) error { 
+func requestXml(url string, defaultSpace string, doc interface{}) error {
 	timeout := time.Duration(3 * time.Second)
 	client := http.Client{
 		Timeout: timeout,

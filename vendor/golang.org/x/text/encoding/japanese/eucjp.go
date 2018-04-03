@@ -27,7 +27,7 @@ var errInvalidEUCJP = errors.New("japanese: invalid EUC-JP encoding")
 
 type eucJPDecoder struct{ transform.NopResetter }
 
-func (eucJPDecoder) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) { 
+func (eucJPDecoder) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) {
 	r, size := rune(0), 0
 loop:
 	for ; nSrc < len(src); nSrc += size {
@@ -107,7 +107,7 @@ loop:
 
 type eucJPEncoder struct{ transform.NopResetter }
 
-func (eucJPEncoder) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) { 
+func (eucJPEncoder) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) {
 	r, size := rune(0), 0
 	for ; nSrc < len(src); nSrc += size {
 		r = rune(src[nSrc])
@@ -203,7 +203,7 @@ func (eucJPEncoder) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err 
 	return nDst, nSrc, err
 }
 
-func init() { 
+func init() {
 	// Check that the hard-coded encode switch covers all tables.
 	if numEncodeTables != 6 {
 		panic("bad numEncodeTables")

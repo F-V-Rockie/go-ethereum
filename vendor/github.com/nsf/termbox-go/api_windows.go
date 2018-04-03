@@ -15,7 +15,7 @@ import (
 //              panic(err)
 //      }
 //      defer termbox.Close()
-func Init() error { 
+func Init() error {
 	var err error
 
 	interrupt, err = create_event()
@@ -72,7 +72,7 @@ func Init() error {
 
 // Finalizes termbox library, should be called after successful initialization
 // when termbox's functionality isn't required anymore.
-func Close() { 
+func Close() {
 	// we ignore errors here, because we can't really do anything about them
 	Clear(0, 0)
 	Flush()
@@ -99,12 +99,12 @@ func Close() {
 // Interrupt an in-progress call to PollEvent by causing it to return
 // EventInterrupt.  Note that this function will block until the PollEvent
 // function has successfully been interrupted.
-func Interrupt() { 
+func Interrupt() {
 	interrupt_comm <- struct{}{}
 }
 
 // Synchronizes the internal back buffer with the terminal.
-func Flush() error { 
+func Flush() error {
 	update_size_maybe()
 	prepare_diff_messages()
 	for _, diff := range diffbuf {
@@ -123,7 +123,7 @@ func Flush() error {
 }
 
 // Sets the position of the cursor. See also HideCursor().
-func SetCursor(x, y int) { 
+func SetCursor(x, y int) {
 	if is_cursor_hidden(cursor_x, cursor_y) && !is_cursor_hidden(x, y) {
 		show_cursor(true)
 	}
@@ -139,13 +139,13 @@ func SetCursor(x, y int) {
 }
 
 // The shortcut for SetCursor(-1, -1).
-func HideCursor() { 
+func HideCursor() {
 	SetCursor(cursor_hidden, cursor_hidden)
 }
 
 // Changes cell's parameters in the internal back buffer at the specified
 // position.
-func SetCell(x, y int, ch rune, fg, bg Attribute) { 
+func SetCell(x, y int, ch rune, fg, bg Attribute) {
 	if x < 0 || x >= back_buffer.width {
 		return
 	}
@@ -159,12 +159,12 @@ func SetCell(x, y int, ch rune, fg, bg Attribute) {
 // Returns a slice into the termbox's back buffer. You can get its dimensions
 // using 'Size' function. The slice remains valid as long as no 'Clear' or
 // 'Flush' function calls were made after call to this function.
-func CellBuffer() []Cell { 
+func CellBuffer() []Cell {
 	return back_buffer.cells
 }
 
 // Wait for an event and return it. This is a blocking function call.
-func PollEvent() Event { 
+func PollEvent() Event {
 	select {
 	case ev := <-input_comm:
 		return ev
@@ -177,12 +177,12 @@ func PollEvent() Event {
 // console's window size in characters). But it doesn't always match the size
 // of the console window, after the console size has changed, the internal back
 // buffer will get in sync only after Clear or Flush function calls.
-func Size() (int, int) { 
+func Size() (int, int) {
 	return int(term_size.x), int(term_size.y)
 }
 
 // Clears the internal back buffer.
-func Clear(fg, bg Attribute) error { 
+func Clear(fg, bg Attribute) error {
 	foreground, background = fg, bg
 	update_size_maybe()
 	back_buffer.clear()
@@ -202,7 +202,7 @@ func Clear(fg, bg Attribute) error {
 //
 // If 'mode' is InputCurrent, returns the current input mode. See also Input*
 // constants.
-func SetInputMode(mode InputMode) InputMode { 
+func SetInputMode(mode InputMode) InputMode {
 	if mode == InputCurrent {
 		return input_mode
 	}
@@ -226,7 +226,7 @@ func SetInputMode(mode InputMode) InputMode {
 //
 // Windows console does not support extra colour modes,
 // so this will always set and return OutputNormal.
-func SetOutputMode(mode OutputMode) OutputMode { 
+func SetOutputMode(mode OutputMode) OutputMode {
 	return OutputNormal
 }
 
@@ -234,6 +234,6 @@ func SetOutputMode(mode OutputMode) OutputMode {
 // of a terminal buffer and the reality. Such as a third party process. Sync
 // forces a complete resync between the termbox and a terminal, it may not be
 // visually pretty though. At the moment on Windows it does nothing.
-func Sync() error { 
+func Sync() error {
 	return nil
 }

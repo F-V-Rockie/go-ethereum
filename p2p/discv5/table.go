@@ -30,6 +30,7 @@ import (
 	"sort"
 
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 const (
@@ -56,7 +57,8 @@ type bucket struct {
 	replacements []*Node
 }
 
-func newTable(ourID NodeID, ourAddr *net.UDPAddr) *Table { log.DebugLog()
+func newTable(ourID NodeID, ourAddr *net.UDPAddr) *Table {
+	log.DebugLog()
 	self := NewNode(ourID, ourAddr.IP, uint16(ourAddr.Port), uint16(ourAddr.Port))
 	tab := &Table{self: self}
 	for i := range tab.buckets {
@@ -77,7 +79,8 @@ const printTable = false
 // with a distance less than twice of that of the selected node.
 // This algorithm will be improved later to specifically target the least recently
 // used buckets.
-func (tab *Table) chooseBucketRefreshTarget() common.Hash { log.DebugLog()
+func (tab *Table) chooseBucketRefreshTarget() common.Hash {
+	log.DebugLog()
 	entries := 0
 	if printTable {
 		fmt.Println()
@@ -118,7 +121,8 @@ func (tab *Table) chooseBucketRefreshTarget() common.Hash { log.DebugLog()
 // readRandomNodes fills the given slice with random nodes from the
 // table. It will not write the same node more than once. The nodes in
 // the slice are copies and can be modified by the caller.
-func (tab *Table) readRandomNodes(buf []*Node) (n int) { log.DebugLog()
+func (tab *Table) readRandomNodes(buf []*Node) (n int) {
+	log.DebugLog()
 	// TODO: tree-based buckets would help here
 	// Find all non-empty buckets and get a fresh slice of their entries.
 	var buckets [][]*Node
@@ -151,7 +155,8 @@ func (tab *Table) readRandomNodes(buf []*Node) (n int) { log.DebugLog()
 	return i + 1
 }
 
-func randUint(max uint32) uint32 { log.DebugLog()
+func randUint(max uint32) uint32 {
+	log.DebugLog()
 	if max < 2 {
 		return 0
 	}
@@ -160,7 +165,8 @@ func randUint(max uint32) uint32 { log.DebugLog()
 	return binary.BigEndian.Uint32(b[:]) % max
 }
 
-func randUint64n(max uint64) uint64 { log.DebugLog()
+func randUint64n(max uint64) uint64 {
+	log.DebugLog()
 	if max < 2 {
 		return 0
 	}
@@ -171,7 +177,8 @@ func randUint64n(max uint64) uint64 { log.DebugLog()
 
 // closest returns the n nodes in the table that are closest to the
 // given id. The caller must hold tab.mutex.
-func (tab *Table) closest(target common.Hash, nresults int) *nodesByDistance { log.DebugLog()
+func (tab *Table) closest(target common.Hash, nresults int) *nodesByDistance {
+	log.DebugLog()
 	// This is a very wasteful way to find the closest nodes but
 	// obviously correct. I believe that tree-based buckets would make
 	// this easier to implement efficiently.
@@ -187,7 +194,8 @@ func (tab *Table) closest(target common.Hash, nresults int) *nodesByDistance { l
 // add attempts to add the given node its corresponding bucket. If the
 // bucket has space available, adding the node succeeds immediately.
 // Otherwise, the node is added to the replacement cache for the bucket.
-func (tab *Table) add(n *Node) (contested *Node) { log.DebugLog()
+func (tab *Table) add(n *Node) (contested *Node) {
+	log.DebugLog()
 	//fmt.Println("add", n.addr().String(), n.ID.String(), n.sha.Hex())
 	if n.ID == tab.self.ID {
 		return
@@ -220,7 +228,8 @@ func (tab *Table) add(n *Node) (contested *Node) { log.DebugLog()
 
 // stuff adds nodes the table to the end of their corresponding bucket
 // if the bucket is not full.
-func (tab *Table) stuff(nodes []*Node) { log.DebugLog()
+func (tab *Table) stuff(nodes []*Node) {
+	log.DebugLog()
 outer:
 	for _, n := range nodes {
 		if n.ID == tab.self.ID {
@@ -244,7 +253,8 @@ outer:
 
 // delete removes an entry from the node table (used to evacuate
 // failed/non-bonded discovery peers).
-func (tab *Table) delete(node *Node) { log.DebugLog()
+func (tab *Table) delete(node *Node) {
+	log.DebugLog()
 	//fmt.Println("delete", node.addr().String(), node.ID.String(), node.sha.Hex())
 	bucket := tab.buckets[logdist(tab.self.sha, node.sha)]
 	for i := range bucket.entries {
@@ -256,7 +266,8 @@ func (tab *Table) delete(node *Node) { log.DebugLog()
 	}
 }
 
-func (tab *Table) deleteReplace(node *Node) { log.DebugLog()
+func (tab *Table) deleteReplace(node *Node) {
+	log.DebugLog()
 	b := tab.buckets[logdist(tab.self.sha, node.sha)]
 	i := 0
 	for i < len(b.entries) {
@@ -278,13 +289,15 @@ func (tab *Table) deleteReplace(node *Node) { log.DebugLog()
 	}
 }
 
-func (b *bucket) addFront(n *Node) { log.DebugLog()
+func (b *bucket) addFront(n *Node) {
+	log.DebugLog()
 	b.entries = append(b.entries, nil)
 	copy(b.entries[1:], b.entries)
 	b.entries[0] = n
 }
 
-func (b *bucket) bump(n *Node) bool { log.DebugLog()
+func (b *bucket) bump(n *Node) bool {
+	log.DebugLog()
 	for i := range b.entries {
 		if b.entries[i].ID == n.ID {
 			// move it to the front
@@ -304,7 +317,8 @@ type nodesByDistance struct {
 }
 
 // push adds the given node to the list, keeping the total size below maxElems.
-func (h *nodesByDistance) push(n *Node, maxElems int) { log.DebugLog()
+func (h *nodesByDistance) push(n *Node, maxElems int) {
+	log.DebugLog()
 	ix := sort.Search(len(h.entries), func(i int) bool {
 		return distcmp(h.target, h.entries[i].sha, n.sha) > 0
 	})

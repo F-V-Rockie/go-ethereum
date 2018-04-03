@@ -3,6 +3,7 @@
 package discv5
 
 import "strconv"
+import "github.com/ethereum/go-ethereum/log"
 
 const (
 	_nodeEvent_name_0 = "invalidEventpingPacketpongPacketfindnodePacketneighborsPacketfindnodeHashPackettopicRegisterPackettopicQueryPackettopicNodesPacket"

@@ -82,7 +82,7 @@ var (
 	ctlScan = regexp.MustCompile(`%?/(panic|fatal|check)(?:\s|$)`)
 )
 
-func operandCount(format string) int { 
+func operandCount(format string) int {
 	count := 0
 	end := len(format)
 	for at := 0; at < end; {
@@ -100,7 +100,7 @@ func operandCount(format string) int {
 	return count
 }
 
-func parseFormat(format string) (frmt _frmt) { 
+func parseFormat(format string) (frmt _frmt) {
 	if ctlTest.MatchString(format) {
 		format = strings.TrimLeftFunc(format, unicode.IsSpace)
 		index := strings.Index(format, "//")
@@ -135,7 +135,7 @@ type Dbgr struct {
 
 type DbgFunction func(values ...interface{})
 
-func NewDbgr() *Dbgr { 
+func NewDbgr() *Dbgr {
 	self := &Dbgr{}
 	return self
 }
@@ -155,7 +155,7 @@ they output to by passing in an (optional) customization function:
     })
 
 */
-func New(options ...interface{}) (dbg DbgFunction, dbgf DbgFunction) { 
+func New(options ...interface{}) (dbg DbgFunction, dbgf DbgFunction) {
 	dbgr := NewDbgr()
 	if len(options) > 0 {
 		if fn, ok := options[0].(func(*Dbgr)); ok {
@@ -165,15 +165,15 @@ func New(options ...interface{}) (dbg DbgFunction, dbgf DbgFunction) {
 	return dbgr.DbgDbgf()
 }
 
-func (self Dbgr) Dbg(values ...interface{}) { 
+func (self Dbgr) Dbg(values ...interface{}) {
 	self.getEmit().emit(_frmt{}, "", values...)
 }
 
-func (self Dbgr) Dbgf(values ...interface{}) { 
+func (self Dbgr) Dbgf(values ...interface{}) {
 	self.dbgf(values...)
 }
 
-func (self Dbgr) DbgDbgf() (dbg DbgFunction, dbgf DbgFunction) { 
+func (self Dbgr) DbgDbgf() (dbg DbgFunction, dbgf DbgFunction) {
 	dbg = func(vl ...interface{}) {
 		self.Dbg(vl...)
 	}
@@ -183,7 +183,7 @@ func (self Dbgr) DbgDbgf() (dbg DbgFunction, dbgf DbgFunction) {
 	return dbg, dbgf // Redundant, but...
 }
 
-func (self Dbgr) dbgf(values ...interface{}) { 
+func (self Dbgr) dbgf(values ...interface{}) {
 
 	var frmt _frmt
 	if len(values) > 0 {
@@ -272,7 +272,7 @@ func (self Dbgr) dbgf(values ...interface{}) {
 }
 
 // Idiot-proof &Dbgr{}, etc.
-func (self *Dbgr) getEmit() _emit { 
+func (self *Dbgr) getEmit() _emit {
 	if self.emit == nil {
 		self.emit = standardEmit()
 	}
@@ -286,7 +286,7 @@ func (self *Dbgr) getEmit() _emit {
 //      nil                 Reset to the default output (os.Stderr)
 //      "log"               Print*/Panic*/Fatal* via the "log" package
 //
-func (self *Dbgr) SetOutput(output interface{}) { 
+func (self *Dbgr) SetOutput(output interface{}) {
 	if output == nil {
 		self.emit = standardEmit()
 		return
@@ -315,13 +315,13 @@ func (self *Dbgr) SetOutput(output interface{}) {
 // = emit = //
 // ======== //
 
-func standardEmit() _emit { 
+func standardEmit() _emit {
 	return _emitWriter{
 		writer: os.Stderr,
 	}
 }
 
-func ln(tmp string) string { 
+func ln(tmp string) string {
 	length := len(tmp)
 	if length > 0 && tmp[length-1] != '\n' {
 		return tmp + "\n"
@@ -337,7 +337,7 @@ type _emitWriter struct {
 	writer io.Writer
 }
 
-func (self _emitWriter) emit(frmt _frmt, format string, values ...interface{}) { 
+func (self _emitWriter) emit(frmt _frmt, format string, values ...interface{}) {
 	if format == "" {
 		fmt.Fprintln(self.writer, values...)
 	} else {
@@ -355,7 +355,7 @@ type _emitLogger struct {
 	logger *log.Logger
 }
 
-func (self _emitLogger) emit(frmt _frmt, format string, values ...interface{}) { 
+func (self _emitLogger) emit(frmt _frmt, format string, values ...interface{}) {
 	if format == "" {
 		self.logger.Println(values...)
 	} else {
@@ -372,7 +372,7 @@ func (self _emitLogger) emit(frmt _frmt, format string, values ...interface{}) {
 type _emitLog struct {
 }
 
-func (self _emitLog) emit(frmt _frmt, format string, values ...interface{}) { 
+func (self _emitLog) emit(frmt _frmt, format string, values ...interface{}) {
 	if format == "" {
 		log.Println(values...)
 	} else {

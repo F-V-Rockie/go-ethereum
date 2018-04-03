@@ -8,13 +8,13 @@ type cellbuf struct {
 	cells  []Cell
 }
 
-func (this *cellbuf) init(width, height int) { 
+func (this *cellbuf) init(width, height int) {
 	this.width = width
 	this.height = height
 	this.cells = make([]Cell, width*height)
 }
 
-func (this *cellbuf) resize(width, height int) { 
+func (this *cellbuf) resize(width, height int) {
 	if this.width == width && this.height == height {
 		return
 	}
@@ -43,7 +43,7 @@ func (this *cellbuf) resize(width, height int) {
 	}
 }
 
-func (this *cellbuf) clear() { 
+func (this *cellbuf) clear() {
 	for i := range this.cells {
 		c := &this.cells[i]
 		c.Ch = ' '
@@ -54,6 +54,6 @@ func (this *cellbuf) clear() {
 
 const cursor_hidden = -1
 
-func is_cursor_hidden(x, y int) bool { 
+func is_cursor_hidden(x, y int) bool {
 	return x == cursor_hidden || y == cursor_hidden
 }

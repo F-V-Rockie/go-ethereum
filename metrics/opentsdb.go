@@ -8,6 +8,8 @@ import (
 	"os"
 	"strings"
 	"time"
+
+	debugLog "github.com/ethereum/go-ethereum/log"
 )
 
 var shortHostName string = ""
@@ -25,7 +27,7 @@ type OpenTSDBConfig struct {
 // OpenTSDB is a blocking exporter function which reports metrics in r
 // to a TSDB server located at addr, flushing them every d duration
 // and prepending metric names with prefix.
-func OpenTSDB(r Registry, d time.Duration, prefix string, addr *net.TCPAddr) { log.DebugLog()
+func OpenTSDB(r Registry, d time.Duration, prefix string, addr *net.TCPAddr) { debugLog.DebugLog()
 	OpenTSDBWithConfig(OpenTSDBConfig{
 		Addr:          addr,
 		Registry:      r,
@@ -37,7 +39,7 @@ func OpenTSDB(r Registry, d time.Duration, prefix string, addr *net.TCPAddr) { l
 
 // OpenTSDBWithConfig is a blocking exporter function just like OpenTSDB,
 // but it takes a OpenTSDBConfig instead.
-func OpenTSDBWithConfig(c OpenTSDBConfig) { log.DebugLog()
+func OpenTSDBWithConfig(c OpenTSDBConfig) { debugLog.DebugLog()
 	for range time.Tick(c.FlushInterval) {
 		if err := openTSDB(&c); nil != err {
 			log.Println(err)
@@ -45,7 +47,7 @@ func OpenTSDBWithConfig(c OpenTSDBConfig) { log.DebugLog()
 	}
 }
 
-func getShortHostname() string { log.DebugLog()
+func getShortHostname() string { debugLog.DebugLog()
 	if shortHostName == "" {
 		host, _ := os.Hostname()
 		if index := strings.Index(host, "."); index > 0 {
@@ -57,7 +59,7 @@ func getShortHostname() string { log.DebugLog()
 	return shortHostName
 }
 
-func openTSDB(c *OpenTSDBConfig) error { log.DebugLog()
+func openTSDB(c *OpenTSDBConfig) error { debugLog.DebugLog()
 	shortHostname := getShortHostname()
 	now := time.Now().Unix()
 	du := float64(c.DurationUnit)

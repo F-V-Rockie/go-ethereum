@@ -59,7 +59,7 @@ type dumpState struct {
 
 // indent performs indentation according to the depth level and cs.Indent
 // option.
-func (d *dumpState) indent() { 
+func (d *dumpState) indent() {
 	if d.ignoreNextIndent {
 		d.ignoreNextIndent = false
 		return
@@ -70,7 +70,7 @@ func (d *dumpState) indent() {
 // unpackValue returns values inside of non-nil interfaces when possible.
 // This is useful for data types like structs, arrays, slices, and maps which
 // can contain varying types packed inside an interface.
-func (d *dumpState) unpackValue(v reflect.Value) reflect.Value { 
+func (d *dumpState) unpackValue(v reflect.Value) reflect.Value {
 	if v.Kind() == reflect.Interface && !v.IsNil() {
 		v = v.Elem()
 	}
@@ -78,7 +78,7 @@ func (d *dumpState) unpackValue(v reflect.Value) reflect.Value {
 }
 
 // dumpPtr handles formatting of pointers by indirecting them as necessary.
-func (d *dumpState) dumpPtr(v reflect.Value) { 
+func (d *dumpState) dumpPtr(v reflect.Value) {
 	// Remove pointers at or below the current depth from map used to detect
 	// circular refs.
 	for k, depth := range d.pointers {
@@ -158,7 +158,7 @@ func (d *dumpState) dumpPtr(v reflect.Value) {
 
 // dumpSlice handles formatting of arrays and slices.  Byte (uint8 under
 // reflection) arrays and slices are dumped in hexdump -C fashion.
-func (d *dumpState) dumpSlice(v reflect.Value) { 
+func (d *dumpState) dumpSlice(v reflect.Value) {
 	// Determine whether this type should be hex dumped or not.  Also,
 	// for types which should be hexdumped, try to use the underlying data
 	// first, then fall back to trying to convert them to a uint8 slice.
@@ -248,7 +248,7 @@ func (d *dumpState) dumpSlice(v reflect.Value) {
 // value to figure out what kind of object we are dealing with and formats it
 // appropriately.  It is a recursive function, however circular data structures
 // are detected and handled properly.
-func (d *dumpState) dump(v reflect.Value) { 
+func (d *dumpState) dump(v reflect.Value) {
 	// Handle invalid reflect values immediately.
 	kind := v.Kind()
 	if kind == reflect.Invalid {
@@ -450,7 +450,7 @@ func (d *dumpState) dump(v reflect.Value) {
 
 // fdump is a helper function to consolidate the logic from the various public
 // methods which take varying writers and config states.
-func fdump(cs *ConfigState, w io.Writer, a ...interface{}) { 
+func fdump(cs *ConfigState, w io.Writer, a ...interface{}) {
 	for _, arg := range a {
 		if arg == nil {
 			w.Write(interfaceBytes)
@@ -469,13 +469,13 @@ func fdump(cs *ConfigState, w io.Writer, a ...interface{}) {
 
 // Fdump formats and displays the passed arguments to io.Writer w.  It formats
 // exactly the same as Dump.
-func Fdump(w io.Writer, a ...interface{}) { 
+func Fdump(w io.Writer, a ...interface{}) {
 	fdump(&Config, w, a...)
 }
 
 // Sdump returns a string with the passed arguments formatted exactly the same
 // as Dump.
-func Sdump(a ...interface{}) string { 
+func Sdump(a ...interface{}) string {
 	var buf bytes.Buffer
 	fdump(&Config, &buf, a...)
 	return buf.String()
@@ -504,6 +504,6 @@ spew.Config.  See ConfigState for options documentation.
 See Fdump if you would prefer dumping to an arbitrary io.Writer or Sdump to
 get the formatted result as a string.
 */
-func Dump(a ...interface{}) { 
+func Dump(a ...interface{}) {
 	fdump(&Config, os.Stdout, a...)
 }

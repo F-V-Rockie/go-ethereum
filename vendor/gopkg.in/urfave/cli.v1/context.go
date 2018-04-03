@@ -22,7 +22,7 @@ type Context struct {
 }
 
 // NewContext creates a new context. For use in when invoking an App or Command action.
-func NewContext(app *App, set *flag.FlagSet, parentCtx *Context) *Context { 
+func NewContext(app *App, set *flag.FlagSet, parentCtx *Context) *Context {
 	c := &Context{App: app, flagSet: set, parentContext: parentCtx}
 
 	if parentCtx != nil {
@@ -33,24 +33,24 @@ func NewContext(app *App, set *flag.FlagSet, parentCtx *Context) *Context {
 }
 
 // NumFlags returns the number of flags set
-func (c *Context) NumFlags() int { 
+func (c *Context) NumFlags() int {
 	return c.flagSet.NFlag()
 }
 
 // Set sets a context flag to a value.
-func (c *Context) Set(name, value string) error { 
+func (c *Context) Set(name, value string) error {
 	c.setFlags = nil
 	return c.flagSet.Set(name, value)
 }
 
 // GlobalSet sets a context flag to a value on the global flagset
-func (c *Context) GlobalSet(name, value string) error { 
+func (c *Context) GlobalSet(name, value string) error {
 	globalContext(c).setFlags = nil
 	return globalContext(c).flagSet.Set(name, value)
 }
 
 // IsSet determines if the flag was actually set
-func (c *Context) IsSet(name string) bool { 
+func (c *Context) IsSet(name string) bool {
 	if c.setFlags == nil {
 		c.setFlags = make(map[string]bool)
 
@@ -113,7 +113,7 @@ func (c *Context) IsSet(name string) bool {
 }
 
 // GlobalIsSet determines if the global flag was actually set
-func (c *Context) GlobalIsSet(name string) bool { 
+func (c *Context) GlobalIsSet(name string) bool {
 	ctx := c
 	if ctx.parentContext != nil {
 		ctx = ctx.parentContext
@@ -128,7 +128,7 @@ func (c *Context) GlobalIsSet(name string) bool {
 }
 
 // FlagNames returns a slice of flag names used in this context.
-func (c *Context) FlagNames() (names []string) { 
+func (c *Context) FlagNames() (names []string) {
 	for _, flag := range c.Command.Flags {
 		name := strings.Split(flag.GetName(), ",")[0]
 		if name == "help" {
@@ -140,7 +140,7 @@ func (c *Context) FlagNames() (names []string) {
 }
 
 // GlobalFlagNames returns a slice of global flag names used by the app.
-func (c *Context) GlobalFlagNames() (names []string) { 
+func (c *Context) GlobalFlagNames() (names []string) {
 	for _, flag := range c.App.Flags {
 		name := strings.Split(flag.GetName(), ",")[0]
 		if name == "help" || name == "version" {
@@ -152,12 +152,12 @@ func (c *Context) GlobalFlagNames() (names []string) {
 }
 
 // Parent returns the parent context, if any
-func (c *Context) Parent() *Context { 
+func (c *Context) Parent() *Context {
 	return c.parentContext
 }
 
 // value returns the value of the flag coressponding to `name`
-func (c *Context) value(name string) interface{} { 
+func (c *Context) value(name string) interface{} {
 	return c.flagSet.Lookup(name).Value.(flag.Getter).Get()
 }
 
@@ -165,18 +165,18 @@ func (c *Context) value(name string) interface{} {
 type Args []string
 
 // Args returns the command line arguments associated with the context.
-func (c *Context) Args() Args { 
+func (c *Context) Args() Args {
 	args := Args(c.flagSet.Args())
 	return args
 }
 
 // NArg returns the number of the command line arguments.
-func (c *Context) NArg() int { 
+func (c *Context) NArg() int {
 	return len(c.Args())
 }
 
 // Get returns the nth argument, or else a blank string
-func (a Args) Get(n int) string { 
+func (a Args) Get(n int) string {
 	if len(a) > n {
 		return a[n]
 	}
@@ -184,13 +184,13 @@ func (a Args) Get(n int) string {
 }
 
 // First returns the first argument, or else a blank string
-func (a Args) First() string { 
+func (a Args) First() string {
 	return a.Get(0)
 }
 
 // Tail returns the rest of the arguments (not the first one)
 // or else an empty string slice
-func (a Args) Tail() []string { 
+func (a Args) Tail() []string {
 	if len(a) >= 2 {
 		return []string(a)[1:]
 	}
@@ -198,12 +198,12 @@ func (a Args) Tail() []string {
 }
 
 // Present checks if there are any arguments present
-func (a Args) Present() bool { 
+func (a Args) Present() bool {
 	return len(a) != 0
 }
 
 // Swap swaps arguments at the given indexes
-func (a Args) Swap(from, to int) error { 
+func (a Args) Swap(from, to int) error {
 	if from >= len(a) || to >= len(a) {
 		return errors.New("index out of range")
 	}
@@ -211,7 +211,7 @@ func (a Args) Swap(from, to int) error {
 	return nil
 }
 
-func globalContext(ctx *Context) *Context { 
+func globalContext(ctx *Context) *Context {
 	if ctx == nil {
 		return nil
 	}
@@ -224,7 +224,7 @@ func globalContext(ctx *Context) *Context {
 	}
 }
 
-func lookupGlobalFlagSet(name string, ctx *Context) *flag.FlagSet { 
+func lookupGlobalFlagSet(name string, ctx *Context) *flag.FlagSet {
 	if ctx.parentContext != nil {
 		ctx = ctx.parentContext
 	}
@@ -236,7 +236,7 @@ func lookupGlobalFlagSet(name string, ctx *Context) *flag.FlagSet {
 	return nil
 }
 
-func copyFlag(name string, ff *flag.Flag, set *flag.FlagSet) { 
+func copyFlag(name string, ff *flag.Flag, set *flag.FlagSet) {
 	switch ff.Value.(type) {
 	case *StringSlice:
 	default:
@@ -244,7 +244,7 @@ func copyFlag(name string, ff *flag.Flag, set *flag.FlagSet) {
 	}
 }
 
-func normalizeFlags(flags []Flag, set *flag.FlagSet) error { 
+func normalizeFlags(flags []Flag, set *flag.FlagSet) error {
 	visited := make(map[string]bool)
 	set.Visit(func(f *flag.Flag) {
 		visited[f.Name] = true

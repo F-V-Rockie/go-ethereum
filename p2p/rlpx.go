@@ -42,6 +42,7 @@ import (
 	"github.com/ethereum/go-ethereum/p2p/discover"
 	"github.com/ethereum/go-ethereum/rlp"
 	"github.com/golang/snappy"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 const (
@@ -83,26 +84,30 @@ type rlpx struct {
 	rw       *rlpxFrameRW
 }
 
-func newRLPX(fd net.Conn) transport { log.DebugLog()
+func newRLPX(fd net.Conn) transport {
+	log.DebugLog()
 	fd.SetDeadline(time.Now().Add(handshakeTimeout))
 	return &rlpx{fd: fd}
 }
 
-func (t *rlpx) ReadMsg() (Msg, error) { log.DebugLog()
+func (t *rlpx) ReadMsg() (Msg, error) {
+	log.DebugLog()
 	t.rmu.Lock()
 	defer t.rmu.Unlock()
 	t.fd.SetReadDeadline(time.Now().Add(frameReadTimeout))
 	return t.rw.ReadMsg()
 }
 
-func (t *rlpx) WriteMsg(msg Msg) error { log.DebugLog()
+func (t *rlpx) WriteMsg(msg Msg) error {
+	log.DebugLog()
 	t.wmu.Lock()
 	defer t.wmu.Unlock()
 	t.fd.SetWriteDeadline(time.Now().Add(frameWriteTimeout))
 	return t.rw.WriteMsg(msg)
 }
 
-func (t *rlpx) close(err error) { log.DebugLog()
+func (t *rlpx) close(err error) {
+	log.DebugLog()
 	t.wmu.Lock()
 	defer t.wmu.Unlock()
 	// Tell the remote end why we're disconnecting if possible.
@@ -121,7 +126,8 @@ func (t *rlpx) close(err error) { log.DebugLog()
 	t.fd.Close()
 }
 
-func (t *rlpx) doProtoHandshake(our *protoHandshake) (their *protoHandshake, err error) { log.DebugLog()
+func (t *rlpx) doProtoHandshake(our *protoHandshake) (their *protoHandshake, err error) {
+	log.DebugLog()
 	// Writing our handshake happens concurrently, we prefer
 	// returning the handshake read error. If the remote side
 	// disconnects us early with a valid reason, we should return it
@@ -141,7 +147,8 @@ func (t *rlpx) doProtoHandshake(our *protoHandshake) (their *protoHandshake, err
 	return their, nil
 }
 
-func readProtocolHandshake(rw MsgReader, our *protoHandshake) (*protoHandshake, error) { log.DebugLog()
+func readProtocolHandshake(rw MsgReader, our *protoHandshake) (*protoHandshake, error) {
+	log.DebugLog()
 	msg, err := rw.ReadMsg()
 	if err != nil {
 		return nil, err
@@ -175,7 +182,8 @@ func readProtocolHandshake(rw MsgReader, our *protoHandshake) (*protoHandshake, 
 // messages. the protocol handshake is the first authenticated message
 // and also verifies whether the encryption handshake 'worked' and the
 // remote side actually provided the right public key.
-func (t *rlpx) doEncHandshake(prv *ecdsa.PrivateKey, dial *discover.Node) (discover.NodeID, error) { log.DebugLog()
+func (t *rlpx) doEncHandshake(prv *ecdsa.PrivateKey, dial *discover.Node) (discover.NodeID, error) {
+	log.DebugLog()
 	var (
 		sec secrets
 		err error
@@ -239,7 +247,8 @@ type authRespV4 struct {
 
 // secrets is called after the handshake is completed.
 // It extracts the connection secrets from the handshake values.
-func (h *encHandshake) secrets(auth, authResp []byte) (secrets, error) { log.DebugLog()
+func (h *encHandshake) secrets(auth, authResp []byte) (secrets, error) {
+	log.DebugLog()
 	ecdheSecret, err := h.randomPrivKey.GenerateShared(h.remoteRandomPub, sskLen, sskLen)
 	if err != nil {
 		return secrets{}, err
@@ -272,7 +281,8 @@ func (h *encHandshake) secrets(auth, authResp []byte) (secrets, error) { log.Deb
 
 // staticSharedSecret returns the static shared secret, the result
 // of key agreement between the local and remote static node key.
-func (h *encHandshake) staticSharedSecret(prv *ecdsa.PrivateKey) ([]byte, error) { log.DebugLog()
+func (h *encHandshake) staticSharedSecret(prv *ecdsa.PrivateKey) ([]byte, error) {
+	log.DebugLog()
 	return ecies.ImportECDSA(prv).GenerateShared(h.remotePub, sskLen, sskLen)
 }
 
@@ -280,7 +290,8 @@ func (h *encHandshake) staticSharedSecret(prv *ecdsa.PrivateKey) ([]byte, error)
 // it should be called on the dialing side of the connection.
 //
 // prv is the local client's private key.
-func initiatorEncHandshake(conn io.ReadWriter, prv *ecdsa.PrivateKey, remoteID discover.NodeID, token []byte) (s secrets, err error) { log.DebugLog()
+func initiatorEncHandshake(conn io.ReadWriter, prv *ecdsa.PrivateKey, remoteID discover.NodeID, token []byte) (s secrets, err error) {
+	log.DebugLog()
 	h := &encHandshake{initiator: true, remoteID: remoteID}
 	authMsg, err := h.makeAuthMsg(prv, token)
 	if err != nil {
@@ -306,7 +317,8 @@ func initiatorEncHandshake(conn io.ReadWriter, prv *ecdsa.PrivateKey, remoteID d
 }
 
 // makeAuthMsg creates the initiator handshake message.
-func (h *encHandshake) makeAuthMsg(prv *ecdsa.PrivateKey, token []byte) (*authMsgV4, error) { log.DebugLog()
+func (h *encHandshake) makeAuthMsg(prv *ecdsa.PrivateKey, token []byte) (*authMsgV4, error) {
+	log.DebugLog()
 	rpub, err := h.remoteID.Pubkey()
 	if err != nil {
 		return nil, fmt.Errorf("bad remoteID: %v", err)
@@ -342,7 +354,8 @@ func (h *encHandshake) makeAuthMsg(prv *ecdsa.PrivateKey, token []byte) (*authMs
 	return msg, nil
 }
 
-func (h *encHandshake) handleAuthResp(msg *authRespV4) (err error) { log.DebugLog()
+func (h *encHandshake) handleAuthResp(msg *authRespV4) (err error) {
+	log.DebugLog()
 	h.respNonce = msg.Nonce[:]
 	h.remoteRandomPub, err = importPublicKey(msg.RandomPubkey[:])
 	return err
@@ -353,7 +366,8 @@ func (h *encHandshake) handleAuthResp(msg *authRespV4) (err error) { log.DebugLo
 //
 // prv is the local client's private key.
 // token is the token from a previous session with this node.
-func receiverEncHandshake(conn io.ReadWriter, prv *ecdsa.PrivateKey, token []byte) (s secrets, err error) { log.DebugLog()
+func receiverEncHandshake(conn io.ReadWriter, prv *ecdsa.PrivateKey, token []byte) (s secrets, err error) {
+	log.DebugLog()
 	authMsg := new(authMsgV4)
 	authPacket, err := readHandshakeMsg(authMsg, encAuthMsgLen, prv, conn)
 	if err != nil {
@@ -383,7 +397,8 @@ func receiverEncHandshake(conn io.ReadWriter, prv *ecdsa.PrivateKey, token []byt
 	return h.secrets(authPacket, authRespPacket)
 }
 
-func (h *encHandshake) handleAuthMsg(msg *authMsgV4, prv *ecdsa.PrivateKey) error { log.DebugLog()
+func (h *encHandshake) handleAuthMsg(msg *authMsgV4, prv *ecdsa.PrivateKey) error {
+	log.DebugLog()
 	// Import the remote identity.
 	h.initNonce = msg.Nonce[:]
 	h.remoteID = msg.InitiatorPubkey
@@ -416,7 +431,8 @@ func (h *encHandshake) handleAuthMsg(msg *authMsgV4, prv *ecdsa.PrivateKey) erro
 	return nil
 }
 
-func (h *encHandshake) makeAuthResp() (msg *authRespV4, err error) { log.DebugLog()
+func (h *encHandshake) makeAuthResp() (msg *authRespV4, err error) {
+	log.DebugLog()
 	// Generate random nonce.
 	h.respNonce = make([]byte, shaLen)
 	if _, err = rand.Read(h.respNonce); err != nil {
@@ -430,7 +446,8 @@ func (h *encHandshake) makeAuthResp() (msg *authRespV4, err error) { log.DebugLo
 	return msg, nil
 }
 
-func (msg *authMsgV4) sealPlain(h *encHandshake) ([]byte, error) { log.DebugLog()
+func (msg *authMsgV4) sealPlain(h *encHandshake) ([]byte, error) {
+	log.DebugLog()
 	buf := make([]byte, authMsgLen)
 	n := copy(buf, msg.Signature[:])
 	n += copy(buf[n:], crypto.Keccak256(exportPubkey(&h.randomPrivKey.PublicKey)))
@@ -440,7 +457,8 @@ func (msg *authMsgV4) sealPlain(h *encHandshake) ([]byte, error) { log.DebugLog(
 	return ecies.Encrypt(rand.Reader, h.remotePub, buf, nil, nil)
 }
 
-func (msg *authMsgV4) decodePlain(input []byte) { log.DebugLog()
+func (msg *authMsgV4) decodePlain(input []byte) {
+	log.DebugLog()
 	n := copy(msg.Signature[:], input)
 	n += shaLen // skip sha3(initiator-ephemeral-pubk)
 	n += copy(msg.InitiatorPubkey[:], input[n:])
@@ -449,14 +467,16 @@ func (msg *authMsgV4) decodePlain(input []byte) { log.DebugLog()
 	msg.gotPlain = true
 }
 
-func (msg *authRespV4) sealPlain(hs *encHandshake) ([]byte, error) { log.DebugLog()
+func (msg *authRespV4) sealPlain(hs *encHandshake) ([]byte, error) {
+	log.DebugLog()
 	buf := make([]byte, authRespLen)
 	n := copy(buf, msg.RandomPubkey[:])
 	copy(buf[n:], msg.Nonce[:])
 	return ecies.Encrypt(rand.Reader, hs.remotePub, buf, nil, nil)
 }
 
-func (msg *authRespV4) decodePlain(input []byte) { log.DebugLog()
+func (msg *authRespV4) decodePlain(input []byte) {
+	log.DebugLog()
 	n := copy(msg.RandomPubkey[:], input)
 	copy(msg.Nonce[:], input[n:])
 	msg.Version = 4
@@ -464,7 +484,8 @@ func (msg *authRespV4) decodePlain(input []byte) { log.DebugLog()
 
 var padSpace = make([]byte, 300)
 
-func sealEIP8(msg interface{}, h *encHandshake) ([]byte, error) { log.DebugLog()
+func sealEIP8(msg interface{}, h *encHandshake) ([]byte, error) {
+	log.DebugLog()
 	buf := new(bytes.Buffer)
 	if err := rlp.Encode(buf, msg); err != nil {
 		return nil, err
@@ -484,7 +505,8 @@ type plainDecoder interface {
 	decodePlain([]byte)
 }
 
-func readHandshakeMsg(msg plainDecoder, plainSize int, prv *ecdsa.PrivateKey, r io.Reader) ([]byte, error) { log.DebugLog()
+func readHandshakeMsg(msg plainDecoder, plainSize int, prv *ecdsa.PrivateKey, r io.Reader) ([]byte, error) {
+	log.DebugLog()
 	buf := make([]byte, plainSize)
 	if _, err := io.ReadFull(r, buf); err != nil {
 		return buf, err
@@ -516,7 +538,8 @@ func readHandshakeMsg(msg plainDecoder, plainSize int, prv *ecdsa.PrivateKey, r 
 }
 
 // importPublicKey unmarshals 512 bit public keys.
-func importPublicKey(pubKey []byte) (*ecies.PublicKey, error) { log.DebugLog()
+func importPublicKey(pubKey []byte) (*ecies.PublicKey, error) {
+	log.DebugLog()
 	var pubKey65 []byte
 	switch len(pubKey) {
 	case 64:
@@ -535,14 +558,16 @@ func importPublicKey(pubKey []byte) (*ecies.PublicKey, error) { log.DebugLog()
 	return ecies.ImportECDSAPublic(pub), nil
 }
 
-func exportPubkey(pub *ecies.PublicKey) []byte { log.DebugLog()
+func exportPubkey(pub *ecies.PublicKey) []byte {
+	log.DebugLog()
 	if pub == nil {
 		panic("nil pubkey")
 	}
 	return elliptic.Marshal(pub.Curve, pub.X, pub.Y)[1:]
 }
 
-func xor(one, other []byte) (xor []byte) { log.DebugLog()
+func xor(one, other []byte) (xor []byte) {
+	log.DebugLog()
 	xor = make([]byte, len(one))
 	for i := 0; i < len(one); i++ {
 		xor[i] = one[i] ^ other[i]
@@ -575,7 +600,8 @@ type rlpxFrameRW struct {
 	snappy bool
 }
 
-func newRLPXFrameRW(conn io.ReadWriter, s secrets) *rlpxFrameRW { log.DebugLog()
+func newRLPXFrameRW(conn io.ReadWriter, s secrets) *rlpxFrameRW {
+	log.DebugLog()
 	macc, err := aes.NewCipher(s.MAC)
 	if err != nil {
 		panic("invalid MAC secret: " + err.Error())
@@ -597,7 +623,8 @@ func newRLPXFrameRW(conn io.ReadWriter, s secrets) *rlpxFrameRW { log.DebugLog()
 	}
 }
 
-func (rw *rlpxFrameRW) WriteMsg(msg Msg) error { log.DebugLog()
+func (rw *rlpxFrameRW) WriteMsg(msg Msg) error {
+	log.DebugLog()
 	ptype, _ := rlp.EncodeToBytes(msg.Code)
 
 	// if snappy is enabled, compress message now
@@ -650,7 +677,8 @@ func (rw *rlpxFrameRW) WriteMsg(msg Msg) error { log.DebugLog()
 	return err
 }
 
-func (rw *rlpxFrameRW) ReadMsg() (msg Msg, err error) { log.DebugLog()
+func (rw *rlpxFrameRW) ReadMsg() (msg Msg, err error) {
+	log.DebugLog()
 	// read the header
 	headbuf := make([]byte, 32)
 	if _, err := io.ReadFull(rw.conn, headbuf); err != nil {
@@ -721,7 +749,8 @@ func (rw *rlpxFrameRW) ReadMsg() (msg Msg, err error) { log.DebugLog()
 
 // updateMAC reseeds the given hash with encrypted seed.
 // it returns the first 16 bytes of the hash sum after seeding.
-func updateMAC(mac hash.Hash, block cipher.Block, seed []byte) []byte { log.DebugLog()
+func updateMAC(mac hash.Hash, block cipher.Block, seed []byte) []byte {
+	log.DebugLog()
 	aesbuf := make([]byte, aes.BlockSize)
 	block.Encrypt(aesbuf, mac.Sum(nil))
 	for i := range aesbuf {
@@ -731,11 +760,13 @@ func updateMAC(mac hash.Hash, block cipher.Block, seed []byte) []byte { log.Debu
 	return mac.Sum(nil)[:16]
 }
 
-func readInt24(b []byte) uint32 { log.DebugLog()
+func readInt24(b []byte) uint32 {
+	log.DebugLog()
 	return uint32(b[2]) | uint32(b[1])<<8 | uint32(b[0])<<16
 }
 
-func putInt24(v uint32, b []byte) { log.DebugLog()
+func putInt24(v uint32, b []byte) {
+	log.DebugLog()
 	b[0] = byte(v >> 16)
 	b[1] = byte(v >> 8)
 	b[2] = byte(v)

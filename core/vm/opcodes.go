@@ -18,12 +18,14 @@ package vm
 
 import (
 	"fmt"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // OpCode is an EVM opcode
 type OpCode byte
 
-func (op OpCode) IsPush() bool { log.DebugLog()
+func (op OpCode) IsPush() bool {
+	log.DebugLog()
 	switch op {
 	case PUSH1, PUSH2, PUSH3, PUSH4, PUSH5, PUSH6, PUSH7, PUSH8, PUSH9, PUSH10, PUSH11, PUSH12, PUSH13, PUSH14, PUSH15, PUSH16, PUSH17, PUSH18, PUSH19, PUSH20, PUSH21, PUSH22, PUSH23, PUSH24, PUSH25, PUSH26, PUSH27, PUSH28, PUSH29, PUSH30, PUSH31, PUSH32:
 		return true
@@ -31,13 +33,14 @@ func (op OpCode) IsPush() bool { log.DebugLog()
 	return false
 }
 
-func (op OpCode) IsStaticJump() bool { log.DebugLog()
+func (op OpCode) IsStaticJump() bool {
+	log.DebugLog()
 	return op == JUMP
 }
 
 const (
 	// 0x0 range - arithmetic ops
-	STOP OpCode = iota
+	STOP       OpCode = iota
 	ADD
 	MUL
 	SUB
@@ -52,7 +55,7 @@ const (
 )
 
 const (
-	LT OpCode = iota + 0x10
+	LT     OpCode = iota + 0x10
 	GT
 	SLT
 	SGT
@@ -72,7 +75,7 @@ const (
 
 const (
 	// 0x30 range - closure state
-	ADDRESS OpCode = 0x30 + iota
+	ADDRESS        OpCode = 0x30 + iota
 	BALANCE
 	ORIGIN
 	CALLER
@@ -91,7 +94,7 @@ const (
 
 const (
 	// 0x40 range - block operations
-	BLOCKHASH OpCode = 0x40 + iota
+	BLOCKHASH  OpCode = 0x40 + iota
 	COINBASE
 	TIMESTAMP
 	NUMBER
@@ -101,7 +104,7 @@ const (
 
 const (
 	// 0x50 range - 'storage' and execution
-	POP OpCode = 0x50 + iota
+	POP      OpCode = 0x50 + iota
 	MLOAD
 	MSTORE
 	MSTORE8
@@ -117,7 +120,7 @@ const (
 
 const (
 	// 0x60 range
-	PUSH1 OpCode = 0x60 + iota
+	PUSH1  OpCode = 0x60 + iota
 	PUSH2
 	PUSH3
 	PUSH4
@@ -200,12 +203,12 @@ const (
 
 const (
 	// 0xf0 range - closures
-	CREATE OpCode = 0xf0 + iota
+	CREATE       OpCode = 0xf0 + iota
 	CALL
 	CALLCODE
 	RETURN
 	DELEGATECALL
-	STATICCALL = 0xfa
+	STATICCALL   = 0xfa
 
 	REVERT       = 0xfd
 	SELFDESTRUCT = 0xff
@@ -375,7 +378,8 @@ var opCodeToString = map[OpCode]string{
 	SWAP: "SWAP",
 }
 
-func (o OpCode) String() string { log.DebugLog()
+func (o OpCode) String() string {
+	log.DebugLog()
 	str := opCodeToString[o]
 	if len(str) == 0 {
 		return fmt.Sprintf("Missing opcode 0x%x", int(o))
@@ -524,6 +528,7 @@ var stringToOp = map[string]OpCode{
 	"SELFDESTRUCT":   SELFDESTRUCT,
 }
 
-func StringToOp(str string) OpCode { log.DebugLog()
+func StringToOp(str string) OpCode {
+	log.DebugLog()
 	return stringToOp[str]
 }

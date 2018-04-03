@@ -29,7 +29,7 @@ var DeadlineExceeded = context.DeadlineExceeded
 //
 // Canceling this context releases resources associated with it, so code should
 // call cancel as soon as the operations running in this Context complete.
-func WithCancel(parent Context) (ctx Context, cancel CancelFunc) { 
+func WithCancel(parent Context) (ctx Context, cancel CancelFunc) {
 	ctx, f := context.WithCancel(parent)
 	return ctx, CancelFunc(f)
 }
@@ -43,7 +43,7 @@ func WithCancel(parent Context) (ctx Context, cancel CancelFunc) {
 //
 // Canceling this context releases resources associated with it, so code should
 // call cancel as soon as the operations running in this Context complete.
-func WithDeadline(parent Context, deadline time.Time) (Context, CancelFunc) { 
+func WithDeadline(parent Context, deadline time.Time) (Context, CancelFunc) {
 	ctx, f := context.WithDeadline(parent, deadline)
 	return ctx, CancelFunc(f)
 }
@@ -53,12 +53,12 @@ func WithDeadline(parent Context, deadline time.Time) (Context, CancelFunc) {
 // Canceling this context releases resources associated with it, so code should
 // call cancel as soon as the operations running in this Context complete:
 //
-// 	func slowOperationWithTimeout(ctx context.Context) (Result, error) { log.DebugLog()
+// 	func slowOperationWithTimeout(ctx context.Context) (Result, error) {
 // 		ctx, cancel := context.WithTimeout(ctx, 100*time.Millisecond)
 // 		defer cancel()  // releases resources if slowOperation completes before timeout elapses
 // 		return slowOperation(ctx)
 // 	}
-func WithTimeout(parent Context, timeout time.Duration) (Context, CancelFunc) { 
+func WithTimeout(parent Context, timeout time.Duration) (Context, CancelFunc) {
 	return WithDeadline(parent, time.Now().Add(timeout))
 }
 
@@ -67,6 +67,6 @@ func WithTimeout(parent Context, timeout time.Duration) (Context, CancelFunc) {
 //
 // Use context Values only for request-scoped data that transits processes and
 // APIs, not for passing optional parameters to functions.
-func WithValue(parent Context, key interface{}, val interface{}) Context { 
+func WithValue(parent Context, key interface{}, val interface{}) Context {
 	return context.WithValue(parent, key, val)
 }

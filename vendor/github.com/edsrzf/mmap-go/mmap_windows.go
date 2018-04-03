@@ -22,7 +22,7 @@ import (
 var handleLock sync.Mutex
 var handleMap = map[uintptr]syscall.Handle{}
 
-func mmap(len int, prot, flags, hfile uintptr, off int64) ([]byte, error) { 
+func mmap(len int, prot, flags, hfile uintptr, off int64) ([]byte, error) {
 	flProtect := uint32(syscall.PAGE_READONLY)
 	dwDesiredAccess := uint32(syscall.FILE_MAP_READ)
 	switch {
@@ -71,7 +71,7 @@ func mmap(len int, prot, flags, hfile uintptr, off int64) ([]byte, error) {
 	return m, nil
 }
 
-func flush(addr, len uintptr) error { 
+func flush(addr, len uintptr) error {
 	errno := syscall.FlushViewOfFile(addr, len)
 	if errno != nil {
 		return os.NewSyscallError("FlushViewOfFile", errno)
@@ -89,17 +89,17 @@ func flush(addr, len uintptr) error {
 	return os.NewSyscallError("FlushFileBuffers", errno)
 }
 
-func lock(addr, len uintptr) error { 
+func lock(addr, len uintptr) error {
 	errno := syscall.VirtualLock(addr, len)
 	return os.NewSyscallError("VirtualLock", errno)
 }
 
-func unlock(addr, len uintptr) error { 
+func unlock(addr, len uintptr) error {
 	errno := syscall.VirtualUnlock(addr, len)
 	return os.NewSyscallError("VirtualUnlock", errno)
 }
 
-func unmap(addr, len uintptr) error { 
+func unmap(addr, len uintptr) error {
 	flush(addr, len)
 	// Lock the UnmapViewOfFile along with the handleMap deletion.
 	// As soon as we unmap the view, the OS is free to give the

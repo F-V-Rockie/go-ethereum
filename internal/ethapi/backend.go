@@ -32,6 +32,7 @@ import (
 	"github.com/ethereum/go-ethereum/event"
 	"github.com/ethereum/go-ethereum/params"
 	"github.com/ethereum/go-ethereum/rpc"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // Backend interface provides the common API services (that are provided by
@@ -71,7 +72,8 @@ type Backend interface {
 	CurrentBlock() *types.Block
 }
 
-func GetAPIs(apiBackend Backend) []rpc.API { log.DebugLog()
+func GetAPIs(apiBackend Backend) []rpc.API {
+	log.DebugLog()
 	nonceLock := new(AddrLocker)
 	return []rpc.API{
 		{

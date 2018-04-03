@@ -23,7 +23,7 @@ type ShareProperties struct {
 }
 
 // builds the complete path for this share object.
-func (s *Share) buildPath() string { 
+func (s *Share) buildPath() string {
 	return fmt.Sprintf("/%s", s.Name)
 }
 
@@ -31,7 +31,7 @@ func (s *Share) buildPath() string {
 // If a share with the same name already exists, the operation fails.
 //
 // See https://msdn.microsoft.com/en-us/library/azure/dn167008.aspx
-func (s *Share) Create() error { 
+func (s *Share) Create() error {
 	headers, err := s.fsc.createResource(s.buildPath(), resourceShare, nil, mergeMDIntoExtraHeaders(s.Metadata, nil), []int{http.StatusCreated})
 	if err != nil {
 		return err
@@ -46,7 +46,7 @@ func (s *Share) Create() error {
 // the share already exists.
 //
 // See https://msdn.microsoft.com/en-us/library/azure/dn167008.aspx
-func (s *Share) CreateIfNotExists() (bool, error) { 
+func (s *Share) CreateIfNotExists() (bool, error) {
 	resp, err := s.fsc.createResourceNoClose(s.buildPath(), resourceShare, nil, nil)
 	if resp != nil {
 		defer readAndCloseBody(resp.body)
@@ -67,14 +67,14 @@ func (s *Share) CreateIfNotExists() (bool, error) {
 // collection.  If the share does not exist the operation fails
 //
 // See https://msdn.microsoft.com/en-us/library/azure/dn689090.aspx
-func (s *Share) Delete() error { 
+func (s *Share) Delete() error {
 	return s.fsc.deleteResource(s.buildPath(), resourceShare)
 }
 
 // DeleteIfExists operation marks this share for deletion if it exists.
 //
 // See https://msdn.microsoft.com/en-us/library/azure/dn689090.aspx
-func (s *Share) DeleteIfExists() (bool, error) { 
+func (s *Share) DeleteIfExists() (bool, error) {
 	resp, err := s.fsc.deleteResourceNoClose(s.buildPath(), resourceShare)
 	if resp != nil {
 		defer readAndCloseBody(resp.body)
@@ -87,7 +87,7 @@ func (s *Share) DeleteIfExists() (bool, error) {
 
 // Exists returns true if this share already exists
 // on the storage account, otherwise returns false.
-func (s *Share) Exists() (bool, error) { 
+func (s *Share) Exists() (bool, error) {
 	exists, headers, err := s.fsc.resourceExists(s.buildPath(), resourceShare)
 	if exists {
 		s.updateEtagAndLastModified(headers)
@@ -97,7 +97,7 @@ func (s *Share) Exists() (bool, error) {
 }
 
 // FetchAttributes retrieves metadata and properties for this share.
-func (s *Share) FetchAttributes() error { 
+func (s *Share) FetchAttributes() error {
 	headers, err := s.fsc.getResourceHeaders(s.buildPath(), compNone, resourceShare, http.MethodHead)
 	if err != nil {
 		return err
@@ -111,7 +111,7 @@ func (s *Share) FetchAttributes() error {
 }
 
 // GetRootDirectoryReference returns a Directory object at the root of this share.
-func (s *Share) GetRootDirectoryReference() *Directory { 
+func (s *Share) GetRootDirectoryReference() *Directory {
 	return &Directory{
 		fsc:   s.fsc,
 		share: s,
@@ -119,7 +119,7 @@ func (s *Share) GetRootDirectoryReference() *Directory {
 }
 
 // ServiceClient returns the FileServiceClient associated with this share.
-func (s *Share) ServiceClient() *FileServiceClient { 
+func (s *Share) ServiceClient() *FileServiceClient {
 	return s.fsc
 }
 
@@ -131,7 +131,7 @@ func (s *Share) ServiceClient() *FileServiceClient {
 // applications either.
 //
 // See https://msdn.microsoft.com/en-us/library/azure/dd179414.aspx
-func (s *Share) SetMetadata() error { 
+func (s *Share) SetMetadata() error {
 	headers, err := s.fsc.setResourceHeaders(s.buildPath(), compMetadata, resourceShare, mergeMDIntoExtraHeaders(s.Metadata, nil))
 	if err != nil {
 		return err
@@ -149,7 +149,7 @@ func (s *Share) SetMetadata() error {
 // applications either.
 //
 // See https://msdn.microsoft.com/en-us/library/azure/mt427368.aspx
-func (s *Share) SetProperties() error { 
+func (s *Share) SetProperties() error {
 	if s.Properties.Quota < 1 || s.Properties.Quota > 5120 {
 		return fmt.Errorf("invalid value %v for quota, valid values are [1, 5120]", s.Properties.Quota)
 	}
@@ -166,13 +166,13 @@ func (s *Share) SetProperties() error {
 }
 
 // updates Etag and last modified date
-func (s *Share) updateEtagAndLastModified(headers http.Header) { 
+func (s *Share) updateEtagAndLastModified(headers http.Header) {
 	s.Properties.Etag = headers.Get("Etag")
 	s.Properties.LastModified = headers.Get("Last-Modified")
 }
 
 // updates quota value
-func (s *Share) updateQuota(headers http.Header) { 
+func (s *Share) updateQuota(headers http.Header) {
 	quota, err := strconv.Atoi(headers.Get("x-ms-share-quota"))
 	if err == nil {
 		s.Properties.Quota = quota
@@ -181,6 +181,6 @@ func (s *Share) updateQuota(headers http.Header) {
 
 // URL gets the canonical URL to this share. This method does not create a publicly accessible
 // URL if the share is private and this method does not check if the share exists.
-func (s *Share) URL() string { 
+func (s *Share) URL() string {
 	return s.fsc.client.getEndpoint(fileServiceName, s.buildPath(), url.Values{})
 }

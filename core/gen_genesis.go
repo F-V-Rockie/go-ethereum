@@ -11,11 +11,13 @@ import (
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/common/math"
 	"github.com/ethereum/go-ethereum/params"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 var _ = (*genesisSpecMarshaling)(nil)
 
-func (g Genesis) MarshalJSON() ([]byte, error) { log.DebugLog()
+func (g Genesis) MarshalJSON() ([]byte, error) {
+	log.DebugLog()
 	type Genesis struct {
 		Config     *params.ChainConfig                         `json:"config"`
 		Nonce      math.HexOrDecimal64                         `json:"nonce"`
@@ -51,7 +53,8 @@ func (g Genesis) MarshalJSON() ([]byte, error) { log.DebugLog()
 	return json.Marshal(&enc)
 }
 
-func (g *Genesis) UnmarshalJSON(input []byte) error { log.DebugLog()
+func (g *Genesis) UnmarshalJSON(input []byte) error {
+	log.DebugLog()
 	type Genesis struct {
 		Config     *params.ChainConfig                         `json:"config"`
 		Nonce      *math.HexOrDecimal64                        `json:"nonce"`

@@ -15,6 +15,8 @@ import (
 	"path/filepath"
 	"strings"
 	"time"
+
+	"github.com/ethereum/go-ethereum/log"
 )
 
 func bindataRead(data []byte, name string) ([]byte, error) {
@@ -206,7 +208,7 @@ func AssetDir(name string) ([]string, error) {
 			}
 		}
 	}
-	if node.func != nil {
+	if node.Func != nil {
 		log.DebugLog()
 		return nil, fmt.Errorf("Asset %s not found", name)
 	}

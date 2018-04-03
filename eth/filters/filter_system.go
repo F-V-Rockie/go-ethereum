@@ -25,12 +25,13 @@ import (
 	"sync"
 	"time"
 
-	ethereum "github.com/ethereum/go-ethereum"
+	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/event"
 	"github.com/ethereum/go-ethereum/rpc"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // Type determines the kind of filter and is used to put the filter in to
@@ -56,7 +57,6 @@ const (
 )
 
 const (
-
 	// txChanSize is the size of channel listening to TxPreEvent.
 	// The number is referenced from the size of tx pool.
 	txChanSize = 4096
@@ -101,7 +101,8 @@ type EventSystem struct {
 //
 // The returned manager has a loop that needs to be stopped with the Stop function
 // or by stopping the given mux.
-func NewEventSystem(mux *event.TypeMux, backend Backend, lightMode bool) *EventSystem { log.DebugLog()
+func NewEventSystem(mux *event.TypeMux, backend Backend, lightMode bool) *EventSystem {
+	log.DebugLog()
 	m := &EventSystem{
 		mux:       mux,
 		backend:   backend,
@@ -124,12 +125,14 @@ type Subscription struct {
 }
 
 // Err returns a channel that is closed when unsubscribed.
-func (sub *Subscription) Err() <-chan error { log.DebugLog()
+func (sub *Subscription) Err() <-chan error {
+	log.DebugLog()
 	return sub.f.err
 }
 
 // Unsubscribe uninstalls the subscription from the event broadcast loop.
-func (sub *Subscription) Unsubscribe() { log.DebugLog()
+func (sub *Subscription) Unsubscribe() {
+	log.DebugLog()
 	sub.unsubOnce.Do(func() {
 	uninstallLoop:
 		for {
@@ -154,7 +157,8 @@ func (sub *Subscription) Unsubscribe() { log.DebugLog()
 }
 
 // subscribe installs the subscription in the event broadcast loop.
-func (es *EventSystem) subscribe(sub *subscription) *Subscription { log.DebugLog()
+func (es *EventSystem) subscribe(sub *subscription) *Subscription {
+	log.DebugLog()
 	es.install <- sub
 	<-sub.installed
 	return &Subscription{ID: sub.id, f: sub, es: es}
@@ -163,7 +167,8 @@ func (es *EventSystem) subscribe(sub *subscription) *Subscription { log.DebugLog
 // SubscribeLogs creates a subscription that will write all logs matching the
 // given criteria to the given logs channel. Default value for the from and to
 // block is "latest". If the fromBlock > toBlock an error is returned.
-func (es *EventSystem) SubscribeLogs(crit ethereum.FilterQuery, logs chan []*types.Log) (*Subscription, error) { log.DebugLog()
+func (es *EventSystem) SubscribeLogs(crit ethereum.FilterQuery, logs chan []*types.Log) (*Subscription, error) {
+	log.DebugLog()
 	var from, to rpc.BlockNumber
 	if crit.FromBlock == nil {
 		from = rpc.LatestBlockNumber
@@ -201,7 +206,8 @@ func (es *EventSystem) SubscribeLogs(crit ethereum.FilterQuery, logs chan []*typ
 
 // subscribeMinedPendingLogs creates a subscription that returned mined and
 // pending logs that match the given criteria.
-func (es *EventSystem) subscribeMinedPendingLogs(crit ethereum.FilterQuery, logs chan []*types.Log) *Subscription { log.DebugLog()
+func (es *EventSystem) subscribeMinedPendingLogs(crit ethereum.FilterQuery, logs chan []*types.Log) *Subscription {
+	log.DebugLog()
 	sub := &subscription{
 		id:        rpc.NewID(),
 		typ:       MinedAndPendingLogsSubscription,
@@ -218,7 +224,8 @@ func (es *EventSystem) subscribeMinedPendingLogs(crit ethereum.FilterQuery, logs
 
 // subscribeLogs creates a subscription that will write all logs matching the
 // given criteria to the given logs channel.
-func (es *EventSystem) subscribeLogs(crit ethereum.FilterQuery, logs chan []*types.Log) *Subscription { log.DebugLog()
+func (es *EventSystem) subscribeLogs(crit ethereum.FilterQuery, logs chan []*types.Log) *Subscription {
+	log.DebugLog()
 	sub := &subscription{
 		id:        rpc.NewID(),
 		typ:       LogsSubscription,
@@ -235,7 +242,8 @@ func (es *EventSystem) subscribeLogs(crit ethereum.FilterQuery, logs chan []*typ
 
 // subscribePendingLogs creates a subscription that writes transaction hashes for
 // transactions that enter the transaction pool.
-func (es *EventSystem) subscribePendingLogs(crit ethereum.FilterQuery, logs chan []*types.Log) *Subscription { log.DebugLog()
+func (es *EventSystem) subscribePendingLogs(crit ethereum.FilterQuery, logs chan []*types.Log) *Subscription {
+	log.DebugLog()
 	sub := &subscription{
 		id:        rpc.NewID(),
 		typ:       PendingLogsSubscription,
@@ -252,7 +260,8 @@ func (es *EventSystem) subscribePendingLogs(crit ethereum.FilterQuery, logs chan
 
 // SubscribeNewHeads creates a subscription that writes the header of a block that is
 // imported in the chain.
-func (es *EventSystem) SubscribeNewHeads(headers chan *types.Header) *Subscription { log.DebugLog()
+func (es *EventSystem) SubscribeNewHeads(headers chan *types.Header) *Subscription {
+	log.DebugLog()
 	sub := &subscription{
 		id:        rpc.NewID(),
 		typ:       BlocksSubscription,
@@ -268,7 +277,8 @@ func (es *EventSystem) SubscribeNewHeads(headers chan *types.Header) *Subscripti
 
 // SubscribePendingTxEvents creates a subscription that writes transaction hashes for
 // transactions that enter the transaction pool.
-func (es *EventSystem) SubscribePendingTxEvents(hashes chan common.Hash) *Subscription { log.DebugLog()
+func (es *EventSystem) SubscribePendingTxEvents(hashes chan common.Hash) *Subscription {
+	log.DebugLog()
 	sub := &subscription{
 		id:        rpc.NewID(),
 		typ:       PendingTransactionsSubscription,
@@ -285,7 +295,8 @@ func (es *EventSystem) SubscribePendingTxEvents(hashes chan common.Hash) *Subscr
 type filterIndex map[Type]map[rpc.ID]*subscription
 
 // broadcast event to filters that match criteria.
-func (es *EventSystem) broadcast(filters filterIndex, ev interface{}) { log.DebugLog()
+func (es *EventSystem) broadcast(filters filterIndex, ev interface{}) {
+	log.DebugLog()
 	if ev == nil {
 		return
 	}
@@ -336,7 +347,8 @@ func (es *EventSystem) broadcast(filters filterIndex, ev interface{}) { log.Debu
 	}
 }
 
-func (es *EventSystem) lightFilterNewHead(newHeader *types.Header, callBack func(*types.Header, bool)) { log.DebugLog()
+func (es *EventSystem) lightFilterNewHead(newHeader *types.Header, callBack func(*types.Header, bool)) {
+	log.DebugLog()
 	oldh := es.lastHead
 	es.lastHead = newHeader
 	if oldh == nil {
@@ -370,7 +382,8 @@ func (es *EventSystem) lightFilterNewHead(newHeader *types.Header, callBack func
 }
 
 // filter logs of a single header in light client mode
-func (es *EventSystem) lightFilterLogs(header *types.Header, addresses []common.Address, topics [][]common.Hash, remove bool) []*types.Log { log.DebugLog()
+func (es *EventSystem) lightFilterLogs(header *types.Header, addresses []common.Address, topics [][]common.Hash, remove bool) []*types.Log {
+	log.DebugLog()
 	if bloomFilter(header.Bloom, addresses, topics) {
 		// Get the logs of the block
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
@@ -410,7 +423,8 @@ func (es *EventSystem) lightFilterLogs(header *types.Header, addresses []common.
 }
 
 // eventLoop (un)installs filters and processes mux events.
-func (es *EventSystem) eventLoop() { log.DebugLog()
+func (es *EventSystem) eventLoop() {
+	log.DebugLog()
 	var (
 		index = make(filterIndex)
 		sub   = es.mux.Subscribe(core.PendingLogsEvent{})
@@ -447,7 +461,7 @@ func (es *EventSystem) eventLoop() { log.DebugLog()
 			}
 			es.broadcast(index, ev)
 
-		// Handle subscribed events
+			// Handle subscribed events
 		case ev := <-txCh:
 			es.broadcast(index, ev)
 		case ev := <-rmLogsCh:
@@ -476,7 +490,7 @@ func (es *EventSystem) eventLoop() { log.DebugLog()
 			}
 			close(f.err)
 
-		// System stopped
+			// System stopped
 		case <-txSub.Err():
 			return
 		case <-rmLogsSub.Err():

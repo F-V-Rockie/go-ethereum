@@ -20,6 +20,7 @@ import (
 	"sync"
 
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 type account struct {
@@ -37,7 +38,8 @@ type ManagedState struct {
 }
 
 // ManagedState returns a new managed state with the statedb as it's backing layer
-func ManageState(statedb *StateDB) *ManagedState { log.DebugLog()
+func ManageState(statedb *StateDB) *ManagedState {
+	log.DebugLog()
 	return &ManagedState{
 		StateDB:  statedb.Copy(),
 		accounts: make(map[common.Address]*account),
@@ -45,14 +47,16 @@ func ManageState(statedb *StateDB) *ManagedState { log.DebugLog()
 }
 
 // SetState sets the backing layer of the managed state
-func (ms *ManagedState) SetState(statedb *StateDB) { log.DebugLog()
+func (ms *ManagedState) SetState(statedb *StateDB) {
+	log.DebugLog()
 	ms.mu.Lock()
 	defer ms.mu.Unlock()
 	ms.StateDB = statedb
 }
 
 // RemoveNonce removed the nonce from the managed state and all future pending nonces
-func (ms *ManagedState) RemoveNonce(addr common.Address, n uint64) { log.DebugLog()
+func (ms *ManagedState) RemoveNonce(addr common.Address, n uint64) {
+	log.DebugLog()
 	if ms.hasAccount(addr) {
 		ms.mu.Lock()
 		defer ms.mu.Unlock()
@@ -67,7 +71,8 @@ func (ms *ManagedState) RemoveNonce(addr common.Address, n uint64) { log.DebugLo
 }
 
 // NewNonce returns the new canonical nonce for the managed account
-func (ms *ManagedState) NewNonce(addr common.Address) uint64 { log.DebugLog()
+func (ms *ManagedState) NewNonce(addr common.Address) uint64 {
+	log.DebugLog()
 	ms.mu.Lock()
 	defer ms.mu.Unlock()
 
@@ -85,7 +90,8 @@ func (ms *ManagedState) NewNonce(addr common.Address) uint64 { log.DebugLog()
 // GetNonce returns the canonical nonce for the managed or unmanaged account.
 //
 // Because GetNonce mutates the DB, we must take a write lock.
-func (ms *ManagedState) GetNonce(addr common.Address) uint64 { log.DebugLog()
+func (ms *ManagedState) GetNonce(addr common.Address) uint64 {
+	log.DebugLog()
 	ms.mu.Lock()
 	defer ms.mu.Unlock()
 
@@ -98,7 +104,8 @@ func (ms *ManagedState) GetNonce(addr common.Address) uint64 { log.DebugLog()
 }
 
 // SetNonce sets the new canonical nonce for the managed state
-func (ms *ManagedState) SetNonce(addr common.Address, nonce uint64) { log.DebugLog()
+func (ms *ManagedState) SetNonce(addr common.Address, nonce uint64) {
+	log.DebugLog()
 	ms.mu.Lock()
 	defer ms.mu.Unlock()
 
@@ -109,19 +116,22 @@ func (ms *ManagedState) SetNonce(addr common.Address, nonce uint64) { log.DebugL
 }
 
 // HasAccount returns whether the given address is managed or not
-func (ms *ManagedState) HasAccount(addr common.Address) bool { log.DebugLog()
+func (ms *ManagedState) HasAccount(addr common.Address) bool {
+	log.DebugLog()
 	ms.mu.RLock()
 	defer ms.mu.RUnlock()
 	return ms.hasAccount(addr)
 }
 
-func (ms *ManagedState) hasAccount(addr common.Address) bool { log.DebugLog()
+func (ms *ManagedState) hasAccount(addr common.Address) bool {
+	log.DebugLog()
 	_, ok := ms.accounts[addr]
 	return ok
 }
 
 // populate the managed state
-func (ms *ManagedState) getAccount(addr common.Address) *account { log.DebugLog()
+func (ms *ManagedState) getAccount(addr common.Address) *account {
+	log.DebugLog()
 	if account, ok := ms.accounts[addr]; !ok {
 		so := ms.GetOrNewStateObject(addr)
 		ms.accounts[addr] = newAccount(so)
@@ -138,6 +148,7 @@ func (ms *ManagedState) getAccount(addr common.Address) *account { log.DebugLog(
 	return ms.accounts[addr]
 }
 
-func newAccount(so *stateObject) *account { log.DebugLog()
+func newAccount(so *stateObject) *account {
+	log.DebugLog()
 	return &account{so, so.Nonce(), nil}
 }

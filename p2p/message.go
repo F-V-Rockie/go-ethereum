@@ -28,6 +28,7 @@ import (
 	"github.com/ethereum/go-ethereum/event"
 	"github.com/ethereum/go-ethereum/p2p/discover"
 	"github.com/ethereum/go-ethereum/rlp"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // Msg defines the structure of a p2p message.
@@ -48,7 +49,8 @@ type Msg struct {
 // the given value, which must be a pointer.
 //
 // For the decoding rules, please see package rlp.
-func (msg Msg) Decode(val interface{}) error { log.DebugLog()
+func (msg Msg) Decode(val interface{}) error {
+	log.DebugLog()
 	s := rlp.NewStream(msg.Payload, uint64(msg.Size))
 	if err := s.Decode(val); err != nil {
 		return newPeerError(errInvalidMsg, "(code %x) (size %d) %v", msg.Code, msg.Size, err)
@@ -56,12 +58,14 @@ func (msg Msg) Decode(val interface{}) error { log.DebugLog()
 	return nil
 }
 
-func (msg Msg) String() string { log.DebugLog()
+func (msg Msg) String() string {
+	log.DebugLog()
 	return fmt.Sprintf("msg #%v (%v bytes)", msg.Code, msg.Size)
 }
 
 // Discard reads any remaining payload data into a black hole.
-func (msg Msg) Discard() error { log.DebugLog()
+func (msg Msg) Discard() error {
+	log.DebugLog()
 	_, err := io.Copy(ioutil.Discard, msg.Payload)
 	return err
 }
@@ -89,7 +93,8 @@ type MsgReadWriter interface {
 
 // Send writes an RLP-encoded message with the given code.
 // data should encode as an RLP list.
-func Send(w MsgWriter, msgcode uint64, data interface{}) error { log.DebugLog()
+func Send(w MsgWriter, msgcode uint64, data interface{}) error {
+	log.DebugLog()
 	size, r, err := rlp.EncodeToReader(data)
 	if err != nil {
 		return err
@@ -106,7 +111,8 @@ func Send(w MsgWriter, msgcode uint64, data interface{}) error { log.DebugLog()
 //
 //    [e1, e2, e3]
 //
-func SendItems(w MsgWriter, msgcode uint64, elems ...interface{}) error { log.DebugLog()
+func SendItems(w MsgWriter, msgcode uint64, elems ...interface{}) error {
+	log.DebugLog()
 	return Send(w, msgcode, elems)
 }
 
@@ -121,7 +127,8 @@ type eofSignal struct {
 
 // note: when using eofSignal to detect whether a message payload
 // has been read, Read might not be called for zero sized messages.
-func (r *eofSignal) Read(buf []byte) (int, error) { log.DebugLog()
+func (r *eofSignal) Read(buf []byte) (int, error) {
+	log.DebugLog()
 	if r.count == 0 {
 		if r.eof != nil {
 			r.eof <- struct{}{}
@@ -146,7 +153,8 @@ func (r *eofSignal) Read(buf []byte) (int, error) { log.DebugLog()
 // MsgPipe creates a message pipe. Reads on one end are matched
 // with writes on the other. The pipe is full-duplex, both ends
 // implement MsgReadWriter.
-func MsgPipe() (*MsgPipeRW, *MsgPipeRW) { log.DebugLog()
+func MsgPipe() (*MsgPipeRW, *MsgPipeRW) {
+	log.DebugLog()
 	var (
 		c1, c2  = make(chan Msg), make(chan Msg)
 		closing = make(chan struct{})
@@ -171,7 +179,8 @@ type MsgPipeRW struct {
 
 // WriteMsg sends a messsage on the pipe.
 // It blocks until the receiver has consumed the message payload.
-func (p *MsgPipeRW) WriteMsg(msg Msg) error { log.DebugLog()
+func (p *MsgPipeRW) WriteMsg(msg Msg) error {
+	log.DebugLog()
 	if atomic.LoadInt32(p.closed) == 0 {
 		consumed := make(chan struct{}, 1)
 		msg.Payload = &eofSignal{msg.Payload, msg.Size, consumed}
@@ -192,7 +201,8 @@ func (p *MsgPipeRW) WriteMsg(msg Msg) error { log.DebugLog()
 }
 
 // ReadMsg returns a message sent on the other end of the pipe.
-func (p *MsgPipeRW) ReadMsg() (Msg, error) { log.DebugLog()
+func (p *MsgPipeRW) ReadMsg() (Msg, error) {
+	log.DebugLog()
 	if atomic.LoadInt32(p.closed) == 0 {
 		select {
 		case msg := <-p.r:
@@ -206,7 +216,8 @@ func (p *MsgPipeRW) ReadMsg() (Msg, error) { log.DebugLog()
 // Close unblocks any pending ReadMsg and WriteMsg calls on both ends
 // of the pipe. They will return ErrPipeClosed. Close also
 // interrupts any reads from a message payload.
-func (p *MsgPipeRW) Close() error { log.DebugLog()
+func (p *MsgPipeRW) Close() error {
+	log.DebugLog()
 	if atomic.AddInt32(p.closed, 1) != 1 {
 		// someone else is already closing
 		atomic.StoreInt32(p.closed, 1) // avoid overflow
@@ -219,7 +230,8 @@ func (p *MsgPipeRW) Close() error { log.DebugLog()
 // ExpectMsg reads a message from r and verifies that its
 // code and encoded RLP content match the provided values.
 // If content is nil, the payload is discarded and not verified.
-func ExpectMsg(r MsgReader, code uint64, content interface{}) error { log.DebugLog()
+func ExpectMsg(r MsgReader, code uint64, content interface{}) error {
+	log.DebugLog()
 	msg, err := r.ReadMsg()
 	if err != nil {
 		return err
@@ -260,7 +272,8 @@ type msgEventer struct {
 
 // newMsgEventer returns a msgEventer which sends message events to the given
 // feed
-func newMsgEventer(rw MsgReadWriter, feed *event.Feed, peerID discover.NodeID, proto string) *msgEventer { log.DebugLog()
+func newMsgEventer(rw MsgReadWriter, feed *event.Feed, peerID discover.NodeID, proto string) *msgEventer {
+	log.DebugLog()
 	return &msgEventer{
 		MsgReadWriter: rw,
 		feed:          feed,
@@ -271,7 +284,8 @@ func newMsgEventer(rw MsgReadWriter, feed *event.Feed, peerID discover.NodeID, p
 
 // ReadMsg reads a message from the underlying MsgReadWriter and emits a
 // "message received" event
-func (self *msgEventer) ReadMsg() (Msg, error) { log.DebugLog()
+func (self *msgEventer) ReadMsg() (Msg, error) {
+	log.DebugLog()
 	msg, err := self.MsgReadWriter.ReadMsg()
 	if err != nil {
 		return msg, err
@@ -288,7 +302,8 @@ func (self *msgEventer) ReadMsg() (Msg, error) { log.DebugLog()
 
 // WriteMsg writes a message to the underlying MsgReadWriter and emits a
 // "message sent" event
-func (self *msgEventer) WriteMsg(msg Msg) error { log.DebugLog()
+func (self *msgEventer) WriteMsg(msg Msg) error {
+	log.DebugLog()
 	err := self.MsgReadWriter.WriteMsg(msg)
 	if err != nil {
 		return err
@@ -305,7 +320,8 @@ func (self *msgEventer) WriteMsg(msg Msg) error { log.DebugLog()
 
 // Close closes the underlying MsgReadWriter if it implements the io.Closer
 // interface
-func (self *msgEventer) Close() error { log.DebugLog()
+func (self *msgEventer) Close() error {
+	log.DebugLog()
 	if v, ok := self.MsgReadWriter.(io.Closer); ok {
 		return v.Close()
 	}

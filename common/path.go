@@ -21,6 +21,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // MakeName creates a node name that follows the ethereum convention

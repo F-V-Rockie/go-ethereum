@@ -28,7 +28,7 @@ import (
 // standard encodings for HTML. Matching is case-insensitive and ignores
 // leading and trailing whitespace. Encoders will use HTML escape sequences for
 // runes that are not supported by the character set.
-func Lookup(label string) (e encoding.Encoding, name string) { 
+func Lookup(label string) (e encoding.Encoding, name string) {
 	e, err := htmlindex.Get(label)
 	if err != nil {
 		return nil, ""
@@ -39,7 +39,7 @@ func Lookup(label string) (e encoding.Encoding, name string) {
 
 type htmlEncoding struct{ encoding.Encoding }
 
-func (h *htmlEncoding) NewEncoder() *encoding.Encoder { 
+func (h *htmlEncoding) NewEncoder() *encoding.Encoder {
 	// HTML requires a non-terminating legacy encoder. We use HTML escapes to
 	// substitute unsupported code points.
 	return encoding.HTMLEscapeUnsupported(h.Encoding.NewEncoder())
@@ -49,7 +49,7 @@ func (h *htmlEncoding) NewEncoder() *encoding.Encoder {
 // up to the first 1024 bytes of content and the declared Content-Type.
 //
 // See http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#determining-the-character-encoding
-func DetermineEncoding(content []byte, contentType string) (e encoding.Encoding, name string, certain bool) { 
+func DetermineEncoding(content []byte, contentType string) (e encoding.Encoding, name string, certain bool) {
 	if len(content) > 1024 {
 		content = content[:1024]
 	}
@@ -105,7 +105,7 @@ func DetermineEncoding(content []byte, contentType string) (e encoding.Encoding,
 
 // NewReader returns an io.Reader that converts the content of r to UTF-8.
 // It calls DetermineEncoding to find out what r's encoding is.
-func NewReader(r io.Reader, contentType string) (io.Reader, error) { 
+func NewReader(r io.Reader, contentType string) (io.Reader, error) {
 	preview := make([]byte, 1024)
 	n, err := io.ReadFull(r, preview)
 	switch {
@@ -128,7 +128,7 @@ func NewReader(r io.Reader, contentType string) (io.Reader, error) {
 // UTF-8. It uses Lookup to find the encoding that corresponds to label, and
 // returns an error if Lookup returns nil. It is suitable for use as
 // encoding/xml.Decoder's CharsetReader function.
-func NewReaderLabel(label string, input io.Reader) (io.Reader, error) { 
+func NewReaderLabel(label string, input io.Reader) (io.Reader, error) {
 	e, _ := Lookup(label)
 	if e == nil {
 		return nil, fmt.Errorf("unsupported charset: %q", label)
@@ -136,7 +136,7 @@ func NewReaderLabel(label string, input io.Reader) (io.Reader, error) {
 	return transform.NewReader(input, e.NewDecoder()), nil
 }
 
-func prescan(content []byte) (e encoding.Encoding, name string) { 
+func prescan(content []byte) (e encoding.Encoding, name string) {
 	z := html.NewTokenizer(bytes.NewReader(content))
 	for {
 		switch z.Next() {
@@ -213,7 +213,7 @@ func prescan(content []byte) (e encoding.Encoding, name string) {
 	}
 }
 
-func fromMetaElement(s string) string { 
+func fromMetaElement(s string) string {
 	for s != "" {
 		csLoc := strings.Index(s, "charset")
 		if csLoc == -1 {

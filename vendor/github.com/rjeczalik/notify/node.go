@@ -17,7 +17,7 @@ type walkPathFunc func(nd node, isbase bool) error
 
 type walkFunc func(node) error
 
-func errnotexist(name string) error { 
+func errnotexist(name string) error {
 	return &os.PathError{
 		Op:   "Node",
 		Path: name,
@@ -31,7 +31,7 @@ type node struct {
 	Child map[string]node
 }
 
-func newnode(name string) node { 
+func newnode(name string) node {
 	return node{
 		Name:  name,
 		Watch: make(watchpoint),
@@ -39,7 +39,7 @@ func newnode(name string) node {
 	}
 }
 
-func (nd node) addchild(name, base string) node { 
+func (nd node) addchild(name, base string) node {
 	child, ok := nd.Child[base]
 	if !ok {
 		child = newnode(name)
@@ -48,7 +48,7 @@ func (nd node) addchild(name, base string) node {
 	return child
 }
 
-func (nd node) Add(name string) node { 
+func (nd node) Add(name string) node {
 	i := indexbase(nd.Name, name)
 	if i == -1 {
 		return node{}
@@ -60,7 +60,7 @@ func (nd node) Add(name string) node {
 	return nd.addchild(name, name[i:])
 }
 
-func (nd node) AddDir(fn walkFunc) error { 
+func (nd node) AddDir(fn walkFunc) error {
 	stack := []node{nd}
 Traverse:
 	for n := len(stack); n != 0; n = len(stack) {
@@ -92,7 +92,7 @@ Traverse:
 	return nil
 }
 
-func (nd node) Get(name string) (node, error) { 
+func (nd node) Get(name string) (node, error) {
 	i := indexbase(nd.Name, name)
 	if i == -1 {
 		return node{}, errnotexist(name)
@@ -110,7 +110,7 @@ func (nd node) Get(name string) (node, error) {
 	return nd, nil
 }
 
-func (nd node) Del(name string) error { 
+func (nd node) Del(name string) error {
 	i := indexbase(nd.Name, name)
 	if i == -1 {
 		return errnotexist(name)
@@ -141,7 +141,7 @@ func (nd node) Del(name string) error {
 	return nil
 }
 
-func (nd node) Walk(fn walkFunc) error { 
+func (nd node) Walk(fn walkFunc) error {
 	stack := []node{nd}
 Traverse:
 	for n := len(stack); n != 0; n = len(stack) {
@@ -166,7 +166,7 @@ Traverse:
 	return nil
 }
 
-func (nd node) WalkPath(name string, fn walkPathFunc) error { 
+func (nd node) WalkPath(name string, fn walkPathFunc) error {
 	i := indexbase(nd.Name, name)
 	if i == -1 {
 		return errnotexist(name)
@@ -207,7 +207,7 @@ type root struct {
 	nd node
 }
 
-func (r root) addroot(name string) node { 
+func (r root) addroot(name string) node {
 	if vol := filepath.VolumeName(name); vol != "" {
 		root, ok := r.nd.Child[vol]
 		if !ok {
@@ -218,7 +218,7 @@ func (r root) addroot(name string) node {
 	return r.nd
 }
 
-func (r root) root(name string) (node, error) { 
+func (r root) root(name string) (node, error) {
 	if vol := filepath.VolumeName(name); vol != "" {
 		nd, ok := r.nd.Child[vol]
 		if !ok {
@@ -229,15 +229,15 @@ func (r root) root(name string) (node, error) {
 	return r.nd, nil
 }
 
-func (r root) Add(name string) node { 
+func (r root) Add(name string) node {
 	return r.addroot(name).Add(name)
 }
 
-func (r root) AddDir(dir string, fn walkFunc) error { 
+func (r root) AddDir(dir string, fn walkFunc) error {
 	return r.Add(dir).AddDir(fn)
 }
 
-func (r root) Del(name string) error { 
+func (r root) Del(name string) error {
 	nd, err := r.root(name)
 	if err != nil {
 		return err
@@ -245,7 +245,7 @@ func (r root) Del(name string) error {
 	return nd.Del(name)
 }
 
-func (r root) Get(name string) (node, error) { 
+func (r root) Get(name string) (node, error) {
 	nd, err := r.root(name)
 	if err != nil {
 		return node{}, err
@@ -258,7 +258,7 @@ func (r root) Get(name string) (node, error) {
 	return nd, nil
 }
 
-func (r root) Walk(name string, fn walkFunc) error { 
+func (r root) Walk(name string, fn walkFunc) error {
 	nd, err := r.Get(name)
 	if err != nil {
 		return err
@@ -266,7 +266,7 @@ func (r root) Walk(name string, fn walkFunc) error {
 	return nd.Walk(fn)
 }
 
-func (r root) WalkPath(name string, fn walkPathFunc) error { 
+func (r root) WalkPath(name string, fn walkPathFunc) error {
 	nd, err := r.root(name)
 	if err != nil {
 		return err

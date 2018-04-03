@@ -169,7 +169,7 @@ If you want to stop long running executions (like third-party code), you can use
 
     var halt = errors.New("Stahp")
 
-    func main() { log.DebugLog()
+    func main() {
         runUnsafe(`var abc = [];`)
         runUnsafe(`
         while (true) {
@@ -177,7 +177,7 @@ If you want to stop long running executions (like third-party code), you can use
         }`)
     }
 
-    func runUnsafe(unsafe string) { log.DebugLog()
+    func runUnsafe(unsafe string) {
         start := time.Now()
         defer func() {
             duration := time.Since(start)
@@ -241,7 +241,7 @@ type Otto struct {
 }
 
 // New will allocate a new JavaScript runtime
-func New() *Otto { 
+func New() *Otto {
 	self := &Otto{
 		runtime: newContext(),
 	}
@@ -256,7 +256,7 @@ func New() *Otto {
 	return self
 }
 
-func (otto *Otto) clone() *Otto { 
+func (otto *Otto) clone() *Otto {
 	self := &Otto{
 		runtime: otto.runtime.clone(),
 	}
@@ -274,7 +274,7 @@ func (otto *Otto) clone() *Otto {
 //
 // src may also be a Program, but if the AST has been modified, then runtime behavior is undefined.
 //
-func Run(src interface{}) (*Otto, Value, error) { 
+func Run(src interface{}) (*Otto, Value, error) {
 	otto := New()
 	value, err := otto.Run(src) // This already does safety checking
 	return otto, value, err
@@ -291,7 +291,7 @@ func Run(src interface{}) (*Otto, Value, error) {
 //
 // src may also be a Program, but if the AST has been modified, then runtime behavior is undefined.
 //
-func (self Otto) Run(src interface{}) (Value, error) { 
+func (self Otto) Run(src interface{}) (Value, error) {
 	value, err := self.runtime.cmpl_run(src, nil)
 	if !value.safe() {
 		value = Value{}
@@ -304,7 +304,7 @@ func (self Otto) Run(src interface{}) (Value, error) {
 // By staying in the same scope, the code evaluated has access to everything
 // already defined in the current stack frame. This is most useful in, for
 // example, a debugger call.
-func (self Otto) Eval(src interface{}) (Value, error) { 
+func (self Otto) Eval(src interface{}) (Value, error) {
 	if self.runtime.scope == nil {
 		self.runtime.enterGlobalScope()
 		defer self.runtime.leaveScope()
@@ -321,7 +321,7 @@ func (self Otto) Eval(src interface{}) (Value, error) {
 //
 // If there is an error (like the binding does not exist), then the value
 // will be undefined.
-func (self Otto) Get(name string) (Value, error) { 
+func (self Otto) Get(name string) (Value, error) {
 	value := Value{}
 	err := catchPanic(func() {
 		value = self.getValue(name)
@@ -332,7 +332,7 @@ func (self Otto) Get(name string) (Value, error) {
 	return value, err
 }
 
-func (self Otto) getValue(name string) Value { 
+func (self Otto) getValue(name string) Value {
 	return self.runtime.globalStash.getBinding(name, false)
 }
 
@@ -345,7 +345,7 @@ func (self Otto) getValue(name string) Value {
 // fails), then an error is returned.
 //
 // If the top-level binding does not exist, it will be created.
-func (self Otto) Set(name string, value interface{}) error { 
+func (self Otto) Set(name string, value interface{}) error {
 	{
 		value, err := self.ToValue(value)
 		if err != nil {
@@ -358,15 +358,15 @@ func (self Otto) Set(name string, value interface{}) error {
 	}
 }
 
-func (self Otto) setValue(name string, value Value) { 
+func (self Otto) setValue(name string, value Value) {
 	self.runtime.globalStash.setValue(name, value, false)
 }
 
-func (self Otto) SetDebuggerHandler(fn func(vm *Otto)) { 
+func (self Otto) SetDebuggerHandler(fn func(vm *Otto)) {
 	self.runtime.debugger = fn
 }
 
-func (self Otto) SetRandomSource(fn func() float64) { 
+func (self Otto) SetRandomSource(fn func() float64) {
 	self.runtime.random = fn
 }
 
@@ -378,7 +378,7 @@ func (self Otto) SetRandomSource(fn func() float64) {
 // JavaScript makes a call to a Go function, otto won't keep track of what
 // happens outside the interpreter. So if your Go function is infinitely
 // recursive, you're still in trouble.
-func (self Otto) SetStackDepthLimit(limit int) { 
+func (self Otto) SetStackDepthLimit(limit int) {
 	self.runtime.stackLimit = limit
 }
 
@@ -387,31 +387,31 @@ func (self Otto) SetStackDepthLimit(limit int) {
 // is 10. This is consistent with V8 and SpiderMonkey.
 //
 // TODO: expose via `Error.stackTraceLimit`
-func (self Otto) SetStackTraceLimit(limit int) { 
+func (self Otto) SetStackTraceLimit(limit int) {
 	self.runtime.traceLimit = limit
 }
 
 // MakeCustomError creates a new Error object with the given name and message,
 // returning it as a Value.
-func (self Otto) MakeCustomError(name, message string) Value { 
+func (self Otto) MakeCustomError(name, message string) Value {
 	return self.runtime.toValue(self.runtime.newError(name, self.runtime.toValue(message), 0))
 }
 
 // MakeRangeError creates a new RangeError object with the given message,
 // returning it as a Value.
-func (self Otto) MakeRangeError(message string) Value { 
+func (self Otto) MakeRangeError(message string) Value {
 	return self.runtime.toValue(self.runtime.newRangeError(self.runtime.toValue(message)))
 }
 
 // MakeSyntaxError creates a new SyntaxError object with the given message,
 // returning it as a Value.
-func (self Otto) MakeSyntaxError(message string) Value { 
+func (self Otto) MakeSyntaxError(message string) Value {
 	return self.runtime.toValue(self.runtime.newSyntaxError(self.runtime.toValue(message)))
 }
 
 // MakeTypeError creates a new TypeError object with the given message,
 // returning it as a Value.
-func (self Otto) MakeTypeError(message string) Value { 
+func (self Otto) MakeTypeError(message string) Value {
 	return self.runtime.toValue(self.runtime.newTypeError(self.runtime.toValue(message)))
 }
 
@@ -429,21 +429,21 @@ type Context struct {
 
 // Context returns the current execution context of the vm, traversing up to
 // ten stack frames, and skipping any innermost native function stack frames.
-func (self Otto) Context() Context { 
+func (self Otto) Context() Context {
 	return self.ContextSkip(10, true)
 }
 
 // ContextLimit returns the current execution context of the vm, with a
 // specific limit on the number of stack frames to traverse, skipping any
 // innermost native function stack frames.
-func (self Otto) ContextLimit(limit int) Context { 
+func (self Otto) ContextLimit(limit int) Context {
 	return self.ContextSkip(limit, true)
 }
 
 // ContextSkip returns the current execution context of the vm, with a
 // specific limit on the number of stack frames to traverse, optionally
 // skipping any innermost native function stack frames.
-func (self Otto) ContextSkip(limit int, skipNative bool) (ctx Context) { 
+func (self Otto) ContextSkip(limit int, skipNative bool) (ctx Context) {
 	// Ensure we are operating in a scope
 	if self.runtime.scope == nil {
 		self.runtime.enterGlobalScope()
@@ -534,7 +534,7 @@ func (self Otto) ContextSkip(limit int, skipNative bool) (ctx Context) {
 //      // value is [ 1, 2, 3, undefined, 4, 5, 6, 7, "abc" ]
 //      value, _ := vm.Call(`[ 1, 2, 3, undefined, 4 ].concat`, nil, 5, 6, 7, "abc")
 //
-func (self Otto) Call(source string, this interface{}, argumentList ...interface{}) (Value, error) { 
+func (self Otto) Call(source string, this interface{}, argumentList ...interface{}) (Value, error) {
 
 	thisValue := Value{}
 
@@ -615,7 +615,7 @@ func (self Otto) Call(source string, this interface{}, argumentList ...interface
 //
 // If there is an error (like the source does not result in an object), then
 // nil and an error is returned.
-func (self Otto) Object(source string) (*Object, error) { 
+func (self Otto) Object(source string) (*Object, error) {
 	value, err := self.runtime.cmpl_run(source, nil)
 	if err != nil {
 		return nil, err
@@ -627,7 +627,7 @@ func (self Otto) Object(source string) (*Object, error) {
 }
 
 // ToValue will convert an interface{} value to a value digestible by otto/JavaScript.
-func (self Otto) ToValue(value interface{}) (Value, error) { 
+func (self Otto) ToValue(value interface{}) (Value, error) {
 	return self.runtime.safeToValue(value)
 }
 
@@ -639,7 +639,7 @@ func (self Otto) ToValue(value interface{}) (Value, error) {
 // etc. into a new runtime.
 //
 // Be on the lookout for memory leaks or inadvertent sharing of resources.
-func (in *Otto) Copy() *Otto { 
+func (in *Otto) Copy() *Otto {
 	out := &Otto{
 		runtime: in.runtime.clone(),
 	}
@@ -655,7 +655,7 @@ type Object struct {
 	value  Value
 }
 
-func _newObject(object *_object, value Value) *Object { 
+func _newObject(object *_object, value Value) *Object {
 	// value MUST contain object!
 	return &Object{
 		object: object,
@@ -676,7 +676,7 @@ func _newObject(object *_object, value Value) *Object {
 //		2. The property is not actually a function
 //		3. An (uncaught) exception is thrown
 //
-func (self Object) Call(name string, argumentList ...interface{}) (Value, error) { 
+func (self Object) Call(name string, argumentList ...interface{}) (Value, error) {
 	// TODO: Insert an example using JavaScript below...
 	// e.g., Object("JSON").Call("stringify", ...)
 
@@ -688,12 +688,12 @@ func (self Object) Call(name string, argumentList ...interface{}) (Value, error)
 }
 
 // Value will return self as a value.
-func (self Object) Value() Value { 
+func (self Object) Value() Value {
 	return self.value
 }
 
 // Get the value of the property with the given name.
-func (self Object) Get(name string) (Value, error) { 
+func (self Object) Get(name string) (Value, error) {
 	value := Value{}
 	err := catchPanic(func() {
 		value = self.object.get(name)
@@ -708,7 +708,7 @@ func (self Object) Get(name string) (Value, error) {
 //
 // An error will result if the setting the property triggers an exception (i.e. read-only),
 // or there is an error during conversion of the given value.
-func (self Object) Set(name string, value interface{}) error { 
+func (self Object) Set(name string, value interface{}) error {
 	{
 		value, err := self.object.runtime.safeToValue(value)
 		if err != nil {
@@ -724,7 +724,7 @@ func (self Object) Set(name string, value interface{}) error {
 // Keys gets the keys for the given object.
 //
 // Equivalent to calling Object.keys on the object.
-func (self Object) Keys() []string { 
+func (self Object) Keys() []string {
 	var keys []string
 	self.object.enumerate(false, func(name string) bool {
 		keys = append(keys, name)
@@ -735,7 +735,7 @@ func (self Object) Keys() []string {
 
 // KeysByParent gets the keys (and those of the parents) for the given object,
 // in order of "closest" to "furthest".
-func (self Object) KeysByParent() [][]string { 
+func (self Object) KeysByParent() [][]string {
 	var a [][]string
 
 	for o := self.object; o != nil; o = o.prototype {
@@ -765,6 +765,6 @@ func (self Object) KeysByParent() [][]string {
 //		Date
 //		RegExp
 //
-func (self Object) Class() string { 
+func (self Object) Class() string {
 	return self.object.class
 }

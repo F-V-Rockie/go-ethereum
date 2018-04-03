@@ -14,7 +14,7 @@ import (
 // be set NewUUID returns nil.  If clock sequence has not been set by
 // SetClockSequence then it will be set automatically.  If GetTime fails to
 // return the current NewUUID returns nil.
-func NewUUID() UUID { 
+func NewUUID() UUID {
 	if nodeID == nil {
 		SetNodeInterface("")
 	}

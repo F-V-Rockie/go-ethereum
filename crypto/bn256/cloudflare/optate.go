@@ -1,5 +1,7 @@
 package bn256
 
+import "github.com/ethereum/go-ethereum/log"
+
 func lineFunctionAdd(r, p *twistPoint, q *curvePoint, r2 *gfP2) (a, b, c *gfP2, rOut *twistPoint) { log.DebugLog()
 	// See the mixed addition algorithm from "Faster Computation of the
 	// Tate Pairing", http://arxiv.org/pdf/0904.0854v3.pdf

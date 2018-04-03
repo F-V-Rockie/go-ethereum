@@ -19,9 +19,10 @@ package keystore
 import (
 	"math/big"
 
-	ethereum "github.com/ethereum/go-ethereum"
+	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/accounts"
 	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // keystoreWallet implements the accounts.Wallet interface for the original
@@ -32,13 +33,15 @@ type keystoreWallet struct {
 }
 
 // URL implements accounts.Wallet, returning the URL of the account within.
-func (w *keystoreWallet) URL() accounts.URL { log.DebugLog()
+func (w *keystoreWallet) URL() accounts.URL {
+	log.DebugLog()
 	return w.account.URL
 }
 
 // Status implements accounts.Wallet, returning whether the account held by the
 // keystore wallet is unlocked or not.
-func (w *keystoreWallet) Status() (string, error) { log.DebugLog()
+func (w *keystoreWallet) Status() (string, error) {
+	log.DebugLog()
 	w.keystore.mu.RLock()
 	defer w.keystore.mu.RUnlock()
 
@@ -50,39 +53,45 @@ func (w *keystoreWallet) Status() (string, error) { log.DebugLog()
 
 // Open implements accounts.Wallet, but is a noop for plain wallets since there
 // is no connection or decryption step necessary to access the list of accounts.
-func (w *keystoreWallet) Open(passphrase string) error { log.DebugLog() return nil }
+func (w *keystoreWallet) Open(passphrase string) error { log.DebugLog()
+														   return nil }
 
 // Close implements accounts.Wallet, but is a noop for plain wallets since is no
 // meaningful open operation.
-func (w *keystoreWallet) Close() error { log.DebugLog() return nil }
+func (w *keystoreWallet) Close() error { log.DebugLog()
+										   return nil }
 
 // Accounts implements accounts.Wallet, returning an account list consisting of
 // a single account that the plain kestore wallet contains.
-func (w *keystoreWallet) Accounts() []accounts.Account { log.DebugLog()
+func (w *keystoreWallet) Accounts() []accounts.Account {
+	log.DebugLog()
 	return []accounts.Account{w.account}
 }
 
 // Contains implements accounts.Wallet, returning whether a particular account is
 // or is not wrapped by this wallet instance.
-func (w *keystoreWallet) Contains(account accounts.Account) bool { log.DebugLog()
+func (w *keystoreWallet) Contains(account accounts.Account) bool {
+	log.DebugLog()
 	return account.Address == w.account.Address && (account.URL == (accounts.URL{}) || account.URL == w.account.URL)
 }
 
 // Derive implements accounts.Wallet, but is a noop for plain wallets since there
 // is no notion of hierarchical account derivation for plain keystore accounts.
-func (w *keystoreWallet) Derive(path accounts.DerivationPath, pin bool) (accounts.Account, error) { log.DebugLog()
+func (w *keystoreWallet) Derive(path accounts.DerivationPath, pin bool) (accounts.Account, error) {
+	log.DebugLog()
 	return accounts.Account{}, accounts.ErrNotSupported
 }
 
 // SelfDerive implements accounts.Wallet, but is a noop for plain wallets since
 // there is no notion of hierarchical account derivation for plain keystore accounts.
-func (w *keystoreWallet) SelfDerive(base accounts.DerivationPath, chain ethereum.ChainStateReader) { log.DebugLog()}
+func (w *keystoreWallet) SelfDerive(base accounts.DerivationPath, chain ethereum.ChainStateReader) { log.DebugLog() }
 
 // SignHash implements accounts.Wallet, attempting to sign the given hash with
 // the given account. If the wallet does not wrap this particular account, an
 // error is returned to avoid account leakage (even though in theory we may be
 // able to sign via our shared keystore backend).
-func (w *keystoreWallet) SignHash(account accounts.Account, hash []byte) ([]byte, error) { log.DebugLog()
+func (w *keystoreWallet) SignHash(account accounts.Account, hash []byte) ([]byte, error) {
+	log.DebugLog()
 	// Make sure the requested account is contained within
 	if account.Address != w.account.Address {
 		return nil, accounts.ErrUnknownAccount
@@ -98,7 +107,8 @@ func (w *keystoreWallet) SignHash(account accounts.Account, hash []byte) ([]byte
 // with the given account. If the wallet does not wrap this particular account,
 // an error is returned to avoid account leakage (even though in theory we may
 // be able to sign via our shared keystore backend).
-func (w *keystoreWallet) SignTx(account accounts.Account, tx *types.Transaction, chainID *big.Int) (*types.Transaction, error) { log.DebugLog()
+func (w *keystoreWallet) SignTx(account accounts.Account, tx *types.Transaction, chainID *big.Int) (*types.Transaction, error) {
+	log.DebugLog()
 	// Make sure the requested account is contained within
 	if account.Address != w.account.Address {
 		return nil, accounts.ErrUnknownAccount
@@ -112,7 +122,8 @@ func (w *keystoreWallet) SignTx(account accounts.Account, tx *types.Transaction,
 
 // SignHashWithPassphrase implements accounts.Wallet, attempting to sign the
 // given hash with the given account using passphrase as extra authentication.
-func (w *keystoreWallet) SignHashWithPassphrase(account accounts.Account, passphrase string, hash []byte) ([]byte, error) { log.DebugLog()
+func (w *keystoreWallet) SignHashWithPassphrase(account accounts.Account, passphrase string, hash []byte) ([]byte, error) {
+	log.DebugLog()
 	// Make sure the requested account is contained within
 	if account.Address != w.account.Address {
 		return nil, accounts.ErrUnknownAccount
@@ -126,7 +137,8 @@ func (w *keystoreWallet) SignHashWithPassphrase(account accounts.Account, passph
 
 // SignTxWithPassphrase implements accounts.Wallet, attempting to sign the given
 // transaction with the given account using passphrase as extra authentication.
-func (w *keystoreWallet) SignTxWithPassphrase(account accounts.Account, passphrase string, tx *types.Transaction, chainID *big.Int) (*types.Transaction, error) { log.DebugLog()
+func (w *keystoreWallet) SignTxWithPassphrase(account accounts.Account, passphrase string, tx *types.Transaction, chainID *big.Int) (*types.Transaction, error) {
+	log.DebugLog()
 	// Make sure the requested account is contained within
 	if account.Address != w.account.Address {
 		return nil, accounts.ErrUnknownAccount

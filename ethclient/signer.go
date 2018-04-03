@@ -22,6 +22,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // senderFromServer is a types.Signer that remembers the sender address returned by the RPC
@@ -34,26 +35,31 @@ type senderFromServer struct {
 
 var errNotCached = errors.New("sender not cached")
 
-func setSenderFromServer(tx *types.Transaction, addr common.Address, block common.Hash) { log.DebugLog()
+func setSenderFromServer(tx *types.Transaction, addr common.Address, block common.Hash) {
+	log.DebugLog()
 	// Use types.Sender for side-effect to store our signer into the cache.
 	types.Sender(&senderFromServer{addr, block}, tx)
 }
 
-func (s *senderFromServer) Equal(other types.Signer) bool { log.DebugLog()
+func (s *senderFromServer) Equal(other types.Signer) bool {
+	log.DebugLog()
 	os, ok := other.(*senderFromServer)
 	return ok && os.blockhash == s.blockhash
 }
 
-func (s *senderFromServer) Sender(tx *types.Transaction) (common.Address, error) { log.DebugLog()
+func (s *senderFromServer) Sender(tx *types.Transaction) (common.Address, error) {
+	log.DebugLog()
 	if s.blockhash == (common.Hash{}) {
 		return common.Address{}, errNotCached
 	}
 	return s.addr, nil
 }
 
-func (s *senderFromServer) Hash(tx *types.Transaction) common.Hash { log.DebugLog()
+func (s *senderFromServer) Hash(tx *types.Transaction) common.Hash {
+	log.DebugLog()
 	panic("can't sign with senderFromServer")
 }
-func (s *senderFromServer) SignatureValues(tx *types.Transaction, sig []byte) (R, S, V *big.Int, err error) { log.DebugLog()
+func (s *senderFromServer) SignatureValues(tx *types.Transaction, sig []byte) (R, S, V *big.Int, err error) {
+	log.DebugLog()
 	panic("can't sign with senderFromServer")
 }

@@ -24,6 +24,7 @@ import (
 	"github.com/ethereum/go-ethereum/event"
 	"github.com/ethereum/go-ethereum/p2p"
 	"github.com/ethereum/go-ethereum/rpc"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // ServiceContext is a collection of service independent options inherited from
@@ -39,7 +40,8 @@ type ServiceContext struct {
 // OpenDatabase opens an existing database with the given name (or creates one
 // if no previous can be found) from within the node's data directory. If the
 // node is an ephemeral one, a memory database is returned.
-func (ctx *ServiceContext) OpenDatabase(name string, cache int, handles int) (ethdb.Database, error) { log.DebugLog()
+func (ctx *ServiceContext) OpenDatabase(name string, cache int, handles int) (ethdb.Database, error) {
+	log.DebugLog()
 	if ctx.config.DataDir == "" {
 		return ethdb.NewMemDatabase()
 	}
@@ -53,12 +55,14 @@ func (ctx *ServiceContext) OpenDatabase(name string, cache int, handles int) (et
 // ResolvePath resolves a user path into the data directory if that was relative
 // and if the user actually uses persistent storage. It will return an empty string
 // for emphemeral storage and the user's own input for absolute paths.
-func (ctx *ServiceContext) ResolvePath(path string) string { log.DebugLog()
+func (ctx *ServiceContext) ResolvePath(path string) string {
+	log.DebugLog()
 	return ctx.config.resolvePath(path)
 }
 
 // Service retrieves a currently running service registered of a specific type.
-func (ctx *ServiceContext) Service(service interface{}) error { log.DebugLog()
+func (ctx *ServiceContext) Service(service interface{}) error {
+	log.DebugLog()
 	element := reflect.ValueOf(service).Elem()
 	if running, ok := ctx.services[element.Type()]; ok {
 		element.Set(reflect.ValueOf(running))

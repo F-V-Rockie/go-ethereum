@@ -26,7 +26,7 @@ type Position struct {
 
 // A Position is valid if the line number is > 0.
 
-func (self *Position) isValid() bool { 
+func (self *Position) isValid() bool {
 	return self.Line > 0
 }
 
@@ -37,7 +37,7 @@ func (self *Position) isValid() bool {
 //	file                An invalid position with filename
 //	-                   An invalid position without filename
 //
-func (self *Position) String() string { 
+func (self *Position) String() string {
 	str := self.Filename
 	if self.isValid() {
 		if str != "" {
@@ -62,7 +62,7 @@ type FileSet struct {
 // AddFile adds a new file with the given filename and src.
 //
 // This an internal method, but exported for cross-package use.
-func (self *FileSet) AddFile(filename, src string) int { 
+func (self *FileSet) AddFile(filename, src string) int {
 	base := self.nextBase()
 	file := &File{
 		name: filename,
@@ -74,14 +74,14 @@ func (self *FileSet) AddFile(filename, src string) int {
 	return base
 }
 
-func (self *FileSet) nextBase() int { 
+func (self *FileSet) nextBase() int {
 	if self.last == nil {
 		return 1
 	}
 	return self.last.base + len(self.last.src) + 1
 }
 
-func (self *FileSet) File(idx Idx) *File { 
+func (self *FileSet) File(idx Idx) *File {
 	for _, file := range self.files {
 		if idx <= Idx(file.base+len(file.src)) {
 			return file
@@ -91,7 +91,7 @@ func (self *FileSet) File(idx Idx) *File {
 }
 
 // Position converts an Idx in the FileSet into a Position.
-func (self *FileSet) Position(idx Idx) *Position { 
+func (self *FileSet) Position(idx Idx) *Position {
 	for _, file := range self.files {
 		if idx <= Idx(file.base+len(file.src)) {
 			return file.Position(idx - Idx(file.base))
@@ -108,7 +108,7 @@ type File struct {
 	sm   *sourcemap.Consumer
 }
 
-func NewFile(filename, src string, base int) *File { 
+func NewFile(filename, src string, base int) *File {
 	return &File{
 		name: filename,
 		src:  src,
@@ -116,24 +116,24 @@ func NewFile(filename, src string, base int) *File {
 	}
 }
 
-func (fl *File) WithSourceMap(sm *sourcemap.Consumer) *File { 
+func (fl *File) WithSourceMap(sm *sourcemap.Consumer) *File {
 	fl.sm = sm
 	return fl
 }
 
-func (fl *File) Name() string { 
+func (fl *File) Name() string {
 	return fl.name
 }
 
-func (fl *File) Source() string { 
+func (fl *File) Source() string {
 	return fl.src
 }
 
-func (fl *File) Base() int { 
+func (fl *File) Base() int {
 	return fl.base
 }
 
-func (fl *File) Position(idx Idx) *Position { 
+func (fl *File) Position(idx Idx) *Position {
 	position := &Position{}
 
 	offset := int(idx) - fl.base

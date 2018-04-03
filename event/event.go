@@ -23,6 +23,7 @@ import (
 	"reflect"
 	"sync"
 	"time"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // TypeMuxEvent is a time-tagged notification pushed to subscribers.

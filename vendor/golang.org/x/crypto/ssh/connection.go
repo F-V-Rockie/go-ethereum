@@ -16,7 +16,7 @@ type OpenChannelError struct {
 	Message string
 }
 
-func (e *OpenChannelError) Error() string { 
+func (e *OpenChannelError) Error() string {
 	return fmt.Sprintf("ssh: rejected: %s (%s)", e.Reason, e.Message)
 }
 
@@ -76,7 +76,7 @@ type Conn interface {
 
 // DiscardRequests consumes and rejects all requests from the
 // passed-in channel.
-func DiscardRequests(in <-chan *Request) { 
+func DiscardRequests(in <-chan *Request) {
 	for req := range in {
 		if req.WantReply {
 			req.Reply(false, nil)
@@ -93,7 +93,7 @@ type connection struct {
 	*mux
 }
 
-func (c *connection) Close() error { 
+func (c *connection) Close() error {
 	return c.sshConn.conn.Close()
 }
 
@@ -108,36 +108,36 @@ type sshConn struct {
 	serverVersion []byte
 }
 
-func dup(src []byte) []byte { 
+func dup(src []byte) []byte {
 	dst := make([]byte, len(src))
 	copy(dst, src)
 	return dst
 }
 
-func (c *sshConn) User() string { 
+func (c *sshConn) User() string {
 	return c.user
 }
 
-func (c *sshConn) RemoteAddr() net.Addr { 
+func (c *sshConn) RemoteAddr() net.Addr {
 	return c.conn.RemoteAddr()
 }
 
-func (c *sshConn) Close() error { 
+func (c *sshConn) Close() error {
 	return c.conn.Close()
 }
 
-func (c *sshConn) LocalAddr() net.Addr { 
+func (c *sshConn) LocalAddr() net.Addr {
 	return c.conn.LocalAddr()
 }
 
-func (c *sshConn) SessionID() []byte { 
+func (c *sshConn) SessionID() []byte {
 	return dup(c.sessionID)
 }
 
-func (c *sshConn) ClientVersion() []byte { 
+func (c *sshConn) ClientVersion() []byte {
 	return dup(c.clientVersion)
 }
 
-func (c *sshConn) ServerVersion() []byte { 
+func (c *sshConn) ServerVersion() []byte {
 	return dup(c.serverVersion)
 }

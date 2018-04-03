@@ -37,7 +37,7 @@ const (
 
 // TranslateAccountName converts a directory service
 // object name from one format to another.
-func TranslateAccountName(username string, from, to uint32, initSize int) (string, error) { 
+func TranslateAccountName(username string, from, to uint32, initSize int) (string, error) {
 	u, e := UTF16PtrFromString(username)
 	if e != nil {
 		return "", e
@@ -148,7 +148,7 @@ type SID struct{}
 
 // StringToSid converts a string-format security identifier
 // sid into a valid, functional sid.
-func StringToSid(s string) (*SID, error) { 
+func StringToSid(s string) (*SID, error) {
 	var sid *SID
 	p, e := UTF16PtrFromString(s)
 	if e != nil {
@@ -165,7 +165,7 @@ func StringToSid(s string) (*SID, error) {
 // LookupSID retrieves a security identifier sid for the account
 // and the name of the domain on which the account was found.
 // System specify target computer to search.
-func LookupSID(system, account string) (sid *SID, domain string, accType uint32, err error) { 
+func LookupSID(system, account string) (sid *SID, domain string, accType uint32, err error) {
 	if len(account) == 0 {
 		return nil, "", 0, syscall.EINVAL
 	}
@@ -201,7 +201,7 @@ func LookupSID(system, account string) (sid *SID, domain string, accType uint32,
 
 // String converts sid to a string format
 // suitable for display, storage, or transmission.
-func (sid *SID) String() (string, error) { 
+func (sid *SID) String() (string, error) {
 	var s *uint16
 	e := ConvertSidToStringSid(sid, &s)
 	if e != nil {
@@ -212,12 +212,12 @@ func (sid *SID) String() (string, error) {
 }
 
 // Len returns the length, in bytes, of a valid security identifier sid.
-func (sid *SID) Len() int { 
+func (sid *SID) Len() int {
 	return int(GetLengthSid(sid))
 }
 
 // Copy creates a duplicate of security identifier sid.
-func (sid *SID) Copy() (*SID, error) { 
+func (sid *SID) Copy() (*SID, error) {
 	b := make([]byte, sid.Len())
 	sid2 := (*SID)(unsafe.Pointer(&b[0]))
 	e := CopySid(uint32(len(b)), sid2, sid)
@@ -230,7 +230,7 @@ func (sid *SID) Copy() (*SID, error) {
 // LookupAccount retrieves the name of the account for this sid
 // and the name of the first domain on which this sid is found.
 // System specify target computer to search for.
-func (sid *SID) LookupAccount(system string) (account, domain string, accType uint32, err error) { 
+func (sid *SID) LookupAccount(system string) (account, domain string, accType uint32, err error) {
 	var sys *uint16
 	if len(system) > 0 {
 		sys, err = UTF16PtrFromString(system)
@@ -350,7 +350,7 @@ type Token Handle
 
 // OpenCurrentProcessToken opens the access token
 // associated with current process.
-func OpenCurrentProcessToken() (Token, error) { 
+func OpenCurrentProcessToken() (Token, error) {
 	p, e := GetCurrentProcess()
 	if e != nil {
 		return 0, e
@@ -364,12 +364,12 @@ func OpenCurrentProcessToken() (Token, error) {
 }
 
 // Close releases access to access token.
-func (t Token) Close() error { 
+func (t Token) Close() error {
 	return CloseHandle(Handle(t))
 }
 
 // getInfo retrieves a specified type of information about an access token.
-func (t Token) getInfo(class uint32, initSize int) (unsafe.Pointer, error) { 
+func (t Token) getInfo(class uint32, initSize int) (unsafe.Pointer, error) {
 	n := uint32(initSize)
 	for {
 		b := make([]byte, n)
@@ -387,7 +387,7 @@ func (t Token) getInfo(class uint32, initSize int) (unsafe.Pointer, error) {
 }
 
 // GetTokenUser retrieves access token t user account information.
-func (t Token) GetTokenUser() (*Tokenuser, error) { 
+func (t Token) GetTokenUser() (*Tokenuser, error) {
 	i, e := t.getInfo(TokenUser, 50)
 	if e != nil {
 		return nil, e
@@ -396,7 +396,7 @@ func (t Token) GetTokenUser() (*Tokenuser, error) {
 }
 
 // GetTokenGroups retrieves group accounts associated with access token t.
-func (t Token) GetTokenGroups() (*Tokengroups, error) { 
+func (t Token) GetTokenGroups() (*Tokengroups, error) {
 	i, e := t.getInfo(TokenGroups, 50)
 	if e != nil {
 		return nil, e
@@ -407,7 +407,7 @@ func (t Token) GetTokenGroups() (*Tokengroups, error) {
 // GetTokenPrimaryGroup retrieves access token t primary group information.
 // A pointer to a SID structure representing a group that will become
 // the primary group of any objects created by a process using this access token.
-func (t Token) GetTokenPrimaryGroup() (*Tokenprimarygroup, error) { 
+func (t Token) GetTokenPrimaryGroup() (*Tokenprimarygroup, error) {
 	i, e := t.getInfo(TokenPrimaryGroup, 50)
 	if e != nil {
 		return nil, e
@@ -417,7 +417,7 @@ func (t Token) GetTokenPrimaryGroup() (*Tokenprimarygroup, error) {
 
 // GetUserProfileDirectory retrieves path to the
 // root directory of the access token t user's profile.
-func (t Token) GetUserProfileDirectory() (string, error) { 
+func (t Token) GetUserProfileDirectory() (string, error) {
 	n := uint32(100)
 	for {
 		b := make([]uint16, n)

@@ -3,6 +3,7 @@ package metrics
 import (
 	"runtime/debug"
 	"time"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 var (

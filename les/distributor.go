@@ -23,6 +23,7 @@ import (
 	"errors"
 	"sync"
 	"time"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // ErrNoPeers is returned if no peers capable of serving a queued request are available
@@ -71,7 +72,8 @@ type distReq struct {
 }
 
 // newRequestDistributor creates a new request distributor
-func newRequestDistributor(peers *peerSet, stopChn chan struct{}) *requestDistributor { log.DebugLog()
+func newRequestDistributor(peers *peerSet, stopChn chan struct{}) *requestDistributor {
+	log.DebugLog()
 	d := &requestDistributor{
 		reqQueue: list.New(),
 		loopChn:  make(chan struct{}, 2),
@@ -86,21 +88,24 @@ func newRequestDistributor(peers *peerSet, stopChn chan struct{}) *requestDistri
 }
 
 // registerPeer implements peerSetNotify
-func (d *requestDistributor) registerPeer(p *peer) { log.DebugLog()
+func (d *requestDistributor) registerPeer(p *peer) {
+	log.DebugLog()
 	d.peerLock.Lock()
 	d.peers[p] = struct{}{}
 	d.peerLock.Unlock()
 }
 
 // unregisterPeer implements peerSetNotify
-func (d *requestDistributor) unregisterPeer(p *peer) { log.DebugLog()
+func (d *requestDistributor) unregisterPeer(p *peer) {
+	log.DebugLog()
 	d.peerLock.Lock()
 	delete(d.peers, p)
 	d.peerLock.Unlock()
 }
 
 // registerTestPeer adds a new test peer
-func (d *requestDistributor) registerTestPeer(p distPeer) { log.DebugLog()
+func (d *requestDistributor) registerTestPeer(p distPeer) {
+	log.DebugLog()
 	d.peerLock.Lock()
 	d.peers[p] = struct{}{}
 	d.peerLock.Unlock()
@@ -111,7 +116,8 @@ func (d *requestDistributor) registerTestPeer(p distPeer) { log.DebugLog()
 const distMaxWait = time.Millisecond * 10
 
 // main event loop
-func (d *requestDistributor) loop() { log.DebugLog()
+func (d *requestDistributor) loop() {
+	log.DebugLog()
 	for {
 		select {
 		case <-d.stopChn:
@@ -169,13 +175,15 @@ type selectPeerItem struct {
 }
 
 // Weight implements wrsItem interface
-func (sp selectPeerItem) Weight() int64 { log.DebugLog()
+func (sp selectPeerItem) Weight() int64 {
+	log.DebugLog()
 	return sp.weight
 }
 
 // nextRequest returns the next possible request from any peer, along with the
 // associated peer and necessary waiting time
-func (d *requestDistributor) nextRequest() (distPeer, *distReq, time.Duration) { log.DebugLog()
+func (d *requestDistributor) nextRequest() (distPeer, *distReq, time.Duration) {
+	log.DebugLog()
 	checkedPeers := make(map[distPeer]struct{})
 	elem := d.reqQueue.Front()
 	var (
@@ -230,7 +238,8 @@ func (d *requestDistributor) nextRequest() (distPeer, *distReq, time.Duration) {
 // receiving peer is sent once the request has been sent (request callback returned).
 // If the request is cancelled or timed out without suitable peers, the channel is
 // closed without sending any peer references to it.
-func (d *requestDistributor) queue(r *distReq) chan distPeer { log.DebugLog()
+func (d *requestDistributor) queue(r *distReq) chan distPeer {
+	log.DebugLog()
 	d.lock.Lock()
 	defer d.lock.Unlock()
 
@@ -262,7 +271,8 @@ func (d *requestDistributor) queue(r *distReq) chan distPeer { log.DebugLog()
 // cancel removes a request from the queue if it has not been sent yet (returns
 // false if it has been sent already). It is guaranteed that the callback functions
 // will not be called after cancel returns.
-func (d *requestDistributor) cancel(r *distReq) bool { log.DebugLog()
+func (d *requestDistributor) cancel(r *distReq) bool {
+	log.DebugLog()
 	d.lock.Lock()
 	defer d.lock.Unlock()
 
@@ -276,7 +286,8 @@ func (d *requestDistributor) cancel(r *distReq) bool { log.DebugLog()
 }
 
 // remove removes a request from the queue
-func (d *requestDistributor) remove(r *distReq) { log.DebugLog()
+func (d *requestDistributor) remove(r *distReq) {
+	log.DebugLog()
 	r.sentChn = nil
 	if r.element != nil {
 		d.reqQueue.Remove(r.element)

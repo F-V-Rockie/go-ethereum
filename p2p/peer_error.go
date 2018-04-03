@@ -19,6 +19,7 @@ package p2p
 import (
 	"errors"
 	"fmt"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 const (
@@ -36,7 +37,8 @@ type peerError struct {
 	message string
 }
 
-func newPeerError(code int, format string, v ...interface{}) *peerError { log.DebugLog()
+func newPeerError(code int, format string, v ...interface{}) *peerError {
+	log.DebugLog()
 	desc, ok := errorToString[code]
 	if !ok {
 		panic("invalid error code")
@@ -48,7 +50,8 @@ func newPeerError(code int, format string, v ...interface{}) *peerError { log.De
 	return err
 }
 
-func (self *peerError) Error() string { log.DebugLog()
+func (self *peerError) Error() string {
+	log.DebugLog()
 	return self.message
 }
 
@@ -57,7 +60,7 @@ var errProtocolReturned = errors.New("protocol returned")
 type DiscReason uint
 
 const (
-	DiscRequested DiscReason = iota
+	DiscRequested           DiscReason = iota
 	DiscNetworkError
 	DiscProtocolError
 	DiscUselessPeer
@@ -69,7 +72,7 @@ const (
 	DiscUnexpectedIdentity
 	DiscSelf
 	DiscReadTimeout
-	DiscSubprotocolError = 0x10
+	DiscSubprotocolError    = 0x10
 )
 
 var discReasonToString = [...]string{
@@ -88,18 +91,21 @@ var discReasonToString = [...]string{
 	DiscSubprotocolError:    "subprotocol error",
 }
 
-func (d DiscReason) String() string { log.DebugLog()
+func (d DiscReason) String() string {
+	log.DebugLog()
 	if len(discReasonToString) < int(d) {
 		return fmt.Sprintf("unknown disconnect reason %d", d)
 	}
 	return discReasonToString[d]
 }
 
-func (d DiscReason) Error() string { log.DebugLog()
+func (d DiscReason) Error() string {
+	log.DebugLog()
 	return d.String()
 }
 
-func discReasonForError(err error) DiscReason { log.DebugLog()
+func discReasonForError(err error) DiscReason {
+	log.DebugLog()
 	if reason, ok := err.(DiscReason); ok {
 		return reason
 	}

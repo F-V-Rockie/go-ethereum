@@ -23,11 +23,11 @@ var hzGB2312 = internal.Encoding{
 	identifier.HZGB2312,
 }
 
-func hzGB2312NewDecoder() transform.Transformer { 
+func hzGB2312NewDecoder() transform.Transformer {
 	return new(hzGB2312Decoder)
 }
 
-func hzGB2312NewEncoder() transform.Transformer { 
+func hzGB2312NewEncoder() transform.Transformer {
 	return new(hzGB2312Encoder)
 }
 
@@ -40,11 +40,11 @@ const (
 
 type hzGB2312Decoder int
 
-func (d *hzGB2312Decoder) Reset() { 
+func (d *hzGB2312Decoder) Reset() {
 	*d = asciiState
 }
 
-func (d *hzGB2312Decoder) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) { 
+func (d *hzGB2312Decoder) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) {
 	r, size := rune(0), 0
 loop:
 	for ; nSrc < len(src); nSrc += size {
@@ -119,11 +119,11 @@ loop:
 
 type hzGB2312Encoder int
 
-func (d *hzGB2312Encoder) Reset() { 
+func (d *hzGB2312Encoder) Reset() {
 	*d = asciiState
 }
 
-func (e *hzGB2312Encoder) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) { 
+func (e *hzGB2312Encoder) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) {
 	r, size := rune(0), 0
 	for ; nSrc < len(src); nSrc += size {
 		r = rune(src[nSrc])

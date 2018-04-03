@@ -26,13 +26,13 @@ type Script struct {
 //      script, err := vm.Compile("", `var abc; if (!abc) abc = 0; abc += 2; abc;`)
 //      vm.Run(script)
 //
-func (self *Otto) Compile(filename string, src interface{}) (*Script, error) { 
+func (self *Otto) Compile(filename string, src interface{}) (*Script, error) {
 	return self.CompileWithSourceMap(filename, src, nil)
 }
 
 // CompileWithSourceMap does the same thing as Compile, but with the obvious
 // difference of applying a source map.
-func (self *Otto) CompileWithSourceMap(filename string, src, sm interface{}) (*Script, error) { 
+func (self *Otto) CompileWithSourceMap(filename string, src, sm interface{}) (*Script, error) {
 	program, err := self.runtime.parse(filename, src, sm)
 	if err != nil {
 		return nil, err
@@ -50,7 +50,7 @@ func (self *Otto) CompileWithSourceMap(filename string, src, sm interface{}) (*S
 	return script, nil
 }
 
-func (self *Script) String() string { 
+func (self *Script) String() string {
 	return "// " + self.filename + "\n" + self.src
 }
 
@@ -59,7 +59,7 @@ func (self *Script) String() string {
 //
 // The binary format can change at any time and should be considered unspecified and opaque.
 //
-func (self *Script) marshalBinary() ([]byte, error) { 
+func (self *Script) marshalBinary() ([]byte, error) {
 	var bfr bytes.Buffer
 	encoder := gob.NewEncoder(&bfr)
 	err := encoder.Encode(self.version)
@@ -87,7 +87,7 @@ func (self *Script) marshalBinary() ([]byte, error) {
 //
 // The binary format can change at any time and should be considered unspecified and opaque.
 //
-func (self *Script) unmarshalBinary(data []byte) error { 
+func (self *Script) unmarshalBinary(data []byte) error {
 	decoder := gob.NewDecoder(bytes.NewReader(data))
 	err := decoder.Decode(&self.version)
 	if err != nil {

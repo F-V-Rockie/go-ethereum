@@ -47,7 +47,7 @@ type disconnectMsg struct {
 	Language string
 }
 
-func (d *disconnectMsg) Error() string { 
+func (d *disconnectMsg) Error() string {
 	return fmt.Sprintf("ssh: disconnect, reason %d: %s", d.Reason, d.Message)
 }
 
@@ -269,7 +269,7 @@ type userAuthPubKeyOkMsg struct {
 
 // typeTags returns the possible type bytes for the given reflect.Type, which
 // should be a struct. The possible values are separated by a '|' character.
-func typeTags(structType reflect.Type) (tags []byte) { 
+func typeTags(structType reflect.Type) (tags []byte) {
 	tagStr := structType.Field(0).Tag.Get("sshtype")
 
 	for _, tag := range strings.Split(tagStr, "|") {
@@ -282,7 +282,7 @@ func typeTags(structType reflect.Type) (tags []byte) {
 	return tags
 }
 
-func fieldError(t reflect.Type, field int, problem string) error { 
+func fieldError(t reflect.Type, field int, problem string) error {
 	if problem != "" {
 		problem = ": " + problem
 	}
@@ -297,7 +297,7 @@ var errShortRead = errors.New("ssh: short read")
 // in decimal, the packet must start with one of those numbers. In
 // case of error, Unmarshal returns a ParseError or
 // UnexpectedMessageError.
-func Unmarshal(data []byte, out interface{}) error { 
+func Unmarshal(data []byte, out interface{}) error {
 	v := reflect.ValueOf(out).Elem()
 	structType := v.Type()
 	expectedTypes := typeTags(structType)
@@ -420,12 +420,12 @@ func Unmarshal(data []byte, out interface{}) error {
 // member has the "sshtype" tag set to a number in decimal, that
 // number is prepended to the result. If the last of member has the
 // "ssh" tag set to "rest", its contents are appended to the output.
-func Marshal(msg interface{}) []byte { 
+func Marshal(msg interface{}) []byte {
 	out := make([]byte, 0, 64)
 	return marshalStruct(out, msg)
 }
 
-func marshalStruct(out []byte, msg interface{}) []byte { 
+func marshalStruct(out []byte, msg interface{}) []byte {
 	v := reflect.Indirect(reflect.ValueOf(msg))
 	msgTypes := typeTags(v.Type())
 	if len(msgTypes) > 0 {
@@ -508,7 +508,7 @@ func marshalStruct(out []byte, msg interface{}) []byte {
 
 var bigOne = big.NewInt(1)
 
-func parseString(in []byte) (out, rest []byte, ok bool) { 
+func parseString(in []byte) (out, rest []byte, ok bool) {
 	if len(in) < 4 {
 		return
 	}
@@ -528,7 +528,7 @@ var (
 	emptyNameList = []string{}
 )
 
-func parseNameList(in []byte) (out []string, rest []byte, ok bool) { 
+func parseNameList(in []byte) (out []string, rest []byte, ok bool) {
 	contents, rest, ok := parseString(in)
 	if !ok {
 		return
@@ -545,7 +545,7 @@ func parseNameList(in []byte) (out []string, rest []byte, ok bool) {
 	return
 }
 
-func parseInt(in []byte) (out *big.Int, rest []byte, ok bool) { 
+func parseInt(in []byte) (out *big.Int, rest []byte, ok bool) {
 	contents, rest, ok := parseString(in)
 	if !ok {
 		return
@@ -569,21 +569,21 @@ func parseInt(in []byte) (out *big.Int, rest []byte, ok bool) {
 	return
 }
 
-func parseUint32(in []byte) (uint32, []byte, bool) { 
+func parseUint32(in []byte) (uint32, []byte, bool) {
 	if len(in) < 4 {
 		return 0, nil, false
 	}
 	return binary.BigEndian.Uint32(in), in[4:], true
 }
 
-func parseUint64(in []byte) (uint64, []byte, bool) { 
+func parseUint64(in []byte) (uint64, []byte, bool) {
 	if len(in) < 8 {
 		return 0, nil, false
 	}
 	return binary.BigEndian.Uint64(in), in[8:], true
 }
 
-func intLength(n *big.Int) int { 
+func intLength(n *big.Int) int {
 	length := 4 /* length bytes */
 	if n.Sign() < 0 {
 		nMinus1 := new(big.Int).Neg(n)
@@ -608,17 +608,17 @@ func intLength(n *big.Int) int {
 	return length
 }
 
-func marshalUint32(to []byte, n uint32) []byte { 
+func marshalUint32(to []byte, n uint32) []byte {
 	binary.BigEndian.PutUint32(to, n)
 	return to[4:]
 }
 
-func marshalUint64(to []byte, n uint64) []byte { 
+func marshalUint64(to []byte, n uint64) []byte {
 	binary.BigEndian.PutUint64(to, n)
 	return to[8:]
 }
 
-func marshalInt(to []byte, n *big.Int) []byte { 
+func marshalInt(to []byte, n *big.Int) []byte {
 	lengthBytes := to
 	to = to[4:]
 	length := 0
@@ -665,14 +665,14 @@ func marshalInt(to []byte, n *big.Int) []byte {
 	return to
 }
 
-func writeInt(w io.Writer, n *big.Int) { 
+func writeInt(w io.Writer, n *big.Int) {
 	length := intLength(n)
 	buf := make([]byte, length)
 	marshalInt(buf, n)
 	w.Write(buf)
 }
 
-func writeString(w io.Writer, s []byte) { 
+func writeString(w io.Writer, s []byte) {
 	var lengthBytes [4]byte
 	lengthBytes[0] = byte(len(s) >> 24)
 	lengthBytes[1] = byte(len(s) >> 16)
@@ -682,11 +682,11 @@ func writeString(w io.Writer, s []byte) {
 	w.Write(s)
 }
 
-func stringLength(n int) int { 
+func stringLength(n int) int {
 	return 4 + n
 }
 
-func marshalString(to []byte, s []byte) []byte { 
+func marshalString(to []byte, s []byte) []byte {
 	to[0] = byte(len(s) >> 24)
 	to[1] = byte(len(s) >> 16)
 	to[2] = byte(len(s) >> 8)
@@ -699,7 +699,7 @@ func marshalString(to []byte, s []byte) []byte {
 var bigIntType = reflect.TypeOf((*big.Int)(nil))
 
 // Decode a packet into its corresponding message.
-func decode(packet []byte) (interface{}, error) { 
+func decode(packet []byte) (interface{}, error) {
 	var msg interface{}
 	switch packet[0] {
 	case msgDisconnect:

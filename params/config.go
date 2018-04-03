@@ -21,6 +21,7 @@ import (
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 var (
@@ -127,7 +128,8 @@ type ChainConfig struct {
 type EthashConfig struct{}
 
 // String implements the stringer interface, returning the consensus engine details.
-func (c *EthashConfig) String() string { log.DebugLog()
+func (c *EthashConfig) String() string {
+	log.DebugLog()
 	return "ethash"
 }
 
@@ -138,12 +140,14 @@ type CliqueConfig struct {
 }
 
 // String implements the stringer interface, returning the consensus engine details.
-func (c *CliqueConfig) String() string { log.DebugLog()
+func (c *CliqueConfig) String() string {
+	log.DebugLog()
 	return "clique"
 }
 
 // String implements the fmt.Stringer interface.
-func (c *ChainConfig) String() string { log.DebugLog()
+func (c *ChainConfig) String() string {
+	log.DebugLog()
 	var engine interface{}
 	switch {
 	case c.Ethash != nil:
@@ -168,39 +172,47 @@ func (c *ChainConfig) String() string { log.DebugLog()
 }
 
 // IsHomestead returns whether num is either equal to the homestead block or greater.
-func (c *ChainConfig) IsHomestead(num *big.Int) bool { log.DebugLog()
+func (c *ChainConfig) IsHomestead(num *big.Int) bool {
+	log.DebugLog()
 	return isForked(c.HomesteadBlock, num)
 }
 
 // IsDAO returns whether num is either equal to the DAO fork block or greater.
-func (c *ChainConfig) IsDAOFork(num *big.Int) bool { log.DebugLog()
+func (c *ChainConfig) IsDAOFork(num *big.Int) bool {
+	log.DebugLog()
 	return isForked(c.DAOForkBlock, num)
 }
 
-func (c *ChainConfig) IsEIP150(num *big.Int) bool { log.DebugLog()
+func (c *ChainConfig) IsEIP150(num *big.Int) bool {
+	log.DebugLog()
 	return isForked(c.EIP150Block, num)
 }
 
-func (c *ChainConfig) IsEIP155(num *big.Int) bool { log.DebugLog()
+func (c *ChainConfig) IsEIP155(num *big.Int) bool {
+	log.DebugLog()
 	return isForked(c.EIP155Block, num)
 }
 
-func (c *ChainConfig) IsEIP158(num *big.Int) bool { log.DebugLog()
+func (c *ChainConfig) IsEIP158(num *big.Int) bool {
+	log.DebugLog()
 	return isForked(c.EIP158Block, num)
 }
 
-func (c *ChainConfig) IsByzantium(num *big.Int) bool { log.DebugLog()
+func (c *ChainConfig) IsByzantium(num *big.Int) bool {
+	log.DebugLog()
 	return isForked(c.ByzantiumBlock, num)
 }
 
-func (c *ChainConfig) IsConstantinople(num *big.Int) bool { log.DebugLog()
+func (c *ChainConfig) IsConstantinople(num *big.Int) bool {
+	log.DebugLog()
 	return isForked(c.ConstantinopleBlock, num)
 }
 
 // GasTable returns the gas table corresponding to the current phase (homestead or homestead reprice).
 //
 // The returned GasTable's fields shouldn't, under any circumstances, be changed.
-func (c *ChainConfig) GasTable(num *big.Int) GasTable { log.DebugLog()
+func (c *ChainConfig) GasTable(num *big.Int) GasTable {
+	log.DebugLog()
 	if num == nil {
 		return GasTableHomestead
 	}
@@ -216,7 +228,8 @@ func (c *ChainConfig) GasTable(num *big.Int) GasTable { log.DebugLog()
 
 // CheckCompatible checks whether scheduled fork transitions have been imported
 // with a mismatching chain configuration.
-func (c *ChainConfig) CheckCompatible(newcfg *ChainConfig, height uint64) *ConfigCompatError { log.DebugLog()
+func (c *ChainConfig) CheckCompatible(newcfg *ChainConfig, height uint64) *ConfigCompatError {
+	log.DebugLog()
 	bhead := new(big.Int).SetUint64(height)
 
 	// Iterate checkCompatible to find the lowest conflict.
@@ -232,7 +245,8 @@ func (c *ChainConfig) CheckCompatible(newcfg *ChainConfig, height uint64) *Confi
 	return lasterr
 }
 
-func (c *ChainConfig) checkCompatible(newcfg *ChainConfig, head *big.Int) *ConfigCompatError { log.DebugLog()
+func (c *ChainConfig) checkCompatible(newcfg *ChainConfig, head *big.Int) *ConfigCompatError {
+	log.DebugLog()
 	if isForkIncompatible(c.HomesteadBlock, newcfg.HomesteadBlock, head) {
 		return newCompatError("Homestead fork block", c.HomesteadBlock, newcfg.HomesteadBlock)
 	}
@@ -265,19 +279,22 @@ func (c *ChainConfig) checkCompatible(newcfg *ChainConfig, head *big.Int) *Confi
 
 // isForkIncompatible returns true if a fork scheduled at s1 cannot be rescheduled to
 // block s2 because head is already past the fork.
-func isForkIncompatible(s1, s2, head *big.Int) bool { log.DebugLog()
+func isForkIncompatible(s1, s2, head *big.Int) bool {
+	log.DebugLog()
 	return (isForked(s1, head) || isForked(s2, head)) && !configNumEqual(s1, s2)
 }
 
 // isForked returns whether a fork scheduled at block s is active at the given head block.
-func isForked(s, head *big.Int) bool { log.DebugLog()
+func isForked(s, head *big.Int) bool {
+	log.DebugLog()
 	if s == nil || head == nil {
 		return false
 	}
 	return s.Cmp(head) <= 0
 }
 
-func configNumEqual(x, y *big.Int) bool { log.DebugLog()
+func configNumEqual(x, y *big.Int) bool {
+	log.DebugLog()
 	if x == nil {
 		return y == nil
 	}
@@ -297,7 +314,8 @@ type ConfigCompatError struct {
 	RewindTo uint64
 }
 
-func newCompatError(what string, storedblock, newblock *big.Int) *ConfigCompatError { log.DebugLog()
+func newCompatError(what string, storedblock, newblock *big.Int) *ConfigCompatError {
+	log.DebugLog()
 	var rew *big.Int
 	switch {
 	case storedblock == nil:
@@ -314,7 +332,8 @@ func newCompatError(what string, storedblock, newblock *big.Int) *ConfigCompatEr
 	return err
 }
 
-func (err *ConfigCompatError) Error() string { log.DebugLog()
+func (err *ConfigCompatError) Error() string {
+	log.DebugLog()
 	return fmt.Sprintf("mismatching %s in database (have %d, want %d, rewindto %d)", err.What, err.StoredConfig, err.NewConfig, err.RewindTo)
 }
 
@@ -329,7 +348,8 @@ type Rules struct {
 	IsByzantium                               bool
 }
 
-func (c *ChainConfig) Rules(num *big.Int) Rules { log.DebugLog()
+func (c *ChainConfig) Rules(num *big.Int) Rules {
+	log.DebugLog()
 	chainId := c.ChainId
 	if chainId == nil {
 		chainId = new(big.Int)

@@ -79,7 +79,7 @@ type messageTypeIder interface {
 	MessageTypeId() int32
 }
 
-func (ms *messageSet) find(pb Message) *_MessageSet_Item { 
+func (ms *messageSet) find(pb Message) *_MessageSet_Item {
 	mti, ok := pb.(messageTypeIder)
 	if !ok {
 		return nil
@@ -93,14 +93,14 @@ func (ms *messageSet) find(pb Message) *_MessageSet_Item {
 	return nil
 }
 
-func (ms *messageSet) Has(pb Message) bool { 
+func (ms *messageSet) Has(pb Message) bool {
 	if ms.find(pb) != nil {
 		return true
 	}
 	return false
 }
 
-func (ms *messageSet) Unmarshal(pb Message) error { 
+func (ms *messageSet) Unmarshal(pb Message) error {
 	if item := ms.find(pb); item != nil {
 		return Unmarshal(item.Message, pb)
 	}
@@ -110,7 +110,7 @@ func (ms *messageSet) Unmarshal(pb Message) error {
 	return nil // TODO: return error instead?
 }
 
-func (ms *messageSet) Marshal(pb Message) error { 
+func (ms *messageSet) Marshal(pb Message) error {
 	msg, err := Marshal(pb)
 	if err != nil {
 		return err
@@ -134,13 +134,13 @@ func (ms *messageSet) Marshal(pb Message) error {
 	return nil
 }
 
-func (ms *messageSet) Reset()         {  *ms = messageSet{} }
-func (ms *messageSet) String() string {  return CompactTextString(ms) }
-func (*messageSet) ProtoMessage()     { }
+func (ms *messageSet) Reset()         { *ms = messageSet{} }
+func (ms *messageSet) String() string { return CompactTextString(ms) }
+func (*messageSet) ProtoMessage()     {}
 
 // Support for the message_set_wire_format message option.
 
-func skipVarint(buf []byte) []byte { 
+func skipVarint(buf []byte) []byte {
 	i := 0
 	for ; buf[i]&0x80 != 0; i++ {
 	}
@@ -149,7 +149,7 @@ func skipVarint(buf []byte) []byte {
 
 // MarshalMessageSet encodes the extension map represented by m in the message set wire format.
 // It is called by generated Marshal methods on protocol buffer messages with the message_set_wire_format option.
-func MarshalMessageSet(exts interface{}) ([]byte, error) { 
+func MarshalMessageSet(exts interface{}) ([]byte, error) {
 	var m map[int32]Extension
 	switch exts := exts.(type) {
 	case *XXX_InternalExtensions:
@@ -190,7 +190,7 @@ func MarshalMessageSet(exts interface{}) ([]byte, error) {
 
 // UnmarshalMessageSet decodes the extension map encoded in buf in the message set wire format.
 // It is called by generated Unmarshal methods on protocol buffer messages with the message_set_wire_format option.
-func UnmarshalMessageSet(buf []byte, exts interface{}) error { 
+func UnmarshalMessageSet(buf []byte, exts interface{}) error {
 	var m map[int32]Extension
 	switch exts := exts.(type) {
 	case *XXX_InternalExtensions:
@@ -231,7 +231,7 @@ func UnmarshalMessageSet(buf []byte, exts interface{}) error {
 
 // MarshalMessageSetJSON encodes the extension map represented by m in JSON format.
 // It is called by generated MarshalJSON methods on protocol buffer messages with the message_set_wire_format option.
-func MarshalMessageSetJSON(exts interface{}) ([]byte, error) { 
+func MarshalMessageSetJSON(exts interface{}) ([]byte, error) {
 	var m map[int32]Extension
 	switch exts := exts.(type) {
 	case *XXX_InternalExtensions:
@@ -283,7 +283,7 @@ func MarshalMessageSetJSON(exts interface{}) ([]byte, error) {
 
 // UnmarshalMessageSetJSON decodes the extension map encoded in buf in JSON format.
 // It is called by generated UnmarshalJSON methods on protocol buffer messages with the message_set_wire_format option.
-func UnmarshalMessageSetJSON(buf []byte, exts interface{}) error { 
+func UnmarshalMessageSetJSON(buf []byte, exts interface{}) error {
 	// Common-case fast path.
 	if len(buf) == 0 || bytes.Equal(buf, []byte("{}")) {
 		return nil
@@ -303,7 +303,7 @@ type messageSetDesc struct {
 }
 
 // RegisterMessageSetType is called from the generated code.
-func RegisterMessageSetType(m Message, fieldNum int32, name string) { 
+func RegisterMessageSetType(m Message, fieldNum int32, name string) {
 	messageSetMap[fieldNum] = messageSetDesc{
 		t:    reflect.TypeOf(m),
 		name: name,

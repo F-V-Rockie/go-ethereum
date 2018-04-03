@@ -25,7 +25,7 @@ var osestr = map[Event]string{}
 
 type event struct{}
 
-func (e *event) Event() (_ Event)         {  return }
-func (e *event) Path() (_ string)         {  return }
-func (e *event) Sys() (_ interface{})     {  return }
-func (e *event) isDir() (_ bool, _ error) {  return }
+func (e *event) Event() (_ Event)         { return }
+func (e *event) Path() (_ string)         { return }
+func (e *event) Sys() (_ interface{})     { return }
+func (e *event) isDir() (_ bool, _ error) { return }

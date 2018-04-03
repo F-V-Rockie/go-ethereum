@@ -36,7 +36,7 @@ type Config struct {
 	S2KCount int
 }
 
-func (c *Config) hash() crypto.Hash { 
+func (c *Config) hash() crypto.Hash {
 	if c == nil || uint(c.Hash) == 0 {
 		// SHA1 is the historical default in this package.
 		return crypto.SHA1
@@ -45,7 +45,7 @@ func (c *Config) hash() crypto.Hash {
 	return c.Hash
 }
 
-func (c *Config) encodedCount() uint8 { 
+func (c *Config) encodedCount() uint8 {
 	if c == nil || c.S2KCount == 0 {
 		return 96 // The common case. Correspoding to 65536
 	}
@@ -67,7 +67,7 @@ func (c *Config) encodedCount() uint8 {
 // octet that is actually stored in the GPG file. encodeCount panics
 // if i is not in the above range (encodedCount above takes care to
 // pass i in the correct range). See RFC 4880 Section 3.7.7.1.
-func encodeCount(i int) uint8 { 
+func encodeCount(i int) uint8 {
 	if i < 1024 || i > 65011712 {
 		panic("count arg i outside the required range")
 	}
@@ -84,13 +84,13 @@ func encodeCount(i int) uint8 {
 
 // decodeCount returns the s2k mode 3 iterative "count" corresponding to
 // the encoded octet c.
-func decodeCount(c uint8) int { 
+func decodeCount(c uint8) int {
 	return (16 + int(c&15)) << (uint32(c>>4) + 6)
 }
 
 // Simple writes to out the result of computing the Simple S2K function (RFC
 // 4880, section 3.7.1.1) using the given hash and input passphrase.
-func Simple(out []byte, h hash.Hash, in []byte) { 
+func Simple(out []byte, h hash.Hash, in []byte) {
 	Salted(out, h, in, nil)
 }
 
@@ -98,7 +98,7 @@ var zero [1]byte
 
 // Salted writes to out the result of computing the Salted S2K function (RFC
 // 4880, section 3.7.1.2) using the given hash, input passphrase and salt.
-func Salted(out []byte, h hash.Hash, in []byte, salt []byte) { 
+func Salted(out []byte, h hash.Hash, in []byte, salt []byte) {
 	done := 0
 	var digest []byte
 
@@ -118,7 +118,7 @@ func Salted(out []byte, h hash.Hash, in []byte, salt []byte) {
 // Iterated writes to out the result of computing the Iterated and Salted S2K
 // function (RFC 4880, section 3.7.1.3) using the given hash, input passphrase,
 // salt and iteration count.
-func Iterated(out []byte, h hash.Hash, in []byte, salt []byte, count int) { 
+func Iterated(out []byte, h hash.Hash, in []byte, salt []byte, count int) {
 	combined := make([]byte, len(in)+len(salt))
 	copy(combined, salt)
 	copy(combined[len(salt):], in)
@@ -153,7 +153,7 @@ func Iterated(out []byte, h hash.Hash, in []byte, salt []byte, count int) {
 
 // Parse reads a binary specification for a string-to-key transformation from r
 // and returns a function which performs that transform.
-func Parse(r io.Reader) (f func(out, in []byte), err error) { 
+func Parse(r io.Reader) (f func(out, in []byte), err error) {
 	var buf [9]byte
 
 	_, err = io.ReadFull(r, buf[:2])
@@ -204,7 +204,7 @@ func Parse(r io.Reader) (f func(out, in []byte), err error) {
 // resulting key into key. It also serializes an S2K descriptor to
 // w. The key stretching can be configured with c, which may be
 // nil. In that case, sensible defaults will be used.
-func Serialize(w io.Writer, key []byte, rand io.Reader, passphrase []byte, c *Config) error { 
+func Serialize(w io.Writer, key []byte, rand io.Reader, passphrase []byte, c *Config) error {
 	var buf [11]byte
 	buf[0] = 3 /* iterated and salted */
 	buf[1], _ = HashToHashId(c.hash())
@@ -241,7 +241,7 @@ var hashToHashIdMapping = []struct {
 
 // HashIdToHash returns a crypto.Hash which corresponds to the given OpenPGP
 // hash id.
-func HashIdToHash(id byte) (h crypto.Hash, ok bool) { 
+func HashIdToHash(id byte) (h crypto.Hash, ok bool) {
 	for _, m := range hashToHashIdMapping {
 		if m.id == id {
 			return m.hash, true
@@ -252,7 +252,7 @@ func HashIdToHash(id byte) (h crypto.Hash, ok bool) {
 
 // HashIdToString returns the name of the hash function corresponding to the
 // given OpenPGP hash id.
-func HashIdToString(id byte) (name string, ok bool) { 
+func HashIdToString(id byte) (name string, ok bool) {
 	for _, m := range hashToHashIdMapping {
 		if m.id == id {
 			return m.name, true
@@ -263,7 +263,7 @@ func HashIdToString(id byte) (name string, ok bool) {
 }
 
 // HashIdToHash returns an OpenPGP hash id which corresponds the given Hash.
-func HashToHashId(h crypto.Hash) (id byte, ok bool) { 
+func HashToHashId(h crypto.Hash) (id byte, ok bool) {
 	for _, m := range hashToHashIdMapping {
 		if m.hash == h {
 			return m.id, true

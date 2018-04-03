@@ -19,10 +19,12 @@ package rpc
 import (
 	"context"
 	"net"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // NewInProcClient attaches an in-process connection to the given RPC server.
-func DialInProc(handler *Server) *Client { log.DebugLog()
+func DialInProc(handler *Server) *Client {
+	log.DebugLog()
 	initctx := context.Background()
 	c, _ := newClient(initctx, func(context.Context) (net.Conn, error) {
 		p1, p2 := net.Pipe()

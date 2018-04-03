@@ -27,7 +27,7 @@ type SockaddrDatalink struct {
 }
 
 // Translate "kern.hostname" to []_C_int{0,1,2,3}.
-func nametomib(name string) (mib []_C_int, err error) { 
+func nametomib(name string) (mib []_C_int, err error) {
 	const siz = unsafe.Sizeof(mib[0])
 
 	// NOTE(rsc): It seems strange to set the buffer to have
@@ -54,21 +54,21 @@ func nametomib(name string) (mib []_C_int, err error) {
 	return buf[0 : n/siz], nil
 }
 
-func direntIno(buf []byte) (uint64, bool) { 
+func direntIno(buf []byte) (uint64, bool) {
 	return readInt(buf, unsafe.Offsetof(Dirent{}.Fileno), unsafe.Sizeof(Dirent{}.Fileno))
 }
 
-func direntReclen(buf []byte) (uint64, bool) { 
+func direntReclen(buf []byte) (uint64, bool) {
 	return readInt(buf, unsafe.Offsetof(Dirent{}.Reclen), unsafe.Sizeof(Dirent{}.Reclen))
 }
 
-func direntNamlen(buf []byte) (uint64, bool) { 
+func direntNamlen(buf []byte) (uint64, bool) {
 	return readInt(buf, unsafe.Offsetof(Dirent{}.Namlen), unsafe.Sizeof(Dirent{}.Namlen))
 }
 
 //sysnb pipe() (r int, w int, err error)
 
-func Pipe(p []int) (err error) { 
+func Pipe(p []int) (err error) {
 	if len(p) != 2 {
 		return EINVAL
 	}
@@ -76,18 +76,18 @@ func Pipe(p []int) (err error) {
 	return
 }
 
-func GetsockoptIPMreqn(fd, level, opt int) (*IPMreqn, error) { 
+func GetsockoptIPMreqn(fd, level, opt int) (*IPMreqn, error) {
 	var value IPMreqn
 	vallen := _Socklen(SizeofIPMreqn)
 	errno := getsockopt(fd, level, opt, unsafe.Pointer(&value), &vallen)
 	return &value, errno
 }
 
-func SetsockoptIPMreqn(fd, level, opt int, mreq *IPMreqn) (err error) { 
+func SetsockoptIPMreqn(fd, level, opt int, mreq *IPMreqn) (err error) {
 	return setsockopt(fd, level, opt, unsafe.Pointer(mreq), unsafe.Sizeof(*mreq))
 }
 
-func Accept4(fd, flags int) (nfd int, sa Sockaddr, err error) { 
+func Accept4(fd, flags int) (nfd int, sa Sockaddr, err error) {
 	var rsa RawSockaddrAny
 	var len _Socklen = SizeofSockaddrAny
 	nfd, err = accept4(fd, &rsa, &len, flags)
@@ -105,7 +105,7 @@ func Accept4(fd, flags int) (nfd int, sa Sockaddr, err error) {
 	return
 }
 
-func Getfsstat(buf []Statfs_t, flags int) (n int, err error) { 
+func Getfsstat(buf []Statfs_t, flags int) (n int, err error) {
 	var _p0 unsafe.Pointer
 	var bufsize uintptr
 	if len(buf) > 0 {
@@ -120,14 +120,14 @@ func Getfsstat(buf []Statfs_t, flags int) (n int, err error) {
 	return
 }
 
-func setattrlistTimes(path string, times []Timespec, flags int) error { 
+func setattrlistTimes(path string, times []Timespec, flags int) error {
 	// used on Darwin for UtimesNano
 	return ENOSYS
 }
 
 // Derive extattr namespace and attribute name
 
-func xattrnamespace(fullattr string) (ns int, attr string, err error) { 
+func xattrnamespace(fullattr string) (ns int, attr string, err error) {
 	s := -1
 	for idx, val := range fullattr {
 		if val == '.' {
@@ -153,7 +153,7 @@ func xattrnamespace(fullattr string) (ns int, attr string, err error) {
 	}
 }
 
-func initxattrdest(dest []byte, idx int) (d unsafe.Pointer) { 
+func initxattrdest(dest []byte, idx int) (d unsafe.Pointer) {
 	if len(dest) > idx {
 		return unsafe.Pointer(&dest[idx])
 	} else {
@@ -163,7 +163,7 @@ func initxattrdest(dest []byte, idx int) (d unsafe.Pointer) {
 
 // FreeBSD implements its own syscalls to handle extended attributes
 
-func Getxattr(file string, attr string, dest []byte) (sz int, err error) { 
+func Getxattr(file string, attr string, dest []byte) (sz int, err error) {
 	d := initxattrdest(dest, 0)
 	destsize := len(dest)
 
@@ -175,7 +175,7 @@ func Getxattr(file string, attr string, dest []byte) (sz int, err error) {
 	return ExtattrGetFile(file, nsid, a, uintptr(d), destsize)
 }
 
-func Fgetxattr(fd int, attr string, dest []byte) (sz int, err error) { 
+func Fgetxattr(fd int, attr string, dest []byte) (sz int, err error) {
 	d := initxattrdest(dest, 0)
 	destsize := len(dest)
 
@@ -187,7 +187,7 @@ func Fgetxattr(fd int, attr string, dest []byte) (sz int, err error) {
 	return ExtattrGetFd(fd, nsid, a, uintptr(d), destsize)
 }
 
-func Lgetxattr(link string, attr string, dest []byte) (sz int, err error) { 
+func Lgetxattr(link string, attr string, dest []byte) (sz int, err error) {
 	d := initxattrdest(dest, 0)
 	destsize := len(dest)
 
@@ -201,7 +201,7 @@ func Lgetxattr(link string, attr string, dest []byte) (sz int, err error) {
 
 // flags are unused on FreeBSD
 
-func Fsetxattr(fd int, attr string, data []byte, flags int) (err error) { 
+func Fsetxattr(fd int, attr string, data []byte, flags int) (err error) {
 	d := unsafe.Pointer(&data[0])
 	datasiz := len(data)
 
@@ -214,7 +214,7 @@ func Fsetxattr(fd int, attr string, data []byte, flags int) (err error) {
 	return
 }
 
-func Setxattr(file string, attr string, data []byte, flags int) (err error) { 
+func Setxattr(file string, attr string, data []byte, flags int) (err error) {
 	d := unsafe.Pointer(&data[0])
 	datasiz := len(data)
 
@@ -227,7 +227,7 @@ func Setxattr(file string, attr string, data []byte, flags int) (err error) {
 	return
 }
 
-func Lsetxattr(link string, attr string, data []byte, flags int) (err error) { 
+func Lsetxattr(link string, attr string, data []byte, flags int) (err error) {
 	d := unsafe.Pointer(&data[0])
 	datasiz := len(data)
 
@@ -240,7 +240,7 @@ func Lsetxattr(link string, attr string, data []byte, flags int) (err error) {
 	return
 }
 
-func Removexattr(file string, attr string) (err error) { 
+func Removexattr(file string, attr string) (err error) {
 	nsid, a, err := xattrnamespace(attr)
 	if err != nil {
 		return
@@ -250,7 +250,7 @@ func Removexattr(file string, attr string) (err error) {
 	return
 }
 
-func Fremovexattr(fd int, attr string) (err error) { 
+func Fremovexattr(fd int, attr string) (err error) {
 	nsid, a, err := xattrnamespace(attr)
 	if err != nil {
 		return
@@ -260,7 +260,7 @@ func Fremovexattr(fd int, attr string) (err error) {
 	return
 }
 
-func Lremovexattr(link string, attr string) (err error) { 
+func Lremovexattr(link string, attr string) (err error) {
 	nsid, a, err := xattrnamespace(attr)
 	if err != nil {
 		return
@@ -270,7 +270,7 @@ func Lremovexattr(link string, attr string) (err error) {
 	return
 }
 
-func Listxattr(file string, dest []byte) (sz int, err error) { 
+func Listxattr(file string, dest []byte) (sz int, err error) {
 	d := initxattrdest(dest, 0)
 	destsiz := len(dest)
 
@@ -305,7 +305,7 @@ func Listxattr(file string, dest []byte) (sz int, err error) {
 	return s, e
 }
 
-func Flistxattr(fd int, dest []byte) (sz int, err error) { 
+func Flistxattr(fd int, dest []byte) (sz int, err error) {
 	d := initxattrdest(dest, 0)
 	destsiz := len(dest)
 
@@ -331,7 +331,7 @@ func Flistxattr(fd int, dest []byte) (sz int, err error) {
 	return s, e
 }
 
-func Llistxattr(link string, dest []byte) (sz int, err error) { 
+func Llistxattr(link string, dest []byte) (sz int, err error) {
 	d := initxattrdest(dest, 0)
 	destsiz := len(dest)
 
@@ -364,33 +364,33 @@ func Llistxattr(link string, dest []byte) (sz int, err error) {
 
 // IoctlSetInt performs an ioctl operation which sets an integer value
 // on fd, using the specified request number.
-func IoctlSetInt(fd int, req uint, value int) error { 
+func IoctlSetInt(fd int, req uint, value int) error {
 	return ioctl(fd, req, uintptr(value))
 }
 
-func IoctlSetWinsize(fd int, req uint, value *Winsize) error { 
+func IoctlSetWinsize(fd int, req uint, value *Winsize) error {
 	return ioctl(fd, req, uintptr(unsafe.Pointer(value)))
 }
 
-func IoctlSetTermios(fd int, req uint, value *Termios) error { 
+func IoctlSetTermios(fd int, req uint, value *Termios) error {
 	return ioctl(fd, req, uintptr(unsafe.Pointer(value)))
 }
 
 // IoctlGetInt performs an ioctl operation which gets an integer value
 // from fd, using the specified request number.
-func IoctlGetInt(fd int, req uint) (int, error) { 
+func IoctlGetInt(fd int, req uint) (int, error) {
 	var value int
 	err := ioctl(fd, req, uintptr(unsafe.Pointer(&value)))
 	return value, err
 }
 
-func IoctlGetWinsize(fd int, req uint) (*Winsize, error) { 
+func IoctlGetWinsize(fd int, req uint) (*Winsize, error) {
 	var value Winsize
 	err := ioctl(fd, req, uintptr(unsafe.Pointer(&value)))
 	return &value, err
 }
 
-func IoctlGetTermios(fd int, req uint) (*Termios, error) { 
+func IoctlGetTermios(fd int, req uint) (*Termios, error) {
 	var value Termios
 	err := ioctl(fd, req, uintptr(unsafe.Pointer(&value)))
 	return &value, err

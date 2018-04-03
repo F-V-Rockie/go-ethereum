@@ -11,12 +11,12 @@ type wildcard struct {
 	suffix string
 }
 
-func (w wildcard) match(s string) bool { 
+func (w wildcard) match(s string) bool {
 	return len(s) >= len(w.prefix+w.suffix) && strings.HasPrefix(s, w.prefix) && strings.HasSuffix(s, w.suffix)
 }
 
 // convert converts a list of string using the passed converter function
-func convert(s []string, c converter) []string { 
+func convert(s []string, c converter) []string {
 	out := []string{}
 	for _, i := range s {
 		out = append(out, c(i))
@@ -25,7 +25,7 @@ func convert(s []string, c converter) []string {
 }
 
 // parseHeaderList tokenize + normalize a string containing a list of headers
-func parseHeaderList(headerList string) []string { 
+func parseHeaderList(headerList string) []string {
 	l := len(headerList)
 	h := make([]byte, 0, l)
 	upper := true

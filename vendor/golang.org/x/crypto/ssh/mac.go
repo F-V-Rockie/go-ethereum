@@ -43,7 +43,7 @@ func (t truncatingMAC) Size() int {
 	return t.length
 }
 
-func (t truncatingMAC) BlockSize() int {  return t.hmac.BlockSize() }
+func (t truncatingMAC) BlockSize() int { return t.hmac.BlockSize() }
 
 var macModes = map[string]*macMode{
 	"hmac-sha2-256-etm@openssh.com": {32, true, func(key []byte) hash.Hash {

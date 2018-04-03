@@ -23,6 +23,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/rlp"
 	"github.com/ethereum/go-ethereum/trie"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 type DumpAccount struct {
@@ -39,7 +40,8 @@ type Dump struct {
 	Accounts map[string]DumpAccount `json:"accounts"`
 }
 
-func (self *StateDB) RawDump() Dump { log.DebugLog()
+func (self *StateDB) RawDump() Dump {
+	log.DebugLog()
 	dump := Dump{
 		Root:     fmt.Sprintf("%x", self.trie.Hash()),
 		Accounts: make(map[string]DumpAccount),
@@ -71,7 +73,8 @@ func (self *StateDB) RawDump() Dump { log.DebugLog()
 	return dump
 }
 
-func (self *StateDB) Dump() []byte { log.DebugLog()
+func (self *StateDB) Dump() []byte {
+	log.DebugLog()
 	json, err := json.MarshalIndent(self.RawDump(), "", "    ")
 	if err != nil {
 		fmt.Println("dump err", err)

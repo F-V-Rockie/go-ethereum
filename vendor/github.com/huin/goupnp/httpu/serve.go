@@ -29,7 +29,7 @@ type Handler interface {
 // HandlerFunc is a function-to-Handler adapter.
 type HandlerFunc func(r *http.Request)
 
-func (f HandlerFunc) ServeMessage(r *http.Request) { 
+func (f HandlerFunc) ServeMessage(r *http.Request) {
 	f(r)
 }
 
@@ -45,7 +45,7 @@ type Server struct {
 // ListenAndServe listens on the UDP network address srv.Addr. If srv.Multicast
 // is true, then a multicast UDP listener will be used on srv.Interface (or
 // default interface if nil).
-func (srv *Server) ListenAndServe() error { 
+func (srv *Server) ListenAndServe() error {
 	var err error
 
 	var addr *net.UDPAddr
@@ -68,7 +68,7 @@ func (srv *Server) ListenAndServe() error {
 }
 
 // Serve messages received on the given packet listener to the srv.Handler.
-func (srv *Server) Serve(l net.PacketConn) error { 
+func (srv *Server) Serve(l net.PacketConn) error {
 	maxMessageBytes := DefaultMaxMessageBytes
 	if srv.MaxMessageBytes != 0 {
 		maxMessageBytes = srv.MaxMessageBytes
@@ -99,7 +99,7 @@ func (srv *Server) Serve(l net.PacketConn) error {
 }
 
 // Serve messages received on the given packet listener to the given handler.
-func Serve(l net.PacketConn, handler Handler) error { 
+func Serve(l net.PacketConn, handler Handler) error {
 	srv := Server{
 		Handler:         handler,
 		MaxMessageBytes: DefaultMaxMessageBytes,

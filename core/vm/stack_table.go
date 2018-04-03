@@ -20,9 +20,11 @@ import (
 	"fmt"
 
 	"github.com/ethereum/go-ethereum/params"
+	"github.com/ethereum/go-ethereum/log"
 )
 
-func makeStackFunc(pop, push int) stackValidationFunc { log.DebugLog()
+func makeStackFunc(pop, push int) stackValidationFunc {
+	log.DebugLog()
 	return func(stack *Stack) error {
 		if err := stack.require(pop); err != nil {
 			return err
@@ -35,10 +37,12 @@ func makeStackFunc(pop, push int) stackValidationFunc { log.DebugLog()
 	}
 }
 
-func makeDupStackFunc(n int) stackValidationFunc { log.DebugLog()
+func makeDupStackFunc(n int) stackValidationFunc {
+	log.DebugLog()
 	return makeStackFunc(n, n+1)
 }
 
-func makeSwapStackFunc(n int) stackValidationFunc { log.DebugLog()
+func makeSwapStackFunc(n int) stackValidationFunc {
+	log.DebugLog()
 	return makeStackFunc(n, n)
 }

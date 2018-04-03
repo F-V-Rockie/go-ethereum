@@ -26,6 +26,7 @@ import (
 	"github.com/huin/goupnp"
 	"github.com/huin/goupnp/dcps/internetgateway1"
 	"github.com/huin/goupnp/dcps/internetgateway2"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 const soapRequestTimeout = 3 * time.Second

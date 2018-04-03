@@ -10,7 +10,7 @@ import (
 	"syscall"
 )
 
-func mmap(len int, inprot, inflags, fd uintptr, off int64) ([]byte, error) { 
+func mmap(len int, inprot, inflags, fd uintptr, off int64) ([]byte, error) {
 	flags := syscall.MAP_SHARED
 	prot := syscall.PROT_READ
 	switch {
@@ -34,7 +34,7 @@ func mmap(len int, inprot, inflags, fd uintptr, off int64) ([]byte, error) {
 	return b, nil
 }
 
-func flush(addr, len uintptr) error { 
+func flush(addr, len uintptr) error {
 	_, _, errno := syscall.Syscall(_SYS_MSYNC, addr, len, _MS_SYNC)
 	if errno != 0 {
 		return syscall.Errno(errno)
@@ -42,7 +42,7 @@ func flush(addr, len uintptr) error {
 	return nil
 }
 
-func lock(addr, len uintptr) error { 
+func lock(addr, len uintptr) error {
 	_, _, errno := syscall.Syscall(syscall.SYS_MLOCK, addr, len, 0)
 	if errno != 0 {
 		return syscall.Errno(errno)
@@ -50,7 +50,7 @@ func lock(addr, len uintptr) error {
 	return nil
 }
 
-func unlock(addr, len uintptr) error { 
+func unlock(addr, len uintptr) error {
 	_, _, errno := syscall.Syscall(syscall.SYS_MUNLOCK, addr, len, 0)
 	if errno != 0 {
 		return syscall.Errno(errno)
@@ -58,7 +58,7 @@ func unlock(addr, len uintptr) error {
 	return nil
 }
 
-func unmap(addr, len uintptr) error { 
+func unmap(addr, len uintptr) error {
 	_, _, errno := syscall.Syscall(syscall.SYS_MUNMAP, addr, len, 0)
 	if errno != 0 {
 		return syscall.Errno(errno)

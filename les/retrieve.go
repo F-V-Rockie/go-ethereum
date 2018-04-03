@@ -27,6 +27,7 @@ import (
 	"time"
 
 	"github.com/ethereum/go-ethereum/common/mclock"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 var (
@@ -91,7 +92,7 @@ type reqPeerEvent struct {
 }
 
 const (
-	rpSent = iota // if peer == nil, not sent (no suitable peers)
+	rpSent             = iota // if peer == nil, not sent (no suitable peers)
 	rpSoftTimeout
 	rpHardTimeout
 	rpDeliveredValid
@@ -99,7 +100,8 @@ const (
 )
 
 // newRetrieveManager creates the retrieve manager
-func newRetrieveManager(peers *peerSet, dist *requestDistributor, serverPool peerSelector) *retrieveManager { log.DebugLog()
+func newRetrieveManager(peers *peerSet, dist *requestDistributor, serverPool peerSelector) *retrieveManager {
+	log.DebugLog()
 	return &retrieveManager{
 		peers:      peers,
 		dist:       dist,
@@ -112,7 +114,8 @@ func newRetrieveManager(peers *peerSet, dist *requestDistributor, serverPool pee
 // that is delivered through the deliver function and successfully validated by the
 // validator callback. It returns when a valid answer is delivered or the context is
 // cancelled.
-func (rm *retrieveManager) retrieve(ctx context.Context, reqID uint64, req *distReq, val validatorFunc, shutdown chan struct{}) error { log.DebugLog()
+func (rm *retrieveManager) retrieve(ctx context.Context, reqID uint64, req *distReq, val validatorFunc, shutdown chan struct{}) error {
+	log.DebugLog()
 	sentReq := rm.sendReq(reqID, req, val)
 	select {
 	case <-sentReq.stopCh:
@@ -126,7 +129,8 @@ func (rm *retrieveManager) retrieve(ctx context.Context, reqID uint64, req *dist
 
 // sendReq starts a process that keeps trying to retrieve a valid answer for a
 // request from any suitable peers until stopped or succeeded.
-func (rm *retrieveManager) sendReq(reqID uint64, req *distReq, val validatorFunc) *sentReq { log.DebugLog()
+func (rm *retrieveManager) sendReq(reqID uint64, req *distReq, val validatorFunc) *sentReq {
+	log.DebugLog()
 	r := &sentReq{
 		rm:       rm,
 		req:      req,
@@ -163,7 +167,8 @@ func (rm *retrieveManager) sendReq(reqID uint64, req *distReq, val validatorFunc
 }
 
 // deliver is called by the LES protocol manager to deliver reply messages to waiting requests
-func (rm *retrieveManager) deliver(peer distPeer, msg *Msg) error { log.DebugLog()
+func (rm *retrieveManager) deliver(peer distPeer, msg *Msg) error {
+	log.DebugLog()
 	rm.lock.RLock()
 	req, ok := rm.sentReqs[msg.ReqID]
 	rm.lock.RUnlock()
@@ -178,7 +183,8 @@ func (rm *retrieveManager) deliver(peer distPeer, msg *Msg) error { log.DebugLog
 type reqStateFn func() reqStateFn
 
 // retrieveLoop is the retrieval state machine event loop
-func (r *sentReq) retrieveLoop() { log.DebugLog()
+func (r *sentReq) retrieveLoop() {
+	log.DebugLog()
 	go r.tryRequest()
 	r.reqQueued = true
 	state := r.stateRequesting
@@ -194,7 +200,8 @@ func (r *sentReq) retrieveLoop() { log.DebugLog()
 
 // stateRequesting: a request has been queued or sent recently; when it reaches soft timeout,
 // a new request is sent to a new peer
-func (r *sentReq) stateRequesting() reqStateFn { log.DebugLog()
+func (r *sentReq) stateRequesting() reqStateFn {
+	log.DebugLog()
 	select {
 	case ev := <-r.eventsCh:
 		r.update(ev)
@@ -229,7 +236,8 @@ func (r *sentReq) stateRequesting() reqStateFn { log.DebugLog()
 // stateNoMorePeers: could not send more requests because no suitable peers are available.
 // Peers may become suitable for a certain request later or new peers may appear so we
 // keep trying.
-func (r *sentReq) stateNoMorePeers() reqStateFn { log.DebugLog()
+func (r *sentReq) stateNoMorePeers() reqStateFn {
+	log.DebugLog()
 	select {
 	case <-time.After(retryQueue):
 		go r.tryRequest()
@@ -249,7 +257,8 @@ func (r *sentReq) stateNoMorePeers() reqStateFn { log.DebugLog()
 
 // stateStopped: request succeeded or cancelled, just waiting for some peers
 // to either answer or time out hard
-func (r *sentReq) stateStopped() reqStateFn { log.DebugLog()
+func (r *sentReq) stateStopped() reqStateFn {
+	log.DebugLog()
 	for r.waiting() {
 		r.update(<-r.eventsCh)
 	}
@@ -257,7 +266,8 @@ func (r *sentReq) stateStopped() reqStateFn { log.DebugLog()
 }
 
 // update updates the queued/sent flags and timed out peers counter according to the event
-func (r *sentReq) update(ev reqPeerEvent) { log.DebugLog()
+func (r *sentReq) update(ev reqPeerEvent) {
+	log.DebugLog()
 	switch ev.event {
 	case rpSent:
 		r.reqQueued = false
@@ -274,14 +284,16 @@ func (r *sentReq) update(ev reqPeerEvent) { log.DebugLog()
 
 // waiting returns true if the retrieval mechanism is waiting for an answer from
 // any peer
-func (r *sentReq) waiting() bool { log.DebugLog()
+func (r *sentReq) waiting() bool {
+	log.DebugLog()
 	return r.reqQueued || r.reqSent || r.reqSrtoCount > 0
 }
 
 // tryRequest tries to send the request to a new peer and waits for it to either
 // succeed or time out if it has been sent. It also sends the appropriate reqPeerEvent
 // messages to the request's event channel.
-func (r *sentReq) tryRequest() { log.DebugLog()
+func (r *sentReq) tryRequest() {
+	log.DebugLog()
 	sent := r.rm.dist.queue(r.req)
 	var p distPeer
 	select {
@@ -355,7 +367,8 @@ func (r *sentReq) tryRequest() { log.DebugLog()
 }
 
 // deliver a reply belonging to this request
-func (r *sentReq) deliver(peer distPeer, msg *Msg) error { log.DebugLog()
+func (r *sentReq) deliver(peer distPeer, msg *Msg) error {
+	log.DebugLog()
 	r.lock.Lock()
 	defer r.lock.Unlock()
 
@@ -374,7 +387,8 @@ func (r *sentReq) deliver(peer distPeer, msg *Msg) error { log.DebugLog()
 
 // stop stops the retrieval process and sets an error code that will be returned
 // by getError
-func (r *sentReq) stop(err error) { log.DebugLog()
+func (r *sentReq) stop(err error) {
+	log.DebugLog()
 	r.lock.Lock()
 	if !r.stopped {
 		r.stopped = true
@@ -386,12 +400,14 @@ func (r *sentReq) stop(err error) { log.DebugLog()
 
 // getError returns any retrieval error (either internally generated or set by the
 // stop function) after stopCh has been closed
-func (r *sentReq) getError() error { log.DebugLog()
+func (r *sentReq) getError() error {
+	log.DebugLog()
 	return r.err
 }
 
 // genReqID generates a new random request ID
-func genReqID() uint64 { log.DebugLog()
+func genReqID() uint64 {
+	log.DebugLog()
 	var rnd [8]byte
 	rand.Read(rnd[:])
 	return binary.BigEndian.Uint64(rnd[:])

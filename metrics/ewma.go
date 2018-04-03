@@ -4,6 +4,7 @@ import (
 	"math"
 	"sync"
 	"sync/atomic"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // EWMAs continuously calculate an exponentially-weighted moving average
@@ -16,7 +17,8 @@ type EWMA interface {
 }
 
 // NewEWMA constructs a new EWMA with the given alpha.
-func NewEWMA(alpha float64) EWMA { log.DebugLog()
+func NewEWMA(alpha float64) EWMA {
+	log.DebugLog()
 	if !Enabled {
 		return NilEWMA{}
 	}
@@ -24,17 +26,20 @@ func NewEWMA(alpha float64) EWMA { log.DebugLog()
 }
 
 // NewEWMA1 constructs a new EWMA for a one-minute moving average.
-func NewEWMA1() EWMA { log.DebugLog()
+func NewEWMA1() EWMA {
+	log.DebugLog()
 	return NewEWMA(1 - math.Exp(-5.0/60.0/1))
 }
 
 // NewEWMA5 constructs a new EWMA for a five-minute moving average.
-func NewEWMA5() EWMA { log.DebugLog()
+func NewEWMA5() EWMA {
+	log.DebugLog()
 	return NewEWMA(1 - math.Exp(-5.0/60.0/5))
 }
 
 // NewEWMA15 constructs a new EWMA for a fifteen-minute moving average.
-func NewEWMA15() EWMA { log.DebugLog()
+func NewEWMA15() EWMA {
+	log.DebugLog()
 	return NewEWMA(1 - math.Exp(-5.0/60.0/15))
 }
 
@@ -43,18 +48,22 @@ type EWMASnapshot float64
 
 // Rate returns the rate of events per second at the time the snapshot was
 // taken.
-func (a EWMASnapshot) Rate() float64 { log.DebugLog() return float64(a) }
+func (a EWMASnapshot) Rate() float64 { log.DebugLog()
+										 return float64(a) }
 
 // Snapshot returns the snapshot.
-func (a EWMASnapshot) Snapshot() EWMA { log.DebugLog() return a }
+func (a EWMASnapshot) Snapshot() EWMA { log.DebugLog()
+										  return a }
 
 // Tick panics.
-func (EWMASnapshot) Tick() { log.DebugLog()
+func (EWMASnapshot) Tick() {
+	log.DebugLog()
 	panic("Tick called on an EWMASnapshot")
 }
 
 // Update panics.
-func (EWMASnapshot) Update(int64) { log.DebugLog()
+func (EWMASnapshot) Update(int64) {
+	log.DebugLog()
 	panic("Update called on an EWMASnapshot")
 }
 
@@ -62,16 +71,18 @@ func (EWMASnapshot) Update(int64) { log.DebugLog()
 type NilEWMA struct{}
 
 // Rate is a no-op.
-func (NilEWMA) Rate() float64 { log.DebugLog() return 0.0 }
+func (NilEWMA) Rate() float64 { log.DebugLog()
+								  return 0.0 }
 
 // Snapshot is a no-op.
-func (NilEWMA) Snapshot() EWMA { log.DebugLog() return NilEWMA{} }
+func (NilEWMA) Snapshot() EWMA { log.DebugLog()
+								   return NilEWMA{} }
 
 // Tick is a no-op.
-func (NilEWMA) Tick() { log.DebugLog()}
+func (NilEWMA) Tick() { log.DebugLog() }
 
 // Update is a no-op.
-func (NilEWMA) Update(n int64) { log.DebugLog()}
+func (NilEWMA) Update(n int64) { log.DebugLog() }
 
 // StandardEWMA is the standard implementation of an EWMA and tracks the number
 // of uncounted events and processes them on each tick.  It uses the
@@ -85,20 +96,23 @@ type StandardEWMA struct {
 }
 
 // Rate returns the moving average rate of events per second.
-func (a *StandardEWMA) Rate() float64 { log.DebugLog()
+func (a *StandardEWMA) Rate() float64 {
+	log.DebugLog()
 	a.mutex.Lock()
 	defer a.mutex.Unlock()
 	return a.rate * float64(1e9)
 }
 
 // Snapshot returns a read-only copy of the EWMA.
-func (a *StandardEWMA) Snapshot() EWMA { log.DebugLog()
+func (a *StandardEWMA) Snapshot() EWMA {
+	log.DebugLog()
 	return EWMASnapshot(a.Rate())
 }
 
 // Tick ticks the clock to update the moving average.  It assumes it is called
 // every five seconds.
-func (a *StandardEWMA) Tick() { log.DebugLog()
+func (a *StandardEWMA) Tick() {
+	log.DebugLog()
 	count := atomic.LoadInt64(&a.uncounted)
 	atomic.AddInt64(&a.uncounted, -count)
 	instantRate := float64(count) / float64(5e9)
@@ -113,6 +127,7 @@ func (a *StandardEWMA) Tick() { log.DebugLog()
 }
 
 // Update adds n uncounted events.
-func (a *StandardEWMA) Update(n int64) { log.DebugLog()
+func (a *StandardEWMA) Update(n int64) {
+	log.DebugLog()
 	atomic.AddInt64(&a.uncounted, n)
 }

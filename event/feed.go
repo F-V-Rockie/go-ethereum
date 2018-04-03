@@ -20,6 +20,7 @@ import (
 	"errors"
 	"reflect"
 	"sync"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 var errBadChannel = errors.New("event: Subscribe argument does not have sendable channel type")

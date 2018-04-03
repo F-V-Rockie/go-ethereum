@@ -9,11 +9,13 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 var _ = (*headerMarshaling)(nil)
 
-func (h Header) MarshalJSON() ([]byte, error) { log.DebugLog()
+func (h Header) MarshalJSON() ([]byte, error) {
+	log.DebugLog()
 	type Header struct {
 		ParentHash  common.Hash    `json:"parentHash"       gencodec:"required"`
 		UncleHash   common.Hash    `json:"sha3Uncles"       gencodec:"required"`
@@ -52,7 +54,8 @@ func (h Header) MarshalJSON() ([]byte, error) { log.DebugLog()
 	return json.Marshal(&enc)
 }
 
-func (h *Header) UnmarshalJSON(input []byte) error { log.DebugLog()
+func (h *Header) UnmarshalJSON(input []byte) error {
+	log.DebugLog()
 	type Header struct {
 		ParentHash  *common.Hash    `json:"parentHash"       gencodec:"required"`
 		UncleHash   *common.Hash    `json:"sha3Uncles"       gencodec:"required"`

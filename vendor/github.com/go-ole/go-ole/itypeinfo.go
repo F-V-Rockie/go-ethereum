@@ -29,6 +29,6 @@ type ITypeInfoVtbl struct {
 	ReleaseVarDesc       uintptr
 }
 
-func (v *ITypeInfo) VTable() *ITypeInfoVtbl { 
+func (v *ITypeInfo) VTable() *ITypeInfoVtbl {
 	return (*ITypeInfoVtbl)(unsafe.Pointer(v.RawVTable))
 }

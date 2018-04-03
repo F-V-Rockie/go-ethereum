@@ -97,7 +97,7 @@ type App struct {
 
 // Tries to find out when this binary was compiled.
 // Returns the current time if it fails to find it.
-func compileTime() time.Time { 
+func compileTime() time.Time {
 	info, err := os.Stat(os.Args[0])
 	if err != nil {
 		return time.Now()
@@ -107,7 +107,7 @@ func compileTime() time.Time {
 
 // NewApp creates a new cli Application with some reasonable defaults for Name,
 // Usage, Version and Action.
-func NewApp() *App { 
+func NewApp() *App {
 	return &App{
 		Name:         filepath.Base(os.Args[0]),
 		HelpName:     filepath.Base(os.Args[0]),
@@ -124,7 +124,7 @@ func NewApp() *App {
 // Setup runs initialization code to ensure all data structures are ready for
 // `Run` or inspection prior to `Run`.  It is internally called by `Run`, but
 // will return early if setup has already happened.
-func (a *App) Setup() { 
+func (a *App) Setup() {
 	if a.didSetup {
 		return
 	}
@@ -172,7 +172,7 @@ func (a *App) Setup() {
 
 // Run is the entry point to the cli app. Parses the arguments slice and routes
 // to the proper flag/args combination
-func (a *App) Run(arguments []string) (err error) { 
+func (a *App) Run(arguments []string) (err error) {
 	a.Setup()
 
 	// handle the completion flag separately from the flagset since
@@ -272,7 +272,7 @@ func (a *App) Run(arguments []string) (err error) {
 // Deprecated: instead you should return an error that fulfills cli.ExitCoder
 // to cli.App.Run. This will cause the application to exit with the given eror
 // code in the cli.ExitCoder
-func (a *App) RunAndExitOnError() { 
+func (a *App) RunAndExitOnError() {
 	if err := a.Run(os.Args); err != nil {
 		fmt.Fprintln(a.errWriter(), err)
 		OsExiter(1)
@@ -281,7 +281,7 @@ func (a *App) RunAndExitOnError() {
 
 // RunAsSubcommand invokes the subcommand given the context, parses ctx.Args() to
 // generate command-specific flags
-func (a *App) RunAsSubcommand(ctx *Context) (err error) { 
+func (a *App) RunAsSubcommand(ctx *Context) (err error) {
 	// append help to commands
 	if len(a.Commands) > 0 {
 		if a.Command(helpCommand.Name) == nil && !a.HideHelp {
@@ -388,7 +388,7 @@ func (a *App) RunAsSubcommand(ctx *Context) (err error) {
 }
 
 // Command returns the named command on App. Returns nil if the command does not exist
-func (a *App) Command(name string) *Command { 
+func (a *App) Command(name string) *Command {
 	for _, c := range a.Commands {
 		if c.HasName(name) {
 			return &c
@@ -399,13 +399,13 @@ func (a *App) Command(name string) *Command {
 }
 
 // Categories returns a slice containing all the categories with the commands they contain
-func (a *App) Categories() CommandCategories { 
+func (a *App) Categories() CommandCategories {
 	return a.categories
 }
 
 // VisibleCategories returns a slice of categories and commands that are
 // Hidden=false
-func (a *App) VisibleCategories() []*CommandCategory { 
+func (a *App) VisibleCategories() []*CommandCategory {
 	ret := []*CommandCategory{}
 	for _, category := range a.categories {
 		if visible := func() *CommandCategory {
@@ -423,7 +423,7 @@ func (a *App) VisibleCategories() []*CommandCategory {
 }
 
 // VisibleCommands returns a slice of the Commands with Hidden=false
-func (a *App) VisibleCommands() []Command { 
+func (a *App) VisibleCommands() []Command {
 	ret := []Command{}
 	for _, command := range a.Commands {
 		if !command.Hidden {
@@ -434,11 +434,11 @@ func (a *App) VisibleCommands() []Command {
 }
 
 // VisibleFlags returns a slice of the Flags with Hidden=false
-func (a *App) VisibleFlags() []Flag { 
+func (a *App) VisibleFlags() []Flag {
 	return visibleFlags(a.Flags)
 }
 
-func (a *App) hasFlag(flag Flag) bool { 
+func (a *App) hasFlag(flag Flag) bool {
 	for _, f := range a.Flags {
 		if flag == f {
 			return true
@@ -448,7 +448,7 @@ func (a *App) hasFlag(flag Flag) bool {
 	return false
 }
 
-func (a *App) errWriter() io.Writer { 
+func (a *App) errWriter() io.Writer {
 
 	// When the app ErrWriter is nil use the package level one.
 	if a.ErrWriter == nil {
@@ -458,7 +458,7 @@ func (a *App) errWriter() io.Writer {
 	return a.ErrWriter
 }
 
-func (a *App) appendFlag(flag Flag) { 
+func (a *App) appendFlag(flag Flag) {
 	if !a.hasFlag(flag) {
 		a.Flags = append(a.Flags, flag)
 	}
@@ -471,7 +471,7 @@ type Author struct {
 }
 
 // String makes Author comply to the Stringer interface, to allow an easy print in the templating process
-func (a Author) String() string { 
+func (a Author) String() string {
 	e := ""
 	if a.Email != "" {
 		e = " <" + a.Email + ">"
@@ -483,7 +483,7 @@ func (a Author) String() string {
 // HandleAction attempts to figure out which Action signature was used.  If
 // it's an ActionFunc or a func with the legacy signature for Action, the func
 // is run!
-func HandleAction(action interface{}, context *Context) (err error) { 
+func HandleAction(action interface{}, context *Context) (err error) {
 	if a, ok := action.(ActionFunc); ok {
 		return a(context)
 	} else if a, ok := action.(func(*Context) error); ok {

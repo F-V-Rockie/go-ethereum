@@ -28,7 +28,7 @@ const (
 )
 
 // Helper for constructing a ValidationError with a string error message
-func NewValidationError(errorText string, errorFlags uint32) *ValidationError { 
+func NewValidationError(errorText string, errorFlags uint32) *ValidationError {
 	return &ValidationError{
 		text:   errorText,
 		Errors: errorFlags,
@@ -43,7 +43,7 @@ type ValidationError struct {
 }
 
 // Validation error is an error type
-func (e ValidationError) Error() string { 
+func (e ValidationError) Error() string {
 	if e.Inner != nil {
 		return e.Inner.Error()
 	} else if e.text != "" {
@@ -54,6 +54,6 @@ func (e ValidationError) Error() string {
 }
 
 // No errors
-func (e *ValidationError) valid() bool { 
+func (e *ValidationError) valid() bool {
 	return e.Errors == 0
 }

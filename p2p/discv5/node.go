@@ -32,6 +32,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // Node represents a host on the network.
@@ -49,7 +50,8 @@ type Node struct {
 
 // NewNode creates a new node. It is mostly meant to be used for
 // testing purposes.
-func NewNode(id NodeID, ip net.IP, udpPort, tcpPort uint16) *Node { log.DebugLog()
+func NewNode(id NodeID, ip net.IP, udpPort, tcpPort uint16) *Node {
+	log.DebugLog()
 	if ipv4 := ip.To4(); ipv4 != nil {
 		ip = ipv4
 	}
@@ -62,11 +64,13 @@ func NewNode(id NodeID, ip net.IP, udpPort, tcpPort uint16) *Node { log.DebugLog
 	}
 }
 
-func (n *Node) addr() *net.UDPAddr { log.DebugLog()
+func (n *Node) addr() *net.UDPAddr {
+	log.DebugLog()
 	return &net.UDPAddr{IP: n.IP, Port: int(n.UDP)}
 }
 
-func (n *Node) setAddr(a *net.UDPAddr) { log.DebugLog()
+func (n *Node) setAddr(a *net.UDPAddr) {
+	log.DebugLog()
 	n.IP = a.IP
 	if ipv4 := a.IP.To4(); ipv4 != nil {
 		n.IP = ipv4
@@ -75,7 +79,8 @@ func (n *Node) setAddr(a *net.UDPAddr) { log.DebugLog()
 }
 
 // compares the given address against the stored values.
-func (n *Node) addrEqual(a *net.UDPAddr) bool { log.DebugLog()
+func (n *Node) addrEqual(a *net.UDPAddr) bool {
+	log.DebugLog()
 	ip := a.IP
 	if ipv4 := a.IP.To4(); ipv4 != nil {
 		ip = ipv4
@@ -84,12 +89,14 @@ func (n *Node) addrEqual(a *net.UDPAddr) bool { log.DebugLog()
 }
 
 // Incomplete returns true for nodes with no IP address.
-func (n *Node) Incomplete() bool { log.DebugLog()
+func (n *Node) Incomplete() bool {
+	log.DebugLog()
 	return n.IP == nil
 }
 
 // checks whether n is a valid complete node.
-func (n *Node) validateComplete() error { log.DebugLog()
+func (n *Node) validateComplete() error {
+	log.DebugLog()
 	if n.Incomplete() {
 		return errors.New("incomplete node")
 	}
@@ -108,7 +115,8 @@ func (n *Node) validateComplete() error { log.DebugLog()
 
 // The string representation of a Node is a URL.
 // Please see ParseNode for a description of the format.
-func (n *Node) String() string { log.DebugLog()
+func (n *Node) String() string {
+	log.DebugLog()
 	u := url.URL{Scheme: "enode"}
 	if n.Incomplete() {
 		u.Host = fmt.Sprintf("%x", n.ID[:])
@@ -148,7 +156,8 @@ var incompleteNodeURL = regexp.MustCompile("(?i)^(?:enode://)?([0-9a-f]+)$")
 // and UDP discovery port 30301.
 //
 //    enode://<hex node id>@10.3.58.6:30303?discport=30301
-func ParseNode(rawurl string) (*Node, error) { log.DebugLog()
+func ParseNode(rawurl string) (*Node, error) {
+	log.DebugLog()
 	if m := incompleteNodeURL.FindStringSubmatch(rawurl); m != nil {
 		id, err := HexID(m[1])
 		if err != nil {
@@ -159,7 +168,8 @@ func ParseNode(rawurl string) (*Node, error) { log.DebugLog()
 	return parseComplete(rawurl)
 }
 
-func parseComplete(rawurl string) (*Node, error) { log.DebugLog()
+func parseComplete(rawurl string) (*Node, error) {
+	log.DebugLog()
 	var (
 		id               NodeID
 		ip               net.IP
@@ -207,7 +217,8 @@ func parseComplete(rawurl string) (*Node, error) { log.DebugLog()
 }
 
 // MustParseNode parses a node URL. It panics if the URL is not valid.
-func MustParseNode(rawurl string) *Node { log.DebugLog()
+func MustParseNode(rawurl string) *Node {
+	log.DebugLog()
 	n, err := ParseNode(rawurl)
 	if err != nil {
 		panic("invalid node URL: " + err.Error())
@@ -216,12 +227,14 @@ func MustParseNode(rawurl string) *Node { log.DebugLog()
 }
 
 // MarshalText implements encoding.TextMarshaler.
-func (n *Node) MarshalText() ([]byte, error) { log.DebugLog()
+func (n *Node) MarshalText() ([]byte, error) {
+	log.DebugLog()
 	return []byte(n.String()), nil
 }
 
 // UnmarshalText implements encoding.TextUnmarshaler.
-func (n *Node) UnmarshalText(text []byte) error { log.DebugLog()
+func (n *Node) UnmarshalText(text []byte) error {
+	log.DebugLog()
 	dec, err := ParseNode(string(text))
 	if err == nil {
 		*n = *dec
@@ -264,23 +277,27 @@ const nodeIDBits = 512
 type NodeID [nodeIDBits / 8]byte
 
 // NodeID prints as a long hexadecimal number.
-func (n NodeID) String() string { log.DebugLog()
+func (n NodeID) String() string {
+	log.DebugLog()
 	return fmt.Sprintf("%x", n[:])
 }
 
 // The Go syntax representation of a NodeID is a call to HexID.
-func (n NodeID) GoString() string { log.DebugLog()
+func (n NodeID) GoString() string {
+	log.DebugLog()
 	return fmt.Sprintf("discover.HexID(\"%x\")", n[:])
 }
 
 // TerminalString returns a shortened hex string for terminal logging.
-func (n NodeID) TerminalString() string { log.DebugLog()
+func (n NodeID) TerminalString() string {
+	log.DebugLog()
 	return hex.EncodeToString(n[:8])
 }
 
 // HexID converts a hex string to a NodeID.
 // The string may be prefixed with 0x.
-func HexID(in string) (NodeID, error) { log.DebugLog()
+func HexID(in string) (NodeID, error) {
+	log.DebugLog()
 	var id NodeID
 	b, err := hex.DecodeString(strings.TrimPrefix(in, "0x"))
 	if err != nil {
@@ -294,7 +311,8 @@ func HexID(in string) (NodeID, error) { log.DebugLog()
 
 // MustHexID converts a hex string to a NodeID.
 // It panics if the string is not a valid NodeID.
-func MustHexID(in string) NodeID { log.DebugLog()
+func MustHexID(in string) NodeID {
+	log.DebugLog()
 	id, err := HexID(in)
 	if err != nil {
 		panic(err)
@@ -303,7 +321,8 @@ func MustHexID(in string) NodeID { log.DebugLog()
 }
 
 // PubkeyID returns a marshaled representation of the given public key.
-func PubkeyID(pub *ecdsa.PublicKey) NodeID { log.DebugLog()
+func PubkeyID(pub *ecdsa.PublicKey) NodeID {
+	log.DebugLog()
 	var id NodeID
 	pbytes := elliptic.Marshal(pub.Curve, pub.X, pub.Y)
 	if len(pbytes)-1 != len(id) {
@@ -315,7 +334,8 @@ func PubkeyID(pub *ecdsa.PublicKey) NodeID { log.DebugLog()
 
 // Pubkey returns the public key represented by the node ID.
 // It returns an error if the ID is not a point on the curve.
-func (id NodeID) Pubkey() (*ecdsa.PublicKey, error) { log.DebugLog()
+func (id NodeID) Pubkey() (*ecdsa.PublicKey, error) {
+	log.DebugLog()
 	p := &ecdsa.PublicKey{Curve: crypto.S256(), X: new(big.Int), Y: new(big.Int)}
 	half := len(id) / 2
 	p.X.SetBytes(id[:half])
@@ -326,7 +346,8 @@ func (id NodeID) Pubkey() (*ecdsa.PublicKey, error) { log.DebugLog()
 	return p, nil
 }
 
-func (id NodeID) mustPubkey() ecdsa.PublicKey { log.DebugLog()
+func (id NodeID) mustPubkey() ecdsa.PublicKey {
+	log.DebugLog()
 	pk, err := id.Pubkey()
 	if err != nil {
 		panic(err)
@@ -336,7 +357,8 @@ func (id NodeID) mustPubkey() ecdsa.PublicKey { log.DebugLog()
 
 // recoverNodeID computes the public key used to sign the
 // given hash from the signature.
-func recoverNodeID(hash, sig []byte) (id NodeID, err error) { log.DebugLog()
+func recoverNodeID(hash, sig []byte) (id NodeID, err error) {
+	log.DebugLog()
 	pubkey, err := crypto.Ecrecover(hash, sig)
 	if err != nil {
 		return id, err
@@ -353,7 +375,8 @@ func recoverNodeID(hash, sig []byte) (id NodeID, err error) { log.DebugLog()
 // distcmp compares the distances a->target and b->target.
 // Returns -1 if a is closer to target, 1 if b is closer to target
 // and 0 if they are equal.
-func distcmp(target, a, b common.Hash) int { log.DebugLog()
+func distcmp(target, a, b common.Hash) int {
+	log.DebugLog()
 	for i := range target {
 		da := a[i] ^ target[i]
 		db := b[i] ^ target[i]
@@ -403,7 +426,8 @@ var lzcount = [256]int{
 }
 
 // logdist returns the logarithmic distance between a and b, log2(a ^ b).
-func logdist(a, b common.Hash) int { log.DebugLog()
+func logdist(a, b common.Hash) int {
+	log.DebugLog()
 	lz := 0
 	for i := range a {
 		x := a[i] ^ b[i]
@@ -418,7 +442,8 @@ func logdist(a, b common.Hash) int { log.DebugLog()
 }
 
 // hashAtDistance returns a random hash such that logdist(a, b) == n
-func hashAtDistance(a common.Hash, n int) (b common.Hash) { log.DebugLog()
+func hashAtDistance(a common.Hash, n int) (b common.Hash) {
+	log.DebugLog()
 	if n == 0 {
 		return a
 	}

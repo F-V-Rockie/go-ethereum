@@ -24,6 +24,7 @@ import (
 	"net"
 	"sort"
 	"strings"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 var lan4, lan6, special4, special6 Netlist

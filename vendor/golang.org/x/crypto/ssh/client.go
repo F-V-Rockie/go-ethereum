@@ -26,7 +26,7 @@ type Client struct {
 // HandleChannelOpen returns a channel on which NewChannel requests
 // for the given type are sent. If the type already is being handled,
 // nil is returned. The channel is closed when the connection is closed.
-func (c *Client) HandleChannelOpen(channelType string) <-chan NewChannel { 
+func (c *Client) HandleChannelOpen(channelType string) <-chan NewChannel {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	if c.channelHandlers == nil {
@@ -47,7 +47,7 @@ func (c *Client) HandleChannelOpen(channelType string) <-chan NewChannel {
 }
 
 // NewClient creates a Client on top of the given connection.
-func NewClient(c Conn, chans <-chan NewChannel, reqs <-chan *Request) *Client { 
+func NewClient(c Conn, chans <-chan NewChannel, reqs <-chan *Request) *Client {
 	conn := &Client{
 		Conn:            c,
 		channelHandlers: make(map[string]chan NewChannel, 1),
@@ -67,7 +67,7 @@ func NewClient(c Conn, chans <-chan NewChannel, reqs <-chan *Request) *Client {
 // NewClientConn establishes an authenticated SSH connection using c
 // as the underlying transport.  The Request and NewChannel channels
 // must be serviced or the connection will hang.
-func NewClientConn(c net.Conn, addr string, config *ClientConfig) (Conn, <-chan NewChannel, <-chan *Request, error) { 
+func NewClientConn(c net.Conn, addr string, config *ClientConfig) (Conn, <-chan NewChannel, <-chan *Request, error) {
 	fullConf := *config
 	fullConf.SetDefaults()
 	if fullConf.HostKeyCallback == nil {
@@ -89,7 +89,7 @@ func NewClientConn(c net.Conn, addr string, config *ClientConfig) (Conn, <-chan 
 
 // clientHandshake performs the client side key exchange. See RFC 4253 Section
 // 7.
-func (c *connection) clientHandshake(dialAddress string, config *ClientConfig) error { 
+func (c *connection) clientHandshake(dialAddress string, config *ClientConfig) error {
 	if config.ClientVersion != "" {
 		c.clientVersion = []byte(config.ClientVersion)
 	} else {
@@ -114,7 +114,7 @@ func (c *connection) clientHandshake(dialAddress string, config *ClientConfig) e
 
 // verifyHostKeySignature verifies the host key obtained in the key
 // exchange.
-func verifyHostKeySignature(hostKey PublicKey, result *kexResult) error { 
+func verifyHostKeySignature(hostKey PublicKey, result *kexResult) error {
 	sig, rest, ok := parseSignatureBody(result.Signature)
 	if len(rest) > 0 || !ok {
 		return errors.New("ssh: signature parse error")
@@ -125,7 +125,7 @@ func verifyHostKeySignature(hostKey PublicKey, result *kexResult) error {
 
 // NewSession opens a new Session for this client. (A session is a remote
 // execution of a program.)
-func (c *Client) NewSession() (*Session, error) { 
+func (c *Client) NewSession() (*Session, error) {
 	ch, in, err := c.OpenChannel("session", nil)
 	if err != nil {
 		return nil, err
@@ -133,7 +133,7 @@ func (c *Client) NewSession() (*Session, error) {
 	return newSession(ch, in)
 }
 
-func (c *Client) handleGlobalRequests(incoming <-chan *Request) { 
+func (c *Client) handleGlobalRequests(incoming <-chan *Request) {
 	for r := range incoming {
 		// This handles keepalive messages and matches
 		// the behaviour of OpenSSH.
@@ -142,7 +142,7 @@ func (c *Client) handleGlobalRequests(incoming <-chan *Request) {
 }
 
 // handleChannelOpens channel open messages from the remote side.
-func (c *Client) handleChannelOpens(in <-chan NewChannel) { 
+func (c *Client) handleChannelOpens(in <-chan NewChannel) {
 	for ch := range in {
 		c.mu.Lock()
 		handler := c.channelHandlers[ch.ChannelType()]
@@ -168,7 +168,7 @@ func (c *Client) handleChannelOpens(in <-chan NewChannel) {
 // initiates the SSH handshake, and then sets up a Client.  For access
 // to incoming channels and requests, use net.Dial with NewClientConn
 // instead.
-func Dial(network, addr string, config *ClientConfig) (*Client, error) { 
+func Dial(network, addr string, config *ClientConfig) (*Client, error) {
 	conn, err := net.DialTimeout(network, addr, config.Timeout)
 	if err != nil {
 		return nil, err
@@ -229,7 +229,7 @@ type ClientConfig struct {
 // InsecureIgnoreHostKey returns a function that can be used for
 // ClientConfig.HostKeyCallback to accept any host key. It should
 // not be used for production code.
-func InsecureIgnoreHostKey() HostKeyCallback { 
+func InsecureIgnoreHostKey() HostKeyCallback {
 	return func(hostname string, remote net.Addr, key PublicKey) error {
 		return nil
 	}
@@ -239,7 +239,7 @@ type fixedHostKey struct {
 	key PublicKey
 }
 
-func (f *fixedHostKey) check(hostname string, remote net.Addr, key PublicKey) error { 
+func (f *fixedHostKey) check(hostname string, remote net.Addr, key PublicKey) error {
 	if f.key == nil {
 		return fmt.Errorf("ssh: required host key was nil")
 	}
@@ -251,7 +251,7 @@ func (f *fixedHostKey) check(hostname string, remote net.Addr, key PublicKey) er
 
 // FixedHostKey returns a function for use in
 // ClientConfig.HostKeyCallback to accept only a specific host key.
-func FixedHostKey(key PublicKey) HostKeyCallback { 
+func FixedHostKey(key PublicKey) HostKeyCallback {
 	hk := &fixedHostKey{key}
 	return hk.check
 }

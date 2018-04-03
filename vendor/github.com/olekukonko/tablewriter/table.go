@@ -76,7 +76,7 @@ type Table struct {
 
 // Start New Table
 // Take io.Writer Directly
-func NewWriter(writer io.Writer) *Table { 
+func NewWriter(writer io.Writer) *Table {
 	t := &Table{
 		out:      writer,
 		rows:     [][]string{},
@@ -105,7 +105,7 @@ func NewWriter(writer io.Writer) *Table {
 }
 
 // Render table output
-func (t Table) Render() { 
+func (t Table) Render() {
 	if t.borders.Top {
 		t.printLine(true)
 	}
@@ -124,7 +124,7 @@ func (t Table) Render() {
 }
 
 // Set table header
-func (t *Table) SetHeader(keys []string) { 
+func (t *Table) SetHeader(keys []string) {
 	t.colSize = len(keys)
 	for i, v := range keys {
 		t.parseDimension(v, i, -1)
@@ -133,7 +133,7 @@ func (t *Table) SetHeader(keys []string) {
 }
 
 // Set table Footer
-func (t *Table) SetFooter(keys []string) { 
+func (t *Table) SetFooter(keys []string) {
 	//t.colSize = len(keys)
 	for i, v := range keys {
 		t.parseDimension(v, i, -1)
@@ -142,85 +142,85 @@ func (t *Table) SetFooter(keys []string) {
 }
 
 // Turn header autoformatting on/off. Default is on (true).
-func (t *Table) SetAutoFormatHeaders(auto bool) { 
+func (t *Table) SetAutoFormatHeaders(auto bool) {
 	t.autoFmt = auto
 }
 
 // Turn automatic multiline text adjustment on/off. Default is on (true).
-func (t *Table) SetAutoWrapText(auto bool) { 
+func (t *Table) SetAutoWrapText(auto bool) {
 	t.autoWrap = auto
 }
 
 // Set the Default column width
-func (t *Table) SetColWidth(width int) { 
+func (t *Table) SetColWidth(width int) {
 	t.mW = width
 }
 
 // Set the Column Separator
-func (t *Table) SetColumnSeparator(sep string) { 
+func (t *Table) SetColumnSeparator(sep string) {
 	t.pColumn = sep
 }
 
 // Set the Row Separator
-func (t *Table) SetRowSeparator(sep string) { 
+func (t *Table) SetRowSeparator(sep string) {
 	t.pRow = sep
 }
 
 // Set the center Separator
-func (t *Table) SetCenterSeparator(sep string) { 
+func (t *Table) SetCenterSeparator(sep string) {
 	t.pCenter = sep
 }
 
 // Set Header Alignment
-func (t *Table) SetHeaderAlignment(hAlign int) { 
+func (t *Table) SetHeaderAlignment(hAlign int) {
 	t.hAlign = hAlign
 }
 
 // Set Footer Alignment
-func (t *Table) SetFooterAlignment(fAlign int) { 
+func (t *Table) SetFooterAlignment(fAlign int) {
 	t.fAlign = fAlign
 }
 
 // Set Table Alignment
-func (t *Table) SetAlignment(align int) { 
+func (t *Table) SetAlignment(align int) {
 	t.align = align
 }
 
 // Set New Line
-func (t *Table) SetNewLine(nl string) { 
+func (t *Table) SetNewLine(nl string) {
 	t.newLine = nl
 }
 
 // Set Header Line
 // This would enable / disable a line after the header
-func (t *Table) SetHeaderLine(line bool) { 
+func (t *Table) SetHeaderLine(line bool) {
 	t.hdrLine = line
 }
 
 // Set Row Line
 // This would enable / disable a line on each row of the table
-func (t *Table) SetRowLine(line bool) { 
+func (t *Table) SetRowLine(line bool) {
 	t.rowLine = line
 }
 
 // Set Auto Merge Cells
 // This would enable / disable the merge of cells with identical values
-func (t *Table) SetAutoMergeCells(auto bool) { 
+func (t *Table) SetAutoMergeCells(auto bool) {
 	t.autoMergeCells = auto
 }
 
 // Set Table Border
 // This would enable / disable line around the table
-func (t *Table) SetBorder(border bool) { 
+func (t *Table) SetBorder(border bool) {
 	t.SetBorders(Border{border, border, border, border})
 }
 
-func (t *Table) SetBorders(border Border) { 
+func (t *Table) SetBorders(border Border) {
 	t.borders = border
 }
 
 // Append row to table
-func (t *Table) Append(row []string) { 
+func (t *Table) Append(row []string) {
 	rowSize := len(t.headers)
 	if rowSize > t.colSize {
 		t.colSize = rowSize
@@ -243,14 +243,14 @@ func (t *Table) Append(row []string) {
 
 // Allow Support for Bulk Append
 // Eliminates repeated for loops
-func (t *Table) AppendBulk(rows [][]string) { 
+func (t *Table) AppendBulk(rows [][]string) {
 	for _, row := range rows {
 		t.Append(row)
 	}
 }
 
 // Print line based on row width
-func (t Table) printLine(nl bool) { 
+func (t Table) printLine(nl bool) {
 	fmt.Fprint(t.out, t.pCenter)
 	for i := 0; i < len(t.cs); i++ {
 		v := t.cs[i]
@@ -266,7 +266,7 @@ func (t Table) printLine(nl bool) {
 }
 
 // Print line based on row width with our without cell separator
-func (t Table) printLineOptionalCellSeparators(nl bool, displayCellSeparator []bool) { 
+func (t Table) printLineOptionalCellSeparators(nl bool, displayCellSeparator []bool) {
 	fmt.Fprint(t.out, t.pCenter)
 	for i := 0; i < len(t.cs); i++ {
 		v := t.cs[i]
@@ -291,7 +291,7 @@ func (t Table) printLineOptionalCellSeparators(nl bool, displayCellSeparator []b
 
 // Return the PadRight function if align is left, PadLeft if align is right,
 // and Pad by default
-func pad(align int) func(string, string, int) string { 
+func pad(align int) func(string, string, int) string {
 	padFunc := Pad
 	switch align {
 	case ALIGN_LEFT:
@@ -303,7 +303,7 @@ func pad(align int) func(string, string, int) string {
 }
 
 // Print heading information
-func (t Table) printHeading() { 
+func (t Table) printHeading() {
 	// Check if headers is available
 	if len(t.headers) < 1 {
 		return
@@ -339,7 +339,7 @@ func (t Table) printHeading() {
 }
 
 // Print heading information
-func (t Table) printFooter() { 
+func (t Table) printFooter() {
 	// Check if headers is available
 	if len(t.footers) < 1 {
 		return
@@ -431,7 +431,7 @@ func (t Table) printFooter() {
 
 }
 
-func (t Table) printRows() { 
+func (t Table) printRows() {
 	for i, lines := range t.lines {
 		t.printRow(lines, i)
 	}
@@ -441,7 +441,7 @@ func (t Table) printRows() {
 // Print Row Information
 // Adjust column alignment based on type
 
-func (t Table) printRow(columns [][]string, colKey int) { 
+func (t Table) printRow(columns [][]string, colKey int) {
 	// Get Maximum Height
 	max := t.rs[colKey]
 	total := len(columns)
@@ -514,7 +514,7 @@ func (t Table) printRow(columns [][]string, colKey int) {
 }
 
 // Print the rows of the table and merge the cells that are identical
-func (t Table) printRowsMergeCells() { 
+func (t Table) printRowsMergeCells() {
 	var previousLine []string
 	var displayCellBorder []bool
 	var tmpWriter bytes.Buffer
@@ -537,7 +537,7 @@ func (t Table) printRowsMergeCells() {
 // Print Row Information to a writer and merge identical cells.
 // Adjust column alignment based on type
 
-func (t Table) printRowMergeCells(writer io.Writer, columns [][]string, colKey int, previousLine []string) ([]string, []bool) { 
+func (t Table) printRowMergeCells(writer io.Writer, columns [][]string, colKey int, previousLine []string) ([]string, []bool) {
 	// Get Maximum Height
 	max := t.rs[colKey]
 	total := len(columns)
@@ -611,7 +611,7 @@ func (t Table) printRowMergeCells(writer io.Writer, columns [][]string, colKey i
 	return previousLine, displayCellBorder
 }
 
-func (t *Table) parseDimension(str string, colKey, rowKey int) []string { 
+func (t *Table) parseDimension(str string, colKey, rowKey int) []string {
 	var (
 		raw []string
 		max int

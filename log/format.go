@@ -27,7 +27,7 @@ var locationTrims = []string{
 
 // PrintOrigins sets or unsets log location (file:line) printing for terminal
 // format output.
-func PrintOrigins(print bool) { log.DebugLog()
+func PrintOrigins(print bool) {
 	if print {
 		atomic.StoreUint32(&locationEnabled, 1)
 	} else {
@@ -56,13 +56,13 @@ type Format interface {
 
 // FormatFunc returns a new Format object which uses
 // the given function to perform record formatting.
-func FormatFunc(f func(*Record) []byte) Format { log.DebugLog()
+func FormatFunc(f func(*Record) []byte) Format {
 	return formatFunc(f)
 }
 
 type formatFunc func(*Record) []byte
 
-func (f formatFunc) Format(r *Record) []byte { log.DebugLog()
+func (f formatFunc) Format(r *Record) []byte {
 	return f(r)
 }
 
@@ -83,7 +83,7 @@ type TerminalStringer interface {
 //
 //     [May 16 20:58:45] [DBUG] remove route ns=haproxy addr=127.0.0.1:50002
 //
-func TerminalFormat(usecolor bool) Format { log.DebugLog()
+func TerminalFormat(usecolor bool) Format {
 	return FormatFunc(func(r *Record) []byte {
 		var color = 0
 		if usecolor {
@@ -148,7 +148,7 @@ func TerminalFormat(usecolor bool) Format { log.DebugLog()
 //
 // For more details see: http://godoc.org/github.com/kr/logfmt
 //
-func LogfmtFormat() Format { log.DebugLog()
+func LogfmtFormat() Format {
 	return FormatFunc(func(r *Record) []byte {
 		common := []interface{}{r.KeyNames.Time, r.Time, r.KeyNames.Lvl, r.Lvl, r.KeyNames.Msg, r.Msg}
 		buf := &bytes.Buffer{}
@@ -157,7 +157,7 @@ func LogfmtFormat() Format { log.DebugLog()
 	})
 }
 
-func logfmt(buf *bytes.Buffer, ctx []interface{}, color int, term bool) { log.DebugLog()
+func logfmt(buf *bytes.Buffer, ctx []interface{}, color int, term bool) {
 	for i := 0; i < len(ctx); i += 2 {
 		if i != 0 {
 			buf.WriteByte(' ')
@@ -198,14 +198,14 @@ func logfmt(buf *bytes.Buffer, ctx []interface{}, color int, term bool) { log.De
 
 // JsonFormat formats log records as JSON objects separated by newlines.
 // It is the equivalent of JsonFormatEx(false, true).
-func JsonFormat() Format { log.DebugLog()
+func JsonFormat() Format {
 	return JsonFormatEx(false, true)
 }
 
 // JsonFormatEx formats log records as JSON objects. If pretty is true,
 // records will be pretty-printed. If lineSeparated is true, records
 // will be logged with a new line between each record.
-func JsonFormatEx(pretty, lineSeparated bool) Format { log.DebugLog()
+func JsonFormatEx(pretty, lineSeparated bool) Format {
 	jsonMarshal := json.Marshal
 	if pretty {
 		jsonMarshal = func(v interface{}) ([]byte, error) {
@@ -244,7 +244,7 @@ func JsonFormatEx(pretty, lineSeparated bool) Format { log.DebugLog()
 	})
 }
 
-func formatShared(value interface{}) (result interface{}) { log.DebugLog()
+func formatShared(value interface{}) (result interface{}) {
 	defer func() {
 		if err := recover(); err != nil {
 			if v := reflect.ValueOf(value); v.Kind() == reflect.Ptr && v.IsNil() {
@@ -270,7 +270,7 @@ func formatShared(value interface{}) (result interface{}) { log.DebugLog()
 	}
 }
 
-func formatJsonValue(value interface{}) interface{} { log.DebugLog()
+func formatJsonValue(value interface{}) interface{} {
 	value = formatShared(value)
 	switch value.(type) {
 	case int, int8, int16, int32, int64, float32, float64, uint, uint8, uint16, uint32, uint64, string:
@@ -281,7 +281,7 @@ func formatJsonValue(value interface{}) interface{} { log.DebugLog()
 }
 
 // formatValue formats a value for serialization
-func formatLogfmtValue(value interface{}, term bool) string { log.DebugLog()
+func formatLogfmtValue(value interface{}, term bool) string {
 	if value == nil {
 		return "nil"
 	}
@@ -319,7 +319,7 @@ var stringBufPool = sync.Pool{
 	New: func() interface{} { return new(bytes.Buffer) },
 }
 
-func escapeString(s string) string { log.DebugLog()
+func escapeString(s string) string {
 	needsQuotes := false
 	needsEscape := false
 	for _, r := range s {

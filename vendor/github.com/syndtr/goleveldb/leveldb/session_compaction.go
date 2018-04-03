@@ -14,13 +14,13 @@ import (
 	"github.com/syndtr/goleveldb/leveldb/opt"
 )
 
-func (s *session) pickMemdbLevel(umin, umax []byte, maxLevel int) int { 
+func (s *session) pickMemdbLevel(umin, umax []byte, maxLevel int) int {
 	v := s.version()
 	defer v.release()
 	return v.pickMemdbLevel(umin, umax, maxLevel)
 }
 
-func (s *session) flushMemdb(rec *sessionRecord, mdb *memdb.DB, maxLevel int) (int, error) { 
+func (s *session) flushMemdb(rec *sessionRecord, mdb *memdb.DB, maxLevel int) (int, error) {
 	// Create sorted table.
 	iter := mdb.NewIterator(nil)
 	defer iter.Release()
@@ -45,7 +45,7 @@ func (s *session) flushMemdb(rec *sessionRecord, mdb *memdb.DB, maxLevel int) (i
 }
 
 // Pick a compaction based on current state; need external synchronization.
-func (s *session) pickCompaction() *compaction { 
+func (s *session) pickCompaction() *compaction {
 	v := s.version()
 
 	var sourceLevel int
@@ -78,7 +78,7 @@ func (s *session) pickCompaction() *compaction {
 }
 
 // Create compaction from given level and range; need external synchronization.
-func (s *session) getCompactionRange(sourceLevel int, umin, umax []byte, noLimit bool) *compaction { 
+func (s *session) getCompactionRange(sourceLevel int, umin, umax []byte, noLimit bool) *compaction {
 	v := s.version()
 
 	if sourceLevel >= len(v.levels) {
@@ -112,7 +112,7 @@ func (s *session) getCompactionRange(sourceLevel int, umin, umax []byte, noLimit
 	return newCompaction(s, v, sourceLevel, t0)
 }
 
-func newCompaction(s *session, v *version, sourceLevel int, t0 tFiles) *compaction { 
+func newCompaction(s *session, v *version, sourceLevel int, t0 tFiles) *compaction {
 	c := &compaction{
 		s:             s,
 		v:             v,
@@ -149,21 +149,21 @@ type compaction struct {
 	snapTPtrs             []int
 }
 
-func (c *compaction) save() { 
+func (c *compaction) save() {
 	c.snapGPI = c.gpi
 	c.snapSeenKey = c.seenKey
 	c.snapGPOverlappedBytes = c.gpOverlappedBytes
 	c.snapTPtrs = append(c.snapTPtrs[:0], c.tPtrs...)
 }
 
-func (c *compaction) restore() { 
+func (c *compaction) restore() {
 	c.gpi = c.snapGPI
 	c.seenKey = c.snapSeenKey
 	c.gpOverlappedBytes = c.snapGPOverlappedBytes
 	c.tPtrs = append(c.tPtrs[:0], c.snapTPtrs...)
 }
 
-func (c *compaction) release() { 
+func (c *compaction) release() {
 	if !c.released {
 		c.released = true
 		c.v.release()
@@ -171,7 +171,7 @@ func (c *compaction) release() {
 }
 
 // Expand compacted tables; need external synchronization.
-func (c *compaction) expand() { 
+func (c *compaction) expand() {
 	limit := int64(c.s.o.GetCompactionExpandLimit(c.sourceLevel))
 	vt0 := c.v.levels[c.sourceLevel]
 	vt1 := tFiles{}
@@ -219,11 +219,11 @@ func (c *compaction) expand() {
 }
 
 // Check whether compaction is trivial.
-func (c *compaction) trivial() bool { 
+func (c *compaction) trivial() bool {
 	return len(c.levels[0]) == 1 && len(c.levels[1]) == 0 && c.gp.size() <= c.maxGPOverlaps
 }
 
-func (c *compaction) baseLevelForKey(ukey []byte) bool { 
+func (c *compaction) baseLevelForKey(ukey []byte) bool {
 	for level := c.sourceLevel + 2; level < len(c.v.levels); level++ {
 		tables := c.v.levels[level]
 		for c.tPtrs[level] < len(tables) {
@@ -242,7 +242,7 @@ func (c *compaction) baseLevelForKey(ukey []byte) bool {
 	return true
 }
 
-func (c *compaction) shouldStopBefore(ikey internalKey) bool { 
+func (c *compaction) shouldStopBefore(ikey internalKey) bool {
 	for ; c.gpi < len(c.gp); c.gpi++ {
 		gp := c.gp[c.gpi]
 		if c.s.icmp.Compare(ikey, gp.imax) <= 0 {
@@ -263,7 +263,7 @@ func (c *compaction) shouldStopBefore(ikey internalKey) bool {
 }
 
 // Creates an iterator.
-func (c *compaction) newIterator() iterator.Iterator { 
+func (c *compaction) newIterator() iterator.Iterator {
 	// Creates iterator slice.
 	icap := len(c.levels)
 	if c.sourceLevel == 0 {

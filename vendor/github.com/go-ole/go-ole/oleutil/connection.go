@@ -27,7 +27,7 @@ type stdDispatchVtbl struct {
 	pInvoke           uintptr
 }
 
-func dispQueryInterface(this *ole.IUnknown, iid *ole.GUID, punk **ole.IUnknown) uint32 { 
+func dispQueryInterface(this *ole.IUnknown, iid *ole.GUID, punk **ole.IUnknown) uint32 {
 	pthis := (*stdDispatch)(unsafe.Pointer(this))
 	*punk = nil
 	if ole.IsEqualGUID(iid, ole.IID_IUnknown) ||
@@ -44,19 +44,19 @@ func dispQueryInterface(this *ole.IUnknown, iid *ole.GUID, punk **ole.IUnknown) 
 	return ole.E_NOINTERFACE
 }
 
-func dispAddRef(this *ole.IUnknown) int32 { 
+func dispAddRef(this *ole.IUnknown) int32 {
 	pthis := (*stdDispatch)(unsafe.Pointer(this))
 	pthis.ref++
 	return pthis.ref
 }
 
-func dispRelease(this *ole.IUnknown) int32 { 
+func dispRelease(this *ole.IUnknown) int32 {
 	pthis := (*stdDispatch)(unsafe.Pointer(this))
 	pthis.ref--
 	return pthis.ref
 }
 
-func dispGetIDsOfNames(this *ole.IUnknown, iid *ole.GUID, wnames []*uint16, namelen int, lcid int, pdisp []int32) uintptr { 
+func dispGetIDsOfNames(this *ole.IUnknown, iid *ole.GUID, wnames []*uint16, namelen int, lcid int, pdisp []int32) uintptr {
 	pthis := (*stdDispatch)(unsafe.Pointer(this))
 	names := make([]string, len(wnames))
 	for i := 0; i < len(names); i++ {
@@ -70,18 +70,18 @@ func dispGetIDsOfNames(this *ole.IUnknown, iid *ole.GUID, wnames []*uint16, name
 	return ole.S_OK
 }
 
-func dispGetTypeInfoCount(pcount *int) uintptr { 
+func dispGetTypeInfoCount(pcount *int) uintptr {
 	if pcount != nil {
 		*pcount = 0
 	}
 	return ole.S_OK
 }
 
-func dispGetTypeInfo(ptypeif *uintptr) uintptr { 
+func dispGetTypeInfo(ptypeif *uintptr) uintptr {
 	return ole.E_NOTIMPL
 }
 
-func dispInvoke(this *ole.IDispatch, dispid int32, riid *ole.GUID, lcid int, flags int16, dispparams *ole.DISPPARAMS, result *ole.VARIANT, pexcepinfo *ole.EXCEPINFO, nerr *uint) uintptr { 
+func dispInvoke(this *ole.IDispatch, dispid int32, riid *ole.GUID, lcid int, flags int16, dispparams *ole.DISPPARAMS, result *ole.VARIANT, pexcepinfo *ole.EXCEPINFO, nerr *uint) uintptr {
 	pthis := (*stdDispatch)(unsafe.Pointer(this))
 	found := ""
 	for name, id := range pthis.funcMap {

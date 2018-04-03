@@ -16,7 +16,10 @@
 
 package bitutil
 
-import "errors"
+import (
+	"errors"
+	"github.com/ethereum/go-ethereum/log"
+)
 
 var (
 	// errMissingData is returned from decompression if the byte referenced by

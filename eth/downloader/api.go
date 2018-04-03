@@ -20,9 +20,10 @@ import (
 	"context"
 	"sync"
 
-	ethereum "github.com/ethereum/go-ethereum"
+	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/event"
 	"github.com/ethereum/go-ethereum/rpc"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // PublicDownloaderAPI provides an API which gives information about the current synchronisation status.
@@ -38,10 +39,11 @@ type PublicDownloaderAPI struct {
 // listens for events from the downloader through the global event mux. In case it receives one of
 // these events it broadcasts it to all syncing subscriptions that are installed through the
 // installSyncSubscription channel.
-func NewPublicDownloaderAPI(d *Downloader, m *event.TypeMux) *PublicDownloaderAPI { log.DebugLog()
+func NewPublicDownloaderAPI(d *Downloader, m *event.TypeMux) *PublicDownloaderAPI {
+	log.DebugLog()
 	api := &PublicDownloaderAPI{
-		d:   d,
-		mux: m,
+		d:                         d,
+		mux:                       m,
 		installSyncSubscription:   make(chan chan interface{}),
 		uninstallSyncSubscription: make(chan *uninstallSyncSubscriptionRequest),
 	}
@@ -53,7 +55,8 @@ func NewPublicDownloaderAPI(d *Downloader, m *event.TypeMux) *PublicDownloaderAP
 
 // eventLoop runs an loop until the event mux closes. It will install and uninstall new
 // sync subscriptions and broadcasts sync status updates to the installed sync subscriptions.
-func (api *PublicDownloaderAPI) eventLoop() { log.DebugLog()
+func (api *PublicDownloaderAPI) eventLoop() {
+	log.DebugLog()
 	var (
 		sub               = api.mux.Subscribe(StartEvent{}, DoneEvent{}, FailedEvent{})
 		syncSubscriptions = make(map[chan interface{}]struct{})
@@ -90,7 +93,8 @@ func (api *PublicDownloaderAPI) eventLoop() { log.DebugLog()
 }
 
 // Syncing provides information when this nodes starts synchronising with the Ethereum network and when it's finished.
-func (api *PublicDownloaderAPI) Syncing(ctx context.Context) (*rpc.Subscription, error) { log.DebugLog()
+func (api *PublicDownloaderAPI) Syncing(ctx context.Context) (*rpc.Subscription, error) {
+	log.DebugLog()
 	notifier, supported := rpc.NotifierFromContext(ctx)
 	if !supported {
 		return &rpc.Subscription{}, rpc.ErrNotificationsUnsupported
@@ -141,7 +145,8 @@ type SyncStatusSubscription struct {
 // Unsubscribe uninstalls the subscription from the DownloadAPI event loop.
 // The status channel that was passed to subscribeSyncStatus isn't used anymore
 // after this method returns.
-func (s *SyncStatusSubscription) Unsubscribe() { log.DebugLog()
+func (s *SyncStatusSubscription) Unsubscribe() {
+	log.DebugLog()
 	s.unsubOnce.Do(func() {
 		req := uninstallSyncSubscriptionRequest{s.c, make(chan interface{})}
 		s.api.uninstallSyncSubscription <- &req
@@ -160,7 +165,8 @@ func (s *SyncStatusSubscription) Unsubscribe() { log.DebugLog()
 
 // SubscribeSyncStatus creates a subscription that will broadcast new synchronisation updates.
 // The given channel must receive interface values, the result can either
-func (api *PublicDownloaderAPI) SubscribeSyncStatus(status chan interface{}) *SyncStatusSubscription { log.DebugLog()
+func (api *PublicDownloaderAPI) SubscribeSyncStatus(status chan interface{}) *SyncStatusSubscription {
+	log.DebugLog()
 	api.installSyncSubscription <- status
 	return &SyncStatusSubscription{api: api, c: status}
 }

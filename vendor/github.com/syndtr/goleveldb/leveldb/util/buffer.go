@@ -24,11 +24,11 @@ type Buffer struct {
 // len(b.Bytes()) == b.Len().  If the caller changes the contents of the
 // returned slice, the contents of the buffer will change provided there
 // are no intervening method calls on the Buffer.
-func (b *Buffer) Bytes() []byte {  return b.buf[b.off:] }
+func (b *Buffer) Bytes() []byte { return b.buf[b.off:] }
 
 // String returns the contents of the unread portion of the buffer
 // as a string.  If the Buffer is a nil pointer, it returns "<nil>".
-func (b *Buffer) String() string { 
+func (b *Buffer) String() string {
 	if b == nil {
 		// Special case, useful in debugging.
 		return "<nil>"
@@ -38,11 +38,11 @@ func (b *Buffer) String() string {
 
 // Len returns the number of bytes of the unread portion of the buffer;
 // b.Len() == len(b.Bytes()).
-func (b *Buffer) Len() int {  return len(b.buf) - b.off }
+func (b *Buffer) Len() int { return len(b.buf) - b.off }
 
 // Truncate discards all but the first n unread bytes from the buffer.
 // It panics if n is negative or greater than the length of the buffer.
-func (b *Buffer) Truncate(n int) { 
+func (b *Buffer) Truncate(n int) {
 	switch {
 	case n < 0 || n > b.Len():
 		panic("leveldb/util.Buffer: truncation out of range")
@@ -55,12 +55,12 @@ func (b *Buffer) Truncate(n int) {
 
 // Reset resets the buffer so it has no content.
 // b.Reset() is the same as b.Truncate(0).
-func (b *Buffer) Reset() {  b.Truncate(0) }
+func (b *Buffer) Reset() { b.Truncate(0) }
 
 // grow grows the buffer to guarantee space for n more bytes.
 // It returns the index where bytes should be written.
 // If the buffer can't grow it will panic with bytes.ErrTooLarge.
-func (b *Buffer) grow(n int) int { 
+func (b *Buffer) grow(n int) int {
 	m := b.Len()
 	// If buffer is empty, reset to recover space.
 	if m == 0 && b.off != 0 {
@@ -92,7 +92,7 @@ func (b *Buffer) grow(n int) int {
 // Alloc allocs n bytes of slice from the buffer, growing the buffer as
 // needed. If n is negative, Alloc will panic.
 // If the buffer can't grow it will panic with bytes.ErrTooLarge.
-func (b *Buffer) Alloc(n int) []byte { 
+func (b *Buffer) Alloc(n int) []byte {
 	if n < 0 {
 		panic("leveldb/util.Buffer.Alloc: negative count")
 	}
@@ -105,7 +105,7 @@ func (b *Buffer) Alloc(n int) []byte {
 // buffer without another allocation.
 // If n is negative, Grow will panic.
 // If the buffer can't grow it will panic with bytes.ErrTooLarge.
-func (b *Buffer) Grow(n int) { 
+func (b *Buffer) Grow(n int) {
 	if n < 0 {
 		panic("leveldb/util.Buffer.Grow: negative count")
 	}
@@ -116,7 +116,7 @@ func (b *Buffer) Grow(n int) {
 // Write appends the contents of p to the buffer, growing the buffer as
 // needed. The return value n is the length of p; err is always nil. If the
 // buffer becomes too large, Write will panic with bytes.ErrTooLarge.
-func (b *Buffer) Write(p []byte) (n int, err error) { 
+func (b *Buffer) Write(p []byte) (n int, err error) {
 	m := b.grow(len(p))
 	return copy(b.buf[m:], p), nil
 }
@@ -131,7 +131,7 @@ const MinRead = 512
 // the buffer as needed. The return value n is the number of bytes read. Any
 // error except io.EOF encountered during the read is also returned. If the
 // buffer becomes too large, ReadFrom will panic with bytes.ErrTooLarge.
-func (b *Buffer) ReadFrom(r io.Reader) (n int64, err error) { 
+func (b *Buffer) ReadFrom(r io.Reader) (n int64, err error) {
 	// If buffer is empty, reset to recover space.
 	if b.off >= len(b.buf) {
 		b.Truncate(0)
@@ -164,7 +164,7 @@ func (b *Buffer) ReadFrom(r io.Reader) (n int64, err error) {
 
 // makeSlice allocates a slice of size n. If the allocation fails, it panics
 // with bytes.ErrTooLarge.
-func makeSlice(n int) []byte { 
+func makeSlice(n int) []byte {
 	// If the make fails, give a known error.
 	defer func() {
 		if recover() != nil {
@@ -178,7 +178,7 @@ func makeSlice(n int) []byte {
 // The return value n is the number of bytes written; it always fits into an
 // int, but it is int64 to match the io.WriterTo interface. Any error
 // encountered during the write is also returned.
-func (b *Buffer) WriteTo(w io.Writer) (n int64, err error) { 
+func (b *Buffer) WriteTo(w io.Writer) (n int64, err error) {
 	if b.off < len(b.buf) {
 		nBytes := b.Len()
 		m, e := w.Write(b.buf[b.off:])
@@ -205,7 +205,7 @@ func (b *Buffer) WriteTo(w io.Writer) (n int64, err error) {
 // The returned error is always nil, but is included to match bufio.Writer's
 // WriteByte. If the buffer becomes too large, WriteByte will panic with
 // bytes.ErrTooLarge.
-func (b *Buffer) WriteByte(c byte) error { 
+func (b *Buffer) WriteByte(c byte) error {
 	m := b.grow(1)
 	b.buf[m] = c
 	return nil
@@ -215,7 +215,7 @@ func (b *Buffer) WriteByte(c byte) error {
 // is drained.  The return value n is the number of bytes read.  If the
 // buffer has no data to return, err is io.EOF (unless len(p) is zero);
 // otherwise it is nil.
-func (b *Buffer) Read(p []byte) (n int, err error) { 
+func (b *Buffer) Read(p []byte) (n int, err error) {
 	if b.off >= len(b.buf) {
 		// Buffer is empty, reset to recover space.
 		b.Truncate(0)
@@ -233,7 +233,7 @@ func (b *Buffer) Read(p []byte) (n int, err error) {
 // advancing the buffer as if the bytes had been returned by Read.
 // If there are fewer than n bytes in the buffer, Next returns the entire buffer.
 // The slice is only valid until the next call to a read or write method.
-func (b *Buffer) Next(n int) []byte { 
+func (b *Buffer) Next(n int) []byte {
 	m := b.Len()
 	if n > m {
 		n = m
@@ -245,7 +245,7 @@ func (b *Buffer) Next(n int) []byte {
 
 // ReadByte reads and returns the next byte from the buffer.
 // If no byte is available, it returns error io.EOF.
-func (b *Buffer) ReadByte() (c byte, err error) { 
+func (b *Buffer) ReadByte() (c byte, err error) {
 	if b.off >= len(b.buf) {
 		// Buffer is empty, reset to recover space.
 		b.Truncate(0)
@@ -262,7 +262,7 @@ func (b *Buffer) ReadByte() (c byte, err error) {
 // it returns the data read before the error and the error itself (often io.EOF).
 // ReadBytes returns err != nil if and only if the returned data does not end in
 // delim.
-func (b *Buffer) ReadBytes(delim byte) (line []byte, err error) { 
+func (b *Buffer) ReadBytes(delim byte) (line []byte, err error) {
 	slice, err := b.readSlice(delim)
 	// return a copy of slice. The buffer's backing array may
 	// be overwritten by later calls.
@@ -271,7 +271,7 @@ func (b *Buffer) ReadBytes(delim byte) (line []byte, err error) {
 }
 
 // readSlice is like ReadBytes but returns a reference to internal buffer data.
-func (b *Buffer) readSlice(delim byte) (line []byte, err error) { 
+func (b *Buffer) readSlice(delim byte) (line []byte, err error) {
 	i := bytes.IndexByte(b.buf[b.off:], delim)
 	end := b.off + i + 1
 	if i < 0 {
@@ -290,4 +290,4 @@ func (b *Buffer) readSlice(delim byte) (line []byte, err error) {
 //
 // In most cases, new(Buffer) (or just declaring a Buffer variable) is
 // sufficient to initialize a Buffer.
-func NewBuffer(buf []byte) *Buffer {  return &Buffer{buf: buf} }
+func NewBuffer(buf []byte) *Buffer { return &Buffer{buf: buf} }

@@ -51,7 +51,8 @@ type topicInfo struct {
 }
 
 // removes tail element from the fifo
-func (t *topicInfo) getFifoTail() *topicEntry { log.DebugLog()
+func (t *topicInfo) getFifoTail() *topicEntry {
+	log.DebugLog()
 	for t.entries[t.fifoTail] == nil {
 		t.fifoTail++
 	}
@@ -78,7 +79,8 @@ type topicTable struct {
 	lastGarbageCollection mclock.AbsTime
 }
 
-func newTopicTable(db *nodeDB, self *Node) *topicTable { log.DebugLog()
+func newTopicTable(db *nodeDB, self *Node) *topicTable {
+	log.DebugLog()
 	if printTestImgLogs {
 		fmt.Printf("*N %016x\n", self.sha[:8])
 	}
@@ -90,7 +92,8 @@ func newTopicTable(db *nodeDB, self *Node) *topicTable { log.DebugLog()
 	}
 }
 
-func (t *topicTable) getOrNewTopic(topic Topic) *topicInfo { log.DebugLog()
+func (t *topicTable) getOrNewTopic(topic Topic) *topicInfo {
+	log.DebugLog()
 	ti := t.topics[topic]
 	if ti == nil {
 		rqItem := &topicRequestQueueItem{
@@ -107,7 +110,8 @@ func (t *topicTable) getOrNewTopic(topic Topic) *topicInfo { log.DebugLog()
 	return ti
 }
 
-func (t *topicTable) checkDeleteTopic(topic Topic) { log.DebugLog()
+func (t *topicTable) checkDeleteTopic(topic Topic) {
+	log.DebugLog()
 	ti := t.topics[topic]
 	if ti == nil {
 		return
@@ -118,7 +122,8 @@ func (t *topicTable) checkDeleteTopic(topic Topic) { log.DebugLog()
 	}
 }
 
-func (t *topicTable) getOrNewNode(node *Node) *nodeInfo { log.DebugLog()
+func (t *topicTable) getOrNewNode(node *Node) *nodeInfo {
+	log.DebugLog()
 	n := t.nodes[node]
 	if n == nil {
 		//fmt.Printf("newNode %016x %016x\n", t.self.sha[:8], node.sha[:8])
@@ -136,21 +141,24 @@ func (t *topicTable) getOrNewNode(node *Node) *nodeInfo { log.DebugLog()
 	return n
 }
 
-func (t *topicTable) checkDeleteNode(node *Node) { log.DebugLog()
+func (t *topicTable) checkDeleteNode(node *Node) {
+	log.DebugLog()
 	if n, ok := t.nodes[node]; ok && len(n.entries) == 0 && n.noRegUntil < mclock.Now() {
 		//fmt.Printf("deleteNode %016x %016x\n", t.self.sha[:8], node.sha[:8])
 		delete(t.nodes, node)
 	}
 }
 
-func (t *topicTable) storeTicketCounters(node *Node) { log.DebugLog()
+func (t *topicTable) storeTicketCounters(node *Node) {
+	log.DebugLog()
 	n := t.getOrNewNode(node)
 	if t.db != nil {
 		t.db.updateTopicRegTickets(node.ID, n.lastIssuedTicket, n.lastUsedTicket)
 	}
 }
 
-func (t *topicTable) getEntries(topic Topic) []*Node { log.DebugLog()
+func (t *topicTable) getEntries(topic Topic) []*Node {
+	log.DebugLog()
 	t.collectGarbage()
 
 	te := t.topics[topic]
@@ -168,7 +176,8 @@ func (t *topicTable) getEntries(topic Topic) []*Node { log.DebugLog()
 	return nodes
 }
 
-func (t *topicTable) addEntry(node *Node, topic Topic) { log.DebugLog()
+func (t *topicTable) addEntry(node *Node, topic Topic) {
+	log.DebugLog()
 	n := t.getOrNewNode(node)
 	// clear previous entries by the same node
 	for _, e := range n.entries {
@@ -206,7 +215,8 @@ func (t *topicTable) addEntry(node *Node, topic Topic) { log.DebugLog()
 }
 
 // removes least requested element from the fifo
-func (t *topicTable) leastRequested() *topicEntry { log.DebugLog()
+func (t *topicTable) leastRequested() *topicEntry {
+	log.DebugLog()
 	for t.requested.Len() > 0 && t.topics[t.requested[0].topic] == nil {
 		heap.Pop(&t.requested)
 	}
@@ -217,7 +227,8 @@ func (t *topicTable) leastRequested() *topicEntry { log.DebugLog()
 }
 
 // entry should exist
-func (t *topicTable) deleteEntry(e *topicEntry) { log.DebugLog()
+func (t *topicTable) deleteEntry(e *topicEntry) {
+	log.DebugLog()
 	if printTestImgLogs {
 		fmt.Printf("*- %d %v %016x %016x\n", mclock.Now()/1000000, e.topic, t.self.sha[:8], e.node.sha[:8])
 	}
@@ -235,7 +246,8 @@ func (t *topicTable) deleteEntry(e *topicEntry) { log.DebugLog()
 }
 
 // It is assumed that topics and waitPeriods have the same length.
-func (t *topicTable) useTicket(node *Node, serialNo uint32, topics []Topic, idx int, issueTime uint64, waitPeriods []uint32) (registered bool) { log.DebugLog()
+func (t *topicTable) useTicket(node *Node, serialNo uint32, topics []Topic, idx int, issueTime uint64, waitPeriods []uint32) (registered bool) {
+	log.DebugLog()
 	log.Trace("Using discovery ticket", "serial", serialNo, "topics", topics, "waits", waitPeriods)
 	//fmt.Println("useTicket", serialNo, topics, waitPeriods)
 	t.collectGarbage()
@@ -271,7 +283,8 @@ func (t *topicTable) useTicket(node *Node, serialNo uint32, topics []Topic, idx 
 	return false
 }
 
-func (topictab *topicTable) getTicket(node *Node, topics []Topic) *ticket { log.DebugLog()
+func (topictab *topicTable) getTicket(node *Node, topics []Topic) *ticket {
+	log.DebugLog()
 	topictab.collectGarbage()
 
 	now := mclock.Now()
@@ -300,7 +313,8 @@ func (topictab *topicTable) getTicket(node *Node, topics []Topic) *ticket { log.
 
 const gcInterval = time.Minute
 
-func (t *topicTable) collectGarbage() { log.DebugLog()
+func (t *topicTable) collectGarbage() {
+	log.DebugLog()
 	tm := mclock.Now()
 	if time.Duration(tm-t.lastGarbageCollection) < gcInterval {
 		return
@@ -338,12 +352,14 @@ type waitControlLoop struct {
 	waitPeriod   time.Duration
 }
 
-func (w *waitControlLoop) registered(tm mclock.AbsTime) { log.DebugLog()
+func (w *waitControlLoop) registered(tm mclock.AbsTime) {
+	log.DebugLog()
 	w.waitPeriod = w.nextWaitPeriod(tm)
 	w.lastIncoming = tm
 }
 
-func (w *waitControlLoop) nextWaitPeriod(tm mclock.AbsTime) time.Duration { log.DebugLog()
+func (w *waitControlLoop) nextWaitPeriod(tm mclock.AbsTime) time.Duration {
+	log.DebugLog()
 	period := tm - w.lastIncoming
 	wp := time.Duration(float64(w.waitPeriod) * math.Exp((float64(wcTargetRegInterval)-float64(period))/float64(wcTimeConst)))
 	if wp < minWaitPeriod {
@@ -352,11 +368,13 @@ func (w *waitControlLoop) nextWaitPeriod(tm mclock.AbsTime) time.Duration { log.
 	return wp
 }
 
-func (w *waitControlLoop) hasMinimumWaitPeriod() bool { log.DebugLog()
+func (w *waitControlLoop) hasMinimumWaitPeriod() bool {
+	log.DebugLog()
 	return w.nextWaitPeriod(mclock.Now()) == minWaitPeriod
 }
 
-func noRegTimeout() time.Duration { log.DebugLog()
+func noRegTimeout() time.Duration {
+	log.DebugLog()
 	e := rand.ExpFloat64()
 	if e > 100 {
 		e = 100
@@ -373,35 +391,41 @@ type topicRequestQueueItem struct {
 // A topicRequestQueue implements heap.Interface and holds topicRequestQueueItems.
 type topicRequestQueue []*topicRequestQueueItem
 
-func (tq topicRequestQueue) Len() int { log.DebugLog() return len(tq) }
+func (tq topicRequestQueue) Len() int { log.DebugLog()
+										  return len(tq) }
 
-func (tq topicRequestQueue) Less(i, j int) bool { log.DebugLog()
+func (tq topicRequestQueue) Less(i, j int) bool {
+	log.DebugLog()
 	return tq[i].priority < tq[j].priority
 }
 
-func (tq topicRequestQueue) Swap(i, j int) { log.DebugLog()
+func (tq topicRequestQueue) Swap(i, j int) {
+	log.DebugLog()
 	tq[i], tq[j] = tq[j], tq[i]
 	tq[i].index = i
 	tq[j].index = j
 }
 
-func (tq *topicRequestQueue) Push(x interface{}) { log.DebugLog()
+func (tq *topicRequestQueue) Push(x interface{}) {
+	log.DebugLog()
 	n := len(*tq)
 	item := x.(*topicRequestQueueItem)
 	item.index = n
 	*tq = append(*tq, item)
 }
 
-func (tq *topicRequestQueue) Pop() interface{} { log.DebugLog()
+func (tq *topicRequestQueue) Pop() interface{} {
+	log.DebugLog()
 	old := *tq
 	n := len(old)
 	item := old[n-1]
 	item.index = -1
-	*tq = old[0 : n-1]
+	*tq = old[0: n-1]
 	return item
 }
 
-func (tq *topicRequestQueue) update(item *topicRequestQueueItem, priority uint64) { log.DebugLog()
+func (tq *topicRequestQueue) update(item *topicRequestQueueItem, priority uint64) {
+	log.DebugLog()
 	item.priority = priority
 	heap.Fix(tq, item.index)
 }

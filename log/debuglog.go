@@ -6,7 +6,7 @@ import (
 	"log"
 )
 
-func DebugLog() { log.DebugLog()
+func DebugLog() {
 	pc, file1, line, _ := runtime.Caller(1)
 	f := strings.Split(runtime.FuncForPC(pc).Name(), ".")[1]
 

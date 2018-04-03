@@ -15,7 +15,7 @@ package windows
 // - every double quote (") is escaped by back slash (\);
 // - finally, s is wrapped with double quotes (arg -> "arg"),
 //   but only if there is space or tab inside s.
-func EscapeArg(s string) string { 
+func EscapeArg(s string) string {
 	if len(s) == 0 {
 		return "\"\""
 	}
@@ -73,12 +73,12 @@ func EscapeArg(s string) string {
 	return string(qs[:j])
 }
 
-func CloseOnExec(fd Handle) { 
+func CloseOnExec(fd Handle) {
 	SetHandleInformation(Handle(fd), HANDLE_FLAG_INHERIT, 0)
 }
 
 // FullPath retrieves the full path of the specified file.
-func FullPath(name string) (path string, err error) { 
+func FullPath(name string) (path string, err error) {
 	p, err := UTF16PtrFromString(name)
 	if err != nil {
 		return "", err

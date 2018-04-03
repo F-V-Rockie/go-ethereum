@@ -16,14 +16,14 @@ const sep = string(os.PathSeparator)
 
 var errDepth = errors.New("exceeded allowed iteration count (circular symlink?)")
 
-func min(i, j int) int { 
+func min(i, j int) int {
 	if i > j {
 		return j
 	}
 	return i
 }
 
-func max(i, j int) int { 
+func max(i, j int) int {
 	if i < j {
 		return j
 	}
@@ -31,14 +31,14 @@ func max(i, j int) int {
 }
 
 // must panics if err is non-nil.
-func must(err error) { 
+func must(err error) {
 	if err != nil {
 		panic(err)
 	}
 }
 
 // nonil gives first non-nil error from the given arguments.
-func nonil(err ...error) error { 
+func nonil(err ...error) error {
 	for _, err := range err {
 		if err != nil {
 			return err
@@ -47,7 +47,7 @@ func nonil(err ...error) error {
 	return nil
 }
 
-func cleanpath(path string) (realpath string, isrec bool, err error) { 
+func cleanpath(path string) (realpath string, isrec bool, err error) {
 	if strings.HasSuffix(path, "...") {
 		isrec = true
 		path = path[:len(path)-3]
@@ -64,7 +64,7 @@ func cleanpath(path string) (realpath string, isrec bool, err error) {
 // canonical resolves any symlink in the given path and returns it in a clean form.
 // It expects the path to be absolute. It fails to resolve circular symlinks by
 // maintaining a simple iteration limit.
-func canonical(p string) (string, error) { 
+func canonical(p string) (string, error) {
 	p, err := filepath.Abs(p)
 	if err != nil {
 		return "", err
@@ -98,7 +98,7 @@ func canonical(p string) (string, error) {
 	return filepath.Clean(p), nil
 }
 
-func joinevents(events []Event) (e Event) { 
+func joinevents(events []Event) (e Event) {
 	if len(events) == 0 {
 		e = All
 	} else {
@@ -109,21 +109,21 @@ func joinevents(events []Event) (e Event) {
 	return
 }
 
-func split(s string) (string, string) { 
+func split(s string) (string, string) {
 	if i := lastIndexSep(s); i != -1 {
 		return s[:i], s[i+1:]
 	}
 	return "", s
 }
 
-func base(s string) string { 
+func base(s string) string {
 	if i := lastIndexSep(s); i != -1 {
 		return s[i+1:]
 	}
 	return s
 }
 
-func indexbase(root, name string) int { 
+func indexbase(root, name string) int {
 	if n, m := len(root), len(name); m >= n && name[:n] == root &&
 		(n == m || name[n] == os.PathSeparator) {
 		return min(n+1, m)
@@ -131,7 +131,7 @@ func indexbase(root, name string) int {
 	return -1
 }
 
-func indexSep(s string) int { 
+func indexSep(s string) int {
 	for i := 0; i < len(s); i++ {
 		if s[i] == os.PathSeparator {
 			return i
@@ -140,7 +140,7 @@ func indexSep(s string) int {
 	return -1
 }
 
-func lastIndexSep(s string) int { 
+func lastIndexSep(s string) int {
 	for i := len(s) - 1; i >= 0; i-- {
 		if s[i] == os.PathSeparator {
 			return i

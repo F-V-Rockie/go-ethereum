@@ -18,6 +18,7 @@ package common
 
 import (
 	"fmt"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // StorageSize is a wrapper around a float value that supports user friendly

@@ -20,6 +20,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // LoadJSON reads the given file and unmarshals its content.

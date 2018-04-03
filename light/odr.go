@@ -26,6 +26,7 @@ import (
 	"github.com/ethereum/go-ethereum/core"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethdb"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // NoOdr is the default context passed to an ODR capable function when the ODR
@@ -55,7 +56,8 @@ type TrieID struct {
 
 // StateTrieID returns a TrieID for a state trie belonging to a certain block
 // header.
-func StateTrieID(header *types.Header) *TrieID { log.DebugLog()
+func StateTrieID(header *types.Header) *TrieID {
+	log.DebugLog()
 	return &TrieID{
 		BlockHash:   header.Hash(),
 		BlockNumber: header.Number.Uint64(),
@@ -67,7 +69,8 @@ func StateTrieID(header *types.Header) *TrieID { log.DebugLog()
 // StorageTrieID returns a TrieID for a contract storage trie at a given account
 // of a given state trie. It also requires the root hash of the trie for
 // checking Merkle proofs.
-func StorageTrieID(state *TrieID, addrHash, root common.Hash) *TrieID { log.DebugLog()
+func StorageTrieID(state *TrieID, addrHash, root common.Hash) *TrieID {
+	log.DebugLog()
 	return &TrieID{
 		BlockHash:   state.BlockHash,
 		BlockNumber: state.BlockNumber,
@@ -85,7 +88,8 @@ type TrieRequest struct {
 }
 
 // StoreResult stores the retrieved data in local database
-func (req *TrieRequest) StoreResult(db ethdb.Database) { log.DebugLog()
+func (req *TrieRequest) StoreResult(db ethdb.Database) {
+	log.DebugLog()
 	req.Proof.Store(db)
 }
 
@@ -98,7 +102,8 @@ type CodeRequest struct {
 }
 
 // StoreResult stores the retrieved data in local database
-func (req *CodeRequest) StoreResult(db ethdb.Database) { log.DebugLog()
+func (req *CodeRequest) StoreResult(db ethdb.Database) {
+	log.DebugLog()
 	db.Put(req.Hash[:], req.Data)
 }
 
@@ -111,7 +116,8 @@ type BlockRequest struct {
 }
 
 // StoreResult stores the retrieved data in local database
-func (req *BlockRequest) StoreResult(db ethdb.Database) { log.DebugLog()
+func (req *BlockRequest) StoreResult(db ethdb.Database) {
+	log.DebugLog()
 	core.WriteBodyRLP(db, req.Hash, req.Number, req.Rlp)
 }
 
@@ -124,7 +130,8 @@ type ReceiptsRequest struct {
 }
 
 // StoreResult stores the retrieved data in local database
-func (req *ReceiptsRequest) StoreResult(db ethdb.Database) { log.DebugLog()
+func (req *ReceiptsRequest) StoreResult(db ethdb.Database) {
+	log.DebugLog()
 	core.WriteBlockReceipts(db, req.Hash, req.Number, req.Receipts)
 }
 
@@ -139,7 +146,8 @@ type ChtRequest struct {
 }
 
 // StoreResult stores the retrieved data in local database
-func (req *ChtRequest) StoreResult(db ethdb.Database) { log.DebugLog()
+func (req *ChtRequest) StoreResult(db ethdb.Database) {
+	log.DebugLog()
 	// if there is a canonical hash, there is a header too
 	core.WriteHeader(db, req.Header)
 	hash, num := req.Header.Hash(), req.Header.Number.Uint64()
@@ -159,7 +167,8 @@ type BloomRequest struct {
 }
 
 // StoreResult stores the retrieved data in local database
-func (req *BloomRequest) StoreResult(db ethdb.Database) { log.DebugLog()
+func (req *BloomRequest) StoreResult(db ethdb.Database) {
+	log.DebugLog()
 	for i, sectionIdx := range req.SectionIdxList {
 		sectionHead := core.GetCanonicalHash(db, (sectionIdx+1)*BloomTrieFrequency-1)
 		// if we don't have the canonical hash stored for this section head number, we'll still store it under

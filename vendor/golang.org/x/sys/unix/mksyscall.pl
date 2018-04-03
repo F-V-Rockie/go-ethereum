@@ -129,7 +129,7 @@ while(<>) {
 
 	# Go function header.
 	my $out_decl = @out ? sprintf(" (%s)", join(', ', @out)) : "";
-	$text .= sprintf "func %s(%s)%s { log.DebugLog()\n", $func, join(', ', @in), $out_decl;
+	$text .= sprintf "func %s(%s)%s {\n", $func, join(', ', @in), $out_decl;
 
 	# Check if err return available
 	my $errvar = "";

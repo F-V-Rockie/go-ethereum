@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"reflect"
 	"syscall"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 var (
@@ -32,7 +33,8 @@ var (
 	datadirInUseErrnos = map[uint]bool{11: true, 32: true, 35: true}
 )
 
-func convertFileLockError(err error) error { log.DebugLog()
+func convertFileLockError(err error) error {
+	log.DebugLog()
 	if errno, ok := err.(syscall.Errno); ok && datadirInUseErrnos[uint(errno)] {
 		return ErrDatadirUsed
 	}
@@ -46,7 +48,8 @@ type DuplicateServiceError struct {
 }
 
 // Error generates a textual representation of the duplicate service error.
-func (e *DuplicateServiceError) Error() string { log.DebugLog()
+func (e *DuplicateServiceError) Error() string {
+	log.DebugLog()
 	return fmt.Sprintf("duplicate service: %v", e.Kind)
 }
 
@@ -58,6 +61,7 @@ type StopError struct {
 }
 
 // Error generates a textual representation of the stop error.
-func (e *StopError) Error() string { log.DebugLog()
+func (e *StopError) Error() string {
+	log.DebugLog()
 	return fmt.Sprintf("server: %v, services: %v", e.Server, e.Services)
 }

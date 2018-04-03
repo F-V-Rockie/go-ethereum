@@ -7,7 +7,7 @@ type Assertions struct {
 }
 
 // New makes a new Assertions object for the specified TestingT.
-func New(t TestingT) *Assertions { 
+func New(t TestingT) *Assertions {
 	return &Assertions{
 		t: t,
 	}

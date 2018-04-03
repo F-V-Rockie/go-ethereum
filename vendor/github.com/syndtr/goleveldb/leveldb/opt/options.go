@@ -48,18 +48,18 @@ type Cacher interface {
 	New(capacity int) cache.Cacher
 }
 
-type Cacherfunc struct { 
+type CacherFunc struct {
 	NewFunc func(capacity int) cache.Cacher
 }
 
-func (f *CacherFunc) New(capacity int) cache.Cacher { 
-	if f.Newfunc != nil { 
+func (f *CacherFunc) New(capacity int) cache.Cacher {
+	if f.NewFunc != nil {
 		return f.NewFunc(capacity)
 	}
 	return nil
 }
 
-func noCacher(int) cache.Cacher {  return nil }
+func noCacher(int) cache.Cacher { return nil }
 
 var (
 	// LRUCacher is the LRU-cache algorithm.
@@ -72,7 +72,7 @@ var (
 // Compression is the 'sorted table' block compression algorithm to use.
 type Compression uint
 
-func (c Compression) String() string { 
+func (c Compression) String() string {
 	switch c {
 	case DefaultCompression:
 		return "default"
@@ -359,14 +359,14 @@ type Options struct {
 	WriteL0SlowdownTrigger int
 }
 
-func (o *Options) GetAltFilters() []filter.Filter { 
+func (o *Options) GetAltFilters() []filter.Filter {
 	if o == nil {
 		return nil
 	}
 	return o.AltFilters
 }
 
-func (o *Options) GetBlockCacher() Cacher { 
+func (o *Options) GetBlockCacher() Cacher {
 	if o == nil || o.BlockCacher == nil {
 		return DefaultBlockCacher
 	} else if o.BlockCacher == NoCacher {
@@ -375,7 +375,7 @@ func (o *Options) GetBlockCacher() Cacher {
 	return o.BlockCacher
 }
 
-func (o *Options) GetBlockCacheCapacity() int { 
+func (o *Options) GetBlockCacheCapacity() int {
 	if o == nil || o.BlockCacheCapacity == 0 {
 		return DefaultBlockCacheCapacity
 	} else if o.BlockCacheCapacity < 0 {
@@ -384,21 +384,21 @@ func (o *Options) GetBlockCacheCapacity() int {
 	return o.BlockCacheCapacity
 }
 
-func (o *Options) GetBlockRestartInterval() int { 
+func (o *Options) GetBlockRestartInterval() int {
 	if o == nil || o.BlockRestartInterval <= 0 {
 		return DefaultBlockRestartInterval
 	}
 	return o.BlockRestartInterval
 }
 
-func (o *Options) GetBlockSize() int { 
+func (o *Options) GetBlockSize() int {
 	if o == nil || o.BlockSize <= 0 {
 		return DefaultBlockSize
 	}
 	return o.BlockSize
 }
 
-func (o *Options) GetCompactionExpandLimit(level int) int { 
+func (o *Options) GetCompactionExpandLimit(level int) int {
 	factor := DefaultCompactionExpandLimitFactor
 	if o != nil && o.CompactionExpandLimitFactor > 0 {
 		factor = o.CompactionExpandLimitFactor
@@ -406,7 +406,7 @@ func (o *Options) GetCompactionExpandLimit(level int) int {
 	return o.GetCompactionTableSize(level+1) * factor
 }
 
-func (o *Options) GetCompactionGPOverlaps(level int) int { 
+func (o *Options) GetCompactionGPOverlaps(level int) int {
 	factor := DefaultCompactionGPOverlapsFactor
 	if o != nil && o.CompactionGPOverlapsFactor > 0 {
 		factor = o.CompactionGPOverlapsFactor
@@ -414,14 +414,14 @@ func (o *Options) GetCompactionGPOverlaps(level int) int {
 	return o.GetCompactionTableSize(level+2) * factor
 }
 
-func (o *Options) GetCompactionL0Trigger() int { 
+func (o *Options) GetCompactionL0Trigger() int {
 	if o == nil || o.CompactionL0Trigger == 0 {
 		return DefaultCompactionL0Trigger
 	}
 	return o.CompactionL0Trigger
 }
 
-func (o *Options) GetCompactionSourceLimit(level int) int { 
+func (o *Options) GetCompactionSourceLimit(level int) int {
 	factor := DefaultCompactionSourceLimitFactor
 	if o != nil && o.CompactionSourceLimitFactor > 0 {
 		factor = o.CompactionSourceLimitFactor
@@ -429,7 +429,7 @@ func (o *Options) GetCompactionSourceLimit(level int) int {
 	return o.GetCompactionTableSize(level+1) * factor
 }
 
-func (o *Options) GetCompactionTableSize(level int) int { 
+func (o *Options) GetCompactionTableSize(level int) int {
 	var (
 		base = DefaultCompactionTableSize
 		mult float64
@@ -450,7 +450,7 @@ func (o *Options) GetCompactionTableSize(level int) int {
 	return int(float64(base) * mult)
 }
 
-func (o *Options) GetCompactionTotalSize(level int) int64 { 
+func (o *Options) GetCompactionTotalSize(level int) int64 {
 	var (
 		base = DefaultCompactionTotalSize
 		mult float64
@@ -471,91 +471,91 @@ func (o *Options) GetCompactionTotalSize(level int) int64 {
 	return int64(float64(base) * mult)
 }
 
-func (o *Options) GetComparer() comparer.Comparer { 
+func (o *Options) GetComparer() comparer.Comparer {
 	if o == nil || o.Comparer == nil {
 		return comparer.DefaultComparer
 	}
 	return o.Comparer
 }
 
-func (o *Options) GetCompression() Compression { 
+func (o *Options) GetCompression() Compression {
 	if o == nil || o.Compression <= DefaultCompression || o.Compression >= nCompression {
 		return DefaultCompressionType
 	}
 	return o.Compression
 }
 
-func (o *Options) GetDisableBufferPool() bool { 
+func (o *Options) GetDisableBufferPool() bool {
 	if o == nil {
 		return false
 	}
 	return o.DisableBufferPool
 }
 
-func (o *Options) GetDisableBlockCache() bool { 
+func (o *Options) GetDisableBlockCache() bool {
 	if o == nil {
 		return false
 	}
 	return o.DisableBlockCache
 }
 
-func (o *Options) GetDisableCompactionBackoff() bool { 
+func (o *Options) GetDisableCompactionBackoff() bool {
 	if o == nil {
 		return false
 	}
 	return o.DisableCompactionBackoff
 }
 
-func (o *Options) GetDisableLargeBatchTransaction() bool { 
+func (o *Options) GetDisableLargeBatchTransaction() bool {
 	if o == nil {
 		return false
 	}
 	return o.DisableLargeBatchTransaction
 }
 
-func (o *Options) GetErrorIfExist() bool { 
+func (o *Options) GetErrorIfExist() bool {
 	if o == nil {
 		return false
 	}
 	return o.ErrorIfExist
 }
 
-func (o *Options) GetErrorIfMissing() bool { 
+func (o *Options) GetErrorIfMissing() bool {
 	if o == nil {
 		return false
 	}
 	return o.ErrorIfMissing
 }
 
-func (o *Options) GetFilter() filter.Filter { 
+func (o *Options) GetFilter() filter.Filter {
 	if o == nil {
 		return nil
 	}
 	return o.Filter
 }
 
-func (o *Options) GetIteratorSamplingRate() int { 
+func (o *Options) GetIteratorSamplingRate() int {
 	if o == nil || o.IteratorSamplingRate <= 0 {
 		return DefaultIteratorSamplingRate
 	}
 	return o.IteratorSamplingRate
 }
 
-func (o *Options) GetNoSync() bool { 
+func (o *Options) GetNoSync() bool {
 	if o == nil {
 		return false
 	}
 	return o.NoSync
 }
 
-func (o *Options) GetNoWriteMerge() bool { 
+func (o *Options) GetNoWriteMerge() bool {
 	if o == nil {
 		return false
 	}
 	return o.NoWriteMerge
 }
 
-func (o *Options) GetOpenFilesCacher() Cacher { 
+func (o *Options) GetOpenFilesCacher() Cacher {
 	if o == nil || o.OpenFilesCacher == nil {
 		return DefaultOpenFilesCacher
 	}
@@ -565,7 +565,7 @@ func (o *Options) GetOpenFilesCacher() Cacher {
 	return o.OpenFilesCacher
 }
 
-func (o *Options) GetOpenFilesCacheCapacity() int { 
+func (o *Options) GetOpenFilesCacheCapacity() int {
 	if o == nil || o.OpenFilesCacheCapacity == 0 {
 		return DefaultOpenFilesCacheCapacity
 	} else if o.OpenFilesCacheCapacity < 0 {
@@ -574,35 +574,35 @@ func (o *Options) GetOpenFilesCacheCapacity() int {
 	return o.OpenFilesCacheCapacity
 }
 
-func (o *Options) GetReadOnly() bool { 
+func (o *Options) GetReadOnly() bool {
 	if o == nil {
 		return false
 	}
 	return o.ReadOnly
 }
 
-func (o *Options) GetStrict(strict Strict) bool { 
+func (o *Options) GetStrict(strict Strict) bool {
 	if o == nil || o.Strict == 0 {
 		return DefaultStrict&strict != 0
 	}
 	return o.Strict&strict != 0
 }
 
-func (o *Options) GetWriteBuffer() int { 
+func (o *Options) GetWriteBuffer() int {
 	if o == nil || o.WriteBuffer <= 0 {
 		return DefaultWriteBuffer
 	}
 	return o.WriteBuffer
 }
 
-func (o *Options) GetWriteL0PauseTrigger() int { 
+func (o *Options) GetWriteL0PauseTrigger() int {
 	if o == nil || o.WriteL0PauseTrigger == 0 {
 		return DefaultWriteL0PauseTrigger
 	}
 	return o.WriteL0PauseTrigger
 }
 
-func (o *Options) GetWriteL0SlowdownTrigger() int { 
+func (o *Options) GetWriteL0SlowdownTrigger() int {
 	if o == nil || o.WriteL0SlowdownTrigger == 0 {
 		return DefaultWriteL0SlowdownTrigger
 	}
@@ -624,14 +624,14 @@ type ReadOptions struct {
 	Strict Strict
 }
 
-func (ro *ReadOptions) GetDontFillCache() bool { 
+func (ro *ReadOptions) GetDontFillCache() bool {
 	if ro == nil {
 		return false
 	}
 	return ro.DontFillCache
 }
 
-func (ro *ReadOptions) GetStrict(strict Strict) bool { 
+func (ro *ReadOptions) GetStrict(strict Strict) bool {
 	if ro == nil {
 		return false
 	}
@@ -661,21 +661,21 @@ type WriteOptions struct {
 	Sync bool
 }
 
-func (wo *WriteOptions) GetNoWriteMerge() bool { 
+func (wo *WriteOptions) GetNoWriteMerge() bool {
 	if wo == nil {
 		return false
 	}
 	return wo.NoWriteMerge
 }
 
-func (wo *WriteOptions) GetSync() bool { 
+func (wo *WriteOptions) GetSync() bool {
 	if wo == nil {
 		return false
 	}
 	return wo.Sync
 }
 
-func GetStrict(o *Options, ro *ReadOptions, strict Strict) bool { 
+func GetStrict(o *Options, ro *ReadOptions, strict Strict) bool {
 	if ro.GetStrict(StrictOverride) {
 		return ro.GetStrict(strict)
 	} else {

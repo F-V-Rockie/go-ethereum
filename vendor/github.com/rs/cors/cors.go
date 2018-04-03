@@ -94,7 +94,7 @@ type Cors struct {
 }
 
 // New creates a new Cors handler with the provided options.
-func New(options Options) *Cors { 
+func New(options Options) *Cors {
 	c := &Cors{
 		exposedHeaders:    convert(options.ExposedHeaders, http.CanonicalHeaderKey),
 		allowOriginFunc:   options.AllowOriginFunc,
@@ -164,13 +164,13 @@ func New(options Options) *Cors {
 }
 
 // Default creates a new Cors handler with default options
-func Default() *Cors { 
+func Default() *Cors {
 	return New(Options{})
 }
 
 // Handler apply the CORS specification on the request, and add relevant CORS headers
 // as necessary.
-func (c *Cors) Handler(h http.Handler) http.Handler { 
+func (c *Cors) Handler(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "OPTIONS" {
 			c.logf("Handler: Preflight request")
@@ -193,7 +193,7 @@ func (c *Cors) Handler(h http.Handler) http.Handler {
 }
 
 // HandlerC is net/context aware handler
-func (c *Cors) HandlerC(h xhandler.HandlerC) xhandler.HandlerC { 
+func (c *Cors) HandlerC(h xhandler.HandlerC) xhandler.HandlerC {
 	return xhandler.HandlerFuncC(func(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 		if r.Method == "OPTIONS" {
 			c.logf("Handler: Preflight request")
@@ -216,7 +216,7 @@ func (c *Cors) HandlerC(h xhandler.HandlerC) xhandler.HandlerC {
 }
 
 // HandlerFunc provides Martini compatible handler
-func (c *Cors) HandlerFunc(w http.ResponseWriter, r *http.Request) { 
+func (c *Cors) HandlerFunc(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "OPTIONS" {
 		c.logf("HandlerFunc: Preflight request")
 		c.handlePreflight(w, r)
@@ -227,7 +227,7 @@ func (c *Cors) HandlerFunc(w http.ResponseWriter, r *http.Request) {
 }
 
 // Negroni compatible interface
-func (c *Cors) ServeHTTP(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) { 
+func (c *Cors) ServeHTTP(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	if r.Method == "OPTIONS" {
 		c.logf("ServeHTTP: Preflight request")
 		c.handlePreflight(w, r)
@@ -248,7 +248,7 @@ func (c *Cors) ServeHTTP(w http.ResponseWriter, r *http.Request, next http.Handl
 }
 
 // handlePreflight handles pre-flight CORS requests
-func (c *Cors) handlePreflight(w http.ResponseWriter, r *http.Request) { 
+func (c *Cors) handlePreflight(w http.ResponseWriter, r *http.Request) {
 	headers := w.Header()
 	origin := r.Header.Get("Origin")
 
@@ -302,7 +302,7 @@ func (c *Cors) handlePreflight(w http.ResponseWriter, r *http.Request) {
 }
 
 // handleActualRequest handles simple cross-origin requests, actual request or redirects
-func (c *Cors) handleActualRequest(w http.ResponseWriter, r *http.Request) { 
+func (c *Cors) handleActualRequest(w http.ResponseWriter, r *http.Request) {
 	headers := w.Header()
 	origin := r.Header.Get("Origin")
 
@@ -341,7 +341,7 @@ func (c *Cors) handleActualRequest(w http.ResponseWriter, r *http.Request) {
 }
 
 // convenience method. checks if debugging is turned on before printing
-func (c *Cors) logf(format string, a ...interface{}) { 
+func (c *Cors) logf(format string, a ...interface{}) {
 	if c.Log != nil {
 		c.Log.Printf(format, a...)
 	}
@@ -349,8 +349,8 @@ func (c *Cors) logf(format string, a ...interface{}) {
 
 // isOriginAllowed checks if a given origin is allowed to perform cross-domain requests
 // on the endpoint
-func (c *Cors) isOriginAllowed(origin string) bool { 
-	if c.allowOriginfunc != nil { 
+func (c *Cors) isOriginAllowed(origin string) bool {
+	if c.allowOriginFunc != nil {
 		return c.allowOriginFunc(origin)
 	}
 	if c.allowedOriginsAll {
@@ -372,7 +372,7 @@ func (c *Cors) isOriginAllowed(origin string) bool {
 
 // isMethodAllowed checks if a given method can be used as part of a cross-domain request
 // on the endpoing
-func (c *Cors) isMethodAllowed(method string) bool { 
+func (c *Cors) isMethodAllowed(method string) bool {
 	if len(c.allowedMethods) == 0 {
 		// If no method allowed, always return false, even for preflight request
 		return false
@@ -392,7 +392,7 @@ func (c *Cors) isMethodAllowed(method string) bool {
 
 // areHeadersAllowed checks if a given list of headers are allowed to used within
 // a cross-domain request.
-func (c *Cors) areHeadersAllowed(requestedHeaders []string) bool { 
+func (c *Cors) areHeadersAllowed(requestedHeaders []string) bool {
 	if c.allowedHeadersAll || len(requestedHeaders) == 0 {
 		return true
 	}

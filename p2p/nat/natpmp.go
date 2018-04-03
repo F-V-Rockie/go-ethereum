@@ -23,6 +23,7 @@ import (
 	"time"
 
 	"github.com/jackpal/go-nat-pmp"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // natPMPClient adapts the NAT-PMP protocol implementation so it conforms to

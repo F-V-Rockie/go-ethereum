@@ -18,6 +18,7 @@ import (
 	"errors"
 	"io"
 	"math/big"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 func randomK(r io.Reader) (k *big.Int, err error) { log.DebugLog()

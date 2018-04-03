@@ -28,7 +28,7 @@ type SymmetricKeyEncrypted struct {
 
 const symmetricKeyEncryptedVersion = 4
 
-func (ske *SymmetricKeyEncrypted) parse(r io.Reader) error { 
+func (ske *SymmetricKeyEncrypted) parse(r io.Reader) error {
 	// RFC 4880, section 5.3.
 	var buf [2]byte
 	if _, err := readFull(r, buf[:]); err != nil {
@@ -70,7 +70,7 @@ func (ske *SymmetricKeyEncrypted) parse(r io.Reader) error {
 // Decrypt attempts to decrypt an encrypted session key and returns the key and
 // the cipher to use when decrypting a subsequent Symmetrically Encrypted Data
 // packet.
-func (ske *SymmetricKeyEncrypted) Decrypt(passphrase []byte) ([]byte, CipherFunction, error) { 
+func (ske *SymmetricKeyEncrypted) Decrypt(passphrase []byte) ([]byte, CipherFunction, error) {
 	key := make([]byte, ske.CipherFunc.KeySize())
 	ske.s2k(key, passphrase)
 
@@ -100,7 +100,7 @@ func (ske *SymmetricKeyEncrypted) Decrypt(passphrase []byte) ([]byte, CipherFunc
 // given passphrase. The session key is returned and must be passed to
 // SerializeSymmetricallyEncrypted.
 // If config is nil, sensible defaults will be used.
-func SerializeSymmetricKeyEncrypted(w io.Writer, passphrase []byte, config *Config) (key []byte, err error) { 
+func SerializeSymmetricKeyEncrypted(w io.Writer, passphrase []byte, config *Config) (key []byte, err error) {
 	cipherFunc := config.Cipher()
 	keySize := cipherFunc.KeySize()
 	if keySize == 0 {

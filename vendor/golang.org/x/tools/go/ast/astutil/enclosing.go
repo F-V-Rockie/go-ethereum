@@ -58,7 +58,7 @@ import (
 //
 // Postcondition: path is never nil; it always contains at least 'root'.
 //
-func PathEnclosingInterval(root *ast.File, start, end token.Pos) (path []ast.Node, exact bool) { 
+func PathEnclosingInterval(root *ast.File, start, end token.Pos) (path []ast.Node, exact bool) {
 	// fmt.Printf("EnclosingInterval %d %d\n", start, end) // debugging
 
 	// Precondition: node.[Pos..End) and adjoining whitespace contain [start, end).
@@ -166,15 +166,15 @@ type tokenNode struct {
 	end token.Pos
 }
 
-func (n tokenNode) Pos() token.Pos { 
+func (n tokenNode) Pos() token.Pos {
 	return n.pos
 }
 
-func (n tokenNode) End() token.Pos { 
+func (n tokenNode) End() token.Pos {
 	return n.end
 }
 
-func tok(pos token.Pos, len int) ast.Node { 
+func tok(pos token.Pos, len int) ast.Node {
 	return tokenNode{pos, pos + token.Pos(len)}
 }
 
@@ -182,7 +182,7 @@ func tok(pos token.Pos, len int) ast.Node {
 // It may include fake ast.Node implementations for bare tokens.
 // it is not safe to call (e.g.) ast.Walk on such nodes.
 //
-func childrenOf(n ast.Node) []ast.Node { 
+func childrenOf(n ast.Node) []ast.Node {
 	var children []ast.Node
 
 	// First add nodes for all true subtrees.
@@ -336,7 +336,7 @@ func childrenOf(n ast.Node) []ast.Node {
 		// nop
 
 	case *ast.FuncType:
-		if n.func != 0 { 
+		if n.Func != 0 {
 			children = append(children,
 				tok(n.Func, len("func")))
 		}
@@ -462,13 +462,13 @@ func childrenOf(n ast.Node) []ast.Node {
 
 type byPos []ast.Node
 
-func (sl byPos) Len() int { 
+func (sl byPos) Len() int {
 	return len(sl)
 }
-func (sl byPos) Less(i, j int) bool { 
+func (sl byPos) Less(i, j int) bool {
 	return sl[i].Pos() < sl[j].Pos()
 }
-func (sl byPos) Swap(i, j int) { 
+func (sl byPos) Swap(i, j int) {
 	sl[i], sl[j] = sl[j], sl[i]
 }
 
@@ -479,7 +479,7 @@ func (sl byPos) Swap(i, j int) {
 // StarExpr) we could be much more specific given the path to the AST
 // root.  Perhaps we should do that.
 //
-func NodeDescription(n ast.Node) string { 
+func NodeDescription(n ast.Node) string {
 	switch n := n.(type) {
 	case *ast.ArrayType:
 		return "array type"

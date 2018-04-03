@@ -22,6 +22,7 @@ import (
 	"runtime"
 	"runtime/debug"
 	"strings"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // Report gives off a warning requesting the user to submit an issue to the github tracker.

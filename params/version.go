@@ -18,6 +18,7 @@ package params
 
 import (
 	"fmt"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 const (
@@ -36,7 +37,8 @@ var Version = func() string {
 	return v
 }()
 
-func VersionWithCommit(gitCommit string) string { log.DebugLog()
+func VersionWithCommit(gitCommit string) string {
+	log.DebugLog()
 	vsn := Version
 	if len(gitCommit) >= 8 {
 		vsn += "-" + gitCommit[:8]

@@ -17,7 +17,10 @@
 // Package common contains various helper functions.
 package common
 
-import "encoding/hex"
+import (
+	"encoding/hex"
+	"github.com/ethereum/go-ethereum/log"
+)
 
 func ToHex(b []byte) string { log.DebugLog()
 	hex := Bytes2Hex(b)

@@ -21,15 +21,15 @@ type attr struct {
 	padding   uint32
 }
 
-func (a *attr) Crtime() time.Time { 
+func (a *attr) Crtime() time.Time {
 	return time.Time{}
 }
 
-func (a *attr) SetCrtime(s uint64, ns uint32) { 
+func (a *attr) SetCrtime(s uint64, ns uint32) {
 	// Ignored on Linux.
 }
 
-func (a *attr) SetFlags(f uint32) { 
+func (a *attr) SetFlags(f uint32) {
 	// Ignored on Linux.
 }
 
@@ -37,19 +37,19 @@ type setattrIn struct {
 	setattrInCommon
 }
 
-func (in *setattrIn) BkupTime() time.Time { 
+func (in *setattrIn) BkupTime() time.Time {
 	return time.Time{}
 }
 
-func (in *setattrIn) Chgtime() time.Time { 
+func (in *setattrIn) Chgtime() time.Time {
 	return time.Time{}
 }
 
-func (in *setattrIn) Flags() uint32 { 
+func (in *setattrIn) Flags() uint32 {
 	return 0
 }
 
-func openFlags(flags uint32) OpenFlags { 
+func openFlags(flags uint32) OpenFlags {
 	// on amd64, the 32-bit O_LARGEFILE flag is always seen;
 	// on i386, the flag probably depends on the app
 	// requesting, but in any case should be utterly

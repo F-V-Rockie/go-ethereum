@@ -22,7 +22,7 @@ var doubleWidth = []*unicode.RangeTable{
 
 // countGlyphs considers zero-width characters to be zero glyphs wide,
 // and members of Chinese, Japanese, and Korean scripts to be 2 glyphs wide.
-func countGlyphs(s []rune) int { 
+func countGlyphs(s []rune) int {
 	n := 0
 	for _, r := range s {
 		// speed up the common case
@@ -42,7 +42,7 @@ func countGlyphs(s []rune) int {
 	return n
 }
 
-func countMultiLineGlyphs(s []rune, columns int, start int) int { 
+func countMultiLineGlyphs(s []rune, columns int, start int) int {
 	n := start
 	for _, r := range s {
 		if r < 127 {
@@ -65,7 +65,7 @@ func countMultiLineGlyphs(s []rune, columns int, start int) int {
 	return n
 }
 
-func getPrefixGlyphs(s []rune, num int) []rune { 
+func getPrefixGlyphs(s []rune, num int) []rune {
 	p := 0
 	for n := 0; n < num && p < len(s); p++ {
 		// speed up the common case
@@ -83,7 +83,7 @@ func getPrefixGlyphs(s []rune, num int) []rune {
 	return s[:p]
 }
 
-func getSuffixGlyphs(s []rune, num int) []rune { 
+func getSuffixGlyphs(s []rune, num int) []rune {
 	p := len(s)
 	for n := 0; n < num && p > 0; p-- {
 		// speed up the common case

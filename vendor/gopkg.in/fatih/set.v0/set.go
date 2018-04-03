@@ -34,7 +34,7 @@ var keyExists = struct{}{}
 //
 // The dynamic type of the returned set is determined by the first passed set's
 // implementation of the New() method.
-func Union(set1, set2 Interface, sets ...Interface) Interface { 
+func Union(set1, set2 Interface, sets ...Interface) Interface {
 	u := set1.Copy()
 	set2.Each(func(item interface{}) bool {
 		u.Add(item)
@@ -53,7 +53,7 @@ func Union(set1, set2 Interface, sets ...Interface) Interface {
 // Difference returns a new set which contains items which are in in the first
 // set but not in the others. Unlike the Difference() method you can use this
 // function separately with multiple sets.
-func Difference(set1, set2 Interface, sets ...Interface) Interface { 
+func Difference(set1, set2 Interface, sets ...Interface) Interface {
 	s := set1.Copy()
 	s.Separate(set2)
 	for _, set := range sets {
@@ -63,7 +63,7 @@ func Difference(set1, set2 Interface, sets ...Interface) Interface {
 }
 
 // Intersection returns a new set which contains items that only exist in all given sets.
-func Intersection(set1, set2 Interface, sets ...Interface) Interface { 
+func Intersection(set1, set2 Interface, sets ...Interface) Interface {
 	all := Union(set1, set2, sets...)
 	result := Union(set1, set2, sets...)
 
@@ -84,7 +84,7 @@ func Intersection(set1, set2 Interface, sets ...Interface) Interface {
 
 // SymmetricDifference returns a new set which s is the difference of items which are in
 // one of either, but not in both.
-func SymmetricDifference(s Interface, t Interface) Interface { 
+func SymmetricDifference(s Interface, t Interface) Interface {
 	u := Difference(s, t)
 	v := Difference(t, s)
 	return Union(u, v)
@@ -92,7 +92,7 @@ func SymmetricDifference(s Interface, t Interface) Interface {
 
 // StringSlice is a helper function that returns a slice of strings of s. If
 // the set contains mixed types of items only items of type string are returned.
-func StringSlice(s Interface) []string { 
+func StringSlice(s Interface) []string {
 	slice := make([]string, 0)
 	for _, item := range s.List() {
 		v, ok := item.(string)
@@ -107,7 +107,7 @@ func StringSlice(s Interface) []string {
 
 // IntSlice is a helper function that returns a slice of ints of s. If
 // the set contains mixed types of items only items of type int are returned.
-func IntSlice(s Interface) []int { 
+func IntSlice(s Interface) []int {
 	slice := make([]int, 0)
 	for _, item := range s.List() {
 		v, ok := item.(int)

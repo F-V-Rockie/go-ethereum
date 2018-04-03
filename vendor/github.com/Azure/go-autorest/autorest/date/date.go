@@ -24,59 +24,59 @@ type Date struct {
 }
 
 // ParseDate create a new Date from the passed string.
-func ParseDate(date string) (d Date, err error) { 
+func ParseDate(date string) (d Date, err error) {
 	return parseDate(date, fullDate)
 }
 
-func parseDate(date string, format string) (Date, error) { 
+func parseDate(date string, format string) (Date, error) {
 	d, err := time.Parse(format, date)
 	return Date{Time: d}, err
 }
 
 // MarshalBinary preserves the Date as a byte array conforming to RFC3339 full-date (i.e.,
 // 2006-01-02).
-func (d Date) MarshalBinary() ([]byte, error) { 
+func (d Date) MarshalBinary() ([]byte, error) {
 	return d.MarshalText()
 }
 
 // UnmarshalBinary reconstitutes a Date saved as a byte array conforming to RFC3339 full-date (i.e.,
 // 2006-01-02).
-func (d *Date) UnmarshalBinary(data []byte) error { 
+func (d *Date) UnmarshalBinary(data []byte) error {
 	return d.UnmarshalText(data)
 }
 
 // MarshalJSON preserves the Date as a JSON string conforming to RFC3339 full-date (i.e.,
 // 2006-01-02).
-func (d Date) MarshalJSON() (json []byte, err error) { 
+func (d Date) MarshalJSON() (json []byte, err error) {
 	return []byte(fmt.Sprintf(jsonFormat, d.Year(), d.Month(), d.Day())), nil
 }
 
 // UnmarshalJSON reconstitutes the Date from a JSON string conforming to RFC3339 full-date (i.e.,
 // 2006-01-02).
-func (d *Date) UnmarshalJSON(data []byte) (err error) { 
+func (d *Date) UnmarshalJSON(data []byte) (err error) {
 	d.Time, err = time.Parse(fullDateJSON, string(data))
 	return err
 }
 
 // MarshalText preserves the Date as a byte array conforming to RFC3339 full-date (i.e.,
 // 2006-01-02).
-func (d Date) MarshalText() (text []byte, err error) { 
+func (d Date) MarshalText() (text []byte, err error) {
 	return []byte(fmt.Sprintf(dateFormat, d.Year(), d.Month(), d.Day())), nil
 }
 
 // UnmarshalText reconstitutes a Date saved as a byte array conforming to RFC3339 full-date (i.e.,
 // 2006-01-02).
-func (d *Date) UnmarshalText(data []byte) (err error) { 
+func (d *Date) UnmarshalText(data []byte) (err error) {
 	d.Time, err = time.Parse(fullDate, string(data))
 	return err
 }
 
 // String returns the Date formatted as an RFC3339 full-date string (i.e., 2006-01-02).
-func (d Date) String() string { 
+func (d Date) String() string {
 	return fmt.Sprintf(dateFormat, d.Year(), d.Month(), d.Day())
 }
 
 // ToTime returns a Date as a time.Time
-func (d Date) ToTime() time.Time { 
+func (d Date) ToTime() time.Time {
 	return d.Time
 }

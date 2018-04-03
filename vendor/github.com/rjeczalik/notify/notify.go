@@ -60,7 +60,7 @@ var defaultTree = newTree()
 // mind this limitation while setting recursive watchpoints for your application,
 // e.g. use persistent paths like %userprofile% or watch additionally parent
 // directory of a recursive watchpoint in order to receive delete events for it.
-func Watch(path string, c chan<- EventInfo, events ...Event) error { 
+func Watch(path string, c chan<- EventInfo, events ...Event) error {
 	return defaultTree.Watch(path, c, events...)
 }
 
@@ -69,6 +69,6 @@ func Watch(path string, c chan<- EventInfo, events ...Event) error {
 //
 // Stop does not close c. When Stop returns, it is guaranteed that c will
 // receive no more signals.
-func Stop(c chan<- EventInfo) { 
+func Stop(c chan<- EventInfo) {
 	defaultTree.Stop(c)
 }

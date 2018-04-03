@@ -10,6 +10,6 @@ const (
 	errNoXattr = ENOATTR
 )
 
-func init() { 
+func init() {
 	errnoNames[errNoXattr] = "ENOATTR"
 }

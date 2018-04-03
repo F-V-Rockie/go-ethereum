@@ -17,7 +17,7 @@ var allSuites []interface{}
 // Suite registers the given value as a test suite to be run. Any methods
 // starting with the Test prefix in the given value will be considered as
 // a test method.
-func Suite(suite interface{}) interface{} { 
+func Suite(suite interface{}) interface{} {
 	allSuites = append(allSuites, suite)
 	return suite
 }
@@ -47,7 +47,7 @@ var (
 // TestingT runs all test suites registered with the Suite function,
 // printing results to stdout, and reporting any failures back to
 // the "testing" package.
-func TestingT(testingT *testing.T) { 
+func TestingT(testingT *testing.T) {
 	benchTime := *newBenchTime
 	if benchTime == 1*time.Second {
 		benchTime = *oldBenchTime
@@ -78,7 +78,7 @@ func TestingT(testingT *testing.T) {
 
 // RunAll runs all test suites registered with the Suite function, using the
 // provided run configuration.
-func RunAll(runConf *RunConf) *Result { 
+func RunAll(runConf *RunConf) *Result {
 	result := Result{}
 	for _, suite := range allSuites {
 		result.Add(Run(suite, runConf))
@@ -87,14 +87,14 @@ func RunAll(runConf *RunConf) *Result {
 }
 
 // Run runs the provided test suite using the provided run configuration.
-func Run(suite interface{}, runConf *RunConf) *Result { 
+func Run(suite interface{}, runConf *RunConf) *Result {
 	runner := newSuiteRunner(suite, runConf)
 	return runner.run()
 }
 
 // ListAll returns the names of all the test functions registered with the
 // Suite function that will be run with the provided run configuration.
-func ListAll(runConf *RunConf) []string { 
+func ListAll(runConf *RunConf) []string {
 	var names []string
 	for _, suite := range allSuites {
 		names = append(names, List(suite, runConf)...)
@@ -104,7 +104,7 @@ func ListAll(runConf *RunConf) []string {
 
 // List returns the names of the test functions in the given
 // suite that will be run with the provided run configuration.
-func List(suite interface{}, runConf *RunConf) []string { 
+func List(suite interface{}, runConf *RunConf) []string {
 	var names []string
 	runner := newSuiteRunner(suite, runConf)
 	for _, t := range runner.tests {
@@ -116,7 +116,7 @@ func List(suite interface{}, runConf *RunConf) []string {
 // -----------------------------------------------------------------------
 // Result methods.
 
-func (r *Result) Add(other *Result) { 
+func (r *Result) Add(other *Result) {
 	r.Succeeded += other.Succeeded
 	r.Skipped += other.Skipped
 	r.Failed += other.Failed
@@ -131,13 +131,13 @@ func (r *Result) Add(other *Result) {
 	}
 }
 
-func (r *Result) Passed() bool { 
+func (r *Result) Passed() bool {
 	return (r.Failed == 0 && r.Panicked == 0 &&
 		r.FixturePanicked == 0 && r.Missed == 0 &&
 		r.RunError == nil)
 }
 
-func (r *Result) String() string { 
+func (r *Result) String() string {
 	if r.RunError != nil {
 		return "ERROR: " + r.RunError.Error()
 	}

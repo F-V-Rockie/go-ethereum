@@ -22,6 +22,7 @@ import (
 	"math/big"
 	"reflect"
 	"sync"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 var (

@@ -26,7 +26,7 @@ const maxReaders = 32
 
 // Next returns the most recently unread Packet, or reads another packet from
 // the top-most io.Reader. Unknown packet types are skipped.
-func (r *Reader) Next() (p Packet, err error) { 
+func (r *Reader) Next() (p Packet, err error) {
 	if len(r.q) > 0 {
 		p = r.q[len(r.q)-1]
 		r.q = r.q[:len(r.q)-1]
@@ -55,7 +55,7 @@ func (r *Reader) Next() (p Packet, err error) {
 // to read from the next most recent io.Reader. Push returns a StructuralError
 // if pushing the reader would exceed the maximum recursion level, otherwise it
 // returns nil.
-func (r *Reader) Push(reader io.Reader) (err error) { 
+func (r *Reader) Push(reader io.Reader) (err error) {
 	if len(r.readers) >= maxReaders {
 		return errors.StructuralError("too many layers of packets")
 	}
@@ -64,11 +64,11 @@ func (r *Reader) Push(reader io.Reader) (err error) {
 }
 
 // Unread causes the given Packet to be returned from the next call to Next.
-func (r *Reader) Unread(p Packet) { 
+func (r *Reader) Unread(p Packet) {
 	r.q = append(r.q, p)
 }
 
-func NewReader(r io.Reader) *Reader { 
+func NewReader(r io.Reader) *Reader {
 	return &Reader{
 		q:       nil,
 		readers: []io.Reader{r},

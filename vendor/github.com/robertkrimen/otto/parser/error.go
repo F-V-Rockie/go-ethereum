@@ -56,7 +56,7 @@ type Error struct {
 
 // FIXME Should this be "SyntaxError"?
 
-func (self Error) Error() string { 
+func (self Error) Error() string {
 	filename := self.Position.Filename
 	if filename == "" {
 		filename = "(anonymous)"
@@ -69,7 +69,7 @@ func (self Error) Error() string {
 	)
 }
 
-func (self *_parser) error(place interface{}, msg string, msgValues ...interface{}) *Error { 
+func (self *_parser) error(place interface{}, msg string, msgValues ...interface{}) *Error {
 	idx := file.Idx(0)
 	switch place := place.(type) {
 	case int:
@@ -90,14 +90,14 @@ func (self *_parser) error(place interface{}, msg string, msgValues ...interface
 	return self.errors[len(self.errors)-1]
 }
 
-func (self *_parser) errorUnexpected(idx file.Idx, chr rune) error { 
+func (self *_parser) errorUnexpected(idx file.Idx, chr rune) error {
 	if chr == -1 {
 		return self.error(idx, err_UnexpectedEndOfInput)
 	}
 	return self.error(idx, err_UnexpectedToken, token.ILLEGAL)
 }
 
-func (self *_parser) errorUnexpectedToken(tkn token.Token) error { 
+func (self *_parser) errorUnexpectedToken(tkn token.Token) error {
 	switch tkn {
 	case token.EOF:
 		return self.error(file.Idx(0), err_UnexpectedEndOfInput)
@@ -124,16 +124,16 @@ func (self *_parser) errorUnexpectedToken(tkn token.Token) error {
 type ErrorList []*Error
 
 // Add adds an Error with given position and message to an ErrorList.
-func (self *ErrorList) Add(position file.Position, msg string) { 
+func (self *ErrorList) Add(position file.Position, msg string) {
 	*self = append(*self, &Error{position, msg})
 }
 
 // Reset resets an ErrorList to no errors.
-func (self *ErrorList) Reset() {  *self = (*self)[0:0] }
+func (self *ErrorList) Reset() { *self = (*self)[0:0] }
 
-func (self ErrorList) Len() int      {  return len(self) }
-func (self ErrorList) Swap(i, j int) {  self[i], self[j] = self[j], self[i] }
-func (self ErrorList) Less(i, j int) bool { 
+func (self ErrorList) Len() int      { return len(self) }
+func (self ErrorList) Swap(i, j int) { self[i], self[j] = self[j], self[i] }
+func (self ErrorList) Less(i, j int) bool {
 	x := &self[i].Position
 	y := &self[j].Position
 	if x.Filename < y.Filename {
@@ -150,12 +150,12 @@ func (self ErrorList) Less(i, j int) bool {
 	return false
 }
 
-func (self ErrorList) Sort() { 
+func (self ErrorList) Sort() {
 	sort.Sort(self)
 }
 
 // Error implements the Error interface.
-func (self ErrorList) Error() string { 
+func (self ErrorList) Error() string {
 	switch len(self) {
 	case 0:
 		return "no errors"
@@ -167,7 +167,7 @@ func (self ErrorList) Error() string {
 
 // Err returns an error equivalent to this ErrorList.
 // If the list is empty, Err returns nil.
-func (self ErrorList) Err() error { 
+func (self ErrorList) Err() error {
 	if len(self) == 0 {
 		return nil
 	}

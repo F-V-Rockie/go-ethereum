@@ -40,7 +40,7 @@ type BufferPool struct {
 	miss    uint32
 }
 
-func (p *BufferPool) poolNum(n int) int { 
+func (p *BufferPool) poolNum(n int) int {
 	if n <= p.baseline0 && n > p.baseline0/2 {
 		return 0
 	}
@@ -53,7 +53,7 @@ func (p *BufferPool) poolNum(n int) int {
 }
 
 // Get returns buffer with length of n.
-func (p *BufferPool) Get(n int) []byte { 
+func (p *BufferPool) Get(n int) []byte {
 	if p == nil {
 		return make([]byte, n)
 	}
@@ -155,7 +155,7 @@ func (p *BufferPool) Get(n int) []byte {
 }
 
 // Put adds given buffer to the pool.
-func (p *BufferPool) Put(b []byte) { 
+func (p *BufferPool) Put(b []byte) {
 	if p == nil {
 		return
 	}
@@ -177,7 +177,7 @@ func (p *BufferPool) Put(b []byte) {
 
 }
 
-func (p *BufferPool) Close() { 
+func (p *BufferPool) Close() {
 	if p == nil {
 		return
 	}
@@ -190,7 +190,7 @@ func (p *BufferPool) Close() {
 	p.mu.Unlock()
 }
 
-func (p *BufferPool) String() string { 
+func (p *BufferPool) String() string {
 	if p == nil {
 		return "<nil>"
 	}
@@ -199,7 +199,7 @@ func (p *BufferPool) String() string {
 		p.baseline0, p.size, p.sizeMiss, p.sizeHalf, p.get, p.put, p.half, p.less, p.equal, p.greater, p.miss)
 }
 
-func (p *BufferPool) drain() { 
+func (p *BufferPool) drain() {
 	ticker := time.NewTicker(2 * time.Second)
 	defer ticker.Stop()
 	for {
@@ -222,7 +222,7 @@ func (p *BufferPool) drain() {
 }
 
 // NewBufferPool creates a new initialized 'buffer pool'.
-func NewBufferPool(baseline int) *BufferPool { 
+func NewBufferPool(baseline int) *BufferPool {
 	if baseline <= 0 {
 		panic("baseline can't be <= 0")
 	}

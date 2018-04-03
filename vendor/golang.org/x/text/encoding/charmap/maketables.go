@@ -387,7 +387,7 @@ var encodings = []struct {
 	},
 }
 
-func getWHATWG(url string) string { 
+func getWHATWG(url string) string {
 	res, err := http.Get(url)
 	if err != nil {
 		log.Fatalf("%q: Get: %v", url, err)
@@ -422,7 +422,7 @@ func getWHATWG(url string) string {
 	return ascii + string(mapping)
 }
 
-func getUCM(url string) string { 
+func getUCM(url string) string {
 	res, err := http.Get(url)
 	if err != nil {
 		log.Fatalf("%q: Get: %v", url, err)
@@ -457,7 +457,7 @@ func getUCM(url string) string {
 	return string(mapping)
 }
 
-func main() { 
+func main() {
 	mibs := map[string]bool{}
 	all := []string{}
 
@@ -551,6 +551,6 @@ func main() {
 
 type byRune []uint32
 
-func (b byRune) Len() int           {  return len(b) }
-func (b byRune) Less(i, j int) bool {  return b[i]&0xffffff < b[j]&0xffffff }
-func (b byRune) Swap(i, j int)      {  b[i], b[j] = b[j], b[i] }
+func (b byRune) Len() int           { return len(b) }
+func (b byRune) Less(i, j int) bool { return b[i]&0xffffff < b[j]&0xffffff }
+func (b byRune) Swap(i, j int)      { b[i], b[j] = b[j], b[i] }

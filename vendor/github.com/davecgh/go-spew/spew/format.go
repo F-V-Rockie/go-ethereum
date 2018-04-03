@@ -44,7 +44,7 @@ type formatState struct {
 // and width information to pass in to fmt.Sprintf in the case of an
 // unrecognized type.  Unless new types are added to the language, this
 // function won't ever be called.
-func (f *formatState) buildDefaultFormat() (format string) { 
+func (f *formatState) buildDefaultFormat() (format string) {
 	buf := bytes.NewBuffer(percentBytes)
 
 	for _, flag := range supportedFlags {
@@ -62,7 +62,7 @@ func (f *formatState) buildDefaultFormat() (format string) {
 // constructOrigFormat recreates the original format string including precision
 // and width information to pass along to the standard fmt package.  This allows
 // automatic deferral of all format strings this package doesn't support.
-func (f *formatState) constructOrigFormat(verb rune) (format string) { 
+func (f *formatState) constructOrigFormat(verb rune) (format string) {
 	buf := bytes.NewBuffer(percentBytes)
 
 	for _, flag := range supportedFlags {
@@ -91,7 +91,7 @@ func (f *formatState) constructOrigFormat(verb rune) (format string) {
 // are displayed when the show types flag is also set.
 // This is useful for data types like structs, arrays, slices, and maps which
 // can contain varying types packed inside an interface.
-func (f *formatState) unpackValue(v reflect.Value) reflect.Value { 
+func (f *formatState) unpackValue(v reflect.Value) reflect.Value {
 	if v.Kind() == reflect.Interface {
 		f.ignoreNextType = false
 		if !v.IsNil() {
@@ -102,7 +102,7 @@ func (f *formatState) unpackValue(v reflect.Value) reflect.Value {
 }
 
 // formatPtr handles formatting of pointers by indirecting them as necessary.
-func (f *formatState) formatPtr(v reflect.Value) { 
+func (f *formatState) formatPtr(v reflect.Value) {
 	// Display nil if top level pointer is nil.
 	showTypes := f.fs.Flag('#')
 	if v.IsNil() && (!showTypes || f.ignoreNextType) {
@@ -198,7 +198,7 @@ func (f *formatState) formatPtr(v reflect.Value) {
 // uses the passed reflect value to figure out what kind of object we are
 // dealing with and formats it appropriately.  It is a recursive function,
 // however circular data structures are detected and handled properly.
-func (f *formatState) format(v reflect.Value) { 
+func (f *formatState) format(v reflect.Value) {
 	// Handle invalid reflect values immediately.
 	kind := v.Kind()
 	if kind == reflect.Invalid {
@@ -368,7 +368,7 @@ func (f *formatState) format(v reflect.Value) {
 
 // Format satisfies the fmt.Formatter interface. See NewFormatter for usage
 // details.
-func (f *formatState) Format(fs fmt.State, verb rune) { 
+func (f *formatState) Format(fs fmt.State, verb rune) {
 	f.fs = fs
 
 	// Use standard formatting for verbs that are not v.
@@ -391,7 +391,7 @@ func (f *formatState) Format(fs fmt.State, verb rune) {
 
 // newFormatter is a helper function to consolidate the logic from the various
 // public methods which take varying config states.
-func newFormatter(cs *ConfigState, v interface{}) fmt.Formatter { 
+func newFormatter(cs *ConfigState, v interface{}) fmt.Formatter {
 	fs := &formatState{value: v, cs: cs}
 	fs.pointers = make(map[uintptr]int)
 	return fs
@@ -414,6 +414,6 @@ Typically this function shouldn't be called directly.  It is much easier to make
 use of the custom formatter by calling one of the convenience functions such as
 Printf, Println, or Fprintf.
 */
-func NewFormatter(v interface{}) fmt.Formatter { 
+func NewFormatter(v interface{}) fmt.Formatter {
 	return newFormatter(&Config, v)
 }

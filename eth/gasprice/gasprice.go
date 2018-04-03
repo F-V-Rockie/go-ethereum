@@ -27,6 +27,7 @@ import (
 	"github.com/ethereum/go-ethereum/internal/ethapi"
 	"github.com/ethereum/go-ethereum/params"
 	"github.com/ethereum/go-ethereum/rpc"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 var maxPrice = big.NewInt(500 * params.Shannon)
@@ -51,7 +52,8 @@ type Oracle struct {
 }
 
 // NewOracle returns a new oracle.
-func NewOracle(backend ethapi.Backend, params Config) *Oracle { log.DebugLog()
+func NewOracle(backend ethapi.Backend, params Config) *Oracle {
+	log.DebugLog()
 	blocks := params.Blocks
 	if blocks < 1 {
 		blocks = 1
@@ -74,7 +76,8 @@ func NewOracle(backend ethapi.Backend, params Config) *Oracle { log.DebugLog()
 }
 
 // SuggestPrice returns the recommended gas price.
-func (gpo *Oracle) SuggestPrice(ctx context.Context) (*big.Int, error) { log.DebugLog()
+func (gpo *Oracle) SuggestPrice(ctx context.Context) (*big.Int, error) {
+	log.DebugLog()
 	gpo.cacheLock.RLock()
 	lastHead := gpo.lastHead
 	lastPrice := gpo.lastPrice
@@ -154,13 +157,17 @@ type getBlockPricesResult struct {
 
 type transactionsByGasPrice []*types.Transaction
 
-func (t transactionsByGasPrice) Len() int           { log.DebugLog() return len(t) }
-func (t transactionsByGasPrice) Swap(i, j int)      { log.DebugLog() t[i], t[j] = t[j], t[i] }
-func (t transactionsByGasPrice) Less(i, j int) bool { log.DebugLog() return t[i].GasPrice().Cmp(t[j].GasPrice()) < 0 }
+func (t transactionsByGasPrice) Len() int           { log.DebugLog()
+														return len(t) }
+func (t transactionsByGasPrice) Swap(i, j int)      { log.DebugLog()
+														t[i], t[j] = t[j], t[i] }
+func (t transactionsByGasPrice) Less(i, j int) bool { log.DebugLog()
+														return t[i].GasPrice().Cmp(t[j].GasPrice()) < 0 }
 
 // getBlockPrices calculates the lowest transaction gas price in a given block
 // and sends it to the result channel. If the block is empty, price is nil.
-func (gpo *Oracle) getBlockPrices(ctx context.Context, signer types.Signer, blockNum uint64, ch chan getBlockPricesResult) { log.DebugLog()
+func (gpo *Oracle) getBlockPrices(ctx context.Context, signer types.Signer, blockNum uint64, ch chan getBlockPricesResult) {
+	log.DebugLog()
 	block, err := gpo.backend.BlockByNumber(ctx, rpc.BlockNumber(blockNum))
 	if block == nil {
 		ch <- getBlockPricesResult{nil, err}
@@ -184,6 +191,9 @@ func (gpo *Oracle) getBlockPrices(ctx context.Context, signer types.Signer, bloc
 
 type bigIntArray []*big.Int
 
-func (s bigIntArray) Len() int           { log.DebugLog() return len(s) }
-func (s bigIntArray) Less(i, j int) bool { log.DebugLog() return s[i].Cmp(s[j]) < 0 }
-func (s bigIntArray) Swap(i, j int)      { log.DebugLog() s[i], s[j] = s[j], s[i] }
+func (s bigIntArray) Len() int           { log.DebugLog()
+											 return len(s) }
+func (s bigIntArray) Less(i, j int) bool { log.DebugLog()
+											 return s[i].Cmp(s[j]) < 0 }
+func (s bigIntArray) Swap(i, j int)      { log.DebugLog()
+											 s[i], s[j] = s[j], s[i] }

@@ -15,9 +15,9 @@ const (
 	userDefinedMetadataHeaderPrefix = "X-Ms-Meta-"
 )
 
-func pathForQueue(queue string) string         {  return fmt.Sprintf("/%s", queue) }
-func pathForQueueMessages(queue string) string {  return fmt.Sprintf("/%s/messages", queue) }
-func pathForMessage(queue, name string) string {  return fmt.Sprintf("/%s/messages/%s", queue, name) }
+func pathForQueue(queue string) string         { return fmt.Sprintf("/%s", queue) }
+func pathForQueueMessages(queue string) string { return fmt.Sprintf("/%s/messages", queue) }
+func pathForMessage(queue, name string) string { return fmt.Sprintf("/%s/messages/%s", queue, name) }
 
 type putMessageRequest struct {
 	XMLName     xml.Name `xml:"QueueMessage"`
@@ -31,7 +31,7 @@ type PutMessageParameters struct {
 	MessageTTL        int
 }
 
-func (p PutMessageParameters) getParameters() url.Values { 
+func (p PutMessageParameters) getParameters() url.Values {
 	out := url.Values{}
 	if p.VisibilityTimeout != 0 {
 		out.Set("visibilitytimeout", strconv.Itoa(p.VisibilityTimeout))
@@ -50,7 +50,7 @@ type GetMessagesParameters struct {
 	VisibilityTimeout int
 }
 
-func (p GetMessagesParameters) getParameters() url.Values { 
+func (p GetMessagesParameters) getParameters() url.Values {
 	out := url.Values{}
 	if p.NumOfMessages != 0 {
 		out.Set("numofmessages", strconv.Itoa(p.NumOfMessages))
@@ -68,7 +68,7 @@ type PeekMessagesParameters struct {
 	NumOfMessages int
 }
 
-func (p PeekMessagesParameters) getParameters() url.Values { 
+func (p PeekMessagesParameters) getParameters() url.Values {
 	out := url.Values{"peekonly": {"true"}} // Required for peek operation
 	if p.NumOfMessages != 0 {
 		out.Set("numofmessages", strconv.Itoa(p.NumOfMessages))
@@ -83,7 +83,7 @@ type UpdateMessageParameters struct {
 	VisibilityTimeout int
 }
 
-func (p UpdateMessageParameters) getParameters() url.Values { 
+func (p UpdateMessageParameters) getParameters() url.Values {
 	out := url.Values{}
 	if p.PopReceipt != "" {
 		out.Set("popreceipt", p.PopReceipt)
@@ -143,7 +143,7 @@ type QueueMetadataResponse struct {
 // Metadata is associated with the queue as name-value pairs.
 //
 // See https://msdn.microsoft.com/en-us/library/azure/dd179348.aspx
-func (c QueueServiceClient) SetMetadata(name string, metadata map[string]string) error { 
+func (c QueueServiceClient) SetMetadata(name string, metadata map[string]string) error {
 	uri := c.client.getEndpoint(queueServiceName, pathForQueue(name), url.Values{"comp": []string{"metadata"}})
 	metadata = c.client.protectUserAgent(metadata)
 	headers := c.client.getStandardHeaders()
@@ -169,7 +169,7 @@ func (c QueueServiceClient) SetMetadata(name string, metadata map[string]string)
 // Because the way Golang's http client (and http.Header in particular)
 // canonicalize header names, the returned metadata names would always
 // be all lower case.
-func (c QueueServiceClient) GetMetadata(name string) (QueueMetadataResponse, error) { 
+func (c QueueServiceClient) GetMetadata(name string) (QueueMetadataResponse, error) {
 	qm := QueueMetadataResponse{}
 	qm.UserDefinedMetadata = make(map[string]string)
 	uri := c.client.getEndpoint(queueServiceName, pathForQueue(name), url.Values{"comp": []string{"metadata"}})
@@ -204,7 +204,7 @@ func (c QueueServiceClient) GetMetadata(name string) (QueueMetadataResponse, err
 // CreateQueue operation creates a queue under the given account.
 //
 // See https://msdn.microsoft.com/en-us/library/azure/dd179342.aspx
-func (c QueueServiceClient) CreateQueue(name string) error { 
+func (c QueueServiceClient) CreateQueue(name string) error {
 	uri := c.client.getEndpoint(queueServiceName, pathForQueue(name), url.Values{})
 	headers := c.client.getStandardHeaders()
 	resp, err := c.client.exec(http.MethodPut, uri, headers, nil, c.auth)
@@ -218,7 +218,7 @@ func (c QueueServiceClient) CreateQueue(name string) error {
 // DeleteQueue operation permanently deletes the specified queue.
 //
 // See https://msdn.microsoft.com/en-us/library/azure/dd179436.aspx
-func (c QueueServiceClient) DeleteQueue(name string) error { 
+func (c QueueServiceClient) DeleteQueue(name string) error {
 	uri := c.client.getEndpoint(queueServiceName, pathForQueue(name), url.Values{})
 	resp, err := c.client.exec(http.MethodDelete, uri, c.client.getStandardHeaders(), nil, c.auth)
 	if err != nil {
@@ -229,7 +229,7 @@ func (c QueueServiceClient) DeleteQueue(name string) error {
 }
 
 // QueueExists returns true if a queue with given name exists.
-func (c QueueServiceClient) QueueExists(name string) (bool, error) { 
+func (c QueueServiceClient) QueueExists(name string) (bool, error) {
 	uri := c.client.getEndpoint(queueServiceName, pathForQueue(name), url.Values{"comp": {"metadata"}})
 	resp, err := c.client.exec(http.MethodGet, uri, c.client.getStandardHeaders(), nil, c.auth)
 	if resp != nil && (resp.statusCode == http.StatusOK || resp.statusCode == http.StatusNotFound) {
@@ -242,7 +242,7 @@ func (c QueueServiceClient) QueueExists(name string) (bool, error) {
 // PutMessage operation adds a new message to the back of the message queue.
 //
 // See https://msdn.microsoft.com/en-us/library/azure/dd179346.aspx
-func (c QueueServiceClient) PutMessage(queue string, message string, params PutMessageParameters) error { 
+func (c QueueServiceClient) PutMessage(queue string, message string, params PutMessageParameters) error {
 	uri := c.client.getEndpoint(queueServiceName, pathForQueueMessages(queue), params.getParameters())
 	req := putMessageRequest{MessageText: message}
 	body, nn, err := xmlMarshal(req)
@@ -262,7 +262,7 @@ func (c QueueServiceClient) PutMessage(queue string, message string, params PutM
 // ClearMessages operation deletes all messages from the specified queue.
 //
 // See https://msdn.microsoft.com/en-us/library/azure/dd179454.aspx
-func (c QueueServiceClient) ClearMessages(queue string) error { 
+func (c QueueServiceClient) ClearMessages(queue string) error {
 	uri := c.client.getEndpoint(queueServiceName, pathForQueueMessages(queue), url.Values{})
 	resp, err := c.client.exec(http.MethodDelete, uri, c.client.getStandardHeaders(), nil, c.auth)
 	if err != nil {
@@ -276,7 +276,7 @@ func (c QueueServiceClient) ClearMessages(queue string) error {
 // queue.
 //
 // See https://msdn.microsoft.com/en-us/library/azure/dd179474.aspx
-func (c QueueServiceClient) GetMessages(queue string, params GetMessagesParameters) (GetMessagesResponse, error) { 
+func (c QueueServiceClient) GetMessages(queue string, params GetMessagesParameters) (GetMessagesResponse, error) {
 	var r GetMessagesResponse
 	uri := c.client.getEndpoint(queueServiceName, pathForQueueMessages(queue), params.getParameters())
 	resp, err := c.client.exec(http.MethodGet, uri, c.client.getStandardHeaders(), nil, c.auth)
@@ -292,7 +292,7 @@ func (c QueueServiceClient) GetMessages(queue string, params GetMessagesParamete
 // does not alter the visibility of the message.
 //
 // See https://msdn.microsoft.com/en-us/library/azure/dd179472.aspx
-func (c QueueServiceClient) PeekMessages(queue string, params PeekMessagesParameters) (PeekMessagesResponse, error) { 
+func (c QueueServiceClient) PeekMessages(queue string, params PeekMessagesParameters) (PeekMessagesResponse, error) {
 	var r PeekMessagesResponse
 	uri := c.client.getEndpoint(queueServiceName, pathForQueueMessages(queue), params.getParameters())
 	resp, err := c.client.exec(http.MethodGet, uri, c.client.getStandardHeaders(), nil, c.auth)
@@ -307,7 +307,7 @@ func (c QueueServiceClient) PeekMessages(queue string, params PeekMessagesParame
 // DeleteMessage operation deletes the specified message.
 //
 // See https://msdn.microsoft.com/en-us/library/azure/dd179347.aspx
-func (c QueueServiceClient) DeleteMessage(queue, messageID, popReceipt string) error { 
+func (c QueueServiceClient) DeleteMessage(queue, messageID, popReceipt string) error {
 	uri := c.client.getEndpoint(queueServiceName, pathForMessage(queue, messageID), url.Values{
 		"popreceipt": {popReceipt}})
 	resp, err := c.client.exec(http.MethodDelete, uri, c.client.getStandardHeaders(), nil, c.auth)
@@ -321,7 +321,7 @@ func (c QueueServiceClient) DeleteMessage(queue, messageID, popReceipt string) e
 // UpdateMessage operation deletes the specified message.
 //
 // See https://msdn.microsoft.com/en-us/library/azure/hh452234.aspx
-func (c QueueServiceClient) UpdateMessage(queue string, messageID string, message string, params UpdateMessageParameters) error { 
+func (c QueueServiceClient) UpdateMessage(queue string, messageID string, message string, params UpdateMessageParameters) error {
 	uri := c.client.getEndpoint(queueServiceName, pathForMessage(queue, messageID), params.getParameters())
 	req := putMessageRequest{MessageText: message}
 	body, nn, err := xmlMarshal(req)

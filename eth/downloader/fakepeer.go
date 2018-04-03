@@ -23,6 +23,7 @@ import (
 	"github.com/ethereum/go-ethereum/core"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethdb"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // FakePeer is a mock downloader peer that operates on a local database instance
@@ -36,20 +37,23 @@ type FakePeer struct {
 }
 
 // NewFakePeer creates a new mock downloader peer with the given data sources.
-func NewFakePeer(id string, db ethdb.Database, hc *core.HeaderChain, dl *Downloader) *FakePeer { log.DebugLog()
+func NewFakePeer(id string, db ethdb.Database, hc *core.HeaderChain, dl *Downloader) *FakePeer {
+	log.DebugLog()
 	return &FakePeer{id: id, db: db, hc: hc, dl: dl}
 }
 
 // Head implements downloader.Peer, returning the current head hash and number
 // of the best known header.
-func (p *FakePeer) Head() (common.Hash, *big.Int) { log.DebugLog()
+func (p *FakePeer) Head() (common.Hash, *big.Int) {
+	log.DebugLog()
 	header := p.hc.CurrentHeader()
 	return header.Hash(), header.Number
 }
 
 // RequestHeadersByHash implements downloader.Peer, returning a batch of headers
 // defined by the origin hash and the associaed query parameters.
-func (p *FakePeer) RequestHeadersByHash(hash common.Hash, amount int, skip int, reverse bool) error { log.DebugLog()
+func (p *FakePeer) RequestHeadersByHash(hash common.Hash, amount int, skip int, reverse bool) error {
+	log.DebugLog()
 	var (
 		headers []*types.Header
 		unknown bool
@@ -93,7 +97,8 @@ func (p *FakePeer) RequestHeadersByHash(hash common.Hash, amount int, skip int, 
 
 // RequestHeadersByNumber implements downloader.Peer, returning a batch of headers
 // defined by the origin number and the associaed query parameters.
-func (p *FakePeer) RequestHeadersByNumber(number uint64, amount int, skip int, reverse bool) error { log.DebugLog()
+func (p *FakePeer) RequestHeadersByNumber(number uint64, amount int, skip int, reverse bool) error {
+	log.DebugLog()
 	var (
 		headers []*types.Header
 		unknown bool
@@ -120,7 +125,8 @@ func (p *FakePeer) RequestHeadersByNumber(number uint64, amount int, skip int, r
 
 // RequestBodies implements downloader.Peer, returning a batch of block bodies
 // corresponding to the specified block hashes.
-func (p *FakePeer) RequestBodies(hashes []common.Hash) error { log.DebugLog()
+func (p *FakePeer) RequestBodies(hashes []common.Hash) error {
+	log.DebugLog()
 	var (
 		txs    [][]*types.Transaction
 		uncles [][]*types.Header
@@ -137,7 +143,8 @@ func (p *FakePeer) RequestBodies(hashes []common.Hash) error { log.DebugLog()
 
 // RequestReceipts implements downloader.Peer, returning a batch of transaction
 // receipts corresponding to the specified block hashes.
-func (p *FakePeer) RequestReceipts(hashes []common.Hash) error { log.DebugLog()
+func (p *FakePeer) RequestReceipts(hashes []common.Hash) error {
+	log.DebugLog()
 	var receipts [][]*types.Receipt
 	for _, hash := range hashes {
 		receipts = append(receipts, core.GetBlockReceipts(p.db, hash, p.hc.GetBlockNumber(hash)))
@@ -148,7 +155,8 @@ func (p *FakePeer) RequestReceipts(hashes []common.Hash) error { log.DebugLog()
 
 // RequestNodeData implements downloader.Peer, returning a batch of state trie
 // nodes corresponding to the specified trie hashes.
-func (p *FakePeer) RequestNodeData(hashes []common.Hash) error { log.DebugLog()
+func (p *FakePeer) RequestNodeData(hashes []common.Hash) error {
+	log.DebugLog()
 	var data [][]byte
 	for _, hash := range hashes {
 		if entry, err := p.db.Get(hash.Bytes()); err == nil {

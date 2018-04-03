@@ -10,11 +10,13 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/common/math"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 var _ = (*genesisAccountMarshaling)(nil)
 
-func (g GenesisAccount) MarshalJSON() ([]byte, error) { log.DebugLog()
+func (g GenesisAccount) MarshalJSON() ([]byte, error) {
+	log.DebugLog()
 	type GenesisAccount struct {
 		Code       hexutil.Bytes               `json:"code,omitempty"`
 		Storage    map[storageJSON]storageJSON `json:"storage,omitempty"`
@@ -36,7 +38,8 @@ func (g GenesisAccount) MarshalJSON() ([]byte, error) { log.DebugLog()
 	return json.Marshal(&enc)
 }
 
-func (g *GenesisAccount) UnmarshalJSON(input []byte) error { log.DebugLog()
+func (g *GenesisAccount) UnmarshalJSON(input []byte) error {
+	log.DebugLog()
 	type GenesisAccount struct {
 		Code       *hexutil.Bytes              `json:"code,omitempty"`
 		Storage    map[storageJSON]storageJSON `json:"storage,omitempty"`

@@ -250,7 +250,7 @@ type NodeRemovexattrer interface {
 
 var startTime = time.Now()
 
-func nodeAttr(ctx context.Context, n Node, attr *fuse.Attr) error { 
+func nodeAttr(ctx context.Context, n Node, attr *fuse.Attr) error {
 	attr.Valid = attrValidTime
 	attr.Nlink = 1
 	attr.Atime = startTime
@@ -343,7 +343,7 @@ type Config struct {
 // connection.
 //
 // Config may be nil.
-func New(conn *fuse.Conn, config *Config) *Server { 
+func New(conn *fuse.Conn, config *Config) *Server {
 	s := &Server{
 		conn:         conn,
 		req:          map[fuse.RequestID]*serveRequest{},
@@ -387,7 +387,7 @@ type Server struct {
 // Serve serves the FUSE connection by making calls to the methods
 // of fs and the Nodes and Handles it makes available.  It returns only
 // when the connection has been closed or an unexpected error occurs.
-func (s *Server) Serve(fs FS) error { 
+func (s *Server) Serve(fs FS) error {
 	defer s.wg.Wait() // Wait for worker goroutines to complete before return
 
 	s.fs = fs
@@ -430,7 +430,7 @@ func (s *Server) Serve(fs FS) error {
 
 // Serve serves a FUSE connection with the default settings. See
 // Server.Serve.
-func Serve(c *fuse.Conn, fs FS) error { 
+func Serve(c *fuse.Conn, fs FS) error {
 	server := New(c, nil)
 	return server.Serve(fs)
 }
@@ -459,7 +459,7 @@ type serveNode struct {
 	wg sync.WaitGroup
 }
 
-func (sn *serveNode) attr(ctx context.Context, attr *fuse.Attr) error { 
+func (sn *serveNode) attr(ctx context.Context, attr *fuse.Attr) error {
 	err := nodeAttr(ctx, sn.node, attr)
 	if attr.Inode == 0 {
 		attr.Inode = sn.inode
@@ -479,7 +479,7 @@ type serveHandle struct {
 // without needing NodeRef.
 type NodeRef struct{}
 
-func (c *Server) saveNode(inode uint64, node Node) (id fuse.NodeID, gen uint64) { 
+func (c *Server) saveNode(inode uint64, node Node) (id fuse.NodeID, gen uint64) {
 	c.meta.Lock()
 	defer c.meta.Unlock()
 
@@ -504,7 +504,7 @@ func (c *Server) saveNode(inode uint64, node Node) (id fuse.NodeID, gen uint64) 
 	return id, sn.generation
 }
 
-func (c *Server) saveHandle(handle Handle, nodeID fuse.NodeID) (id fuse.HandleID) { 
+func (c *Server) saveHandle(handle Handle, nodeID fuse.NodeID) (id fuse.HandleID) {
 	c.meta.Lock()
 	shandle := &serveHandle{handle: handle, nodeID: nodeID}
 	if n := len(c.freeHandle); n > 0 {
@@ -525,11 +525,11 @@ type nodeRefcountDropBug struct {
 	Node fuse.NodeID
 }
 
-func (n *nodeRefcountDropBug) String() string { 
+func (n *nodeRefcountDropBug) String() string {
 	return fmt.Sprintf("bug: trying to drop %d of %d references to %v", n.N, n.Refs, n.Node)
 }
 
-func (c *Server) dropNode(id fuse.NodeID, n uint64) (forget bool) { 
+func (c *Server) dropNode(id fuse.NodeID, n uint64) (forget bool) {
 	c.meta.Lock()
 	defer c.meta.Unlock()
 	snode := c.node[id]
@@ -561,7 +561,7 @@ func (c *Server) dropNode(id fuse.NodeID, n uint64) (forget bool) {
 	return false
 }
 
-func (c *Server) dropHandle(id fuse.HandleID) { 
+func (c *Server) dropHandle(id fuse.HandleID) {
 	c.meta.Lock()
 	c.handle[id] = nil
 	c.freeHandle = append(c.freeHandle, id)
@@ -573,12 +573,12 @@ type missingHandle struct {
 	MaxHandle fuse.HandleID
 }
 
-func (m missingHandle) String() string { 
+func (m missingHandle) String() string {
 	return fmt.Sprint("missing handle: ", m.Handle, m.MaxHandle)
 }
 
 // Returns nil for invalid handles.
-func (c *Server) getHandle(id fuse.HandleID) (shandle *serveHandle) { 
+func (c *Server) getHandle(id fuse.HandleID) (shandle *serveHandle) {
 	c.meta.Lock()
 	defer c.meta.Unlock()
 	if id < fuse.HandleID(len(c.handle)) {
@@ -599,7 +599,7 @@ type request struct {
 	In      interface{} `json:",omitempty"`
 }
 
-func (r request) String() string { 
+func (r request) String() string {
 	return fmt.Sprintf("<- %s", r.In)
 }
 
@@ -607,7 +607,7 @@ type logResponseHeader struct {
 	ID fuse.RequestID
 }
 
-func (m logResponseHeader) String() string { 
+func (m logResponseHeader) String() string {
 	return fmt.Sprintf("ID=%v", m.ID)
 }
 
@@ -621,7 +621,7 @@ type response struct {
 	Error string `json:",omitempty"`
 }
 
-func (r response) errstr() string { 
+func (r response) errstr() string {
 	s := r.Errno
 	if r.Error != "" {
 		// prefix the errno constant to the long form message
@@ -630,7 +630,7 @@ func (r response) errstr() string {
 	return s
 }
 
-func (r response) String() string { 
+func (r response) String() string {
 	switch {
 	case r.Errno != "" && r.Out != nil:
 		return fmt.Sprintf("-> [%v] %v error=%s", r.Request, r.Out, r.errstr())
@@ -658,7 +658,7 @@ type notification struct {
 	Err  string      `json:",omitempty"`
 }
 
-func (n notification) String() string { 
+func (n notification) String() string {
 	var buf bytes.Buffer
 	fmt.Fprintf(&buf, "=> %s %v", n.Op, n.Node)
 	if n.Out != nil {
@@ -682,7 +682,7 @@ type logMissingNode struct {
 	MaxNode fuse.NodeID
 }
 
-func opName(req fuse.Request) string { 
+func opName(req fuse.Request) string {
 	t := reflect.Indirect(reflect.ValueOf(req)).Type()
 	s := t.Name()
 	s = strings.TrimSuffix(s, "Request")
@@ -694,7 +694,7 @@ type logLinkRequestOldNodeNotFound struct {
 	In      *fuse.LinkRequest
 }
 
-func (m *logLinkRequestOldNodeNotFound) String() string { 
+func (m *logLinkRequestOldNodeNotFound) String() string {
 	return fmt.Sprintf("In LinkRequest (request %v), node %d not found", m.Request.Hdr().ID, m.In.OldNode)
 }
 
@@ -703,7 +703,7 @@ type renameNewDirNodeNotFound struct {
 	In      *fuse.RenameRequest
 }
 
-func (m *renameNewDirNodeNotFound) String() string { 
+func (m *renameNewDirNodeNotFound) String() string {
 	return fmt.Sprintf("In RenameRequest (request %v), node %d not found", m.Request.Hdr().ID, m.In.NewDir)
 }
 
@@ -714,13 +714,13 @@ type handlerPanickedError struct {
 
 var _ error = handlerPanickedError{}
 
-func (h handlerPanickedError) Error() string { 
+func (h handlerPanickedError) Error() string {
 	return fmt.Sprintf("handler panicked: %v", h.Err)
 }
 
 var _ fuse.ErrorNumber = handlerPanickedError{}
 
-func (h handlerPanickedError) Errno() fuse.Errno { 
+func (h handlerPanickedError) Errno() fuse.Errno {
 	if err, ok := h.Err.(fuse.ErrorNumber); ok {
 		return err.Errno()
 	}
@@ -736,13 +736,13 @@ type handlerTerminatedError struct {
 
 var _ error = handlerTerminatedError{}
 
-func (h handlerTerminatedError) Error() string { 
+func (h handlerTerminatedError) Error() string {
 	return fmt.Sprintf("handler terminated (called runtime.Goexit)")
 }
 
 var _ fuse.ErrorNumber = handlerTerminatedError{}
 
-func (h handlerTerminatedError) Errno() fuse.Errno { 
+func (h handlerTerminatedError) Errno() fuse.Errno {
 	return fuse.DefaultErrno
 }
 
@@ -752,21 +752,21 @@ type handleNotReaderError struct {
 
 var _ error = handleNotReaderError{}
 
-func (e handleNotReaderError) Error() string { 
+func (e handleNotReaderError) Error() string {
 	return fmt.Sprintf("handle has no Read: %T", e.handle)
 }
 
 var _ fuse.ErrorNumber = handleNotReaderError{}
 
-func (e handleNotReaderError) Errno() fuse.Errno { 
+func (e handleNotReaderError) Errno() fuse.Errno {
 	return fuse.ENOTSUP
 }
 
-func initLookupResponse(s *fuse.LookupResponse) { 
+func initLookupResponse(s *fuse.LookupResponse) {
 	s.EntryValid = entryValidTime
 }
 
-func (c *Server) serve(r fuse.Request) { 
+func (c *Server) serve(r fuse.Request) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 	parentCtx := ctx
@@ -904,7 +904,7 @@ func (c *Server) serve(r fuse.Request) {
 }
 
 // handleRequest will either a) call done(s) and r.Respond(s) OR b) return an error.
-func (c *Server) handleRequest(ctx context.Context, node Node, snode *serveNode, r fuse.Request, done func(resp interface{})) error { 
+func (c *Server) handleRequest(ctx context.Context, node Node, snode *serveNode, r fuse.Request, done func(resp interface{})) error {
 	switch r := r.(type) {
 	default:
 		// Note: To FUSE, ENOSYS means "this server never implements this request."
@@ -1400,7 +1400,7 @@ func (c *Server) handleRequest(ctx context.Context, node Node, snode *serveNode,
 	panic("not reached")
 }
 
-func (c *Server) saveLookup(ctx context.Context, s *fuse.LookupResponse, snode *serveNode, elem string, n2 Node) error { 
+func (c *Server) saveLookup(ctx context.Context, s *fuse.LookupResponse, snode *serveNode, elem string, n2 Node) error {
 	if err := nodeAttr(ctx, n2, &s.Attr); err != nil {
 		return err
 	}
@@ -1417,18 +1417,18 @@ type invalidateNodeDetail struct {
 	Size int64
 }
 
-func (i invalidateNodeDetail) String() string { 
+func (i invalidateNodeDetail) String() string {
 	return fmt.Sprintf("Off:%d Size:%d", i.Off, i.Size)
 }
 
-func errstr(err error) string { 
+func errstr(err error) string {
 	if err == nil {
 		return ""
 	}
 	return err.Error()
 }
 
-func (s *Server) invalidateNode(node Node, off int64, size int64) error { 
+func (s *Server) invalidateNode(node Node, off int64, size int64) error {
 	s.meta.Lock()
 	id, ok := s.nodeRef[node]
 	if ok {
@@ -1463,7 +1463,7 @@ func (s *Server) invalidateNode(node Node, off int64, size int64) error {
 //
 // Returns fuse.ErrNotCached if the kernel is not currently caching
 // the node.
-func (s *Server) InvalidateNodeAttr(node Node) error { 
+func (s *Server) InvalidateNodeAttr(node Node) error {
 	return s.invalidateNode(node, 0, 0)
 }
 
@@ -1472,7 +1472,7 @@ func (s *Server) InvalidateNodeAttr(node Node) error {
 //
 // Returns fuse.ErrNotCached if the kernel is not currently caching
 // the node.
-func (s *Server) InvalidateNodeData(node Node) error { 
+func (s *Server) InvalidateNodeData(node Node) error {
 	return s.invalidateNode(node, 0, -1)
 }
 
@@ -1481,7 +1481,7 @@ func (s *Server) InvalidateNodeData(node Node) error {
 //
 // Returns fuse.ErrNotCached if the kernel is not currently caching
 // the node.
-func (s *Server) InvalidateNodeDataRange(node Node, off int64, size int64) error { 
+func (s *Server) InvalidateNodeDataRange(node Node, off int64, size int64) error {
 	return s.invalidateNode(node, off, size)
 }
 
@@ -1489,7 +1489,7 @@ type invalidateEntryDetail struct {
 	Name string
 }
 
-func (i invalidateEntryDetail) String() string { 
+func (i invalidateEntryDetail) String() string {
 	return fmt.Sprintf("%q", i.Name)
 }
 
@@ -1503,7 +1503,7 @@ func (i invalidateEntryDetail) String() string {
 //
 // Returns ErrNotCached if the kernel is not currently caching the
 // node.
-func (s *Server) InvalidateEntry(parent Node, name string) error { 
+func (s *Server) InvalidateEntry(parent Node, name string) error {
 	s.meta.Lock()
 	id, ok := s.nodeRef[parent]
 	if ok {
@@ -1531,7 +1531,7 @@ func (s *Server) InvalidateEntry(parent Node, name string) error {
 
 // DataHandle returns a read-only Handle that satisfies reads
 // using the given data.
-func DataHandle(data []byte) Handle { 
+func DataHandle(data []byte) Handle {
 	return &dataHandle{data}
 }
 
@@ -1539,7 +1539,7 @@ type dataHandle struct {
 	data []byte
 }
 
-func (d *dataHandle) ReadAll(ctx context.Context) ([]byte, error) { 
+func (d *dataHandle) ReadAll(ctx context.Context) ([]byte, error) {
 	return d.data, nil
 }
 
@@ -1548,7 +1548,7 @@ func (d *dataHandle) ReadAll(ctx context.Context) ([]byte, error) {
 // The parent inode and current entry name are used as the criteria
 // for choosing a pseudorandom inode. This makes it likely the same
 // entry will get the same inode on multiple runs.
-func GenerateDynamicInode(parent uint64, name string) uint64 { 
+func GenerateDynamicInode(parent uint64, name string) uint64 {
 	h := fnv.New64a()
 	var buf [8]byte
 	binary.LittleEndian.PutUint64(buf[:], parent)

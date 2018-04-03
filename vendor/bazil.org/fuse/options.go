@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-func dummyOption(conf *mountConfig) error { 
+func dummyOption(conf *mountConfig) error {
 	return nil
 }
 
@@ -18,7 +18,7 @@ type mountConfig struct {
 	osxfuseLocations []OSXFUSEPaths
 }
 
-func escapeComma(s string) string { 
+func escapeComma(s string) string {
 	s = strings.Replace(s, `\`, `\\`, -1)
 	s = strings.Replace(s, `,`, `\,`, -1)
 	return s
@@ -27,7 +27,7 @@ func escapeComma(s string) string {
 // getOptions makes a string of options suitable for passing to FUSE
 // mount flag `-o`. Returns an empty string if no options were set.
 // Any platform specific adjustments should happen before the call.
-func (m *mountConfig) getOptions() string { 
+func (m *mountConfig) getOptions() string {
 	var opts []string
 	for k, v := range m.options {
 		k = escapeComma(k)
@@ -48,7 +48,7 @@ type MountOption mountOption
 // visible in the list of mounted file systems.
 //
 // FreeBSD ignores this option.
-func FSName(name string) MountOption { 
+func FSName(name string) MountOption {
 	return func(conf *mountConfig) error {
 		conf.options["fsname"] = name
 		return nil
@@ -61,7 +61,7 @@ func FSName(name string) MountOption {
 //
 // OS X ignores this option.
 // FreeBSD ignores this option.
-func Subtype(fstype string) MountOption { 
+func Subtype(fstype string) MountOption {
 	return func(conf *mountConfig) error {
 		conf.options["subtype"] = fstype
 		return nil
@@ -72,14 +72,14 @@ func Subtype(fstype string) MountOption {
 // changing the behavior of Finder, Spotlight, and such.
 //
 // OS X only. Others ignore this option.
-func LocalVolume() MountOption { 
+func LocalVolume() MountOption {
 	return localVolume
 }
 
 // VolumeName sets the volume name shown in Finder.
 //
 // OS X only. Others ignore this option.
-func VolumeName(name string) MountOption { 
+func VolumeName(name string) MountOption {
 	return volumeName(name)
 }
 
@@ -93,7 +93,7 @@ func VolumeName(name string) MountOption {
 //     .DS_Store
 //
 // OS X only.  Others ignore this option.
-func NoAppleDouble() MountOption { 
+func NoAppleDouble() MountOption {
 	return noAppleDouble
 }
 
@@ -102,7 +102,7 @@ func NoAppleDouble() MountOption {
 // other such information.
 //
 // OS X only.  Others ignore this option.
-func NoAppleXattr() MountOption { 
+func NoAppleXattr() MountOption {
 	return noAppleXattr
 }
 
@@ -128,7 +128,7 @@ func NoAppleXattr() MountOption {
 //
 // OS X only. Others ignore this options.
 // Requires OSXFUSE 3.4.1 or newer.
-func ExclCreate() MountOption { 
+func ExclCreate() MountOption {
 	return exclCreate
 }
 
@@ -136,7 +136,7 @@ func ExclCreate() MountOption {
 // the FUSE mount is declared dead.
 //
 // OS X and FreeBSD only. Others ignore this option.
-func DaemonTimeout(name string) MountOption { 
+func DaemonTimeout(name string) MountOption {
 	return daemonTimeout(name)
 }
 
@@ -145,7 +145,7 @@ var ErrCannotCombineAllowOtherAndAllowRoot = errors.New("cannot combine AllowOth
 // AllowOther allows other users to access the file system.
 //
 // Only one of AllowOther or AllowRoot can be used.
-func AllowOther() MountOption { 
+func AllowOther() MountOption {
 	return func(conf *mountConfig) error {
 		if _, ok := conf.options["allow_root"]; ok {
 			return ErrCannotCombineAllowOtherAndAllowRoot
@@ -160,7 +160,7 @@ func AllowOther() MountOption {
 // Only one of AllowOther or AllowRoot can be used.
 //
 // FreeBSD ignores this option.
-func AllowRoot() MountOption { 
+func AllowRoot() MountOption {
 	return func(conf *mountConfig) error {
 		if _, ok := conf.options["allow_other"]; ok {
 			return ErrCannotCombineAllowOtherAndAllowRoot
@@ -172,7 +172,7 @@ func AllowRoot() MountOption {
 
 // AllowDev enables interpreting character or block special devices on the
 // filesystem.
-func AllowDev() MountOption { 
+func AllowDev() MountOption {
 	return func(conf *mountConfig) error {
 		conf.options["dev"] = ""
 		return nil
@@ -181,7 +181,7 @@ func AllowDev() MountOption {
 
 // AllowSUID allows set-user-identifier or set-group-identifier bits to take
 // effect.
-func AllowSUID() MountOption { 
+func AllowSUID() MountOption {
 	return func(conf *mountConfig) error {
 		conf.options["suid"] = ""
 		return nil
@@ -196,7 +196,7 @@ func AllowSUID() MountOption {
 // accessed by other users without AllowOther/AllowRoot.
 //
 // FreeBSD ignores this option.
-func DefaultPermissions() MountOption { 
+func DefaultPermissions() MountOption {
 	return func(conf *mountConfig) error {
 		conf.options["default_permissions"] = ""
 		return nil
@@ -204,7 +204,7 @@ func DefaultPermissions() MountOption {
 }
 
 // ReadOnly makes the mount read-only.
-func ReadOnly() MountOption { 
+func ReadOnly() MountOption {
 	return func(conf *mountConfig) error {
 		conf.options["ro"] = ""
 		return nil
@@ -218,7 +218,7 @@ func ReadOnly() MountOption {
 // This setting makes the kernel perform speculative reads that do not
 // originate from any client process. This usually tremendously
 // improves read performance.
-func MaxReadahead(n uint32) MountOption { 
+func MaxReadahead(n uint32) MountOption {
 	return func(conf *mountConfig) error {
 		conf.maxReadahead = n
 		return nil
@@ -228,7 +228,7 @@ func MaxReadahead(n uint32) MountOption {
 // AsyncRead enables multiple outstanding read requests for the same
 // handle. Without this, there is at most one request in flight at a
 // time.
-func AsyncRead() MountOption { 
+func AsyncRead() MountOption {
 	return func(conf *mountConfig) error {
 		conf.initFlags |= InitAsyncRead
 		return nil
@@ -238,7 +238,7 @@ func AsyncRead() MountOption {
 // WritebackCache enables the kernel to buffer writes before sending
 // them to the FUSE server. Without this, writethrough caching is
 // used.
-func WritebackCache() MountOption { 
+func WritebackCache() MountOption {
 	return func(conf *mountConfig) error {
 		conf.initFlags |= InitWritebackCache
 		return nil
@@ -285,7 +285,7 @@ var (
 // used.
 //
 // OS X only. Others ignore this option.
-func OSXFUSELocations(paths ...OSXFUSEPaths) MountOption { 
+func OSXFUSELocations(paths ...OSXFUSEPaths) MountOption {
 	return func(conf *mountConfig) error {
 		if len(paths) == 0 {
 			return errors.New("must specify at least one location for OSXFUSELocations")
@@ -302,7 +302,7 @@ func OSXFUSELocations(paths ...OSXFUSEPaths) MountOption {
 // The files in it will be shadowed by the freshly created mount. By
 // default these mounts are rejected to prevent accidental covering up
 // of data, which could for example prevent automatic backup.
-func AllowNonEmptyMount() MountOption { 
+func AllowNonEmptyMount() MountOption {
 	return func(conf *mountConfig) error {
 		conf.options["nonempty"] = ""
 		return nil

@@ -7,12 +7,12 @@ import (
 	"unsafe"
 )
 
-func (v *IConnectionPoint) GetConnectionInterface(piid **GUID) int32 { 
+func (v *IConnectionPoint) GetConnectionInterface(piid **GUID) int32 {
 	// XXX: This doesn't look like it does what it's supposed to
 	return release((*IUnknown)(unsafe.Pointer(v)))
 }
 
-func (v *IConnectionPoint) Advise(unknown *IUnknown) (cookie uint32, err error) { 
+func (v *IConnectionPoint) Advise(unknown *IUnknown) (cookie uint32, err error) {
 	hr, _, _ := syscall.Syscall(
 		v.VTable().Advise,
 		3,
@@ -25,7 +25,7 @@ func (v *IConnectionPoint) Advise(unknown *IUnknown) (cookie uint32, err error) 
 	return
 }
 
-func (v *IConnectionPoint) Unadvise(cookie uint32) (err error) { 
+func (v *IConnectionPoint) Unadvise(cookie uint32) (err error) {
 	hr, _, _ := syscall.Syscall(
 		v.VTable().Unadvise,
 		2,
@@ -38,6 +38,6 @@ func (v *IConnectionPoint) Unadvise(cookie uint32) (err error) {
 	return
 }
 
-func (v *IConnectionPoint) EnumConnections(p *unsafe.Pointer) error { 
+func (v *IConnectionPoint) EnumConnections(p *unsafe.Pointer) error {
 	return NewError(E_NOTIMPL)
 }

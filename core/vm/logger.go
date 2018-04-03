@@ -27,11 +27,13 @@ import (
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/common/math"
 	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 type Storage map[common.Hash]common.Hash
 
-func (self Storage) Copy() Storage { log.DebugLog()
+func (self Storage) Copy() Storage {
+	log.DebugLog()
 	cpy := make(Storage)
 	for key, value := range self {
 		cpy[key] = value
@@ -75,11 +77,13 @@ type structLogMarshaling struct {
 	ErrorString string `json:"error"`  // adds call to ErrorString() in MarshalJSON
 }
 
-func (s *StructLog) OpName() string { log.DebugLog()
+func (s *StructLog) OpName() string {
+	log.DebugLog()
 	return s.Op.String()
 }
 
-func (s *StructLog) ErrorString() string { log.DebugLog()
+func (s *StructLog) ErrorString() string {
+	log.DebugLog()
 	if s.Err != nil {
 		return s.Err.Error()
 	}
@@ -113,7 +117,8 @@ type StructLogger struct {
 }
 
 // NewStructLogger returns a new logger
-func NewStructLogger(cfg *LogConfig) *StructLogger { log.DebugLog()
+func NewStructLogger(cfg *LogConfig) *StructLogger {
+	log.DebugLog()
 	logger := &StructLogger{
 		changedValues: make(map[common.Address]Storage),
 	}
@@ -123,14 +128,16 @@ func NewStructLogger(cfg *LogConfig) *StructLogger { log.DebugLog()
 	return logger
 }
 
-func (l *StructLogger) CaptureStart(from common.Address, to common.Address, create bool, input []byte, gas uint64, value *big.Int) error { log.DebugLog()
+func (l *StructLogger) CaptureStart(from common.Address, to common.Address, create bool, input []byte, gas uint64, value *big.Int) error {
+	log.DebugLog()
 	return nil
 }
 
 // CaptureState logs a new structured log message and pushes it out to the environment
 //
 // CaptureState also tracks SSTORE ops to track dirty values.
-func (l *StructLogger) CaptureState(env *EVM, pc uint64, op OpCode, gas, cost uint64, memory *Memory, stack *Stack, contract *Contract, depth int, err error) error { log.DebugLog()
+func (l *StructLogger) CaptureState(env *EVM, pc uint64, op OpCode, gas, cost uint64, memory *Memory, stack *Stack, contract *Contract, depth int, err error) error {
+	log.DebugLog()
 	// check if already accumulated the specified number of logs
 	if l.cfg.Limit != 0 && l.cfg.Limit <= len(l.logs) {
 		return ErrTraceLimitReached
@@ -177,27 +184,33 @@ func (l *StructLogger) CaptureState(env *EVM, pc uint64, op OpCode, gas, cost ui
 	return nil
 }
 
-func (l *StructLogger) CaptureFault(env *EVM, pc uint64, op OpCode, gas, cost uint64, memory *Memory, stack *Stack, contract *Contract, depth int, err error) error { log.DebugLog()
+func (l *StructLogger) CaptureFault(env *EVM, pc uint64, op OpCode, gas, cost uint64, memory *Memory, stack *Stack, contract *Contract, depth int, err error) error {
+	log.DebugLog()
 	return nil
 }
 
-func (l *StructLogger) CaptureEnd(output []byte, gasUsed uint64, t time.Duration, err error) error { log.DebugLog()
+func (l *StructLogger) CaptureEnd(output []byte, gasUsed uint64, t time.Duration, err error) error {
+	log.DebugLog()
 	l.output = output
 	l.err = err
 	return nil
 }
 
 // StructLogs returns the captured log entries.
-func (l *StructLogger) StructLogs() []StructLog { log.DebugLog() return l.logs }
+func (l *StructLogger) StructLogs() []StructLog { log.DebugLog()
+													return l.logs }
 
 // Error returns the VM error captured by the trace.
-func (l *StructLogger) Error() error { log.DebugLog() return l.err }
+func (l *StructLogger) Error() error { log.DebugLog()
+										 return l.err }
 
 // Output returns the VM return value captured by the trace.
-func (l *StructLogger) Output() []byte { log.DebugLog() return l.output }
+func (l *StructLogger) Output() []byte { log.DebugLog()
+										   return l.output }
 
 // WriteTrace writes a formatted trace to the given writer
-func WriteTrace(writer io.Writer, logs []StructLog) { log.DebugLog()
+func WriteTrace(writer io.Writer, logs []StructLog) {
+	log.DebugLog()
 	for _, log := range logs {
 		fmt.Fprintf(writer, "%-16spc=%08d gas=%v cost=%v", log.Op, log.Pc, log.Gas, log.GasCost)
 		if log.Err != nil {
@@ -226,7 +239,8 @@ func WriteTrace(writer io.Writer, logs []StructLog) { log.DebugLog()
 }
 
 // WriteLogs writes vm logs in a readable format to the given writer
-func WriteLogs(writer io.Writer, logs []*types.Log) { log.DebugLog()
+func WriteLogs(writer io.Writer, logs []*types.Log) {
+	log.DebugLog()
 	for _, log := range logs {
 		fmt.Fprintf(writer, "LOG%d: %x bn=%d txi=%x\n", len(log.Topics), log.Address, log.BlockNumber, log.TxIndex)
 

@@ -7,25 +7,25 @@ import (
 )
 
 // parseIntBytes is a zero-alloc wrapper around strconv.ParseInt.
-func parseIntBytes(b []byte, base int, bitSize int) (i int64, err error) { 
+func parseIntBytes(b []byte, base int, bitSize int) (i int64, err error) {
 	s := unsafeBytesToString(b)
 	return strconv.ParseInt(s, base, bitSize)
 }
 
 // parseUintBytes is a zero-alloc wrapper around strconv.ParseUint.
-func parseUintBytes(b []byte, base int, bitSize int) (i uint64, err error) { 
+func parseUintBytes(b []byte, base int, bitSize int) (i uint64, err error) {
 	s := unsafeBytesToString(b)
 	return strconv.ParseUint(s, base, bitSize)
 }
 
 // parseFloatBytes is a zero-alloc wrapper around strconv.ParseFloat.
-func parseFloatBytes(b []byte, bitSize int) (float64, error) { 
+func parseFloatBytes(b []byte, bitSize int) (float64, error) {
 	s := unsafeBytesToString(b)
 	return strconv.ParseFloat(s, bitSize)
 }
 
 // parseBoolBytes is a zero-alloc wrapper around strconv.ParseBool.
-func parseBoolBytes(b []byte) (bool, error) { 
+func parseBoolBytes(b []byte) (bool, error) {
 	return strconv.ParseBool(unsafeBytesToString(b))
 }
 
@@ -33,7 +33,7 @@ func parseBoolBytes(b []byte) (bool, error) {
 //
 // It is unsafe, and is intended to prepare input to short-lived functions
 // that require strings.
-func unsafeBytesToString(in []byte) string { 
+func unsafeBytesToString(in []byte) string {
 	src := *(*reflect.SliceHeader)(unsafe.Pointer(&in))
 	dst := reflect.StringHeader{
 		Data: src.Data,

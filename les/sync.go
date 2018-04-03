@@ -23,6 +23,7 @@ import (
 	"github.com/ethereum/go-ethereum/core"
 	"github.com/ethereum/go-ethereum/eth/downloader"
 	"github.com/ethereum/go-ethereum/light"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 const (
@@ -32,7 +33,8 @@ const (
 
 // syncer is responsible for periodically synchronising with the network, both
 // downloading hashes and blocks as well as handling the announcement handler.
-func (pm *ProtocolManager) syncer() { log.DebugLog()
+func (pm *ProtocolManager) syncer() {
+	log.DebugLog()
 	// Start and ensure cleanup of sync mechanisms
 	//pm.fetcher.Start()
 	//defer pm.fetcher.Stop()
@@ -49,24 +51,26 @@ func (pm *ProtocolManager) syncer() { log.DebugLog()
 						}
 						go pm.synchronise(pm.peers.BestPeer())
 			*/
-		/*case <-forceSync:
-		// Force a sync even if not enough peers are present
-		go pm.synchronise(pm.peers.BestPeer())
-		*/
+			/*case <-forceSync:
+			// Force a sync even if not enough peers are present
+			go pm.synchronise(pm.peers.BestPeer())
+			*/
 		case <-pm.noMorePeers:
 			return
 		}
 	}
 }
 
-func (pm *ProtocolManager) needToSync(peerHead blockInfo) bool { log.DebugLog()
+func (pm *ProtocolManager) needToSync(peerHead blockInfo) bool {
+	log.DebugLog()
 	head := pm.blockchain.CurrentHeader()
 	currentTd := core.GetTd(pm.chainDb, head.Hash(), head.Number.Uint64())
 	return currentTd != nil && peerHead.Td.Cmp(currentTd) > 0
 }
 
 // synchronise tries to sync up our local block chain with a remote peer.
-func (pm *ProtocolManager) synchronise(peer *peer) { log.DebugLog()
+func (pm *ProtocolManager) synchronise(peer *peer) {
+	log.DebugLog()
 	// Short circuit if no peers are available
 	if peer == nil {
 		return

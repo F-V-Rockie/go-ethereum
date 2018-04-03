@@ -7,7 +7,7 @@ import (
 	"unsafe"
 )
 
-func (v *ITypeInfo) GetTypeAttr() (tattr *TYPEATTR, err error) { 
+func (v *ITypeInfo) GetTypeAttr() (tattr *TYPEATTR, err error) {
 	hr, _, _ := syscall.Syscall(
 		uintptr(v.VTable().GetTypeAttr),
 		2,

@@ -32,7 +32,7 @@ var (
 
 // UnixTime converts t the number of seconds and nanoseconds using the Unix
 // epoch of 1 Jan 1970.
-func (t Time) UnixTime() (sec, nsec int64) { 
+func (t Time) UnixTime() (sec, nsec int64) {
 	sec = int64(t - g1582ns100)
 	nsec = (sec % 10000000) * 100
 	sec /= 10000000
@@ -42,13 +42,13 @@ func (t Time) UnixTime() (sec, nsec int64) {
 // GetTime returns the current Time (100s of nanoseconds since 15 Oct 1582) and
 // clock sequence as well as adjusting the clock sequence as needed.  An error
 // is returned if the current time cannot be determined.
-func GetTime() (Time, uint16, error) { 
+func GetTime() (Time, uint16, error) {
 	defer timeMu.Unlock()
 	timeMu.Lock()
 	return getTime()
 }
 
-func getTime() (Time, uint16, error) { 
+func getTime() (Time, uint16, error) {
 	t := timeNow()
 
 	// If we don't have a clock sequence already, set one.
@@ -74,13 +74,13 @@ func getTime() (Time, uint16, error) {
 // clock sequence is generated the first time a clock sequence is requested by
 // ClockSequence, GetTime, or NewUUID.  (section 4.2.1.1) sequence is generated
 // for
-func ClockSequence() int { 
+func ClockSequence() int {
 	defer timeMu.Unlock()
 	timeMu.Lock()
 	return clockSequence()
 }
 
-func clockSequence() int { 
+func clockSequence() int {
 	if clock_seq == 0 {
 		setClockSequence(-1)
 	}
@@ -89,13 +89,13 @@ func clockSequence() int {
 
 // SetClockSeq sets the clock sequence to the lower 14 bits of seq.  Setting to
 // -1 causes a new sequence to be generated.
-func SetClockSequence(seq int) { 
+func SetClockSequence(seq int) {
 	defer timeMu.Unlock()
 	timeMu.Lock()
 	setClockSequence(seq)
 }
 
-func setClockSequence(seq int) { 
+func setClockSequence(seq int) {
 	if seq == -1 {
 		var b [2]byte
 		randomBits(b[:]) // clock sequence
@@ -111,7 +111,7 @@ func setClockSequence(seq int) {
 // Time returns the time in 100s of nanoseconds since 15 Oct 1582 encoded in
 // uuid.  It returns false if uuid is not valid.  The time is only well defined
 // for version 1 and 2 UUIDs.
-func (uuid UUID) Time() (Time, bool) { 
+func (uuid UUID) Time() (Time, bool) {
 	if len(uuid) != 16 {
 		return 0, false
 	}
@@ -124,7 +124,7 @@ func (uuid UUID) Time() (Time, bool) {
 // ClockSequence returns the clock sequence encoded in uuid.  It returns false
 // if uuid is not valid.  The clock sequence is only well defined for version 1
 // and 2 UUIDs.
-func (uuid UUID) ClockSequence() (int, bool) { 
+func (uuid UUID) ClockSequence() (int, bool) {
 	if len(uuid) != 16 {
 		return 0, false
 	}

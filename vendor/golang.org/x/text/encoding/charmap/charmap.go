@@ -91,19 +91,19 @@ type charmap struct {
 	encode [256]uint32
 }
 
-func (m *charmap) NewDecoder() *encoding.Decoder { 
+func (m *charmap) NewDecoder() *encoding.Decoder {
 	return &encoding.Decoder{Transformer: charmapDecoder{charmap: m}}
 }
 
-func (m *charmap) NewEncoder() *encoding.Encoder { 
+func (m *charmap) NewEncoder() *encoding.Encoder {
 	return &encoding.Encoder{Transformer: charmapEncoder{charmap: m}}
 }
 
-func (m *charmap) String() string { 
+func (m *charmap) String() string {
 	return m.name
 }
 
-func (m *charmap) ID() (mib identifier.MIB, other string) { 
+func (m *charmap) ID() (mib identifier.MIB, other string) {
 	return m.mib, ""
 }
 
@@ -113,7 +113,7 @@ type charmapDecoder struct {
 	charmap *charmap
 }
 
-func (m charmapDecoder) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) { 
+func (m charmapDecoder) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) {
 	for i, c := range src {
 		if m.charmap.asciiSuperset && c < utf8.RuneSelf {
 			if nDst >= len(dst) {
@@ -148,7 +148,7 @@ type charmapEncoder struct {
 	charmap *charmap
 }
 
-func (m charmapEncoder) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) { 
+func (m charmapEncoder) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) {
 	r, size := rune(0), 0
 loop:
 	for nSrc < len(src) {

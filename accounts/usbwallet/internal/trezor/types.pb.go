@@ -100,6 +100,7 @@ import "github.com/golang/protobuf/proto"
 import "fmt"
 import "math"
 import google_protobuf "github.com/golang/protobuf/protoc-gen-go/descriptor"
+import "github.com/ethereum/go-ethereum/log"
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
@@ -180,8 +181,10 @@ func (x *FailureType) UnmarshalJSON(data []byte) error {
 	*x = FailureType(value)
 	return nil
 }
-func (FailureType) EnumDescriptor() ([]byte, []int) { log.DebugLog()
-														return fileDescriptor0, []int{0} }
+func (FailureType) EnumDescriptor() ([]byte, []int) {
+	log.DebugLog()
+	return fileDescriptor0, []int{0}
+}
 
 // *
 // Type of script which will be used for transaction output
@@ -233,8 +236,10 @@ func (x *OutputScriptType) UnmarshalJSON(data []byte) error {
 	*x = OutputScriptType(value)
 	return nil
 }
-func (OutputScriptType) EnumDescriptor() ([]byte, []int) { log.DebugLog()
-															 return fileDescriptor0, []int{1} }
+func (OutputScriptType) EnumDescriptor() ([]byte, []int) {
+	log.DebugLog()
+	return fileDescriptor0, []int{1}
+}
 
 // *
 // Type of script which will be used for transaction output
@@ -283,8 +288,10 @@ func (x *InputScriptType) UnmarshalJSON(data []byte) error {
 	*x = InputScriptType(value)
 	return nil
 }
-func (InputScriptType) EnumDescriptor() ([]byte, []int) { log.DebugLog()
-															return fileDescriptor0, []int{2} }
+func (InputScriptType) EnumDescriptor() ([]byte, []int) {
+	log.DebugLog()
+	return fileDescriptor0, []int{2}
+}
 
 // *
 // Type of information required by transaction signing process
@@ -333,8 +340,10 @@ func (x *RequestType) UnmarshalJSON(data []byte) error {
 	*x = RequestType(value)
 	return nil
 }
-func (RequestType) EnumDescriptor() ([]byte, []int) { log.DebugLog()
-														return fileDescriptor0, []int{3} }
+func (RequestType) EnumDescriptor() ([]byte, []int) {
+	log.DebugLog()
+	return fileDescriptor0, []int{3}
+}
 
 // *
 // Type of button request
@@ -401,8 +410,10 @@ func (x *ButtonRequestType) UnmarshalJSON(data []byte) error {
 	*x = ButtonRequestType(value)
 	return nil
 }
-func (ButtonRequestType) EnumDescriptor() ([]byte, []int) { log.DebugLog()
-															  return fileDescriptor0, []int{4} }
+func (ButtonRequestType) EnumDescriptor() ([]byte, []int) {
+	log.DebugLog()
+	return fileDescriptor0, []int{4}
+}
 
 // *
 // Type of PIN request
@@ -445,8 +456,10 @@ func (x *PinMatrixRequestType) UnmarshalJSON(data []byte) error {
 	*x = PinMatrixRequestType(value)
 	return nil
 }
-func (PinMatrixRequestType) EnumDescriptor() ([]byte, []int) { log.DebugLog()
-																 return fileDescriptor0, []int{5} }
+func (PinMatrixRequestType) EnumDescriptor() ([]byte, []int) {
+	log.DebugLog()
+	return fileDescriptor0, []int{5}
+}
 
 // *
 // Type of recovery procedure. These should be used as bitmask, e.g.,
@@ -493,8 +506,10 @@ func (x *RecoveryDeviceType) UnmarshalJSON(data []byte) error {
 	*x = RecoveryDeviceType(value)
 	return nil
 }
-func (RecoveryDeviceType) EnumDescriptor() ([]byte, []int) { log.DebugLog()
-															   return fileDescriptor0, []int{6} }
+func (RecoveryDeviceType) EnumDescriptor() ([]byte, []int) {
+	log.DebugLog()
+	return fileDescriptor0, []int{6}
+}
 
 // *
 // Type of Recovery Word request
@@ -537,8 +552,10 @@ func (x *WordRequestType) UnmarshalJSON(data []byte) error {
 	*x = WordRequestType(value)
 	return nil
 }
-func (WordRequestType) EnumDescriptor() ([]byte, []int) { log.DebugLog()
-															return fileDescriptor0, []int{7} }
+func (WordRequestType) EnumDescriptor() ([]byte, []int) {
+	log.DebugLog()
+	return fileDescriptor0, []int{7}
+}
 
 // *
 // Structure representing BIP32 (hierarchical deterministic) node
@@ -557,12 +574,19 @@ type HDNodeType struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *HDNodeType) Reset()                    { log.DebugLog() * m = HDNodeType{} }
-func (m *HDNodeType) String() string            { log.DebugLog()
-													return proto.CompactTextString(m) }
-func (*HDNodeType) ProtoMessage()               { log.DebugLog() }
-func (*HDNodeType) Descriptor() ([]byte, []int) { log.DebugLog()
-													return fileDescriptor0, []int{0} }
+func (m *HDNodeType) Reset() {
+	log.DebugLog()
+	*m = HDNodeType{}
+}
+func (m *HDNodeType) String() string {
+	log.DebugLog()
+	return proto.CompactTextString(m)
+}
+func (*HDNodeType) ProtoMessage() { log.DebugLog() }
+func (*HDNodeType) Descriptor() ([]byte, []int) {
+	log.DebugLog()
+	return fileDescriptor0, []int{0}
+}
 
 func (m *HDNodeType) GetDepth() uint32 {
 	log.DebugLog()
@@ -618,12 +642,19 @@ type HDNodePathType struct {
 	XXX_unrecognized []byte      `json:"-"`
 }
 
-func (m *HDNodePathType) Reset()                    { log.DebugLog() * m = HDNodePathType{} }
-func (m *HDNodePathType) String() string            { log.DebugLog()
-														return proto.CompactTextString(m) }
-func (*HDNodePathType) ProtoMessage()               { log.DebugLog() }
-func (*HDNodePathType) Descriptor() ([]byte, []int) { log.DebugLog()
-														return fileDescriptor0, []int{1} }
+func (m *HDNodePathType) Reset() {
+	log.DebugLog()
+	*m = HDNodePathType{}
+}
+func (m *HDNodePathType) String() string {
+	log.DebugLog()
+	return proto.CompactTextString(m)
+}
+func (*HDNodePathType) ProtoMessage() { log.DebugLog() }
+func (*HDNodePathType) Descriptor() ([]byte, []int) {
+	log.DebugLog()
+	return fileDescriptor0, []int{1}
+}
 
 func (m *HDNodePathType) GetNode() *HDNodeType {
 	log.DebugLog()
@@ -658,12 +689,19 @@ type CoinType struct {
 	XXX_unrecognized    []byte  `json:"-"`
 }
 
-func (m *CoinType) Reset()                    { log.DebugLog() * m = CoinType{} }
-func (m *CoinType) String() string            { log.DebugLog()
-												  return proto.CompactTextString(m) }
-func (*CoinType) ProtoMessage()               { log.DebugLog() }
-func (*CoinType) Descriptor() ([]byte, []int) { log.DebugLog()
-												  return fileDescriptor0, []int{2} }
+func (m *CoinType) Reset() {
+	log.DebugLog()
+	*m = CoinType{}
+}
+func (m *CoinType) String() string {
+	log.DebugLog()
+	return proto.CompactTextString(m)
+}
+func (*CoinType) ProtoMessage() { log.DebugLog() }
+func (*CoinType) Descriptor() ([]byte, []int) {
+	log.DebugLog()
+	return fileDescriptor0, []int{2}
+}
 
 const Default_CoinType_AddressType uint32 = 0
 const Default_CoinType_AddressTypeP2Sh uint32 = 5
@@ -760,12 +798,19 @@ type MultisigRedeemScriptType struct {
 	XXX_unrecognized []byte            `json:"-"`
 }
 
-func (m *MultisigRedeemScriptType) Reset()                    { log.DebugLog() * m = MultisigRedeemScriptType{} }
-func (m *MultisigRedeemScriptType) String() string            { log.DebugLog()
-																  return proto.CompactTextString(m) }
-func (*MultisigRedeemScriptType) ProtoMessage()               { log.DebugLog() }
-func (*MultisigRedeemScriptType) Descriptor() ([]byte, []int) { log.DebugLog()
-																  return fileDescriptor0, []int{3} }
+func (m *MultisigRedeemScriptType) Reset() {
+	log.DebugLog()
+	*m = MultisigRedeemScriptType{}
+}
+func (m *MultisigRedeemScriptType) String() string {
+	log.DebugLog()
+	return proto.CompactTextString(m)
+}
+func (*MultisigRedeemScriptType) ProtoMessage() { log.DebugLog() }
+func (*MultisigRedeemScriptType) Descriptor() ([]byte, []int) {
+	log.DebugLog()
+	return fileDescriptor0, []int{3}
+}
 
 func (m *MultisigRedeemScriptType) GetPubkeys() []*HDNodePathType {
 	log.DebugLog()
@@ -807,12 +852,19 @@ type TxInputType struct {
 	XXX_unrecognized []byte                    `json:"-"`
 }
 
-func (m *TxInputType) Reset()                    { log.DebugLog() * m = TxInputType{} }
-func (m *TxInputType) String() string            { log.DebugLog()
-													 return proto.CompactTextString(m) }
-func (*TxInputType) ProtoMessage()               { log.DebugLog() }
-func (*TxInputType) Descriptor() ([]byte, []int) { log.DebugLog()
-													 return fileDescriptor0, []int{4} }
+func (m *TxInputType) Reset() {
+	log.DebugLog()
+	*m = TxInputType{}
+}
+func (m *TxInputType) String() string {
+	log.DebugLog()
+	return proto.CompactTextString(m)
+}
+func (*TxInputType) ProtoMessage() { log.DebugLog() }
+func (*TxInputType) Descriptor() ([]byte, []int) {
+	log.DebugLog()
+	return fileDescriptor0, []int{4}
+}
 
 const Default_TxInputType_Sequence uint32 = 4294967295
 const Default_TxInputType_ScriptType InputScriptType = InputScriptType_SPENDADDRESS
@@ -895,12 +947,19 @@ type TxOutputType struct {
 	XXX_unrecognized []byte                    `json:"-"`
 }
 
-func (m *TxOutputType) Reset()                    { log.DebugLog() * m = TxOutputType{} }
-func (m *TxOutputType) String() string            { log.DebugLog()
-													  return proto.CompactTextString(m) }
-func (*TxOutputType) ProtoMessage()               { log.DebugLog() }
-func (*TxOutputType) Descriptor() ([]byte, []int) { log.DebugLog()
-													  return fileDescriptor0, []int{5} }
+func (m *TxOutputType) Reset() {
+	log.DebugLog()
+	*m = TxOutputType{}
+}
+func (m *TxOutputType) String() string {
+	log.DebugLog()
+	return proto.CompactTextString(m)
+}
+func (*TxOutputType) ProtoMessage() { log.DebugLog() }
+func (*TxOutputType) Descriptor() ([]byte, []int) {
+	log.DebugLog()
+	return fileDescriptor0, []int{5}
+}
 
 func (m *TxOutputType) GetAddress() string {
 	log.DebugLog()
@@ -959,12 +1018,19 @@ type TxOutputBinType struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *TxOutputBinType) Reset()                    { log.DebugLog() * m = TxOutputBinType{} }
-func (m *TxOutputBinType) String() string            { log.DebugLog()
-														 return proto.CompactTextString(m) }
-func (*TxOutputBinType) ProtoMessage()               { log.DebugLog() }
-func (*TxOutputBinType) Descriptor() ([]byte, []int) { log.DebugLog()
-														 return fileDescriptor0, []int{6} }
+func (m *TxOutputBinType) Reset() {
+	log.DebugLog()
+	*m = TxOutputBinType{}
+}
+func (m *TxOutputBinType) String() string {
+	log.DebugLog()
+	return proto.CompactTextString(m)
+}
+func (*TxOutputBinType) ProtoMessage() { log.DebugLog() }
+func (*TxOutputBinType) Descriptor() ([]byte, []int) {
+	log.DebugLog()
+	return fileDescriptor0, []int{6}
+}
 
 func (m *TxOutputBinType) GetAmount() uint64 {
 	log.DebugLog()
@@ -998,12 +1064,19 @@ type TransactionType struct {
 	XXX_unrecognized []byte             `json:"-"`
 }
 
-func (m *TransactionType) Reset()                    { log.DebugLog() * m = TransactionType{} }
-func (m *TransactionType) String() string            { log.DebugLog()
-														 return proto.CompactTextString(m) }
-func (*TransactionType) ProtoMessage()               { log.DebugLog() }
-func (*TransactionType) Descriptor() ([]byte, []int) { log.DebugLog()
-														 return fileDescriptor0, []int{7} }
+func (m *TransactionType) Reset() {
+	log.DebugLog()
+	*m = TransactionType{}
+}
+func (m *TransactionType) String() string {
+	log.DebugLog()
+	return proto.CompactTextString(m)
+}
+func (*TransactionType) ProtoMessage() { log.DebugLog() }
+func (*TransactionType) Descriptor() ([]byte, []int) {
+	log.DebugLog()
+	return fileDescriptor0, []int{7}
+}
 
 func (m *TransactionType) GetVersion() uint32 {
 	log.DebugLog()
@@ -1088,12 +1161,19 @@ type TxRequestDetailsType struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *TxRequestDetailsType) Reset()                    { log.DebugLog() * m = TxRequestDetailsType{} }
-func (m *TxRequestDetailsType) String() string            { log.DebugLog()
-															  return proto.CompactTextString(m) }
-func (*TxRequestDetailsType) ProtoMessage()               { log.DebugLog() }
-func (*TxRequestDetailsType) Descriptor() ([]byte, []int) { log.DebugLog()
-															  return fileDescriptor0, []int{8} }
+func (m *TxRequestDetailsType) Reset() {
+	log.DebugLog()
+	*m = TxRequestDetailsType{}
+}
+func (m *TxRequestDetailsType) String() string {
+	log.DebugLog()
+	return proto.CompactTextString(m)
+}
+func (*TxRequestDetailsType) ProtoMessage() { log.DebugLog() }
+func (*TxRequestDetailsType) Descriptor() ([]byte, []int) {
+	log.DebugLog()
+	return fileDescriptor0, []int{8}
+}
 
 func (m *TxRequestDetailsType) GetRequestIndex() uint32 {
 	log.DebugLog()
@@ -1137,12 +1217,19 @@ type TxRequestSerializedType struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *TxRequestSerializedType) Reset()                    { log.DebugLog() * m = TxRequestSerializedType{} }
-func (m *TxRequestSerializedType) String() string            { log.DebugLog()
-																 return proto.CompactTextString(m) }
-func (*TxRequestSerializedType) ProtoMessage()               { log.DebugLog() }
-func (*TxRequestSerializedType) Descriptor() ([]byte, []int) { log.DebugLog()
-																 return fileDescriptor0, []int{9} }
+func (m *TxRequestSerializedType) Reset() {
+	log.DebugLog()
+	*m = TxRequestSerializedType{}
+}
+func (m *TxRequestSerializedType) String() string {
+	log.DebugLog()
+	return proto.CompactTextString(m)
+}
+func (*TxRequestSerializedType) ProtoMessage() { log.DebugLog() }
+func (*TxRequestSerializedType) Descriptor() ([]byte, []int) {
+	log.DebugLog()
+	return fileDescriptor0, []int{9}
+}
 
 func (m *TxRequestSerializedType) GetSignatureIndex() uint32 {
 	log.DebugLog()
@@ -1181,12 +1268,19 @@ type IdentityType struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *IdentityType) Reset()                    { log.DebugLog() * m = IdentityType{} }
-func (m *IdentityType) String() string            { log.DebugLog()
-													  return proto.CompactTextString(m) }
-func (*IdentityType) ProtoMessage()               { log.DebugLog() }
-func (*IdentityType) Descriptor() ([]byte, []int) { log.DebugLog()
-													  return fileDescriptor0, []int{10} }
+func (m *IdentityType) Reset() {
+	log.DebugLog()
+	*m = IdentityType{}
+}
+func (m *IdentityType) String() string {
+	log.DebugLog()
+	return proto.CompactTextString(m)
+}
+func (*IdentityType) ProtoMessage() { log.DebugLog() }
+func (*IdentityType) Descriptor() ([]byte, []int) {
+	log.DebugLog()
+	return fileDescriptor0, []int{10}
+}
 
 const Default_IdentityType_Index uint32 = 0
 
@@ -1320,8 +1414,10 @@ func init() {
 	proto.RegisterExtension(E_WireBootloader)
 }
 
-func init() { log.DebugLog()
-				proto.RegisterFile("types.proto", fileDescriptor0) }
+func init() {
+	log.DebugLog()
+	proto.RegisterFile("types.proto", fileDescriptor0)
+}
 
 var fileDescriptor0 = []byte{
 	// 1899 bytes of a gzipped FileDescriptorProto

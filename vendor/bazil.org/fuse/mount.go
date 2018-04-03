@@ -17,11 +17,11 @@ var (
 	ErrOSXFUSENotFound = errors.New("cannot locate OSXFUSE")
 )
 
-func neverIgnoreLine(line string) bool { 
+func neverIgnoreLine(line string) bool {
 	return false
 }
 
-func lineLogger(wg *sync.WaitGroup, prefix string, ignore func(line string) bool, r io.ReadCloser) { 
+func lineLogger(wg *sync.WaitGroup, prefix string, ignore func(line string) bool, r io.ReadCloser) {
 	defer wg.Done()
 
 	scanner := bufio.NewScanner(r)

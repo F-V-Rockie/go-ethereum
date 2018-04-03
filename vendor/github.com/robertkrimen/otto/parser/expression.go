@@ -8,7 +8,7 @@ import (
 	"github.com/robertkrimen/otto/token"
 )
 
-func (self *_parser) parseIdentifier() *ast.Identifier { 
+func (self *_parser) parseIdentifier() *ast.Identifier {
 	literal := self.literal
 	idx := self.idx
 	if self.mode&StoreComments != 0 {
@@ -27,7 +27,7 @@ func (self *_parser) parseIdentifier() *ast.Identifier {
 	return exp
 }
 
-func (self *_parser) parsePrimaryExpression() ast.Expression { 
+func (self *_parser) parsePrimaryExpression() ast.Expression {
 	literal := self.literal
 	idx := self.idx
 	switch self.token {
@@ -118,7 +118,7 @@ func (self *_parser) parsePrimaryExpression() ast.Expression {
 	return &ast.BadExpression{From: idx, To: self.idx}
 }
 
-func (self *_parser) parseRegExpLiteral() *ast.RegExpLiteral { 
+func (self *_parser) parseRegExpLiteral() *ast.RegExpLiteral {
 
 	offset := self.chrOffset - 1 // Opening slash already gotten
 	if self.token == token.QUOTIENT_ASSIGN {
@@ -174,7 +174,7 @@ func (self *_parser) parseRegExpLiteral() *ast.RegExpLiteral {
 	}
 }
 
-func (self *_parser) parseVariableDeclaration(declarationList *[]*ast.VariableExpression) ast.Expression { 
+func (self *_parser) parseVariableDeclaration(declarationList *[]*ast.VariableExpression) ast.Expression {
 
 	if self.token != token.IDENTIFIER {
 		idx := self.expect(token.IDENTIFIER)
@@ -208,7 +208,7 @@ func (self *_parser) parseVariableDeclaration(declarationList *[]*ast.VariableEx
 	return node
 }
 
-func (self *_parser) parseVariableDeclarationList(var_ file.Idx) []ast.Expression { 
+func (self *_parser) parseVariableDeclarationList(var_ file.Idx) []ast.Expression {
 
 	var declarationList []*ast.VariableExpression // Avoid bad expressions
 	var list []ast.Expression
@@ -236,7 +236,7 @@ func (self *_parser) parseVariableDeclarationList(var_ file.Idx) []ast.Expressio
 	return list
 }
 
-func (self *_parser) parseObjectPropertyKey() (string, string) { 
+func (self *_parser) parseObjectPropertyKey() (string, string) {
 	idx, tkn, literal := self.idx, self.token, self.literal
 	value := ""
 	if self.mode&StoreComments != 0 {
@@ -270,7 +270,7 @@ func (self *_parser) parseObjectPropertyKey() (string, string) {
 	return literal, value
 }
 
-func (self *_parser) parseObjectProperty() ast.Property { 
+func (self *_parser) parseObjectProperty() ast.Property {
 	literal, value := self.parseObjectPropertyKey()
 	if literal == "get" && self.token != token.COLON {
 		idx := self.idx
@@ -321,7 +321,7 @@ func (self *_parser) parseObjectProperty() ast.Property {
 	return exp
 }
 
-func (self *_parser) parseObjectLiteral() ast.Expression { 
+func (self *_parser) parseObjectLiteral() ast.Expression {
 	var value []ast.Property
 	idx0 := self.expect(token.LEFT_BRACE)
 	for self.token != token.RIGHT_BRACE && self.token != token.EOF {
@@ -346,7 +346,7 @@ func (self *_parser) parseObjectLiteral() ast.Expression {
 	}
 }
 
-func (self *_parser) parseArrayLiteral() ast.Expression { 
+func (self *_parser) parseArrayLiteral() ast.Expression {
 	idx0 := self.expect(token.LEFT_BRACKET)
 	var value []ast.Expression
 	for self.token != token.RIGHT_BRACKET && self.token != token.EOF {
@@ -385,7 +385,7 @@ func (self *_parser) parseArrayLiteral() ast.Expression {
 	}
 }
 
-func (self *_parser) parseArgumentList() (argumentList []ast.Expression, idx0, idx1 file.Idx) { 
+func (self *_parser) parseArgumentList() (argumentList []ast.Expression, idx0, idx1 file.Idx) {
 	if self.mode&StoreComments != 0 {
 		self.comments.Unset()
 	}
@@ -413,7 +413,7 @@ func (self *_parser) parseArgumentList() (argumentList []ast.Expression, idx0, i
 	return
 }
 
-func (self *_parser) parseCallExpression(left ast.Expression) ast.Expression { 
+func (self *_parser) parseCallExpression(left ast.Expression) ast.Expression {
 	argumentList, idx0, idx1 := self.parseArgumentList()
 	exp := &ast.CallExpression{
 		Callee:           left,
@@ -428,7 +428,7 @@ func (self *_parser) parseCallExpression(left ast.Expression) ast.Expression {
 	return exp
 }
 
-func (self *_parser) parseDotMember(left ast.Expression) ast.Expression { 
+func (self *_parser) parseDotMember(left ast.Expression) ast.Expression {
 	period := self.expect(token.PERIOD)
 
 	literal := self.literal
@@ -451,7 +451,7 @@ func (self *_parser) parseDotMember(left ast.Expression) ast.Expression {
 	}
 }
 
-func (self *_parser) parseBracketMember(left ast.Expression) ast.Expression { 
+func (self *_parser) parseBracketMember(left ast.Expression) ast.Expression {
 	idx0 := self.expect(token.LEFT_BRACKET)
 	member := self.parseExpression()
 	idx1 := self.expect(token.RIGHT_BRACKET)
@@ -463,7 +463,7 @@ func (self *_parser) parseBracketMember(left ast.Expression) ast.Expression {
 	}
 }
 
-func (self *_parser) parseNewExpression() ast.Expression { 
+func (self *_parser) parseNewExpression() ast.Expression {
 	idx := self.expect(token.NEW)
 	callee := self.parseLeftHandSideExpression()
 	node := &ast.NewExpression{
@@ -484,7 +484,7 @@ func (self *_parser) parseNewExpression() ast.Expression {
 	return node
 }
 
-func (self *_parser) parseLeftHandSideExpression() ast.Expression { 
+func (self *_parser) parseLeftHandSideExpression() ast.Expression {
 
 	var left ast.Expression
 	if self.token == token.NEW {
@@ -514,7 +514,7 @@ func (self *_parser) parseLeftHandSideExpression() ast.Expression {
 	return left
 }
 
-func (self *_parser) parseLeftHandSideExpressionAllowCall() ast.Expression { 
+func (self *_parser) parseLeftHandSideExpressionAllowCall() ast.Expression {
 
 	allowIn := self.scope.allowIn
 	self.scope.allowIn = true
@@ -561,7 +561,7 @@ func (self *_parser) parseLeftHandSideExpressionAllowCall() ast.Expression {
 	return left
 }
 
-func (self *_parser) parsePostfixExpression() ast.Expression { 
+func (self *_parser) parsePostfixExpression() ast.Expression {
 	operand := self.parseLeftHandSideExpressionAllowCall()
 
 	switch self.token {
@@ -600,7 +600,7 @@ func (self *_parser) parsePostfixExpression() ast.Expression {
 	return operand
 }
 
-func (self *_parser) parseUnaryExpression() ast.Expression { 
+func (self *_parser) parseUnaryExpression() ast.Expression {
 
 	switch self.token {
 	case token.PLUS, token.MINUS, token.NOT, token.BITWISE_NOT:
@@ -643,7 +643,7 @@ func (self *_parser) parseUnaryExpression() ast.Expression {
 	return self.parsePostfixExpression()
 }
 
-func (self *_parser) parseMultiplicativeExpression() ast.Expression { 
+func (self *_parser) parseMultiplicativeExpression() ast.Expression {
 	next := self.parseUnaryExpression
 	left := next()
 
@@ -665,7 +665,7 @@ func (self *_parser) parseMultiplicativeExpression() ast.Expression {
 	return left
 }
 
-func (self *_parser) parseAdditiveExpression() ast.Expression { 
+func (self *_parser) parseAdditiveExpression() ast.Expression {
 	next := self.parseMultiplicativeExpression
 	left := next()
 
@@ -686,7 +686,7 @@ func (self *_parser) parseAdditiveExpression() ast.Expression {
 	return left
 }
 
-func (self *_parser) parseShiftExpression() ast.Expression { 
+func (self *_parser) parseShiftExpression() ast.Expression {
 	next := self.parseAdditiveExpression
 	left := next()
 
@@ -708,7 +708,7 @@ func (self *_parser) parseShiftExpression() ast.Expression {
 	return left
 }
 
-func (self *_parser) parseRelationalExpression() ast.Expression { 
+func (self *_parser) parseRelationalExpression() ast.Expression {
 	next := self.parseShiftExpression
 	left := next()
 
@@ -767,7 +767,7 @@ func (self *_parser) parseRelationalExpression() ast.Expression {
 	return left
 }
 
-func (self *_parser) parseEqualityExpression() ast.Expression { 
+func (self *_parser) parseEqualityExpression() ast.Expression {
 	next := self.parseRelationalExpression
 	left := next()
 
@@ -790,7 +790,7 @@ func (self *_parser) parseEqualityExpression() ast.Expression {
 	return left
 }
 
-func (self *_parser) parseBitwiseAndExpression() ast.Expression { 
+func (self *_parser) parseBitwiseAndExpression() ast.Expression {
 	next := self.parseEqualityExpression
 	left := next()
 
@@ -811,7 +811,7 @@ func (self *_parser) parseBitwiseAndExpression() ast.Expression {
 	return left
 }
 
-func (self *_parser) parseBitwiseExclusiveOrExpression() ast.Expression { 
+func (self *_parser) parseBitwiseExclusiveOrExpression() ast.Expression {
 	next := self.parseBitwiseAndExpression
 	left := next()
 
@@ -832,7 +832,7 @@ func (self *_parser) parseBitwiseExclusiveOrExpression() ast.Expression {
 	return left
 }
 
-func (self *_parser) parseBitwiseOrExpression() ast.Expression { 
+func (self *_parser) parseBitwiseOrExpression() ast.Expression {
 	next := self.parseBitwiseExclusiveOrExpression
 	left := next()
 
@@ -853,7 +853,7 @@ func (self *_parser) parseBitwiseOrExpression() ast.Expression {
 	return left
 }
 
-func (self *_parser) parseLogicalAndExpression() ast.Expression { 
+func (self *_parser) parseLogicalAndExpression() ast.Expression {
 	next := self.parseBitwiseOrExpression
 	left := next()
 
@@ -874,7 +874,7 @@ func (self *_parser) parseLogicalAndExpression() ast.Expression {
 	return left
 }
 
-func (self *_parser) parseLogicalOrExpression() ast.Expression { 
+func (self *_parser) parseLogicalOrExpression() ast.Expression {
 	next := self.parseLogicalAndExpression
 	left := next()
 
@@ -895,7 +895,7 @@ func (self *_parser) parseLogicalOrExpression() ast.Expression {
 	return left
 }
 
-func (self *_parser) parseConditionlExpression() ast.Expression { 
+func (self *_parser) parseConditionlExpression() ast.Expression {
 	left := self.parseLogicalOrExpression()
 
 	if self.token == token.QUESTION_MARK {
@@ -921,7 +921,7 @@ func (self *_parser) parseConditionlExpression() ast.Expression {
 	return left
 }
 
-func (self *_parser) parseAssignmentExpression() ast.Expression { 
+func (self *_parser) parseAssignmentExpression() ast.Expression {
 	left := self.parseConditionlExpression()
 	var operator token.Token
 	switch self.token {
@@ -983,7 +983,7 @@ func (self *_parser) parseAssignmentExpression() ast.Expression {
 	return left
 }
 
-func (self *_parser) parseExpression() ast.Expression { 
+func (self *_parser) parseExpression() ast.Expression {
 	next := self.parseAssignmentExpression
 	left := next()
 

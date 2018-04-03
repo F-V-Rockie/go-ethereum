@@ -28,7 +28,7 @@ type EncryptedKey struct {
 	encryptedMPI1, encryptedMPI2 parsedMPI
 }
 
-func (e *EncryptedKey) parse(r io.Reader) (err error) { 
+func (e *EncryptedKey) parse(r io.Reader) (err error) {
 	var buf [10]byte
 	_, err = readFull(r, buf[:])
 	if err != nil {
@@ -53,7 +53,7 @@ func (e *EncryptedKey) parse(r io.Reader) (err error) {
 	return
 }
 
-func checksumKeyMaterial(key []byte) uint16 { 
+func checksumKeyMaterial(key []byte) uint16 {
 	var checksum uint16
 	for _, v := range key {
 		checksum += uint16(v)
@@ -64,7 +64,7 @@ func checksumKeyMaterial(key []byte) uint16 {
 // Decrypt decrypts an encrypted session key with the given private key. The
 // private key must have been decrypted first.
 // If config is nil, sensible defaults will be used.
-func (e *EncryptedKey) Decrypt(priv *PrivateKey, config *Config) error { 
+func (e *EncryptedKey) Decrypt(priv *PrivateKey, config *Config) error {
 	var err error
 	var b []byte
 
@@ -97,7 +97,7 @@ func (e *EncryptedKey) Decrypt(priv *PrivateKey, config *Config) error {
 }
 
 // Serialize writes the encrypted key packet, e, to w.
-func (e *EncryptedKey) Serialize(w io.Writer) error { 
+func (e *EncryptedKey) Serialize(w io.Writer) error {
 	var mpiLen int
 	switch e.Algo {
 	case PubKeyAlgoRSA, PubKeyAlgoRSAEncryptOnly:
@@ -129,7 +129,7 @@ func (e *EncryptedKey) Serialize(w io.Writer) error {
 // SerializeEncryptedKey serializes an encrypted key packet to w that contains
 // key, encrypted to pub.
 // If config is nil, sensible defaults will be used.
-func SerializeEncryptedKey(w io.Writer, pub *PublicKey, cipherFunc CipherFunction, key []byte, config *Config) error { 
+func SerializeEncryptedKey(w io.Writer, pub *PublicKey, cipherFunc CipherFunction, key []byte, config *Config) error {
 	var buf [10]byte
 	buf[0] = encryptedKeyVersion
 	binary.BigEndian.PutUint64(buf[1:9], pub.KeyId)
@@ -154,7 +154,7 @@ func SerializeEncryptedKey(w io.Writer, pub *PublicKey, cipherFunc CipherFunctio
 	return errors.UnsupportedError("encrypting a key to public key of type " + strconv.Itoa(int(pub.PubKeyAlgo)))
 }
 
-func serializeEncryptedKeyRSA(w io.Writer, rand io.Reader, header [10]byte, pub *rsa.PublicKey, keyBlock []byte) error { 
+func serializeEncryptedKeyRSA(w io.Writer, rand io.Reader, header [10]byte, pub *rsa.PublicKey, keyBlock []byte) error {
 	cipherText, err := rsa.EncryptPKCS1v15(rand, pub, keyBlock)
 	if err != nil {
 		return errors.InvalidArgumentError("RSA encryption failed: " + err.Error())
@@ -173,7 +173,7 @@ func serializeEncryptedKeyRSA(w io.Writer, rand io.Reader, header [10]byte, pub 
 	return writeMPI(w, 8*uint16(len(cipherText)), cipherText)
 }
 
-func serializeEncryptedKeyElGamal(w io.Writer, rand io.Reader, header [10]byte, pub *elgamal.PublicKey, keyBlock []byte) error { 
+func serializeEncryptedKeyElGamal(w io.Writer, rand io.Reader, header [10]byte, pub *elgamal.PublicKey, keyBlock []byte) error {
 	c1, c2, err := elgamal.Encrypt(rand, pub, keyBlock)
 	if err != nil {
 		return errors.InvalidArgumentError("ElGamal encryption failed: " + err.Error())

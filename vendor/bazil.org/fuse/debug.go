@@ -4,12 +4,12 @@ import (
 	"runtime"
 )
 
-func stack() string { 
+func stack() string {
 	buf := make([]byte, 1024)
 	return string(buf[:runtime.Stack(buf, false)])
 }
 
-func nop(msg interface{}) { }
+func nop(msg interface{}) {}
 
 // Debug is called to output debug messages, including protocol
 // traces. The default behavior is to do nothing.

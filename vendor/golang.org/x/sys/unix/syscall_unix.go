@@ -36,7 +36,7 @@ var (
 
 // errnoErr returns common boxed Errno values, to prevent
 // allocations at runtime.
-func errnoErr(e syscall.Errno) error { 
+func errnoErr(e syscall.Errno) error {
 	switch e {
 	case 0:
 		return nil
@@ -59,7 +59,7 @@ type mmapper struct {
 	munmap func(addr uintptr, length uintptr) error
 }
 
-func (m *mmapper) Mmap(fd int, offset int64, length int, prot int, flags int) (data []byte, err error) { 
+func (m *mmapper) Mmap(fd int, offset int64, length int, prot int, flags int) (data []byte, err error) {
 	if length <= 0 {
 		return nil, EINVAL
 	}
@@ -88,7 +88,7 @@ func (m *mmapper) Mmap(fd int, offset int64, length int, prot int, flags int) (d
 	return b, nil
 }
 
-func (m *mmapper) Munmap(data []byte) (err error) { 
+func (m *mmapper) Munmap(data []byte) (err error) {
 	if len(data) == 0 || len(data) != cap(data) {
 		return EINVAL
 	}
@@ -110,7 +110,7 @@ func (m *mmapper) Munmap(data []byte) (err error) {
 	return nil
 }
 
-func Read(fd int, p []byte) (n int, err error) { 
+func Read(fd int, p []byte) (n int, err error) {
 	n, err = read(fd, p)
 	if raceenabled {
 		if n > 0 {
@@ -123,7 +123,7 @@ func Read(fd int, p []byte) (n int, err error) {
 	return
 }
 
-func Write(fd int, p []byte) (n int, err error) { 
+func Write(fd int, p []byte) (n int, err error) {
 	if raceenabled {
 		raceReleaseMerge(unsafe.Pointer(&ioSync))
 	}
@@ -160,7 +160,7 @@ type SockaddrUnix struct {
 	raw  RawSockaddrUnix
 }
 
-func Bind(fd int, sa Sockaddr) (err error) { 
+func Bind(fd int, sa Sockaddr) (err error) {
 	ptr, n, err := sa.sockaddr()
 	if err != nil {
 		return err
@@ -168,7 +168,7 @@ func Bind(fd int, sa Sockaddr) (err error) {
 	return bind(fd, ptr, n)
 }
 
-func Connect(fd int, sa Sockaddr) (err error) { 
+func Connect(fd int, sa Sockaddr) (err error) {
 	ptr, n, err := sa.sockaddr()
 	if err != nil {
 		return err
@@ -176,7 +176,7 @@ func Connect(fd int, sa Sockaddr) (err error) {
 	return connect(fd, ptr, n)
 }
 
-func Getpeername(fd int) (sa Sockaddr, err error) { 
+func Getpeername(fd int) (sa Sockaddr, err error) {
 	var rsa RawSockaddrAny
 	var len _Socklen = SizeofSockaddrAny
 	if err = getpeername(fd, &rsa, &len); err != nil {
@@ -185,14 +185,14 @@ func Getpeername(fd int) (sa Sockaddr, err error) {
 	return anyToSockaddr(&rsa)
 }
 
-func GetsockoptInt(fd, level, opt int) (value int, err error) { 
+func GetsockoptInt(fd, level, opt int) (value int, err error) {
 	var n int32
 	vallen := _Socklen(4)
 	err = getsockopt(fd, level, opt, unsafe.Pointer(&n), &vallen)
 	return int(n), err
 }
 
-func Recvfrom(fd int, p []byte, flags int) (n int, from Sockaddr, err error) { 
+func Recvfrom(fd int, p []byte, flags int) (n int, from Sockaddr, err error) {
 	var rsa RawSockaddrAny
 	var len _Socklen = SizeofSockaddrAny
 	if n, err = recvfrom(fd, p, flags, &rsa, &len); err != nil {
@@ -204,7 +204,7 @@ func Recvfrom(fd int, p []byte, flags int) (n int, from Sockaddr, err error) {
 	return
 }
 
-func Sendto(fd int, p []byte, flags int, to Sockaddr) (err error) { 
+func Sendto(fd int, p []byte, flags int, to Sockaddr) (err error) {
 	ptr, n, err := to.sockaddr()
 	if err != nil {
 		return err
@@ -212,44 +212,44 @@ func Sendto(fd int, p []byte, flags int, to Sockaddr) (err error) {
 	return sendto(fd, p, flags, ptr, n)
 }
 
-func SetsockoptByte(fd, level, opt int, value byte) (err error) { 
+func SetsockoptByte(fd, level, opt int, value byte) (err error) {
 	return setsockopt(fd, level, opt, unsafe.Pointer(&value), 1)
 }
 
-func SetsockoptInt(fd, level, opt int, value int) (err error) { 
+func SetsockoptInt(fd, level, opt int, value int) (err error) {
 	var n = int32(value)
 	return setsockopt(fd, level, opt, unsafe.Pointer(&n), 4)
 }
 
-func SetsockoptInet4Addr(fd, level, opt int, value [4]byte) (err error) { 
+func SetsockoptInet4Addr(fd, level, opt int, value [4]byte) (err error) {
 	return setsockopt(fd, level, opt, unsafe.Pointer(&value[0]), 4)
 }
 
-func SetsockoptIPMreq(fd, level, opt int, mreq *IPMreq) (err error) { 
+func SetsockoptIPMreq(fd, level, opt int, mreq *IPMreq) (err error) {
 	return setsockopt(fd, level, opt, unsafe.Pointer(mreq), SizeofIPMreq)
 }
 
-func SetsockoptIPv6Mreq(fd, level, opt int, mreq *IPv6Mreq) (err error) { 
+func SetsockoptIPv6Mreq(fd, level, opt int, mreq *IPv6Mreq) (err error) {
 	return setsockopt(fd, level, opt, unsafe.Pointer(mreq), SizeofIPv6Mreq)
 }
 
-func SetsockoptICMPv6Filter(fd, level, opt int, filter *ICMPv6Filter) error { 
+func SetsockoptICMPv6Filter(fd, level, opt int, filter *ICMPv6Filter) error {
 	return setsockopt(fd, level, opt, unsafe.Pointer(filter), SizeofICMPv6Filter)
 }
 
-func SetsockoptLinger(fd, level, opt int, l *Linger) (err error) { 
+func SetsockoptLinger(fd, level, opt int, l *Linger) (err error) {
 	return setsockopt(fd, level, opt, unsafe.Pointer(l), SizeofLinger)
 }
 
-func SetsockoptString(fd, level, opt int, s string) (err error) { 
+func SetsockoptString(fd, level, opt int, s string) (err error) {
 	return setsockopt(fd, level, opt, unsafe.Pointer(&[]byte(s)[0]), uintptr(len(s)))
 }
 
-func SetsockoptTimeval(fd, level, opt int, tv *Timeval) (err error) { 
+func SetsockoptTimeval(fd, level, opt int, tv *Timeval) (err error) {
 	return setsockopt(fd, level, opt, unsafe.Pointer(tv), unsafe.Sizeof(*tv))
 }
 
-func Socket(domain, typ, proto int) (fd int, err error) { 
+func Socket(domain, typ, proto int) (fd int, err error) {
 	if domain == AF_INET6 && SocketDisableIPv6 {
 		return -1, EAFNOSUPPORT
 	}
@@ -257,7 +257,7 @@ func Socket(domain, typ, proto int) (fd int, err error) {
 	return
 }
 
-func Socketpair(domain, typ, proto int) (fd [2]int, err error) { 
+func Socketpair(domain, typ, proto int) (fd [2]int, err error) {
 	var fdx [2]int32
 	err = socketpair(domain, typ, proto, &fdx)
 	if err == nil {
@@ -267,7 +267,7 @@ func Socketpair(domain, typ, proto int) (fd [2]int, err error) {
 	return
 }
 
-func Sendfile(outfd int, infd int, offset *int64, count int) (written int, err error) { 
+func Sendfile(outfd int, infd int, offset *int64, count int) (written int, err error) {
 	if raceenabled {
 		raceReleaseMerge(unsafe.Pointer(&ioSync))
 	}
@@ -276,9 +276,9 @@ func Sendfile(outfd int, infd int, offset *int64, count int) (written int, err e
 
 var ioSync int64
 
-func CloseOnExec(fd int) {  fcntl(fd, F_SETFD, FD_CLOEXEC) }
+func CloseOnExec(fd int) { fcntl(fd, F_SETFD, FD_CLOEXEC) }
 
-func SetNonblock(fd int, nonblocking bool) (err error) { 
+func SetNonblock(fd int, nonblocking bool) (err error) {
 	flag, err := fcntl(fd, F_GETFL, 0)
 	if err != nil {
 		return err

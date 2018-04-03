@@ -26,6 +26,7 @@ import (
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethdb"
 	"github.com/ethereum/go-ethereum/params"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 const (
@@ -48,7 +49,8 @@ const (
 
 // startBloomHandlers starts a batch of goroutines to accept bloom bit database
 // retrievals from possibly a range of filters and serving the data to satisfy.
-func (eth *Ethereum) startBloomHandlers() { log.DebugLog()
+func (eth *Ethereum) startBloomHandlers() {
+	log.DebugLog()
 	for i := 0; i < bloomServiceThreads; i++ {
 		go func() {
 			for {
@@ -102,7 +104,8 @@ type BloomIndexer struct {
 
 // NewBloomIndexer returns a chain indexer that generates bloom bits data for the
 // canonical chain for fast logs filtering.
-func NewBloomIndexer(db ethdb.Database, size uint64) *core.ChainIndexer { log.DebugLog()
+func NewBloomIndexer(db ethdb.Database, size uint64) *core.ChainIndexer {
+	log.DebugLog()
 	backend := &BloomIndexer{
 		db:   db,
 		size: size,
@@ -114,7 +117,8 @@ func NewBloomIndexer(db ethdb.Database, size uint64) *core.ChainIndexer { log.De
 
 // Reset implements core.ChainIndexerBackend, starting a new bloombits index
 // section.
-func (b *BloomIndexer) Reset(section uint64, lastSectionHead common.Hash) error { log.DebugLog()
+func (b *BloomIndexer) Reset(section uint64, lastSectionHead common.Hash) error {
+	log.DebugLog()
 	gen, err := bloombits.NewGenerator(uint(b.size))
 	b.gen, b.section, b.head = gen, section, common.Hash{}
 	return err
@@ -122,14 +126,16 @@ func (b *BloomIndexer) Reset(section uint64, lastSectionHead common.Hash) error 
 
 // Process implements core.ChainIndexerBackend, adding a new header's bloom into
 // the index.
-func (b *BloomIndexer) Process(header *types.Header) { log.DebugLog()
+func (b *BloomIndexer) Process(header *types.Header) {
+	log.DebugLog()
 	b.gen.AddBloom(uint(header.Number.Uint64()-b.section*b.size), header.Bloom)
 	b.head = header.Hash()
 }
 
 // Commit implements core.ChainIndexerBackend, finalizing the bloom section and
 // writing it out into the database.
-func (b *BloomIndexer) Commit() error { log.DebugLog()
+func (b *BloomIndexer) Commit() error {
+	log.DebugLog()
 	batch := b.db.NewBatch()
 
 	for i := 0; i < types.BloomBitLength; i++ {

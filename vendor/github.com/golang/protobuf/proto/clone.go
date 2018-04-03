@@ -41,7 +41,7 @@ import (
 )
 
 // Clone returns a deep copy of a protocol buffer.
-func Clone(pb Message) Message { 
+func Clone(pb Message) Message {
 	in := reflect.ValueOf(pb)
 	if in.IsNil() {
 		return pb
@@ -57,7 +57,7 @@ func Clone(pb Message) Message {
 // Required and optional fields that are set in src will be set to that value in dst.
 // Elements of repeated fields will be appended.
 // Merge panics if src and dst are not the same type, or if dst is nil.
-func Merge(dst, src Message) { 
+func Merge(dst, src Message) {
 	in := reflect.ValueOf(src)
 	out := reflect.ValueOf(dst)
 	if out.IsNil() {
@@ -74,7 +74,7 @@ func Merge(dst, src Message) {
 	mergeStruct(out.Elem(), in.Elem())
 }
 
-func mergeStruct(out, in reflect.Value) { 
+func mergeStruct(out, in reflect.Value) {
 	sprop := GetProperties(in.Type())
 	for i := 0; i < in.NumField(); i++ {
 		f := in.Type().Field(i)
@@ -108,7 +108,7 @@ func mergeStruct(out, in reflect.Value) {
 // mergeAny performs a merge between two values of the same type.
 // viaPtr indicates whether the values were indirected through a pointer (implying proto2).
 // prop is set if this is a struct field (it may be nil).
-func mergeAny(out, in reflect.Value, viaPtr bool, prop *Properties) { 
+func mergeAny(out, in reflect.Value, viaPtr bool, prop *Properties) {
 	if in.Type() == protoMessageType {
 		if !in.IsNil() {
 			if out.IsNil() {
@@ -211,7 +211,7 @@ func mergeAny(out, in reflect.Value, viaPtr bool, prop *Properties) {
 	}
 }
 
-func mergeExtension(out, in map[int32]Extension) { 
+func mergeExtension(out, in map[int32]Extension) {
 	for extNum, eIn := range in {
 		eOut := Extension{desc: eIn.desc}
 		if eIn.value != nil {

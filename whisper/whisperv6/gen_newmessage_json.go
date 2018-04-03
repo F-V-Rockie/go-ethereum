@@ -6,12 +6,14 @@ import (
 	"encoding/json"
 
 	"github.com/ethereum/go-ethereum/common/hexutil"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 var _ = (*newMessageOverride)(nil)
 
 // MarshalJSON marshals type NewMessage to a json string
-func (n NewMessage) MarshalJSON() ([]byte, error) { log.DebugLog()
+func (n NewMessage) MarshalJSON() ([]byte, error) {
+	log.DebugLog()
 	type NewMessage struct {
 		SymKeyID   string        `json:"symKeyID"`
 		PublicKey  hexutil.Bytes `json:"pubKey"`
@@ -39,7 +41,8 @@ func (n NewMessage) MarshalJSON() ([]byte, error) { log.DebugLog()
 }
 
 // UnmarshalJSON unmarshals type NewMessage to a json string
-func (n *NewMessage) UnmarshalJSON(input []byte) error { log.DebugLog()
+func (n *NewMessage) UnmarshalJSON(input []byte) error {
+	log.DebugLog()
 	type NewMessage struct {
 		SymKeyID   *string        `json:"symKeyID"`
 		PublicKey  *hexutil.Bytes `json:"pubKey"`

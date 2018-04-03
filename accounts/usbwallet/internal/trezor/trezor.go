@@ -27,6 +27,7 @@ import (
 	"reflect"
 
 	"github.com/golang/protobuf/proto"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // Type returns the protocol buffer type number of a specific message. If the

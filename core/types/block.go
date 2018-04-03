@@ -31,6 +31,7 @@ import (
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto/sha3"
 	"github.com/ethereum/go-ethereum/rlp"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 var (
@@ -44,24 +45,28 @@ var (
 type BlockNonce [8]byte
 
 // EncodeNonce converts the given integer to a block nonce.
-func EncodeNonce(i uint64) BlockNonce { log.DebugLog()
+func EncodeNonce(i uint64) BlockNonce {
+	log.DebugLog()
 	var n BlockNonce
 	binary.BigEndian.PutUint64(n[:], i)
 	return n
 }
 
 // Uint64 returns the integer value of a block nonce.
-func (n BlockNonce) Uint64() uint64 { log.DebugLog()
+func (n BlockNonce) Uint64() uint64 {
+	log.DebugLog()
 	return binary.BigEndian.Uint64(n[:])
 }
 
 // MarshalText encodes n as a hex string with 0x prefix.
-func (n BlockNonce) MarshalText() ([]byte, error) { log.DebugLog()
+func (n BlockNonce) MarshalText() ([]byte, error) {
+	log.DebugLog()
 	return hexutil.Bytes(n[:]).MarshalText()
 }
 
 // UnmarshalText implements encoding.TextUnmarshaler.
-func (n *BlockNonce) UnmarshalText(input []byte) error { log.DebugLog()
+func (n *BlockNonce) UnmarshalText(input []byte) error {
+	log.DebugLog()
 	return hexutil.UnmarshalFixedText("BlockNonce", input, n[:])
 }
 
@@ -70,20 +75,20 @@ func (n *BlockNonce) UnmarshalText(input []byte) error { log.DebugLog()
 // wyliu:
 // Header represents a block header in the Ethereum blockchain.
 type Header struct {
-	ParentHash  common.Hash    `json:"parentHash"       gencodec:"required"`	// wyliu: Hash to the previous block
-	UncleHash   common.Hash    `json:"sha3Uncles"       gencodec:"required"`	// wyliu: Uncles of this block
-	Coinbase    common.Address `json:"miner"            gencodec:"required"`	// wyliu: The coin base address
-	Root        common.Hash    `json:"stateRoot"        gencodec:"required"`	// wyliu: Block Trie state
-	TxHash      common.Hash    `json:"transactionsRoot" gencodec:"required"`	// wyliu: Tx sha
-	ReceiptHash common.Hash    `json:"receiptsRoot"     gencodec:"required"`	// wyliu: Receipt sha
-	Bloom       Bloom          `json:"logsBloom"        gencodec:"required"`	// wyliu: Bloom
-	Difficulty  *big.Int       `json:"difficulty"       gencodec:"required"`	// wyliu: Difficulty for the current block
-	Number      *big.Int       `json:"number"           gencodec:"required"`	// wyliu: The block number
-	GasLimit    uint64         `json:"gasLimit"         gencodec:"required"`	// wyliu: Gas limit
-	GasUsed     uint64         `json:"gasUsed"          gencodec:"required"`	// wyliu: Gas used
-	Time        *big.Int       `json:"timestamp"        gencodec:"required"`	// wyliu: Creation time
-	Extra       []byte         `json:"extraData"        gencodec:"required"`	// wyliu: Extra data
-	MixDigest   common.Hash    `json:"mixHash"          gencodec:"required"`	// wyliu: for quick difficulty verification
+	ParentHash  common.Hash    `json:"parentHash"       gencodec:"required"` // wyliu: Hash to the previous block
+	UncleHash   common.Hash    `json:"sha3Uncles"       gencodec:"required"` // wyliu: Uncles of this block
+	Coinbase    common.Address `json:"miner"            gencodec:"required"` // wyliu: The coin base address
+	Root        common.Hash    `json:"stateRoot"        gencodec:"required"` // wyliu: Block Trie state
+	TxHash      common.Hash    `json:"transactionsRoot" gencodec:"required"` // wyliu: Tx sha
+	ReceiptHash common.Hash    `json:"receiptsRoot"     gencodec:"required"` // wyliu: Receipt sha
+	Bloom       Bloom          `json:"logsBloom"        gencodec:"required"` // wyliu: Bloom
+	Difficulty  *big.Int       `json:"difficulty"       gencodec:"required"` // wyliu: Difficulty for the current block
+	Number      *big.Int       `json:"number"           gencodec:"required"` // wyliu: The block number
+	GasLimit    uint64         `json:"gasLimit"         gencodec:"required"` // wyliu: Gas limit
+	GasUsed     uint64         `json:"gasUsed"          gencodec:"required"` // wyliu: Gas used
+	Time        *big.Int       `json:"timestamp"        gencodec:"required"` // wyliu: Creation time
+	Extra       []byte         `json:"extraData"        gencodec:"required"` // wyliu: Extra data
+	MixDigest   common.Hash    `json:"mixHash"          gencodec:"required"` // wyliu: for quick difficulty verification
 	Nonce       BlockNonce     `json:"nonce"            gencodec:"required"`
 }
 
@@ -100,12 +105,14 @@ type headerMarshaling struct {
 
 // Hash returns the block hash of the header, which is simply the keccak256 hash of its
 // RLP encoding.
-func (h *Header) Hash() common.Hash { log.DebugLog()
+func (h *Header) Hash() common.Hash {
+	log.DebugLog()
 	return rlpHash(h)
 }
 
 // HashNoNonce returns the hash which is used as input for the proof-of-work search.
-func (h *Header) HashNoNonce() common.Hash { log.DebugLog()
+func (h *Header) HashNoNonce() common.Hash {
+	log.DebugLog()
 	return rlpHash([]interface{}{
 		h.ParentHash,
 		h.UncleHash,
@@ -125,11 +132,13 @@ func (h *Header) HashNoNonce() common.Hash { log.DebugLog()
 
 // Size returns the approximate memory used by all internal contents. It is used
 // to approximate and limit the memory consumption of various caches.
-func (h *Header) Size() common.StorageSize { log.DebugLog()
+func (h *Header) Size() common.StorageSize {
+	log.DebugLog()
 	return common.StorageSize(unsafe.Sizeof(*h)) + common.StorageSize(len(h.Extra)+(h.Difficulty.BitLen()+h.Number.BitLen()+h.Time.BitLen())/8)
 }
 
-func rlpHash(x interface{}) (h common.Hash) { log.DebugLog()
+func rlpHash(x interface{}) (h common.Hash) {
+	log.DebugLog()
 	hw := sha3.NewKeccak256()
 	rlp.Encode(hw, x)
 	hw.Sum(h[:0])
@@ -167,7 +176,8 @@ type Block struct {
 // DeprecatedTd is an old relic for extracting the TD of a block. It is in the
 // code solely to facilitate upgrading the database from the old format to the
 // new, after which it should be deleted. Do not use!
-func (b *Block) DeprecatedTd() *big.Int { log.DebugLog()
+func (b *Block) DeprecatedTd() *big.Int {
+	log.DebugLog()
 	return b.td
 }
 
@@ -200,7 +210,8 @@ type storageblock struct {
 // The values of TxHash, UncleHash, ReceiptHash and Bloom in header
 // are ignored and set to values derived from the given txs, uncles
 // and receipts.
-func NewBlock(header *Header, txs []*Transaction, uncles []*Header, receipts []*Receipt) *Block { log.DebugLog()
+func NewBlock(header *Header, txs []*Transaction, uncles []*Header, receipts []*Receipt) *Block {
+	log.DebugLog()
 	b := &Block{header: CopyHeader(header), td: new(big.Int)}
 
 	// TODO: panic if len(txs) != len(receipts)
@@ -235,13 +246,15 @@ func NewBlock(header *Header, txs []*Transaction, uncles []*Header, receipts []*
 // NewBlockWithHeader creates a block with the given header data. The
 // header data is copied, changes to header and to the field values
 // will not affect the block.
-func NewBlockWithHeader(header *Header) *Block { log.DebugLog()
+func NewBlockWithHeader(header *Header) *Block {
+	log.DebugLog()
 	return &Block{header: CopyHeader(header)}
 }
 
 // CopyHeader creates a deep copy of a block header to prevent side effects from
 // modifying a header variable.
-func CopyHeader(h *Header) *Header { log.DebugLog()
+func CopyHeader(h *Header) *Header {
+	log.DebugLog()
 	cpy := *h
 	if cpy.Time = new(big.Int); h.Time != nil {
 		cpy.Time.Set(h.Time)
@@ -260,7 +273,8 @@ func CopyHeader(h *Header) *Header { log.DebugLog()
 }
 
 // DecodeRLP decodes the Ethereum
-func (b *Block) DecodeRLP(s *rlp.Stream) error { log.DebugLog()
+func (b *Block) DecodeRLP(s *rlp.Stream) error {
+	log.DebugLog()
 	var eb extblock
 	_, size, _ := s.Kind()
 	if err := s.Decode(&eb); err != nil {
@@ -272,7 +286,8 @@ func (b *Block) DecodeRLP(s *rlp.Stream) error { log.DebugLog()
 }
 
 // EncodeRLP serializes b into the Ethereum RLP block format.
-func (b *Block) EncodeRLP(w io.Writer) error { log.DebugLog()
+func (b *Block) EncodeRLP(w io.Writer) error {
+	log.DebugLog()
 	return rlp.Encode(w, extblock{
 		Header: b.header,
 		Txs:    b.transactions,
@@ -281,7 +296,8 @@ func (b *Block) EncodeRLP(w io.Writer) error { log.DebugLog()
 }
 
 // [deprecated by eth/63]
-func (b *StorageBlock) DecodeRLP(s *rlp.Stream) error { log.DebugLog()
+func (b *StorageBlock) DecodeRLP(s *rlp.Stream) error {
+	log.DebugLog()
 	var sb storageblock
 	if err := s.Decode(&sb); err != nil {
 		return err
@@ -292,10 +308,13 @@ func (b *StorageBlock) DecodeRLP(s *rlp.Stream) error { log.DebugLog()
 
 // TODO: copies
 
-func (b *Block) Uncles() []*Header          { log.DebugLog() return b.uncles }
-func (b *Block) Transactions() Transactions { log.DebugLog() return b.transactions }
+func (b *Block) Uncles() []*Header          { log.DebugLog()
+												return b.uncles }
+func (b *Block) Transactions() Transactions { log.DebugLog()
+												return b.transactions }
 
-func (b *Block) Transaction(hash common.Hash) *Transaction { log.DebugLog()
+func (b *Block) Transaction(hash common.Hash) *Transaction {
+	log.DebugLog()
 	for _, transaction := range b.transactions {
 		if transaction.Hash() == hash {
 			return transaction
@@ -304,36 +323,56 @@ func (b *Block) Transaction(hash common.Hash) *Transaction { log.DebugLog()
 	return nil
 }
 
-func (b *Block) Number() *big.Int     { log.DebugLog() return new(big.Int).Set(b.header.Number) }
-func (b *Block) GasLimit() uint64     { log.DebugLog() return b.header.GasLimit }
-func (b *Block) GasUsed() uint64      { log.DebugLog() return b.header.GasUsed }
-func (b *Block) Difficulty() *big.Int { log.DebugLog() return new(big.Int).Set(b.header.Difficulty) }
-func (b *Block) Time() *big.Int       { log.DebugLog() return new(big.Int).Set(b.header.Time) }
+func (b *Block) Number() *big.Int     { log.DebugLog()
+										  return new(big.Int).Set(b.header.Number) }
+func (b *Block) GasLimit() uint64     { log.DebugLog()
+										  return b.header.GasLimit }
+func (b *Block) GasUsed() uint64      { log.DebugLog()
+										  return b.header.GasUsed }
+func (b *Block) Difficulty() *big.Int { log.DebugLog()
+										  return new(big.Int).Set(b.header.Difficulty) }
+func (b *Block) Time() *big.Int       { log.DebugLog()
+										  return new(big.Int).Set(b.header.Time) }
 
-func (b *Block) NumberU64() uint64        { log.DebugLog() return b.header.Number.Uint64() }
-func (b *Block) MixDigest() common.Hash   { log.DebugLog() return b.header.MixDigest }
-func (b *Block) Nonce() uint64            { log.DebugLog() return binary.BigEndian.Uint64(b.header.Nonce[:]) }
-func (b *Block) Bloom() Bloom             { log.DebugLog() return b.header.Bloom }
-func (b *Block) Coinbase() common.Address { log.DebugLog() return b.header.Coinbase }
-func (b *Block) Root() common.Hash        { log.DebugLog() return b.header.Root }
-func (b *Block) ParentHash() common.Hash  { log.DebugLog() return b.header.ParentHash }
-func (b *Block) TxHash() common.Hash      { log.DebugLog() return b.header.TxHash }
-func (b *Block) ReceiptHash() common.Hash { log.DebugLog() return b.header.ReceiptHash }
-func (b *Block) UncleHash() common.Hash   { log.DebugLog() return b.header.UncleHash }
-func (b *Block) Extra() []byte            { log.DebugLog() return common.CopyBytes(b.header.Extra) }
+func (b *Block) NumberU64() uint64        { log.DebugLog()
+											  return b.header.Number.Uint64() }
+func (b *Block) MixDigest() common.Hash   { log.DebugLog()
+											  return b.header.MixDigest }
+func (b *Block) Nonce() uint64            { log.DebugLog()
+											  return binary.BigEndian.Uint64(b.header.Nonce[:]) }
+func (b *Block) Bloom() Bloom             { log.DebugLog()
+											  return b.header.Bloom }
+func (b *Block) Coinbase() common.Address { log.DebugLog()
+											  return b.header.Coinbase }
+func (b *Block) Root() common.Hash        { log.DebugLog()
+											  return b.header.Root }
+func (b *Block) ParentHash() common.Hash  { log.DebugLog()
+											  return b.header.ParentHash }
+func (b *Block) TxHash() common.Hash      { log.DebugLog()
+											  return b.header.TxHash }
+func (b *Block) ReceiptHash() common.Hash { log.DebugLog()
+											  return b.header.ReceiptHash }
+func (b *Block) UncleHash() common.Hash   { log.DebugLog()
+											  return b.header.UncleHash }
+func (b *Block) Extra() []byte            { log.DebugLog()
+											  return common.CopyBytes(b.header.Extra) }
 
-func (b *Block) Header() *Header { log.DebugLog() return CopyHeader(b.header) }
+func (b *Block) Header() *Header { log.DebugLog()
+									 return CopyHeader(b.header) }
 
 // Body returns the non-header content of the block.
-func (b *Block) Body() *Body { log.DebugLog() return &Body{b.transactions, b.uncles} }
+func (b *Block) Body() *Body { log.DebugLog()
+								 return &Body{b.transactions, b.uncles} }
 
-func (b *Block) HashNoNonce() common.Hash { log.DebugLog()
+func (b *Block) HashNoNonce() common.Hash {
+	log.DebugLog()
 	return b.header.HashNoNonce()
 }
 
 // Size returns the true RLP encoded storage size of the block, either by encoding
 // and returning it, or returning a previsouly cached value.
-func (b *Block) Size() common.StorageSize { log.DebugLog()
+func (b *Block) Size() common.StorageSize {
+	log.DebugLog()
 	if size := b.size.Load(); size != nil {
 		return size.(common.StorageSize)
 	}
@@ -345,18 +384,21 @@ func (b *Block) Size() common.StorageSize { log.DebugLog()
 
 type writeCounter common.StorageSize
 
-func (c *writeCounter) Write(b []byte) (int, error) { log.DebugLog()
+func (c *writeCounter) Write(b []byte) (int, error) {
+	log.DebugLog()
 	*c += writeCounter(len(b))
 	return len(b), nil
 }
 
-func CalcUncleHash(uncles []*Header) common.Hash { log.DebugLog()
+func CalcUncleHash(uncles []*Header) common.Hash {
+	log.DebugLog()
 	return rlpHash(uncles)
 }
 
 // WithSeal returns a new block with the data from b but the header replaced with
 // the sealed one.
-func (b *Block) WithSeal(header *Header) *Block { log.DebugLog()
+func (b *Block) WithSeal(header *Header) *Block {
+	log.DebugLog()
 	cpy := *header
 
 	return &Block{
@@ -367,7 +409,8 @@ func (b *Block) WithSeal(header *Header) *Block { log.DebugLog()
 }
 
 // WithBody returns a new block with the given transaction and uncle contents.
-func (b *Block) WithBody(transactions []*Transaction, uncles []*Header) *Block { log.DebugLog()
+func (b *Block) WithBody(transactions []*Transaction, uncles []*Header) *Block {
+	log.DebugLog()
 	block := &Block{
 		header:       CopyHeader(b.header),
 		transactions: make([]*Transaction, len(transactions)),
@@ -382,7 +425,8 @@ func (b *Block) WithBody(transactions []*Transaction, uncles []*Header) *Block {
 
 // Hash returns the keccak256 hash of b's header.
 // The hash is computed on the first call and cached thereafter.
-func (b *Block) Hash() common.Hash { log.DebugLog()
+func (b *Block) Hash() common.Hash {
+	log.DebugLog()
 	if hash := b.hash.Load(); hash != nil {
 		return hash.(common.Hash)
 	}
@@ -391,7 +435,8 @@ func (b *Block) Hash() common.Hash { log.DebugLog()
 	return v
 }
 
-func (b *Block) String() string { log.DebugLog()
+func (b *Block) String() string {
+	log.DebugLog()
 	str := fmt.Sprintf(`Block(#%v): Size: %v {
 MinerHash: %x
 %v
@@ -404,7 +449,8 @@ Uncles:
 	return str
 }
 
-func (h *Header) String() string { log.DebugLog()
+func (h *Header) String() string {
+	log.DebugLog()
 	return fmt.Sprintf(`Header(%x):
 [
 	ParentHash:	    %x
@@ -429,7 +475,8 @@ type Blocks []*Block
 
 type BlockBy func(b1, b2 *Block) bool
 
-func (self BlockBy) Sort(blocks Blocks) { log.DebugLog()
+func (self BlockBy) Sort(blocks Blocks) {
+	log.DebugLog()
 	bs := blockSorter{
 		blocks: blocks,
 		by:     self,
@@ -442,10 +489,14 @@ type blockSorter struct {
 	by     func(b1, b2 *Block) bool
 }
 
-func (self blockSorter) Len() int { log.DebugLog() return len(self.blocks) }
-func (self blockSorter) Swap(i, j int) { log.DebugLog()
+func (self blockSorter) Len() int { log.DebugLog()
+									  return len(self.blocks) }
+func (self blockSorter) Swap(i, j int) {
+	log.DebugLog()
 	self.blocks[i], self.blocks[j] = self.blocks[j], self.blocks[i]
 }
-func (self blockSorter) Less(i, j int) bool { log.DebugLog() return self.by(self.blocks[i], self.blocks[j]) }
+func (self blockSorter) Less(i, j int) bool { log.DebugLog()
+												return self.by(self.blocks[i], self.blocks[j]) }
 
-func Number(b1, b2 *Block) bool { log.DebugLog() return b1.header.Number.Cmp(b2.header.Number) < 0 }
+func Number(b1, b2 *Block) bool { log.DebugLog()
+									return b1.header.Number.Cmp(b2.header.Number) < 0 }

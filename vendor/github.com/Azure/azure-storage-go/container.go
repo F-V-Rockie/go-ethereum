@@ -18,7 +18,7 @@ type Container struct {
 	Properties ContainerProperties `xml:"Properties"`
 }
 
-func (c *Container) buildPath() string { 
+func (c *Container) buildPath() string {
 	return fmt.Sprintf("/%s", c.Name)
 }
 
@@ -82,7 +82,7 @@ type ListBlobsParameters struct {
 	Timeout    uint
 }
 
-func (p ListBlobsParameters) getParameters() url.Values { 
+func (p ListBlobsParameters) getParameters() url.Values {
 	out := url.Values{}
 
 	if p.Prefix != "" {
@@ -146,7 +146,7 @@ const (
 // with given name and access level. Returns error if container already exists.
 //
 // See https://msdn.microsoft.com/en-us/library/azure/dd179468.aspx
-func (c *Container) Create() error { 
+func (c *Container) Create() error {
 	resp, err := c.create()
 	if err != nil {
 		return err
@@ -157,7 +157,7 @@ func (c *Container) Create() error {
 
 // CreateIfNotExists creates a blob container if it does not exist. Returns
 // true if container is newly created or false if container already exists.
-func (c *Container) CreateIfNotExists() (bool, error) { 
+func (c *Container) CreateIfNotExists() (bool, error) {
 	resp, err := c.create()
 	if resp != nil {
 		defer readAndCloseBody(resp.body)
@@ -168,7 +168,7 @@ func (c *Container) CreateIfNotExists() (bool, error) {
 	return false, err
 }
 
-func (c *Container) create() (*storageResponse, error) { 
+func (c *Container) create() (*storageResponse, error) {
 	uri := c.bsc.client.getEndpoint(blobServiceName, c.buildPath(), url.Values{"restype": {"container"}})
 	headers := c.bsc.client.getStandardHeaders()
 	return c.bsc.client.exec(http.MethodPut, uri, headers, nil, c.bsc.auth)
@@ -176,7 +176,7 @@ func (c *Container) create() (*storageResponse, error) {
 
 // Exists returns true if a container with given name exists
 // on the storage account, otherwise returns false.
-func (c *Container) Exists() (bool, error) { 
+func (c *Container) Exists() (bool, error) {
 	uri := c.bsc.client.getEndpoint(blobServiceName, c.buildPath(), url.Values{"restype": {"container"}})
 	headers := c.bsc.client.getStandardHeaders()
 
@@ -191,7 +191,7 @@ func (c *Container) Exists() (bool, error) {
 }
 
 // SetPermissions sets up container permissions as per https://msdn.microsoft.com/en-us/library/azure/dd179391.aspx
-func (c *Container) SetPermissions(permissions ContainerPermissions, timeout int, leaseID string) error { 
+func (c *Container) SetPermissions(permissions ContainerPermissions, timeout int, leaseID string) error {
 	params := url.Values{
 		"restype": {"container"},
 		"comp":    {"acl"},
@@ -230,7 +230,7 @@ func (c *Container) SetPermissions(permissions ContainerPermissions, timeout int
 // GetPermissions gets the container permissions as per https://msdn.microsoft.com/en-us/library/azure/dd179469.aspx
 // If timeout is 0 then it will not be passed to Azure
 // leaseID will only be passed to Azure if populated
-func (c *Container) GetPermissions(timeout int, leaseID string) (*ContainerPermissions, error) { 
+func (c *Container) GetPermissions(timeout int, leaseID string) (*ContainerPermissions, error) {
 	params := url.Values{
 		"restype": {"container"},
 		"comp":    {"acl"},
@@ -261,7 +261,7 @@ func (c *Container) GetPermissions(timeout int, leaseID string) (*ContainerPermi
 	return buildAccessPolicy(ap, &resp.headers), nil
 }
 
-func buildAccessPolicy(ap AccessPolicy, headers *http.Header) *ContainerPermissions { 
+func buildAccessPolicy(ap AccessPolicy, headers *http.Header) *ContainerPermissions {
 	// containerAccess. Blob, Container, empty
 	containerAccess := headers.Get(http.CanonicalHeaderKey(ContainerAccessHeader))
 	permissions := ContainerPermissions{
@@ -288,7 +288,7 @@ func buildAccessPolicy(ap AccessPolicy, headers *http.Header) *ContainerPermissi
 // account. If the container does not exist returns error.
 //
 // See https://msdn.microsoft.com/en-us/library/azure/dd179408.aspx
-func (c *Container) Delete() error { 
+func (c *Container) Delete() error {
 	resp, err := c.delete()
 	if err != nil {
 		return err
@@ -303,7 +303,7 @@ func (c *Container) Delete() error {
 // operation.
 //
 // See https://msdn.microsoft.com/en-us/library/azure/dd179408.aspx
-func (c *Container) DeleteIfExists() (bool, error) { 
+func (c *Container) DeleteIfExists() (bool, error) {
 	resp, err := c.delete()
 	if resp != nil {
 		defer readAndCloseBody(resp.body)
@@ -314,7 +314,7 @@ func (c *Container) DeleteIfExists() (bool, error) {
 	return false, err
 }
 
-func (c *Container) delete() (*storageResponse, error) { 
+func (c *Container) delete() (*storageResponse, error) {
 	uri := c.bsc.client.getEndpoint(blobServiceName, c.buildPath(), url.Values{"restype": {"container"}})
 	headers := c.bsc.client.getStandardHeaders()
 	return c.bsc.client.exec(http.MethodDelete, uri, headers, nil, c.bsc.auth)
@@ -324,7 +324,7 @@ func (c *Container) delete() (*storageResponse, error) {
 // pagination token and other information in the response of List Blobs call.
 //
 // See https://msdn.microsoft.com/en-us/library/azure/dd135734.aspx
-func (c *Container) ListBlobs(params ListBlobsParameters) (BlobListResponse, error) { 
+func (c *Container) ListBlobs(params ListBlobsParameters) (BlobListResponse, error) {
 	q := mergeParams(params.getParameters(), url.Values{
 		"restype": {"container"},
 		"comp":    {"list"}},
@@ -343,7 +343,7 @@ func (c *Container) ListBlobs(params ListBlobsParameters) (BlobListResponse, err
 	return out, err
 }
 
-func generateContainerACLpayload(policies []ContainerAccessPolicy) (io.Reader, int, error) { 
+func generateContainerACLpayload(policies []ContainerAccessPolicy) (io.Reader, int, error) {
 	sil := SignedIdentifiers{
 		SignedIdentifiers: []SignedIdentifier{},
 	}
@@ -355,7 +355,7 @@ func generateContainerACLpayload(policies []ContainerAccessPolicy) (io.Reader, i
 	return xmlMarshal(sil)
 }
 
-func (capd *ContainerAccessPolicy) generateContainerPermissions() (permissions string) { 
+func (capd *ContainerAccessPolicy) generateContainerPermissions() (permissions string) {
 	// generate the permissions string (rwd).
 	// still want the end user API to have bool flags.
 	permissions = ""

@@ -97,13 +97,13 @@ type Function struct {
 // Sadly Go is a bit confused when the package name doesn't match the directory
 // containing the source file and will use the directory name instead of the
 // real package name.
-func (f Function) String() string { 
+func (f Function) String() string {
 	s, _ := url.QueryUnescape(f.Raw)
 	return s
 }
 
 // Name is the naked function name.
-func (f Function) Name() string { 
+func (f Function) Name() string {
 	parts := strings.SplitN(filepath.Base(f.Raw), ".", 2)
 	if len(parts) == 1 {
 		return parts[0]
@@ -112,7 +112,7 @@ func (f Function) Name() string {
 }
 
 // PkgName is the package name for this function reference.
-func (f Function) PkgName() string { 
+func (f Function) PkgName() string {
 	parts := strings.SplitN(filepath.Base(f.Raw), ".", 2)
 	if len(parts) == 1 {
 		return ""
@@ -122,7 +122,7 @@ func (f Function) PkgName() string {
 }
 
 // PkgDotName returns "<package>.<func>" format.
-func (f Function) PkgDotName() string { 
+func (f Function) PkgDotName() string {
 	parts := strings.SplitN(filepath.Base(f.Raw), ".", 2)
 	s, _ := url.QueryUnescape(parts[0])
 	if len(parts) == 1 {
@@ -135,7 +135,7 @@ func (f Function) PkgDotName() string {
 }
 
 // IsExported returns true if the function is exported.
-func (f Function) IsExported() bool { 
+func (f Function) IsExported() bool {
 	name := f.Name()
 	parts := strings.Split(name, ".")
 	r, _ := utf8.DecodeRuneInString(parts[len(parts)-1])
@@ -153,12 +153,12 @@ type Arg struct {
 
 // IsPtr returns true if we guess it's a pointer. It's only a guess, it can be
 // easily be confused by a bitmask.
-func (a *Arg) IsPtr() bool { 
+func (a *Arg) IsPtr() bool {
 	// Assumes all pointers are above 16Mb and positive.
 	return a.Value > 16*1024*1024 && a.Value < math.MaxInt64
 }
 
-func (a Arg) String() string { 
+func (a Arg) String() string {
 	if a.Name != "" {
 		return a.Name
 	}
@@ -175,7 +175,7 @@ type Args struct {
 	Elided    bool     // If set, it means there was a trailing ", ..."
 }
 
-func (a Args) String() string { 
+func (a Args) String() string {
 	var v []string
 	if len(a.Processed) != 0 {
 		v = make([]string, 0, len(a.Processed))
@@ -195,7 +195,7 @@ func (a Args) String() string {
 }
 
 // Equal returns true only if both arguments are exactly equal.
-func (a *Args) Equal(r *Args) bool { 
+func (a *Args) Equal(r *Args) bool {
 	if a.Elided != r.Elided || len(a.Values) != len(r.Values) {
 		return false
 	}
@@ -209,7 +209,7 @@ func (a *Args) Equal(r *Args) bool {
 
 // Similar returns true if the two Args are equal or almost but not quite
 // equal.
-func (a *Args) Similar(r *Args, similar Similarity) bool { 
+func (a *Args) Similar(r *Args, similar Similarity) bool {
 	if a.Elided != r.Elided || len(a.Values) != len(r.Values) {
 		return false
 	}
@@ -232,7 +232,7 @@ func (a *Args) Similar(r *Args, similar Similarity) bool {
 }
 
 // Merge merges two similar Args, zapping out differences.
-func (a *Args) Merge(r *Args) Args { 
+func (a *Args) Merge(r *Args) Args {
 	out := Args{
 		Values: make([]Arg, len(a.Values)),
 		Elided: a.Elided,
@@ -257,18 +257,18 @@ type Call struct {
 }
 
 // Equal returns true only if both calls are exactly equal.
-func (c *Call) Equal(r *Call) bool { 
+func (c *Call) Equal(r *Call) bool {
 	return c.SourcePath == r.SourcePath && c.Line == r.Line && c.Func == r.Func && c.Args.Equal(&r.Args)
 }
 
 // Similar returns true if the two Call are equal or almost but not quite
 // equal.
-func (c *Call) Similar(r *Call, similar Similarity) bool { 
+func (c *Call) Similar(r *Call, similar Similarity) bool {
 	return c.SourcePath == r.SourcePath && c.Line == r.Line && c.Func == r.Func && c.Args.Similar(&r.Args, similar)
 }
 
 // Merge merges two similar Call, zapping out differences.
-func (c *Call) Merge(r *Call) Call { 
+func (c *Call) Merge(r *Call) Call {
 	return Call{
 		SourcePath: c.SourcePath,
 		Line:       c.Line,
@@ -278,22 +278,22 @@ func (c *Call) Merge(r *Call) Call {
 }
 
 // SourceName returns the base file name of the source file.
-func (c *Call) SourceName() string { 
+func (c *Call) SourceName() string {
 	return filepath.Base(c.SourcePath)
 }
 
 // SourceLine returns "source.go:line", including only the base file name.
-func (c *Call) SourceLine() string { 
+func (c *Call) SourceLine() string {
 	return fmt.Sprintf("%s:%d", c.SourceName(), c.Line)
 }
 
 // FullSourceLine returns "/path/to/source.go:line".
-func (c *Call) FullSourceLine() string { 
+func (c *Call) FullSourceLine() string {
 	return fmt.Sprintf("%s:%d", c.SourcePath, c.Line)
 }
 
 // PkgSource is one directory plus the file name of the source file.
-func (c *Call) PkgSource() string { 
+func (c *Call) PkgSource() string {
 	return filepath.Join(filepath.Base(filepath.Dir(c.SourcePath)), c.SourceName())
 }
 
@@ -301,7 +301,7 @@ const testMainSource = "_test" + string(os.PathSeparator) + "_testmain.go"
 
 // IsStdlib returns true if it is a Go standard library function. This includes
 // the 'go test' generated main executable.
-func (c *Call) IsStdlib() bool { 
+func (c *Call) IsStdlib() bool {
 	for _, goroot := range goroots {
 		if strings.HasPrefix(c.SourcePath, goroot) {
 			return true
@@ -312,7 +312,7 @@ func (c *Call) IsStdlib() bool {
 }
 
 // IsPkgMain returns true if it is in the main package.
-func (c *Call) IsPkgMain() bool { 
+func (c *Call) IsPkgMain() bool {
 	return c.Func.PkgName() == "main"
 }
 
@@ -323,7 +323,7 @@ type Stack struct {
 }
 
 // Equal returns true on if both call stacks are exactly equal.
-func (s *Stack) Equal(r *Stack) bool { 
+func (s *Stack) Equal(r *Stack) bool {
 	if len(s.Calls) != len(r.Calls) || s.Elided != r.Elided {
 		return false
 	}
@@ -337,7 +337,7 @@ func (s *Stack) Equal(r *Stack) bool {
 
 // Similar returns true if the two Stack are equal or almost but not quite
 // equal.
-func (s *Stack) Similar(r *Stack, similar Similarity) bool { 
+func (s *Stack) Similar(r *Stack, similar Similarity) bool {
 	if len(s.Calls) != len(r.Calls) || s.Elided != r.Elided {
 		return false
 	}
@@ -350,7 +350,7 @@ func (s *Stack) Similar(r *Stack, similar Similarity) bool {
 }
 
 // Merge merges two similar Stack, zapping out differences.
-func (s *Stack) Merge(r *Stack) *Stack { 
+func (s *Stack) Merge(r *Stack) *Stack {
 	// Assumes similar stacks have the same length.
 	out := &Stack{
 		Calls:  make([]Call, len(s.Calls)),
@@ -366,7 +366,7 @@ func (s *Stack) Merge(r *Stack) *Stack {
 // important, so they come up front. A Stack with more private functions is
 // 'less' so it is at the top. Inversely, a Stack with only public
 // functions is 'more' so it is at the bottom.
-func (s *Stack) Less(r *Stack) bool { 
+func (s *Stack) Less(r *Stack) bool {
 	lStdlib := 0
 	lPrivate := 0
 	for _, c := range s.Calls {
@@ -453,7 +453,7 @@ type Signature struct {
 }
 
 // Equal returns true only if both signatures are exactly equal.
-func (s *Signature) Equal(r *Signature) bool { 
+func (s *Signature) Equal(r *Signature) bool {
 	if s.State != r.State || !s.CreatedBy.Equal(&r.CreatedBy) || s.Locked != r.Locked || s.SleepMin != r.SleepMin || s.SleepMax != r.SleepMax {
 		return false
 	}
@@ -462,7 +462,7 @@ func (s *Signature) Equal(r *Signature) bool {
 
 // Similar returns true if the two Signature are equal or almost but not quite
 // equal.
-func (s *Signature) Similar(r *Signature, similar Similarity) bool { 
+func (s *Signature) Similar(r *Signature, similar Similarity) bool {
 	if s.State != r.State || !s.CreatedBy.Similar(&r.CreatedBy, similar) {
 		return false
 	}
@@ -473,7 +473,7 @@ func (s *Signature) Similar(r *Signature, similar Similarity) bool {
 }
 
 // Merge merges two similar Signature, zapping out differences.
-func (s *Signature) Merge(r *Signature) *Signature { 
+func (s *Signature) Merge(r *Signature) *Signature {
 	min := s.SleepMin
 	if r.SleepMin < min {
 		min = r.SleepMin
@@ -496,7 +496,7 @@ func (s *Signature) Merge(r *Signature) *Signature {
 // important, so they come up front. A Signature with more private functions is
 // 'less' so it is at the top. Inversely, a Signature with only public
 // functions is 'more' so it is at the bottom.
-func (s *Signature) Less(r *Signature) bool { 
+func (s *Signature) Less(r *Signature) bool {
 	if s.Stack.Less(&r.Stack) {
 		return true
 	}
@@ -526,7 +526,7 @@ type Goroutine struct {
 }
 
 // Bucketize returns the number of similar goroutines.
-func Bucketize(goroutines []Goroutine, similar Similarity) map[*Signature][]Goroutine { 
+func Bucketize(goroutines []Goroutine, similar Similarity) map[*Signature][]Goroutine {
 	out := map[*Signature][]Goroutine{}
 	// O(n²). Fix eventually.
 	for _, routine := range goroutines {
@@ -565,7 +565,7 @@ type Bucket struct {
 
 // First returns true if it contains the first goroutine, e.g. the ones that
 // likely generated the panic() call, if any.
-func (b *Bucket) First() bool { 
+func (b *Bucket) First() bool {
 	for _, r := range b.Routines {
 		if r.First {
 			return true
@@ -575,7 +575,7 @@ func (b *Bucket) First() bool {
 }
 
 // Less does reverse sort.
-func (b *Bucket) Less(r *Bucket) bool { 
+func (b *Bucket) Less(r *Bucket) bool {
 	if b.First() {
 		return true
 	}
@@ -588,20 +588,20 @@ func (b *Bucket) Less(r *Bucket) bool {
 // Buckets is a list of Bucket sorted by repeation count.
 type Buckets []Bucket
 
-func (b Buckets) Len() int { 
+func (b Buckets) Len() int {
 	return len(b)
 }
 
-func (b Buckets) Less(i, j int) bool { 
+func (b Buckets) Less(i, j int) bool {
 	return b[i].Less(&b[j])
 }
 
-func (b Buckets) Swap(i, j int) { 
+func (b Buckets) Swap(i, j int) {
 	b[j], b[i] = b[i], b[j]
 }
 
 // SortBuckets creates a list of Bucket from each goroutine stack trace count.
-func SortBuckets(buckets map[*Signature][]Goroutine) Buckets { 
+func SortBuckets(buckets map[*Signature][]Goroutine) Buckets {
 	out := make(Buckets, 0, len(buckets))
 	for signature, count := range buckets {
 		out = append(out, Bucket{*signature, count})
@@ -614,7 +614,7 @@ func SortBuckets(buckets map[*Signature][]Goroutine) Buckets {
 //     - doesn't drop '\n'
 //     - doesn't strip '\r'
 //     - returns when the data is bufio.MaxScanTokenSize bytes
-func scanLines(data []byte, atEOF bool) (advance int, token []byte, err error) { 
+func scanLines(data []byte, atEOF bool) (advance int, token []byte, err error) {
 	if atEOF && len(data) == 0 {
 		return 0, nil, nil
 	}
@@ -637,7 +637,7 @@ func scanLines(data []byte, atEOF bool) (advance int, token []byte, err error) {
 //
 // It supports piping from another command and assumes there is junk before the
 // actual stack trace. The junk is streamed to out.
-func ParseDump(r io.Reader, out io.Writer) ([]Goroutine, error) { 
+func ParseDump(r io.Reader, out io.Writer) ([]Goroutine, error) {
 	goroutines := make([]Goroutine, 0, 16)
 	var goroutine *Goroutine
 	scanner := bufio.NewScanner(r)
@@ -768,7 +768,7 @@ func ParseDump(r io.Reader, out io.Writer) ([]Goroutine, error) {
 
 // Private stuff.
 
-func nameArguments(goroutines []Goroutine) { 
+func nameArguments(goroutines []Goroutine) {
 	// Set a name for any pointer occuring more than once.
 	type object struct {
 		args      []*Arg
@@ -827,6 +827,6 @@ func nameArguments(goroutines []Goroutine) {
 
 type uint64Slice []uint64
 
-func (a uint64Slice) Len() int           {  return len(a) }
-func (a uint64Slice) Swap(i, j int)      {  a[i], a[j] = a[j], a[i] }
-func (a uint64Slice) Less(i, j int) bool {  return a[i] < a[j] }
+func (a uint64Slice) Len() int           { return len(a) }
+func (a uint64Slice) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a uint64Slice) Less(i, j int) bool { return a[i] < a[j] }

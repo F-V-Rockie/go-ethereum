@@ -21,6 +21,7 @@ import (
 	"reflect"
 	"strings"
 	"sync"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 var (

@@ -41,7 +41,7 @@ const (
 //   // Field appears in TOML as key "field", but the field is skipped if
 //   // empty. Note the leading comma.
 //   Field int `toml:",omitempty"`
-func (cfg *Config) Marshal(v interface{}) ([]byte, error) { 
+func (cfg *Config) Marshal(v interface{}) ([]byte, error) {
 	buf := new(bytes.Buffer)
 	err := cfg.NewEncoder(buf).Encode(v)
 	return buf.Bytes(), err
@@ -54,13 +54,13 @@ type Encoder struct {
 }
 
 // NewEncoder returns a new Encoder that writes to w.
-func (cfg *Config) NewEncoder(w io.Writer) *Encoder { 
+func (cfg *Config) NewEncoder(w io.Writer) *Encoder {
 	return &Encoder{w, cfg}
 }
 
 // Encode writes the TOML of v to the stream.
 // See the documentation for Marshal for details about the conversion of Go values to TOML.
-func (e *Encoder) Encode(v interface{}) error { 
+func (e *Encoder) Encode(v interface{}) error {
 	rv := reflect.ValueOf(v)
 	for rv.Kind() == reflect.Ptr {
 		if rv.IsNil() {
@@ -107,7 +107,7 @@ type tableBuf struct {
 	arrayDepth int
 }
 
-func (b *tableBuf) writeTo(w io.Writer, prefix string) error { 
+func (b *tableBuf) writeTo(w io.Writer, prefix string) error {
 	key := b.name // TODO: escape dots
 	if prefix != "" {
 		key = prefix + "." + key
@@ -140,7 +140,7 @@ func (b *tableBuf) writeTo(w io.Writer, prefix string) error {
 	return nil
 }
 
-func (b *tableBuf) newChild(name string) *tableBuf { 
+func (b *tableBuf) newChild(name string) *tableBuf {
 	child := &tableBuf{name: quoteName(name), typ: ast.TableTypeNormal}
 	if b.arrayDepth > 0 {
 		child.typ = ast.TableTypeArray
@@ -148,7 +148,7 @@ func (b *tableBuf) newChild(name string) *tableBuf {
 	return child
 }
 
-func (b *tableBuf) addChild(child *tableBuf) { 
+func (b *tableBuf) addChild(child *tableBuf) {
 	// Empty table elision: we can avoid writing a table that doesn't have any keys on its
 	// own. Array tables can't be elided because they define array elements (which would
 	// be missing if elided).
@@ -162,7 +162,7 @@ func (b *tableBuf) addChild(child *tableBuf) {
 	b.children = append(b.children, child)
 }
 
-func (b *tableBuf) structFields(cfg *Config, rv reflect.Value) error { 
+func (b *tableBuf) structFields(cfg *Config, rv reflect.Value) error {
 	rt := rv.Type()
 	for i := 0; i < rv.NumField(); i++ {
 		ft := rt.Field(i)
@@ -192,11 +192,11 @@ type mapKeyList []struct {
 	value reflect.Value
 }
 
-func (l mapKeyList) Len() int           {  return len(l) }
-func (l mapKeyList) Swap(i, j int)      {  l[i], l[j] = l[j], l[i] }
-func (l mapKeyList) Less(i, j int) bool {  return l[i].key < l[j].key }
+func (l mapKeyList) Len() int           { return len(l) }
+func (l mapKeyList) Swap(i, j int)      { l[i], l[j] = l[j], l[i] }
+func (l mapKeyList) Less(i, j int) bool { return l[i].key < l[j].key }
 
-func (b *tableBuf) mapFields(cfg *Config, rv reflect.Value) error { 
+func (b *tableBuf) mapFields(cfg *Config, rv reflect.Value) error {
 	keys := rv.MapKeys()
 	keylist := make(mapKeyList, len(keys))
 	for i, key := range keys {
@@ -217,7 +217,7 @@ func (b *tableBuf) mapFields(cfg *Config, rv reflect.Value) error {
 	return nil
 }
 
-func (b *tableBuf) field(cfg *Config, name string, rv reflect.Value) error { 
+func (b *tableBuf) field(cfg *Config, name string, rv reflect.Value) error {
 	off := len(b.body)
 	b.body = append(b.body, quoteName(name)...)
 	b.body = append(b.body, " = "...)
@@ -230,7 +230,7 @@ func (b *tableBuf) field(cfg *Config, name string, rv reflect.Value) error {
 	return err
 }
 
-func (b *tableBuf) value(cfg *Config, rv reflect.Value, name string) (bool, error) { 
+func (b *tableBuf) value(cfg *Config, rv reflect.Value, name string) (bool, error) {
 	isMarshaler, isTable, err := b.marshaler(cfg, rv, name)
 	if isMarshaler {
 		return isTable, err
@@ -296,7 +296,7 @@ func (b *tableBuf) value(cfg *Config, rv reflect.Value, name string) (bool, erro
 	return false, nil
 }
 
-func (b *tableBuf) marshaler(cfg *Config, rv reflect.Value, name string) (handled, isTable bool, err error) { 
+func (b *tableBuf) marshaler(cfg *Config, rv reflect.Value, name string) (handled, isTable bool, err error) {
 	switch t := rv.Interface().(type) {
 	case encoding.TextMarshaler:
 		enc, err := t.MarshalText()
@@ -323,7 +323,7 @@ func (b *tableBuf) marshaler(cfg *Config, rv reflect.Value, name string) (handle
 	return false, false, nil
 }
 
-func encodeTextMarshaler(buf []byte, v string) []byte { 
+func encodeTextMarshaler(buf []byte, v string) []byte {
 	// Emit the value without quotes if possible.
 	if v == "true" || v == "false" {
 		return append(buf, v...)
@@ -339,7 +339,7 @@ func encodeTextMarshaler(buf []byte, v string) []byte {
 	return strconv.AppendQuote(buf, v)
 }
 
-func encodeMapKey(rv reflect.Value) (string, error) { 
+func encodeMapKey(rv reflect.Value) (string, error) {
 	if rv.Kind() == reflect.String {
 		return rv.String(), nil
 	}
@@ -356,7 +356,7 @@ func encodeMapKey(rv reflect.Value) (string, error) {
 	return "", fmt.Errorf("toml: invalid map key type %v", rv.Type())
 }
 
-func isEmptyValue(v reflect.Value) bool { 
+func isEmptyValue(v reflect.Value) bool {
 	switch v.Kind() {
 	case reflect.Array:
 		// encoding/json treats all arrays with non-zero length as non-empty. We check the
@@ -384,7 +384,7 @@ func isEmptyValue(v reflect.Value) bool {
 	return false
 }
 
-func quoteName(s string) string { 
+func quoteName(s string) string {
 	if len(s) == 0 {
 		return strconv.Quote(s)
 	}

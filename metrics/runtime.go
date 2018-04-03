@@ -4,6 +4,7 @@ import (
 	"runtime"
 	"runtime/pprof"
 	"time"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 var (

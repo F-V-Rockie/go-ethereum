@@ -11,7 +11,7 @@ package snappy
 // equals that length.
 //
 // It returns 0 on success or a decodeErrCodeXxx error code on failure.
-func decode(dst, src []byte) int { 
+func decode(dst, src []byte) int {
 	var d, s, offset, length int
 	for s < len(src) {
 		switch src[s] & 0x03 {

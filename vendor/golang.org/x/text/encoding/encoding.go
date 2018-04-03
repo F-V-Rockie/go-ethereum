@@ -53,7 +53,7 @@ type Decoder struct {
 
 // Bytes converts the given encoded bytes to UTF-8. It returns the converted
 // bytes or nil, err if any error occurred.
-func (d *Decoder) Bytes(b []byte) ([]byte, error) { 
+func (d *Decoder) Bytes(b []byte) ([]byte, error) {
 	b, _, err := transform.Bytes(d, b)
 	if err != nil {
 		return nil, err
@@ -63,7 +63,7 @@ func (d *Decoder) Bytes(b []byte) ([]byte, error) {
 
 // String converts the given encoded string to UTF-8. It returns the converted
 // string or "", err if any error occurred.
-func (d *Decoder) String(s string) (string, error) { 
+func (d *Decoder) String(s string) (string, error) {
 	s, _, err := transform.String(d, s)
 	if err != nil {
 		return "", err
@@ -75,7 +75,7 @@ func (d *Decoder) String(s string) (string, error) {
 //
 // The Decoder may not be used for any other operation as long as the returned
 // Reader is in use.
-func (d *Decoder) Reader(r io.Reader) io.Reader { 
+func (d *Decoder) Reader(r io.Reader) io.Reader {
 	return transform.NewReader(r, d)
 }
 
@@ -97,7 +97,7 @@ type Encoder struct {
 
 // Bytes converts bytes from UTF-8. It returns the converted bytes or nil, err if
 // any error occurred.
-func (e *Encoder) Bytes(b []byte) ([]byte, error) { 
+func (e *Encoder) Bytes(b []byte) ([]byte, error) {
 	b, _, err := transform.Bytes(e, b)
 	if err != nil {
 		return nil, err
@@ -107,7 +107,7 @@ func (e *Encoder) Bytes(b []byte) ([]byte, error) {
 
 // String converts a string from UTF-8. It returns the converted string or
 // "", err if any error occurred.
-func (e *Encoder) String(s string) (string, error) { 
+func (e *Encoder) String(s string) (string, error) {
 	s, _, err := transform.String(e, s)
 	if err != nil {
 		return "", err
@@ -119,7 +119,7 @@ func (e *Encoder) String(s string) (string, error) {
 //
 // The Encoder may not be used for any other operation as long as the returned
 // Writer is in use.
-func (e *Encoder) Writer(w io.Writer) io.Writer { 
+func (e *Encoder) Writer(w io.Writer) io.Writer {
 	return transform.NewWriter(w, e)
 }
 
@@ -133,10 +133,10 @@ var Nop Encoding = nop{}
 
 type nop struct{}
 
-func (nop) NewDecoder() *Decoder { 
+func (nop) NewDecoder() *Decoder {
 	return &Decoder{Transformer: transform.Nop}
 }
-func (nop) NewEncoder() *Encoder { 
+func (nop) NewEncoder() *Encoder {
 	return &Encoder{Transformer: transform.Nop}
 }
 
@@ -150,21 +150,21 @@ var Replacement Encoding = replacement{}
 
 type replacement struct{}
 
-func (replacement) NewDecoder() *Decoder { 
+func (replacement) NewDecoder() *Decoder {
 	return &Decoder{Transformer: replacementDecoder{}}
 }
 
-func (replacement) NewEncoder() *Encoder { 
+func (replacement) NewEncoder() *Encoder {
 	return &Encoder{Transformer: replacementEncoder{}}
 }
 
-func (replacement) ID() (mib identifier.MIB, other string) { 
+func (replacement) ID() (mib identifier.MIB, other string) {
 	return identifier.Replacement, ""
 }
 
 type replacementDecoder struct{ transform.NopResetter }
 
-func (replacementDecoder) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) { 
+func (replacementDecoder) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) {
 	if len(dst) < 3 {
 		return 0, 0, transform.ErrShortDst
 	}
@@ -180,7 +180,7 @@ func (replacementDecoder) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int
 
 type replacementEncoder struct{ transform.NopResetter }
 
-func (replacementEncoder) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) { 
+func (replacementEncoder) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) {
 	r, size := rune(0), 0
 
 	for ; nSrc < len(src); nSrc += size {
@@ -221,7 +221,7 @@ func (replacementEncoder) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int
 // non-terminating legacy encoder. The produced sequences may lead to data
 // loss as they are indistinguishable from legitimate input. To avoid this
 // issue, use UTF-8 encodings whenever possible.
-func HTMLEscapeUnsupported(e *Encoder) *Encoder { 
+func HTMLEscapeUnsupported(e *Encoder) *Encoder {
 	return &Encoder{Transformer: &errorHandler{e, errorToHTML}}
 }
 
@@ -231,7 +231,7 @@ func HTMLEscapeUnsupported(e *Encoder) *Encoder {
 //
 // This wrapper is only provided for backwards compatibility and legacy
 // handling. Its use is strongly discouraged. Use UTF-8 whenever possible.
-func ReplaceUnsupported(e *Encoder) *Encoder { 
+func ReplaceUnsupported(e *Encoder) *Encoder {
 	return &Encoder{Transformer: &errorHandler{e, errorToReplacement}}
 }
 
@@ -245,7 +245,7 @@ type repertoireError interface {
 	Replacement() byte
 }
 
-func (h errorHandler) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) { 
+func (h errorHandler) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) {
 	nDst, nSrc, err = h.Transformer.Transform(dst, src, atEOF)
 	for err != nil {
 		rerr, ok := err.(repertoireError)
@@ -269,7 +269,7 @@ func (h errorHandler) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, er
 	return nDst, nSrc, err
 }
 
-func errorToHTML(dst []byte, r rune, err repertoireError) (n int, ok bool) { 
+func errorToHTML(dst []byte, r rune, err repertoireError) (n int, ok bool) {
 	buf := [8]byte{}
 	b := strconv.AppendUint(buf[:0], uint64(r), 10)
 	if n = len(b) + len("&#;"); n >= len(dst) {
@@ -281,7 +281,7 @@ func errorToHTML(dst []byte, r rune, err repertoireError) (n int, ok bool) {
 	return n, true
 }
 
-func errorToReplacement(dst []byte, r rune, err repertoireError) (n int, ok bool) { 
+func errorToReplacement(dst []byte, r rune, err repertoireError) (n int, ok bool) {
 	if len(dst) == 0 {
 		return 0, false
 	}
@@ -298,7 +298,7 @@ var UTF8Validator transform.Transformer = utf8Validator{}
 
 type utf8Validator struct{ transform.NopResetter }
 
-func (utf8Validator) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) { 
+func (utf8Validator) Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error) {
 	n := len(src)
 	if n > len(dst) {
 		n = len(dst)

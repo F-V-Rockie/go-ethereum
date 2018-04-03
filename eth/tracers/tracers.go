@@ -22,13 +22,15 @@ import (
 	"unicode"
 
 	"github.com/ethereum/go-ethereum/eth/tracers/internal/tracers"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // all contains all the built in JavaScript tracers by name.
 var all = make(map[string]string)
 
 // camel converts a snake cased input string into a camel cased output.
-func camel(str string) string { log.DebugLog()
+func camel(str string) string {
+	log.DebugLog()
 	pieces := strings.Split(str, "_")
 	for i := 1; i < len(pieces); i++ {
 		pieces[i] = string(unicode.ToUpper(rune(pieces[i][0]))) + pieces[i][1:]
@@ -45,7 +47,8 @@ func init() {
 }
 
 // tracer retrieves a specific JavaScript tracer by name.
-func tracer(name string) (string, bool) { log.DebugLog()
+func tracer(name string) (string, bool) {
+	log.DebugLog()
 	if tracer, ok := all[name]; ok {
 		return tracer, true
 	}

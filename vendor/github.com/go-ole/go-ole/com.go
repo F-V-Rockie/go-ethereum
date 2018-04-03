@@ -47,7 +47,7 @@ var (
 // That said, most users of the library have gotten away with just this
 // function. If you are experiencing threading issues, then use
 // CoInitializeEx().
-func coInitialize() (err error) { 
+func coInitialize() (err error) {
 	// http://msdn.microsoft.com/en-us/library/windows/desktop/ms678543(v=vs.85).aspx
 	// Suggests that no value should be passed to CoInitialized.
 	// Could just be Call() since the parameter is optional. <-- Needs testing to be sure.
@@ -59,7 +59,7 @@ func coInitialize() (err error) {
 }
 
 // coInitializeEx initializes COM library with concurrency model.
-func coInitializeEx(coinit uint32) (err error) { 
+func coInitializeEx(coinit uint32) (err error) {
 	// http://msdn.microsoft.com/en-us/library/windows/desktop/ms695279(v=vs.85).aspx
 	// Suggests that the first parameter is not only optional but should always be NULL.
 	hr, _, _ := procCoInitializeEx.Call(uintptr(0), uintptr(coinit))
@@ -78,7 +78,7 @@ func coInitializeEx(coinit uint32) (err error) {
 // That said, most users of the library have gotten away with just this
 // function. If you are experiencing threading issues, then use
 // CoInitializeEx().
-func CoInitialize(p uintptr) (err error) { 
+func CoInitialize(p uintptr) (err error) {
 	// p is ignored and won't be used.
 	// Avoid any variable not used errors.
 	p = uintptr(0)
@@ -86,19 +86,19 @@ func CoInitialize(p uintptr) (err error) {
 }
 
 // CoInitializeEx initializes COM library with concurrency model.
-func CoInitializeEx(p uintptr, coinit uint32) (err error) { 
+func CoInitializeEx(p uintptr, coinit uint32) (err error) {
 	// Avoid any variable not used errors.
 	p = uintptr(0)
 	return coInitializeEx(coinit)
 }
 
 // CoUninitialize uninitializes COM Library.
-func CoUninitialize() { 
+func CoUninitialize() {
 	procCoUninitialize.Call()
 }
 
 // CoTaskMemFree frees memory pointer.
-func CoTaskMemFree(memptr uintptr) { 
+func CoTaskMemFree(memptr uintptr) {
 	procCoTaskMemFree.Call(memptr)
 }
 
@@ -115,7 +115,7 @@ func CoTaskMemFree(memptr uintptr) {
 // "Program.Component.Version" with version being optional.
 //
 // CLSIDFromProgID in Windows API.
-func CLSIDFromProgID(progId string) (clsid *GUID, err error) { 
+func CLSIDFromProgID(progId string) (clsid *GUID, err error) {
 	var guid GUID
 	lpszProgID := uintptr(unsafe.Pointer(syscall.StringToUTF16Ptr(progId)))
 	hr, _, _ := procCLSIDFromProgID.Call(lpszProgID, uintptr(unsafe.Pointer(&guid)))
@@ -132,7 +132,7 @@ func CLSIDFromProgID(progId string) (clsid *GUID, err error) {
 // string to object.
 //
 // CLSIDFromString in Windows API.
-func CLSIDFromString(str string) (clsid *GUID, err error) { 
+func CLSIDFromString(str string) (clsid *GUID, err error) {
 	var guid GUID
 	lpsz := uintptr(unsafe.Pointer(syscall.StringToUTF16Ptr(str)))
 	hr, _, _ := procCLSIDFromString.Call(lpsz, uintptr(unsafe.Pointer(&guid)))
@@ -144,7 +144,7 @@ func CLSIDFromString(str string) (clsid *GUID, err error) {
 }
 
 // StringFromCLSID returns GUID formated string from GUID object.
-func StringFromCLSID(clsid *GUID) (str string, err error) { 
+func StringFromCLSID(clsid *GUID) (str string, err error) {
 	var p *uint16
 	hr, _, _ := procStringFromCLSID.Call(uintptr(unsafe.Pointer(clsid)), uintptr(unsafe.Pointer(&p)))
 	if hr != 0 {
@@ -155,7 +155,7 @@ func StringFromCLSID(clsid *GUID) (str string, err error) {
 }
 
 // IIDFromString returns GUID from program ID.
-func IIDFromString(progId string) (clsid *GUID, err error) { 
+func IIDFromString(progId string) (clsid *GUID, err error) {
 	var guid GUID
 	lpsz := uintptr(unsafe.Pointer(syscall.StringToUTF16Ptr(progId)))
 	hr, _, _ := procIIDFromString.Call(lpsz, uintptr(unsafe.Pointer(&guid)))
@@ -167,7 +167,7 @@ func IIDFromString(progId string) (clsid *GUID, err error) {
 }
 
 // StringFromIID returns GUID formatted string from GUID object.
-func StringFromIID(iid *GUID) (str string, err error) { 
+func StringFromIID(iid *GUID) (str string, err error) {
 	var p *uint16
 	hr, _, _ := procStringFromIID.Call(uintptr(unsafe.Pointer(iid)), uintptr(unsafe.Pointer(&p)))
 	if hr != 0 {
@@ -178,7 +178,7 @@ func StringFromIID(iid *GUID) (str string, err error) {
 }
 
 // CreateInstance of single uninitialized object with GUID.
-func CreateInstance(clsid *GUID, iid *GUID) (unk *IUnknown, err error) { 
+func CreateInstance(clsid *GUID, iid *GUID) (unk *IUnknown, err error) {
 	if iid == nil {
 		iid = IID_IUnknown
 	}
@@ -195,7 +195,7 @@ func CreateInstance(clsid *GUID, iid *GUID) (unk *IUnknown, err error) {
 }
 
 // GetActiveObject retrieves pointer to active object.
-func GetActiveObject(clsid *GUID, iid *GUID) (unk *IUnknown, err error) { 
+func GetActiveObject(clsid *GUID, iid *GUID) (unk *IUnknown, err error) {
 	if iid == nil {
 		iid = IID_IUnknown
 	}
@@ -210,7 +210,7 @@ func GetActiveObject(clsid *GUID, iid *GUID) (unk *IUnknown, err error) {
 }
 
 // VariantInit initializes variant.
-func VariantInit(v *VARIANT) (err error) { 
+func VariantInit(v *VARIANT) (err error) {
 	hr, _, _ := procVariantInit.Call(uintptr(unsafe.Pointer(v)))
 	if hr != 0 {
 		err = NewError(hr)
@@ -219,7 +219,7 @@ func VariantInit(v *VARIANT) (err error) {
 }
 
 // VariantClear clears value in Variant settings to VT_EMPTY.
-func VariantClear(v *VARIANT) (err error) { 
+func VariantClear(v *VARIANT) (err error) {
 	hr, _, _ := procVariantClear.Call(uintptr(unsafe.Pointer(v)))
 	if hr != 0 {
 		err = NewError(hr)
@@ -228,14 +228,14 @@ func VariantClear(v *VARIANT) (err error) {
 }
 
 // SysAllocString allocates memory for string and copies string into memory.
-func SysAllocString(v string) (ss *int16) { 
+func SysAllocString(v string) (ss *int16) {
 	pss, _, _ := procSysAllocString.Call(uintptr(unsafe.Pointer(syscall.StringToUTF16Ptr(v))))
 	ss = (*int16)(unsafe.Pointer(pss))
 	return
 }
 
 // SysAllocStringLen copies up to length of given string returning pointer.
-func SysAllocStringLen(v string) (ss *int16) { 
+func SysAllocStringLen(v string) (ss *int16) {
 	utf16 := utf16.Encode([]rune(v + "\x00"))
 	ptr := &utf16[0]
 
@@ -245,7 +245,7 @@ func SysAllocStringLen(v string) (ss *int16) {
 }
 
 // SysFreeString frees string system memory. This must be called with SysAllocString.
-func SysFreeString(v *int16) (err error) { 
+func SysFreeString(v *int16) (err error) {
 	hr, _, _ := procSysFreeString.Call(uintptr(unsafe.Pointer(v)))
 	if hr != 0 {
 		err = NewError(hr)
@@ -254,7 +254,7 @@ func SysFreeString(v *int16) (err error) {
 }
 
 // SysStringLen is the length of the system allocated string.
-func SysStringLen(v *int16) uint32 { 
+func SysStringLen(v *int16) uint32 {
 	l, _, _ := procSysStringLen.Call(uintptr(unsafe.Pointer(v)))
 	return uint32(l)
 }
@@ -264,7 +264,7 @@ func SysStringLen(v *int16) uint32 {
 // This handles default IDispatch implementation for objects. It haves a few
 // limitations with only supporting one language. It will also only return
 // default exception codes.
-func CreateStdDispatch(unk *IUnknown, v uintptr, ptinfo *IUnknown) (disp *IDispatch, err error) { 
+func CreateStdDispatch(unk *IUnknown, v uintptr, ptinfo *IUnknown) (disp *IDispatch, err error) {
 	hr, _, _ := procCreateStdDispatch.Call(
 		uintptr(unsafe.Pointer(unk)),
 		v,
@@ -279,7 +279,7 @@ func CreateStdDispatch(unk *IUnknown, v uintptr, ptinfo *IUnknown) (disp *IDispa
 // CreateDispTypeInfo provides default ITypeInfo implementation for IDispatch.
 //
 // This will not handle the full implementation of the interface.
-func CreateDispTypeInfo(idata *INTERFACEDATA) (pptinfo *IUnknown, err error) { 
+func CreateDispTypeInfo(idata *INTERFACEDATA) (pptinfo *IUnknown, err error) {
 	hr, _, _ := procCreateDispTypeInfo.Call(
 		uintptr(unsafe.Pointer(idata)),
 		uintptr(GetUserDefaultLCID()),
@@ -291,12 +291,12 @@ func CreateDispTypeInfo(idata *INTERFACEDATA) (pptinfo *IUnknown, err error) {
 }
 
 // copyMemory moves location of a block of memory.
-func copyMemory(dest unsafe.Pointer, src unsafe.Pointer, length uint32) { 
+func copyMemory(dest unsafe.Pointer, src unsafe.Pointer, length uint32) {
 	procCopyMemory.Call(uintptr(dest), uintptr(src), uintptr(length))
 }
 
 // GetUserDefaultLCID retrieves current user default locale.
-func GetUserDefaultLCID() (lcid uint32) { 
+func GetUserDefaultLCID() (lcid uint32) {
 	ret, _, _ := procGetUserDefaultLCID.Call()
 	lcid = uint32(ret)
 	return
@@ -305,21 +305,21 @@ func GetUserDefaultLCID() (lcid uint32) {
 // GetMessage in message queue from runtime.
 //
 // This function appears to block. PeekMessage does not block.
-func GetMessage(msg *Msg, hwnd uint32, MsgFilterMin uint32, MsgFilterMax uint32) (ret int32, err error) { 
+func GetMessage(msg *Msg, hwnd uint32, MsgFilterMin uint32, MsgFilterMax uint32) (ret int32, err error) {
 	r0, _, err := procGetMessageW.Call(uintptr(unsafe.Pointer(msg)), uintptr(hwnd), uintptr(MsgFilterMin), uintptr(MsgFilterMax))
 	ret = int32(r0)
 	return
 }
 
 // DispatchMessage to window procedure.
-func DispatchMessage(msg *Msg) (ret int32) { 
+func DispatchMessage(msg *Msg) (ret int32) {
 	r0, _, _ := procDispatchMessageW.Call(uintptr(unsafe.Pointer(msg)))
 	ret = int32(r0)
 	return
 }
 
 // GetVariantDate converts COM Variant Time value to Go time.Time.
-func GetVariantDate(value float64) (time.Time, error) { 
+func GetVariantDate(value float64) (time.Time, error) {
 	var st syscall.Systemtime
 	r, _, _ := procVariantTimeToSystemTime.Call(uintptr(value), uintptr(unsafe.Pointer(&st)))
 	if r != 0 {

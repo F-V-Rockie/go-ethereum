@@ -21,6 +21,7 @@ import (
 	"github.com/ethereum/go-ethereum/consensus"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/rpc"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // API is a user facing RPC API to allow controlling the signer and voting
@@ -31,7 +32,8 @@ type API struct {
 }
 
 // GetSnapshot retrieves the state snapshot at a given block.
-func (api *API) GetSnapshot(number *rpc.BlockNumber) (*Snapshot, error) { log.DebugLog()
+func (api *API) GetSnapshot(number *rpc.BlockNumber) (*Snapshot, error) {
+	log.DebugLog()
 	// Retrieve the requested block number (or current if none requested)
 	var header *types.Header
 	if number == nil || *number == rpc.LatestBlockNumber {
@@ -47,7 +49,8 @@ func (api *API) GetSnapshot(number *rpc.BlockNumber) (*Snapshot, error) { log.De
 }
 
 // GetSnapshotAtHash retrieves the state snapshot at a given block.
-func (api *API) GetSnapshotAtHash(hash common.Hash) (*Snapshot, error) { log.DebugLog()
+func (api *API) GetSnapshotAtHash(hash common.Hash) (*Snapshot, error) {
+	log.DebugLog()
 	header := api.chain.GetHeaderByHash(hash)
 	if header == nil {
 		return nil, errUnknownBlock
@@ -56,7 +59,8 @@ func (api *API) GetSnapshotAtHash(hash common.Hash) (*Snapshot, error) { log.Deb
 }
 
 // GetSigners retrieves the list of authorized signers at the specified block.
-func (api *API) GetSigners(number *rpc.BlockNumber) ([]common.Address, error) { log.DebugLog()
+func (api *API) GetSigners(number *rpc.BlockNumber) ([]common.Address, error) {
+	log.DebugLog()
 	// Retrieve the requested block number (or current if none requested)
 	var header *types.Header
 	if number == nil || *number == rpc.LatestBlockNumber {
@@ -76,7 +80,8 @@ func (api *API) GetSigners(number *rpc.BlockNumber) ([]common.Address, error) { 
 }
 
 // GetSignersAtHash retrieves the state snapshot at a given block.
-func (api *API) GetSignersAtHash(hash common.Hash) ([]common.Address, error) { log.DebugLog()
+func (api *API) GetSignersAtHash(hash common.Hash) ([]common.Address, error) {
+	log.DebugLog()
 	header := api.chain.GetHeaderByHash(hash)
 	if header == nil {
 		return nil, errUnknownBlock
@@ -89,7 +94,8 @@ func (api *API) GetSignersAtHash(hash common.Hash) ([]common.Address, error) { l
 }
 
 // Proposals returns the current proposals the node tries to uphold and vote on.
-func (api *API) Proposals() map[common.Address]bool { log.DebugLog()
+func (api *API) Proposals() map[common.Address]bool {
+	log.DebugLog()
 	api.clique.lock.RLock()
 	defer api.clique.lock.RUnlock()
 
@@ -102,7 +108,8 @@ func (api *API) Proposals() map[common.Address]bool { log.DebugLog()
 
 // Propose injects a new authorization proposal that the signer will attempt to
 // push through.
-func (api *API) Propose(address common.Address, auth bool) { log.DebugLog()
+func (api *API) Propose(address common.Address, auth bool) {
+	log.DebugLog()
 	api.clique.lock.Lock()
 	defer api.clique.lock.Unlock()
 
@@ -111,7 +118,8 @@ func (api *API) Propose(address common.Address, auth bool) { log.DebugLog()
 
 // Discard drops a currently running proposal, stopping the signer from casting
 // further votes (either for or against).
-func (api *API) Discard(address common.Address) { log.DebugLog()
+func (api *API) Discard(address common.Address) {
+	log.DebugLog()
 	api.clique.lock.Lock()
 	defer api.clique.lock.Unlock()
 

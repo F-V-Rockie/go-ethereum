@@ -23,6 +23,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethdb"
 	"gopkg.in/karalabe/cookiejar.v2/collections/prque"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // ErrNotRequested is returned by the trie sync when it's requested to process a
@@ -61,7 +62,8 @@ type syncMemBatch struct {
 }
 
 // newSyncMemBatch allocates a new memory-buffer for not-yet persisted trie nodes.
-func newSyncMemBatch() *syncMemBatch { log.DebugLog()
+func newSyncMemBatch() *syncMemBatch {
+	log.DebugLog()
 	return &syncMemBatch{
 		batch: make(map[common.Hash][]byte),
 		order: make([]common.Hash, 0, 256),
@@ -79,7 +81,8 @@ type TrieSync struct {
 }
 
 // NewTrieSync creates a new trie data download scheduler.
-func NewTrieSync(root common.Hash, database DatabaseReader, callback LeafCallback) *TrieSync { log.DebugLog()
+func NewTrieSync(root common.Hash, database DatabaseReader, callback LeafCallback) *TrieSync {
+	log.DebugLog()
 	ts := &TrieSync{
 		database: database,
 		membatch: newSyncMemBatch(),
@@ -91,7 +94,8 @@ func NewTrieSync(root common.Hash, database DatabaseReader, callback LeafCallbac
 }
 
 // AddSubTrie registers a new trie to the sync code, rooted at the designated parent.
-func (s *TrieSync) AddSubTrie(root common.Hash, depth int, parent common.Hash, callback LeafCallback) { log.DebugLog()
+func (s *TrieSync) AddSubTrie(root common.Hash, depth int, parent common.Hash, callback LeafCallback) {
+	log.DebugLog()
 	// Short circuit if the trie is empty or already known
 	if root == emptyRoot {
 		return
@@ -126,7 +130,8 @@ func (s *TrieSync) AddSubTrie(root common.Hash, depth int, parent common.Hash, c
 // interpreted as a trie node, but rather accepted and stored into the database
 // as is. This method's goal is to support misc state metadata retrievals (e.g.
 // contract code).
-func (s *TrieSync) AddRawEntry(hash common.Hash, depth int, parent common.Hash) { log.DebugLog()
+func (s *TrieSync) AddRawEntry(hash common.Hash, depth int, parent common.Hash) {
+	log.DebugLog()
 	// Short circuit if the entry is empty or already known
 	if hash == emptyState {
 		return
@@ -156,7 +161,8 @@ func (s *TrieSync) AddRawEntry(hash common.Hash, depth int, parent common.Hash) 
 }
 
 // Missing retrieves the known missing nodes from the trie for retrieval.
-func (s *TrieSync) Missing(max int) []common.Hash { log.DebugLog()
+func (s *TrieSync) Missing(max int) []common.Hash {
+	log.DebugLog()
 	requests := []common.Hash{}
 	for !s.queue.Empty() && (max == 0 || len(requests) < max) {
 		requests = append(requests, s.queue.PopItem().(common.Hash))
@@ -167,7 +173,8 @@ func (s *TrieSync) Missing(max int) []common.Hash { log.DebugLog()
 // Process injects a batch of retrieved trie nodes data, returning if something
 // was committed to the database and also the index of an entry if processing of
 // it failed.
-func (s *TrieSync) Process(results []SyncResult) (bool, int, error) { log.DebugLog()
+func (s *TrieSync) Process(results []SyncResult) (bool, int, error) {
+	log.DebugLog()
 	committed := false
 
 	for i, item := range results {
@@ -213,7 +220,8 @@ func (s *TrieSync) Process(results []SyncResult) (bool, int, error) { log.DebugL
 
 // Commit flushes the data stored in the internal membatch out to persistent
 // storage, returning th enumber of items written and any occurred error.
-func (s *TrieSync) Commit(dbw ethdb.Putter) (int, error) { log.DebugLog()
+func (s *TrieSync) Commit(dbw ethdb.Putter) (int, error) {
+	log.DebugLog()
 	// Dump the membatch into a database dbw
 	for i, key := range s.membatch.order {
 		if err := dbw.Put(key[:], s.membatch.batch[key]); err != nil {
@@ -228,14 +236,16 @@ func (s *TrieSync) Commit(dbw ethdb.Putter) (int, error) { log.DebugLog()
 }
 
 // Pending returns the number of state entries currently pending for download.
-func (s *TrieSync) Pending() int { log.DebugLog()
+func (s *TrieSync) Pending() int {
+	log.DebugLog()
 	return len(s.requests)
 }
 
 // schedule inserts a new state retrieval request into the fetch queue. If there
 // is already a pending request for this node, the new request will be discarded
 // and only a parent reference added to the old one.
-func (s *TrieSync) schedule(req *request) { log.DebugLog()
+func (s *TrieSync) schedule(req *request) {
+	log.DebugLog()
 	// If we're already requesting this node, add a new reference and stop
 	if old, ok := s.requests[req.hash]; ok {
 		old.parents = append(old.parents, req.parents...)
@@ -248,7 +258,8 @@ func (s *TrieSync) schedule(req *request) { log.DebugLog()
 
 // children retrieves all the missing children of a state trie entry for future
 // retrieval scheduling.
-func (s *TrieSync) children(req *request, object node) ([]*request, error) { log.DebugLog()
+func (s *TrieSync) children(req *request, object node) ([]*request, error) {
+	log.DebugLog()
 	// Gather all the children of the node, irrelevant whether known or not
 	type child struct {
 		node  node
@@ -310,7 +321,8 @@ func (s *TrieSync) children(req *request, object node) ([]*request, error) { log
 // commit finalizes a retrieval request and stores it into the membatch. If any
 // of the referencing parent requests complete due to this commit, they are also
 // committed themselves.
-func (s *TrieSync) commit(req *request) (err error) { log.DebugLog()
+func (s *TrieSync) commit(req *request) (err error) {
+	log.DebugLog()
 	// Write the node content to the membatch
 	s.membatch.batch[req.hash] = req.data
 	s.membatch.order = append(s.membatch.order, req.hash)

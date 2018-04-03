@@ -14186,7 +14186,7 @@ DUK_LOCAL duk_idx_t duk__call_get_idx_func(duk_hthread *thr, duk_idx_t nargs, du
 	DUK_ASSERT(other >= 0);
 
 	idx_func = duk_get_top(thr) - nargs - other;
-	if (DUK_UNLIKELY((idx_func | nargs) < 0)) {   /* idx_func < 0 || nargs < 0; OR sign bits */
+	if (DUK_UNLIKELY((idx_func | nargs) < 0)) {  /* idx_func < 0 || nargs < 0; OR sign bits */
 		DUK_ERROR_TYPE_INVALID_ARGS(thr);
 		/* unreachable */
 	}
@@ -37620,7 +37620,7 @@ DUK_INTERNAL duk_ret_t duk_bi_object_constructor_is_sealed_frozen_shared(duk_hth
 
 	is_frozen = (duk_bool_t) duk_get_current_magic(thr);
 	mask = duk_get_type_mask(thr, 0);
-	if (mask & (DUK_TYPE_MASK_LIGHTfunc | DUK_TYPE_MASK_BUFFER)) {
+	if (mask & (DUK_TYPE_MASK_LIGHTFUNC | DUK_TYPE_MASK_BUFFER)) {
 		DUK_ASSERT(is_frozen == 0 || is_frozen == 1);
 		duk_push_boolean(thr, (mask & DUK_TYPE_MASK_LIGHTFUNC) ?
 		                          1 :               /* lightfunc always frozen and sealed */
@@ -37801,7 +37801,7 @@ DUK_INTERNAL duk_ret_t duk_bi_object_setprototype_shared(duk_hthread *thr) {
 	/* h_new_proto may be NULL */
 
 	mask = duk_get_type_mask(thr, 0);
-	if (mask & (DUK_TYPE_MASK_LIGHTfunc | DUK_TYPE_MASK_BUFFER)) {
+	if (mask & (DUK_TYPE_MASK_LIGHTFUNC | DUK_TYPE_MASK_BUFFER)) {
 		duk_hobject *curr_proto;
 		curr_proto = thr->builtins[(mask & DUK_TYPE_MASK_LIGHTFUNC) ?
 		                               DUK_BIDX_FUNCTION_PROTOTYPE :

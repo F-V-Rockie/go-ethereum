@@ -8,6 +8,6 @@
 package term
 
 // IsTty always returns false on AppEngine.
-func IsTty(fd uintptr) bool { log.DebugLog()
+func IsTty(fd uintptr) bool { 
 	return false
 }

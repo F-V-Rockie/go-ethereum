@@ -24,14 +24,14 @@ type unixLock struct {
 	f *os.File
 }
 
-func (l *unixLock) Release() error { 
+func (l *unixLock) Release() error {
 	if err := l.set(false); err != nil {
 		return err
 	}
 	return l.f.Close()
 }
 
-func (l *unixLock) set(lock bool) error { 
+func (l *unixLock) set(lock bool) error {
 	how := syscall.LOCK_UN
 	if lock {
 		how = syscall.LOCK_EX
@@ -39,7 +39,7 @@ func (l *unixLock) set(lock bool) error {
 	return syscall.Flock(int(l.f.Fd()), how|syscall.LOCK_NB)
 }
 
-func newLock(fileName string) (Releaser, error) { 
+func newLock(fileName string) (Releaser, error) {
 	f, err := os.OpenFile(fileName, os.O_RDWR|os.O_CREATE, 0644)
 	if err != nil {
 		return nil, err

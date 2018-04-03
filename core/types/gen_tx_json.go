@@ -9,11 +9,13 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 var _ = (*txdataMarshaling)(nil)
 
-func (t txdata) MarshalJSON() ([]byte, error) { log.DebugLog()
+func (t txdata) MarshalJSON() ([]byte, error) {
+	log.DebugLog()
 	type txdata struct {
 		AccountNonce hexutil.Uint64  `json:"nonce"    gencodec:"required"`
 		Price        *hexutil.Big    `json:"gasPrice" gencodec:"required"`
@@ -40,7 +42,8 @@ func (t txdata) MarshalJSON() ([]byte, error) { log.DebugLog()
 	return json.Marshal(&enc)
 }
 
-func (t *txdata) UnmarshalJSON(input []byte) error { log.DebugLog()
+func (t *txdata) UnmarshalJSON(input []byte) error {
+	log.DebugLog()
 	type txdata struct {
 		AccountNonce *hexutil.Uint64 `json:"nonce"    gencodec:"required"`
 		Price        *hexutil.Big    `json:"gasPrice" gencodec:"required"`

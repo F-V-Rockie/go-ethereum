@@ -3,6 +3,7 @@ package metrics
 import (
 	"sync"
 	"time"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // Meters count events to produce exponentially-weighted moving average rates
@@ -22,7 +23,8 @@ type Meter interface {
 // new StandardMeter.
 // Be sure to unregister the meter from the registry once it is of no use to
 // allow for garbage collection.
-func GetOrRegisterMeter(name string, r Registry) Meter { log.DebugLog()
+func GetOrRegisterMeter(name string, r Registry) Meter {
+	log.DebugLog()
 	if nil == r {
 		r = DefaultRegistry
 	}
@@ -31,7 +33,8 @@ func GetOrRegisterMeter(name string, r Registry) Meter { log.DebugLog()
 
 // NewMeter constructs a new StandardMeter and launches a goroutine.
 // Be sure to call Stop() once the meter is of no use to allow for garbage collection.
-func NewMeter() Meter { log.DebugLog()
+func NewMeter() Meter {
+	log.DebugLog()
 	if !Enabled {
 		return NilMeter{}
 	}
@@ -50,7 +53,8 @@ func NewMeter() Meter { log.DebugLog()
 // goroutine.
 // Be sure to unregister the meter from the registry once it is of no use to
 // allow for garbage collection.
-func NewRegisteredMeter(name string, r Registry) Meter { log.DebugLog()
+func NewRegisteredMeter(name string, r Registry) Meter {
+	log.DebugLog()
 	c := NewMeter()
 	if nil == r {
 		r = DefaultRegistry
@@ -66,61 +70,74 @@ type MeterSnapshot struct {
 }
 
 // Count returns the count of events at the time the snapshot was taken.
-func (m *MeterSnapshot) Count() int64 { log.DebugLog() return m.count }
+func (m *MeterSnapshot) Count() int64 { log.DebugLog()
+										  return m.count }
 
 // Mark panics.
-func (*MeterSnapshot) Mark(n int64) { log.DebugLog()
+func (*MeterSnapshot) Mark(n int64) {
+	log.DebugLog()
 	panic("Mark called on a MeterSnapshot")
 }
 
 // Rate1 returns the one-minute moving average rate of events per second at the
 // time the snapshot was taken.
-func (m *MeterSnapshot) Rate1() float64 { log.DebugLog() return m.rate1 }
+func (m *MeterSnapshot) Rate1() float64 { log.DebugLog()
+											return m.rate1 }
 
 // Rate5 returns the five-minute moving average rate of events per second at
 // the time the snapshot was taken.
-func (m *MeterSnapshot) Rate5() float64 { log.DebugLog() return m.rate5 }
+func (m *MeterSnapshot) Rate5() float64 { log.DebugLog()
+											return m.rate5 }
 
 // Rate15 returns the fifteen-minute moving average rate of events per second
 // at the time the snapshot was taken.
-func (m *MeterSnapshot) Rate15() float64 { log.DebugLog() return m.rate15 }
+func (m *MeterSnapshot) Rate15() float64 { log.DebugLog()
+											 return m.rate15 }
 
 // RateMean returns the meter's mean rate of events per second at the time the
 // snapshot was taken.
-func (m *MeterSnapshot) RateMean() float64 { log.DebugLog() return m.rateMean }
+func (m *MeterSnapshot) RateMean() float64 { log.DebugLog()
+											   return m.rateMean }
 
 // Snapshot returns the snapshot.
-func (m *MeterSnapshot) Snapshot() Meter { log.DebugLog() return m }
+func (m *MeterSnapshot) Snapshot() Meter { log.DebugLog()
+											 return m }
 
 // Stop is a no-op.
-func (m *MeterSnapshot) Stop() { log.DebugLog()}
+func (m *MeterSnapshot) Stop() { log.DebugLog() }
 
 // NilMeter is a no-op Meter.
 type NilMeter struct{}
 
 // Count is a no-op.
-func (NilMeter) Count() int64 { log.DebugLog() return 0 }
+func (NilMeter) Count() int64 { log.DebugLog()
+								  return 0 }
 
 // Mark is a no-op.
-func (NilMeter) Mark(n int64) { log.DebugLog()}
+func (NilMeter) Mark(n int64) { log.DebugLog() }
 
 // Rate1 is a no-op.
-func (NilMeter) Rate1() float64 { log.DebugLog() return 0.0 }
+func (NilMeter) Rate1() float64 { log.DebugLog()
+									return 0.0 }
 
 // Rate5 is a no-op.
-func (NilMeter) Rate5() float64 { log.DebugLog() return 0.0 }
+func (NilMeter) Rate5() float64 { log.DebugLog()
+									return 0.0 }
 
 // Rate15is a no-op.
-func (NilMeter) Rate15() float64 { log.DebugLog() return 0.0 }
+func (NilMeter) Rate15() float64 { log.DebugLog()
+									 return 0.0 }
 
 // RateMean is a no-op.
-func (NilMeter) RateMean() float64 { log.DebugLog() return 0.0 }
+func (NilMeter) RateMean() float64 { log.DebugLog()
+									   return 0.0 }
 
 // Snapshot is a no-op.
-func (NilMeter) Snapshot() Meter { log.DebugLog() return NilMeter{} }
+func (NilMeter) Snapshot() Meter { log.DebugLog()
+									 return NilMeter{} }
 
 // Stop is a no-op.
-func (NilMeter) Stop() { log.DebugLog()}
+func (NilMeter) Stop() { log.DebugLog() }
 
 // StandardMeter is the standard implementation of a Meter.
 type StandardMeter struct {
@@ -131,7 +148,8 @@ type StandardMeter struct {
 	stopped     bool
 }
 
-func newStandardMeter() *StandardMeter { log.DebugLog()
+func newStandardMeter() *StandardMeter {
+	log.DebugLog()
 	return &StandardMeter{
 		snapshot:  &MeterSnapshot{},
 		a1:        NewEWMA1(),
@@ -142,7 +160,8 @@ func newStandardMeter() *StandardMeter { log.DebugLog()
 }
 
 // Stop stops the meter, Mark() will be a no-op if you use it after being stopped.
-func (m *StandardMeter) Stop() { log.DebugLog()
+func (m *StandardMeter) Stop() {
+	log.DebugLog()
 	m.lock.Lock()
 	stopped := m.stopped
 	m.stopped = true
@@ -155,7 +174,8 @@ func (m *StandardMeter) Stop() { log.DebugLog()
 }
 
 // Count returns the number of events recorded.
-func (m *StandardMeter) Count() int64 { log.DebugLog()
+func (m *StandardMeter) Count() int64 {
+	log.DebugLog()
 	m.lock.RLock()
 	count := m.snapshot.count
 	m.lock.RUnlock()
@@ -163,7 +183,8 @@ func (m *StandardMeter) Count() int64 { log.DebugLog()
 }
 
 // Mark records the occurrence of n events.
-func (m *StandardMeter) Mark(n int64) { log.DebugLog()
+func (m *StandardMeter) Mark(n int64) {
+	log.DebugLog()
 	m.lock.Lock()
 	defer m.lock.Unlock()
 	if m.stopped {
@@ -177,7 +198,8 @@ func (m *StandardMeter) Mark(n int64) { log.DebugLog()
 }
 
 // Rate1 returns the one-minute moving average rate of events per second.
-func (m *StandardMeter) Rate1() float64 { log.DebugLog()
+func (m *StandardMeter) Rate1() float64 {
+	log.DebugLog()
 	m.lock.RLock()
 	rate1 := m.snapshot.rate1
 	m.lock.RUnlock()
@@ -185,7 +207,8 @@ func (m *StandardMeter) Rate1() float64 { log.DebugLog()
 }
 
 // Rate5 returns the five-minute moving average rate of events per second.
-func (m *StandardMeter) Rate5() float64 { log.DebugLog()
+func (m *StandardMeter) Rate5() float64 {
+	log.DebugLog()
 	m.lock.RLock()
 	rate5 := m.snapshot.rate5
 	m.lock.RUnlock()
@@ -193,7 +216,8 @@ func (m *StandardMeter) Rate5() float64 { log.DebugLog()
 }
 
 // Rate15 returns the fifteen-minute moving average rate of events per second.
-func (m *StandardMeter) Rate15() float64 { log.DebugLog()
+func (m *StandardMeter) Rate15() float64 {
+	log.DebugLog()
 	m.lock.RLock()
 	rate15 := m.snapshot.rate15
 	m.lock.RUnlock()
@@ -201,7 +225,8 @@ func (m *StandardMeter) Rate15() float64 { log.DebugLog()
 }
 
 // RateMean returns the meter's mean rate of events per second.
-func (m *StandardMeter) RateMean() float64 { log.DebugLog()
+func (m *StandardMeter) RateMean() float64 {
+	log.DebugLog()
 	m.lock.RLock()
 	rateMean := m.snapshot.rateMean
 	m.lock.RUnlock()
@@ -209,14 +234,16 @@ func (m *StandardMeter) RateMean() float64 { log.DebugLog()
 }
 
 // Snapshot returns a read-only copy of the meter.
-func (m *StandardMeter) Snapshot() Meter { log.DebugLog()
+func (m *StandardMeter) Snapshot() Meter {
+	log.DebugLog()
 	m.lock.RLock()
 	snapshot := *m.snapshot
 	m.lock.RUnlock()
 	return &snapshot
 }
 
-func (m *StandardMeter) updateSnapshot() { log.DebugLog()
+func (m *StandardMeter) updateSnapshot() {
+	log.DebugLog()
 	// should run with write lock held on m.lock
 	snapshot := m.snapshot
 	snapshot.rate1 = m.a1.Rate()
@@ -225,7 +252,8 @@ func (m *StandardMeter) updateSnapshot() { log.DebugLog()
 	snapshot.rateMean = float64(snapshot.count) / time.Since(m.startTime).Seconds()
 }
 
-func (m *StandardMeter) tick() { log.DebugLog()
+func (m *StandardMeter) tick() {
+	log.DebugLog()
 	m.lock.Lock()
 	defer m.lock.Unlock()
 	m.a1.Tick()
@@ -246,13 +274,15 @@ type meterArbiter struct {
 var arbiter = meterArbiter{ticker: time.NewTicker(5e9), meters: make(map[*StandardMeter]struct{})}
 
 // Ticks meters on the scheduled interval
-func (ma *meterArbiter) tick() { log.DebugLog()
+func (ma *meterArbiter) tick() {
+	log.DebugLog()
 	for range ma.ticker.C {
 		ma.tickMeters()
 	}
 }
 
-func (ma *meterArbiter) tickMeters() { log.DebugLog()
+func (ma *meterArbiter) tickMeters() {
+	log.DebugLog()
 	ma.RLock()
 	defer ma.RUnlock()
 	for meter := range ma.meters {

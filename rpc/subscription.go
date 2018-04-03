@@ -20,6 +20,7 @@ import (
 	"context"
 	"errors"
 	"sync"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 var (
@@ -41,7 +42,8 @@ type Subscription struct {
 }
 
 // Err returns a channel that is closed when the client send an unsubscribe request.
-func (s *Subscription) Err() <-chan error { log.DebugLog()
+func (s *Subscription) Err() <-chan error {
+	log.DebugLog()
 	return s.err
 }
 
@@ -59,7 +61,8 @@ type Notifier struct {
 
 // newNotifier creates a new notifier that can be used to send subscription
 // notifications to the client.
-func newNotifier(codec ServerCodec) *Notifier { log.DebugLog()
+func newNotifier(codec ServerCodec) *Notifier {
+	log.DebugLog()
 	return &Notifier{
 		codec:    codec,
 		active:   make(map[ID]*Subscription),
@@ -68,7 +71,8 @@ func newNotifier(codec ServerCodec) *Notifier { log.DebugLog()
 }
 
 // NotifierFromContext returns the Notifier value stored in ctx, if any.
-func NotifierFromContext(ctx context.Context) (*Notifier, bool) { log.DebugLog()
+func NotifierFromContext(ctx context.Context) (*Notifier, bool) {
+	log.DebugLog()
 	n, ok := ctx.Value(notifierKey{}).(*Notifier)
 	return n, ok
 }
@@ -77,7 +81,8 @@ func NotifierFromContext(ctx context.Context) (*Notifier, bool) { log.DebugLog()
 // RPC connection. By default subscriptions are inactive and notifications
 // are dropped until the subscription is marked as active. This is done
 // by the RPC server after the subscription ID is send to the client.
-func (n *Notifier) CreateSubscription() *Subscription { log.DebugLog()
+func (n *Notifier) CreateSubscription() *Subscription {
+	log.DebugLog()
 	s := &Subscription{ID: NewID(), err: make(chan error)}
 	n.subMu.Lock()
 	n.inactive[s.ID] = s
@@ -87,7 +92,8 @@ func (n *Notifier) CreateSubscription() *Subscription { log.DebugLog()
 
 // Notify sends a notification to the client with the given data as payload.
 // If an error occurs the RPC connection is closed and the error is returned.
-func (n *Notifier) Notify(id ID, data interface{}) error { log.DebugLog()
+func (n *Notifier) Notify(id ID, data interface{}) error {
+	log.DebugLog()
 	n.subMu.RLock()
 	defer n.subMu.RUnlock()
 
@@ -103,13 +109,15 @@ func (n *Notifier) Notify(id ID, data interface{}) error { log.DebugLog()
 }
 
 // Closed returns a channel that is closed when the RPC connection is closed.
-func (n *Notifier) Closed() <-chan interface{} { log.DebugLog()
+func (n *Notifier) Closed() <-chan interface{} {
+	log.DebugLog()
 	return n.codec.Closed()
 }
 
 // unsubscribe a subscription.
 // If the subscription could not be found ErrSubscriptionNotFound is returned.
-func (n *Notifier) unsubscribe(id ID) error { log.DebugLog()
+func (n *Notifier) unsubscribe(id ID) error {
+	log.DebugLog()
 	n.subMu.Lock()
 	defer n.subMu.Unlock()
 	if s, found := n.active[id]; found {
@@ -124,7 +132,8 @@ func (n *Notifier) unsubscribe(id ID) error { log.DebugLog()
 // notifications are dropped. This method is called by the RPC server after
 // the subscription ID was sent to client. This prevents notifications being
 // send to the client before the subscription ID is send to the client.
-func (n *Notifier) activate(id ID, namespace string) { log.DebugLog()
+func (n *Notifier) activate(id ID, namespace string) {
+	log.DebugLog()
 	n.subMu.Lock()
 	defer n.subMu.Unlock()
 	if sub, found := n.inactive[id]; found {

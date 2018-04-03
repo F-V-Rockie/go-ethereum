@@ -5,6 +5,7 @@ import (
 	"reflect"
 	"strings"
 	"sync"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // DuplicateMetric is the error returned by Registry.Register when a metric

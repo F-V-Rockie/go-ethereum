@@ -102,11 +102,11 @@ type event struct {
 	e      Event
 }
 
-func (e *event) Event() Event     {  return e.e }
-func (e *event) Path() string     {  return filepath.Join(syscall.UTF16ToString(e.pathw), e.name) }
-func (e *event) Sys() interface{} {  return e.ftype }
+func (e *event) Event() Event     { return e.e }
+func (e *event) Path() string     { return filepath.Join(syscall.UTF16ToString(e.pathw), e.name) }
+func (e *event) Sys() interface{} { return e.ftype }
 
-func (e *event) isDir() (bool, error) { 
+func (e *event) isDir() (bool, error) {
 	if e.ftype != fTypeUnknown {
 		return e.ftype == fTypeDirectory, nil
 	}

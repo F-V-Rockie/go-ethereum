@@ -2,6 +2,7 @@ package bn256
 
 import (
 	"math/big"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // curvePoint implements the elliptic curve y²=x³+3. Points are kept in Jacobian

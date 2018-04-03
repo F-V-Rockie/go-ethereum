@@ -20,6 +20,7 @@ import (
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // ContractRef is a reference to the contract's backing object
@@ -37,7 +38,10 @@ type ContractRef interface {
 type AccountRef common.Address
 
 // Address casts AccountRef to a Address
-func (ar AccountRef) Address() common.Address { log.DebugLog() return (common.Address)(ar) }
+func (ar AccountRef) Address() common.Address {
+	log.DebugLog()
+	return (common.Address)(ar)
+}
 
 // Contract represents an ethereum contract in the state database. It contains
 // the the contract code, calling arguments. Contract implements ContractRef
@@ -65,7 +69,8 @@ type Contract struct {
 }
 
 // NewContract returns a new contract environment for the execution of EVM.
-func NewContract(caller ContractRef, object ContractRef, value *big.Int, gas uint64) *Contract { log.DebugLog()
+func NewContract(caller ContractRef, object ContractRef, value *big.Int, gas uint64) *Contract {
+	log.DebugLog()
 	c := &Contract{CallerAddress: caller.Address(), caller: caller, self: object, Args: nil}
 
 	if parent, ok := caller.(*Contract); ok {
@@ -86,7 +91,8 @@ func NewContract(caller ContractRef, object ContractRef, value *big.Int, gas uin
 
 // AsDelegate sets the contract to be a delegate call and returns the current
 // contract (for chaining calls)
-func (c *Contract) AsDelegate() *Contract { log.DebugLog()
+func (c *Contract) AsDelegate() *Contract {
+	log.DebugLog()
 	c.DelegateCall = true
 	// NOTE: caller must, at all times be a contract. It should never happen
 	// that caller is something other than a Contract.
@@ -98,12 +104,14 @@ func (c *Contract) AsDelegate() *Contract { log.DebugLog()
 }
 
 // GetOp returns the n'th element in the contract's byte array
-func (c *Contract) GetOp(n uint64) OpCode { log.DebugLog()
+func (c *Contract) GetOp(n uint64) OpCode {
+	log.DebugLog()
 	return OpCode(c.GetByte(n))
 }
 
 // GetByte returns the n'th byte in the contract's byte array
-func (c *Contract) GetByte(n uint64) byte { log.DebugLog()
+func (c *Contract) GetByte(n uint64) byte {
+	log.DebugLog()
 	if n < uint64(len(c.Code)) {
 		return c.Code[n]
 	}
@@ -115,12 +123,14 @@ func (c *Contract) GetByte(n uint64) byte { log.DebugLog()
 //
 // Caller will recursively call caller when the contract is a delegate
 // call, including that of caller's caller.
-func (c *Contract) Caller() common.Address { log.DebugLog()
+func (c *Contract) Caller() common.Address {
+	log.DebugLog()
 	return c.CallerAddress
 }
 
 // UseGas attempts the use gas and subtracts it and returns true on success
-func (c *Contract) UseGas(gas uint64) (ok bool) { log.DebugLog()
+func (c *Contract) UseGas(gas uint64) (ok bool) {
+	log.DebugLog()
 	if c.Gas < gas {
 		return false
 	}
@@ -129,24 +139,28 @@ func (c *Contract) UseGas(gas uint64) (ok bool) { log.DebugLog()
 }
 
 // Address returns the contracts address
-func (c *Contract) Address() common.Address { log.DebugLog()
+func (c *Contract) Address() common.Address {
+	log.DebugLog()
 	return c.self.Address()
 }
 
 // Value returns the contracts value (sent to it from it's caller)
-func (c *Contract) Value() *big.Int { log.DebugLog()
+func (c *Contract) Value() *big.Int {
+	log.DebugLog()
 	return c.value
 }
 
 // SetCode sets the code to the contract
-func (self *Contract) SetCode(hash common.Hash, code []byte) { log.DebugLog()
+func (self *Contract) SetCode(hash common.Hash, code []byte) {
+	log.DebugLog()
 	self.Code = code
 	self.CodeHash = hash
 }
 
 // SetCallCode sets the code of the contract and address of the backing data
 // object
-func (self *Contract) SetCallCode(addr *common.Address, hash common.Hash, code []byte) { log.DebugLog()
+func (self *Contract) SetCallCode(addr *common.Address, hash common.Hash, code []byte) {
+	log.DebugLog()
 	self.Code = code
 	self.CodeHash = hash
 	self.CodeAddr = addr

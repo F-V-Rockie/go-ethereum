@@ -22,6 +22,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 type bytesBacked interface {
@@ -41,7 +42,8 @@ type Bloom [BloomByteLength]byte
 
 // BytesToBloom converts a byte slice to a bloom filter.
 // It panics if b is not of suitable size.
-func BytesToBloom(b []byte) Bloom { log.DebugLog()
+func BytesToBloom(b []byte) Bloom {
+	log.DebugLog()
 	var bloom Bloom
 	bloom.SetBytes(b)
 	return bloom
@@ -49,7 +51,8 @@ func BytesToBloom(b []byte) Bloom { log.DebugLog()
 
 // SetBytes sets the content of b to the given bytes.
 // It panics if d is not of suitable size.
-func (b *Bloom) SetBytes(d []byte) { log.DebugLog()
+func (b *Bloom) SetBytes(d []byte) {
+	log.DebugLog()
 	if len(b) < len(d) {
 		panic(fmt.Sprintf("bloom bytes too big %d %d", len(b), len(d)))
 	}
@@ -57,41 +60,49 @@ func (b *Bloom) SetBytes(d []byte) { log.DebugLog()
 }
 
 // Add adds d to the filter. Future calls of Test(d) will return true.
-func (b *Bloom) Add(d *big.Int) { log.DebugLog()
+func (b *Bloom) Add(d *big.Int) {
+	log.DebugLog()
 	bin := new(big.Int).SetBytes(b[:])
 	bin.Or(bin, bloom9(d.Bytes()))
 	b.SetBytes(bin.Bytes())
 }
 
 // Big converts b to a big integer.
-func (b Bloom) Big() *big.Int { log.DebugLog()
+func (b Bloom) Big() *big.Int {
+	log.DebugLog()
 	return new(big.Int).SetBytes(b[:])
 }
 
-func (b Bloom) Bytes() []byte { log.DebugLog()
+func (b Bloom) Bytes() []byte {
+	log.DebugLog()
 	return b[:]
 }
 
-func (b Bloom) Test(test *big.Int) bool { log.DebugLog()
+func (b Bloom) Test(test *big.Int) bool {
+	log.DebugLog()
 	return BloomLookup(b, test)
 }
 
-func (b Bloom) TestBytes(test []byte) bool { log.DebugLog()
+func (b Bloom) TestBytes(test []byte) bool {
+	log.DebugLog()
 	return b.Test(new(big.Int).SetBytes(test))
 
 }
 
 // MarshalText encodes b as a hex string with 0x prefix.
-func (b Bloom) MarshalText() ([]byte, error) { log.DebugLog()
+func (b Bloom) MarshalText() ([]byte, error) {
+	log.DebugLog()
 	return hexutil.Bytes(b[:]).MarshalText()
 }
 
 // UnmarshalText b as a hex string with 0x prefix.
-func (b *Bloom) UnmarshalText(input []byte) error { log.DebugLog()
+func (b *Bloom) UnmarshalText(input []byte) error {
+	log.DebugLog()
 	return hexutil.UnmarshalFixedText("Bloom", input, b[:])
 }
 
-func CreateBloom(receipts Receipts) Bloom { log.DebugLog()
+func CreateBloom(receipts Receipts) Bloom {
+	log.DebugLog()
 	bin := new(big.Int)
 	for _, receipt := range receipts {
 		bin.Or(bin, LogsBloom(receipt.Logs))
@@ -100,7 +111,8 @@ func CreateBloom(receipts Receipts) Bloom { log.DebugLog()
 	return BytesToBloom(bin.Bytes())
 }
 
-func LogsBloom(logs []*Log) *big.Int { log.DebugLog()
+func LogsBloom(logs []*Log) *big.Int {
+	log.DebugLog()
 	bin := new(big.Int)
 	for _, log := range logs {
 		bin.Or(bin, bloom9(log.Address.Bytes()))
@@ -112,7 +124,8 @@ func LogsBloom(logs []*Log) *big.Int { log.DebugLog()
 	return bin
 }
 
-func bloom9(b []byte) *big.Int { log.DebugLog()
+func bloom9(b []byte) *big.Int {
+	log.DebugLog()
 	b = crypto.Keccak256(b[:])
 
 	r := new(big.Int)
@@ -128,7 +141,8 @@ func bloom9(b []byte) *big.Int { log.DebugLog()
 
 var Bloom9 = bloom9
 
-func BloomLookup(bin Bloom, topic bytesBacked) bool { log.DebugLog()
+func BloomLookup(bin Bloom, topic bytesBacked) bool {
+	log.DebugLog()
 	bloom := bin.Big()
 	cmp := bloom9(topic.Bytes()[:])
 

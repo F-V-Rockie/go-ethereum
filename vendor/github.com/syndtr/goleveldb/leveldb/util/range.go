@@ -17,7 +17,7 @@ type Range struct {
 
 // BytesPrefix returns key range that satisfy the given prefix.
 // This only applicable for the standard 'bytes comparer'.
-func BytesPrefix(prefix []byte) *Range { 
+func BytesPrefix(prefix []byte) *Range {
 	var limit []byte
 	for i := len(prefix) - 1; i >= 0; i-- {
 		c := prefix[i]

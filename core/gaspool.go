@@ -19,6 +19,7 @@ package core
 import (
 	"fmt"
 	"math"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // GasPool tracks the amount of gas available during execution of the transactions
@@ -26,7 +27,8 @@ import (
 type GasPool uint64
 
 // AddGas makes gas available for execution.
-func (gp *GasPool) AddGas(amount uint64) *GasPool { log.DebugLog()
+func (gp *GasPool) AddGas(amount uint64) *GasPool {
+	log.DebugLog()
 	if uint64(*gp) > math.MaxUint64-amount {
 		panic("gas pool pushed above uint64")
 	}
@@ -36,7 +38,8 @@ func (gp *GasPool) AddGas(amount uint64) *GasPool { log.DebugLog()
 
 // SubGas deducts the given amount from the pool if enough gas is
 // available and returns an error otherwise.
-func (gp *GasPool) SubGas(amount uint64) error { log.DebugLog()
+func (gp *GasPool) SubGas(amount uint64) error {
+	log.DebugLog()
 	if uint64(*gp) < amount {
 		return ErrGasLimitReached
 	}
@@ -45,10 +48,12 @@ func (gp *GasPool) SubGas(amount uint64) error { log.DebugLog()
 }
 
 // Gas returns the amount of gas remaining in the pool.
-func (gp *GasPool) Gas() uint64 { log.DebugLog()
+func (gp *GasPool) Gas() uint64 {
+	log.DebugLog()
 	return uint64(*gp)
 }
 
-func (gp *GasPool) String() string { log.DebugLog()
+func (gp *GasPool) String() string {
+	log.DebugLog()
 	return fmt.Sprintf("%d", *gp)
 }

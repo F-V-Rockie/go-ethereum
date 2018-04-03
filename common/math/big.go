@@ -20,6 +20,7 @@ package math
 import (
 	"fmt"
 	"math/big"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 var (
@@ -42,7 +43,8 @@ const (
 type HexOrDecimal256 big.Int
 
 // UnmarshalText implements encoding.TextUnmarshaler.
-func (i *HexOrDecimal256) UnmarshalText(input []byte) error { log.DebugLog()
+func (i *HexOrDecimal256) UnmarshalText(input []byte) error {
+	log.DebugLog()
 	bigint, ok := ParseBig256(string(input))
 	if !ok {
 		return fmt.Errorf("invalid hex or decimal integer %q", input)
@@ -52,7 +54,8 @@ func (i *HexOrDecimal256) UnmarshalText(input []byte) error { log.DebugLog()
 }
 
 // MarshalText implements encoding.TextMarshaler.
-func (i *HexOrDecimal256) MarshalText() ([]byte, error) { log.DebugLog()
+func (i *HexOrDecimal256) MarshalText() ([]byte, error) {
+	log.DebugLog()
 	if i == nil {
 		return []byte("0x0"), nil
 	}
@@ -61,7 +64,8 @@ func (i *HexOrDecimal256) MarshalText() ([]byte, error) { log.DebugLog()
 
 // ParseBig256 parses s as a 256 bit integer in decimal or hexadecimal syntax.
 // Leading zeros are accepted. The empty string parses as zero.
-func ParseBig256(s string) (*big.Int, bool) { log.DebugLog()
+func ParseBig256(s string) (*big.Int, bool) {
+	log.DebugLog()
 	if s == "" {
 		return new(big.Int), true
 	}
@@ -79,7 +83,8 @@ func ParseBig256(s string) (*big.Int, bool) { log.DebugLog()
 }
 
 // MustParseBig parses s as a 256 bit big integer and panics if the string is invalid.
-func MustParseBig256(s string) *big.Int { log.DebugLog()
+func MustParseBig256(s string) *big.Int {
+	log.DebugLog()
 	v, ok := ParseBig256(s)
 	if !ok {
 		panic("invalid 256 bit integer: " + s)
@@ -88,13 +93,15 @@ func MustParseBig256(s string) *big.Int { log.DebugLog()
 }
 
 // BigPow returns a ** b as a big integer.
-func BigPow(a, b int64) *big.Int { log.DebugLog()
+func BigPow(a, b int64) *big.Int {
+	log.DebugLog()
 	r := big.NewInt(a)
 	return r.Exp(r, big.NewInt(b), nil)
 }
 
 // BigMax returns the larger of x or y.
-func BigMax(x, y *big.Int) *big.Int { log.DebugLog()
+func BigMax(x, y *big.Int) *big.Int {
+	log.DebugLog()
 	if x.Cmp(y) < 0 {
 		return y
 	}
@@ -102,7 +109,8 @@ func BigMax(x, y *big.Int) *big.Int { log.DebugLog()
 }
 
 // BigMin returns the smaller of x or y.
-func BigMin(x, y *big.Int) *big.Int { log.DebugLog()
+func BigMin(x, y *big.Int) *big.Int {
+	log.DebugLog()
 	if x.Cmp(y) > 0 {
 		return y
 	}
@@ -110,7 +118,8 @@ func BigMin(x, y *big.Int) *big.Int { log.DebugLog()
 }
 
 // FirstBitSet returns the index of the first 1 bit in v, counting from LSB.
-func FirstBitSet(v *big.Int) int { log.DebugLog()
+func FirstBitSet(v *big.Int) int {
+	log.DebugLog()
 	for i := 0; i < v.BitLen(); i++ {
 		if v.Bit(i) > 0 {
 			return i
@@ -121,7 +130,8 @@ func FirstBitSet(v *big.Int) int { log.DebugLog()
 
 // PaddedBigBytes encodes a big integer as a big-endian byte slice. The length
 // of the slice is at least n bytes.
-func PaddedBigBytes(bigint *big.Int, n int) []byte { log.DebugLog()
+func PaddedBigBytes(bigint *big.Int, n int) []byte {
+	log.DebugLog()
 	if bigint.BitLen()/8 >= n {
 		return bigint.Bytes()
 	}
@@ -133,7 +143,8 @@ func PaddedBigBytes(bigint *big.Int, n int) []byte { log.DebugLog()
 // bigEndianByteAt returns the byte at position n,
 // in Big-Endian encoding
 // So n==0 returns the least significant byte
-func bigEndianByteAt(bigint *big.Int, n int) byte { log.DebugLog()
+func bigEndianByteAt(bigint *big.Int, n int) byte {
+	log.DebugLog()
 	words := bigint.Bits()
 	// Check word-bucket the byte will reside in
 	i := n / wordBytes
@@ -151,7 +162,8 @@ func bigEndianByteAt(bigint *big.Int, n int) byte { log.DebugLog()
 // with the supplied padlength in Little-Endian encoding.
 // n==0 returns the MSB
 // Example: bigint '5', padlength 32, n=31 => 5
-func Byte(bigint *big.Int, padlength, n int) byte { log.DebugLog()
+func Byte(bigint *big.Int, padlength, n int) byte {
+	log.DebugLog()
 	if n >= padlength {
 		return byte(0)
 	}
@@ -160,7 +172,8 @@ func Byte(bigint *big.Int, padlength, n int) byte { log.DebugLog()
 
 // ReadBits encodes the absolute value of bigint as big-endian bytes. Callers must ensure
 // that buf has enough space. If buf is too short the result will be incomplete.
-func ReadBits(bigint *big.Int, buf []byte) { log.DebugLog()
+func ReadBits(bigint *big.Int, buf []byte) {
+	log.DebugLog()
 	i := len(buf)
 	for _, d := range bigint.Bits() {
 		for j := 0; j < wordBytes && i > 0; j++ {
@@ -172,7 +185,8 @@ func ReadBits(bigint *big.Int, buf []byte) { log.DebugLog()
 }
 
 // U256 encodes as a 256 bit two's complement number. This operation is destructive.
-func U256(x *big.Int) *big.Int { log.DebugLog()
+func U256(x *big.Int) *big.Int {
+	log.DebugLog()
 	return x.And(x, tt256m1)
 }
 
@@ -183,7 +197,8 @@ func U256(x *big.Int) *big.Int { log.DebugLog()
 //   S256(1)        = 1
 //   S256(2**255)   = -2**255
 //   S256(2**256-1) = -1
-func S256(x *big.Int) *big.Int { log.DebugLog()
+func S256(x *big.Int) *big.Int {
+	log.DebugLog()
 	if x.Cmp(tt255) < 0 {
 		return x
 	} else {
@@ -196,7 +211,8 @@ func S256(x *big.Int) *big.Int { log.DebugLog()
 // base or exponent. The result is truncated to 256 bits.
 //
 // Courtesy @karalabe and @chfast
-func Exp(base, exponent *big.Int) *big.Int { log.DebugLog()
+func Exp(base, exponent *big.Int) *big.Int {
+	log.DebugLog()
 	result := big.NewInt(1)
 
 	for _, word := range exponent.Bits() {

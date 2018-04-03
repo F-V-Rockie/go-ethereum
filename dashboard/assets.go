@@ -13,6 +13,8 @@ import (
 	"path/filepath"
 	"strings"
 	"time"
+
+	"github.com/ethereum/go-ethereum/log"
 )
 
 type asset struct {
@@ -38560,7 +38562,7 @@ func AssetDir(name string) ([]string, error) { log.DebugLog()
 			}
 		}
 	}
-	if node.func != nil { log.DebugLog()
+	if node.Func != nil { log.DebugLog()
 		return nil, fmt.Errorf("Asset %s not found", name)
 	}
 	rv := make([]string, 0, len(node.Children))

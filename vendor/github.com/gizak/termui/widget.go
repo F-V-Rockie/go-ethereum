@@ -22,7 +22,7 @@ type Widget interface {
 	Id() string
 }
 
-func NewWgtInfo(wgt Widget) WgtInfo { 
+func NewWgtInfo(wgt Widget) WgtInfo {
 	return WgtInfo{
 		Handlers: make(map[string]func(Event)),
 		WgtRef:   wgt,
@@ -30,31 +30,31 @@ func NewWgtInfo(wgt Widget) WgtInfo {
 	}
 }
 
-func NewWgtMgr() WgtMgr { 
+func NewWgtMgr() WgtMgr {
 	wm := WgtMgr(make(map[string]WgtInfo))
 	return wm
 
 }
 
-func (wm WgtMgr) AddWgt(wgt Widget) { 
+func (wm WgtMgr) AddWgt(wgt Widget) {
 	wm[wgt.Id()] = NewWgtInfo(wgt)
 }
 
-func (wm WgtMgr) RmWgt(wgt Widget) { 
+func (wm WgtMgr) RmWgt(wgt Widget) {
 	wm.RmWgtById(wgt.Id())
 }
 
-func (wm WgtMgr) RmWgtById(id string) { 
+func (wm WgtMgr) RmWgtById(id string) {
 	delete(wm, id)
 }
 
-func (wm WgtMgr) AddWgtHandler(id, path string, h func(Event)) { 
+func (wm WgtMgr) AddWgtHandler(id, path string, h func(Event)) {
 	if w, ok := wm[id]; ok {
 		w.Handlers[path] = h
 	}
 }
 
-func (wm WgtMgr) RmWgtHandler(id, path string) { 
+func (wm WgtMgr) RmWgtHandler(id, path string) {
 	if w, ok := wm[id]; ok {
 		delete(w.Handlers, path)
 	}
@@ -65,7 +65,7 @@ var counter struct {
 	count int
 }
 
-func GenId() string { 
+func GenId() string {
 	counter.Lock()
 	defer counter.Unlock()
 
@@ -73,7 +73,7 @@ func GenId() string {
 	return fmt.Sprintf("%d", counter.count)
 }
 
-func (wm WgtMgr) WgtHandlersHook() func(Event) { 
+func (wm WgtMgr) WgtHandlersHook() func(Event) {
 	return func(e Event) {
 		for _, v := range wm {
 			if k := findMatch(v.Handlers, e.Path); k != "" {
@@ -85,7 +85,7 @@ func (wm WgtMgr) WgtHandlersHook() func(Event) {
 
 var DefaultWgtMgr WgtMgr
 
-func (b *Block) Handle(path string, handler func(Event)) { 
+func (b *Block) Handle(path string, handler func(Event)) {
 	if _, ok := DefaultWgtMgr[b.Id()]; !ok {
 		DefaultWgtMgr.AddWgt(b)
 	}

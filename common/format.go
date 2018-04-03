@@ -21,6 +21,7 @@ import (
 	"regexp"
 	"strings"
 	"time"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // PrettyDuration is a pretty printed version of a time.Duration value that cuts

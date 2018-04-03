@@ -25,6 +25,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"gopkg.in/fatih/set.v0"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // API describes the set of methods offered over the RPC interface
@@ -130,10 +131,11 @@ const (
 // Returned errors:
 // - an invalid block number error when the given argument isn't a known strings
 // - an out of range error when the given block number is either too little or too large
-func (bn *BlockNumber) UnmarshalJSON(data []byte) error { log.DebugLog()
+func (bn *BlockNumber) UnmarshalJSON(data []byte) error {
+	log.DebugLog()
 	input := strings.TrimSpace(string(data))
 	if len(input) >= 2 && input[0] == '"' && input[len(input)-1] == '"' {
-		input = input[1 : len(input)-1]
+		input = input[1: len(input)-1]
 	}
 
 	switch input {
@@ -160,6 +162,7 @@ func (bn *BlockNumber) UnmarshalJSON(data []byte) error { log.DebugLog()
 	return nil
 }
 
-func (bn BlockNumber) Int64() int64 { log.DebugLog()
+func (bn BlockNumber) Int64() int64 {
+	log.DebugLog()
 	return (int64)(bn)
 }

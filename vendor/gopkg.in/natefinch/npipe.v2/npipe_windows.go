@@ -80,17 +80,17 @@ type PipeError struct {
 }
 
 // Error implements the error interface
-func (e PipeError) Error() string { 
+func (e PipeError) Error() string {
 	return e.msg
 }
 
 // Timeout implements net.AddrError.Timeout()
-func (e PipeError) Timeout() bool { 
+func (e PipeError) Timeout() bool {
 	return e.timeout
 }
 
 // Temporary implements net.AddrError.Temporary()
-func (e PipeError) Temporary() bool { 
+func (e PipeError) Temporary() bool {
 	return false
 }
 
@@ -108,7 +108,7 @@ func (e PipeError) Temporary() bool {
 //
 //   // remote pipe
 //   conn, err := Dial(`\\othercomp\pipe\mypipename`)
-func Dial(address string) (*PipeConn, error) { 
+func Dial(address string) (*PipeConn, error) {
 	for {
 		conn, err := dial(address, nmpwait_wait_forever)
 		if err == nil {
@@ -123,7 +123,7 @@ func Dial(address string) (*PipeConn, error) {
 }
 
 // DialTimeout acts like Dial, but will time out after the duration of timeout
-func DialTimeout(address string, timeout time.Duration) (*PipeConn, error) { 
+func DialTimeout(address string, timeout time.Duration) (*PipeConn, error) {
 	deadline := time.Now().Add(timeout)
 
 	now := time.Now()
@@ -156,7 +156,7 @@ func DialTimeout(address string, timeout time.Duration) (*PipeConn, error) {
 }
 
 // isPipeNotReady checks the error to see if it indicates the pipe is not ready
-func isPipeNotReady(err error) bool { 
+func isPipeNotReady(err error) bool {
 	// Pipe Busy means another client just grabbed the open pipe end,
 	// and the server hasn't made a new one yet.
 	// File Not Found means the server hasn't created the pipe yet.
@@ -167,7 +167,7 @@ func isPipeNotReady(err error) bool {
 
 // newOverlapped creates a structure used to track asynchronous
 // I/O requests that have been issued.
-func newOverlapped() (*syscall.Overlapped, error) { 
+func newOverlapped() (*syscall.Overlapped, error) {
 	event, err := createEvent(nil, true, true, nil)
 	if err != nil {
 		return nil, err
@@ -178,7 +178,7 @@ func newOverlapped() (*syscall.Overlapped, error) {
 // waitForCompletion waits for an asynchronous I/O request referred to by overlapped to complete.
 // This function returns the number of bytes transferred by the operation and an error code if
 // applicable (nil otherwise).
-func waitForCompletion(handle syscall.Handle, overlapped *syscall.Overlapped) (uint32, error) { 
+func waitForCompletion(handle syscall.Handle, overlapped *syscall.Overlapped) (uint32, error) {
 	_, err := syscall.WaitForSingleObject(overlapped.HEvent, syscall.INFINITE)
 	if err != nil {
 		return 0, err
@@ -191,7 +191,7 @@ func waitForCompletion(handle syscall.Handle, overlapped *syscall.Overlapped) (u
 // dial is a helper to initiate a connection to a named pipe that has been started by a server.
 // The timeout is only enforced if the pipe server has already created the pipe, otherwise
 // this function will return immediately.
-func dial(address string, timeout uint32) (*PipeConn, error) { 
+func dial(address string, timeout uint32) (*PipeConn, error) {
 	name, err := syscall.UTF16PtrFromString(string(address))
 	if err != nil {
 		return nil, err
@@ -225,7 +225,7 @@ func dial(address string, timeout uint32) (*PipeConn, error) {
 // address. The address must be of the form \\.\pipe\<name>
 //
 // Listen will return a PipeError for an incorrectly formatted pipe name.
-func Listen(address string) (*PipeListener, error) { 
+func Listen(address string) (*PipeListener, error) {
 	handle, err := createPipe(address, true)
 	if err == error_invalid_name {
 		return nil, badAddr(address)
@@ -259,7 +259,7 @@ type PipeListener struct {
 
 // Accept implements the Accept method in the net.Listener interface; it
 // waits for the next call and returns a generic net.Conn.
-func (l *PipeListener) Accept() (net.Conn, error) { 
+func (l *PipeListener) Accept() (net.Conn, error) {
 	c, err := l.AcceptPipe()
 	for err == error_no_data {
 		// Ignore clients that connect and immediately disconnect.
@@ -274,7 +274,7 @@ func (l *PipeListener) Accept() (net.Conn, error) {
 // AcceptPipe accepts the next incoming call and returns the new connection.
 // It might return an error if a client connected and immediately cancelled
 // the connection.
-func (l *PipeListener) AcceptPipe() (*PipeConn, error) { 
+func (l *PipeListener) AcceptPipe() (*PipeConn, error) {
 	if l == nil {
 		return nil, syscall.EINVAL
 	}
@@ -339,7 +339,7 @@ func (l *PipeListener) AcceptPipe() (*PipeConn, error) {
 
 // Close stops listening on the address.
 // Already Accepted connections are not closed.
-func (l *PipeListener) Close() error { 
+func (l *PipeListener) Close() error {
 	l.mu.Lock()
 	defer l.mu.Unlock()
 
@@ -379,7 +379,7 @@ func (l *PipeListener) Close() error {
 }
 
 // Addr returns the listener's network address, a PipeAddr.
-func (l *PipeListener) Addr() net.Addr {  return l.addr }
+func (l *PipeListener) Addr() net.Addr { return l.addr }
 
 // PipeConn is the implementation of the net.Conn interface for named pipe connections.
 type PipeConn struct {
@@ -399,7 +399,7 @@ type iodata struct {
 // completeRequest looks at iodata to see if a request is pending. If so, it waits for it to either complete or to
 // abort due to hitting the specified deadline. Deadline may be set to nil to wait forever. If no request is pending,
 // the content of iodata is returned.
-func (c *PipeConn) completeRequest(data iodata, deadline *time.Time, overlapped *syscall.Overlapped) (int, error) { 
+func (c *PipeConn) completeRequest(data iodata, deadline *time.Time, overlapped *syscall.Overlapped) (int, error) {
 	if data.err == error_io_incomplete || data.err == syscall.ERROR_IO_PENDING {
 		var timer <-chan time.Time
 		if deadline != nil {
@@ -429,7 +429,7 @@ func (c *PipeConn) completeRequest(data iodata, deadline *time.Time, overlapped 
 }
 
 // Read implements the net.Conn Read method.
-func (c *PipeConn) Read(b []byte) (int, error) { 
+func (c *PipeConn) Read(b []byte) (int, error) {
 	// Use ReadFile() rather than Read() because the latter
 	// contains a workaround that eats ERROR_BROKEN_PIPE.
 	overlapped, err := newOverlapped()
@@ -443,7 +443,7 @@ func (c *PipeConn) Read(b []byte) (int, error) {
 }
 
 // Write implements the net.Conn Write method.
-func (c *PipeConn) Write(b []byte) (int, error) { 
+func (c *PipeConn) Write(b []byte) (int, error) {
 	overlapped, err := newOverlapped()
 	if err != nil {
 		return 0, err
@@ -455,24 +455,24 @@ func (c *PipeConn) Write(b []byte) (int, error) {
 }
 
 // Close closes the connection.
-func (c *PipeConn) Close() error { 
+func (c *PipeConn) Close() error {
 	return syscall.CloseHandle(c.handle)
 }
 
 // LocalAddr returns the local network address.
-func (c *PipeConn) LocalAddr() net.Addr { 
+func (c *PipeConn) LocalAddr() net.Addr {
 	return c.addr
 }
 
 // RemoteAddr returns the remote network address.
-func (c *PipeConn) RemoteAddr() net.Addr { 
+func (c *PipeConn) RemoteAddr() net.Addr {
 	// not sure what to do here, we don't have remote addr....
 	return c.addr
 }
 
 // SetDeadline implements the net.Conn SetDeadline method.
 // Note that timeouts are only supported on Windows Vista/Server 2008 and above
-func (c *PipeConn) SetDeadline(t time.Time) error { 
+func (c *PipeConn) SetDeadline(t time.Time) error {
 	c.SetReadDeadline(t)
 	c.SetWriteDeadline(t)
 	return nil
@@ -480,14 +480,14 @@ func (c *PipeConn) SetDeadline(t time.Time) error {
 
 // SetReadDeadline implements the net.Conn SetReadDeadline method.
 // Note that timeouts are only supported on Windows Vista/Server 2008 and above
-func (c *PipeConn) SetReadDeadline(t time.Time) error { 
+func (c *PipeConn) SetReadDeadline(t time.Time) error {
 	c.readDeadline = &t
 	return nil
 }
 
 // SetWriteDeadline implements the net.Conn SetWriteDeadline method.
 // Note that timeouts are only supported on Windows Vista/Server 2008 and above
-func (c *PipeConn) SetWriteDeadline(t time.Time) error { 
+func (c *PipeConn) SetWriteDeadline(t time.Time) error {
 	c.writeDeadline = &t
 	return nil
 }
@@ -496,10 +496,10 @@ func (c *PipeConn) SetWriteDeadline(t time.Time) error {
 type PipeAddr string
 
 // Network returns the address's network name, "pipe".
-func (a PipeAddr) Network() string {  return "pipe" }
+func (a PipeAddr) Network() string { return "pipe" }
 
 // String returns the address of the pipe
-func (a PipeAddr) String() string { 
+func (a PipeAddr) String() string {
 	return string(a)
 }
 
@@ -507,7 +507,7 @@ func (a PipeAddr) String() string {
 // with the same arguments, since subsequent calls to create pipe need
 // to use the same arguments as the first one. If first is set, fail
 // if the pipe already exists.
-func createPipe(address string, first bool) (syscall.Handle, error) { 
+func createPipe(address string, first bool) (syscall.Handle, error) {
 	n, err := syscall.UTF16PtrFromString(address)
 	if err != nil {
 		return 0, err
@@ -523,9 +523,9 @@ func createPipe(address string, first bool) (syscall.Handle, error) {
 		512, 512, 0, nil)
 }
 
-func badAddr(addr string) PipeError { 
+func badAddr(addr string) PipeError {
 	return PipeError{fmt.Sprintf("Invalid pipe address '%s'.", addr), false}
 }
-func timeout(addr string) PipeError { 
+func timeout(addr string) PipeError {
 	return PipeError{fmt.Sprintf("Pipe IO timed out waiting for '%s'", addr), true}
 }

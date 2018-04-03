@@ -137,7 +137,7 @@ type fieldVal struct {
 }
 
 // String returns the field value as a human-readable hex string.
-func (f fieldVal) String() string { 
+func (f fieldVal) String() string {
 	t := new(fieldVal).Set(&f).Normalize()
 	return hex.EncodeToString(t.Bytes()[:])
 }
@@ -145,7 +145,7 @@ func (f fieldVal) String() string {
 // Zero sets the field value to zero.  A newly created field value is already
 // set to zero.  This function can be useful to clear an existing field value
 // for reuse.
-func (f *fieldVal) Zero() { 
+func (f *fieldVal) Zero() {
 	f.n[0] = 0
 	f.n[1] = 0
 	f.n[2] = 0
@@ -163,7 +163,7 @@ func (f *fieldVal) Zero() {
 // The field value is returned to support chaining.  This enables syntax like:
 // f := new(fieldVal).Set(f2).Add(1) so that f = f2 + 1 where f2 is not
 // modified.
-func (f *fieldVal) Set(val *fieldVal) *fieldVal { 
+func (f *fieldVal) Set(val *fieldVal) *fieldVal {
 	*f = *val
 	return f
 }
@@ -174,7 +174,7 @@ func (f *fieldVal) Set(val *fieldVal) *fieldVal {
 //
 // The field value is returned to support chaining.  This enables syntax such
 // as f := new(fieldVal).SetInt(2).Mul(f2) so that f = 2 * f2.
-func (f *fieldVal) SetInt(ui uint) *fieldVal { 
+func (f *fieldVal) SetInt(ui uint) *fieldVal {
 	f.Zero()
 	f.n[0] = uint32(ui)
 	return f
@@ -185,7 +185,7 @@ func (f *fieldVal) SetInt(ui uint) *fieldVal {
 //
 // The field value is returned to support chaining.  This enables syntax like:
 // f := new(fieldVal).SetBytes(byteArray).Mul(f2) so that f = ba * f2.
-func (f *fieldVal) SetBytes(b *[32]byte) *fieldVal { 
+func (f *fieldVal) SetBytes(b *[32]byte) *fieldVal {
 	// Pack the 256 total bits across the 10 uint32 words with a max of
 	// 26-bits per word.  This could be done with a couple of for loops,
 	// but this unrolled version is significantly faster.  Benchmarks show
@@ -219,7 +219,7 @@ func (f *fieldVal) SetBytes(b *[32]byte) *fieldVal {
 //
 // The field value is returned to support chaining.  This enables syntax like:
 // f := new(fieldVal).SetByteSlice(byteSlice)
-func (f *fieldVal) SetByteSlice(b []byte) *fieldVal { 
+func (f *fieldVal) SetByteSlice(b []byte) *fieldVal {
 	var b32 [32]byte
 	for i := 0; i < len(b); i++ {
 		if i < 32 {
@@ -234,7 +234,7 @@ func (f *fieldVal) SetByteSlice(b []byte) *fieldVal {
 //
 // The field value is returned to support chaining.  This enables syntax like:
 // f := new(fieldVal).SetHex("0abc").Add(1) so that f = 0x0abc + 1
-func (f *fieldVal) SetHex(hexString string) *fieldVal { 
+func (f *fieldVal) SetHex(hexString string) *fieldVal {
 	if len(hexString)%2 != 0 {
 		hexString = "0" + hexString
 	}
@@ -245,7 +245,7 @@ func (f *fieldVal) SetHex(hexString string) *fieldVal {
 // Normalize normalizes the internal field words into the desired range and
 // performs fast modular reduction over the secp256k1 prime by making use of the
 // special form of the prime.
-func (f *fieldVal) Normalize() *fieldVal { 
+func (f *fieldVal) Normalize() *fieldVal {
 	// The field representation leaves 6 bits of overflow in each word so
 	// intermediate calculations can be performed without needing to
 	// propagate the carry to each higher word during the calculations.  In
@@ -374,7 +374,7 @@ func (f *fieldVal) Normalize() *fieldVal {
 //
 // The field value must be normalized for this function to return the correct
 // result.
-func (f *fieldVal) PutBytes(b *[32]byte) { 
+func (f *fieldVal) PutBytes(b *[32]byte) {
 	// Unpack the 256 total bits from the 10 uint32 words with a max of
 	// 26-bits per word.  This could be done with a couple of for loops,
 	// but this unrolled version is a bit faster.  Benchmarks show this is
@@ -420,14 +420,14 @@ func (f *fieldVal) PutBytes(b *[32]byte) {
 //
 // The field value must be normalized for this function to return correct
 // result.
-func (f *fieldVal) Bytes() *[32]byte { 
+func (f *fieldVal) Bytes() *[32]byte {
 	b := new([32]byte)
 	f.PutBytes(b)
 	return b
 }
 
 // IsZero returns whether or not the field value is equal to zero.
-func (f *fieldVal) IsZero() bool { 
+func (f *fieldVal) IsZero() bool {
 	// The value can only be zero if no bits are set in any of the words.
 	// This is a constant time implementation.
 	bits := f.n[0] | f.n[1] | f.n[2] | f.n[3] | f.n[4] |
@@ -440,7 +440,7 @@ func (f *fieldVal) IsZero() bool {
 //
 // The field value must be normalized for this function to return correct
 // result.
-func (f *fieldVal) IsOdd() bool { 
+func (f *fieldVal) IsOdd() bool {
 	// Only odd numbers have the bottom bit set.
 	return f.n[0]&1 == 1
 }
@@ -448,7 +448,7 @@ func (f *fieldVal) IsOdd() bool {
 // Equals returns whether or not the two field values are the same.  Both
 // field values being compared must be normalized for this function to return
 // the correct result.
-func (f *fieldVal) Equals(val *fieldVal) bool { 
+func (f *fieldVal) Equals(val *fieldVal) bool {
 	// Xor only sets bits when they are different, so the two field values
 	// can only be the same if no bits are set after xoring each word.
 	// This is a constant time implementation.
@@ -465,7 +465,7 @@ func (f *fieldVal) Equals(val *fieldVal) bool {
 //
 // The field value is returned to support chaining.  This enables syntax like:
 // f.NegateVal(f2).AddInt(1) so that f = -f2 + 1.
-func (f *fieldVal) NegateVal(val *fieldVal, magnitude uint32) *fieldVal { 
+func (f *fieldVal) NegateVal(val *fieldVal, magnitude uint32) *fieldVal {
 	// Negation in the field is just the prime minus the value.  However,
 	// in order to allow negation against a field value without having to
 	// normalize/reduce it first, multiply by the magnitude (that is how
@@ -503,7 +503,7 @@ func (f *fieldVal) NegateVal(val *fieldVal, magnitude uint32) *fieldVal {
 //
 // The field value is returned to support chaining.  This enables syntax like:
 // f.Negate().AddInt(1) so that f = -f + 1.
-func (f *fieldVal) Negate(magnitude uint32) *fieldVal { 
+func (f *fieldVal) Negate(magnitude uint32) *fieldVal {
 	return f.NegateVal(f, magnitude)
 }
 
@@ -513,7 +513,7 @@ func (f *fieldVal) Negate(magnitude uint32) *fieldVal {
 //
 // The field value is returned to support chaining.  This enables syntax like:
 // f.AddInt(1).Add(f2) so that f = f + 1 + f2.
-func (f *fieldVal) AddInt(ui uint) *fieldVal { 
+func (f *fieldVal) AddInt(ui uint) *fieldVal {
 	// Since the field representation intentionally provides overflow bits,
 	// it's ok to use carryless addition as the carry bit is safely part of
 	// the word and will be normalized out.
@@ -527,7 +527,7 @@ func (f *fieldVal) AddInt(ui uint) *fieldVal {
 //
 // The field value is returned to support chaining.  This enables syntax like:
 // f.Add(f2).AddInt(1) so that f = f + f2 + 1.
-func (f *fieldVal) Add(val *fieldVal) *fieldVal { 
+func (f *fieldVal) Add(val *fieldVal) *fieldVal {
 	// Since the field representation intentionally provides overflow bits,
 	// it's ok to use carryless addition as the carry bit is safely part of
 	// each word and will be normalized out.  This could obviously be done
@@ -550,7 +550,7 @@ func (f *fieldVal) Add(val *fieldVal) *fieldVal {
 //
 // The field value is returned to support chaining.  This enables syntax like:
 // f3.Add2(f, f2).AddInt(1) so that f3 = f + f2 + 1.
-func (f *fieldVal) Add2(val *fieldVal, val2 *fieldVal) *fieldVal { 
+func (f *fieldVal) Add2(val *fieldVal, val2 *fieldVal) *fieldVal {
 	// Since the field representation intentionally provides overflow bits,
 	// it's ok to use carryless addition as the carry bit is safely part of
 	// each word and will be normalized out.  This could obviously be done
@@ -576,7 +576,7 @@ func (f *fieldVal) Add2(val *fieldVal, val2 *fieldVal) *fieldVal {
 //
 // The field value is returned to support chaining.  This enables syntax like:
 // f.MulInt(2).Add(f2) so that f = 2 * f + f2.
-func (f *fieldVal) MulInt(val uint) *fieldVal { 
+func (f *fieldVal) MulInt(val uint) *fieldVal {
 	// Since each word of the field representation can hold up to
 	// fieldOverflowBits extra bits which will be normalized out, it's safe
 	// to multiply each word without using a larger type or carry
@@ -606,7 +606,7 @@ func (f *fieldVal) MulInt(val uint) *fieldVal {
 //
 // The field value is returned to support chaining.  This enables syntax like:
 // f.Mul(f2).AddInt(1) so that f = (f * f2) + 1.
-func (f *fieldVal) Mul(val *fieldVal) *fieldVal { 
+func (f *fieldVal) Mul(val *fieldVal) *fieldVal {
 	return f.Mul2(f, val)
 }
 
@@ -618,7 +618,7 @@ func (f *fieldVal) Mul(val *fieldVal) *fieldVal {
 //
 // The field value is returned to support chaining.  This enables syntax like:
 // f3.Mul2(f, f2).AddInt(1) so that f3 = (f * f2) + 1.
-func (f *fieldVal) Mul2(val *fieldVal, val2 *fieldVal) *fieldVal { 
+func (f *fieldVal) Mul2(val *fieldVal, val2 *fieldVal) *fieldVal {
 	// This could be done with a couple of for loops and an array to store
 	// the intermediate terms, but this unrolled version is significantly
 	// faster.
@@ -887,7 +887,7 @@ func (f *fieldVal) Mul2(val *fieldVal, val2 *fieldVal) *fieldVal {
 //
 // The field value is returned to support chaining.  This enables syntax like:
 // f.Square().Mul(f2) so that f = f^2 * f2.
-func (f *fieldVal) Square() *fieldVal { 
+func (f *fieldVal) Square() *fieldVal {
 	return f.SquareVal(f)
 }
 
@@ -898,7 +898,7 @@ func (f *fieldVal) Square() *fieldVal {
 //
 // The field value is returned to support chaining.  This enables syntax like:
 // f3.SquareVal(f).Mul(f) so that f3 = f^2 * f = f^3.
-func (f *fieldVal) SquareVal(val *fieldVal) *fieldVal { 
+func (f *fieldVal) SquareVal(val *fieldVal) *fieldVal {
 	// This could be done with a couple of for loops and an array to store
 	// the intermediate terms, but this unrolled version is significantly
 	// faster.
@@ -1118,7 +1118,7 @@ func (f *fieldVal) SquareVal(val *fieldVal) *fieldVal {
 //
 // The field value is returned to support chaining.  This enables syntax like:
 // f.Inverse().Mul(f2) so that f = f^-1 * f2.
-func (f *fieldVal) Inverse() *fieldVal { 
+func (f *fieldVal) Inverse() *fieldVal {
 	// Fermat's little theorem states that for a nonzero number a and prime
 	// prime p, a^(p-1) = 1 (mod p).  Since the multipliciative inverse is
 	// a*b = 1 (mod p), it follows that b = a*a^(p-2) = a^(p-1) = 1 (mod p).

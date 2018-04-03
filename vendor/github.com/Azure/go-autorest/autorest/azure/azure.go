@@ -35,7 +35,7 @@ type ServiceError struct {
 	Details *[]interface{} `json:"details"`
 }
 
-func (se ServiceError) Error() string { 
+func (se ServiceError) Error() string {
 	if se.Details != nil {
 		d, err := json.Marshal(*(se.Details))
 		if err != nil {
@@ -58,13 +58,13 @@ type RequestError struct {
 }
 
 // Error returns a human-friendly error message from service error.
-func (e RequestError) Error() string { 
+func (e RequestError) Error() string {
 	return fmt.Sprintf("autorest/azure: Service returned an error. Status=%v %v",
 		e.StatusCode, e.ServiceError)
 }
 
 // IsAzureError returns true if the passed error is an Azure Service error; false otherwise.
-func IsAzureError(e error) bool { 
+func IsAzureError(e error) bool {
 	_, ok := e.(*RequestError)
 	return ok
 }
@@ -73,7 +73,7 @@ func IsAzureError(e error) bool {
 // passed packageType, method, statusCode of the given resp (UndefinedStatusCode
 // if resp is nil), message, and original error. message is treated as a format
 // string to which the optional args apply.
-func NewErrorWithError(original error, packageType string, method string, resp *http.Response, message string, args ...interface{}) RequestError { 
+func NewErrorWithError(original error, packageType string, method string, resp *http.Response, message string, args ...interface{}) RequestError {
 	if v, ok := original.(*RequestError); ok {
 		return *v
 	}
@@ -97,7 +97,7 @@ func NewErrorWithError(original error, packageType string, method string, resp *
 // x-ms-client-request-id whose value is the passed, undecorated UUID (e.g.,
 // "0F39878C-5F76-4DB8-A25D-61D2C193C3CA"). It also sets the x-ms-return-client-request-id
 // header to true such that UUID accompanies the http.Response.
-func WithReturningClientID(uuid string) autorest.PrepareDecorator { 
+func WithReturningClientID(uuid string) autorest.PrepareDecorator {
 	preparer := autorest.CreatePreparer(
 		WithClientID(uuid),
 		WithReturnClientID(true))
@@ -116,26 +116,26 @@ func WithReturningClientID(uuid string) autorest.PrepareDecorator {
 // WithClientID returns a PrepareDecorator that adds an HTTP extension header of
 // x-ms-client-request-id whose value is passed, undecorated UUID (e.g.,
 // "0F39878C-5F76-4DB8-A25D-61D2C193C3CA").
-func WithClientID(uuid string) autorest.PrepareDecorator { 
+func WithClientID(uuid string) autorest.PrepareDecorator {
 	return autorest.WithHeader(HeaderClientID, uuid)
 }
 
 // WithReturnClientID returns a PrepareDecorator that adds an HTTP extension header of
 // x-ms-return-client-request-id whose boolean value indicates if the value of the
 // x-ms-client-request-id header should be included in the http.Response.
-func WithReturnClientID(b bool) autorest.PrepareDecorator { 
+func WithReturnClientID(b bool) autorest.PrepareDecorator {
 	return autorest.WithHeader(HeaderReturnClientID, strconv.FormatBool(b))
 }
 
 // ExtractClientID extracts the client identifier from the x-ms-client-request-id header set on the
 // http.Request sent to the service (and returned in the http.Response)
-func ExtractClientID(resp *http.Response) string { 
+func ExtractClientID(resp *http.Response) string {
 	return autorest.ExtractHeaderValue(HeaderClientID, resp)
 }
 
 // ExtractRequestID extracts the Azure server generated request identifier from the
 // x-ms-request-id header.
-func ExtractRequestID(resp *http.Response) string { 
+func ExtractRequestID(resp *http.Response) string {
 	return autorest.ExtractHeaderValue(HeaderRequestID, resp)
 }
 
@@ -150,7 +150,7 @@ func ExtractRequestID(resp *http.Response) string {
 //
 // If this Responder returns an error, the response body will be replaced with
 // an in-memory reader, which needs no further closing.
-func WithErrorUnlessStatusCode(codes ...int) autorest.RespondDecorator { 
+func WithErrorUnlessStatusCode(codes ...int) autorest.RespondDecorator {
 	return func(r autorest.Responder) autorest.Responder {
 		return autorest.ResponderFunc(func(resp *http.Response) error {
 			err := r.Respond(resp)

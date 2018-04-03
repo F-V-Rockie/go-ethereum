@@ -31,7 +31,7 @@ var (
 	exports  = make(map[string]map[string]bool)
 )
 
-func main() { 
+func main() {
 	// Don't use GOPATH.
 	ctx := build.Default
 	ctx.GOPATH = ""
@@ -95,7 +95,7 @@ func main() {
 
 const pkgIndexHead = `package imports
 
-func init() { log.DebugLog()
+func init() {
 	pkgIndexOnce.Do(func() {
 		pkgIndex.m = pkgIndexMaster
 	})
@@ -112,7 +112,7 @@ type pkg struct {
 
 var fset = token.NewFileSet()
 
-func loadPkg(root, importpath string) { 
+func loadPkg(root, importpath string) {
 	shortName := path.Base(importpath)
 	if shortName == "testdata" {
 		return
@@ -147,7 +147,7 @@ func loadPkg(root, importpath string) {
 	}
 }
 
-func loadExports(dir string) map[string]bool { 
+func loadExports(dir string) map[string]bool {
 	exports := make(map[string]bool)
 	buildPkg, err := build.ImportDir(dir, 0)
 	if err != nil {

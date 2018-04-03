@@ -96,7 +96,7 @@ type pendingKex struct {
 	done      chan error
 }
 
-func newHandshakeTransport(conn keyingTransport, config *Config, clientVersion, serverVersion []byte) *handshakeTransport { 
+func newHandshakeTransport(conn keyingTransport, config *Config, clientVersion, serverVersion []byte) *handshakeTransport {
 	t := &handshakeTransport{
 		conn:          conn,
 		serverVersion: serverVersion,
@@ -115,7 +115,7 @@ func newHandshakeTransport(conn keyingTransport, config *Config, clientVersion, 
 	return t
 }
 
-func newClientTransport(conn keyingTransport, clientVersion, serverVersion []byte, config *ClientConfig, dialAddr string, addr net.Addr) *handshakeTransport { 
+func newClientTransport(conn keyingTransport, clientVersion, serverVersion []byte, config *ClientConfig, dialAddr string, addr net.Addr) *handshakeTransport {
 	t := newHandshakeTransport(conn, &config.Config, clientVersion, serverVersion)
 	t.dialAddress = dialAddr
 	t.remoteAddr = addr
@@ -130,7 +130,7 @@ func newClientTransport(conn keyingTransport, clientVersion, serverVersion []byt
 	return t
 }
 
-func newServerTransport(conn keyingTransport, clientVersion, serverVersion []byte, config *ServerConfig) *handshakeTransport { 
+func newServerTransport(conn keyingTransport, clientVersion, serverVersion []byte, config *ServerConfig) *handshakeTransport {
 	t := newHandshakeTransport(conn, &config.Config, clientVersion, serverVersion)
 	t.hostKeys = config.hostKeys
 	go t.readLoop()
@@ -138,13 +138,13 @@ func newServerTransport(conn keyingTransport, clientVersion, serverVersion []byt
 	return t
 }
 
-func (t *handshakeTransport) getSessionID() []byte { 
+func (t *handshakeTransport) getSessionID() []byte {
 	return t.sessionID
 }
 
 // waitSession waits for the session to be established. This should be
 // the first thing to call after instantiating handshakeTransport.
-func (t *handshakeTransport) waitSession() error { 
+func (t *handshakeTransport) waitSession() error {
 	p, err := t.readPacket()
 	if err != nil {
 		return err
@@ -156,14 +156,14 @@ func (t *handshakeTransport) waitSession() error {
 	return nil
 }
 
-func (t *handshakeTransport) id() string { 
+func (t *handshakeTransport) id() string {
 	if len(t.hostKeys) > 0 {
 		return "server"
 	}
 	return "client"
 }
 
-func (t *handshakeTransport) printPacket(p []byte, write bool) { 
+func (t *handshakeTransport) printPacket(p []byte, write bool) {
 	action := "got"
 	if write {
 		action = "sent"
@@ -177,7 +177,7 @@ func (t *handshakeTransport) printPacket(p []byte, write bool) {
 	}
 }
 
-func (t *handshakeTransport) readPacket() ([]byte, error) { 
+func (t *handshakeTransport) readPacket() ([]byte, error) {
 	p, ok := <-t.incoming
 	if !ok {
 		return nil, t.readError
@@ -185,7 +185,7 @@ func (t *handshakeTransport) readPacket() ([]byte, error) {
 	return p, nil
 }
 
-func (t *handshakeTransport) readLoop() { 
+func (t *handshakeTransport) readLoop() {
 	first := true
 	for {
 		p, err := t.readOnePacket(first)
@@ -210,20 +210,20 @@ func (t *handshakeTransport) readLoop() {
 	// Don't close t.requestKex; it's also written to from writePacket.
 }
 
-func (t *handshakeTransport) pushPacket(p []byte) error { 
+func (t *handshakeTransport) pushPacket(p []byte) error {
 	if debugHandshake {
 		t.printPacket(p, true)
 	}
 	return t.conn.writePacket(p)
 }
 
-func (t *handshakeTransport) getWriteError() error { 
+func (t *handshakeTransport) getWriteError() error {
 	t.mu.Lock()
 	defer t.mu.Unlock()
 	return t.writeError
 }
 
-func (t *handshakeTransport) recordWriteError(err error) { 
+func (t *handshakeTransport) recordWriteError(err error) {
 	t.mu.Lock()
 	defer t.mu.Unlock()
 	if t.writeError == nil && err != nil {
@@ -231,7 +231,7 @@ func (t *handshakeTransport) recordWriteError(err error) {
 	}
 }
 
-func (t *handshakeTransport) requestKeyExchange() { 
+func (t *handshakeTransport) requestKeyExchange() {
 	select {
 	case t.requestKex <- struct{}{}:
 	default:
@@ -239,7 +239,7 @@ func (t *handshakeTransport) requestKeyExchange() {
 	}
 }
 
-func (t *handshakeTransport) resetWriteThresholds() { 
+func (t *handshakeTransport) resetWriteThresholds() {
 	t.writePacketsLeft = packetRekeyThreshold
 	if t.config.RekeyThreshold > 0 {
 		t.writeBytesLeft = int64(t.config.RekeyThreshold)
@@ -250,7 +250,7 @@ func (t *handshakeTransport) resetWriteThresholds() {
 	}
 }
 
-func (t *handshakeTransport) kexLoop() { 
+func (t *handshakeTransport) kexLoop() {
 
 write:
 	for t.getWriteError() == nil {
@@ -353,7 +353,7 @@ write:
 // key exchange itself.
 const packetRekeyThreshold = (1 << 31)
 
-func (t *handshakeTransport) resetReadThresholds() { 
+func (t *handshakeTransport) resetReadThresholds() {
 	t.readPacketsLeft = packetRekeyThreshold
 	if t.config.RekeyThreshold > 0 {
 		t.readBytesLeft = int64(t.config.RekeyThreshold)
@@ -364,7 +364,7 @@ func (t *handshakeTransport) resetReadThresholds() {
 	}
 }
 
-func (t *handshakeTransport) readOnePacket(first bool) ([]byte, error) { 
+func (t *handshakeTransport) readOnePacket(first bool) ([]byte, error) {
 	p, err := t.conn.readPacket()
 	if err != nil {
 		return nil, err
@@ -427,7 +427,7 @@ func (t *handshakeTransport) readOnePacket(first bool) ([]byte, error) {
 }
 
 // sendKexInit sends a key change message.
-func (t *handshakeTransport) sendKexInit() error { 
+func (t *handshakeTransport) sendKexInit() error {
 	t.mu.Lock()
 	defer t.mu.Unlock()
 	if t.sentInitMsg != nil {
@@ -473,7 +473,7 @@ func (t *handshakeTransport) sendKexInit() error {
 	return nil
 }
 
-func (t *handshakeTransport) writePacket(p []byte) error { 
+func (t *handshakeTransport) writePacket(p []byte) error {
 	switch p[0] {
 	case msgKexInit:
 		return errors.New("ssh: only handshakeTransport can send kexInit")
@@ -514,11 +514,11 @@ func (t *handshakeTransport) writePacket(p []byte) error {
 	return nil
 }
 
-func (t *handshakeTransport) Close() error { 
+func (t *handshakeTransport) Close() error {
 	return t.conn.Close()
 }
 
-func (t *handshakeTransport) enterKeyExchange(otherInitPacket []byte) error { 
+func (t *handshakeTransport) enterKeyExchange(otherInitPacket []byte) error {
 	if debugHandshake {
 		log.Printf("%s entered key exchange", t.id())
 	}
@@ -604,7 +604,7 @@ func (t *handshakeTransport) enterKeyExchange(otherInitPacket []byte) error {
 	return nil
 }
 
-func (t *handshakeTransport) server(kex kexAlgorithm, algs *algorithms, magics *handshakeMagics) (*kexResult, error) { 
+func (t *handshakeTransport) server(kex kexAlgorithm, algs *algorithms, magics *handshakeMagics) (*kexResult, error) {
 	var hostKey Signer
 	for _, k := range t.hostKeys {
 		if algs.hostKey == k.PublicKey().Type() {
@@ -616,7 +616,7 @@ func (t *handshakeTransport) server(kex kexAlgorithm, algs *algorithms, magics *
 	return r, err
 }
 
-func (t *handshakeTransport) client(kex kexAlgorithm, algs *algorithms, magics *handshakeMagics) (*kexResult, error) { 
+func (t *handshakeTransport) client(kex kexAlgorithm, algs *algorithms, magics *handshakeMagics) (*kexResult, error) {
 	result, err := kex.Client(t.conn, t.config.Rand, magics)
 	if err != nil {
 		return nil, err

@@ -71,7 +71,7 @@ func Syscall9(trap, a1, a2, a3, a4, a5, a6, a7, a8, a9 uintptr) (r1, r2 uintptr,
 //sys	EpollWait(epfd int, events []EpollEvent, msec int) (n int, err error)
 //sys	Pause() (err error)
 
-func Fstatfs(fd int, buf *Statfs_t) (err error) { 
+func Fstatfs(fd int, buf *Statfs_t) (err error) {
 	_, _, e := Syscall(SYS_FSTATFS64, uintptr(fd), unsafe.Sizeof(*buf), uintptr(unsafe.Pointer(buf)))
 	if e != 0 {
 		err = errnoErr(e)
@@ -79,7 +79,7 @@ func Fstatfs(fd int, buf *Statfs_t) (err error) {
 	return
 }
 
-func Statfs(path string, buf *Statfs_t) (err error) { 
+func Statfs(path string, buf *Statfs_t) (err error) {
 	p, err := BytePtrFromString(path)
 	if err != nil {
 		return err
@@ -91,7 +91,7 @@ func Statfs(path string, buf *Statfs_t) (err error) {
 	return
 }
 
-func Seek(fd int, offset int64, whence int) (off int64, err error) { 
+func Seek(fd int, offset int64, whence int) (off int64, err error) {
 	_, _, e := Syscall6(SYS__LLSEEK, uintptr(fd), uintptr(offset>>32), uintptr(offset), uintptr(unsafe.Pointer(&off)), uintptr(whence), 0)
 	if e != 0 {
 		err = errnoErr(e)
@@ -99,17 +99,17 @@ func Seek(fd int, offset int64, whence int) (off int64, err error) {
 	return
 }
 
-func setTimespec(sec, nsec int64) Timespec { 
+func setTimespec(sec, nsec int64) Timespec {
 	return Timespec{Sec: int32(sec), Nsec: int32(nsec)}
 }
 
-func setTimeval(sec, usec int64) Timeval { 
+func setTimeval(sec, usec int64) Timeval {
 	return Timeval{Sec: int32(sec), Usec: int32(usec)}
 }
 
 //sysnb pipe2(p *[2]_C_int, flags int) (err error)
 
-func Pipe2(p []int, flags int) (err error) { 
+func Pipe2(p []int, flags int) (err error) {
 	if len(p) != 2 {
 		return EINVAL
 	}
@@ -120,7 +120,7 @@ func Pipe2(p []int, flags int) (err error) {
 	return
 }
 
-func Pipe(p []int) (err error) { 
+func Pipe(p []int) (err error) {
 	if len(p) != 2 {
 		return EINVAL
 	}
@@ -133,7 +133,7 @@ func Pipe(p []int) (err error) {
 
 //sys	mmap2(addr uintptr, length uintptr, prot int, flags int, fd int, pageOffset uintptr) (xaddr uintptr, err error)
 
-func mmap(addr uintptr, length uintptr, prot int, flags int, fd int, offset int64) (xaddr uintptr, err error) { 
+func mmap(addr uintptr, length uintptr, prot int, flags int, fd int, offset int64) (xaddr uintptr, err error) {
 	page := uintptr(offset / 4096)
 	if offset != int64(page)*4096 {
 		return 0, EINVAL
@@ -151,7 +151,7 @@ type rlimit32 struct {
 
 //sysnb getrlimit(resource int, rlim *rlimit32) (err error) = SYS_GETRLIMIT
 
-func Getrlimit(resource int, rlim *Rlimit) (err error) { 
+func Getrlimit(resource int, rlim *Rlimit) (err error) {
 	err = prlimit(0, resource, nil, rlim)
 	if err != ENOSYS {
 		return err
@@ -179,7 +179,7 @@ func Getrlimit(resource int, rlim *Rlimit) (err error) {
 
 //sysnb setrlimit(resource int, rlim *rlimit32) (err error) = SYS_SETRLIMIT
 
-func Setrlimit(resource int, rlim *Rlimit) (err error) { 
+func Setrlimit(resource int, rlim *Rlimit) (err error) {
 	err = prlimit(0, resource, rlim, nil)
 	if err != ENOSYS {
 		return err
@@ -204,25 +204,25 @@ func Setrlimit(resource int, rlim *Rlimit) (err error) {
 	return setrlimit(resource, &rl)
 }
 
-func (r *PtraceRegs) PC() uint64 {  return r.Epc }
+func (r *PtraceRegs) PC() uint64 { return r.Epc }
 
-func (r *PtraceRegs) SetPC(pc uint64) {  r.Epc = pc }
+func (r *PtraceRegs) SetPC(pc uint64) { r.Epc = pc }
 
-func (iov *Iovec) SetLen(length int) { 
+func (iov *Iovec) SetLen(length int) {
 	iov.Len = uint32(length)
 }
 
-func (msghdr *Msghdr) SetControllen(length int) { 
+func (msghdr *Msghdr) SetControllen(length int) {
 	msghdr.Controllen = uint32(length)
 }
 
-func (cmsg *Cmsghdr) SetLen(length int) { 
+func (cmsg *Cmsghdr) SetLen(length int) {
 	cmsg.Len = uint32(length)
 }
 
 //sys	poll(fds *PollFd, nfds int, timeout int) (n int, err error)
 
-func Poll(fds []PollFd, timeout int) (n int, err error) { 
+func Poll(fds []PollFd, timeout int) (n int, err error) {
 	if len(fds) == 0 {
 		return poll(nil, 0, timeout)
 	}

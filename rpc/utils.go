@@ -30,6 +30,7 @@ import (
 	"time"
 	"unicode"
 	"unicode/utf8"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 var (
@@ -38,13 +39,15 @@ var (
 )
 
 // Is this an exported - upper case - name?
-func isExported(name string) bool { log.DebugLog()
+func isExported(name string) bool {
+	log.DebugLog()
 	rune, _ := utf8.DecodeRuneInString(name)
 	return unicode.IsUpper(rune)
 }
 
 // Is this type exported or a builtin?
-func isExportedOrBuiltinType(t reflect.Type) bool { log.DebugLog()
+func isExportedOrBuiltinType(t reflect.Type) bool {
+	log.DebugLog()
 	for t.Kind() == reflect.Ptr {
 		t = t.Elem()
 	}
@@ -56,7 +59,8 @@ func isExportedOrBuiltinType(t reflect.Type) bool { log.DebugLog()
 var contextType = reflect.TypeOf((*context.Context)(nil)).Elem()
 
 // isContextType returns an indication if the given t is of context.Context or *context.Context type
-func isContextType(t reflect.Type) bool { log.DebugLog()
+func isContextType(t reflect.Type) bool {
+	log.DebugLog()
 	for t.Kind() == reflect.Ptr {
 		t = t.Elem()
 	}
@@ -66,7 +70,8 @@ func isContextType(t reflect.Type) bool { log.DebugLog()
 var errorType = reflect.TypeOf((*error)(nil)).Elem()
 
 // Implements this type the error interface
-func isErrorType(t reflect.Type) bool { log.DebugLog()
+func isErrorType(t reflect.Type) bool {
+	log.DebugLog()
 	for t.Kind() == reflect.Ptr {
 		t = t.Elem()
 	}
@@ -76,7 +81,8 @@ func isErrorType(t reflect.Type) bool { log.DebugLog()
 var subscriptionType = reflect.TypeOf((*Subscription)(nil)).Elem()
 
 // isSubscriptionType returns an indication if the given t is of Subscription or *Subscription type
-func isSubscriptionType(t reflect.Type) bool { log.DebugLog()
+func isSubscriptionType(t reflect.Type) bool {
+	log.DebugLog()
 	for t.Kind() == reflect.Ptr {
 		t = t.Elem()
 	}
@@ -85,7 +91,8 @@ func isSubscriptionType(t reflect.Type) bool { log.DebugLog()
 
 // isPubSub tests whether the given method has as as first argument a context.Context
 // and returns the pair (Subscription, error)
-func isPubSub(methodType reflect.Type) bool { log.DebugLog()
+func isPubSub(methodType reflect.Type) bool {
+	log.DebugLog()
 	// numIn(0) is the receiver type
 	if methodType.NumIn() < 2 || methodType.NumOut() != 2 {
 		return false
@@ -97,7 +104,8 @@ func isPubSub(methodType reflect.Type) bool { log.DebugLog()
 }
 
 // formatName will convert to first character to lower case
-func formatName(name string) string { log.DebugLog()
+func formatName(name string) string {
+	log.DebugLog()
 	ret := []rune(name)
 	if len(ret) > 0 {
 		ret[0] = unicode.ToLower(ret[0])
@@ -108,7 +116,8 @@ func formatName(name string) string { log.DebugLog()
 var bigIntType = reflect.TypeOf((*big.Int)(nil)).Elem()
 
 // Indication if this type should be serialized in hex
-func isHexNum(t reflect.Type) bool { log.DebugLog()
+func isHexNum(t reflect.Type) bool {
+	log.DebugLog()
 	if t == nil {
 		return false
 	}
@@ -122,7 +131,8 @@ func isHexNum(t reflect.Type) bool { log.DebugLog()
 // suitableCallbacks iterates over the methods of the given type. It will determine if a method satisfies the criteria
 // for a RPC callback or a subscription callback and adds it to the collection of callbacks or subscriptions. See server
 // documentation for a summary of these criteria.
-func suitableCallbacks(rcvr reflect.Value, typ reflect.Type) (callbacks, subscriptions) { log.DebugLog()
+func suitableCallbacks(rcvr reflect.Value, typ reflect.Type) (callbacks, subscriptions) {
+	log.DebugLog()
 	callbacks := make(callbacks)
 	subscriptions := make(subscriptions)
 
@@ -208,7 +218,8 @@ METHODS:
 
 // idGenerator helper utility that generates a (pseudo) random sequence of
 // bytes that are used to generate identifiers.
-func idGenerator() *rand.Rand { log.DebugLog()
+func idGenerator() *rand.Rand {
+	log.DebugLog()
 	if seed, err := binary.ReadVarint(bufio.NewReader(crand.Reader)); err == nil {
 		return rand.New(rand.NewSource(seed))
 	}
@@ -217,7 +228,8 @@ func idGenerator() *rand.Rand { log.DebugLog()
 
 // NewID generates a identifier that can be used as an identifier in the RPC interface.
 // e.g. filter and subscription identifier.
-func NewID() ID { log.DebugLog()
+func NewID() ID {
+	log.DebugLog()
 	subscriptionIDGenMu.Lock()
 	defer subscriptionIDGenMu.Unlock()
 

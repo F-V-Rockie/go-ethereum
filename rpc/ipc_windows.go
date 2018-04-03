@@ -24,6 +24,7 @@ import (
 	"time"
 
 	"gopkg.in/natefinch/npipe.v2"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // This is used if the dialing context has no deadline. It is much smaller than the
@@ -31,12 +32,14 @@ import (
 const defaultPipeDialTimeout = 2 * time.Second
 
 // ipcListen will create a named pipe on the given endpoint.
-func ipcListen(endpoint string) (net.Listener, error) { log.DebugLog()
+func ipcListen(endpoint string) (net.Listener, error) {
+	log.DebugLog()
 	return npipe.Listen(endpoint)
 }
 
 // newIPCConnection will connect to a named pipe with the given endpoint as name.
-func newIPCConnection(ctx context.Context, endpoint string) (net.Conn, error) { log.DebugLog()
+func newIPCConnection(ctx context.Context, endpoint string) (net.Conn, error) {
+	log.DebugLog()
 	timeout := defaultPipeDialTimeout
 	if deadline, ok := ctx.Deadline(); ok {
 		timeout = deadline.Sub(time.Now())

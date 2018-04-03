@@ -25,6 +25,7 @@ import (
 
 	"github.com/fatih/color"
 	"github.com/robertkrimen/otto"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 const (

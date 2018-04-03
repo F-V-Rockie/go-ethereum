@@ -39,7 +39,8 @@ type CpuAgent struct {
 	isMining int32 // isMining indicates whether the agent is currently mining
 }
 
-func NewCpuAgent(chain consensus.ChainReader, engine consensus.Engine) *CpuAgent { log.DebugLog()
+func NewCpuAgent(chain consensus.ChainReader, engine consensus.Engine) *CpuAgent {
+	log.DebugLog()
 	miner := &CpuAgent{
 		chain:  chain,
 		engine: engine,
@@ -49,16 +50,19 @@ func NewCpuAgent(chain consensus.ChainReader, engine consensus.Engine) *CpuAgent
 	return miner
 }
 
-func (self *CpuAgent) Work() chan<- *Work            { log.DebugLog() return self.workCh }
-func (self *CpuAgent) SetReturnCh(ch chan<- *Result) { log.DebugLog() self.returnCh = ch }
+func (self *CpuAgent) Work() chan<- *Work            { log.DebugLog()
+														 return self.workCh }
+func (self *CpuAgent) SetReturnCh(ch chan<- *Result) { log.DebugLog()
+														 self.returnCh = ch }
 
-func (self *CpuAgent) Stop() { log.DebugLog()
+func (self *CpuAgent) Stop() {
+	log.DebugLog()
 	if !atomic.CompareAndSwapInt32(&self.isMining, 1, 0) {
 		return // agent already stopped
 	}
 	self.stop <- struct{}{}
 done:
-	// Empty work channel
+// Empty work channel
 	for {
 		select {
 		case <-self.workCh:
@@ -68,14 +72,16 @@ done:
 	}
 }
 
-func (self *CpuAgent) Start() { log.DebugLog()
+func (self *CpuAgent) Start() {
+	log.DebugLog()
 	if !atomic.CompareAndSwapInt32(&self.isMining, 0, 1) {
 		return // agent already started
 	}
 	go self.update()
 }
 
-func (self *CpuAgent) update() { log.DebugLog()
+func (self *CpuAgent) update() {
+	log.DebugLog()
 out:
 	for {
 		select {
@@ -99,7 +105,8 @@ out:
 	}
 }
 
-func (self *CpuAgent) mine(work *Work, stop <-chan struct{}) { log.DebugLog()
+func (self *CpuAgent) mine(work *Work, stop <-chan struct{}) {
+	log.DebugLog()
 	if result, err := self.engine.Seal(self.chain, work.Block, stop); result != nil {
 		log.Info("Successfully sealed new block", "number", result.Number(), "hash", result.Hash())
 		self.returnCh <- &Result{work, result}
@@ -111,7 +118,8 @@ func (self *CpuAgent) mine(work *Work, stop <-chan struct{}) { log.DebugLog()
 	}
 }
 
-func (self *CpuAgent) GetHashRate() int64 { log.DebugLog()
+func (self *CpuAgent) GetHashRate() int64 {
+	log.DebugLog()
 	if pow, ok := self.engine.(consensus.PoW); ok {
 		return int64(pow.Hashrate())
 	}

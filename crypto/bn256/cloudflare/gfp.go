@@ -3,11 +3,13 @@ package bn256
 import (
 	"errors"
 	"fmt"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 type gfP [4]uint64
 
-func newGFp(x int64) (out *gfP) { log.DebugLog()
+func newGFp(x int64) (out *gfP) {
+	log.DebugLog()
 	if x >= 0 {
 		out = &gfP{uint64(x)}
 	} else {
@@ -19,18 +21,21 @@ func newGFp(x int64) (out *gfP) { log.DebugLog()
 	return out
 }
 
-func (e *gfP) String() string { log.DebugLog()
+func (e *gfP) String() string {
+	log.DebugLog()
 	return fmt.Sprintf("%16.16x%16.16x%16.16x%16.16x", e[3], e[2], e[1], e[0])
 }
 
-func (e *gfP) Set(f *gfP) { log.DebugLog()
+func (e *gfP) Set(f *gfP) {
+	log.DebugLog()
 	e[0] = f[0]
 	e[1] = f[1]
 	e[2] = f[2]
 	e[3] = f[3]
 }
 
-func (e *gfP) Invert(f *gfP) { log.DebugLog()
+func (e *gfP) Invert(f *gfP) {
+	log.DebugLog()
 	bits := [4]uint64{0x3c208c16d87cfd45, 0x97816a916871ca8d, 0xb85045b68181585d, 0x30644e72e131a029}
 
 	sum, power := &gfP{}, &gfP{}
@@ -50,7 +55,8 @@ func (e *gfP) Invert(f *gfP) { log.DebugLog()
 	e.Set(sum)
 }
 
-func (e *gfP) Marshal(out []byte) { log.DebugLog()
+func (e *gfP) Marshal(out []byte) {
+	log.DebugLog()
 	for w := uint(0); w < 4; w++ {
 		for b := uint(0); b < 8; b++ {
 			out[8*w+b] = byte(e[3-w] >> (56 - 8*b))
@@ -58,7 +64,8 @@ func (e *gfP) Marshal(out []byte) { log.DebugLog()
 	}
 }
 
-func (e *gfP) Unmarshal(in []byte) error { log.DebugLog()
+func (e *gfP) Unmarshal(in []byte) error {
+	log.DebugLog()
 	// Unmarshal the bytes into little endian form
 	for w := uint(0); w < 4; w++ {
 		for b := uint(0); b < 8; b++ {
@@ -77,5 +84,7 @@ func (e *gfP) Unmarshal(in []byte) error { log.DebugLog()
 	return errors.New("bn256: coordinate equals modulus")
 }
 
-func montEncode(c, a *gfP) { log.DebugLog() gfpMul(c, a, r2) }
-func montDecode(c, a *gfP) { log.DebugLog() gfpMul(c, a, &gfP{1}) }
+func montEncode(c, a *gfP) { log.DebugLog()
+							   gfpMul(c, a, r2) }
+func montDecode(c, a *gfP) { log.DebugLog()
+							   gfpMul(c, a, &gfP{1}) }

@@ -29,6 +29,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/common/math"
 	"gopkg.in/urfave/cli.v1"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // Custom type which is registered in the flags library which cli uses for
@@ -38,11 +39,13 @@ type DirectoryString struct {
 	Value string
 }
 
-func (self *DirectoryString) String() string { log.DebugLog()
+func (self *DirectoryString) String() string {
+	log.DebugLog()
 	return self.Value
 }
 
-func (self *DirectoryString) Set(value string) error { log.DebugLog()
+func (self *DirectoryString) Set(value string) error {
+	log.DebugLog()
 	self.Value = expandPath(value)
 	return nil
 }
@@ -55,7 +58,8 @@ type DirectoryFlag struct {
 	Usage string
 }
 
-func (self DirectoryFlag) String() string { log.DebugLog()
+func (self DirectoryFlag) String() string {
+	log.DebugLog()
 	fmtString := "%s %v\t%v"
 	if len(self.Value.Value) > 0 {
 		fmtString = "%s \"%v\"\t%v"
@@ -63,7 +67,8 @@ func (self DirectoryFlag) String() string { log.DebugLog()
 	return fmt.Sprintf(fmtString, prefixedNames(self.Name), self.Value.Value, self.Usage)
 }
 
-func eachName(longName string, fn func(string)) { log.DebugLog()
+func eachName(longName string, fn func(string)) {
+	log.DebugLog()
 	parts := strings.Split(longName, ",")
 	for _, name := range parts {
 		name = strings.Trim(name, " ")
@@ -73,7 +78,8 @@ func eachName(longName string, fn func(string)) { log.DebugLog()
 
 // called by cli library, grabs variable from environment (if in env)
 // and adds variable to flag set for parsing.
-func (self DirectoryFlag) Apply(set *flag.FlagSet) { log.DebugLog()
+func (self DirectoryFlag) Apply(set *flag.FlagSet) {
+	log.DebugLog()
 	eachName(self.Name, func(name string) {
 		set.Var(&self.Value, self.Name, self.Usage)
 	})
@@ -89,7 +95,8 @@ type textMarshalerVal struct {
 	v TextMarshaler
 }
 
-func (v textMarshalerVal) String() string { log.DebugLog()
+func (v textMarshalerVal) String() string {
+	log.DebugLog()
 	if v.v == nil {
 		return ""
 	}
@@ -97,7 +104,8 @@ func (v textMarshalerVal) String() string { log.DebugLog()
 	return string(text)
 }
 
-func (v textMarshalerVal) Set(s string) error { log.DebugLog()
+func (v textMarshalerVal) Set(s string) error {
+	log.DebugLog()
 	return v.v.UnmarshalText([]byte(s))
 }
 
@@ -108,22 +116,26 @@ type TextMarshalerFlag struct {
 	Usage string
 }
 
-func (f TextMarshalerFlag) GetName() string { log.DebugLog()
+func (f TextMarshalerFlag) GetName() string {
+	log.DebugLog()
 	return f.Name
 }
 
-func (f TextMarshalerFlag) String() string { log.DebugLog()
+func (f TextMarshalerFlag) String() string {
+	log.DebugLog()
 	return fmt.Sprintf("%s \"%v\"\t%v", prefixedNames(f.Name), f.Value, f.Usage)
 }
 
-func (f TextMarshalerFlag) Apply(set *flag.FlagSet) { log.DebugLog()
+func (f TextMarshalerFlag) Apply(set *flag.FlagSet) {
+	log.DebugLog()
 	eachName(f.Name, func(name string) {
 		set.Var(textMarshalerVal{f.Value}, f.Name, f.Usage)
 	})
 }
 
 // GlobalTextMarshaler returns the value of a TextMarshalerFlag from the global flag set.
-func GlobalTextMarshaler(ctx *cli.Context, name string) TextMarshaler { log.DebugLog()
+func GlobalTextMarshaler(ctx *cli.Context, name string) TextMarshaler {
+	log.DebugLog()
 	val := ctx.GlobalGeneric(name)
 	if val == nil {
 		return nil
@@ -142,14 +154,16 @@ type BigFlag struct {
 // bigValue turns *big.Int into a flag.Value
 type bigValue big.Int
 
-func (b *bigValue) String() string { log.DebugLog()
+func (b *bigValue) String() string {
+	log.DebugLog()
 	if b == nil {
 		return ""
 	}
 	return (*big.Int)(b).String()
 }
 
-func (b *bigValue) Set(s string) error { log.DebugLog()
+func (b *bigValue) Set(s string) error {
+	log.DebugLog()
 	int, ok := math.ParseBig256(s)
 	if !ok {
 		return errors.New("invalid integer syntax")
@@ -158,11 +172,13 @@ func (b *bigValue) Set(s string) error { log.DebugLog()
 	return nil
 }
 
-func (f BigFlag) GetName() string { log.DebugLog()
+func (f BigFlag) GetName() string {
+	log.DebugLog()
 	return f.Name
 }
 
-func (f BigFlag) String() string { log.DebugLog()
+func (f BigFlag) String() string {
+	log.DebugLog()
 	fmtString := "%s %v\t%v"
 	if f.Value != nil {
 		fmtString = "%s \"%v\"\t%v"
@@ -170,14 +186,16 @@ func (f BigFlag) String() string { log.DebugLog()
 	return fmt.Sprintf(fmtString, prefixedNames(f.Name), f.Value, f.Usage)
 }
 
-func (f BigFlag) Apply(set *flag.FlagSet) { log.DebugLog()
+func (f BigFlag) Apply(set *flag.FlagSet) {
+	log.DebugLog()
 	eachName(f.Name, func(name string) {
 		set.Var((*bigValue)(f.Value), f.Name, f.Usage)
 	})
 }
 
 // GlobalBig returns the value of a BigFlag from the global flag set.
-func GlobalBig(ctx *cli.Context, name string) *big.Int { log.DebugLog()
+func GlobalBig(ctx *cli.Context, name string) *big.Int {
+	log.DebugLog()
 	val := ctx.GlobalGeneric(name)
 	if val == nil {
 		return nil
@@ -185,7 +203,8 @@ func GlobalBig(ctx *cli.Context, name string) *big.Int { log.DebugLog()
 	return (*big.Int)(val.(*bigValue))
 }
 
-func prefixFor(name string) (prefix string) { log.DebugLog()
+func prefixFor(name string) (prefix string) {
+	log.DebugLog()
 	if len(name) == 1 {
 		prefix = "-"
 	} else {
@@ -195,7 +214,8 @@ func prefixFor(name string) (prefix string) { log.DebugLog()
 	return
 }
 
-func prefixedNames(fullName string) (prefixed string) { log.DebugLog()
+func prefixedNames(fullName string) (prefixed string) {
+	log.DebugLog()
 	parts := strings.Split(fullName, ",")
 	for i, name := range parts {
 		name = strings.Trim(name, " ")
@@ -207,11 +227,13 @@ func prefixedNames(fullName string) (prefixed string) { log.DebugLog()
 	return
 }
 
-func (self DirectoryFlag) GetName() string { log.DebugLog()
+func (self DirectoryFlag) GetName() string {
+	log.DebugLog()
 	return self.Name
 }
 
-func (self *DirectoryFlag) Set(value string) { log.DebugLog()
+func (self *DirectoryFlag) Set(value string) {
+	log.DebugLog()
 	self.Value.Value = value
 }
 
@@ -220,7 +242,8 @@ func (self *DirectoryFlag) Set(value string) { log.DebugLog()
 // 2. expands embedded environment variables
 // 3. cleans the path, e.g. /a/b/../c -> /a/c
 // Note, it has limitations, e.g. ~someuser/tmp will not be expanded
-func expandPath(p string) string { log.DebugLog()
+func expandPath(p string) string {
+	log.DebugLog()
 	if strings.HasPrefix(p, "~/") || strings.HasPrefix(p, "~\\") {
 		if home := homeDir(); home != "" {
 			p = home + p[1:]
@@ -229,7 +252,8 @@ func expandPath(p string) string { log.DebugLog()
 	return path.Clean(os.ExpandEnv(p))
 }
 
-func homeDir() string { log.DebugLog()
+func homeDir() string {
+	log.DebugLog()
 	if home := os.Getenv("HOME"); home != "" {
 		return home
 	}

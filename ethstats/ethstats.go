@@ -83,7 +83,8 @@ type Service struct {
 }
 
 // New returns a monitoring service ready for stats reporting.
-func New(url string, ethServ *eth.Ethereum, lesServ *les.LightEthereum) (*Service, error) { log.DebugLog()
+func New(url string, ethServ *eth.Ethereum, lesServ *les.LightEthereum) (*Service, error) {
+	log.DebugLog()
 	// Parse the netstats connection url
 	re := regexp.MustCompile("([^:@]*)(:([^@]*))?@(.+)")
 	parts := re.FindStringSubmatch(url)
@@ -111,14 +112,17 @@ func New(url string, ethServ *eth.Ethereum, lesServ *les.LightEthereum) (*Servic
 
 // Protocols implements node.Service, returning the P2P network protocols used
 // by the stats service (nil as it doesn't use the devp2p overlay network).
-func (s *Service) Protocols() []p2p.Protocol { log.DebugLog() return nil }
+func (s *Service) Protocols() []p2p.Protocol { log.DebugLog()
+												 return nil }
 
 // APIs implements node.Service, returning the RPC API endpoints provided by the
 // stats service (nil as it doesn't provide any user callable APIs).
-func (s *Service) APIs() []rpc.API { log.DebugLog() return nil }
+func (s *Service) APIs() []rpc.API { log.DebugLog()
+									   return nil }
 
 // Start implements node.Service, starting up the monitoring and reporting daemon.
-func (s *Service) Start(server *p2p.Server) error { log.DebugLog()
+func (s *Service) Start(server *p2p.Server) error {
+	log.DebugLog()
 	s.server = server
 	go s.loop()
 
@@ -127,14 +131,16 @@ func (s *Service) Start(server *p2p.Server) error { log.DebugLog()
 }
 
 // Stop implements node.Service, terminating the monitoring and reporting daemon.
-func (s *Service) Stop() error { log.DebugLog()
+func (s *Service) Stop() error {
+	log.DebugLog()
 	log.Info("Stats daemon stopped")
 	return nil
 }
 
 // loop keeps trying to connect to the netstats server, reporting chain events
 // until termination.
-func (s *Service) loop() { log.DebugLog()
+func (s *Service) loop() {
+	log.DebugLog()
 	// Subscribe to chain events to execute updates on
 	var blockchain blockChain
 	var txpool txPool
@@ -173,7 +179,7 @@ func (s *Service) loop() { log.DebugLog()
 				default:
 				}
 
-			// Notify of new transaction events, but drop if too frequent
+				// Notify of new transaction events, but drop if too frequent
 			case <-txEventCh:
 				if time.Duration(mclock.Now()-lastTx) < time.Second {
 					continue
@@ -185,7 +191,7 @@ func (s *Service) loop() { log.DebugLog()
 				default:
 				}
 
-			// node stopped
+				// node stopped
 			case <-txSub.Err():
 				break HandleLoop
 			case <-headSub.Err():
@@ -277,7 +283,8 @@ func (s *Service) loop() { log.DebugLog()
 // from the network socket. If any of them match an active request, it forwards
 // it, if they themselves are requests it initiates a reply, and lastly it drops
 // unknown packets.
-func (s *Service) readLoop(conn *websocket.Conn) { log.DebugLog()
+func (s *Service) readLoop(conn *websocket.Conn) {
+	log.DebugLog()
 	// If the read loop exists, close the connection
 	defer conn.Close()
 
@@ -368,7 +375,8 @@ type authMsg struct {
 }
 
 // login tries to authorize the client at the remote server.
-func (s *Service) login(conn *websocket.Conn) error { log.DebugLog()
+func (s *Service) login(conn *websocket.Conn) error {
+	log.DebugLog()
 	// Construct and send the login authentication
 	infos := s.server.NodeInfo()
 
@@ -413,7 +421,8 @@ func (s *Service) login(conn *websocket.Conn) error { log.DebugLog()
 // report collects all possible data to report and send it to the stats server.
 // This should only be used on reconnects or rarely to avoid overloading the
 // server. Use the individual methods for reporting subscribed events.
-func (s *Service) report(conn *websocket.Conn) error { log.DebugLog()
+func (s *Service) report(conn *websocket.Conn) error {
+	log.DebugLog()
 	if err := s.reportLatency(conn); err != nil {
 		return err
 	}
@@ -431,7 +440,8 @@ func (s *Service) report(conn *websocket.Conn) error { log.DebugLog()
 
 // reportLatency sends a ping request to the server, measures the RTT time and
 // finally sends a latency update.
-func (s *Service) reportLatency(conn *websocket.Conn) error { log.DebugLog()
+func (s *Service) reportLatency(conn *websocket.Conn) error {
+	log.DebugLog()
 	// Send the current time to the ethstats server
 	start := time.Now()
 
@@ -492,7 +502,8 @@ type txStats struct {
 // empty arrays instead of returning null for them.
 type uncleStats []*types.Header
 
-func (s uncleStats) MarshalJSON() ([]byte, error) { log.DebugLog()
+func (s uncleStats) MarshalJSON() ([]byte, error) {
+	log.DebugLog()
 	if uncles := ([]*types.Header)(s); len(uncles) > 0 {
 		return json.Marshal(uncles)
 	}
@@ -500,7 +511,8 @@ func (s uncleStats) MarshalJSON() ([]byte, error) { log.DebugLog()
 }
 
 // reportBlock retrieves the current chain head and repors it to the stats server.
-func (s *Service) reportBlock(conn *websocket.Conn, block *types.Block) error { log.DebugLog()
+func (s *Service) reportBlock(conn *websocket.Conn, block *types.Block) error {
+	log.DebugLog()
 	// Gather the block details from the header or block chain
 	details := s.assembleBlockStats(block)
 
@@ -519,7 +531,8 @@ func (s *Service) reportBlock(conn *websocket.Conn, block *types.Block) error { 
 
 // assembleBlockStats retrieves any required metadata to report a single block
 // and assembles the block stats. If block is nil, the current head is processed.
-func (s *Service) assembleBlockStats(block *types.Block) *blockStats { log.DebugLog()
+func (s *Service) assembleBlockStats(block *types.Block) *blockStats {
+	log.DebugLog()
 	// Gather the block infos from the local blockchain
 	var (
 		header *types.Header
@@ -572,7 +585,8 @@ func (s *Service) assembleBlockStats(block *types.Block) *blockStats { log.Debug
 
 // reportHistory retrieves the most recent batch of blocks and reports it to the
 // stats server.
-func (s *Service) reportHistory(conn *websocket.Conn, list []uint64) error { log.DebugLog()
+func (s *Service) reportHistory(conn *websocket.Conn, list []uint64) error {
+	log.DebugLog()
 	// Figure out the indexes that need reporting
 	indexes := make([]uint64, 0, historyUpdateRange)
 	if len(list) > 0 {
@@ -638,7 +652,8 @@ type pendStats struct {
 
 // reportPending retrieves the current number of pending transactions and reports
 // it to the stats server.
-func (s *Service) reportPending(conn *websocket.Conn) error { log.DebugLog()
+func (s *Service) reportPending(conn *websocket.Conn) error {
+	log.DebugLog()
 	// Retrieve the pending count from the local blockchain
 	var pending int
 	if s.eth != nil {
@@ -674,7 +689,8 @@ type nodeStats struct {
 
 // reportPending retrieves various stats about the node at the networking and
 // mining layer and reports it to the stats server.
-func (s *Service) reportStats(conn *websocket.Conn) error { log.DebugLog()
+func (s *Service) reportStats(conn *websocket.Conn) error {
+	log.DebugLog()
 	// Gather the syncing and mining infos from the local miner instance
 	var (
 		mining   bool

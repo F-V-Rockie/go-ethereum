@@ -25,6 +25,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto/sha3"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 const (
@@ -40,56 +41,71 @@ var (
 // Hash represents the 32 byte Keccak256 hash of arbitrary data.
 type Hash [HashLength]byte
 
-func BytesToHash(b []byte) Hash { log.DebugLog()
+func BytesToHash(b []byte) Hash {
+	log.DebugLog()
 	var h Hash
 	h.SetBytes(b)
 	return h
 }
-func StringToHash(s string) Hash { log.DebugLog() return BytesToHash([]byte(s)) }
-func BigToHash(b *big.Int) Hash  { log.DebugLog() return BytesToHash(b.Bytes()) }
-func HexToHash(s string) Hash    { log.DebugLog() return BytesToHash(FromHex(s)) }
+func StringToHash(s string) Hash { log.DebugLog()
+									 return BytesToHash([]byte(s)) }
+func BigToHash(b *big.Int) Hash  { log.DebugLog()
+									 return BytesToHash(b.Bytes()) }
+func HexToHash(s string) Hash    { log.DebugLog()
+									 return BytesToHash(FromHex(s)) }
 
 // Get the string representation of the underlying hash
-func (h Hash) Str() string   { log.DebugLog() return string(h[:]) }
-func (h Hash) Bytes() []byte { log.DebugLog() return h[:] }
-func (h Hash) Big() *big.Int { log.DebugLog() return new(big.Int).SetBytes(h[:]) }
-func (h Hash) Hex() string   { log.DebugLog() return hexutil.Encode(h[:]) }
+func (h Hash) Str() string   { log.DebugLog()
+								 return string(h[:]) }
+func (h Hash) Bytes() []byte { log.DebugLog()
+								 return h[:] }
+func (h Hash) Big() *big.Int { log.DebugLog()
+								 return new(big.Int).SetBytes(h[:]) }
+func (h Hash) Hex() string   { log.DebugLog()
+								 return hexutil.Encode(h[:]) }
 
 // TerminalString implements log.TerminalStringer, formatting a string for console
 // output during logging.
-func (h Hash) TerminalString() string { log.DebugLog()
+func (h Hash) TerminalString() string {
+	log.DebugLog()
 	return fmt.Sprintf("%x…%x", h[:3], h[29:])
 }
 
 // String implements the stringer interface and is used also by the logger when
 // doing full logging into a file.
-func (h Hash) String() string { log.DebugLog()
+func (h Hash) String() string {
+	log.DebugLog()
 	return h.Hex()
 }
 
 // Format implements fmt.Formatter, forcing the byte slice to be formatted as is,
 // without going through the stringer interface used for logging.
-func (h Hash) Format(s fmt.State, c rune) { log.DebugLog()
+func (h Hash) Format(s fmt.State, c rune) {
+	log.DebugLog()
 	fmt.Fprintf(s, "%"+string(c), h[:])
 }
 
 // UnmarshalText parses a hash in hex syntax.
-func (h *Hash) UnmarshalText(input []byte) error { log.DebugLog()
+func (h *Hash) UnmarshalText(input []byte) error {
+	log.DebugLog()
 	return hexutil.UnmarshalFixedText("Hash", input, h[:])
 }
 
 // UnmarshalJSON parses a hash in hex syntax.
-func (h *Hash) UnmarshalJSON(input []byte) error { log.DebugLog()
+func (h *Hash) UnmarshalJSON(input []byte) error {
+	log.DebugLog()
 	return hexutil.UnmarshalFixedJSON(hashT, input, h[:])
 }
 
 // MarshalText returns the hex representation of h.
-func (h Hash) MarshalText() ([]byte, error) { log.DebugLog()
+func (h Hash) MarshalText() ([]byte, error) {
+	log.DebugLog()
 	return hexutil.Bytes(h[:]).MarshalText()
 }
 
 // Sets the hash to the value of b. If b is larger than len(h), 'b' will be cropped (from the left).
-func (h *Hash) SetBytes(b []byte) { log.DebugLog()
+func (h *Hash) SetBytes(b []byte) {
+	log.DebugLog()
 	if len(b) > len(h) {
 		b = b[len(b)-HashLength:]
 	}
@@ -98,17 +114,20 @@ func (h *Hash) SetBytes(b []byte) { log.DebugLog()
 }
 
 // Set string `s` to h. If s is larger than len(h) s will be cropped (from left) to fit.
-func (h *Hash) SetString(s string) { log.DebugLog() h.SetBytes([]byte(s)) }
+func (h *Hash) SetString(s string) { log.DebugLog()
+									   h.SetBytes([]byte(s)) }
 
 // Sets h to other
-func (h *Hash) Set(other Hash) { log.DebugLog()
+func (h *Hash) Set(other Hash) {
+	log.DebugLog()
 	for i, v := range other {
 		h[i] = v
 	}
 }
 
 // Generate implements testing/quick.Generator.
-func (h Hash) Generate(rand *rand.Rand, size int) reflect.Value { log.DebugLog()
+func (h Hash) Generate(rand *rand.Rand, size int) reflect.Value {
+	log.DebugLog()
 	m := rand.Intn(len(h))
 	for i := len(h) - 1; i > m; i-- {
 		h[i] = byte(rand.Uint32())
@@ -116,7 +135,8 @@ func (h Hash) Generate(rand *rand.Rand, size int) reflect.Value { log.DebugLog()
 	return reflect.ValueOf(h)
 }
 
-func EmptyHash(h Hash) bool { log.DebugLog()
+func EmptyHash(h Hash) bool {
+	log.DebugLog()
 	return h == Hash{}
 }
 
@@ -124,12 +144,14 @@ func EmptyHash(h Hash) bool { log.DebugLog()
 type UnprefixedHash Hash
 
 // UnmarshalText decodes the hash from hex. The 0x prefix is optional.
-func (h *UnprefixedHash) UnmarshalText(input []byte) error { log.DebugLog()
+func (h *UnprefixedHash) UnmarshalText(input []byte) error {
+	log.DebugLog()
 	return hexutil.UnmarshalFixedUnprefixedText("UnprefixedHash", input, h[:])
 }
 
 // MarshalText encodes the hash as hex.
-func (h UnprefixedHash) MarshalText() ([]byte, error) { log.DebugLog()
+func (h UnprefixedHash) MarshalText() ([]byte, error) {
+	log.DebugLog()
 	return []byte(hex.EncodeToString(h[:])), nil
 }
 
@@ -138,18 +160,23 @@ func (h UnprefixedHash) MarshalText() ([]byte, error) { log.DebugLog()
 // Address represents the 20 byte address of an Ethereum account.
 type Address [AddressLength]byte
 
-func BytesToAddress(b []byte) Address { log.DebugLog()
+func BytesToAddress(b []byte) Address {
+	log.DebugLog()
 	var a Address
 	a.SetBytes(b)
 	return a
 }
-func StringToAddress(s string) Address { log.DebugLog() return BytesToAddress([]byte(s)) }
-func BigToAddress(b *big.Int) Address  { log.DebugLog() return BytesToAddress(b.Bytes()) }
-func HexToAddress(s string) Address    { log.DebugLog() return BytesToAddress(FromHex(s)) }
+func StringToAddress(s string) Address { log.DebugLog()
+										   return BytesToAddress([]byte(s)) }
+func BigToAddress(b *big.Int) Address  { log.DebugLog()
+										   return BytesToAddress(b.Bytes()) }
+func HexToAddress(s string) Address    { log.DebugLog()
+										   return BytesToAddress(FromHex(s)) }
 
 // IsHexAddress verifies whether a string can represent a valid hex-encoded
 // Ethereum address or not.
-func IsHexAddress(s string) bool { log.DebugLog()
+func IsHexAddress(s string) bool {
+	log.DebugLog()
 	if hasHexPrefix(s) {
 		s = s[2:]
 	}
@@ -157,13 +184,18 @@ func IsHexAddress(s string) bool { log.DebugLog()
 }
 
 // Get the string representation of the underlying address
-func (a Address) Str() string   { log.DebugLog() return string(a[:]) }
-func (a Address) Bytes() []byte { log.DebugLog() return a[:] }
-func (a Address) Big() *big.Int { log.DebugLog() return new(big.Int).SetBytes(a[:]) }
-func (a Address) Hash() Hash    { log.DebugLog() return BytesToHash(a[:]) }
+func (a Address) Str() string   { log.DebugLog()
+									return string(a[:]) }
+func (a Address) Bytes() []byte { log.DebugLog()
+									return a[:] }
+func (a Address) Big() *big.Int { log.DebugLog()
+									return new(big.Int).SetBytes(a[:]) }
+func (a Address) Hash() Hash    { log.DebugLog()
+									return BytesToHash(a[:]) }
 
 // Hex returns an EIP55-compliant hex string representation of the address.
-func (a Address) Hex() string { log.DebugLog()
+func (a Address) Hex() string {
+	log.DebugLog()
 	unchecksummed := hex.EncodeToString(a[:])
 	sha := sha3.NewKeccak256()
 	sha.Write([]byte(unchecksummed))
@@ -185,18 +217,21 @@ func (a Address) Hex() string { log.DebugLog()
 }
 
 // String implements the stringer interface and is used also by the logger.
-func (a Address) String() string { log.DebugLog()
+func (a Address) String() string {
+	log.DebugLog()
 	return a.Hex()
 }
 
 // Format implements fmt.Formatter, forcing the byte slice to be formatted as is,
 // without going through the stringer interface used for logging.
-func (a Address) Format(s fmt.State, c rune) { log.DebugLog()
+func (a Address) Format(s fmt.State, c rune) {
+	log.DebugLog()
 	fmt.Fprintf(s, "%"+string(c), a[:])
 }
 
 // Sets the address to the value of b. If b is larger than len(a) it will panic
-func (a *Address) SetBytes(b []byte) { log.DebugLog()
+func (a *Address) SetBytes(b []byte) {
+	log.DebugLog()
 	if len(b) > len(a) {
 		b = b[len(b)-AddressLength:]
 	}
@@ -204,27 +239,32 @@ func (a *Address) SetBytes(b []byte) { log.DebugLog()
 }
 
 // Set string `s` to a. If s is larger than len(a) it will panic
-func (a *Address) SetString(s string) { log.DebugLog() a.SetBytes([]byte(s)) }
+func (a *Address) SetString(s string) { log.DebugLog()
+										  a.SetBytes([]byte(s)) }
 
 // Sets a to other
-func (a *Address) Set(other Address) { log.DebugLog()
+func (a *Address) Set(other Address) {
+	log.DebugLog()
 	for i, v := range other {
 		a[i] = v
 	}
 }
 
 // MarshalText returns the hex representation of a.
-func (a Address) MarshalText() ([]byte, error) { log.DebugLog()
+func (a Address) MarshalText() ([]byte, error) {
+	log.DebugLog()
 	return hexutil.Bytes(a[:]).MarshalText()
 }
 
 // UnmarshalText parses a hash in hex syntax.
-func (a *Address) UnmarshalText(input []byte) error { log.DebugLog()
+func (a *Address) UnmarshalText(input []byte) error {
+	log.DebugLog()
 	return hexutil.UnmarshalFixedText("Address", input, a[:])
 }
 
 // UnmarshalJSON parses a hash in hex syntax.
-func (a *Address) UnmarshalJSON(input []byte) error { log.DebugLog()
+func (a *Address) UnmarshalJSON(input []byte) error {
+	log.DebugLog()
 	return hexutil.UnmarshalFixedJSON(addressT, input, a[:])
 }
 
@@ -232,11 +272,13 @@ func (a *Address) UnmarshalJSON(input []byte) error { log.DebugLog()
 type UnprefixedAddress Address
 
 // UnmarshalText decodes the address from hex. The 0x prefix is optional.
-func (a *UnprefixedAddress) UnmarshalText(input []byte) error { log.DebugLog()
+func (a *UnprefixedAddress) UnmarshalText(input []byte) error {
+	log.DebugLog()
 	return hexutil.UnmarshalFixedUnprefixedText("UnprefixedAddress", input, a[:])
 }
 
 // MarshalText encodes the address as hex.
-func (a UnprefixedAddress) MarshalText() ([]byte, error) { log.DebugLog()
+func (a UnprefixedAddress) MarshalText() ([]byte, error) {
+	log.DebugLog()
 	return []byte(hex.EncodeToString(a[:])), nil
 }

@@ -98,7 +98,7 @@ import (
 
 // New returns an error with the supplied message.
 // New also records the stack trace at the point it was called.
-func New(message string) error { 
+func New(message string) error {
 	return &fundamental{
 		msg:   message,
 		stack: callers(),
@@ -108,7 +108,7 @@ func New(message string) error {
 // Errorf formats according to a format specifier and returns the string
 // as a value that satisfies error.
 // Errorf also records the stack trace at the point it was called.
-func Errorf(format string, args ...interface{}) error { 
+func Errorf(format string, args ...interface{}) error {
 	return &fundamental{
 		msg:   fmt.Sprintf(format, args...),
 		stack: callers(),
@@ -121,9 +121,9 @@ type fundamental struct {
 	*stack
 }
 
-func (f *fundamental) Error() string {  return f.msg }
+func (f *fundamental) Error() string { return f.msg }
 
-func (f *fundamental) Format(s fmt.State, verb rune) { 
+func (f *fundamental) Format(s fmt.State, verb rune) {
 	switch verb {
 	case 'v':
 		if s.Flag('+') {
@@ -141,7 +141,7 @@ func (f *fundamental) Format(s fmt.State, verb rune) {
 
 // WithStack annotates err with a stack trace at the point WithStack was called.
 // If err is nil, WithStack returns nil.
-func WithStack(err error) error { 
+func WithStack(err error) error {
 	if err == nil {
 		return nil
 	}
@@ -156,9 +156,9 @@ type withStack struct {
 	*stack
 }
 
-func (w *withStack) Cause() error {  return w.error }
+func (w *withStack) Cause() error { return w.error }
 
-func (w *withStack) Format(s fmt.State, verb rune) { 
+func (w *withStack) Format(s fmt.State, verb rune) {
 	switch verb {
 	case 'v':
 		if s.Flag('+') {
@@ -177,7 +177,7 @@ func (w *withStack) Format(s fmt.State, verb rune) {
 // Wrap returns an error annotating err with a stack trace
 // at the point Wrap is called, and the supplied message.
 // If err is nil, Wrap returns nil.
-func Wrap(err error, message string) error { 
+func Wrap(err error, message string) error {
 	if err == nil {
 		return nil
 	}
@@ -194,7 +194,7 @@ func Wrap(err error, message string) error {
 // Wrapf returns an error annotating err with a stack trace
 // at the point Wrapf is call, and the format specifier.
 // If err is nil, Wrapf returns nil.
-func Wrapf(err error, format string, args ...interface{}) error { 
+func Wrapf(err error, format string, args ...interface{}) error {
 	if err == nil {
 		return nil
 	}
@@ -210,7 +210,7 @@ func Wrapf(err error, format string, args ...interface{}) error {
 
 // WithMessage annotates err with a new message.
 // If err is nil, WithMessage returns nil.
-func WithMessage(err error, message string) error { 
+func WithMessage(err error, message string) error {
 	if err == nil {
 		return nil
 	}
@@ -225,10 +225,10 @@ type withMessage struct {
 	msg   string
 }
 
-func (w *withMessage) Error() string {  return w.msg + ": " + w.cause.Error() }
-func (w *withMessage) Cause() error  {  return w.cause }
+func (w *withMessage) Error() string { return w.msg + ": " + w.cause.Error() }
+func (w *withMessage) Cause() error  { return w.cause }
 
-func (w *withMessage) Format(s fmt.State, verb rune) { 
+func (w *withMessage) Format(s fmt.State, verb rune) {
 	switch verb {
 	case 'v':
 		if s.Flag('+') {
@@ -253,7 +253,7 @@ func (w *withMessage) Format(s fmt.State, verb rune) {
 // If the error does not implement Cause, the original error will
 // be returned. If the error is nil, nil will be returned without further
 // investigation.
-func Cause(err error) error { 
+func Cause(err error) error {
 	type causer interface {
 		Cause() error
 	}

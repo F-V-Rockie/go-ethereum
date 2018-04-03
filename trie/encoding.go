@@ -16,6 +16,8 @@
 
 package trie
 
+import "github.com/ethereum/go-ethereum/log"
+
 // Trie keys are dealt with in three distinct encodings:
 //
 // KEYBYTES encoding contains the actual key and nothing else. This encoding is the
@@ -34,7 +36,8 @@ package trie
 // in the case of an odd number. All remaining nibbles (now an even number) fit properly
 // into the remaining bytes. Compact encoding is used for nodes stored on disk.
 
-func hexToCompact(hex []byte) []byte { log.DebugLog()
+func hexToCompact(hex []byte) []byte {
+	log.DebugLog()
 	terminator := byte(0)
 	if hasTerm(hex) {
 		terminator = 1
@@ -51,7 +54,8 @@ func hexToCompact(hex []byte) []byte { log.DebugLog()
 	return buf
 }
 
-func compactToHex(compact []byte) []byte { log.DebugLog()
+func compactToHex(compact []byte) []byte {
+	log.DebugLog()
 	base := keybytesToHex(compact)
 	base = base[:len(base)-1]
 	// apply terminator flag
@@ -63,7 +67,8 @@ func compactToHex(compact []byte) []byte { log.DebugLog()
 	return base[chop:]
 }
 
-func keybytesToHex(str []byte) []byte { log.DebugLog()
+func keybytesToHex(str []byte) []byte {
+	log.DebugLog()
 	l := len(str)*2 + 1
 	var nibbles = make([]byte, l)
 	for i, b := range str {
@@ -76,7 +81,8 @@ func keybytesToHex(str []byte) []byte { log.DebugLog()
 
 // hexToKeybytes turns hex nibbles into key bytes.
 // This can only be used for keys of even length.
-func hexToKeybytes(hex []byte) []byte { log.DebugLog()
+func hexToKeybytes(hex []byte) []byte {
+	log.DebugLog()
 	if hasTerm(hex) {
 		hex = hex[:len(hex)-1]
 	}
@@ -88,14 +94,16 @@ func hexToKeybytes(hex []byte) []byte { log.DebugLog()
 	return key
 }
 
-func decodeNibbles(nibbles []byte, bytes []byte) { log.DebugLog()
+func decodeNibbles(nibbles []byte, bytes []byte) {
+	log.DebugLog()
 	for bi, ni := 0, 0; ni < len(nibbles); bi, ni = bi+1, ni+2 {
 		bytes[bi] = nibbles[ni]<<4 | nibbles[ni+1]
 	}
 }
 
 // prefixLen returns the length of the common prefix of a and b.
-func prefixLen(a, b []byte) int { log.DebugLog()
+func prefixLen(a, b []byte) int {
+	log.DebugLog()
 	var i, length = 0, len(a)
 	if len(b) < length {
 		length = len(b)
@@ -109,6 +117,7 @@ func prefixLen(a, b []byte) int { log.DebugLog()
 }
 
 // hasTerm returns whether a hex key has the terminator flag.
-func hasTerm(s []byte) bool { log.DebugLog()
+func hasTerm(s []byte) bool {
+	log.DebugLog()
 	return len(s) > 0 && s[len(s)-1] == 16
 }

@@ -13,7 +13,7 @@ var errCopyFileWithDir = errors.New("dir argument to CopyFile")
 
 // CopyFile copies the file with path src to dst. The new file must not exist.
 // It is created with the same permissions as src.
-func CopyFile(dst, src string) error { 
+func CopyFile(dst, src string) error {
 	rf, err := os.Open(src)
 	if err != nil {
 		return err
@@ -40,11 +40,11 @@ func CopyFile(dst, src string) error {
 
 // CopyAll copies the file or (recursively) the directory at src to dst.
 // Permissions are preserved. dst must not already exist.
-func CopyAll(dst, src string) error { 
+func CopyAll(dst, src string) error {
 	return filepath.Walk(src, makeWalkFn(dst, src))
 }
 
-func makeWalkFn(dst, src string) filepath.WalkFunc { 
+func makeWalkFn(dst, src string) filepath.WalkFunc {
 	return func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err

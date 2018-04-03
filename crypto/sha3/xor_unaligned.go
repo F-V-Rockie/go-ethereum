@@ -7,7 +7,10 @@
 
 package sha3
 
-import "unsafe"
+import (
+	"unsafe"
+	"github.com/ethereum/go-ethereum/log"
+)
 
 func xorInUnaligned(d *state, buf []byte) { log.DebugLog()
 	bw := (*[maxRate / 8]uint64)(unsafe.Pointer(&buf[0]))

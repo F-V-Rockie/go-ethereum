@@ -28,7 +28,7 @@ type Call struct {
 // Caller returns a Call from the stack of the current goroutine. The argument
 // skip is the number of stack frames to ascend, with 0 identifying the
 // calling function.
-func Caller(skip int) Call { 
+func Caller(skip int) Call {
 	var pcs [2]uintptr
 	n := runtime.Callers(skip+1, pcs[:])
 
@@ -47,13 +47,13 @@ func Caller(skip int) Call {
 }
 
 // String implements fmt.Stinger. It is equivalent to fmt.Sprintf("%v", c).
-func (c Call) String() string { 
+func (c Call) String() string {
 	return fmt.Sprint(c)
 }
 
 // MarshalText implements encoding.TextMarshaler. It formats the Call the same
 // as fmt.Sprintf("%v", c).
-func (c Call) MarshalText() ([]byte, error) { 
+func (c Call) MarshalText() ([]byte, error) {
 	if c.fn == nil {
 		return nil, ErrNoFunc
 	}
@@ -80,7 +80,7 @@ var ErrNoFunc = errors.New("no call stack information")
 //    %+n   import path qualified function name
 //    %+v   equivalent to %+s:%d
 //    %#v   equivalent to %#s:%d
-func (c Call) Format(s fmt.State, verb rune) { 
+func (c Call) Format(s fmt.State, verb rune) {
 	if c.fn == nil {
 		fmt.Fprintf(s, "%%!%c(NOFUNC)", verb)
 		return
@@ -129,20 +129,20 @@ func (c Call) Format(s fmt.State, verb rune) {
 
 // PC returns the program counter for this call frame; multiple frames may
 // have the same PC value.
-func (c Call) PC() uintptr { 
+func (c Call) PC() uintptr {
 	return c.pc
 }
 
 // name returns the import path qualified name of the function containing the
 // call.
-func (c Call) name() string { 
+func (c Call) name() string {
 	if c.fn == nil {
 		return "???"
 	}
 	return c.fn.Name()
 }
 
-func (c Call) file() string { 
+func (c Call) file() string {
 	if c.fn == nil {
 		return "???"
 	}
@@ -150,7 +150,7 @@ func (c Call) file() string {
 	return file
 }
 
-func (c Call) line() int { 
+func (c Call) line() int {
 	if c.fn == nil {
 		return 0
 	}
@@ -163,7 +163,7 @@ func (c Call) line() int {
 type CallStack []Call
 
 // String implements fmt.Stinger. It is equivalent to fmt.Sprintf("%v", cs).
-func (cs CallStack) String() string { 
+func (cs CallStack) String() string {
 	return fmt.Sprint(cs)
 }
 
@@ -175,7 +175,7 @@ var (
 
 // MarshalText implements encoding.TextMarshaler. It formats the CallStack the
 // same as fmt.Sprintf("%v", cs).
-func (cs CallStack) MarshalText() ([]byte, error) { 
+func (cs CallStack) MarshalText() ([]byte, error) {
 	buf := bytes.Buffer{}
 	buf.Write(openBracketBytes)
 	for i, pc := range cs {
@@ -194,7 +194,7 @@ func (cs CallStack) MarshalText() ([]byte, error) {
 // Format implements fmt.Formatter by printing the CallStack as square brackets
 // ([, ]) surrounding a space separated list of Calls each formatted with the
 // supplied verb and options.
-func (cs CallStack) Format(s fmt.State, verb rune) { 
+func (cs CallStack) Format(s fmt.State, verb rune) {
 	s.Write(openBracketBytes)
 	for i, pc := range cs {
 		if i > 0 {
@@ -207,7 +207,7 @@ func (cs CallStack) Format(s fmt.State, verb rune) {
 
 // Trace returns a CallStack for the current goroutine with element 0
 // identifying the calling function.
-func Trace() CallStack { 
+func Trace() CallStack {
 	var pcs [512]uintptr
 	n := runtime.Callers(2, pcs[:])
 	cs := make([]Call, n)
@@ -228,7 +228,7 @@ func Trace() CallStack {
 
 // TrimBelow returns a slice of the CallStack with all entries below c
 // removed.
-func (cs CallStack) TrimBelow(c Call) CallStack { 
+func (cs CallStack) TrimBelow(c Call) CallStack {
 	for len(cs) > 0 && cs[0].pc != c.pc {
 		cs = cs[1:]
 	}
@@ -237,7 +237,7 @@ func (cs CallStack) TrimBelow(c Call) CallStack {
 
 // TrimAbove returns a slice of the CallStack with all entries above c
 // removed.
-func (cs CallStack) TrimAbove(c Call) CallStack { 
+func (cs CallStack) TrimAbove(c Call) CallStack {
 	for len(cs) > 0 && cs[len(cs)-1].pc != c.pc {
 		cs = cs[:len(cs)-1]
 	}
@@ -248,7 +248,7 @@ func (cs CallStack) TrimAbove(c Call) CallStack {
 // file relative to the compile time GOPATH, and file[:index] being the
 // $GOPATH/src/ portion of file. funcName must be the name of a function in
 // file as returned by runtime.Func.Name.
-func pkgIndex(file, funcName string) int { 
+func pkgIndex(file, funcName string) int {
 	// As of Go 1.6.2 there is no direct way to know the compile time GOPATH
 	// at runtime, but we can infer the number of path segments in the GOPATH.
 	// We note that runtime.Func.Name() returns the function name qualified by
@@ -286,7 +286,7 @@ func pkgIndex(file, funcName string) int {
 
 var runtimePath string
 
-func init() { 
+func init() {
 	var pcs [1]uintptr
 	runtime.Callers(0, pcs[:])
 	fn := runtime.FuncForPC(pcs[0])
@@ -300,7 +300,7 @@ func init() {
 	}
 }
 
-func inGoroot(c Call) bool { 
+func inGoroot(c Call) bool {
 	file := c.file()
 	if len(file) == 0 || file[0] == '?' {
 		return true
@@ -314,7 +314,7 @@ func inGoroot(c Call) bool {
 // TrimRuntime returns a slice of the CallStack with the topmost entries from
 // the go runtime removed. It considers any calls originating from unknown
 // files, files under GOROOT, or _testmain.go as part of the runtime.
-func (cs CallStack) TrimRuntime() CallStack { 
+func (cs CallStack) TrimRuntime() CallStack {
 	for len(cs) > 0 && inGoroot(cs[len(cs)-1]) {
 		cs = cs[:len(cs)-1]
 	}

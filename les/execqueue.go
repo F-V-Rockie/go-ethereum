@@ -16,7 +16,10 @@
 
 package les
 
-import "sync"
+import (
+	"sync"
+	"github.com/ethereum/go-ethereum/log"
+)
 
 // execQueue implements a queue that executes function calls in a single thread,
 // in the same order as they have been queued.
@@ -28,21 +31,24 @@ type execQueue struct {
 }
 
 // newExecQueue creates a new execution queue.
-func newExecQueue(capacity int) *execQueue { log.DebugLog()
+func newExecQueue(capacity int) *execQueue {
+	log.DebugLog()
 	q := &execQueue{funcs: make([]func(), 0, capacity)}
 	q.cond = sync.NewCond(&q.mu)
 	go q.loop()
 	return q
 }
 
-func (q *execQueue) loop() { log.DebugLog()
+func (q *execQueue) loop() {
+	log.DebugLog()
 	for f := q.waitNext(false); f != nil; f = q.waitNext(true) {
 		f()
 	}
 	close(q.closeWait)
 }
 
-func (q *execQueue) waitNext(drop bool) (f func()) { log.DebugLog()
+func (q *execQueue) waitNext(drop bool) (f func()) {
+	log.DebugLog()
 	q.mu.Lock()
 	if drop {
 		// Remove the function that just executed. We do this here instead of when
@@ -60,12 +66,14 @@ func (q *execQueue) waitNext(drop bool) (f func()) { log.DebugLog()
 	return f
 }
 
-func (q *execQueue) isClosed() bool { log.DebugLog()
+func (q *execQueue) isClosed() bool {
+	log.DebugLog()
 	return q.closeWait != nil
 }
 
 // canQueue returns true if more function calls can be added to the execution queue.
-func (q *execQueue) canQueue() bool { log.DebugLog()
+func (q *execQueue) canQueue() bool {
+	log.DebugLog()
 	q.mu.Lock()
 	ok := !q.isClosed() && len(q.funcs) < cap(q.funcs)
 	q.mu.Unlock()
@@ -73,7 +81,8 @@ func (q *execQueue) canQueue() bool { log.DebugLog()
 }
 
 // queue adds a function call to the execution queue. Returns true if successful.
-func (q *execQueue) queue(f func()) bool { log.DebugLog()
+func (q *execQueue) queue(f func()) bool {
+	log.DebugLog()
 	q.mu.Lock()
 	ok := !q.isClosed() && len(q.funcs) < cap(q.funcs)
 	if ok {
@@ -86,7 +95,8 @@ func (q *execQueue) queue(f func()) bool { log.DebugLog()
 
 // quit stops the exec queue.
 // quit waits for the current execution to finish before returning.
-func (q *execQueue) quit() { log.DebugLog()
+func (q *execQueue) quit() {
+	log.DebugLog()
 	q.mu.Lock()
 	if !q.isClosed() {
 		q.closeWait = make(chan struct{})

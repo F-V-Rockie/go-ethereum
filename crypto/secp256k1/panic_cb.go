@@ -17,7 +17,10 @@
 package secp256k1
 
 import "C"
-import "unsafe"
+import (
+	"unsafe"
+	"github.com/ethereum/go-ethereum/log"
+)
 
 // Callbacks for converting libsecp256k1 internal faults into
 // recoverable Go panics.

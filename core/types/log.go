@@ -23,6 +23,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/rlp"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 //go:generate gencodec -type Log -field-override logMarshaling -out gen_log_json.go
@@ -81,12 +82,14 @@ type rlpStorageLog struct {
 }
 
 // EncodeRLP implements rlp.Encoder.
-func (l *Log) EncodeRLP(w io.Writer) error { log.DebugLog()
+func (l *Log) EncodeRLP(w io.Writer) error {
+	log.DebugLog()
 	return rlp.Encode(w, rlpLog{Address: l.Address, Topics: l.Topics, Data: l.Data})
 }
 
 // DecodeRLP implements rlp.Decoder.
-func (l *Log) DecodeRLP(s *rlp.Stream) error { log.DebugLog()
+func (l *Log) DecodeRLP(s *rlp.Stream) error {
+	log.DebugLog()
 	var dec rlpLog
 	err := s.Decode(&dec)
 	if err == nil {
@@ -95,7 +98,8 @@ func (l *Log) DecodeRLP(s *rlp.Stream) error { log.DebugLog()
 	return err
 }
 
-func (l *Log) String() string { log.DebugLog()
+func (l *Log) String() string {
+	log.DebugLog()
 	return fmt.Sprintf(`log: %x %x %x %x %d %x %d`, l.Address, l.Topics, l.Data, l.TxHash, l.TxIndex, l.BlockHash, l.Index)
 }
 
@@ -104,7 +108,8 @@ func (l *Log) String() string { log.DebugLog()
 type LogForStorage Log
 
 // EncodeRLP implements rlp.Encoder.
-func (l *LogForStorage) EncodeRLP(w io.Writer) error { log.DebugLog()
+func (l *LogForStorage) EncodeRLP(w io.Writer) error {
+	log.DebugLog()
 	return rlp.Encode(w, rlpStorageLog{
 		Address:     l.Address,
 		Topics:      l.Topics,
@@ -118,7 +123,8 @@ func (l *LogForStorage) EncodeRLP(w io.Writer) error { log.DebugLog()
 }
 
 // DecodeRLP implements rlp.Decoder.
-func (l *LogForStorage) DecodeRLP(s *rlp.Stream) error { log.DebugLog()
+func (l *LogForStorage) DecodeRLP(s *rlp.Stream) error {
+	log.DebugLog()
 	var dec rlpStorageLog
 	err := s.Decode(&dec)
 	if err == nil {

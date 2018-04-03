@@ -54,7 +54,7 @@ const (
 
 // NewLiner initializes a new *State, and sets the terminal into raw mode. To
 // restore the terminal to its previous state, call State.Close().
-func NewLiner() *State { 
+func NewLiner() *State {
 	var s State
 	hIn, _, _ := procGetStdHandle.Call(uintptr(std_input_handle))
 	s.handle = syscall.Handle(hIn)
@@ -149,7 +149,7 @@ const (
 )
 
 // inputWaiting only returns true if the next call to readNext will return immediately.
-func (s *State) inputWaiting() bool { 
+func (s *State) inputWaiting() bool {
 	var num uint32
 	ok, _, _ := procGetNumberOfConsoleInputEvents.Call(uintptr(s.handle), uintptr(unsafe.Pointer(&num)))
 	if ok == 0 {
@@ -163,7 +163,7 @@ func (s *State) inputWaiting() bool {
 	return num > 1
 }
 
-func (s *State) readNext() (interface{}, error) { 
+func (s *State) readNext() (interface{}, error) {
 	if s.repeat > 0 {
 		s.repeat--
 		return s.key, nil
@@ -282,12 +282,12 @@ func (s *State) readNext() (interface{}, error) {
 }
 
 // Close returns the terminal to its previous mode
-func (s *State) Close() error { 
+func (s *State) Close() error {
 	s.origMode.ApplyMode()
 	return nil
 }
 
-func (s *State) startPrompt() { 
+func (s *State) startPrompt() {
 	if m, err := TerminalMode(); err == nil {
 		s.defaultMode = m.(inputMode)
 		mode := s.defaultMode
@@ -296,20 +296,20 @@ func (s *State) startPrompt() {
 	}
 }
 
-func (s *State) restartPrompt() { 
+func (s *State) restartPrompt() {
 }
 
-func (s *State) stopPrompt() { 
+func (s *State) stopPrompt() {
 	s.defaultMode.ApplyMode()
 }
 
 // TerminalSupported returns true because line editing is always
 // supported on Windows.
-func TerminalSupported() bool { 
+func TerminalSupported() bool {
 	return true
 }
 
-func (mode inputMode) ApplyMode() error { 
+func (mode inputMode) ApplyMode() error {
 	hIn, _, err := procGetStdHandle.Call(uintptr(std_input_handle))
 	if hIn == invalid_handle_value || hIn == 0 {
 		return err
@@ -325,7 +325,7 @@ func (mode inputMode) ApplyMode() error {
 //
 // This function is provided for convenience, and should
 // not be necessary for most users of liner.
-func TerminalMode() (ModeApplier, error) { 
+func TerminalMode() (ModeApplier, error) {
 	var mode inputMode
 	hIn, _, err := procGetStdHandle.Call(uintptr(std_input_handle))
 	if hIn == invalid_handle_value || hIn == 0 {

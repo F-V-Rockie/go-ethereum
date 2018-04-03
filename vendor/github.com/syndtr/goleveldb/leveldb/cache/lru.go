@@ -19,7 +19,7 @@ type lruNode struct {
 	next, prev *lruNode
 }
 
-func (n *lruNode) insert(at *lruNode) { 
+func (n *lruNode) insert(at *lruNode) {
 	x := at.next
 	at.next = n
 	n.prev = at
@@ -27,7 +27,7 @@ func (n *lruNode) insert(at *lruNode) {
 	x.prev = n
 }
 
-func (n *lruNode) remove() { 
+func (n *lruNode) remove() {
 	if n.prev != nil {
 		n.prev.next = n.next
 		n.next.prev = n.prev
@@ -45,19 +45,19 @@ type lru struct {
 	recent   lruNode
 }
 
-func (r *lru) reset() { 
+func (r *lru) reset() {
 	r.recent.next = &r.recent
 	r.recent.prev = &r.recent
 	r.used = 0
 }
 
-func (r *lru) Capacity() int { 
+func (r *lru) Capacity() int {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 	return r.capacity
 }
 
-func (r *lru) SetCapacity(capacity int) { 
+func (r *lru) SetCapacity(capacity int) {
 	var evicted []*lruNode
 
 	r.mu.Lock()
@@ -79,7 +79,7 @@ func (r *lru) SetCapacity(capacity int) {
 	}
 }
 
-func (r *lru) Promote(n *Node) { 
+func (r *lru) Promote(n *Node) {
 	var evicted []*lruNode
 
 	r.mu.Lock()
@@ -115,7 +115,7 @@ func (r *lru) Promote(n *Node) {
 	}
 }
 
-func (r *lru) Ban(n *Node) { 
+func (r *lru) Ban(n *Node) {
 	r.mu.Lock()
 	if n.CacheData == nil {
 		n.CacheData = unsafe.Pointer(&lruNode{n: n, ban: true})
@@ -135,7 +135,7 @@ func (r *lru) Ban(n *Node) {
 	r.mu.Unlock()
 }
 
-func (r *lru) Evict(n *Node) { 
+func (r *lru) Evict(n *Node) {
 	r.mu.Lock()
 	rn := (*lruNode)(n.CacheData)
 	if rn == nil || rn.ban {
@@ -148,7 +148,7 @@ func (r *lru) Evict(n *Node) {
 	rn.h.Release()
 }
 
-func (r *lru) EvictNS(ns uint64) { 
+func (r *lru) EvictNS(ns uint64) {
 	var evicted []*lruNode
 
 	r.mu.Lock()
@@ -169,7 +169,7 @@ func (r *lru) EvictNS(ns uint64) {
 	}
 }
 
-func (r *lru) EvictAll() { 
+func (r *lru) EvictAll() {
 	r.mu.Lock()
 	back := r.recent.prev
 	for rn := back; rn != &r.recent; rn = rn.prev {
@@ -183,12 +183,12 @@ func (r *lru) EvictAll() {
 	}
 }
 
-func (r *lru) Close() error { 
+func (r *lru) Close() error {
 	return nil
 }
 
 // NewLRU create a new LRU-cache.
-func NewLRU(capacity int) Cacher { 
+func NewLRU(capacity int) Cacher {
 	r := &lru{capacity: capacity}
 	r.reset()
 	return r

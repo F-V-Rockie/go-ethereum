@@ -24,6 +24,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/p2p"
 	"github.com/ethereum/go-ethereum/p2p/nat"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 const (
@@ -50,7 +51,8 @@ var DefaultConfig = Config{
 
 // DefaultDataDir is the default data directory to use for the databases and other
 // persistence requirements.
-func DefaultDataDir() string { log.DebugLog()
+func DefaultDataDir() string {
+	log.DebugLog()
 	// Try to place the data folder in the user's home dir
 	home := homeDir()
 	if home != "" {
@@ -66,7 +68,8 @@ func DefaultDataDir() string { log.DebugLog()
 	return ""
 }
 
-func homeDir() string { log.DebugLog()
+func homeDir() string {
+	log.DebugLog()
 	if home := os.Getenv("HOME"); home != "" {
 		return home
 	}

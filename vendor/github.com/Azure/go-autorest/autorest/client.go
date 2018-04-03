@@ -70,7 +70,7 @@ type LoggingInspector struct {
 //
 // Note: Since it reads the entire Body, this decorator should not be used where body streaming is
 // important. It is best used to trace JSON or similar body values.
-func (li LoggingInspector) WithInspection() PrepareDecorator { 
+func (li LoggingInspector) WithInspection() PrepareDecorator {
 	return func(p Preparer) Preparer {
 		return PreparerFunc(func(r *http.Request) (*http.Request, error) {
 			var body, b bytes.Buffer
@@ -95,7 +95,7 @@ func (li LoggingInspector) WithInspection() PrepareDecorator {
 //
 // Note: Since it reads the entire Body, this decorator should not be used where body streaming is
 // important. It is best used to trace JSON or similar body values.
-func (li LoggingInspector) ByInspecting() RespondDecorator { 
+func (li LoggingInspector) ByInspecting() RespondDecorator {
 	return func(r Responder) Responder {
 		return ResponderFunc(func(resp *http.Response) error {
 			var body, b bytes.Buffer
@@ -151,7 +151,7 @@ type Client struct {
 
 // NewClientWithUserAgent returns an instance of a Client with the UserAgent set to the passed
 // string.
-func NewClientWithUserAgent(ua string) Client { 
+func NewClientWithUserAgent(ua string) Client {
 	c := Client{
 		PollingDelay:    DefaultPollingDelay,
 		PollingDuration: DefaultPollingDuration,
@@ -164,7 +164,7 @@ func NewClientWithUserAgent(ua string) Client {
 }
 
 // AddToUserAgent adds an extension to the current user agent
-func (c *Client) AddToUserAgent(extension string) error { 
+func (c *Client) AddToUserAgent(extension string) error {
 	if extension != "" {
 		c.UserAgent = fmt.Sprintf("%s %s", c.UserAgent, extension)
 		return nil
@@ -175,7 +175,7 @@ func (c *Client) AddToUserAgent(extension string) error {
 // Do implements the Sender interface by invoking the active Sender after applying authorization.
 // If Sender is not set, it uses a new instance of http.Client. In both cases it will, if UserAgent
 // is set, apply set the User-Agent header.
-func (c Client) Do(r *http.Request) (*http.Response, error) { 
+func (c Client) Do(r *http.Request) (*http.Response, error) {
 	if r.UserAgent() == "" {
 		r, _ = Prepare(r,
 			WithUserAgent(c.UserAgent))
@@ -194,7 +194,7 @@ func (c Client) Do(r *http.Request) (*http.Response, error) {
 }
 
 // sender returns the Sender to which to send requests.
-func (c Client) sender() Sender { 
+func (c Client) sender() Sender {
 	if c.Sender == nil {
 		j, _ := cookiejar.New(nil)
 		return &http.Client{Jar: j}
@@ -204,12 +204,12 @@ func (c Client) sender() Sender {
 
 // WithAuthorization is a convenience method that returns the WithAuthorization PrepareDecorator
 // from the current Authorizer. If not Authorizer is set, it uses the NullAuthorizer.
-func (c Client) WithAuthorization() PrepareDecorator { 
+func (c Client) WithAuthorization() PrepareDecorator {
 	return c.authorizer().WithAuthorization()
 }
 
 // authorizer returns the Authorizer to use.
-func (c Client) authorizer() Authorizer { 
+func (c Client) authorizer() Authorizer {
 	if c.Authorizer == nil {
 		return NullAuthorizer{}
 	}
@@ -218,7 +218,7 @@ func (c Client) authorizer() Authorizer {
 
 // WithInspection is a convenience method that passes the request to the supplied RequestInspector,
 // if present, or returns the WithNothing PrepareDecorator otherwise.
-func (c Client) WithInspection() PrepareDecorator { 
+func (c Client) WithInspection() PrepareDecorator {
 	if c.RequestInspector == nil {
 		return WithNothing()
 	}
@@ -227,7 +227,7 @@ func (c Client) WithInspection() PrepareDecorator {
 
 // ByInspecting is a convenience method that passes the response to the supplied ResponseInspector,
 // if present, or returns the ByIgnoring RespondDecorator otherwise.
-func (c Client) ByInspecting() RespondDecorator { 
+func (c Client) ByInspecting() RespondDecorator {
 	if c.ResponseInspector == nil {
 		return ByIgnoring()
 	}

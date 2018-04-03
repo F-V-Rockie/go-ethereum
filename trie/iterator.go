@@ -22,6 +22,7 @@ import (
 	"errors"
 
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // Iterator is a key-value trie iterator that traverses a Trie.
@@ -34,14 +35,16 @@ type Iterator struct {
 }
 
 // NewIterator creates a new key-value iterator from a node iterator
-func NewIterator(it NodeIterator) *Iterator { log.DebugLog()
+func NewIterator(it NodeIterator) *Iterator {
+	log.DebugLog()
 	return &Iterator{
 		nodeIt: it,
 	}
 }
 
 // Next moves the iterator forward one key-value entry.
-func (it *Iterator) Next() bool { log.DebugLog()
+func (it *Iterator) Next() bool {
+	log.DebugLog()
 	for it.nodeIt.Next(true) {
 		if it.nodeIt.Leaf() {
 			it.Key = it.nodeIt.LeafKey()
@@ -108,11 +111,13 @@ type seekError struct {
 	err error
 }
 
-func (e seekError) Error() string { log.DebugLog()
+func (e seekError) Error() string {
+	log.DebugLog()
 	return "seek error: " + e.err.Error()
 }
 
-func newNodeIterator(trie *Trie, start []byte) NodeIterator { log.DebugLog()
+func newNodeIterator(trie *Trie, start []byte) NodeIterator {
+	log.DebugLog()
 	if trie.Hash() == emptyState {
 		return new(nodeIterator)
 	}
@@ -121,25 +126,29 @@ func newNodeIterator(trie *Trie, start []byte) NodeIterator { log.DebugLog()
 	return it
 }
 
-func (it *nodeIterator) Hash() common.Hash { log.DebugLog()
+func (it *nodeIterator) Hash() common.Hash {
+	log.DebugLog()
 	if len(it.stack) == 0 {
 		return common.Hash{}
 	}
 	return it.stack[len(it.stack)-1].hash
 }
 
-func (it *nodeIterator) Parent() common.Hash { log.DebugLog()
+func (it *nodeIterator) Parent() common.Hash {
+	log.DebugLog()
 	if len(it.stack) == 0 {
 		return common.Hash{}
 	}
 	return it.stack[len(it.stack)-1].parent
 }
 
-func (it *nodeIterator) Leaf() bool { log.DebugLog()
+func (it *nodeIterator) Leaf() bool {
+	log.DebugLog()
 	return hasTerm(it.path)
 }
 
-func (it *nodeIterator) LeafBlob() []byte { log.DebugLog()
+func (it *nodeIterator) LeafBlob() []byte {
+	log.DebugLog()
 	if len(it.stack) > 0 {
 		if node, ok := it.stack[len(it.stack)-1].node.(valueNode); ok {
 			return []byte(node)
@@ -148,7 +157,8 @@ func (it *nodeIterator) LeafBlob() []byte { log.DebugLog()
 	panic("not at leaf")
 }
 
-func (it *nodeIterator) LeafKey() []byte { log.DebugLog()
+func (it *nodeIterator) LeafKey() []byte {
+	log.DebugLog()
 	if len(it.stack) > 0 {
 		if _, ok := it.stack[len(it.stack)-1].node.(valueNode); ok {
 			return hexToKeybytes(it.path)
@@ -157,11 +167,13 @@ func (it *nodeIterator) LeafKey() []byte { log.DebugLog()
 	panic("not at leaf")
 }
 
-func (it *nodeIterator) Path() []byte { log.DebugLog()
+func (it *nodeIterator) Path() []byte {
+	log.DebugLog()
 	return it.path
 }
 
-func (it *nodeIterator) Error() error { log.DebugLog()
+func (it *nodeIterator) Error() error {
+	log.DebugLog()
 	if it.err == iteratorEnd {
 		return nil
 	}
@@ -175,7 +187,8 @@ func (it *nodeIterator) Error() error { log.DebugLog()
 // further nodes. In case of an internal error this method returns false and
 // sets the Error field to the encountered failure. If `descend` is false,
 // skips iterating over any subnodes of the current node.
-func (it *nodeIterator) Next(descend bool) bool { log.DebugLog()
+func (it *nodeIterator) Next(descend bool) bool {
+	log.DebugLog()
 	if it.err == iteratorEnd {
 		return false
 	}
@@ -194,7 +207,8 @@ func (it *nodeIterator) Next(descend bool) bool { log.DebugLog()
 	return true
 }
 
-func (it *nodeIterator) seek(prefix []byte) error { log.DebugLog()
+func (it *nodeIterator) seek(prefix []byte) error {
+	log.DebugLog()
 	// The path we're looking for is the hex encoded key without terminator.
 	key := keybytesToHex(prefix)
 	key = key[:len(key)-1]
@@ -213,7 +227,8 @@ func (it *nodeIterator) seek(prefix []byte) error { log.DebugLog()
 }
 
 // peek creates the next state of the iterator.
-func (it *nodeIterator) peek(descend bool) (*nodeIteratorState, *int, []byte, error) { log.DebugLog()
+func (it *nodeIterator) peek(descend bool) (*nodeIteratorState, *int, []byte, error) {
+	log.DebugLog()
 	if len(it.stack) == 0 {
 		// Initialize the iterator if we've just started.
 		root := it.trie.Hash()
@@ -249,7 +264,8 @@ func (it *nodeIterator) peek(descend bool) (*nodeIteratorState, *int, []byte, er
 	return nil, nil, nil, iteratorEnd
 }
 
-func (st *nodeIteratorState) resolve(tr *Trie, path []byte) error { log.DebugLog()
+func (st *nodeIteratorState) resolve(tr *Trie, path []byte) error {
+	log.DebugLog()
 	if hash, ok := st.node.(hashNode); ok {
 		resolved, err := tr.resolveHash(hash, path)
 		if err != nil {
@@ -261,7 +277,8 @@ func (st *nodeIteratorState) resolve(tr *Trie, path []byte) error { log.DebugLog
 	return nil
 }
 
-func (it *nodeIterator) nextChild(parent *nodeIteratorState, ancestor common.Hash) (*nodeIteratorState, []byte, bool) { log.DebugLog()
+func (it *nodeIterator) nextChild(parent *nodeIteratorState, ancestor common.Hash) (*nodeIteratorState, []byte, bool) {
+	log.DebugLog()
 	switch node := parent.node.(type) {
 	case *fullNode:
 		// Full node, move to the first non-nil child.
@@ -299,7 +316,8 @@ func (it *nodeIterator) nextChild(parent *nodeIteratorState, ancestor common.Has
 	return parent, it.path, false
 }
 
-func (it *nodeIterator) push(state *nodeIteratorState, parentIndex *int, path []byte) { log.DebugLog()
+func (it *nodeIterator) push(state *nodeIteratorState, parentIndex *int, path []byte) {
+	log.DebugLog()
 	it.path = path
 	it.stack = append(it.stack, state)
 	if parentIndex != nil {
@@ -307,13 +325,15 @@ func (it *nodeIterator) push(state *nodeIteratorState, parentIndex *int, path []
 	}
 }
 
-func (it *nodeIterator) pop() { log.DebugLog()
+func (it *nodeIterator) pop() {
+	log.DebugLog()
 	parent := it.stack[len(it.stack)-1]
 	it.path = it.path[:parent.pathlen]
 	it.stack = it.stack[:len(it.stack)-1]
 }
 
-func compareNodes(a, b NodeIterator) int { log.DebugLog()
+func compareNodes(a, b NodeIterator) int {
+	log.DebugLog()
 	if cmp := bytes.Compare(a.Path(), b.Path()); cmp != 0 {
 		return cmp
 	}
@@ -340,7 +360,8 @@ type differenceIterator struct {
 // NewDifferenceIterator constructs a NodeIterator that iterates over elements in b that
 // are not in a. Returns the iterator, and a pointer to an integer recording the number
 // of nodes seen.
-func NewDifferenceIterator(a, b NodeIterator) (NodeIterator, *int) { log.DebugLog()
+func NewDifferenceIterator(a, b NodeIterator) (NodeIterator, *int) {
+	log.DebugLog()
 	a.Next(true)
 	it := &differenceIterator{
 		a: a,
@@ -349,31 +370,38 @@ func NewDifferenceIterator(a, b NodeIterator) (NodeIterator, *int) { log.DebugLo
 	return it, &it.count
 }
 
-func (it *differenceIterator) Hash() common.Hash { log.DebugLog()
+func (it *differenceIterator) Hash() common.Hash {
+	log.DebugLog()
 	return it.b.Hash()
 }
 
-func (it *differenceIterator) Parent() common.Hash { log.DebugLog()
+func (it *differenceIterator) Parent() common.Hash {
+	log.DebugLog()
 	return it.b.Parent()
 }
 
-func (it *differenceIterator) Leaf() bool { log.DebugLog()
+func (it *differenceIterator) Leaf() bool {
+	log.DebugLog()
 	return it.b.Leaf()
 }
 
-func (it *differenceIterator) LeafBlob() []byte { log.DebugLog()
+func (it *differenceIterator) LeafBlob() []byte {
+	log.DebugLog()
 	return it.b.LeafBlob()
 }
 
-func (it *differenceIterator) LeafKey() []byte { log.DebugLog()
+func (it *differenceIterator) LeafKey() []byte {
+	log.DebugLog()
 	return it.b.LeafKey()
 }
 
-func (it *differenceIterator) Path() []byte { log.DebugLog()
+func (it *differenceIterator) Path() []byte {
+	log.DebugLog()
 	return it.b.Path()
 }
 
-func (it *differenceIterator) Next(bool) bool { log.DebugLog()
+func (it *differenceIterator) Next(bool) bool {
+	log.DebugLog()
 	// Invariants:
 	// - We always advance at least one element in b.
 	// - At the start of this function, a's path is lexically greater than b's.
@@ -415,7 +443,8 @@ func (it *differenceIterator) Next(bool) bool { log.DebugLog()
 	}
 }
 
-func (it *differenceIterator) Error() error { log.DebugLog()
+func (it *differenceIterator) Error() error {
+	log.DebugLog()
 	if err := it.a.Error(); err != nil {
 		return err
 	}
@@ -424,14 +453,27 @@ func (it *differenceIterator) Error() error { log.DebugLog()
 
 type nodeIteratorHeap []NodeIterator
 
-func (h nodeIteratorHeap) Len() int            { log.DebugLog() return len(h) }
-func (h nodeIteratorHeap) Less(i, j int) bool  { log.DebugLog() return compareNodes(h[i], h[j]) < 0 }
-func (h nodeIteratorHeap) Swap(i, j int)       { log.DebugLog() h[i], h[j] = h[j], h[i] }
-func (h *nodeIteratorHeap) Push(x interface{}) { log.DebugLog() *h = append(*h, x.(NodeIterator)) }
-func (h *nodeIteratorHeap) Pop() interface{} { log.DebugLog()
+func (h nodeIteratorHeap) Len() int {
+	log.DebugLog()
+	return len(h)
+}
+func (h nodeIteratorHeap) Less(i, j int) bool {
+	log.DebugLog()
+	return compareNodes(h[i], h[j]) < 0
+}
+func (h nodeIteratorHeap) Swap(i, j int) {
+	log.DebugLog()
+	h[i], h[j] = h[j], h[i]
+}
+func (h *nodeIteratorHeap) Push(x interface{}) {
+	log.DebugLog()
+	*h = append(*h, x.(NodeIterator))
+}
+func (h *nodeIteratorHeap) Pop() interface{} {
+	log.DebugLog()
 	n := len(*h)
 	x := (*h)[n-1]
-	*h = (*h)[0 : n-1]
+	*h = (*h)[0: n-1]
 	return x
 }
 
@@ -443,7 +485,8 @@ type unionIterator struct {
 // NewUnionIterator constructs a NodeIterator that iterates over elements in the union
 // of the provided NodeIterators. Returns the iterator, and a pointer to an integer
 // recording the number of nodes visited.
-func NewUnionIterator(iters []NodeIterator) (NodeIterator, *int) { log.DebugLog()
+func NewUnionIterator(iters []NodeIterator) (NodeIterator, *int) {
+	log.DebugLog()
 	h := make(nodeIteratorHeap, len(iters))
 	copy(h, iters)
 	heap.Init(&h)
@@ -452,27 +495,33 @@ func NewUnionIterator(iters []NodeIterator) (NodeIterator, *int) { log.DebugLog(
 	return ui, &ui.count
 }
 
-func (it *unionIterator) Hash() common.Hash { log.DebugLog()
+func (it *unionIterator) Hash() common.Hash {
+	log.DebugLog()
 	return (*it.items)[0].Hash()
 }
 
-func (it *unionIterator) Parent() common.Hash { log.DebugLog()
+func (it *unionIterator) Parent() common.Hash {
+	log.DebugLog()
 	return (*it.items)[0].Parent()
 }
 
-func (it *unionIterator) Leaf() bool { log.DebugLog()
+func (it *unionIterator) Leaf() bool {
+	log.DebugLog()
 	return (*it.items)[0].Leaf()
 }
 
-func (it *unionIterator) LeafBlob() []byte { log.DebugLog()
+func (it *unionIterator) LeafBlob() []byte {
+	log.DebugLog()
 	return (*it.items)[0].LeafBlob()
 }
 
-func (it *unionIterator) LeafKey() []byte { log.DebugLog()
+func (it *unionIterator) LeafKey() []byte {
+	log.DebugLog()
 	return (*it.items)[0].LeafKey()
 }
 
-func (it *unionIterator) Path() []byte { log.DebugLog()
+func (it *unionIterator) Path() []byte {
+	log.DebugLog()
 	return (*it.items)[0].Path()
 }
 
@@ -490,7 +539,8 @@ func (it *unionIterator) Path() []byte { log.DebugLog()
 // In the case that descend=false - eg, we're asked to ignore all subnodes of the
 // current node - we also advance any iterators in the heap that have the current
 // path as a prefix.
-func (it *unionIterator) Next(descend bool) bool { log.DebugLog()
+func (it *unionIterator) Next(descend bool) bool {
+	log.DebugLog()
 	if len(*it.items) == 0 {
 		return false
 	}
@@ -518,7 +568,8 @@ func (it *unionIterator) Next(descend bool) bool { log.DebugLog()
 	return len(*it.items) > 0
 }
 
-func (it *unionIterator) Error() error { log.DebugLog()
+func (it *unionIterator) Error() error {
+	log.DebugLog()
 	for i := 0; i < len(*it.items); i++ {
 		if err := (*it.items)[i].Error(); err != nil {
 			return err

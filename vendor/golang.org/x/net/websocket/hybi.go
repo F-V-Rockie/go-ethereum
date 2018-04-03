@@ -79,7 +79,7 @@ type hybiFrameReader struct {
 	length int
 }
 
-func (frame *hybiFrameReader) Read(msg []byte) (n int, err error) { 
+func (frame *hybiFrameReader) Read(msg []byte) (n int, err error) {
 	n, err = frame.reader.Read(msg)
 	if frame.header.MaskingKey != nil {
 		for i := 0; i < n; i++ {
@@ -90,9 +90,9 @@ func (frame *hybiFrameReader) Read(msg []byte) (n int, err error) {
 	return n, err
 }
 
-func (frame *hybiFrameReader) PayloadType() byte {  return frame.header.OpCode }
+func (frame *hybiFrameReader) PayloadType() byte { return frame.header.OpCode }
 
-func (frame *hybiFrameReader) HeaderReader() io.Reader { 
+func (frame *hybiFrameReader) HeaderReader() io.Reader {
 	if frame.header.data == nil {
 		return nil
 	}
@@ -102,9 +102,9 @@ func (frame *hybiFrameReader) HeaderReader() io.Reader {
 	return frame.header.data
 }
 
-func (frame *hybiFrameReader) TrailerReader() io.Reader {  return nil }
+func (frame *hybiFrameReader) TrailerReader() io.Reader { return nil }
 
-func (frame *hybiFrameReader) Len() (n int) {  return frame.length }
+func (frame *hybiFrameReader) Len() (n int) { return frame.length }
 
 // A hybiFrameReaderFactory creates new frame reader based on its frame type.
 type hybiFrameReaderFactory struct {
@@ -114,7 +114,7 @@ type hybiFrameReaderFactory struct {
 // NewFrameReader reads a frame header from the connection, and creates new reader for the frame.
 // See Section 5.2 Base Framing protocol for detail.
 // http://tools.ietf.org/html/draft-ietf-hybi-thewebsocketprotocol-17#section-5.2
-func (buf hybiFrameReaderFactory) NewFrameReader() (frame frameReader, err error) { 
+func (buf hybiFrameReaderFactory) NewFrameReader() (frame frameReader, err error) {
 	hybiFrame := new(hybiFrameReader)
 	frame = hybiFrame
 	var header []byte
@@ -184,7 +184,7 @@ type hybiFrameWriter struct {
 	header *hybiFrameHeader
 }
 
-func (frame *hybiFrameWriter) Write(msg []byte) (n int, err error) { 
+func (frame *hybiFrameWriter) Write(msg []byte) (n int, err error) {
 	var header []byte
 	var b byte
 	if frame.header.Fin {
@@ -241,14 +241,14 @@ func (frame *hybiFrameWriter) Write(msg []byte) (n int, err error) {
 	return length, err
 }
 
-func (frame *hybiFrameWriter) Close() error {  return nil }
+func (frame *hybiFrameWriter) Close() error { return nil }
 
 type hybiFrameWriterFactory struct {
 	*bufio.Writer
 	needMaskingKey bool
 }
 
-func (buf hybiFrameWriterFactory) NewFrameWriter(payloadType byte) (frame frameWriter, err error) { 
+func (buf hybiFrameWriterFactory) NewFrameWriter(payloadType byte) (frame frameWriter, err error) {
 	frameHeader := &hybiFrameHeader{Fin: true, OpCode: payloadType}
 	if buf.needMaskingKey {
 		frameHeader.MaskingKey, err = generateMaskingKey()
@@ -264,7 +264,7 @@ type hybiFrameHandler struct {
 	payloadType byte
 }
 
-func (handler *hybiFrameHandler) HandleFrame(frame frameReader) (frameReader, error) { 
+func (handler *hybiFrameHandler) HandleFrame(frame frameReader) (frameReader, error) {
 	if handler.conn.IsServerConn() {
 		// The client MUST mask all frames sent to the server.
 		if frame.(*hybiFrameReader).header.MaskingKey == nil {
@@ -305,7 +305,7 @@ func (handler *hybiFrameHandler) HandleFrame(frame frameReader) (frameReader, er
 	return frame, nil
 }
 
-func (handler *hybiFrameHandler) WriteClose(status int) (err error) { 
+func (handler *hybiFrameHandler) WriteClose(status int) (err error) {
 	handler.conn.wio.Lock()
 	defer handler.conn.wio.Unlock()
 	w, err := handler.conn.frameWriterFactory.NewFrameWriter(CloseFrame)
@@ -319,7 +319,7 @@ func (handler *hybiFrameHandler) WriteClose(status int) (err error) {
 	return err
 }
 
-func (handler *hybiFrameHandler) WritePong(msg []byte) (n int, err error) { 
+func (handler *hybiFrameHandler) WritePong(msg []byte) (n int, err error) {
 	handler.conn.wio.Lock()
 	defer handler.conn.wio.Unlock()
 	w, err := handler.conn.frameWriterFactory.NewFrameWriter(PongFrame)
@@ -332,7 +332,7 @@ func (handler *hybiFrameHandler) WritePong(msg []byte) (n int, err error) {
 }
 
 // newHybiConn creates a new WebSocket connection speaking hybi draft protocol.
-func newHybiConn(config *Config, buf *bufio.ReadWriter, rwc io.ReadWriteCloser, request *http.Request) *Conn { 
+func newHybiConn(config *Config, buf *bufio.ReadWriter, rwc io.ReadWriteCloser, request *http.Request) *Conn {
 	if buf == nil {
 		br := bufio.NewReader(rwc)
 		bw := bufio.NewWriter(rwc)
@@ -349,7 +349,7 @@ func newHybiConn(config *Config, buf *bufio.ReadWriter, rwc io.ReadWriteCloser, 
 }
 
 // generateMaskingKey generates a masking key for a frame.
-func generateMaskingKey() (maskingKey []byte, err error) { 
+func generateMaskingKey() (maskingKey []byte, err error) {
 	maskingKey = make([]byte, 4)
 	if _, err = io.ReadFull(rand.Reader, maskingKey); err != nil {
 		return
@@ -359,7 +359,7 @@ func generateMaskingKey() (maskingKey []byte, err error) {
 
 // generateNonce generates a nonce consisting of a randomly selected 16-byte
 // value that has been base64-encoded.
-func generateNonce() (nonce []byte) { 
+func generateNonce() (nonce []byte) {
 	key := make([]byte, 16)
 	if _, err := io.ReadFull(rand.Reader, key); err != nil {
 		panic(err)
@@ -371,7 +371,7 @@ func generateNonce() (nonce []byte) {
 
 // removeZone removes IPv6 zone identifer from host.
 // E.g., "[fe80::1%en0]:8080" to "[fe80::1]:8080"
-func removeZone(host string) string { 
+func removeZone(host string) string {
 	if !strings.HasPrefix(host, "[") {
 		return host
 	}
@@ -388,7 +388,7 @@ func removeZone(host string) string {
 
 // getNonceAccept computes the base64-encoded SHA-1 of the concatenation of
 // the nonce ("Sec-WebSocket-Key" value) with the websocket GUID string.
-func getNonceAccept(nonce []byte) (expected []byte, err error) { 
+func getNonceAccept(nonce []byte) (expected []byte, err error) {
 	h := sha1.New()
 	if _, err = h.Write(nonce); err != nil {
 		return
@@ -402,7 +402,7 @@ func getNonceAccept(nonce []byte) (expected []byte, err error) {
 }
 
 // Client handshake described in draft-ietf-hybi-thewebsocket-protocol-17
-func hybiClientHandshake(config *Config, br *bufio.Reader, bw *bufio.Writer) (err error) { 
+func hybiClientHandshake(config *Config, br *bufio.Reader, bw *bufio.Writer) (err error) {
 	bw.WriteString("GET " + config.Location.RequestURI() + " HTTP/1.1\r\n")
 
 	// According to RFC 6874, an HTTP client, proxy, or other
@@ -477,7 +477,7 @@ func hybiClientHandshake(config *Config, br *bufio.Reader, bw *bufio.Writer) (er
 }
 
 // newHybiClientConn creates a client WebSocket connection after handshake.
-func newHybiClientConn(config *Config, buf *bufio.ReadWriter, rwc io.ReadWriteCloser) *Conn { 
+func newHybiClientConn(config *Config, buf *bufio.ReadWriter, rwc io.ReadWriteCloser) *Conn {
 	return newHybiConn(config, buf, rwc, nil)
 }
 
@@ -487,7 +487,7 @@ type hybiServerHandshaker struct {
 	accept []byte
 }
 
-func (c *hybiServerHandshaker) ReadHandshake(buf *bufio.Reader, req *http.Request) (code int, err error) { 
+func (c *hybiServerHandshaker) ReadHandshake(buf *bufio.Reader, req *http.Request) (code int, err error) {
 	c.Version = ProtocolVersionHybi13
 	if req.Method != "GET" {
 		return http.StatusMethodNotAllowed, ErrBadRequestMethod
@@ -536,7 +536,7 @@ func (c *hybiServerHandshaker) ReadHandshake(buf *bufio.Reader, req *http.Reques
 
 // Origin parses the Origin header in req.
 // If the Origin header is not set, it returns nil and nil.
-func Origin(config *Config, req *http.Request) (*url.URL, error) { 
+func Origin(config *Config, req *http.Request) (*url.URL, error) {
 	var origin string
 	switch config.Version {
 	case ProtocolVersionHybi13:
@@ -548,7 +548,7 @@ func Origin(config *Config, req *http.Request) (*url.URL, error) {
 	return url.ParseRequestURI(origin)
 }
 
-func (c *hybiServerHandshaker) AcceptHandshake(buf *bufio.Writer) (err error) { 
+func (c *hybiServerHandshaker) AcceptHandshake(buf *bufio.Writer) (err error) {
 	if len(c.Protocol) > 0 {
 		if len(c.Protocol) != 1 {
 			// You need choose a Protocol in Handshake func in Server.
@@ -573,11 +573,11 @@ func (c *hybiServerHandshaker) AcceptHandshake(buf *bufio.Writer) (err error) {
 	return buf.Flush()
 }
 
-func (c *hybiServerHandshaker) NewServerConn(buf *bufio.ReadWriter, rwc io.ReadWriteCloser, request *http.Request) *Conn { 
+func (c *hybiServerHandshaker) NewServerConn(buf *bufio.ReadWriter, rwc io.ReadWriteCloser, request *http.Request) *Conn {
 	return newHybiServerConn(c.Config, buf, rwc, request)
 }
 
 // newHybiServerConn returns a new WebSocket connection speaking hybi draft protocol.
-func newHybiServerConn(config *Config, buf *bufio.ReadWriter, rwc io.ReadWriteCloser, request *http.Request) *Conn { 
+func newHybiServerConn(config *Config, buf *bufio.ReadWriter, rwc io.ReadWriteCloser, request *http.Request) *Conn {
 	return newHybiConn(config, buf, rwc, request)
 }

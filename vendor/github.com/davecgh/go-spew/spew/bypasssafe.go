@@ -33,6 +33,6 @@ const (
 // unaddressable and unexported data.  However, doing this relies on access to
 // the unsafe package.  This is a stub version which simply returns the passed
 // reflect.Value when the unsafe package is not available.
-func unsafeReflectValue(v reflect.Value) reflect.Value { 
+func unsafeReflectValue(v reflect.Value) reflect.Value {
 	return v
 }

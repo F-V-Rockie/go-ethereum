@@ -4,7 +4,7 @@ import (
 	"math"
 )
 
-func _newContext(runtime *_runtime) { 
+func _newContext(runtime *_runtime) {
 	{
 		runtime.global.ObjectPrototype = &_object{
 			runtime:     runtime,
@@ -6210,7 +6210,7 @@ func _newContext(runtime *_runtime) {
 	}
 }
 
-func newConsoleObject(runtime *_runtime) *_object { 
+func newConsoleObject(runtime *_runtime) *_object {
 	{
 		log_function := &_object{
 			runtime:     runtime,
@@ -6536,112 +6536,112 @@ func newConsoleObject(runtime *_runtime) *_object {
 	}
 }
 
-func toValue_int(value int) Value { 
+func toValue_int(value int) Value {
 	return Value{
 		kind:  valueNumber,
 		value: value,
 	}
 }
 
-func toValue_int8(value int8) Value { 
+func toValue_int8(value int8) Value {
 	return Value{
 		kind:  valueNumber,
 		value: value,
 	}
 }
 
-func toValue_int16(value int16) Value { 
+func toValue_int16(value int16) Value {
 	return Value{
 		kind:  valueNumber,
 		value: value,
 	}
 }
 
-func toValue_int32(value int32) Value { 
+func toValue_int32(value int32) Value {
 	return Value{
 		kind:  valueNumber,
 		value: value,
 	}
 }
 
-func toValue_int64(value int64) Value { 
+func toValue_int64(value int64) Value {
 	return Value{
 		kind:  valueNumber,
 		value: value,
 	}
 }
 
-func toValue_uint(value uint) Value { 
+func toValue_uint(value uint) Value {
 	return Value{
 		kind:  valueNumber,
 		value: value,
 	}
 }
 
-func toValue_uint8(value uint8) Value { 
+func toValue_uint8(value uint8) Value {
 	return Value{
 		kind:  valueNumber,
 		value: value,
 	}
 }
 
-func toValue_uint16(value uint16) Value { 
+func toValue_uint16(value uint16) Value {
 	return Value{
 		kind:  valueNumber,
 		value: value,
 	}
 }
 
-func toValue_uint32(value uint32) Value { 
+func toValue_uint32(value uint32) Value {
 	return Value{
 		kind:  valueNumber,
 		value: value,
 	}
 }
 
-func toValue_uint64(value uint64) Value { 
+func toValue_uint64(value uint64) Value {
 	return Value{
 		kind:  valueNumber,
 		value: value,
 	}
 }
 
-func toValue_float32(value float32) Value { 
+func toValue_float32(value float32) Value {
 	return Value{
 		kind:  valueNumber,
 		value: value,
 	}
 }
 
-func toValue_float64(value float64) Value { 
+func toValue_float64(value float64) Value {
 	return Value{
 		kind:  valueNumber,
 		value: value,
 	}
 }
 
-func toValue_string(value string) Value { 
+func toValue_string(value string) Value {
 	return Value{
 		kind:  valueString,
 		value: value,
 	}
 }
 
-func toValue_string16(value []uint16) Value { 
+func toValue_string16(value []uint16) Value {
 	return Value{
 		kind:  valueString,
 		value: value,
 	}
 }
 
-func toValue_bool(value bool) Value { 
+func toValue_bool(value bool) Value {
 	return Value{
 		kind:  valueBoolean,
 		value: value,
 	}
 }
 
-func toValue_object(value *_object) Value { 
+func toValue_object(value *_object) Value {
 	return Value{
 		kind:  valueObject,
 		value: value,

@@ -37,6 +37,7 @@ import (
 	"unsafe"
 
 	"github.com/ethereum/go-ethereum/common/math"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 /*

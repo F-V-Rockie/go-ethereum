@@ -9,7 +9,7 @@ package notify
 // functions typically return the None value.
 type eventDiff [2]Event
 
-func (diff eventDiff) Event() Event { 
+func (diff eventDiff) Event() Event {
 	return diff[1] &^ diff[0]
 }
 
@@ -32,7 +32,7 @@ var rec = func() (ch chan<- EventInfo) {
 	return
 }()
 
-func (wp watchpoint) dryAdd(ch chan<- EventInfo, e Event) eventDiff { 
+func (wp watchpoint) dryAdd(ch chan<- EventInfo, e Event) eventDiff {
 	if e &^= internal; wp[ch]&e == e {
 		return none
 	}
@@ -41,7 +41,7 @@ func (wp watchpoint) dryAdd(ch chan<- EventInfo, e Event) eventDiff {
 }
 
 // Add assumes neither c nor e are nil or zero values.
-func (wp watchpoint) Add(c chan<- EventInfo, e Event) (diff eventDiff) { 
+func (wp watchpoint) Add(c chan<- EventInfo, e Event) (diff eventDiff) {
 	wp[c] |= e
 	diff[0] = wp[nil]
 	diff[1] = diff[0] | e
@@ -55,7 +55,7 @@ func (wp watchpoint) Add(c chan<- EventInfo, e Event) (diff eventDiff) {
 	return
 }
 
-func (wp watchpoint) Del(c chan<- EventInfo, e Event) (diff eventDiff) { 
+func (wp watchpoint) Del(c chan<- EventInfo, e Event) (diff eventDiff) {
 	wp[c] &^= e
 	if wp[c] == 0 {
 		delete(wp, c)
@@ -78,7 +78,7 @@ func (wp watchpoint) Del(c chan<- EventInfo, e Event) (diff eventDiff) {
 	return
 }
 
-func (wp watchpoint) Dispatch(ei EventInfo, extra Event) { 
+func (wp watchpoint) Dispatch(ei EventInfo, extra Event) {
 	e := eventmask(ei, extra)
 	if !matches(wp[nil], e) {
 		return
@@ -94,10 +94,10 @@ func (wp watchpoint) Dispatch(ei EventInfo, extra Event) {
 	}
 }
 
-func (wp watchpoint) Total() Event { 
+func (wp watchpoint) Total() Event {
 	return wp[nil] &^ internal
 }
 
-func (wp watchpoint) IsRecursive() bool { 
+func (wp watchpoint) IsRecursive() bool {
 	return wp[nil]&recursive != 0
 }

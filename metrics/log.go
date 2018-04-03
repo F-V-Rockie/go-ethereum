@@ -2,6 +2,7 @@ package metrics
 
 import (
 	"time"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 type Logger interface {

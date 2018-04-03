@@ -21,6 +21,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/common/bitutil"
 	"github.com/ethereum/go-ethereum/light"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 const (
@@ -43,7 +44,8 @@ const (
 
 // startBloomHandlers starts a batch of goroutines to accept bloom bit database
 // retrievals from possibly a range of filters and serving the data to satisfy.
-func (eth *LightEthereum) startBloomHandlers() { log.DebugLog()
+func (eth *LightEthereum) startBloomHandlers() {
+	log.DebugLog()
 	for i := 0; i < bloomServiceThreads; i++ {
 		go func() {
 			for {

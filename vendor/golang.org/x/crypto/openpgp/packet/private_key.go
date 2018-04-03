@@ -36,28 +36,28 @@ type PrivateKey struct {
 	iv            []byte
 }
 
-func NewRSAPrivateKey(currentTime time.Time, priv *rsa.PrivateKey) *PrivateKey { 
+func NewRSAPrivateKey(currentTime time.Time, priv *rsa.PrivateKey) *PrivateKey {
 	pk := new(PrivateKey)
 	pk.PublicKey = *NewRSAPublicKey(currentTime, &priv.PublicKey)
 	pk.PrivateKey = priv
 	return pk
 }
 
-func NewDSAPrivateKey(currentTime time.Time, priv *dsa.PrivateKey) *PrivateKey { 
+func NewDSAPrivateKey(currentTime time.Time, priv *dsa.PrivateKey) *PrivateKey {
 	pk := new(PrivateKey)
 	pk.PublicKey = *NewDSAPublicKey(currentTime, &priv.PublicKey)
 	pk.PrivateKey = priv
 	return pk
 }
 
-func NewElGamalPrivateKey(currentTime time.Time, priv *elgamal.PrivateKey) *PrivateKey { 
+func NewElGamalPrivateKey(currentTime time.Time, priv *elgamal.PrivateKey) *PrivateKey {
 	pk := new(PrivateKey)
 	pk.PublicKey = *NewElGamalPublicKey(currentTime, &priv.PublicKey)
 	pk.PrivateKey = priv
 	return pk
 }
 
-func NewECDSAPrivateKey(currentTime time.Time, priv *ecdsa.PrivateKey) *PrivateKey { 
+func NewECDSAPrivateKey(currentTime time.Time, priv *ecdsa.PrivateKey) *PrivateKey {
 	pk := new(PrivateKey)
 	pk.PublicKey = *NewECDSAPublicKey(currentTime, &priv.PublicKey)
 	pk.PrivateKey = priv
@@ -66,7 +66,7 @@ func NewECDSAPrivateKey(currentTime time.Time, priv *ecdsa.PrivateKey) *PrivateK
 
 // NewSignerPrivateKey creates a sign-only PrivateKey from a crypto.Signer that
 // implements RSA or ECDSA.
-func NewSignerPrivateKey(currentTime time.Time, signer crypto.Signer) *PrivateKey { 
+func NewSignerPrivateKey(currentTime time.Time, signer crypto.Signer) *PrivateKey {
 	pk := new(PrivateKey)
 	switch pubkey := signer.Public().(type) {
 	case rsa.PublicKey:
@@ -81,7 +81,7 @@ func NewSignerPrivateKey(currentTime time.Time, signer crypto.Signer) *PrivateKe
 	return pk
 }
 
-func (pk *PrivateKey) parse(r io.Reader) (err error) { 
+func (pk *PrivateKey) parse(r io.Reader) (err error) {
 	err = (&pk.PublicKey).parse(r)
 	if err != nil {
 		return
@@ -140,7 +140,7 @@ func (pk *PrivateKey) parse(r io.Reader) (err error) {
 	return
 }
 
-func mod64kHash(d []byte) uint16 { 
+func mod64kHash(d []byte) uint16 {
 	var h uint16
 	for _, b := range d {
 		h += uint16(b)
@@ -148,7 +148,7 @@ func mod64kHash(d []byte) uint16 {
 	return h
 }
 
-func (pk *PrivateKey) Serialize(w io.Writer) (err error) { 
+func (pk *PrivateKey) Serialize(w io.Writer) (err error) {
 	// TODO(agl): support encrypted private keys
 	buf := bytes.NewBuffer(nil)
 	err = pk.PublicKey.serializeWithoutHeaders(buf)
@@ -203,7 +203,7 @@ func (pk *PrivateKey) Serialize(w io.Writer) (err error) {
 	return
 }
 
-func serializeRSAPrivateKey(w io.Writer, priv *rsa.PrivateKey) error { 
+func serializeRSAPrivateKey(w io.Writer, priv *rsa.PrivateKey) error {
 	err := writeBig(w, priv.D)
 	if err != nil {
 		return err
@@ -219,20 +219,20 @@ func serializeRSAPrivateKey(w io.Writer, priv *rsa.PrivateKey) error {
 	return writeBig(w, priv.Precomputed.Qinv)
 }
 
-func serializeDSAPrivateKey(w io.Writer, priv *dsa.PrivateKey) error { 
+func serializeDSAPrivateKey(w io.Writer, priv *dsa.PrivateKey) error {
 	return writeBig(w, priv.X)
 }
 
-func serializeElGamalPrivateKey(w io.Writer, priv *elgamal.PrivateKey) error { 
+func serializeElGamalPrivateKey(w io.Writer, priv *elgamal.PrivateKey) error {
 	return writeBig(w, priv.X)
 }
 
-func serializeECDSAPrivateKey(w io.Writer, priv *ecdsa.PrivateKey) error { 
+func serializeECDSAPrivateKey(w io.Writer, priv *ecdsa.PrivateKey) error {
 	return writeBig(w, priv.D)
 }
 
 // Decrypt decrypts an encrypted private key using a passphrase.
-func (pk *PrivateKey) Decrypt(passphrase []byte) error { 
+func (pk *PrivateKey) Decrypt(passphrase []byte) error {
 	if !pk.Encrypted {
 		return nil
 	}
@@ -274,7 +274,7 @@ func (pk *PrivateKey) Decrypt(passphrase []byte) error {
 	return pk.parsePrivateKey(data)
 }
 
-func (pk *PrivateKey) parsePrivateKey(data []byte) (err error) { 
+func (pk *PrivateKey) parsePrivateKey(data []byte) (err error) {
 	switch pk.PublicKey.PubKeyAlgo {
 	case PubKeyAlgoRSA, PubKeyAlgoRSASignOnly, PubKeyAlgoRSAEncryptOnly:
 		return pk.parseRSAPrivateKey(data)
@@ -288,7 +288,7 @@ func (pk *PrivateKey) parsePrivateKey(data []byte) (err error) {
 	panic("impossible")
 }
 
-func (pk *PrivateKey) parseRSAPrivateKey(data []byte) (err error) { 
+func (pk *PrivateKey) parseRSAPrivateKey(data []byte) (err error) {
 	rsaPub := pk.PublicKey.PublicKey.(*rsa.PublicKey)
 	rsaPriv := new(rsa.PrivateKey)
 	rsaPriv.PublicKey = *rsaPub
@@ -322,7 +322,7 @@ func (pk *PrivateKey) parseRSAPrivateKey(data []byte) (err error) {
 	return nil
 }
 
-func (pk *PrivateKey) parseDSAPrivateKey(data []byte) (err error) { 
+func (pk *PrivateKey) parseDSAPrivateKey(data []byte) (err error) {
 	dsaPub := pk.PublicKey.PublicKey.(*dsa.PublicKey)
 	dsaPriv := new(dsa.PrivateKey)
 	dsaPriv.PublicKey = *dsaPub
@@ -341,7 +341,7 @@ func (pk *PrivateKey) parseDSAPrivateKey(data []byte) (err error) {
 	return nil
 }
 
-func (pk *PrivateKey) parseElGamalPrivateKey(data []byte) (err error) { 
+func (pk *PrivateKey) parseElGamalPrivateKey(data []byte) (err error) {
 	pub := pk.PublicKey.PublicKey.(*elgamal.PublicKey)
 	priv := new(elgamal.PrivateKey)
 	priv.PublicKey = *pub
@@ -360,7 +360,7 @@ func (pk *PrivateKey) parseElGamalPrivateKey(data []byte) (err error) {
 	return nil
 }
 
-func (pk *PrivateKey) parseECDSAPrivateKey(data []byte) (err error) { 
+func (pk *PrivateKey) parseECDSAPrivateKey(data []byte) (err error) {
 	ecdsaPub := pk.PublicKey.PublicKey.(*ecdsa.PublicKey)
 
 	buf := bytes.NewBuffer(data)

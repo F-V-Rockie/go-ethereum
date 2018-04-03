@@ -37,11 +37,11 @@ const (
 // by the transport before the first key-exchange.
 type noneCipher struct{}
 
-func (c noneCipher) XORKeyStream(dst, src []byte) { 
+func (c noneCipher) XORKeyStream(dst, src []byte) {
 	copy(dst, src)
 }
 
-func newAESCTR(key, iv []byte) (cipher.Stream, error) { 
+func newAESCTR(key, iv []byte) (cipher.Stream, error) {
 	c, err := aes.NewCipher(key)
 	if err != nil {
 		return nil, err
@@ -49,7 +49,7 @@ func newAESCTR(key, iv []byte) (cipher.Stream, error) {
 	return cipher.NewCTR(c, iv), nil
 }
 
-func newRC4(key, iv []byte) (cipher.Stream, error) { 
+func newRC4(key, iv []byte) (cipher.Stream, error) {
 	return rc4.NewCipher(key)
 }
 
@@ -60,7 +60,7 @@ type streamCipherMode struct {
 	createFunc func(key, iv []byte) (cipher.Stream, error)
 }
 
-func (c *streamCipherMode) createStream(key, iv []byte) (cipher.Stream, error) { 
+func (c *streamCipherMode) createStream(key, iv []byte) (cipher.Stream, error) {
 	if len(key) < c.keySize {
 		panic("ssh: key length too small for cipher")
 	}
@@ -146,7 +146,7 @@ type streamPacketCipher struct {
 }
 
 // readPacket reads and decrypt a single packet from the reader argument.
-func (s *streamPacketCipher) readPacket(seqNum uint32, r io.Reader) ([]byte, error) { 
+func (s *streamPacketCipher) readPacket(seqNum uint32, r io.Reader) ([]byte, error) {
 	if _, err := io.ReadFull(r, s.prefix[:]); err != nil {
 		return nil, err
 	}
@@ -218,7 +218,7 @@ func (s *streamPacketCipher) readPacket(seqNum uint32, r io.Reader) ([]byte, err
 }
 
 // writePacket encrypts and sends a packet of data to the writer argument
-func (s *streamPacketCipher) writePacket(seqNum uint32, w io.Writer, rand io.Reader, packet []byte) error { 
+func (s *streamPacketCipher) writePacket(seqNum uint32, w io.Writer, rand io.Reader, packet []byte) error {
 	if len(packet) > maxPacket {
 		return errors.New("ssh: packet too large")
 	}
@@ -304,7 +304,7 @@ type gcmCipher struct {
 	buf    []byte
 }
 
-func newGCMCipher(iv, key []byte) (packetCipher, error) { 
+func newGCMCipher(iv, key []byte) (packetCipher, error) {
 	c, err := aes.NewCipher(key)
 	if err != nil {
 		return nil, err
@@ -323,7 +323,7 @@ func newGCMCipher(iv, key []byte) (packetCipher, error) {
 
 const gcmTagSize = 16
 
-func (c *gcmCipher) writePacket(seqNum uint32, w io.Writer, rand io.Reader, packet []byte) error { 
+func (c *gcmCipher) writePacket(seqNum uint32, w io.Writer, rand io.Reader, packet []byte) error {
 	// Pad out to multiple of 16 bytes. This is different from the
 	// stream cipher because that encrypts the length too.
 	padding := byte(packetSizeMultiple - (1+len(packet))%packetSizeMultiple)
@@ -357,7 +357,7 @@ func (c *gcmCipher) writePacket(seqNum uint32, w io.Writer, rand io.Reader, pack
 	return nil
 }
 
-func (c *gcmCipher) incIV() { 
+func (c *gcmCipher) incIV() {
 	for i := 4 + 7; i >= 4; i-- {
 		c.iv[i]++
 		if c.iv[i] != 0 {
@@ -366,7 +366,7 @@ func (c *gcmCipher) incIV() {
 	}
 }
 
-func (c *gcmCipher) readPacket(seqNum uint32, r io.Reader) ([]byte, error) { 
+func (c *gcmCipher) readPacket(seqNum uint32, r io.Reader) ([]byte, error) {
 	if _, err := io.ReadFull(r, c.prefix[:]); err != nil {
 		return nil, err
 	}
@@ -422,7 +422,7 @@ type cbcCipher struct {
 	oracleCamouflage uint32
 }
 
-func newCBCCipher(c cipher.Block, iv, key, macKey []byte, algs directionAlgorithms) (packetCipher, error) { 
+func newCBCCipher(c cipher.Block, iv, key, macKey []byte, algs directionAlgorithms) (packetCipher, error) {
 	cbc := &cbcCipher{
 		mac:        macModes[algs.MAC].new(macKey),
 		decrypter:  cipher.NewCBCDecrypter(c, iv),
@@ -436,7 +436,7 @@ func newCBCCipher(c cipher.Block, iv, key, macKey []byte, algs directionAlgorith
 	return cbc, nil
 }
 
-func newAESCBCCipher(iv, key, macKey []byte, algs directionAlgorithms) (packetCipher, error) { 
+func newAESCBCCipher(iv, key, macKey []byte, algs directionAlgorithms) (packetCipher, error) {
 	c, err := aes.NewCipher(key)
 	if err != nil {
 		return nil, err
@@ -450,7 +450,7 @@ func newAESCBCCipher(iv, key, macKey []byte, algs directionAlgorithms) (packetCi
 	return cbc, nil
 }
 
-func newTripleDESCBCCipher(iv, key, macKey []byte, algs directionAlgorithms) (packetCipher, error) { 
+func newTripleDESCBCCipher(iv, key, macKey []byte, algs directionAlgorithms) (packetCipher, error) {
 	c, err := des.NewTripleDESCipher(key)
 	if err != nil {
 		return nil, err
@@ -464,7 +464,7 @@ func newTripleDESCBCCipher(iv, key, macKey []byte, algs directionAlgorithms) (pa
 	return cbc, nil
 }
 
-func maxUInt32(a, b int) uint32 { 
+func maxUInt32(a, b int) uint32 {
 	if a > b {
 		return uint32(a)
 	}
@@ -480,9 +480,9 @@ const (
 // cbcError represents a verification error that may leak information.
 type cbcError string
 
-func (e cbcError) Error() string {  return string(e) }
+func (e cbcError) Error() string { return string(e) }
 
-func (c *cbcCipher) readPacket(seqNum uint32, r io.Reader) ([]byte, error) { 
+func (c *cbcCipher) readPacket(seqNum uint32, r io.Reader) ([]byte, error) {
 	p, err := c.readPacketLeaky(seqNum, r)
 	if err != nil {
 		if _, ok := err.(cbcError); ok {
@@ -496,7 +496,7 @@ func (c *cbcCipher) readPacket(seqNum uint32, r io.Reader) ([]byte, error) {
 	return p, err
 }
 
-func (c *cbcCipher) readPacketLeaky(seqNum uint32, r io.Reader) ([]byte, error) { 
+func (c *cbcCipher) readPacketLeaky(seqNum uint32, r io.Reader) ([]byte, error) {
 	blockSize := c.decrypter.BlockSize()
 
 	// Read the header, which will include some of the subsequent data in the
@@ -572,7 +572,7 @@ func (c *cbcCipher) readPacketLeaky(seqNum uint32, r io.Reader) ([]byte, error) 
 	return c.packetData[prefixLen:paddingStart], nil
 }
 
-func (c *cbcCipher) writePacket(seqNum uint32, w io.Writer, rand io.Reader, packet []byte) error { 
+func (c *cbcCipher) writePacket(seqNum uint32, w io.Writer, rand io.Reader, packet []byte) error {
 	effectiveBlockSize := maxUInt32(cbcMinPacketSizeMultiple, c.encrypter.BlockSize())
 
 	// Length of encrypted portion of the packet (header, payload, padding).

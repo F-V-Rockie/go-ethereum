@@ -16,7 +16,10 @@
 
 package vm
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/ethereum/go-ethereum/log"
+)
 
 // Memory implements a simple memory model for the ethereum virtual machine.
 type Memory struct {
@@ -24,12 +27,14 @@ type Memory struct {
 	lastGasCost uint64
 }
 
-func NewMemory() *Memory { log.DebugLog()
+func NewMemory() *Memory {
+	log.DebugLog()
 	return &Memory{}
 }
 
 // Set sets offset + size to value
-func (m *Memory) Set(offset, size uint64, value []byte) { log.DebugLog()
+func (m *Memory) Set(offset, size uint64, value []byte) {
+	log.DebugLog()
 	// length of store may never be less than offset + size.
 	// The store should be resized PRIOR to setting the memory
 	if size > uint64(len(m.store)) {
@@ -44,14 +49,16 @@ func (m *Memory) Set(offset, size uint64, value []byte) { log.DebugLog()
 }
 
 // Resize resizes the memory to size
-func (m *Memory) Resize(size uint64) { log.DebugLog()
+func (m *Memory) Resize(size uint64) {
+	log.DebugLog()
 	if uint64(m.Len()) < size {
 		m.store = append(m.store, make([]byte, size-uint64(m.Len()))...)
 	}
 }
 
 // Get returns offset + size as a new slice
-func (self *Memory) Get(offset, size int64) (cpy []byte) { log.DebugLog()
+func (self *Memory) Get(offset, size int64) (cpy []byte) {
+	log.DebugLog()
 	if size == 0 {
 		return nil
 	}
@@ -67,29 +74,33 @@ func (self *Memory) Get(offset, size int64) (cpy []byte) { log.DebugLog()
 }
 
 // GetPtr returns the offset + size
-func (self *Memory) GetPtr(offset, size int64) []byte { log.DebugLog()
+func (self *Memory) GetPtr(offset, size int64) []byte {
+	log.DebugLog()
 	if size == 0 {
 		return nil
 	}
 
 	if len(self.store) > int(offset) {
-		return self.store[offset : offset+size]
+		return self.store[offset: offset+size]
 	}
 
 	return nil
 }
 
 // Len returns the length of the backing slice
-func (m *Memory) Len() int { log.DebugLog()
+func (m *Memory) Len() int {
+	log.DebugLog()
 	return len(m.store)
 }
 
 // Data returns the backing slice
-func (m *Memory) Data() []byte { log.DebugLog()
+func (m *Memory) Data() []byte {
+	log.DebugLog()
 	return m.store
 }
 
-func (m *Memory) Print() { log.DebugLog()
+func (m *Memory) Print() {
+	log.DebugLog()
 	fmt.Printf("### mem %d bytes ###\n", len(m.store))
 	if len(m.store) > 0 {
 		addr := 0

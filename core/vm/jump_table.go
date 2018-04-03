@@ -21,13 +21,14 @@ import (
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/params"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 type (
-	executionFunc       func(pc *uint64, env *EVM, contract *Contract, memory *Memory, stack *Stack) ([]byte, error)
-	gasFunc             func(params.GasTable, *EVM, *Contract, *Stack, *Memory, uint64) (uint64, error) // last parameter is the requested memory size as a uint64
+	executionFunc func(pc *uint64, env *EVM, contract *Contract, memory *Memory, stack *Stack) ([]byte, error)
+	gasFunc func(params.GasTable, *EVM, *Contract, *Stack, *Memory, uint64) (uint64, error) // last parameter is the requested memory size as a uint64
 	stackValidationFunc func(*Stack) error
-	memorySizeFunc      func(*Stack) *big.Int
+	memorySizeFunc func(*Stack) *big.Int
 )
 
 var errGasUintOverflow = errors.New("gas uint64 overflow")
@@ -59,7 +60,8 @@ var (
 
 // NewConstantinopleInstructionSet returns the frontier, homestead
 // byzantium and contantinople instructions.
-func NewConstantinopleInstructionSet() [256]operation { log.DebugLog()
+func NewConstantinopleInstructionSet() [256]operation {
+	log.DebugLog()
 	// instructions that can be executed during the byzantium phase.
 	instructionSet := NewByzantiumInstructionSet()
 	instructionSet[SHL] = operation{
@@ -85,7 +87,8 @@ func NewConstantinopleInstructionSet() [256]operation { log.DebugLog()
 
 // NewByzantiumInstructionSet returns the frontier, homestead and
 // byzantium instructions.
-func NewByzantiumInstructionSet() [256]operation { log.DebugLog()
+func NewByzantiumInstructionSet() [256]operation {
+	log.DebugLog()
 	// instructions that can be executed during the homestead phase.
 	instructionSet := NewHomesteadInstructionSet()
 	instructionSet[STATICCALL] = operation{
@@ -123,7 +126,8 @@ func NewByzantiumInstructionSet() [256]operation { log.DebugLog()
 
 // NewHomesteadInstructionSet returns the frontier and homestead
 // instructions that can be executed during the homestead phase.
-func NewHomesteadInstructionSet() [256]operation { log.DebugLog()
+func NewHomesteadInstructionSet() [256]operation {
+	log.DebugLog()
 	instructionSet := NewFrontierInstructionSet()
 	instructionSet[DELEGATECALL] = operation{
 		execute:       opDelegateCall,
@@ -138,7 +142,8 @@ func NewHomesteadInstructionSet() [256]operation { log.DebugLog()
 
 // NewFrontierInstructionSet returns the frontier instructions
 // that can be executed during the frontier phase.
-func NewFrontierInstructionSet() [256]operation { log.DebugLog()
+func NewFrontierInstructionSet() [256]operation {
+	log.DebugLog()
 	return [256]operation{
 		STOP: {
 			execute:       opStop,

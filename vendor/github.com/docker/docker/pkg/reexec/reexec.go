@@ -10,7 +10,7 @@ import (
 var registeredInitializers = make(map[string]func())
 
 // Register adds an initialization func under the specified name
-func Register(name string, initializer func()) { 
+func Register(name string, initializer func()) {
 	if _, exists := registeredInitializers[name]; exists {
 		panic(fmt.Sprintf("reexec func already registered under name %q", name))
 	}
@@ -20,7 +20,7 @@ func Register(name string, initializer func()) {
 
 // Init is called as the first part of the exec process and returns true if an
 // initialization function was called.
-func Init() bool { 
+func Init() bool {
 	initializer, exists := registeredInitializers[os.Args[0]]
 	if exists {
 		initializer()
@@ -30,7 +30,7 @@ func Init() bool {
 	return false
 }
 
-func naiveSelf() string { 
+func naiveSelf() string {
 	name := os.Args[0]
 	if filepath.Base(name) == name {
 		if lp, err := exec.LookPath(name); err == nil {

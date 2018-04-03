@@ -76,7 +76,7 @@ type Writer struct {
 }
 
 // NewColorable return new instance of Writer which handle escape sequence from File.
-func NewColorable(file *os.File) io.Writer { 
+func NewColorable(file *os.File) io.Writer {
 	if file == nil {
 		panic("nil passed instead of *os.File to NewColorable()")
 	}
@@ -92,12 +92,12 @@ func NewColorable(file *os.File) io.Writer {
 }
 
 // NewColorableStdout return new instance of Writer which handle escape sequence for stdout.
-func NewColorableStdout() io.Writer { 
+func NewColorableStdout() io.Writer {
 	return NewColorable(os.Stdout)
 }
 
 // NewColorableStderr return new instance of Writer which handle escape sequence for stderr.
-func NewColorableStderr() io.Writer { 
+func NewColorableStderr() io.Writer {
 	return NewColorable(os.Stderr)
 }
 
@@ -361,7 +361,7 @@ var color256 = map[int]int{
 }
 
 // Write write data on console
-func (w *Writer) Write(data []byte) (n int, err error) { 
+func (w *Writer) Write(data []byte) (n int, err error) {
 	var csbi consoleScreenBufferInfo
 	procGetConsoleScreenBufferInfo.Call(uintptr(w.handle), uintptr(unsafe.Pointer(&csbi)))
 
@@ -667,7 +667,7 @@ type consoleColor struct {
 	intensity bool
 }
 
-func (c consoleColor) foregroundAttr() (attr word) { 
+func (c consoleColor) foregroundAttr() (attr word) {
 	if c.red {
 		attr |= foregroundRed
 	}
@@ -683,7 +683,7 @@ func (c consoleColor) foregroundAttr() (attr word) {
 	return
 }
 
-func (c consoleColor) backgroundAttr() (attr word) { 
+func (c consoleColor) backgroundAttr() (attr word) {
 	if c.red {
 		attr |= backgroundRed
 	}
@@ -722,7 +722,7 @@ type hsv struct {
 	h, s, v float32
 }
 
-func (a hsv) dist(b hsv) float32 { 
+func (a hsv) dist(b hsv) float32 {
 	dh := a.h - b.h
 	switch {
 	case dh > 0.5:
@@ -735,7 +735,7 @@ func (a hsv) dist(b hsv) float32 {
 	return float32(math.Sqrt(float64(dh*dh + ds*ds + dv*dv)))
 }
 
-func toHSV(rgb int) hsv { 
+func toHSV(rgb int) hsv {
 	r, g, b := float32((rgb&0xFF0000)>>16)/256.0,
 		float32((rgb&0x00FF00)>>8)/256.0,
 		float32(rgb&0x0000FF)/256.0
@@ -764,7 +764,7 @@ func toHSV(rgb int) hsv {
 
 type hsvTable []hsv
 
-func toHSVTable(rgbTable []consoleColor) hsvTable { 
+func toHSVTable(rgbTable []consoleColor) hsvTable {
 	t := make(hsvTable, len(rgbTable))
 	for i, c := range rgbTable {
 		t[i] = toHSV(c.rgb)
@@ -772,7 +772,7 @@ func toHSVTable(rgbTable []consoleColor) hsvTable {
 	return t
 }
 
-func (t hsvTable) find(rgb int) consoleColor { 
+func (t hsvTable) find(rgb int) consoleColor {
 	hsv := toHSV(rgb)
 	n := 7
 	l := float32(5.0)
@@ -785,7 +785,7 @@ func (t hsvTable) find(rgb int) consoleColor {
 	return color16[n]
 }
 
-func minmax3f(a, b, c float32) (min, max float32) { 
+func minmax3f(a, b, c float32) (min, max float32) {
 	if a < b {
 		if b < c {
 			return a, c
@@ -808,7 +808,7 @@ func minmax3f(a, b, c float32) (min, max float32) {
 var n256foreAttr []word
 var n256backAttr []word
 
-func n256setup() { 
+func n256setup() {
 	n256foreAttr = make([]word, 256)
 	n256backAttr = make([]word, 256)
 	t := toHSVTable(color16)

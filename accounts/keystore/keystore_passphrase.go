@@ -43,6 +43,7 @@ import (
 	"github.com/pborman/uuid"
 	"golang.org/x/crypto/pbkdf2"
 	"golang.org/x/crypto/scrypt"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 const (
@@ -74,7 +75,8 @@ type keyStorePassphrase struct {
 	scryptP     int
 }
 
-func (ks keyStorePassphrase) GetKey(addr common.Address, filename, auth string) (*Key, error) { log.DebugLog()
+func (ks keyStorePassphrase) GetKey(addr common.Address, filename, auth string) (*Key, error) {
+	log.DebugLog()
 	// Load the key from the keystore and decrypt its contents
 	keyjson, err := ioutil.ReadFile(filename)
 	if err != nil {
@@ -92,12 +94,14 @@ func (ks keyStorePassphrase) GetKey(addr common.Address, filename, auth string) 
 }
 
 // StoreKey generates a key, encrypts with 'auth' and stores in the given directory
-func StoreKey(dir, auth string, scryptN, scryptP int) (common.Address, error) { log.DebugLog()
+func StoreKey(dir, auth string, scryptN, scryptP int) (common.Address, error) {
+	log.DebugLog()
 	_, a, err := storeNewKey(&keyStorePassphrase{dir, scryptN, scryptP}, crand.Reader, auth)
 	return a.Address, err
 }
 
-func (ks keyStorePassphrase) StoreKey(filename string, key *Key, auth string) error { log.DebugLog()
+func (ks keyStorePassphrase) StoreKey(filename string, key *Key, auth string) error {
+	log.DebugLog()
 	keyjson, err := EncryptKey(key, auth, ks.scryptN, ks.scryptP)
 	if err != nil {
 		return err
@@ -105,7 +109,8 @@ func (ks keyStorePassphrase) StoreKey(filename string, key *Key, auth string) er
 	return writeKeyFile(filename, keyjson)
 }
 
-func (ks keyStorePassphrase) JoinPath(filename string) string { log.DebugLog()
+func (ks keyStorePassphrase) JoinPath(filename string) string {
+	log.DebugLog()
 	if filepath.IsAbs(filename) {
 		return filename
 	} else {
@@ -115,7 +120,8 @@ func (ks keyStorePassphrase) JoinPath(filename string) string { log.DebugLog()
 
 // EncryptKey encrypts a key using the specified scrypt parameters into a json
 // blob that can be decrypted later on.
-func EncryptKey(key *Key, auth string, scryptN, scryptP int) ([]byte, error) { log.DebugLog()
+func EncryptKey(key *Key, auth string, scryptN, scryptP int) ([]byte, error) {
+	log.DebugLog()
 	authArray := []byte(auth)
 	salt := randentropy.GetEntropyCSPRNG(32)
 	derivedKey, err := scrypt.Key(authArray, salt, scryptN, scryptR, scryptP, scryptDKLen)
@@ -161,7 +167,8 @@ func EncryptKey(key *Key, auth string, scryptN, scryptP int) ([]byte, error) { l
 }
 
 // DecryptKey decrypts a key from a json blob, returning the private key itself.
-func DecryptKey(keyjson []byte, auth string) (*Key, error) { log.DebugLog()
+func DecryptKey(keyjson []byte, auth string) (*Key, error) {
+	log.DebugLog()
 	// Parse the json into a simple map to fetch the key version
 	m := make(map[string]interface{})
 	if err := json.Unmarshal(keyjson, &m); err != nil {
@@ -198,7 +205,8 @@ func DecryptKey(keyjson []byte, auth string) (*Key, error) { log.DebugLog()
 	}, nil
 }
 
-func decryptKeyV3(keyProtected *encryptedKeyJSONV3, auth string) (keyBytes []byte, keyId []byte, err error) { log.DebugLog()
+func decryptKeyV3(keyProtected *encryptedKeyJSONV3, auth string) (keyBytes []byte, keyId []byte, err error) {
+	log.DebugLog()
 	if keyProtected.Version != version {
 		return nil, nil, fmt.Errorf("Version not supported: %v", keyProtected.Version)
 	}
@@ -240,7 +248,8 @@ func decryptKeyV3(keyProtected *encryptedKeyJSONV3, auth string) (keyBytes []byt
 	return plainText, keyId, err
 }
 
-func decryptKeyV1(keyProtected *encryptedKeyJSONV1, auth string) (keyBytes []byte, keyId []byte, err error) { log.DebugLog()
+func decryptKeyV1(keyProtected *encryptedKeyJSONV1, auth string) (keyBytes []byte, keyId []byte, err error) {
+	log.DebugLog()
 	keyId = uuid.Parse(keyProtected.Id)
 	mac, err := hex.DecodeString(keyProtected.Crypto.MAC)
 	if err != nil {
@@ -274,7 +283,8 @@ func decryptKeyV1(keyProtected *encryptedKeyJSONV1, auth string) (keyBytes []byt
 	return plainText, keyId, err
 }
 
-func getKDFKey(cryptoJSON cryptoJSON, auth string) ([]byte, error) { log.DebugLog()
+func getKDFKey(cryptoJSON cryptoJSON, auth string) ([]byte, error) {
+	log.DebugLog()
 	authArray := []byte(auth)
 	salt, err := hex.DecodeString(cryptoJSON.KDFParams["salt"].(string))
 	if err != nil {
@@ -304,7 +314,8 @@ func getKDFKey(cryptoJSON cryptoJSON, auth string) ([]byte, error) { log.DebugLo
 // TODO: can we do without this when unmarshalling dynamic JSON?
 // why do integers in KDF params end up as float64 and not int after
 // unmarshal?
-func ensureInt(x interface{}) int { log.DebugLog()
+func ensureInt(x interface{}) int {
+	log.DebugLog()
 	res, ok := x.(int)
 	if !ok {
 		res = int(x.(float64))

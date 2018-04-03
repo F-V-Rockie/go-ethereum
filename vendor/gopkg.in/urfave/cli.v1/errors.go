@@ -20,12 +20,12 @@ type MultiError struct {
 }
 
 // NewMultiError creates a new MultiError. Pass in one or more errors.
-func NewMultiError(err ...error) MultiError { 
+func NewMultiError(err ...error) MultiError {
 	return MultiError{Errors: err}
 }
 
 // Error implements the error interface.
-func (m MultiError) Error() string { 
+func (m MultiError) Error() string {
 	errs := make([]string, len(m.Errors))
 	for i, err := range m.Errors {
 		errs[i] = err.Error()
@@ -52,7 +52,7 @@ type ExitError struct {
 }
 
 // NewExitError makes a new *ExitError
-func NewExitError(message interface{}, exitCode int) *ExitError { 
+func NewExitError(message interface{}, exitCode int) *ExitError {
 	return &ExitError{
 		exitCode: exitCode,
 		message:  message,
@@ -61,13 +61,13 @@ func NewExitError(message interface{}, exitCode int) *ExitError {
 
 // Error returns the string message, fulfilling the interface required by
 // `error`
-func (ee *ExitError) Error() string { 
+func (ee *ExitError) Error() string {
 	return fmt.Sprintf("%v", ee.message)
 }
 
 // ExitCode returns the exit code, fulfilling the interface required by
 // `ExitCoder`
-func (ee *ExitError) ExitCode() int { 
+func (ee *ExitError) ExitCode() int {
 	return ee.exitCode
 }
 
@@ -75,7 +75,7 @@ func (ee *ExitError) ExitCode() int {
 // so prints the error to stderr (if it is non-empty) and calls OsExiter with the
 // given exit code.  If the given error is a MultiError, then this func is
 // called on all members of the Errors slice and calls OsExiter with the last exit code.
-func HandleExitCoder(err error) { 
+func HandleExitCoder(err error) {
 	if err == nil {
 		return
 	}
@@ -99,7 +99,7 @@ func HandleExitCoder(err error) {
 	}
 }
 
-func handleMultiError(multiErr MultiError) int { 
+func handleMultiError(multiErr MultiError) int {
 	code := 1
 	for _, merr := range multiErr.Errors {
 		if multiErr2, ok := merr.(MultiError); ok {

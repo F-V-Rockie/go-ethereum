@@ -18,10 +18,14 @@
 
 package debug
 
-import "runtime/debug"
+import (
+	"runtime/debug"
+	"github.com/ethereum/go-ethereum/log"
+)
 
 // LoudPanic panics in a way that gets all goroutine stacks printed on stderr.
-func LoudPanic(x interface{}) { log.DebugLog()
+func LoudPanic(x interface{}) {
+	log.DebugLog()
 	debug.SetTraceback("all")
 	panic(x)
 }

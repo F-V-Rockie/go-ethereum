@@ -34,7 +34,7 @@ type ProcessBasicInformation struct {
 // associated with the given handle (provided by OpenProcess). It uses the
 // NtQueryInformationProcess function to collect the data.
 // https://msdn.microsoft.com/en-us/library/windows/desktop/ms684280(v=vs.85).aspx
-func NtQueryProcessBasicInformation(handle syscall.Handle) (ProcessBasicInformation, error) { 
+func NtQueryProcessBasicInformation(handle syscall.Handle) (ProcessBasicInformation, error) {
 	var processBasicInfo ProcessBasicInformation
 	processBasicInfoPtr := (*byte)(unsafe.Pointer(&processBasicInfo))
 	size := uint32(unsafe.Sizeof(processBasicInfo))
@@ -71,7 +71,7 @@ type _SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION struct {
 // information for each CPU. It uses the NtQuerySystemInformation function to
 // collect the SystemProcessorPerformanceInformation.
 // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724509(v=vs.85).aspx
-func NtQuerySystemProcessorPerformanceInformation() ([]SystemProcessorPerformanceInformation, error) { 
+func NtQuerySystemProcessorPerformanceInformation() ([]SystemProcessorPerformanceInformation, error) {
 	// NTSTATUS code for success.
 	// https://msdn.microsoft.com/en-us/library/cc704588.aspx
 	const STATUS_SUCCESS = 0
@@ -98,7 +98,7 @@ func NtQuerySystemProcessorPerformanceInformation() ([]SystemProcessorPerformanc
 // containing SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION data. The buffer should
 // contain one entry for each CPU.
 // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724509(v=vs.85).aspx
-func readSystemProcessorPerformanceInformationBuffer(b []byte) ([]SystemProcessorPerformanceInformation, error) { 
+func readSystemProcessorPerformanceInformationBuffer(b []byte) ([]SystemProcessorPerformanceInformation, error) {
 	n := len(b) / sizeofSystemProcessorPerformanceInformation
 	r := bytes.NewReader(b)
 

@@ -20,6 +20,7 @@ import (
 	"fmt"
 
 	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // peerDropFn is a callback type for dropping a peer detected as malicious.
@@ -38,9 +39,18 @@ type headerPack struct {
 	headers []*types.Header
 }
 
-func (p *headerPack) PeerId() string { log.DebugLog() return p.peerId }
-func (p *headerPack) Items() int     { log.DebugLog() return len(p.headers) }
-func (p *headerPack) Stats() string  { log.DebugLog() return fmt.Sprintf("%d", len(p.headers)) }
+func (p *headerPack) PeerId() string {
+	log.DebugLog()
+	return p.peerId
+}
+func (p *headerPack) Items() int {
+	log.DebugLog()
+	return len(p.headers)
+}
+func (p *headerPack) Stats() string {
+	log.DebugLog()
+	return fmt.Sprintf("%d", len(p.headers))
+}
 
 // bodyPack is a batch of block bodies returned by a peer.
 type bodyPack struct {
@@ -49,14 +59,21 @@ type bodyPack struct {
 	uncles       [][]*types.Header
 }
 
-func (p *bodyPack) PeerId() string { log.DebugLog() return p.peerId }
-func (p *bodyPack) Items() int { log.DebugLog()
+func (p *bodyPack) PeerId() string {
+	log.DebugLog()
+	return p.peerId
+}
+func (p *bodyPack) Items() int {
+	log.DebugLog()
 	if len(p.transactions) <= len(p.uncles) {
 		return len(p.transactions)
 	}
 	return len(p.uncles)
 }
-func (p *bodyPack) Stats() string { log.DebugLog() return fmt.Sprintf("%d:%d", len(p.transactions), len(p.uncles)) }
+func (p *bodyPack) Stats() string {
+	log.DebugLog()
+	return fmt.Sprintf("%d:%d", len(p.transactions), len(p.uncles))
+}
 
 // receiptPack is a batch of receipts returned by a peer.
 type receiptPack struct {
@@ -64,9 +81,18 @@ type receiptPack struct {
 	receipts [][]*types.Receipt
 }
 
-func (p *receiptPack) PeerId() string { log.DebugLog() return p.peerId }
-func (p *receiptPack) Items() int     { log.DebugLog() return len(p.receipts) }
-func (p *receiptPack) Stats() string  { log.DebugLog() return fmt.Sprintf("%d", len(p.receipts)) }
+func (p *receiptPack) PeerId() string {
+	log.DebugLog()
+	return p.peerId
+}
+func (p *receiptPack) Items() int {
+	log.DebugLog()
+	return len(p.receipts)
+}
+func (p *receiptPack) Stats() string {
+	log.DebugLog()
+	return fmt.Sprintf("%d", len(p.receipts))
+}
 
 // statePack is a batch of states returned by a peer.
 type statePack struct {
@@ -74,6 +100,15 @@ type statePack struct {
 	states [][]byte
 }
 
-func (p *statePack) PeerId() string { log.DebugLog() return p.peerId }
-func (p *statePack) Items() int     { log.DebugLog() return len(p.states) }
-func (p *statePack) Stats() string  { log.DebugLog() return fmt.Sprintf("%d", len(p.states)) }
+func (p *statePack) PeerId() string {
+	log.DebugLog()
+	return p.peerId
+}
+func (p *statePack) Items() int {
+	log.DebugLog()
+	return len(p.states)
+}
+func (p *statePack) Stats() string {
+	log.DebugLog()
+	return fmt.Sprintf("%d", len(p.states))
+}

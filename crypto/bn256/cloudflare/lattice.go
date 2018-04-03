@@ -2,6 +2,7 @@ package bn256
 
 import (
 	"math/big"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 var half = new(big.Int).Rsh(Order, 1)

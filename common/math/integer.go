@@ -19,6 +19,7 @@ package math
 import (
 	"fmt"
 	"strconv"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 const (

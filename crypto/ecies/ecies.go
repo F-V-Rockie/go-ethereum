@@ -39,6 +39,7 @@ import (
 	"hash"
 	"io"
 	"math/big"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 var (

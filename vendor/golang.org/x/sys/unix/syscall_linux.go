@@ -20,25 +20,25 @@ import (
  * Wrapped
  */
 
-func Access(path string, mode uint32) (err error) { 
+func Access(path string, mode uint32) (err error) {
 	return Faccessat(AT_FDCWD, path, mode, 0)
 }
 
-func Chmod(path string, mode uint32) (err error) { 
+func Chmod(path string, mode uint32) (err error) {
 	return Fchmodat(AT_FDCWD, path, mode, 0)
 }
 
-func Chown(path string, uid int, gid int) (err error) { 
+func Chown(path string, uid int, gid int) (err error) {
 	return Fchownat(AT_FDCWD, path, uid, gid, 0)
 }
 
-func Creat(path string, mode uint32) (fd int, err error) { 
+func Creat(path string, mode uint32) (fd int, err error) {
 	return Open(path, O_CREAT|O_WRONLY|O_TRUNC, mode)
 }
 
 //sys	fchmodat(dirfd int, path string, mode uint32) (err error)
 
-func Fchmodat(dirfd int, path string, mode uint32, flags int) (err error) { 
+func Fchmodat(dirfd int, path string, mode uint32, flags int) (err error) {
 	// Linux fchmodat doesn't support the flags parameter. Mimick glibc's behavior
 	// and check the flags. Otherwise the mode would be applied to the symlink
 	// destination which is not what the user expects.
@@ -57,33 +57,33 @@ func Fchmodat(dirfd int, path string, mode uint32, flags int) (err error) {
 
 // IoctlSetInt performs an ioctl operation which sets an integer value
 // on fd, using the specified request number.
-func IoctlSetInt(fd int, req uint, value int) error { 
+func IoctlSetInt(fd int, req uint, value int) error {
 	return ioctl(fd, req, uintptr(value))
 }
 
-func IoctlSetWinsize(fd int, req uint, value *Winsize) error { 
+func IoctlSetWinsize(fd int, req uint, value *Winsize) error {
 	return ioctl(fd, req, uintptr(unsafe.Pointer(value)))
 }
 
-func IoctlSetTermios(fd int, req uint, value *Termios) error { 
+func IoctlSetTermios(fd int, req uint, value *Termios) error {
 	return ioctl(fd, req, uintptr(unsafe.Pointer(value)))
 }
 
 // IoctlGetInt performs an ioctl operation which gets an integer value
 // from fd, using the specified request number.
-func IoctlGetInt(fd int, req uint) (int, error) { 
+func IoctlGetInt(fd int, req uint) (int, error) {
 	var value int
 	err := ioctl(fd, req, uintptr(unsafe.Pointer(&value)))
 	return value, err
 }
 
-func IoctlGetWinsize(fd int, req uint) (*Winsize, error) { 
+func IoctlGetWinsize(fd int, req uint) (*Winsize, error) {
 	var value Winsize
 	err := ioctl(fd, req, uintptr(unsafe.Pointer(&value)))
 	return &value, err
 }
 
-func IoctlGetTermios(fd int, req uint) (*Termios, error) { 
+func IoctlGetTermios(fd int, req uint) (*Termios, error) {
 	var value Termios
 	err := ioctl(fd, req, uintptr(unsafe.Pointer(&value)))
 	return &value, err
@@ -91,31 +91,31 @@ func IoctlGetTermios(fd int, req uint) (*Termios, error) {
 
 //sys	Linkat(olddirfd int, oldpath string, newdirfd int, newpath string, flags int) (err error)
 
-func Link(oldpath string, newpath string) (err error) { 
+func Link(oldpath string, newpath string) (err error) {
 	return Linkat(AT_FDCWD, oldpath, AT_FDCWD, newpath, 0)
 }
 
-func Mkdir(path string, mode uint32) (err error) { 
+func Mkdir(path string, mode uint32) (err error) {
 	return Mkdirat(AT_FDCWD, path, mode)
 }
 
-func Mknod(path string, mode uint32, dev int) (err error) { 
+func Mknod(path string, mode uint32, dev int) (err error) {
 	return Mknodat(AT_FDCWD, path, mode, dev)
 }
 
-func Open(path string, mode int, perm uint32) (fd int, err error) { 
+func Open(path string, mode int, perm uint32) (fd int, err error) {
 	return openat(AT_FDCWD, path, mode|O_LARGEFILE, perm)
 }
 
 //sys	openat(dirfd int, path string, flags int, mode uint32) (fd int, err error)
 
-func Openat(dirfd int, path string, flags int, mode uint32) (fd int, err error) { 
+func Openat(dirfd int, path string, flags int, mode uint32) (fd int, err error) {
 	return openat(dirfd, path, flags|O_LARGEFILE, mode)
 }
 
 //sys	ppoll(fds *PollFd, nfds int, timeout *Timespec, sigmask *Sigset_t) (n int, err error)
 
-func Ppoll(fds []PollFd, timeout *Timespec, sigmask *Sigset_t) (n int, err error) { 
+func Ppoll(fds []PollFd, timeout *Timespec, sigmask *Sigset_t) (n int, err error) {
 	if len(fds) == 0 {
 		return ppoll(nil, 0, timeout, sigmask)
 	}
@@ -124,25 +124,25 @@ func Ppoll(fds []PollFd, timeout *Timespec, sigmask *Sigset_t) (n int, err error
 
 //sys	Readlinkat(dirfd int, path string, buf []byte) (n int, err error)
 
-func Readlink(path string, buf []byte) (n int, err error) { 
+func Readlink(path string, buf []byte) (n int, err error) {
 	return Readlinkat(AT_FDCWD, path, buf)
 }
 
-func Rename(oldpath string, newpath string) (err error) { 
+func Rename(oldpath string, newpath string) (err error) {
 	return Renameat(AT_FDCWD, oldpath, AT_FDCWD, newpath)
 }
 
-func Rmdir(path string) error { 
+func Rmdir(path string) error {
 	return Unlinkat(AT_FDCWD, path, AT_REMOVEDIR)
 }
 
 //sys	Symlinkat(oldpath string, newdirfd int, newpath string) (err error)
 
-func Symlink(oldpath string, newpath string) (err error) { 
+func Symlink(oldpath string, newpath string) (err error) {
 	return Symlinkat(oldpath, AT_FDCWD, newpath)
 }
 
-func Unlink(path string) error { 
+func Unlink(path string) error {
 	return Unlinkat(AT_FDCWD, path, 0)
 }
 
@@ -150,7 +150,7 @@ func Unlink(path string) error {
 
 //sys	utimes(path string, times *[2]Timeval) (err error)
 
-func Utimes(path string, tv []Timeval) error { 
+func Utimes(path string, tv []Timeval) error {
 	if tv == nil {
 		err := utimensat(AT_FDCWD, path, nil, 0)
 		if err != ENOSYS {
@@ -173,7 +173,7 @@ func Utimes(path string, tv []Timeval) error {
 
 //sys	utimensat(dirfd int, path string, times *[2]Timespec, flags int) (err error)
 
-func UtimesNano(path string, ts []Timespec) error { 
+func UtimesNano(path string, ts []Timespec) error {
 	if ts == nil {
 		err := utimensat(AT_FDCWD, path, nil, 0)
 		if err != ENOSYS {
@@ -197,7 +197,7 @@ func UtimesNano(path string, ts []Timespec) error {
 	return utimes(path, (*[2]Timeval)(unsafe.Pointer(&tv[0])))
 }
 
-func UtimesNanoAt(dirfd int, path string, ts []Timespec, flags int) error { 
+func UtimesNanoAt(dirfd int, path string, ts []Timespec, flags int) error {
 	if ts == nil {
 		return utimensat(dirfd, path, nil, flags)
 	}
@@ -209,7 +209,7 @@ func UtimesNanoAt(dirfd int, path string, ts []Timespec, flags int) error {
 
 //sys	futimesat(dirfd int, path *byte, times *[2]Timeval) (err error)
 
-func Futimesat(dirfd int, path string, tv []Timeval) error { 
+func Futimesat(dirfd int, path string, tv []Timeval) error {
 	pathp, err := BytePtrFromString(path)
 	if err != nil {
 		return err
@@ -223,7 +223,7 @@ func Futimesat(dirfd int, path string, tv []Timeval) error {
 	return futimesat(dirfd, pathp, (*[2]Timeval)(unsafe.Pointer(&tv[0])))
 }
 
-func Futimes(fd int, tv []Timeval) (err error) { 
+func Futimes(fd int, tv []Timeval) (err error) {
 	// Believe it or not, this is the best we can do on Linux
 	// (and is what glibc does).
 	return Utimes("/proc/self/fd/"+itoa(fd), tv)
@@ -233,7 +233,7 @@ const ImplementsGetwd = true
 
 //sys	Getcwd(buf []byte) (n int, err error)
 
-func Getwd() (wd string, err error) { 
+func Getwd() (wd string, err error) {
 	var buf [PathMax]byte
 	n, err := Getcwd(buf[0:])
 	if err != nil {
@@ -246,7 +246,7 @@ func Getwd() (wd string, err error) {
 	return string(buf[0 : n-1]), nil
 }
 
-func Getgroups() (gids []int, err error) { 
+func Getgroups() (gids []int, err error) {
 	n, err := getgroups(0, nil)
 	if err != nil {
 		return nil, err
@@ -272,7 +272,7 @@ func Getgroups() (gids []int, err error) {
 	return
 }
 
-func Setgroups(gids []int) (err error) { 
+func Setgroups(gids []int) (err error) {
 	if len(gids) == 0 {
 		return setgroups(0, nil)
 	}
@@ -303,38 +303,38 @@ const (
 	shift   = 8
 )
 
-func (w WaitStatus) Exited() bool {  return w&mask == exited }
+func (w WaitStatus) Exited() bool { return w&mask == exited }
 
-func (w WaitStatus) Signaled() bool {  return w&mask != stopped && w&mask != exited }
+func (w WaitStatus) Signaled() bool { return w&mask != stopped && w&mask != exited }
 
-func (w WaitStatus) Stopped() bool {  return w&0xFF == stopped }
+func (w WaitStatus) Stopped() bool { return w&0xFF == stopped }
 
-func (w WaitStatus) Continued() bool {  return w == 0xFFFF }
+func (w WaitStatus) Continued() bool { return w == 0xFFFF }
 
-func (w WaitStatus) CoreDump() bool {  return w.Signaled() && w&core != 0 }
+func (w WaitStatus) CoreDump() bool { return w.Signaled() && w&core != 0 }
 
-func (w WaitStatus) ExitStatus() int { 
+func (w WaitStatus) ExitStatus() int {
 	if !w.Exited() {
 		return -1
 	}
 	return int(w>>shift) & 0xFF
 }
 
-func (w WaitStatus) Signal() syscall.Signal { 
+func (w WaitStatus) Signal() syscall.Signal {
 	if !w.Signaled() {
 		return -1
 	}
 	return syscall.Signal(w & mask)
 }
 
-func (w WaitStatus) StopSignal() syscall.Signal { 
+func (w WaitStatus) StopSignal() syscall.Signal {
 	if !w.Stopped() {
 		return -1
 	}
 	return syscall.Signal(w>>shift) & 0xFF
 }
 
-func (w WaitStatus) TrapCause() int { 
+func (w WaitStatus) TrapCause() int {
 	if w.StopSignal() != SIGTRAP {
 		return -1
 	}
@@ -343,7 +343,7 @@ func (w WaitStatus) TrapCause() int {
 
 //sys	wait4(pid int, wstatus *_C_int, options int, rusage *Rusage) (wpid int, err error)
 
-func Wait4(pid int, wstatus *WaitStatus, options int, rusage *Rusage) (wpid int, err error) { 
+func Wait4(pid int, wstatus *WaitStatus, options int, rusage *Rusage) (wpid int, err error) {
 	var status _C_int
 	wpid, err = wait4(pid, &status, options, rusage)
 	if wstatus != nil {
@@ -352,15 +352,15 @@ func Wait4(pid int, wstatus *WaitStatus, options int, rusage *Rusage) (wpid int,
 	return
 }
 
-func Mkfifo(path string, mode uint32) error { 
+func Mkfifo(path string, mode uint32) error {
 	return Mknod(path, mode|S_IFIFO, 0)
 }
 
-func Mkfifoat(dirfd int, path string, mode uint32) error { 
+func Mkfifoat(dirfd int, path string, mode uint32) error {
 	return Mknodat(dirfd, path, mode|S_IFIFO, 0)
 }
 
-func (sa *SockaddrInet4) sockaddr() (unsafe.Pointer, _Socklen, error) { 
+func (sa *SockaddrInet4) sockaddr() (unsafe.Pointer, _Socklen, error) {
 	if sa.Port < 0 || sa.Port > 0xFFFF {
 		return nil, 0, EINVAL
 	}
@@ -374,7 +374,7 @@ func (sa *SockaddrInet4) sockaddr() (unsafe.Pointer, _Socklen, error) {
 	return unsafe.Pointer(&sa.raw), SizeofSockaddrInet4, nil
 }
 
-func (sa *SockaddrInet6) sockaddr() (unsafe.Pointer, _Socklen, error) { 
+func (sa *SockaddrInet6) sockaddr() (unsafe.Pointer, _Socklen, error) {
 	if sa.Port < 0 || sa.Port > 0xFFFF {
 		return nil, 0, EINVAL
 	}
@@ -389,7 +389,7 @@ func (sa *SockaddrInet6) sockaddr() (unsafe.Pointer, _Socklen, error) {
 	return unsafe.Pointer(&sa.raw), SizeofSockaddrInet6, nil
 }
 
-func (sa *SockaddrUnix) sockaddr() (unsafe.Pointer, _Socklen, error) { 
+func (sa *SockaddrUnix) sockaddr() (unsafe.Pointer, _Socklen, error) {
 	name := sa.Name
 	n := len(name)
 	if n >= len(sa.raw.Path) {
@@ -423,7 +423,7 @@ type SockaddrLinklayer struct {
 	raw      RawSockaddrLinklayer
 }
 
-func (sa *SockaddrLinklayer) sockaddr() (unsafe.Pointer, _Socklen, error) { 
+func (sa *SockaddrLinklayer) sockaddr() (unsafe.Pointer, _Socklen, error) {
 	if sa.Ifindex < 0 || sa.Ifindex > 0x7fffffff {
 		return nil, 0, EINVAL
 	}
@@ -447,7 +447,7 @@ type SockaddrNetlink struct {
 	raw    RawSockaddrNetlink
 }
 
-func (sa *SockaddrNetlink) sockaddr() (unsafe.Pointer, _Socklen, error) { 
+func (sa *SockaddrNetlink) sockaddr() (unsafe.Pointer, _Socklen, error) {
 	sa.raw.Family = AF_NETLINK
 	sa.raw.Pad = sa.Pad
 	sa.raw.Pid = sa.Pid
@@ -461,7 +461,7 @@ type SockaddrHCI struct {
 	raw     RawSockaddrHCI
 }
 
-func (sa *SockaddrHCI) sockaddr() (unsafe.Pointer, _Socklen, error) { 
+func (sa *SockaddrHCI) sockaddr() (unsafe.Pointer, _Socklen, error) {
 	sa.raw.Family = AF_BLUETOOTH
 	sa.raw.Dev = sa.Dev
 	sa.raw.Channel = sa.Channel
@@ -492,7 +492,7 @@ type SockaddrCAN struct {
 	raw     RawSockaddrCAN
 }
 
-func (sa *SockaddrCAN) sockaddr() (unsafe.Pointer, _Socklen, error) { 
+func (sa *SockaddrCAN) sockaddr() (unsafe.Pointer, _Socklen, error) {
 	if sa.Ifindex < 0 || sa.Ifindex > 0x7fffffff {
 		return nil, 0, EINVAL
 	}
@@ -580,7 +580,7 @@ type SockaddrALG struct {
 	raw     RawSockaddrALG
 }
 
-func (sa *SockaddrALG) sockaddr() (unsafe.Pointer, _Socklen, error) { 
+func (sa *SockaddrALG) sockaddr() (unsafe.Pointer, _Socklen, error) {
 	// Leave room for NUL byte terminator.
 	if len(sa.Type) > 13 {
 		return nil, 0, EINVAL
@@ -622,7 +622,7 @@ type SockaddrVM struct {
 	raw  RawSockaddrVM
 }
 
-func (sa *SockaddrVM) sockaddr() (unsafe.Pointer, _Socklen, error) { 
+func (sa *SockaddrVM) sockaddr() (unsafe.Pointer, _Socklen, error) {
 	sa.raw.Family = AF_VSOCK
 	sa.raw.Port = sa.Port
 	sa.raw.Cid = sa.CID
@@ -630,7 +630,7 @@ func (sa *SockaddrVM) sockaddr() (unsafe.Pointer, _Socklen, error) {
 	return unsafe.Pointer(&sa.raw), SizeofSockaddrVM, nil
 }
 
-func anyToSockaddr(rsa *RawSockaddrAny) (Sockaddr, error) { 
+func anyToSockaddr(rsa *RawSockaddrAny) (Sockaddr, error) {
 	switch rsa.Addr.Family {
 	case AF_NETLINK:
 		pp := (*RawSockaddrNetlink)(unsafe.Pointer(rsa))
@@ -711,7 +711,7 @@ func anyToSockaddr(rsa *RawSockaddrAny) (Sockaddr, error) {
 	return nil, EAFNOSUPPORT
 }
 
-func Accept(fd int) (nfd int, sa Sockaddr, err error) { 
+func Accept(fd int) (nfd int, sa Sockaddr, err error) {
 	var rsa RawSockaddrAny
 	var len _Socklen = SizeofSockaddrAny
 	nfd, err = accept(fd, &rsa, &len)
@@ -726,7 +726,7 @@ func Accept(fd int) (nfd int, sa Sockaddr, err error) {
 	return
 }
 
-func Accept4(fd int, flags int) (nfd int, sa Sockaddr, err error) { 
+func Accept4(fd int, flags int) (nfd int, sa Sockaddr, err error) {
 	var rsa RawSockaddrAny
 	var len _Socklen = SizeofSockaddrAny
 	nfd, err = accept4(fd, &rsa, &len, flags)
@@ -744,7 +744,7 @@ func Accept4(fd int, flags int) (nfd int, sa Sockaddr, err error) {
 	return
 }
 
-func Getsockname(fd int) (sa Sockaddr, err error) { 
+func Getsockname(fd int) (sa Sockaddr, err error) {
 	var rsa RawSockaddrAny
 	var len _Socklen = SizeofSockaddrAny
 	if err = getsockname(fd, &rsa, &len); err != nil {
@@ -753,62 +753,62 @@ func Getsockname(fd int) (sa Sockaddr, err error) {
 	return anyToSockaddr(&rsa)
 }
 
-func GetsockoptInet4Addr(fd, level, opt int) (value [4]byte, err error) { 
+func GetsockoptInet4Addr(fd, level, opt int) (value [4]byte, err error) {
 	vallen := _Socklen(4)
 	err = getsockopt(fd, level, opt, unsafe.Pointer(&value[0]), &vallen)
 	return value, err
 }
 
-func GetsockoptIPMreq(fd, level, opt int) (*IPMreq, error) { 
+func GetsockoptIPMreq(fd, level, opt int) (*IPMreq, error) {
 	var value IPMreq
 	vallen := _Socklen(SizeofIPMreq)
 	err := getsockopt(fd, level, opt, unsafe.Pointer(&value), &vallen)
 	return &value, err
 }
 
-func GetsockoptIPMreqn(fd, level, opt int) (*IPMreqn, error) { 
+func GetsockoptIPMreqn(fd, level, opt int) (*IPMreqn, error) {
 	var value IPMreqn
 	vallen := _Socklen(SizeofIPMreqn)
 	err := getsockopt(fd, level, opt, unsafe.Pointer(&value), &vallen)
 	return &value, err
 }
 
-func GetsockoptIPv6Mreq(fd, level, opt int) (*IPv6Mreq, error) { 
+func GetsockoptIPv6Mreq(fd, level, opt int) (*IPv6Mreq, error) {
 	var value IPv6Mreq
 	vallen := _Socklen(SizeofIPv6Mreq)
 	err := getsockopt(fd, level, opt, unsafe.Pointer(&value), &vallen)
 	return &value, err
 }
 
-func GetsockoptIPv6MTUInfo(fd, level, opt int) (*IPv6MTUInfo, error) { 
+func GetsockoptIPv6MTUInfo(fd, level, opt int) (*IPv6MTUInfo, error) {
 	var value IPv6MTUInfo
 	vallen := _Socklen(SizeofIPv6MTUInfo)
 	err := getsockopt(fd, level, opt, unsafe.Pointer(&value), &vallen)
 	return &value, err
 }
 
-func GetsockoptICMPv6Filter(fd, level, opt int) (*ICMPv6Filter, error) { 
+func GetsockoptICMPv6Filter(fd, level, opt int) (*ICMPv6Filter, error) {
 	var value ICMPv6Filter
 	vallen := _Socklen(SizeofICMPv6Filter)
 	err := getsockopt(fd, level, opt, unsafe.Pointer(&value), &vallen)
 	return &value, err
 }
 
-func GetsockoptUcred(fd, level, opt int) (*Ucred, error) { 
+func GetsockoptUcred(fd, level, opt int) (*Ucred, error) {
 	var value Ucred
 	vallen := _Socklen(SizeofUcred)
 	err := getsockopt(fd, level, opt, unsafe.Pointer(&value), &vallen)
 	return &value, err
 }
 
-func GetsockoptTCPInfo(fd, level, opt int) (*TCPInfo, error) { 
+func GetsockoptTCPInfo(fd, level, opt int) (*TCPInfo, error) {
 	var value TCPInfo
 	vallen := _Socklen(SizeofTCPInfo)
 	err := getsockopt(fd, level, opt, unsafe.Pointer(&value), &vallen)
 	return &value, err
 }
 
-func SetsockoptIPMreqn(fd, level, opt int, mreq *IPMreqn) (err error) { 
+func SetsockoptIPMreqn(fd, level, opt int, mreq *IPMreqn) (err error) {
 	return setsockopt(fd, level, opt, unsafe.Pointer(mreq), unsafe.Sizeof(*mreq))
 }
 
@@ -828,7 +828,7 @@ func SetsockoptIPMreqn(fd, level, opt int, mreq *IPMreqn) (err error) {
 
 // KeyctlString calls keyctl commands which return a string.
 // These commands are KEYCTL_DESCRIBE and KEYCTL_GET_SECURITY.
-func KeyctlString(cmd int, id int) (string, error) { 
+func KeyctlString(cmd int, id int) (string, error) {
 	// We must loop as the string data may change in between the syscalls.
 	// We could allocate a large buffer here to reduce the chance that the
 	// syscall needs to be called twice; however, this is unnecessary as
@@ -857,7 +857,7 @@ func KeyctlString(cmd int, id int) (string, error) {
 // KeyctlGetKeyringID implements the KEYCTL_GET_KEYRING_ID command.
 // See the full documentation at:
 // http://man7.org/linux/man-pages/man3/keyctl_get_keyring_ID.3.html
-func KeyctlGetKeyringID(id int, create bool) (ringid int, err error) { 
+func KeyctlGetKeyringID(id int, create bool) (ringid int, err error) {
 	createInt := 0
 	if create {
 		createInt = 1
@@ -870,7 +870,7 @@ func KeyctlGetKeyringID(id int, create bool) (ringid int, err error) {
 // http://man7.org/linux/man-pages/man1/keyctl.1.html.
 // See the full documentation at:
 // http://man7.org/linux/man-pages/man3/keyctl_setperm.3.html
-func KeyctlSetperm(id int, perm uint32) error { 
+func KeyctlSetperm(id int, perm uint32) error {
 	_, err := KeyctlInt(KEYCTL_SETPERM, id, int(perm), 0, 0)
 	return err
 }
@@ -880,7 +880,7 @@ func KeyctlSetperm(id int, perm uint32) error {
 // KeyctlJoinSessionKeyring implements the KEYCTL_JOIN_SESSION_KEYRING command.
 // See the full documentation at:
 // http://man7.org/linux/man-pages/man3/keyctl_join_session_keyring.3.html
-func KeyctlJoinSessionKeyring(name string) (ringid int, err error) { 
+func KeyctlJoinSessionKeyring(name string) (ringid int, err error) {
 	return keyctlJoin(KEYCTL_JOIN_SESSION_KEYRING, name)
 }
 
@@ -889,7 +889,7 @@ func KeyctlJoinSessionKeyring(name string) (ringid int, err error) {
 // KeyctlSearch implements the KEYCTL_SEARCH command.
 // See the full documentation at:
 // http://man7.org/linux/man-pages/man3/keyctl_search.3.html
-func KeyctlSearch(ringid int, keyType, description string, destRingid int) (id int, err error) { 
+func KeyctlSearch(ringid int, keyType, description string, destRingid int) (id int, err error) {
 	return keyctlSearch(KEYCTL_SEARCH, ringid, keyType, description, destRingid)
 }
 
@@ -900,7 +900,7 @@ func KeyctlSearch(ringid int, keyType, description string, destRingid int) (id i
 // of Iovec (each of which represents a buffer) instead of a single buffer.
 // See the full documentation at:
 // http://man7.org/linux/man-pages/man3/keyctl_instantiate_iov.3.html
-func KeyctlInstantiateIOV(id int, payload []Iovec, ringid int) error { 
+func KeyctlInstantiateIOV(id int, payload []Iovec, ringid int) error {
 	return keyctlIOV(KEYCTL_INSTANTIATE_IOV, id, payload, ringid)
 }
 
@@ -915,11 +915,11 @@ func KeyctlInstantiateIOV(id int, payload []Iovec, ringid int) error {
 // from KEYCTL_READ's behavior which always returns the requested payload size.
 // See the full documentation at:
 // http://man7.org/linux/man-pages/man3/keyctl_dh_compute.3.html
-func KeyctlDHCompute(params *KeyctlDHParams, buffer []byte) (size int, err error) { 
+func KeyctlDHCompute(params *KeyctlDHParams, buffer []byte) (size int, err error) {
 	return keyctlDH(KEYCTL_DH_COMPUTE, params, buffer)
 }
 
-func Recvmsg(fd int, p, oob []byte, flags int) (n, oobn int, recvflags int, from Sockaddr, err error) { 
+func Recvmsg(fd int, p, oob []byte, flags int) (n, oobn int, recvflags int, from Sockaddr, err error) {
 	var msg Msghdr
 	var rsa RawSockaddrAny
 	msg.Name = (*byte)(unsafe.Pointer(&rsa))
@@ -958,12 +958,12 @@ func Recvmsg(fd int, p, oob []byte, flags int) (n, oobn int, recvflags int, from
 	return
 }
 
-func Sendmsg(fd int, p, oob []byte, to Sockaddr, flags int) (err error) { 
+func Sendmsg(fd int, p, oob []byte, to Sockaddr, flags int) (err error) {
 	_, err = SendmsgN(fd, p, oob, to, flags)
 	return
 }
 
-func SendmsgN(fd int, p, oob []byte, to Sockaddr, flags int) (n int, err error) { 
+func SendmsgN(fd int, p, oob []byte, to Sockaddr, flags int) (n int, err error) {
 	var ptr unsafe.Pointer
 	var salen _Socklen
 	if to != nil {
@@ -1008,13 +1008,13 @@ func SendmsgN(fd int, p, oob []byte, to Sockaddr, flags int) (n int, err error) 
 }
 
 // BindToDevice binds the socket associated with fd to device.
-func BindToDevice(fd int, device string) (err error) { 
+func BindToDevice(fd int, device string) (err error) {
 	return SetsockoptString(fd, SOL_SOCKET, SO_BINDTODEVICE, device)
 }
 
 //sys	ptrace(request int, pid int, addr uintptr, data uintptr) (err error)
 
-func ptracePeek(req int, pid int, addr uintptr, out []byte) (count int, err error) { 
+func ptracePeek(req int, pid int, addr uintptr, out []byte) (count int, err error) {
 	// The peek requests are machine-size oriented, so we wrap it
 	// to retrieve arbitrary-length data.
 
@@ -1054,19 +1054,19 @@ func ptracePeek(req int, pid int, addr uintptr, out []byte) (count int, err erro
 	return n, nil
 }
 
-func PtracePeekText(pid int, addr uintptr, out []byte) (count int, err error) { 
+func PtracePeekText(pid int, addr uintptr, out []byte) (count int, err error) {
 	return ptracePeek(PTRACE_PEEKTEXT, pid, addr, out)
 }
 
-func PtracePeekData(pid int, addr uintptr, out []byte) (count int, err error) { 
+func PtracePeekData(pid int, addr uintptr, out []byte) (count int, err error) {
 	return ptracePeek(PTRACE_PEEKDATA, pid, addr, out)
 }
 
-func PtracePeekUser(pid int, addr uintptr, out []byte) (count int, err error) { 
+func PtracePeekUser(pid int, addr uintptr, out []byte) (count int, err error) {
 	return ptracePeek(PTRACE_PEEKUSR, pid, addr, out)
 }
 
-func ptracePoke(pokeReq int, peekReq int, pid int, addr uintptr, data []byte) (count int, err error) { 
+func ptracePoke(pokeReq int, peekReq int, pid int, addr uintptr, data []byte) (count int, err error) {
 	// As for ptracePeek, we need to align our accesses to deal
 	// with the possibility of straddling an invalid page.
 
@@ -1117,70 +1117,70 @@ func ptracePoke(pokeReq int, peekReq int, pid int, addr uintptr, data []byte) (c
 	return n, nil
 }
 
-func PtracePokeText(pid int, addr uintptr, data []byte) (count int, err error) { 
+func PtracePokeText(pid int, addr uintptr, data []byte) (count int, err error) {
 	return ptracePoke(PTRACE_POKETEXT, PTRACE_PEEKTEXT, pid, addr, data)
 }
 
-func PtracePokeData(pid int, addr uintptr, data []byte) (count int, err error) { 
+func PtracePokeData(pid int, addr uintptr, data []byte) (count int, err error) {
 	return ptracePoke(PTRACE_POKEDATA, PTRACE_PEEKDATA, pid, addr, data)
 }
 
-func PtracePokeUser(pid int, addr uintptr, data []byte) (count int, err error) { 
+func PtracePokeUser(pid int, addr uintptr, data []byte) (count int, err error) {
 	return ptracePoke(PTRACE_POKEUSR, PTRACE_PEEKUSR, pid, addr, data)
 }
 
-func PtraceGetRegs(pid int, regsout *PtraceRegs) (err error) { 
+func PtraceGetRegs(pid int, regsout *PtraceRegs) (err error) {
 	return ptrace(PTRACE_GETREGS, pid, 0, uintptr(unsafe.Pointer(regsout)))
 }
 
-func PtraceSetRegs(pid int, regs *PtraceRegs) (err error) { 
+func PtraceSetRegs(pid int, regs *PtraceRegs) (err error) {
 	return ptrace(PTRACE_SETREGS, pid, 0, uintptr(unsafe.Pointer(regs)))
 }
 
-func PtraceSetOptions(pid int, options int) (err error) { 
+func PtraceSetOptions(pid int, options int) (err error) {
 	return ptrace(PTRACE_SETOPTIONS, pid, 0, uintptr(options))
 }
 
-func PtraceGetEventMsg(pid int) (msg uint, err error) { 
+func PtraceGetEventMsg(pid int) (msg uint, err error) {
 	var data _C_long
 	err = ptrace(PTRACE_GETEVENTMSG, pid, 0, uintptr(unsafe.Pointer(&data)))
 	msg = uint(data)
 	return
 }
 
-func PtraceCont(pid int, signal int) (err error) { 
+func PtraceCont(pid int, signal int) (err error) {
 	return ptrace(PTRACE_CONT, pid, 0, uintptr(signal))
 }
 
-func PtraceSyscall(pid int, signal int) (err error) { 
+func PtraceSyscall(pid int, signal int) (err error) {
 	return ptrace(PTRACE_SYSCALL, pid, 0, uintptr(signal))
 }
 
-func PtraceSingleStep(pid int) (err error) {  return ptrace(PTRACE_SINGLESTEP, pid, 0, 0) }
+func PtraceSingleStep(pid int) (err error) { return ptrace(PTRACE_SINGLESTEP, pid, 0, 0) }
 
-func PtraceAttach(pid int) (err error) {  return ptrace(PTRACE_ATTACH, pid, 0, 0) }
+func PtraceAttach(pid int) (err error) { return ptrace(PTRACE_ATTACH, pid, 0, 0) }
 
-func PtraceDetach(pid int) (err error) {  return ptrace(PTRACE_DETACH, pid, 0, 0) }
+func PtraceDetach(pid int) (err error) { return ptrace(PTRACE_DETACH, pid, 0, 0) }
 
 //sys	reboot(magic1 uint, magic2 uint, cmd int, arg string) (err error)
 
-func Reboot(cmd int) (err error) { 
+func Reboot(cmd int) (err error) {
 	return reboot(LINUX_REBOOT_MAGIC1, LINUX_REBOOT_MAGIC2, cmd, "")
 }
 
-func ReadDirent(fd int, buf []byte) (n int, err error) { 
+func ReadDirent(fd int, buf []byte) (n int, err error) {
 	return Getdents(fd, buf)
 }
 
-func direntIno(buf []byte) (uint64, bool) { 
+func direntIno(buf []byte) (uint64, bool) {
 	return readInt(buf, unsafe.Offsetof(Dirent{}.Ino), unsafe.Sizeof(Dirent{}.Ino))
 }
 
-func direntReclen(buf []byte) (uint64, bool) { 
+func direntReclen(buf []byte) (uint64, bool) {
 	return readInt(buf, unsafe.Offsetof(Dirent{}.Reclen), unsafe.Sizeof(Dirent{}.Reclen))
 }
 
-func direntNamlen(buf []byte) (uint64, bool) { 
+func direntNamlen(buf []byte) (uint64, bool) {
 	reclen, ok := direntReclen(buf)
 	if !ok {
 		return 0, false
@@ -1190,7 +1190,7 @@ func direntNamlen(buf []byte) (uint64, bool) {
 
 //sys	mount(source string, target string, fstype string, flags uintptr, data *byte) (err error)
 
-func Mount(source string, target string, fstype string, flags uintptr, data string) (err error) { 
+func Mount(source string, target string, fstype string, flags uintptr, data string) (err error) {
 	// Certain file systems get rather angry and EINVAL if you give
 	// them an empty string of data, rather than NULL.
 	if data == "" {
@@ -1237,7 +1237,7 @@ func Mount(source string, target string, fstype string, flags uintptr, data stri
 //sys	Getdents(fd int, buf []byte) (n int, err error) = SYS_GETDENTS64
 //sysnb	Getpgid(pid int) (pgid int, err error)
 
-func Getpgrp() (pid int) { 
+func Getpgrp() (pid int) {
 	pid, _ = Getpgid(0)
 	return
 }
@@ -1283,11 +1283,11 @@ func Getpgrp() (pid int) {
 // This does not match what most callers expect so we must return an error
 // here rather than letting the caller think that the call succeeded.
 
-func Setuid(uid int) (err error) { 
+func Setuid(uid int) (err error) {
 	return EOPNOTSUPP
 }
 
-func Setgid(uid int) (err error) { 
+func Setgid(uid int) (err error) {
 	return EOPNOTSUPP
 }
 
@@ -1318,11 +1318,11 @@ var mapper = &mmapper{
 	munmap: munmap,
 }
 
-func Mmap(fd int, offset int64, length int, prot int, flags int) (data []byte, err error) { 
+func Mmap(fd int, offset int64, length int, prot int, flags int) (data []byte, err error) {
 	return mapper.Mmap(fd, offset, length, prot, flags)
 }
 
-func Munmap(b []byte) (err error) { 
+func Munmap(b []byte) (err error) {
 	return mapper.Munmap(b)
 }
 
@@ -1336,7 +1336,7 @@ func Munmap(b []byte) (err error) {
 
 // Vmsplice splices user pages from a slice of Iovecs into a pipe specified by fd,
 // using the specified flags.
-func Vmsplice(fd int, iovs []Iovec, flags int) (int, error) { 
+func Vmsplice(fd int, iovs []Iovec, flags int) (int, error) {
 	n, _, errno := Syscall6(
 		SYS_VMSPLICE,
 		uintptr(fd),

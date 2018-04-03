@@ -4,7 +4,7 @@ import (
 	"strconv"
 )
 
-func (self *_runtime) cmpl_evaluate_nodeProgram(node *_nodeProgram, eval bool) Value { 
+func (self *_runtime) cmpl_evaluate_nodeProgram(node *_nodeProgram, eval bool) Value {
 	if !eval {
 		self.enterGlobalScope()
 		defer func() {
@@ -17,7 +17,7 @@ func (self *_runtime) cmpl_evaluate_nodeProgram(node *_nodeProgram, eval bool) V
 	return self.cmpl_evaluate_nodeStatementList(node.body)
 }
 
-func (self *_runtime) cmpl_call_nodeFunction(function *_object, stash *_fnStash, node *_nodeFunctionLiteral, this Value, argumentList []Value) Value { 
+func (self *_runtime) cmpl_call_nodeFunction(function *_object, stash *_fnStash, node *_nodeFunctionLiteral, this Value, argumentList []Value) Value {
 
 	indexOfParameterName := make([]string, len(argumentList))
 	// function(abc, def, ghi)
@@ -66,7 +66,7 @@ func (self *_runtime) cmpl_call_nodeFunction(function *_object, stash *_fnStash,
 	return Value{}
 }
 
-func (self *_runtime) cmpl_functionDeclaration(list []*_nodeFunctionLiteral) { 
+func (self *_runtime) cmpl_functionDeclaration(list []*_nodeFunctionLiteral) {
 	executionContext := self.scope
 	eval := executionContext.eval
 	stash := executionContext.variable
@@ -83,7 +83,7 @@ func (self *_runtime) cmpl_functionDeclaration(list []*_nodeFunctionLiteral) {
 	}
 }
 
-func (self *_runtime) cmpl_variableDeclaration(list []string) { 
+func (self *_runtime) cmpl_variableDeclaration(list []string) {
 	executionContext := self.scope
 	eval := executionContext.eval
 	stash := executionContext.variable

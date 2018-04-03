@@ -23,6 +23,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/rlp"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 var indices = []string{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f", "[17]"}
@@ -43,17 +44,20 @@ type (
 		Val   node
 		flags nodeFlag
 	}
-	hashNode  []byte
+	hashNode []byte
 	valueNode []byte
 )
 
 // EncodeRLP encodes a full node into the consensus RLP format.
-func (n *fullNode) EncodeRLP(w io.Writer) error { log.DebugLog()
+func (n *fullNode) EncodeRLP(w io.Writer) error {
+	log.DebugLog()
 	return rlp.Encode(w, n.Children)
 }
 
-func (n *fullNode) copy() *fullNode   { log.DebugLog() copy := *n; return &copy }
-func (n *shortNode) copy() *shortNode { log.DebugLog() copy := *n; return &copy }
+func (n *fullNode) copy() *fullNode   { log.DebugLog()
+										  copy := *n; return &copy }
+func (n *shortNode) copy() *shortNode { log.DebugLog()
+										  copy := *n; return &copy }
 
 // nodeFlag contains caching-related metadata about a node.
 type nodeFlag struct {
@@ -63,27 +67,41 @@ type nodeFlag struct {
 }
 
 // canUnload tells whether a node can be unloaded.
-func (n *nodeFlag) canUnload(cachegen, cachelimit uint16) bool { log.DebugLog()
+func (n *nodeFlag) canUnload(cachegen, cachelimit uint16) bool {
+	log.DebugLog()
 	return !n.dirty && cachegen-n.gen >= cachelimit
 }
 
-func (n *fullNode) canUnload(gen, limit uint16) bool  { log.DebugLog() return n.flags.canUnload(gen, limit) }
-func (n *shortNode) canUnload(gen, limit uint16) bool { log.DebugLog() return n.flags.canUnload(gen, limit) }
-func (n hashNode) canUnload(uint16, uint16) bool      { log.DebugLog() return false }
-func (n valueNode) canUnload(uint16, uint16) bool     { log.DebugLog() return false }
+func (n *fullNode) canUnload(gen, limit uint16) bool  { log.DebugLog()
+														  return n.flags.canUnload(gen, limit) }
+func (n *shortNode) canUnload(gen, limit uint16) bool { log.DebugLog()
+														  return n.flags.canUnload(gen, limit) }
+func (n hashNode) canUnload(uint16, uint16) bool      { log.DebugLog()
+														  return false }
+func (n valueNode) canUnload(uint16, uint16) bool     { log.DebugLog()
+														  return false }
 
-func (n *fullNode) cache() (hashNode, bool)  { log.DebugLog() return n.flags.hash, n.flags.dirty }
-func (n *shortNode) cache() (hashNode, bool) { log.DebugLog() return n.flags.hash, n.flags.dirty }
-func (n hashNode) cache() (hashNode, bool)   { log.DebugLog() return nil, true }
-func (n valueNode) cache() (hashNode, bool)  { log.DebugLog() return nil, true }
+func (n *fullNode) cache() (hashNode, bool)  { log.DebugLog()
+												 return n.flags.hash, n.flags.dirty }
+func (n *shortNode) cache() (hashNode, bool) { log.DebugLog()
+												 return n.flags.hash, n.flags.dirty }
+func (n hashNode) cache() (hashNode, bool)   { log.DebugLog()
+												 return nil, true }
+func (n valueNode) cache() (hashNode, bool)  { log.DebugLog()
+												 return nil, true }
 
 // Pretty printing.
-func (n *fullNode) String() string  { log.DebugLog() return n.fstring("") }
-func (n *shortNode) String() string { log.DebugLog() return n.fstring("") }
-func (n hashNode) String() string   { log.DebugLog() return n.fstring("") }
-func (n valueNode) String() string  { log.DebugLog() return n.fstring("") }
+func (n *fullNode) String() string  { log.DebugLog()
+										return n.fstring("") }
+func (n *shortNode) String() string { log.DebugLog()
+										return n.fstring("") }
+func (n hashNode) String() string   { log.DebugLog()
+										return n.fstring("") }
+func (n valueNode) String() string  { log.DebugLog()
+										return n.fstring("") }
 
-func (n *fullNode) fstring(ind string) string { log.DebugLog()
+func (n *fullNode) fstring(ind string) string {
+	log.DebugLog()
 	resp := fmt.Sprintf("[\n%s  ", ind)
 	for i, node := range n.Children {
 		if node == nil {
@@ -94,17 +112,21 @@ func (n *fullNode) fstring(ind string) string { log.DebugLog()
 	}
 	return resp + fmt.Sprintf("\n%s] ", ind)
 }
-func (n *shortNode) fstring(ind string) string { log.DebugLog()
+func (n *shortNode) fstring(ind string) string {
+	log.DebugLog()
 	return fmt.Sprintf("{%x: %v} ", n.Key, n.Val.fstring(ind+"  "))
 }
-func (n hashNode) fstring(ind string) string { log.DebugLog()
+func (n hashNode) fstring(ind string) string {
+	log.DebugLog()
 	return fmt.Sprintf("<%x> ", []byte(n))
 }
-func (n valueNode) fstring(ind string) string { log.DebugLog()
+func (n valueNode) fstring(ind string) string {
+	log.DebugLog()
 	return fmt.Sprintf("%x ", []byte(n))
 }
 
-func mustDecodeNode(hash, buf []byte, cachegen uint16) node { log.DebugLog()
+func mustDecodeNode(hash, buf []byte, cachegen uint16) node {
+	log.DebugLog()
 	n, err := decodeNode(hash, buf, cachegen)
 	if err != nil {
 		panic(fmt.Sprintf("node %x: %v", hash, err))
@@ -113,7 +135,8 @@ func mustDecodeNode(hash, buf []byte, cachegen uint16) node { log.DebugLog()
 }
 
 // decodeNode parses the RLP encoding of a trie node.
-func decodeNode(hash, buf []byte, cachegen uint16) (node, error) { log.DebugLog()
+func decodeNode(hash, buf []byte, cachegen uint16) (node, error) {
+	log.DebugLog()
 	if len(buf) == 0 {
 		return nil, io.ErrUnexpectedEOF
 	}
@@ -133,7 +156,8 @@ func decodeNode(hash, buf []byte, cachegen uint16) (node, error) { log.DebugLog(
 	}
 }
 
-func decodeShort(hash, buf, elems []byte, cachegen uint16) (node, error) { log.DebugLog()
+func decodeShort(hash, buf, elems []byte, cachegen uint16) (node, error) {
+	log.DebugLog()
 	kbuf, rest, err := rlp.SplitString(elems)
 	if err != nil {
 		return nil, err
@@ -155,7 +179,8 @@ func decodeShort(hash, buf, elems []byte, cachegen uint16) (node, error) { log.D
 	return &shortNode{key, r, flag}, nil
 }
 
-func decodeFull(hash, buf, elems []byte, cachegen uint16) (*fullNode, error) { log.DebugLog()
+func decodeFull(hash, buf, elems []byte, cachegen uint16) (*fullNode, error) {
+	log.DebugLog()
 	n := &fullNode{flags: nodeFlag{hash: hash, gen: cachegen}}
 	for i := 0; i < 16; i++ {
 		cld, rest, err := decodeRef(elems, cachegen)
@@ -176,7 +201,8 @@ func decodeFull(hash, buf, elems []byte, cachegen uint16) (*fullNode, error) { l
 
 const hashLen = len(common.Hash{})
 
-func decodeRef(buf []byte, cachegen uint16) (node, []byte, error) { log.DebugLog()
+func decodeRef(buf []byte, cachegen uint16) (node, []byte, error) {
+	log.DebugLog()
 	kind, val, rest, err := rlp.Split(buf)
 	if err != nil {
 		return nil, buf, err
@@ -208,7 +234,8 @@ type decodeError struct {
 	stack []string
 }
 
-func wrapError(err error, ctx string) error { log.DebugLog()
+func wrapError(err error, ctx string) error {
+	log.DebugLog()
 	if err == nil {
 		return nil
 	}
@@ -219,6 +246,7 @@ func wrapError(err error, ctx string) error { log.DebugLog()
 	return &decodeError{err, []string{ctx}}
 }
 
-func (err *decodeError) Error() string { log.DebugLog()
+func (err *decodeError) Error() string {
+	log.DebugLog()
 	return fmt.Sprintf("%v (decode path: %s)", err.what, strings.Join(err.stack, "<-"))
 }

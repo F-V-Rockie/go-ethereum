@@ -19,6 +19,7 @@ package eth
 import (
 	"github.com/ethereum/go-ethereum/metrics"
 	"github.com/ethereum/go-ethereum/p2p"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 var (
@@ -59,13 +60,14 @@ var (
 // meteredMsgReadWriter is a wrapper around a p2p.MsgReadWriter, capable of
 // accumulating the above defined metrics based on the data stream contents.
 type meteredMsgReadWriter struct {
-	p2p.MsgReadWriter     // Wrapped message stream to meter
-	version           int // Protocol version to select correct meters
+	p2p.MsgReadWriter // Wrapped message stream to meter
+	version int       // Protocol version to select correct meters
 }
 
 // newMeteredMsgWriter wraps a p2p MsgReadWriter with metering support. If the
 // metrics system is disabled, this function returns the original object.
-func newMeteredMsgWriter(rw p2p.MsgReadWriter) p2p.MsgReadWriter { log.DebugLog()
+func newMeteredMsgWriter(rw p2p.MsgReadWriter) p2p.MsgReadWriter {
+	log.DebugLog()
 	if !metrics.Enabled {
 		return rw
 	}
@@ -74,11 +76,13 @@ func newMeteredMsgWriter(rw p2p.MsgReadWriter) p2p.MsgReadWriter { log.DebugLog(
 
 // Init sets the protocol version used by the stream to know which meters to
 // increment in case of overlapping message ids between protocol versions.
-func (rw *meteredMsgReadWriter) Init(version int) { log.DebugLog()
+func (rw *meteredMsgReadWriter) Init(version int) {
+	log.DebugLog()
 	rw.version = version
 }
 
-func (rw *meteredMsgReadWriter) ReadMsg() (p2p.Msg, error) { log.DebugLog()
+func (rw *meteredMsgReadWriter) ReadMsg() (p2p.Msg, error) {
+	log.DebugLog()
 	// Read the message and short circuit in case of an error
 	msg, err := rw.MsgReadWriter.ReadMsg()
 	if err != nil {
@@ -110,7 +114,8 @@ func (rw *meteredMsgReadWriter) ReadMsg() (p2p.Msg, error) { log.DebugLog()
 	return msg, err
 }
 
-func (rw *meteredMsgReadWriter) WriteMsg(msg p2p.Msg) error { log.DebugLog()
+func (rw *meteredMsgReadWriter) WriteMsg(msg p2p.Msg) error {
+	log.DebugLog()
 	// Account for the data traffic
 	packets, traffic := miscOutPacketsMeter, miscOutTrafficMeter
 	switch {

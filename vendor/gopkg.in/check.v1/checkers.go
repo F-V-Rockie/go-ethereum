@@ -28,7 +28,7 @@ type comment struct {
 //
 //     c.Assert(l, Equals, 8192) // Ensure buffer size is correct (bug #123)
 //
-func Commentf(format string, args ...interface{}) CommentInterface { 
+func Commentf(format string, args ...interface{}) CommentInterface {
 	return &comment{format, args}
 }
 
@@ -38,7 +38,7 @@ type CommentInterface interface {
 	CheckCommentString() string
 }
 
-func (c *comment) CheckCommentString() string { 
+func (c *comment) CheckCommentString() string {
 	return fmt.Sprintf(c.format, c.args...)
 }
 
@@ -58,7 +58,7 @@ type CheckerInfo struct {
 	Params []string
 }
 
-func (info *CheckerInfo) Info() *CheckerInfo { 
+func (info *CheckerInfo) Info() *CheckerInfo {
 	return info
 }
 
@@ -73,7 +73,7 @@ func (info *CheckerInfo) Info() *CheckerInfo {
 //
 //     c.Assert(a, Not(Equals), b)
 //
-func Not(checker Checker) Checker { 
+func Not(checker Checker) Checker {
 	return &notChecker{checker}
 }
 
@@ -81,13 +81,13 @@ type notChecker struct {
 	sub Checker
 }
 
-func (checker *notChecker) Info() *CheckerInfo { 
+func (checker *notChecker) Info() *CheckerInfo {
 	info := *checker.sub.Info()
 	info.Name = "Not(" + info.Name + ")"
 	return &info
 }
 
-func (checker *notChecker) Check(params []interface{}, names []string) (result bool, error string) { 
+func (checker *notChecker) Check(params []interface{}, names []string) (result bool, error string) {
 	result, error = checker.sub.Check(params, names)
 	result = !result
 	return
@@ -110,11 +110,11 @@ var IsNil Checker = &isNilChecker{
 	&CheckerInfo{Name: "IsNil", Params: []string{"value"}},
 }
 
-func (checker *isNilChecker) Check(params []interface{}, names []string) (result bool, error string) { 
+func (checker *isNilChecker) Check(params []interface{}, names []string) (result bool, error string) {
 	return isNil(params[0]), ""
 }
 
-func isNil(obtained interface{}) (result bool) { 
+func isNil(obtained interface{}) (result bool) {
 	if obtained == nil {
 		result = true
 	} else {
@@ -146,7 +146,7 @@ var NotNil Checker = &notNilChecker{
 	&CheckerInfo{Name: "NotNil", Params: []string{"value"}},
 }
 
-func (checker *notNilChecker) Check(params []interface{}, names []string) (result bool, error string) { 
+func (checker *notNilChecker) Check(params []interface{}, names []string) (result bool, error string) {
 	return !isNil(params[0]), ""
 }
 
@@ -168,7 +168,7 @@ var Equals Checker = &equalsChecker{
 	&CheckerInfo{Name: "Equals", Params: []string{"obtained", "expected"}},
 }
 
-func (checker *equalsChecker) Check(params []interface{}, names []string) (result bool, error string) { 
+func (checker *equalsChecker) Check(params []interface{}, names []string) (result bool, error string) {
 	defer func() {
 		if v := recover(); v != nil {
 			result = false
@@ -199,7 +199,7 @@ var DeepEquals Checker = &deepEqualsChecker{
 	&CheckerInfo{Name: "DeepEquals", Params: []string{"obtained", "expected"}},
 }
 
-func (checker *deepEqualsChecker) Check(params []interface{}, names []string) (result bool, error string) { 
+func (checker *deepEqualsChecker) Check(params []interface{}, names []string) (result bool, error string) {
 	return reflect.DeepEqual(params[0], params[1]), ""
 }
 
@@ -224,7 +224,7 @@ var HasLen Checker = &hasLenChecker{
 	&CheckerInfo{Name: "HasLen", Params: []string{"obtained", "n"}},
 }
 
-func (checker *hasLenChecker) Check(params []interface{}, names []string) (result bool, error string) { 
+func (checker *hasLenChecker) Check(params []interface{}, names []string) (result bool, error string) {
 	n, ok := params[1].(int)
 	if !ok {
 		return false, "n must be an int"
@@ -256,7 +256,7 @@ var ErrorMatches Checker = errorMatchesChecker{
 	&CheckerInfo{Name: "ErrorMatches", Params: []string{"value", "regex"}},
 }
 
-func (checker errorMatchesChecker) Check(params []interface{}, names []string) (result bool, errStr string) { 
+func (checker errorMatchesChecker) Check(params []interface{}, names []string) (result bool, errStr string) {
 	if params[0] == nil {
 		return false, "Error value is nil"
 	}
@@ -288,11 +288,11 @@ var Matches Checker = &matchesChecker{
 	&CheckerInfo{Name: "Matches", Params: []string{"value", "regex"}},
 }
 
-func (checker *matchesChecker) Check(params []interface{}, names []string) (result bool, error string) { 
+func (checker *matchesChecker) Check(params []interface{}, names []string) (result bool, error string) {
 	return matches(params[0], params[1])
 }
 
-func matches(value, regex interface{}) (result bool, error string) { 
+func matches(value, regex interface{}) (result bool, error string) {
 	reStr, ok := regex.(string)
 	if !ok {
 		return false, "Regex must be a string"
@@ -332,9 +332,9 @@ var Panics Checker = &panicsChecker{
 	&CheckerInfo{Name: "Panics", Params: []string{"function", "expected"}},
 }
 
-func (checker *panicsChecker) Check(params []interface{}, names []string) (result bool, error string) { 
+func (checker *panicsChecker) Check(params []interface{}, names []string) (result bool, error string) {
 	f := reflect.ValueOf(params[0])
-	if f.Kind() != reflect.func || f.Type().NumIn() != 0 { 
+	if f.Kind() != reflect.Func || f.Type().NumIn() != 0 {
 		return false, "Function must take zero arguments"
 	}
 	defer func() {
@@ -367,9 +367,9 @@ var PanicMatches Checker = &panicMatchesChecker{
 	&CheckerInfo{Name: "PanicMatches", Params: []string{"function", "expected"}},
 }
 
-func (checker *panicMatchesChecker) Check(params []interface{}, names []string) (result bool, errmsg string) { 
+func (checker *panicMatchesChecker) Check(params []interface{}, names []string) (result bool, errmsg string) {
 	f := reflect.ValueOf(params[0])
-	if f.Kind() != reflect.func || f.Type().NumIn() != 0 { 
+	if f.Kind() != reflect.Func || f.Type().NumIn() != 0 {
 		return false, "Function must take zero arguments"
 	}
 	defer func() {
@@ -413,7 +413,7 @@ var FitsTypeOf Checker = &fitsTypeChecker{
 	&CheckerInfo{Name: "FitsTypeOf", Params: []string{"obtained", "sample"}},
 }
 
-func (checker *fitsTypeChecker) Check(params []interface{}, names []string) (result bool, error string) { 
+func (checker *fitsTypeChecker) Check(params []interface{}, names []string) (result bool, error string) {
 	obtained := reflect.ValueOf(params[0])
 	sample := reflect.ValueOf(params[1])
 	if !obtained.IsValid() {
@@ -445,7 +445,7 @@ var Implements Checker = &implementsChecker{
 	&CheckerInfo{Name: "Implements", Params: []string{"obtained", "ifaceptr"}},
 }
 
-func (checker *implementsChecker) Check(params []interface{}, names []string) (result bool, error string) { 
+func (checker *implementsChecker) Check(params []interface{}, names []string) (result bool, error string) {
 	obtained := reflect.ValueOf(params[0])
 	ifaceptr := reflect.ValueOf(params[1])
 	if !obtained.IsValid() {

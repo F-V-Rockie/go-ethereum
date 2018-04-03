@@ -24,6 +24,7 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethdb"
 	"github.com/ethereum/go-ethereum/rlp"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // NodeSet stores a set of trie nodes. It implements trie.Database and can also
@@ -37,14 +38,16 @@ type NodeSet struct {
 }
 
 // NewNodeSet creates an empty node set
-func NewNodeSet() *NodeSet { log.DebugLog()
+func NewNodeSet() *NodeSet {
+	log.DebugLog()
 	return &NodeSet{
 		nodes: make(map[string][]byte),
 	}
 }
 
 // Put stores a new node in the set
-func (db *NodeSet) Put(key []byte, value []byte) error { log.DebugLog()
+func (db *NodeSet) Put(key []byte, value []byte) error {
+	log.DebugLog()
 	db.lock.Lock()
 	defer db.lock.Unlock()
 
@@ -61,7 +64,8 @@ func (db *NodeSet) Put(key []byte, value []byte) error { log.DebugLog()
 }
 
 // Get returns a stored node
-func (db *NodeSet) Get(key []byte) ([]byte, error) { log.DebugLog()
+func (db *NodeSet) Get(key []byte) ([]byte, error) {
+	log.DebugLog()
 	db.lock.RLock()
 	defer db.lock.RUnlock()
 
@@ -72,13 +76,15 @@ func (db *NodeSet) Get(key []byte) ([]byte, error) { log.DebugLog()
 }
 
 // Has returns true if the node set contains the given key
-func (db *NodeSet) Has(key []byte) (bool, error) { log.DebugLog()
+func (db *NodeSet) Has(key []byte) (bool, error) {
+	log.DebugLog()
 	_, err := db.Get(key)
 	return err == nil, nil
 }
 
 // KeyCount returns the number of nodes in the set
-func (db *NodeSet) KeyCount() int { log.DebugLog()
+func (db *NodeSet) KeyCount() int {
+	log.DebugLog()
 	db.lock.RLock()
 	defer db.lock.RUnlock()
 
@@ -86,7 +92,8 @@ func (db *NodeSet) KeyCount() int { log.DebugLog()
 }
 
 // DataSize returns the aggregated data size of nodes in the set
-func (db *NodeSet) DataSize() int { log.DebugLog()
+func (db *NodeSet) DataSize() int {
+	log.DebugLog()
 	db.lock.RLock()
 	defer db.lock.RUnlock()
 
@@ -94,7 +101,8 @@ func (db *NodeSet) DataSize() int { log.DebugLog()
 }
 
 // NodeList converts the node set to a NodeList
-func (db *NodeSet) NodeList() NodeList { log.DebugLog()
+func (db *NodeSet) NodeList() NodeList {
+	log.DebugLog()
 	db.lock.RLock()
 	defer db.lock.RUnlock()
 
@@ -106,7 +114,8 @@ func (db *NodeSet) NodeList() NodeList { log.DebugLog()
 }
 
 // Store writes the contents of the set to the given database
-func (db *NodeSet) Store(target ethdb.Putter) { log.DebugLog()
+func (db *NodeSet) Store(target ethdb.Putter) {
+	log.DebugLog()
 	db.lock.RLock()
 	defer db.lock.RUnlock()
 
@@ -119,27 +128,31 @@ func (db *NodeSet) Store(target ethdb.Putter) { log.DebugLog()
 type NodeList []rlp.RawValue
 
 // Store writes the contents of the list to the given database
-func (n NodeList) Store(db ethdb.Putter) { log.DebugLog()
+func (n NodeList) Store(db ethdb.Putter) {
+	log.DebugLog()
 	for _, node := range n {
 		db.Put(crypto.Keccak256(node), node)
 	}
 }
 
 // NodeSet converts the node list to a NodeSet
-func (n NodeList) NodeSet() *NodeSet { log.DebugLog()
+func (n NodeList) NodeSet() *NodeSet {
+	log.DebugLog()
 	db := NewNodeSet()
 	n.Store(db)
 	return db
 }
 
 // Put stores a new node at the end of the list
-func (n *NodeList) Put(key []byte, value []byte) error { log.DebugLog()
+func (n *NodeList) Put(key []byte, value []byte) error {
+	log.DebugLog()
 	*n = append(*n, value)
 	return nil
 }
 
 // DataSize returns the aggregated data size of nodes in the list
-func (n NodeList) DataSize() int { log.DebugLog()
+func (n NodeList) DataSize() int {
+	log.DebugLog()
 	var size int
 	for _, node := range n {
 		size += len(node)

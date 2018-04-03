@@ -74,7 +74,8 @@ type LightChain struct {
 // NewLightChain returns a fully initialised light chain using information
 // available in the database. It initialises the default Ethereum header
 // validator.
-func NewLightChain(odr OdrBackend, config *params.ChainConfig, engine consensus.Engine) (*LightChain, error) { log.DebugLog()
+func NewLightChain(odr OdrBackend, config *params.ChainConfig, engine consensus.Engine) (*LightChain, error) {
+	log.DebugLog()
 	bodyCache, _ := lru.New(bodyCacheLimit)
 	bodyRLPCache, _ := lru.New(bodyCacheLimit)
 	blockCache, _ := lru.New(blockCacheLimit)
@@ -115,7 +116,8 @@ func NewLightChain(odr OdrBackend, config *params.ChainConfig, engine consensus.
 }
 
 // addTrustedCheckpoint adds a trusted checkpoint to the blockchain
-func (self *LightChain) addTrustedCheckpoint(cp trustedCheckpoint) { log.DebugLog()
+func (self *LightChain) addTrustedCheckpoint(cp trustedCheckpoint) {
+	log.DebugLog()
 	if self.odr.ChtIndexer() != nil {
 		StoreChtRoot(self.chainDb, cp.sectionIdx, cp.sectionHead, cp.chtRoot)
 		self.odr.ChtIndexer().AddKnownSectionHead(cp.sectionIdx, cp.sectionHead)
@@ -130,18 +132,21 @@ func (self *LightChain) addTrustedCheckpoint(cp trustedCheckpoint) { log.DebugLo
 	log.Info("Added trusted checkpoint", "chain", cp.name, "block", (cp.sectionIdx+1)*CHTFrequencyClient-1, "hash", cp.sectionHead)
 }
 
-func (self *LightChain) getProcInterrupt() bool { log.DebugLog()
+func (self *LightChain) getProcInterrupt() bool {
+	log.DebugLog()
 	return atomic.LoadInt32(&self.procInterrupt) == 1
 }
 
 // Odr returns the ODR backend of the chain
-func (self *LightChain) Odr() OdrBackend { log.DebugLog()
+func (self *LightChain) Odr() OdrBackend {
+	log.DebugLog()
 	return self.odr
 }
 
 // loadLastState loads the last known chain state from the database. This method
 // assumes that the chain manager mutex is held.
-func (self *LightChain) loadLastState() error { log.DebugLog()
+func (self *LightChain) loadLastState() error {
+	log.DebugLog()
 	if head := core.GetHeadHeaderHash(self.chainDb); head == (common.Hash{}) {
 		// Corrupt or empty database, init from scratch
 		self.Reset()
@@ -161,7 +166,8 @@ func (self *LightChain) loadLastState() error { log.DebugLog()
 
 // SetHead rewinds the local chain to a new head. Everything above the new
 // head will be deleted and the new one set.
-func (bc *LightChain) SetHead(head uint64) { log.DebugLog()
+func (bc *LightChain) SetHead(head uint64) {
+	log.DebugLog()
 	bc.mu.Lock()
 	defer bc.mu.Unlock()
 
@@ -170,18 +176,21 @@ func (bc *LightChain) SetHead(head uint64) { log.DebugLog()
 }
 
 // GasLimit returns the gas limit of the current HEAD block.
-func (self *LightChain) GasLimit() uint64 { log.DebugLog()
+func (self *LightChain) GasLimit() uint64 {
+	log.DebugLog()
 	return self.hc.CurrentHeader().GasLimit
 }
 
 // Reset purges the entire blockchain, restoring it to its genesis state.
-func (bc *LightChain) Reset() { log.DebugLog()
+func (bc *LightChain) Reset() {
+	log.DebugLog()
 	bc.ResetWithGenesisBlock(bc.genesisBlock)
 }
 
 // ResetWithGenesisBlock purges the entire blockchain, restoring it to the
 // specified genesis state.
-func (bc *LightChain) ResetWithGenesisBlock(genesis *types.Block) { log.DebugLog()
+func (bc *LightChain) ResetWithGenesisBlock(genesis *types.Block) {
+	log.DebugLog()
 	// Dump the entire block chain and purge the caches
 	bc.SetHead(0)
 
@@ -203,21 +212,25 @@ func (bc *LightChain) ResetWithGenesisBlock(genesis *types.Block) { log.DebugLog
 // Accessors
 
 // Engine retrieves the light chain's consensus engine.
-func (bc *LightChain) Engine() consensus.Engine { log.DebugLog() return bc.engine }
+func (bc *LightChain) Engine() consensus.Engine { log.DebugLog()
+													return bc.engine }
 
 // Genesis returns the genesis block
-func (bc *LightChain) Genesis() *types.Block { log.DebugLog()
+func (bc *LightChain) Genesis() *types.Block {
+	log.DebugLog()
 	return bc.genesisBlock
 }
 
 // State returns a new mutable state based on the current HEAD block.
-func (bc *LightChain) State() (*state.StateDB, error) { log.DebugLog()
+func (bc *LightChain) State() (*state.StateDB, error) {
+	log.DebugLog()
 	return nil, errors.New("not implemented, needs client/server interface split")
 }
 
 // GetBody retrieves a block body (transactions and uncles) from the database
 // or ODR service by hash, caching it if found.
-func (self *LightChain) GetBody(ctx context.Context, hash common.Hash) (*types.Body, error) { log.DebugLog()
+func (self *LightChain) GetBody(ctx context.Context, hash common.Hash) (*types.Body, error) {
+	log.DebugLog()
 	// Short circuit if the body's already in the cache, retrieve otherwise
 	if cached, ok := self.bodyCache.Get(hash); ok {
 		body := cached.(*types.Body)
@@ -234,7 +247,8 @@ func (self *LightChain) GetBody(ctx context.Context, hash common.Hash) (*types.B
 
 // GetBodyRLP retrieves a block body in RLP encoding from the database or
 // ODR service by hash, caching it if found.
-func (self *LightChain) GetBodyRLP(ctx context.Context, hash common.Hash) (rlp.RawValue, error) { log.DebugLog()
+func (self *LightChain) GetBodyRLP(ctx context.Context, hash common.Hash) (rlp.RawValue, error) {
+	log.DebugLog()
 	// Short circuit if the body's already in the cache, retrieve otherwise
 	if cached, ok := self.bodyRLPCache.Get(hash); ok {
 		return cached.(rlp.RawValue), nil
@@ -250,14 +264,16 @@ func (self *LightChain) GetBodyRLP(ctx context.Context, hash common.Hash) (rlp.R
 
 // HasBlock checks if a block is fully present in the database or not, caching
 // it if present.
-func (bc *LightChain) HasBlock(hash common.Hash, number uint64) bool { log.DebugLog()
+func (bc *LightChain) HasBlock(hash common.Hash, number uint64) bool {
+	log.DebugLog()
 	blk, _ := bc.GetBlock(NoOdr, hash, number)
 	return blk != nil
 }
 
 // GetBlock retrieves a block from the database or ODR service by hash and number,
 // caching it if found.
-func (self *LightChain) GetBlock(ctx context.Context, hash common.Hash, number uint64) (*types.Block, error) { log.DebugLog()
+func (self *LightChain) GetBlock(ctx context.Context, hash common.Hash, number uint64) (*types.Block, error) {
+	log.DebugLog()
 	// Short circuit if the block's already in the cache, retrieve otherwise
 	if block, ok := self.blockCache.Get(hash); ok {
 		return block.(*types.Block), nil
@@ -273,13 +289,15 @@ func (self *LightChain) GetBlock(ctx context.Context, hash common.Hash, number u
 
 // GetBlockByHash retrieves a block from the database or ODR service by hash,
 // caching it if found.
-func (self *LightChain) GetBlockByHash(ctx context.Context, hash common.Hash) (*types.Block, error) { log.DebugLog()
+func (self *LightChain) GetBlockByHash(ctx context.Context, hash common.Hash) (*types.Block, error) {
+	log.DebugLog()
 	return self.GetBlock(ctx, hash, self.hc.GetBlockNumber(hash))
 }
 
 // GetBlockByNumber retrieves a block from the database or ODR service by
 // number, caching it (associated with its hash) if found.
-func (self *LightChain) GetBlockByNumber(ctx context.Context, number uint64) (*types.Block, error) { log.DebugLog()
+func (self *LightChain) GetBlockByNumber(ctx context.Context, number uint64) (*types.Block, error) {
+	log.DebugLog()
 	hash, err := GetCanonicalHash(ctx, self.odr, number)
 	if hash == (common.Hash{}) || err != nil {
 		return nil, err
@@ -289,7 +307,8 @@ func (self *LightChain) GetBlockByNumber(ctx context.Context, number uint64) (*t
 
 // Stop stops the blockchain service. If any imports are currently in progress
 // it will abort them using the procInterrupt.
-func (bc *LightChain) Stop() { log.DebugLog()
+func (bc *LightChain) Stop() {
+	log.DebugLog()
 	if !atomic.CompareAndSwapInt32(&bc.running, 0, 1) {
 		return
 	}
@@ -302,7 +321,8 @@ func (bc *LightChain) Stop() { log.DebugLog()
 
 // Rollback is designed to remove a chain of links from the database that aren't
 // certain enough to be valid.
-func (self *LightChain) Rollback(chain []common.Hash) { log.DebugLog()
+func (self *LightChain) Rollback(chain []common.Hash) {
+	log.DebugLog()
 	self.mu.Lock()
 	defer self.mu.Unlock()
 
@@ -317,7 +337,8 @@ func (self *LightChain) Rollback(chain []common.Hash) { log.DebugLog()
 
 // postChainEvents iterates over the events generated by a chain insertion and
 // posts them into the event feed.
-func (self *LightChain) postChainEvents(events []interface{}) { log.DebugLog()
+func (self *LightChain) postChainEvents(events []interface{}) {
+	log.DebugLog()
 	for _, event := range events {
 		switch ev := event.(type) {
 		case core.ChainEvent:
@@ -342,7 +363,8 @@ func (self *LightChain) postChainEvents(events []interface{}) { log.DebugLog()
 //
 // In the case of a light chain, InsertHeaderChain also creates and posts light
 // chain events when necessary.
-func (self *LightChain) InsertHeaderChain(chain []*types.Header, checkFreq int) (int, error) { log.DebugLog()
+func (self *LightChain) InsertHeaderChain(chain []*types.Header, checkFreq int) (int, error) {
+	log.DebugLog()
 	start := time.Now()
 	if i, err := self.hc.ValidateHeaderChain(chain, checkFreq); err != nil {
 		return i, err
@@ -359,7 +381,8 @@ func (self *LightChain) InsertHeaderChain(chain []*types.Header, checkFreq int) 
 	defer self.wg.Done()
 
 	var events []interface{}
-	whfunc := func(header *types.Header) error { log.DebugLog()
+	whFunc := func(header *types.Header) error {
+		log.DebugLog()
 		self.mu.Lock()
 		defer self.mu.Unlock()
 
@@ -383,55 +406,64 @@ func (self *LightChain) InsertHeaderChain(chain []*types.Header, checkFreq int) 
 
 // CurrentHeader retrieves the current head header of the canonical chain. The
 // header is retrieved from the HeaderChain's internal cache.
-func (self *LightChain) CurrentHeader() *types.Header { log.DebugLog()
+func (self *LightChain) CurrentHeader() *types.Header {
+	log.DebugLog()
 	return self.hc.CurrentHeader()
 }
 
 // GetTd retrieves a block's total difficulty in the canonical chain from the
 // database by hash and number, caching it if found.
-func (self *LightChain) GetTd(hash common.Hash, number uint64) *big.Int { log.DebugLog()
+func (self *LightChain) GetTd(hash common.Hash, number uint64) *big.Int {
+	log.DebugLog()
 	return self.hc.GetTd(hash, number)
 }
 
 // GetTdByHash retrieves a block's total difficulty in the canonical chain from the
 // database by hash, caching it if found.
-func (self *LightChain) GetTdByHash(hash common.Hash) *big.Int { log.DebugLog()
+func (self *LightChain) GetTdByHash(hash common.Hash) *big.Int {
+	log.DebugLog()
 	return self.hc.GetTdByHash(hash)
 }
 
 // GetHeader retrieves a block header from the database by hash and number,
 // caching it if found.
-func (self *LightChain) GetHeader(hash common.Hash, number uint64) *types.Header { log.DebugLog()
+func (self *LightChain) GetHeader(hash common.Hash, number uint64) *types.Header {
+	log.DebugLog()
 	return self.hc.GetHeader(hash, number)
 }
 
 // GetHeaderByHash retrieves a block header from the database by hash, caching it if
 // found.
-func (self *LightChain) GetHeaderByHash(hash common.Hash) *types.Header { log.DebugLog()
+func (self *LightChain) GetHeaderByHash(hash common.Hash) *types.Header {
+	log.DebugLog()
 	return self.hc.GetHeaderByHash(hash)
 }
 
 // HasHeader checks if a block header is present in the database or not, caching
 // it if present.
-func (bc *LightChain) HasHeader(hash common.Hash, number uint64) bool { log.DebugLog()
+func (bc *LightChain) HasHeader(hash common.Hash, number uint64) bool {
+	log.DebugLog()
 	return bc.hc.HasHeader(hash, number)
 }
 
 // GetBlockHashesFromHash retrieves a number of block hashes starting at a given
 // hash, fetching towards the genesis block.
-func (self *LightChain) GetBlockHashesFromHash(hash common.Hash, max uint64) []common.Hash { log.DebugLog()
+func (self *LightChain) GetBlockHashesFromHash(hash common.Hash, max uint64) []common.Hash {
+	log.DebugLog()
 	return self.hc.GetBlockHashesFromHash(hash, max)
 }
 
 // GetHeaderByNumber retrieves a block header from the database by number,
 // caching it (associated with its hash) if found.
-func (self *LightChain) GetHeaderByNumber(number uint64) *types.Header { log.DebugLog()
+func (self *LightChain) GetHeaderByNumber(number uint64) *types.Header {
+	log.DebugLog()
 	return self.hc.GetHeaderByNumber(number)
 }
 
 // GetHeaderByNumberOdr retrieves a block header from the database or network
 // by number, caching it (associated with its hash) if found.
-func (self *LightChain) GetHeaderByNumberOdr(ctx context.Context, number uint64) (*types.Header, error) { log.DebugLog()
+func (self *LightChain) GetHeaderByNumberOdr(ctx context.Context, number uint64) (*types.Header, error) {
+	log.DebugLog()
 	if header := self.hc.GetHeaderByNumber(number); header != nil {
 		return header, nil
 	}
@@ -439,9 +471,11 @@ func (self *LightChain) GetHeaderByNumberOdr(ctx context.Context, number uint64)
 }
 
 // Config retrieves the header chain's chain configuration.
-func (self *LightChain) Config() *params.ChainConfig { log.DebugLog() return self.hc.Config() }
+func (self *LightChain) Config() *params.ChainConfig { log.DebugLog()
+														 return self.hc.Config() }
 
-func (self *LightChain) SyncCht(ctx context.Context) bool { log.DebugLog()
+func (self *LightChain) SyncCht(ctx context.Context) bool {
+	log.DebugLog()
 	if self.odr.ChtIndexer() == nil {
 		return false
 	}
@@ -464,38 +498,45 @@ func (self *LightChain) SyncCht(ctx context.Context) bool { log.DebugLog()
 
 // LockChain locks the chain mutex for reading so that multiple canonical hashes can be
 // retrieved while it is guaranteed that they belong to the same version of the chain
-func (self *LightChain) LockChain() { log.DebugLog()
+func (self *LightChain) LockChain() {
+	log.DebugLog()
 	self.chainmu.RLock()
 }
 
 // UnlockChain unlocks the chain mutex
-func (self *LightChain) UnlockChain() { log.DebugLog()
+func (self *LightChain) UnlockChain() {
+	log.DebugLog()
 	self.chainmu.RUnlock()
 }
 
 // SubscribeChainEvent registers a subscription of ChainEvent.
-func (self *LightChain) SubscribeChainEvent(ch chan<- core.ChainEvent) event.Subscription { log.DebugLog()
+func (self *LightChain) SubscribeChainEvent(ch chan<- core.ChainEvent) event.Subscription {
+	log.DebugLog()
 	return self.scope.Track(self.chainFeed.Subscribe(ch))
 }
 
 // SubscribeChainHeadEvent registers a subscription of ChainHeadEvent.
-func (self *LightChain) SubscribeChainHeadEvent(ch chan<- core.ChainHeadEvent) event.Subscription { log.DebugLog()
+func (self *LightChain) SubscribeChainHeadEvent(ch chan<- core.ChainHeadEvent) event.Subscription {
+	log.DebugLog()
 	return self.scope.Track(self.chainHeadFeed.Subscribe(ch))
 }
 
 // SubscribeChainSideEvent registers a subscription of ChainSideEvent.
-func (self *LightChain) SubscribeChainSideEvent(ch chan<- core.ChainSideEvent) event.Subscription { log.DebugLog()
+func (self *LightChain) SubscribeChainSideEvent(ch chan<- core.ChainSideEvent) event.Subscription {
+	log.DebugLog()
 	return self.scope.Track(self.chainSideFeed.Subscribe(ch))
 }
 
 // SubscribeLogsEvent implements the interface of filters.Backend
 // LightChain does not send logs events, so return an empty subscription.
-func (self *LightChain) SubscribeLogsEvent(ch chan<- []*types.Log) event.Subscription { log.DebugLog()
+func (self *LightChain) SubscribeLogsEvent(ch chan<- []*types.Log) event.Subscription {
+	log.DebugLog()
 	return self.scope.Track(new(event.Feed).Subscribe(ch))
 }
 
 // SubscribeRemovedLogsEvent implements the interface of filters.Backend
 // LightChain does not send core.RemovedLogsEvent, so return an empty subscription.
-func (self *LightChain) SubscribeRemovedLogsEvent(ch chan<- core.RemovedLogsEvent) event.Subscription { log.DebugLog()
+func (self *LightChain) SubscribeRemovedLogsEvent(ch chan<- core.RemovedLogsEvent) event.Subscription {
+	log.DebugLog()
 	return self.scope.Track(new(event.Feed).Subscribe(ch))
 }

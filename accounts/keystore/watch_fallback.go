@@ -21,8 +21,11 @@
 
 package keystore
 
+import "github.com/ethereum/go-ethereum/log"
+
 type watcher struct{ running bool }
 
-func newWatcher(*accountCache) *watcher { log.DebugLog() return new(watcher) }
-func (*watcher) start()                 { log.DebugLog()}
-func (*watcher) close()                 { log.DebugLog()}
+func newWatcher(*accountCache) *watcher { log.DebugLog()
+											return new(watcher) }
+func (*watcher) start()                 { log.DebugLog() }
+func (*watcher) close()                 { log.DebugLog() }

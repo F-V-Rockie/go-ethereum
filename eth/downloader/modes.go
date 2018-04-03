@@ -16,7 +16,10 @@
 
 package downloader
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/ethereum/go-ethereum/log"
+)
 
 // SyncMode represents the synchronisation mode of the downloader.
 type SyncMode int
@@ -27,12 +30,14 @@ const (
 	LightSync                 // Download only the headers and terminate afterwards
 )
 
-func (mode SyncMode) IsValid() bool { log.DebugLog()
+func (mode SyncMode) IsValid() bool {
+	log.DebugLog()
 	return mode >= FullSync && mode <= LightSync
 }
 
 // String implements the stringer interface.
-func (mode SyncMode) String() string { log.DebugLog()
+func (mode SyncMode) String() string {
+	log.DebugLog()
 	switch mode {
 	case FullSync:
 		return "full"
@@ -45,7 +50,8 @@ func (mode SyncMode) String() string { log.DebugLog()
 	}
 }
 
-func (mode SyncMode) MarshalText() ([]byte, error) { log.DebugLog()
+func (mode SyncMode) MarshalText() ([]byte, error) {
+	log.DebugLog()
 	switch mode {
 	case FullSync:
 		return []byte("full"), nil
@@ -58,7 +64,8 @@ func (mode SyncMode) MarshalText() ([]byte, error) { log.DebugLog()
 	}
 }
 
-func (mode *SyncMode) UnmarshalText(text []byte) error { log.DebugLog()
+func (mode *SyncMode) UnmarshalText(text []byte) error {
+	log.DebugLog()
 	switch string(text) {
 	case "full":
 		*mode = FullSync

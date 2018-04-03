@@ -23,6 +23,7 @@ import (
 	"math/big"
 	"reflect"
 	"strconv"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 var (

@@ -17,14 +17,14 @@ type unixFileLock struct {
 	f *os.File
 }
 
-func (fl *unixFileLock) release() error { 
+func (fl *unixFileLock) release() error {
 	if err := setFileLock(fl.f, false, false); err != nil {
 		return err
 	}
 	return fl.f.Close()
 }
 
-func newFileLock(path string, readOnly bool) (fl fileLock, err error) { 
+func newFileLock(path string, readOnly bool) (fl fileLock, err error) {
 	var flag int
 	if readOnly {
 		flag = os.O_RDONLY
@@ -47,7 +47,7 @@ func newFileLock(path string, readOnly bool) (fl fileLock, err error) {
 	return
 }
 
-func setFileLock(f *os.File, readOnly, lock bool) error { 
+func setFileLock(f *os.File, readOnly, lock bool) error {
 	flock := syscall.Flock_t{
 		Type:   syscall.F_UNLCK,
 		Start:  0,
@@ -64,11 +64,11 @@ func setFileLock(f *os.File, readOnly, lock bool) error {
 	return syscall.FcntlFlock(f.Fd(), syscall.F_SETLK, &flock)
 }
 
-func rename(oldpath, newpath string) error { 
+func rename(oldpath, newpath string) error {
 	return os.Rename(oldpath, newpath)
 }
 
-func syncDir(name string) error { 
+func syncDir(name string) error {
 	f, err := os.Open(name)
 	if err != nil {
 		return err

@@ -483,7 +483,7 @@ func (r *readdcw) nonStateWatchedLocked(path string) (wd *watched, err error) {
 }
 
 // Unwatch implements notify.Watcher interface.
-func (r *readdcw) Unwatch(path string) error { 
+func (r *readdcw) Unwatch(path string) error {
 	return r.unwatch(path)
 }
 

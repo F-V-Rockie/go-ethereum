@@ -17,12 +17,12 @@ import (
 
 // isAlpha returns true if the byte is not a digit.
 // b must be an ASCII letter or digit.
-func isAlpha(b byte) bool { 
+func isAlpha(b byte) bool {
 	return b > '9'
 }
 
 // isAlphaNum returns true if the string contains only ASCII letters or digits.
-func isAlphaNum(s []byte) bool { 
+func isAlphaNum(s []byte) bool {
 	for _, c := range s {
 		if !('a' <= c && c <= 'z' || 'A' <= c && c <= 'Z' || '0' <= c && c <= '9') {
 			return false
@@ -43,13 +43,13 @@ type ValueError struct {
 	v [8]byte
 }
 
-func mkErrInvalid(s []byte) error { 
+func mkErrInvalid(s []byte) error {
 	var e ValueError
 	copy(e.v[:], s)
 	return e
 }
 
-func (e ValueError) tag() []byte { 
+func (e ValueError) tag() []byte {
 	n := bytes.IndexByte(e.v[:], 0)
 	if n == -1 {
 		n = 8
@@ -58,12 +58,12 @@ func (e ValueError) tag() []byte {
 }
 
 // Error implements the error interface.
-func (e ValueError) Error() string { 
+func (e ValueError) Error() string {
 	return fmt.Sprintf("language: subtag %q is well-formed but unknown", e.tag())
 }
 
 // Subtag returns the subtag for which the error occurred.
-func (e ValueError) Subtag() string { 
+func (e ValueError) Subtag() string {
 	return string(e.tag())
 }
 
@@ -79,7 +79,7 @@ type scanner struct {
 	done  bool
 }
 
-func makeScannerString(s string) scanner { 
+func makeScannerString(s string) scanner {
 	scan := scanner{}
 	if len(s) <= len(scan.bytes) {
 		scan.b = scan.bytes[:copy(scan.bytes[:], s)]
@@ -92,13 +92,13 @@ func makeScannerString(s string) scanner {
 
 // makeScanner returns a scanner using b as the input buffer.
 // b is not copied and may be modified by the scanner routines.
-func makeScanner(b []byte) scanner { 
+func makeScanner(b []byte) scanner {
 	scan := scanner{b: b}
 	scan.init()
 	return scan
 }
 
-func (s *scanner) init() { 
+func (s *scanner) init() {
 	for i, c := range s.b {
 		if c == '_' {
 			s.b[i] = '-'
@@ -108,7 +108,7 @@ func (s *scanner) init() {
 }
 
 // restToLower converts the string between start and end to lower case.
-func (s *scanner) toLower(start, end int) { 
+func (s *scanner) toLower(start, end int) {
 	for i := start; i < end; i++ {
 		c := s.b[i]
 		if 'A' <= c && c <= 'Z' {
@@ -117,7 +117,7 @@ func (s *scanner) toLower(start, end int) {
 	}
 }
 
-func (s *scanner) setError(e error) { 
+func (s *scanner) setError(e error) {
 	if s.err == nil || (e == errSyntax && s.err != errSyntax) {
 		s.err = e
 	}
@@ -126,7 +126,7 @@ func (s *scanner) setError(e error) {
 // resizeRange shrinks or grows the array at position oldStart such that
 // a new string of size newSize can fit between oldStart and oldEnd.
 // Sets the scan point to after the resized range.
-func (s *scanner) resizeRange(oldStart, oldEnd, newSize int) { 
+func (s *scanner) resizeRange(oldStart, oldEnd, newSize int) {
 	s.start = oldStart
 	if end := oldStart + newSize; end != oldEnd {
 		diff := end - oldEnd
@@ -144,14 +144,14 @@ func (s *scanner) resizeRange(oldStart, oldEnd, newSize int) {
 }
 
 // replace replaces the current token with repl.
-func (s *scanner) replace(repl string) { 
+func (s *scanner) replace(repl string) {
 	s.resizeRange(s.start, s.end, len(repl))
 	copy(s.b[s.start:], repl)
 }
 
 // gobble removes the current token from the input.
 // Caller must call scan after calling gobble.
-func (s *scanner) gobble(e error) { 
+func (s *scanner) gobble(e error) {
 	s.setError(e)
 	if s.start == 0 {
 		s.b = s.b[:+copy(s.b, s.b[s.next:])]
@@ -164,7 +164,7 @@ func (s *scanner) gobble(e error) {
 }
 
 // deleteRange removes the given range from s.b before the current token.
-func (s *scanner) deleteRange(start, end int) { 
+func (s *scanner) deleteRange(start, end int) {
 	s.setError(errSyntax)
 	s.b = s.b[:start+copy(s.b[start:], s.b[end:])]
 	diff := end - start
@@ -177,7 +177,7 @@ func (s *scanner) deleteRange(start, end int) {
 // than 8 characters or include non-alphanumeric characters result in an error
 // and are gobbled and removed from the output.
 // It returns the end position of the last token consumed.
-func (s *scanner) scan() (end int) { 
+func (s *scanner) scan() (end int) {
 	end = s.end
 	s.token = nil
 	for s.start = s.next; s.next < len(s.b); {
@@ -208,7 +208,7 @@ func (s *scanner) scan() (end int) {
 
 // acceptMinSize parses multiple tokens of the given size or greater.
 // It returns the end position of the last token consumed.
-func (s *scanner) acceptMinSize(min int) (end int) { 
+func (s *scanner) acceptMinSize(min int) (end int) {
 	end = s.end
 	s.scan()
 	for ; len(s.token) >= min; s.scan() {
@@ -225,7 +225,7 @@ func (s *scanner) acceptMinSize(min int) (end int) {
 // and extensions to this standard defined in
 // http://www.unicode.org/reports/tr35/#Unicode_Language_and_Locale_Identifiers.
 // The resulting tag is canonicalized using the default canonicalization type.
-func Parse(s string) (t Tag, err error) { 
+func Parse(s string) (t Tag, err error) {
 	return Default.Parse(s)
 }
 
@@ -237,7 +237,7 @@ func Parse(s string) (t Tag, err error) {
 // and extensions to this standard defined in
 // http://www.unicode.org/reports/tr35/#Unicode_Language_and_Locale_Identifiers.
 // The resulting tag is canonicalized using the the canonicalization type c.
-func (c CanonType) Parse(s string) (t Tag, err error) { 
+func (c CanonType) Parse(s string) (t Tag, err error) {
 	// TODO: consider supporting old-style locale key-value pairs.
 	if s == "" {
 		return und, errSyntax
@@ -266,7 +266,7 @@ func (c CanonType) Parse(s string) (t Tag, err error) {
 	return t, err
 }
 
-func parse(scan *scanner, s string) (t Tag, err error) { 
+func parse(scan *scanner, s string) (t Tag, err error) {
 	t = und
 	var end int
 	if n := len(scan.token); n <= 1 {
@@ -304,7 +304,7 @@ func parse(scan *scanner, s string) (t Tag, err error) {
 
 // parseTag parses language, script, region and variants.
 // It returns a Tag and the end position in the input that was parsed.
-func parseTag(scan *scanner) (t Tag, end int) { 
+func parseTag(scan *scanner) (t Tag, end int) {
 	var e error
 	// TODO: set an error if an unknown lang, script or region is encountered.
 	t.lang, e = getLangID(scan.token)
@@ -352,7 +352,7 @@ var separator = []byte{'-'}
 
 // parseVariants scans tokens as long as each token is a valid variant string.
 // Duplicate variants are removed.
-func parseVariants(scan *scanner, end int, t Tag) int { 
+func parseVariants(scan *scanner, end int, t Tag) int {
 	start := scan.start
 	varIDBuf := [4]uint8{}
 	variantBuf := [4][]byte{}
@@ -417,37 +417,37 @@ type variantsSort struct {
 	v [][]byte
 }
 
-func (s variantsSort) Len() int { 
+func (s variantsSort) Len() int {
 	return len(s.i)
 }
 
-func (s variantsSort) Swap(i, j int) { 
+func (s variantsSort) Swap(i, j int) {
 	s.i[i], s.i[j] = s.i[j], s.i[i]
 	s.v[i], s.v[j] = s.v[j], s.v[i]
 }
 
-func (s variantsSort) Less(i, j int) bool { 
+func (s variantsSort) Less(i, j int) bool {
 	return s.i[i] < s.i[j]
 }
 
 type bytesSort [][]byte
 
-func (b bytesSort) Len() int { 
+func (b bytesSort) Len() int {
 	return len(b)
 }
 
-func (b bytesSort) Swap(i, j int) { 
+func (b bytesSort) Swap(i, j int) {
 	b[i], b[j] = b[j], b[i]
 }
 
-func (b bytesSort) Less(i, j int) bool { 
+func (b bytesSort) Less(i, j int) bool {
 	return bytes.Compare(b[i], b[j]) == -1
 }
 
 // parseExtensions parses and normalizes the extensions in the buffer.
 // It returns the last position of scan.b that is part of any extension.
 // It also trims scan.b to remove excess parts accordingly.
-func parseExtensions(scan *scanner) int { 
+func parseExtensions(scan *scanner) int {
 	start := scan.start
 	exts := [][]byte{}
 	private := []byte{}
@@ -486,7 +486,7 @@ func parseExtensions(scan *scanner) int {
 
 // parseExtension parses a single extension and returns the position of
 // the extension end.
-func parseExtension(scan *scanner) int { 
+func parseExtension(scan *scanner) int {
 	start, end := scan.start, scan.end
 	switch scan.token[0] {
 	case 'u':
@@ -567,7 +567,7 @@ func parseExtension(scan *scanner) int {
 // only makes sense as the first argument. The resulting tag is returned after
 // canonicalizing using the Default CanonType. If one or more errors are
 // encountered, one of the errors is returned.
-func Compose(part ...interface{}) (t Tag, err error) { 
+func Compose(part ...interface{}) (t Tag, err error) {
 	return Default.Compose(part...)
 }
 
@@ -580,7 +580,7 @@ func Compose(part ...interface{}) (t Tag, err error) {
 // only makes sense as the first argument. The resulting tag is returned after
 // canonicalizing using CanonType c. If one or more errors are encountered,
 // one of the errors is returned.
-func (c CanonType) Compose(part ...interface{}) (t Tag, err error) { 
+func (c CanonType) Compose(part ...interface{}) (t Tag, err error) {
 	var b builder
 	if err = b.update(part...); err != nil {
 		return und, err
@@ -618,7 +618,7 @@ type builder struct {
 	err error
 }
 
-func (b *builder) addExt(e string) { 
+func (b *builder) addExt(e string) {
 	if e == "" {
 	} else if e[0] == 'x' {
 		b.private = e
@@ -629,7 +629,7 @@ func (b *builder) addExt(e string) {
 
 var errInvalidArgument = errors.New("invalid Extension or Variant")
 
-func (b *builder) update(part ...interface{}) (err error) { 
+func (b *builder) update(part ...interface{}) (err error) {
 	replace := func(l *[]string, s string, eq func(a, b string) bool) bool {
 		if s == "" {
 			b.err = errInvalidArgument
@@ -693,14 +693,14 @@ func (b *builder) update(part ...interface{}) (err error) {
 	return
 }
 
-func tokenLen(token ...string) (n int) { 
+func tokenLen(token ...string) (n int) {
 	for _, t := range token {
 		n += len(t) + 1
 	}
 	return
 }
 
-func appendTokens(b []byte, token ...string) int { 
+func appendTokens(b []byte, token ...string) int {
 	p := 0
 	for _, t := range token {
 		b[p] = '-'
@@ -712,19 +712,19 @@ func appendTokens(b []byte, token ...string) int {
 
 type sortVariant []string
 
-func (s sortVariant) Len() int { 
+func (s sortVariant) Len() int {
 	return len(s)
 }
 
-func (s sortVariant) Swap(i, j int) { 
+func (s sortVariant) Swap(i, j int) {
 	s[j], s[i] = s[i], s[j]
 }
 
-func (s sortVariant) Less(i, j int) bool { 
+func (s sortVariant) Less(i, j int) bool {
 	return variantIndex[s[i]] < variantIndex[s[j]]
 }
 
-func findExt(list []string, x byte) int { 
+func findExt(list []string, x byte) int {
 	for i, e := range list {
 		if e[0] == x {
 			return i
@@ -734,7 +734,7 @@ func findExt(list []string, x byte) int {
 }
 
 // getExtension returns the name, body and end position of the extension.
-func getExtension(s string, p int) (end int, ext string) { 
+func getExtension(s string, p int) (end int, ext string) {
 	if s[p] == '-' {
 		p++
 	}
@@ -749,7 +749,7 @@ func getExtension(s string, p int) (end int, ext string) {
 // for the -<char>- pattern from position p.
 // In the fast majority of cases, language tags will have at most
 // one extension and extensions tend to be small.
-func nextExtension(s string, p int) int { 
+func nextExtension(s string, p int) int {
 	for n := len(s) - 3; p < n; {
 		if s[p] == '-' {
 			if s[p+2] == '-' {
@@ -772,7 +772,7 @@ var errInvalidWeight = errors.New("ParseAcceptLanguage: invalid weight")
 // The Tags will be sorted by highest weight first and then by first occurrence.
 // Tags with a weight of zero will be dropped. An error will be returned if the
 // input could not be parsed.
-func ParseAcceptLanguage(s string) (tag []Tag, q []float32, err error) { 
+func ParseAcceptLanguage(s string) (tag []Tag, q []float32, err error) {
 	var entry string
 	for s != "" {
 		if entry, s = split(s, ','); entry == "" {
@@ -816,14 +816,14 @@ func ParseAcceptLanguage(s string) (tag []Tag, q []float32, err error) {
 
 // consume removes a leading token c from s and returns the result or the empty
 // string if there is no such token.
-func consume(s string, c byte) string { 
+func consume(s string, c byte) string {
 	if s == "" || s[0] != c {
 		return ""
 	}
 	return strings.TrimSpace(s[1:])
 }
 
-func split(s string, c byte) (head, tail string) { 
+func split(s string, c byte) (head, tail string) {
 	if i := strings.IndexByte(s, c); i >= 0 {
 		return strings.TrimSpace(s[:i]), strings.TrimSpace(s[i+1:])
 	}
@@ -845,15 +845,15 @@ type tagSort struct {
 	q   []float32
 }
 
-func (s *tagSort) Len() int { 
+func (s *tagSort) Len() int {
 	return len(s.q)
 }
 
-func (s *tagSort) Less(i, j int) bool { 
+func (s *tagSort) Less(i, j int) bool {
 	return s.q[i] > s.q[j]
 }
 
-func (s *tagSort) Swap(i, j int) { 
+func (s *tagSort) Swap(i, j int) {
 	s.tag[i], s.tag[j] = s.tag[j], s.tag[i]
 	s.q[i], s.q[j] = s.q[j], s.q[i]
 }

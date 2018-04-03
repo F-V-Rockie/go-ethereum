@@ -32,7 +32,7 @@ type fileStorageLock struct {
 	fs *fileStorage
 }
 
-func (lock *fileStorageLock) Unlock() { 
+func (lock *fileStorageLock) Unlock() {
 	if lock.fs != nil {
 		lock.fs.mu.Lock()
 		defer lock.fs.mu.Unlock()
@@ -65,7 +65,7 @@ type fileStorage struct {
 // same path will fail.
 //
 // The storage must be closed after use, by calling Close method.
-func OpenFile(path string, readOnly bool) (Storage, error) { 
+func OpenFile(path string, readOnly bool) (Storage, error) {
 	if fi, err := os.Stat(path); err == nil {
 		if !fi.IsDir() {
 			return nil, fmt.Errorf("leveldb/storage: open %s: not a directory", path)
@@ -116,7 +116,7 @@ func OpenFile(path string, readOnly bool) (Storage, error) {
 	return fs, nil
 }
 
-func (fs *fileStorage) Lock() (Locker, error) { 
+func (fs *fileStorage) Lock() (Locker, error) {
 	fs.mu.Lock()
 	defer fs.mu.Unlock()
 	if fs.open < 0 {
@@ -132,7 +132,7 @@ func (fs *fileStorage) Lock() (Locker, error) {
 	return fs.slock, nil
 }
 
-func itoa(buf []byte, i int, wid int) []byte { 
+func itoa(buf []byte, i int, wid int) []byte {
 	u := uint(i)
 	if u == 0 && wid <= 1 {
 		return append(buf, '0')
@@ -149,7 +149,7 @@ func itoa(buf []byte, i int, wid int) []byte {
 	return append(buf, b[bp:]...)
 }
 
-func (fs *fileStorage) printDay(t time.Time) { 
+func (fs *fileStorage) printDay(t time.Time) {
 	if fs.day == t.Day() {
 		return
 	}
@@ -157,7 +157,7 @@ func (fs *fileStorage) printDay(t time.Time) {
 	fs.logw.Write([]byte("=============== " + t.Format("Jan 2, 2006 (MST)") + " ===============\n"))
 }
 
-func (fs *fileStorage) doLog(t time.Time, str string) { 
+func (fs *fileStorage) doLog(t time.Time, str string) {
 	if fs.logSize > logSizeThreshold {
 		// Rotate log file.
 		fs.logw.Close()
@@ -192,7 +192,7 @@ func (fs *fileStorage) doLog(t time.Time, str string) {
 	fs.logw.Write(fs.buf)
 }
 
-func (fs *fileStorage) Log(str string) { 
+func (fs *fileStorage) Log(str string) {
 	if !fs.readOnly {
 		t := time.Now()
 		fs.mu.Lock()
@@ -204,13 +204,13 @@ func (fs *fileStorage) Log(str string) {
 	}
 }
 
-func (fs *fileStorage) log(str string) { 
+func (fs *fileStorage) log(str string) {
 	if !fs.readOnly {
 		fs.doLog(time.Now(), str)
 	}
 }
 
-func (fs *fileStorage) SetMeta(fd FileDesc) (err error) { 
+func (fs *fileStorage) SetMeta(fd FileDesc) (err error) {
 	if !FileDescOk(fd) {
 		return ErrInvalidFile
 	}
@@ -260,7 +260,7 @@ func (fs *fileStorage) SetMeta(fd FileDesc) (err error) {
 	return
 }
 
-func (fs *fileStorage) GetMeta() (fd FileDesc, err error) { 
+func (fs *fileStorage) GetMeta() (fd FileDesc, err error) {
 	fs.mu.Lock()
 	defer fs.mu.Unlock()
 	if fs.open < 0 {
@@ -366,7 +366,7 @@ func (fs *fileStorage) GetMeta() (fd FileDesc, err error) {
 	return
 }
 
-func (fs *fileStorage) List(ft FileType) (fds []FileDesc, err error) { 
+func (fs *fileStorage) List(ft FileType) (fds []FileDesc, err error) {
 	fs.mu.Lock()
 	defer fs.mu.Unlock()
 	if fs.open < 0 {
@@ -391,7 +391,7 @@ func (fs *fileStorage) List(ft FileType) (fds []FileDesc, err error) {
 	return
 }
 
-func (fs *fileStorage) Open(fd FileDesc) (Reader, error) { 
+func (fs *fileStorage) Open(fd FileDesc) (Reader, error) {
 	if !FileDescOk(fd) {
 		return nil, ErrInvalidFile
 	}
@@ -416,7 +416,7 @@ ok:
 	return &fileWrap{File: of, fs: fs, fd: fd}, nil
 }
 
-func (fs *fileStorage) Create(fd FileDesc) (Writer, error) { 
+func (fs *fileStorage) Create(fd FileDesc) (Writer, error) {
 	if !FileDescOk(fd) {
 		return nil, ErrInvalidFile
 	}
@@ -437,7 +437,7 @@ func (fs *fileStorage) Create(fd FileDesc) (Writer, error) {
 	return &fileWrap{File: of, fs: fs, fd: fd}, nil
 }
 
-func (fs *fileStorage) Remove(fd FileDesc) error { 
+func (fs *fileStorage) Remove(fd FileDesc) error {
 	if !FileDescOk(fd) {
 		return ErrInvalidFile
 	}
@@ -464,7 +464,7 @@ func (fs *fileStorage) Remove(fd FileDesc) error {
 	return err
 }
 
-func (fs *fileStorage) Rename(oldfd, newfd FileDesc) error { 
+func (fs *fileStorage) Rename(oldfd, newfd FileDesc) error {
 	if !FileDescOk(oldfd) || !FileDescOk(newfd) {
 		return ErrInvalidFile
 	}
@@ -483,7 +483,7 @@ func (fs *fileStorage) Rename(oldfd, newfd FileDesc) error {
 	return rename(filepath.Join(fs.path, fsGenName(oldfd)), filepath.Join(fs.path, fsGenName(newfd)))
 }
 
-func (fs *fileStorage) Close() error { 
+func (fs *fileStorage) Close() error {
 	fs.mu.Lock()
 	defer fs.mu.Unlock()
 	if fs.open < 0 {
@@ -509,7 +509,7 @@ type fileWrap struct {
 	closed bool
 }
 
-func (fw *fileWrap) Sync() error { 
+func (fw *fileWrap) Sync() error {
 	if err := fw.File.Sync(); err != nil {
 		return err
 	}
@@ -524,7 +524,7 @@ func (fw *fileWrap) Sync() error {
 	return nil
 }
 
-func (fw *fileWrap) Close() error { 
+func (fw *fileWrap) Close() error {
 	fw.fs.mu.Lock()
 	defer fw.fs.mu.Unlock()
 	if fw.closed {
@@ -539,7 +539,7 @@ func (fw *fileWrap) Close() error {
 	return err
 }
 
-func fsGenName(fd FileDesc) string { 
+func fsGenName(fd FileDesc) string {
 	switch fd.Type {
 	case TypeManifest:
 		return fmt.Sprintf("MANIFEST-%06d", fd.Num)
@@ -554,11 +554,11 @@ func fsGenName(fd FileDesc) string {
 	}
 }
 
-func fsHasOldName(fd FileDesc) bool { 
+func fsHasOldName(fd FileDesc) bool {
 	return fd.Type == TypeTable
 }
 
-func fsGenOldName(fd FileDesc) string { 
+func fsGenOldName(fd FileDesc) string {
 	switch fd.Type {
 	case TypeTable:
 		return fmt.Sprintf("%06d.sst", fd.Num)
@@ -566,7 +566,7 @@ func fsGenOldName(fd FileDesc) string {
 	return fsGenName(fd)
 }
 
-func fsParseName(name string) (fd FileDesc, ok bool) { 
+func fsParseName(name string) (fd FileDesc, ok bool) {
 	var tail string
 	_, err := fmt.Sscanf(name, "%d.%s", &fd.Num, &tail)
 	if err == nil {
@@ -590,7 +590,7 @@ func fsParseName(name string) (fd FileDesc, ok bool) {
 	return
 }
 
-func fsParseNamePtr(name string, fd *FileDesc) bool { 
+func fsParseNamePtr(name string, fd *FileDesc) bool {
 	_fd, ok := fsParseName(name)
 	if fd != nil {
 		*fd = _fd

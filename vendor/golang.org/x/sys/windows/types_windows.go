@@ -301,11 +301,11 @@ type Timeval struct {
 	Usec int32
 }
 
-func (tv *Timeval) Nanoseconds() int64 { 
+func (tv *Timeval) Nanoseconds() int64 {
 	return (int64(tv.Sec)*1e6 + int64(tv.Usec)) * 1e3
 }
 
-func NsecToTimeval(nsec int64) (tv Timeval) { 
+func NsecToTimeval(nsec int64) (tv Timeval) {
 	tv.Sec = int32(nsec / 1e9)
 	tv.Usec = int32(nsec % 1e9 / 1e3)
 	return
@@ -339,7 +339,7 @@ type Filetime struct {
 
 // Nanoseconds returns Filetime ft in nanoseconds
 // since Epoch (00:00:00 UTC, January 1, 1970).
-func (ft *Filetime) Nanoseconds() int64 { 
+func (ft *Filetime) Nanoseconds() int64 {
 	// 100-nanosecond intervals since January 1, 1601
 	nsec := int64(ft.HighDateTime)<<32 + int64(ft.LowDateTime)
 	// change starting time to the Epoch (00:00:00 UTC, January 1, 1970)
@@ -349,7 +349,7 @@ func (ft *Filetime) Nanoseconds() int64 {
 	return nsec
 }
 
-func NsecToFiletime(nsec int64) (ft Filetime) { 
+func NsecToFiletime(nsec int64) (ft Filetime) {
 	// convert into 100-nanosecond
 	nsec /= 100
 	// change starting time to January 1, 1601
@@ -388,7 +388,7 @@ type win32finddata1 struct {
 	AlternateFileName [14]uint16
 }
 
-func copyFindData(dst *Win32finddata, src *win32finddata1) { 
+func copyFindData(dst *Win32finddata, src *win32finddata1) {
 	dst.FileAttributes = src.FileAttributes
 	dst.CreationTime = src.CreationTime
 	dst.LastAccessTime = src.LastAccessTime

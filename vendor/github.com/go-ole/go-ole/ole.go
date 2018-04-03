@@ -27,17 +27,17 @@ type EXCEPINFO struct {
 }
 
 // WCode return wCode in EXCEPINFO.
-func (e EXCEPINFO) WCode() uint16 { 
+func (e EXCEPINFO) WCode() uint16 {
 	return e.wCode
 }
 
 // SCODE return scode in EXCEPINFO.
-func (e EXCEPINFO) SCODE() uint32 { 
+func (e EXCEPINFO) SCODE() uint32 {
 	return e.scode
 }
 
 // String convert EXCEPINFO to string.
-func (e EXCEPINFO) String() string { 
+func (e EXCEPINFO) String() string {
 	var src, desc, hlp string
 	if e.bstrSource == nil {
 		src = "<nil>"
@@ -64,7 +64,7 @@ func (e EXCEPINFO) String() string {
 }
 
 // Error implements error interface and returns error string.
-func (e EXCEPINFO) Error() string { 
+func (e EXCEPINFO) Error() string {
 	if e.bstrDescription != nil {
 		return strings.TrimSpace(BstrToString(e.bstrDescription))
 	}

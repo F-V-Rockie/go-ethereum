@@ -10,7 +10,7 @@ var (
 )
 
 // IsEastAsian return true if the current locale is CJK
-func IsEastAsian() bool { 
+func IsEastAsian() bool {
 	r1, _, _ := procGetConsoleOutputCP.Call()
 	if r1 == 0 {
 		return false

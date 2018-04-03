@@ -22,7 +22,7 @@ import (
 */
 import "C"
 
-func init() { 
+func init() {
 	system.ticks = uint64(C.sysconf(C._SC_CLK_TCK))
 
 	Procd = "/compat/linux/proc"
@@ -30,11 +30,11 @@ func init() {
 	getLinuxBootTime()
 }
 
-func getMountTableFileName() string { 
+func getMountTableFileName() string {
 	return Procd + "/mtab"
 }
 
-func (self *Uptime) Get() error { 
+func (self *Uptime) Get() error {
 	ts := C.struct_timespec{}
 
 	if _, err := C.clock_gettime(C.CLOCK_UPTIME, &ts); err != nil {
@@ -46,7 +46,7 @@ func (self *Uptime) Get() error {
 	return nil
 }
 
-func (self *FDUsage) Get() error { 
+func (self *FDUsage) Get() error {
 	val := C.uint32_t(0)
 	sc := C.size_t(4)
 
@@ -71,7 +71,7 @@ func (self *FDUsage) Get() error {
 	return nil
 }
 
-func (self *ProcFDUsage) Get(pid int) error { 
+func (self *ProcFDUsage) Get(pid int) error {
 	err := readFile("/proc/"+strconv.Itoa(pid)+"/rlimit", func(line string) bool {
 		if strings.HasPrefix(line, "nofile") {
 			fields := strings.Fields(line)
@@ -97,7 +97,7 @@ func (self *ProcFDUsage) Get(pid int) error {
 	return nil
 }
 
-func parseCpuStat(self *Cpu, line string) error { 
+func parseCpuStat(self *Cpu, line string) error {
 	fields := strings.Fields(line)
 
 	self.User, _ = strtoull(fields[1])

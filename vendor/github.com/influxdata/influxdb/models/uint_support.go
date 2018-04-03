@@ -2,6 +2,6 @@
 
 package models
 
-func init() { 
+func init() {
 	EnableUintSupport()
 }

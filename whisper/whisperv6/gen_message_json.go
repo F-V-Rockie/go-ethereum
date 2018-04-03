@@ -6,12 +6,14 @@ import (
 	"encoding/json"
 
 	"github.com/ethereum/go-ethereum/common/hexutil"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 var _ = (*messageOverride)(nil)
 
 // MarshalJSON marshals type Message to a json string
-func (m Message) MarshalJSON() ([]byte, error) { log.DebugLog()
+func (m Message) MarshalJSON() ([]byte, error) {
+	log.DebugLog()
 	type Message struct {
 		Sig       hexutil.Bytes `json:"sig,omitempty"`
 		TTL       uint32        `json:"ttl"`
@@ -37,7 +39,8 @@ func (m Message) MarshalJSON() ([]byte, error) { log.DebugLog()
 }
 
 // UnmarshalJSON unmarshals type Message to a json string
-func (m *Message) UnmarshalJSON(input []byte) error { log.DebugLog()
+func (m *Message) UnmarshalJSON(input []byte) error {
+	log.DebugLog()
 	type Message struct {
 		Sig       *hexutil.Bytes `json:"sig,omitempty"`
 		TTL       *uint32        `json:"ttl"`

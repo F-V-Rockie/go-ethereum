@@ -19,6 +19,7 @@ package rlp
 import (
 	"io"
 	"reflect"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // RawValue represents an encoded RLP value and can be used to delay

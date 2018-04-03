@@ -40,6 +40,7 @@ import (
 	"errors"
 	"math/big"
 	"unsafe"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 var context *C.secp256k1_context

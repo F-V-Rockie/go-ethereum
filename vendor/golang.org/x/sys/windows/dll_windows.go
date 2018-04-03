@@ -18,7 +18,7 @@ type DLLError struct {
 	Msg     string
 }
 
-func (e *DLLError) Error() string {  return e.Msg }
+func (e *DLLError) Error() string { return e.Msg }
 
 // Implemented in runtime/syscall_windows.goc; we provide jumps to them in our assembly file.
 func loadlibrary(filename *uint16) (handle uintptr, err syscall.Errno)
@@ -35,7 +35,7 @@ type DLL struct {
 // Warning: using LoadDLL without an absolute path name is subject to
 // DLL preloading attacks. To safely load a system DLL, use LazyDLL
 // with System set to true, or use LoadLibraryEx directly.
-func LoadDLL(name string) (dll *DLL, err error) { 
+func LoadDLL(name string) (dll *DLL, err error) {
 	namep, err := UTF16PtrFromString(name)
 	if err != nil {
 		return nil, err
@@ -56,7 +56,7 @@ func LoadDLL(name string) (dll *DLL, err error) {
 }
 
 // MustLoadDLL is like LoadDLL but panics if load operation failes.
-func MustLoadDLL(name string) *DLL { 
+func MustLoadDLL(name string) *DLL {
 	d, e := LoadDLL(name)
 	if e != nil {
 		panic(e)
@@ -66,7 +66,7 @@ func MustLoadDLL(name string) *DLL {
 
 // FindProc searches DLL d for procedure named name and returns *Proc
 // if found. It returns an error if search fails.
-func (d *DLL) FindProc(name string) (proc *Proc, err error) { 
+func (d *DLL) FindProc(name string) (proc *Proc, err error) {
 	namep, err := BytePtrFromString(name)
 	if err != nil {
 		return nil, err
@@ -88,7 +88,7 @@ func (d *DLL) FindProc(name string) (proc *Proc, err error) {
 }
 
 // MustFindProc is like FindProc but panics if search fails.
-func (d *DLL) MustFindProc(name string) *Proc { 
+func (d *DLL) MustFindProc(name string) *Proc {
 	p, e := d.FindProc(name)
 	if e != nil {
 		panic(e)
@@ -97,7 +97,7 @@ func (d *DLL) MustFindProc(name string) *Proc {
 }
 
 // Release unloads DLL d from memory.
-func (d *DLL) Release() (err error) { 
+func (d *DLL) Release() (err error) {
 	return FreeLibrary(d.Handle)
 }
 
@@ -110,7 +110,7 @@ type Proc struct {
 
 // Addr returns the address of the procedure represented by p.
 // The return value can be passed to Syscall to run the procedure.
-func (p *Proc) Addr() uintptr { 
+func (p *Proc) Addr() uintptr {
 	return p.addr
 }
 
@@ -123,7 +123,7 @@ func (p *Proc) Addr() uintptr {
 // Callers must inspect the primary return value to decide whether an error occurred
 // (according to the semantics of the specific function being called) before consulting
 // the error. The error will be guaranteed to contain windows.Errno.
-func (p *Proc) Call(a ...uintptr) (r1, r2 uintptr, lastErr error) { 
+func (p *Proc) Call(a ...uintptr) (r1, r2 uintptr, lastErr error) {
 	switch len(a) {
 	case 0:
 		return syscall.Syscall(p.Addr(), uintptr(len(a)), 0, 0, 0)
@@ -180,7 +180,7 @@ type LazyDLL struct {
 
 // Load loads DLL file d.Name into memory. It returns an error if fails.
 // Load will not try to load DLL, if it is already loaded into memory.
-func (d *LazyDLL) Load() error { 
+func (d *LazyDLL) Load() error {
 	// Non-racy version of:
 	// if d.dll != nil {
 	if atomic.LoadPointer((*unsafe.Pointer)(unsafe.Pointer(&d.dll))) != nil {
@@ -213,7 +213,7 @@ func (d *LazyDLL) Load() error {
 }
 
 // mustLoad is like Load but panics if search fails.
-func (d *LazyDLL) mustLoad() { 
+func (d *LazyDLL) mustLoad() {
 	e := d.Load()
 	if e != nil {
 		panic(e)
@@ -221,25 +221,25 @@ func (d *LazyDLL) mustLoad() {
 }
 
 // Handle returns d's module handle.
-func (d *LazyDLL) Handle() uintptr { 
+func (d *LazyDLL) Handle() uintptr {
 	d.mustLoad()
 	return uintptr(d.dll.Handle)
 }
 
 // NewProc returns a LazyProc for accessing the named procedure in the DLL d.
-func (d *LazyDLL) NewProc(name string) *LazyProc { 
+func (d *LazyDLL) NewProc(name string) *LazyProc {
 	return &LazyProc{l: d, Name: name}
 }
 
 // NewLazyDLL creates new LazyDLL associated with DLL file.
-func NewLazyDLL(name string) *LazyDLL { 
+func NewLazyDLL(name string) *LazyDLL {
 	return &LazyDLL{Name: name}
 }
 
 // NewLazySystemDLL is like NewLazyDLL, but will only
 // search Windows System directory for the DLL if name is
 // a base name (like "advapi32.dll").
-func NewLazySystemDLL(name string) *LazyDLL { 
+func NewLazySystemDLL(name string) *LazyDLL {
 	return &LazyDLL{Name: name, System: true}
 }
 
@@ -256,7 +256,7 @@ type LazyProc struct {
 // Find searches DLL for procedure named p.Name. It returns
 // an error if search fails. Find will not search procedure,
 // if it is already found and loaded into memory.
-func (p *LazyProc) Find() error { 
+func (p *LazyProc) Find() error {
 	// Non-racy version of:
 	// if p.proc == nil {
 	if atomic.LoadPointer((*unsafe.Pointer)(unsafe.Pointer(&p.proc))) == nil {
@@ -280,7 +280,7 @@ func (p *LazyProc) Find() error {
 }
 
 // mustFind is like Find but panics if search fails.
-func (p *LazyProc) mustFind() { 
+func (p *LazyProc) mustFind() {
 	e := p.Find()
 	if e != nil {
 		panic(e)
@@ -290,7 +290,7 @@ func (p *LazyProc) mustFind() {
 // Addr returns the address of the procedure represented by p.
 // The return value can be passed to Syscall to run the procedure.
 // It will panic if the procedure cannot be found.
-func (p *LazyProc) Addr() uintptr { 
+func (p *LazyProc) Addr() uintptr {
 	p.mustFind()
 	return p.proc.Addr()
 }
@@ -304,7 +304,7 @@ func (p *LazyProc) Addr() uintptr {
 // Callers must inspect the primary return value to decide whether an error occurred
 // (according to the semantics of the specific function being called) before consulting
 // the error. The error will be guaranteed to contain windows.Errno.
-func (p *LazyProc) Call(a ...uintptr) (r1, r2 uintptr, lastErr error) { 
+func (p *LazyProc) Call(a ...uintptr) (r1, r2 uintptr, lastErr error) {
 	p.mustFind()
 	return p.proc.Call(a...)
 }
@@ -314,7 +314,7 @@ var canDoSearchSystem32Once struct {
 	v bool
 }
 
-func initCanDoSearchSystem32() { 
+func initCanDoSearchSystem32() {
 	// https://msdn.microsoft.com/en-us/library/ms684179(v=vs.85).aspx says:
 	// "Windows 7, Windows Server 2008 R2, Windows Vista, and Windows
 	// Server 2008: The LOAD_LIBRARY_SEARCH_* flags are available on
@@ -326,12 +326,12 @@ func initCanDoSearchSystem32() {
 	canDoSearchSystem32Once.v = (modkernel32.NewProc("AddDllDirectory").Find() == nil)
 }
 
-func canDoSearchSystem32() bool { 
+func canDoSearchSystem32() bool {
 	canDoSearchSystem32Once.Do(initCanDoSearchSystem32)
 	return canDoSearchSystem32Once.v
 }
 
-func isBaseName(name string) bool { 
+func isBaseName(name string) bool {
 	for _, c := range name {
 		if c == ':' || c == '/' || c == '\\' {
 			return false
@@ -347,7 +347,7 @@ func isBaseName(name string) bool {
 // If name is not an absolute path, LoadLibraryEx searches for the DLL
 // in a variety of automatic locations unless constrained by flags.
 // See: https://msdn.microsoft.com/en-us/library/ff919712%28VS.85%29.aspx
-func loadLibraryEx(name string, system bool) (*DLL, error) { 
+func loadLibraryEx(name string, system bool) (*DLL, error) {
 	loadDLL := name
 	var flags uintptr
 	if system {
@@ -375,4 +375,4 @@ func loadLibraryEx(name string, system bool) (*DLL, error) {
 
 type errString string
 
-func (s errString) Error() string {  return string(s) }
+func (s errString) Error() string { return string(s) }
