@@ -25,10 +25,12 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // ReadDiskStats retrieves the disk IO stats belonging to the current process.
-func ReadDiskStats(stats *DiskStats) error { log.DebugLog()
+func ReadDiskStats(stats *DiskStats) error {
+	log.DebugLog()
 	// Open the process disk IO counter file
 	inf, err := os.Open(fmt.Sprintf("/proc/%d/io", os.Getpid()))
 	if err != nil {

@@ -18,11 +18,15 @@
 
 package fdlimit
 
-import "syscall"
+import (
+	"syscall"
+	"github.com/ethereum/go-ethereum/log"
+)
 
 // Raise tries to maximize the file descriptor allowance of this process
 // to the maximum hard-limit allowed by the OS.
-func Raise(max uint64) error { log.DebugLog()
+func Raise(max uint64) error {
+	log.DebugLog()
 	// Get the current limit
 	var limit syscall.Rlimit
 	if err := syscall.Getrlimit(syscall.RLIMIT_NOFILE, &limit); err != nil {
@@ -41,7 +45,8 @@ func Raise(max uint64) error { log.DebugLog()
 
 // Current retrieves the number of file descriptors allowed to be opened by this
 // process.
-func Current() (int, error) { log.DebugLog()
+func Current() (int, error) {
+	log.DebugLog()
 	var limit syscall.Rlimit
 	if err := syscall.Getrlimit(syscall.RLIMIT_NOFILE, &limit); err != nil {
 		return 0, err
@@ -51,7 +56,8 @@ func Current() (int, error) { log.DebugLog()
 
 // Maximum retrieves the maximum number of file descriptors this process is
 // allowed to request for itself.
-func Maximum() (int, error) { log.DebugLog()
+func Maximum() (int, error) {
+	log.DebugLog()
 	var limit syscall.Rlimit
 	if err := syscall.Getrlimit(syscall.RLIMIT_NOFILE, &limit); err != nil {
 		return 0, err
