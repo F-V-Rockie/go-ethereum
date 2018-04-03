@@ -6,11 +6,13 @@ import (
 	"fmt"
 	"log/syslog"
 	"time"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // Output each metric in the given registry to syslog periodically using
 // the given syslogger.
-func Syslog(r Registry, d time.Duration, w *syslog.Writer) { log.DebugLog()
+func Syslog(r Registry, d time.Duration, w *syslog.Writer) {
+	log.DebugLog()
 	for range time.Tick(d) {
 		r.Each(func(name string, i interface{}) {
 			switch metric := i.(type) {

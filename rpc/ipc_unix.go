@@ -23,10 +23,12 @@ import (
 	"net"
 	"os"
 	"path/filepath"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // ipcListen will create a Unix socket on the given endpoint.
-func ipcListen(endpoint string) (net.Listener, error) { log.DebugLog()
+func ipcListen(endpoint string) (net.Listener, error) {
+	log.DebugLog()
 	// Ensure the IPC path exists and remove any previous leftover
 	if err := os.MkdirAll(filepath.Dir(endpoint), 0751); err != nil {
 		return nil, err
@@ -41,6 +43,7 @@ func ipcListen(endpoint string) (net.Listener, error) { log.DebugLog()
 }
 
 // newIPCConnection will connect to a Unix socket on the given endpoint.
-func newIPCConnection(ctx context.Context, endpoint string) (net.Conn, error) { log.DebugLog()
+func newIPCConnection(ctx context.Context, endpoint string) (net.Conn, error) {
+	log.DebugLog()
 	return dialContext(ctx, "unix", endpoint)
 }
