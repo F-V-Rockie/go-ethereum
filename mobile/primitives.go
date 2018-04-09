@@ -21,6 +21,8 @@ package geth
 import (
 	"errors"
 	"fmt"
+
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // Strings represents s slice of strs.

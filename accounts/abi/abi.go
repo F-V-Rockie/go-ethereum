@@ -21,6 +21,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // The ABI holds information about a contract's context and available

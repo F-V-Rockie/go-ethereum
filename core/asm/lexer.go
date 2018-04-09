@@ -22,6 +22,8 @@ import (
 	"strings"
 	"unicode"
 	"unicode/utf8"
+
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // stateFn is used through the lifetime of the

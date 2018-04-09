@@ -24,6 +24,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/rlp"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // Entry is implemented by known node record entry types.
@@ -40,40 +41,48 @@ type generic struct {
 	value interface{}
 }
 
-func (g generic) ENRKey() string { log.DebugLog() return g.key }
+func (g generic) ENRKey() string { log.DebugLog()
+									 return g.key }
 
-func (g generic) EncodeRLP(w io.Writer) error { log.DebugLog()
+func (g generic) EncodeRLP(w io.Writer) error {
+	log.DebugLog()
 	return rlp.Encode(w, g.value)
 }
 
-func (g *generic) DecodeRLP(s *rlp.Stream) error { log.DebugLog()
+func (g *generic) DecodeRLP(s *rlp.Stream) error {
+	log.DebugLog()
 	return s.Decode(g.value)
 }
 
 // WithEntry wraps any value with a key name. It can be used to set and load arbitrary values
 // in a record. The value v must be supported by rlp. To use WithEntry with Load, the value
 // must be a pointer.
-func WithEntry(k string, v interface{}) Entry { log.DebugLog()
+func WithEntry(k string, v interface{}) Entry {
+	log.DebugLog()
 	return &generic{key: k, value: v}
 }
 
 // DiscPort is the "discv5" key, which holds the UDP port for discovery v5.
 type DiscPort uint16
 
-func (v DiscPort) ENRKey() string { log.DebugLog() return "discv5" }
+func (v DiscPort) ENRKey() string { log.DebugLog()
+									  return "discv5" }
 
 // ID is the "id" key, which holds the name of the identity scheme.
 type ID string
 
-func (v ID) ENRKey() string { log.DebugLog() return "id" }
+func (v ID) ENRKey() string { log.DebugLog()
+								return "id" }
 
 // IP4 is the "ip4" key, which holds a 4-byte IPv4 address.
 type IP4 net.IP
 
-func (v IP4) ENRKey() string { log.DebugLog() return "ip4" }
+func (v IP4) ENRKey() string { log.DebugLog()
+								 return "ip4" }
 
 // EncodeRLP implements rlp.Encoder.
-func (v IP4) EncodeRLP(w io.Writer) error { log.DebugLog()
+func (v IP4) EncodeRLP(w io.Writer) error {
+	log.DebugLog()
 	ip4 := net.IP(v).To4()
 	if ip4 == nil {
 		return fmt.Errorf("invalid IPv4 address: %v", v)
@@ -82,7 +91,8 @@ func (v IP4) EncodeRLP(w io.Writer) error { log.DebugLog()
 }
 
 // DecodeRLP implements rlp.Decoder.
-func (v *IP4) DecodeRLP(s *rlp.Stream) error { log.DebugLog()
+func (v *IP4) DecodeRLP(s *rlp.Stream) error {
+	log.DebugLog()
 	if err := s.Decode((*net.IP)(v)); err != nil {
 		return err
 	}
@@ -95,16 +105,19 @@ func (v *IP4) DecodeRLP(s *rlp.Stream) error { log.DebugLog()
 // IP6 is the "ip6" key, which holds a 16-byte IPv6 address.
 type IP6 net.IP
 
-func (v IP6) ENRKey() string { log.DebugLog() return "ip6" }
+func (v IP6) ENRKey() string { log.DebugLog()
+								 return "ip6" }
 
 // EncodeRLP implements rlp.Encoder.
-func (v IP6) EncodeRLP(w io.Writer) error { log.DebugLog()
+func (v IP6) EncodeRLP(w io.Writer) error {
+	log.DebugLog()
 	ip6 := net.IP(v)
 	return rlp.Encode(w, ip6)
 }
 
 // DecodeRLP implements rlp.Decoder.
-func (v *IP6) DecodeRLP(s *rlp.Stream) error { log.DebugLog()
+func (v *IP6) DecodeRLP(s *rlp.Stream) error {
+	log.DebugLog()
 	if err := s.Decode((*net.IP)(v)); err != nil {
 		return err
 	}
@@ -117,15 +130,18 @@ func (v *IP6) DecodeRLP(s *rlp.Stream) error { log.DebugLog()
 // Secp256k1 is the "secp256k1" key, which holds a public key.
 type Secp256k1 ecdsa.PublicKey
 
-func (v Secp256k1) ENRKey() string { log.DebugLog() return "secp256k1" }
+func (v Secp256k1) ENRKey() string { log.DebugLog()
+									   return "secp256k1" }
 
 // EncodeRLP implements rlp.Encoder.
-func (v Secp256k1) EncodeRLP(w io.Writer) error { log.DebugLog()
+func (v Secp256k1) EncodeRLP(w io.Writer) error {
+	log.DebugLog()
 	return rlp.Encode(w, crypto.CompressPubkey((*ecdsa.PublicKey)(&v)))
 }
 
 // DecodeRLP implements rlp.Decoder.
-func (v *Secp256k1) DecodeRLP(s *rlp.Stream) error { log.DebugLog()
+func (v *Secp256k1) DecodeRLP(s *rlp.Stream) error {
+	log.DebugLog()
 	buf, err := s.Bytes()
 	if err != nil {
 		return err
@@ -145,7 +161,8 @@ type KeyError struct {
 }
 
 // Error implements error.
-func (err *KeyError) Error() string { log.DebugLog()
+func (err *KeyError) Error() string {
+	log.DebugLog()
 	if err.Err == errNotFound {
 		return fmt.Sprintf("missing ENR key %q", err.Key)
 	}
@@ -154,7 +171,8 @@ func (err *KeyError) Error() string { log.DebugLog()
 
 // IsNotFound reports whether the given error means that a key/value pair is
 // missing from a record.
-func IsNotFound(err error) bool { log.DebugLog()
+func IsNotFound(err error) bool {
+	log.DebugLog()
 	kerr, ok := err.(*KeyError)
 	return ok && kerr.Err == errNotFound
 }

@@ -30,6 +30,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"golang.org/x/tools/imports"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // Lang is a target programming language selector to generate bindings for.

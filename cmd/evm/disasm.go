@@ -24,6 +24,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/core/asm"
 	cli "gopkg.in/urfave/cli.v1"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 var disasmCommand = cli.Command{

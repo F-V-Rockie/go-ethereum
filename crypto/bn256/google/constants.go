@@ -6,6 +6,8 @@ package bn256
 
 import (
 	"math/big"
+
+	"github.com/ethereum/go-ethereum/log"
 )
 
 func bigFromBase10(s string) *big.Int { log.DebugLog()

@@ -38,6 +38,7 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/crypto/sha3"
 	"github.com/ethereum/go-ethereum/rlp"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 const SizeLimit = 300 // maximum encoded size of a node record in bytes
@@ -71,19 +72,22 @@ type pair struct {
 }
 
 // Signed reports whether the record has a valid signature.
-func (r *Record) Signed() bool { log.DebugLog()
+func (r *Record) Signed() bool {
+	log.DebugLog()
 	return r.signature != nil
 }
 
 // Seq returns the sequence number.
-func (r *Record) Seq() uint64 { log.DebugLog()
+func (r *Record) Seq() uint64 {
+	log.DebugLog()
 	return r.seq
 }
 
 // SetSeq updates the record sequence number. This invalidates any signature on the record.
 // Calling SetSeq is usually not required because signing the redord increments the
 // sequence number.
-func (r *Record) SetSeq(s uint64) { log.DebugLog()
+func (r *Record) SetSeq(s uint64) {
+	log.DebugLog()
 	r.signature = nil
 	r.raw = nil
 	r.seq = s
@@ -94,7 +98,8 @@ func (r *Record) SetSeq(s uint64) { log.DebugLog()
 //
 // Errors returned by Load are wrapped in KeyError. You can distinguish decoding errors
 // from missing keys using the IsNotFound function.
-func (r *Record) Load(e Entry) error { log.DebugLog()
+func (r *Record) Load(e Entry) error {
+	log.DebugLog()
 	i := sort.Search(len(r.pairs), func(i int) bool { return r.pairs[i].k >= e.ENRKey() })
 	if i < len(r.pairs) && r.pairs[i].k == e.ENRKey() {
 		if err := rlp.DecodeBytes(r.pairs[i].v, e); err != nil {
@@ -107,7 +112,8 @@ func (r *Record) Load(e Entry) error { log.DebugLog()
 
 // Set adds or updates the given entry in the record.
 // It panics if the value can't be encoded.
-func (r *Record) Set(e Entry) { log.DebugLog()
+func (r *Record) Set(e Entry) {
+	log.DebugLog()
 	r.signature = nil
 	r.raw = nil
 	blob, err := rlp.EncodeToBytes(e)
@@ -136,7 +142,8 @@ func (r *Record) Set(e Entry) { log.DebugLog()
 
 // EncodeRLP implements rlp.Encoder. Encoding fails if
 // the record is unsigned.
-func (r Record) EncodeRLP(w io.Writer) error { log.DebugLog()
+func (r Record) EncodeRLP(w io.Writer) error {
+	log.DebugLog()
 	if !r.Signed() {
 		return errEncodeUnsigned
 	}
@@ -145,7 +152,8 @@ func (r Record) EncodeRLP(w io.Writer) error { log.DebugLog()
 }
 
 // DecodeRLP implements rlp.Decoder. Decoding verifies the signature.
-func (r *Record) DecodeRLP(s *rlp.Stream) error { log.DebugLog()
+func (r *Record) DecodeRLP(s *rlp.Stream) error {
+	log.DebugLog()
 	raw, err := s.Raw()
 	if err != nil {
 		return err
@@ -207,11 +215,13 @@ func (r *Record) DecodeRLP(s *rlp.Stream) error { log.DebugLog()
 
 type s256raw []byte
 
-func (s256raw) ENRKey() string { log.DebugLog() return "secp256k1" }
+func (s256raw) ENRKey() string { log.DebugLog()
+								   return "secp256k1" }
 
 // NodeAddr returns the node address. The return value will be nil if the record is
 // unsigned.
-func (r *Record) NodeAddr() []byte { log.DebugLog()
+func (r *Record) NodeAddr() []byte {
+	log.DebugLog()
 	var entry s256raw
 	if r.Load(&entry) != nil {
 		return nil
@@ -222,14 +232,16 @@ func (r *Record) NodeAddr() []byte { log.DebugLog()
 // Sign signs the record with the given private key. It updates the record's identity
 // scheme, public key and increments the sequence number. Sign returns an error if the
 // encoded record is larger than the size limit.
-func (r *Record) Sign(privkey *ecdsa.PrivateKey) error { log.DebugLog()
+func (r *Record) Sign(privkey *ecdsa.PrivateKey) error {
+	log.DebugLog()
 	r.seq = r.seq + 1
 	r.Set(ID_SECP256k1_KECCAK)
 	r.Set(Secp256k1(privkey.PublicKey))
 	return r.signAndEncode(privkey)
 }
 
-func (r *Record) appendPairs(list []interface{}) []interface{} { log.DebugLog()
+func (r *Record) appendPairs(list []interface{}) []interface{} {
+	log.DebugLog()
 	list = append(list, r.seq)
 	for _, p := range r.pairs {
 		list = append(list, p.k, p.v)
@@ -237,7 +249,8 @@ func (r *Record) appendPairs(list []interface{}) []interface{} { log.DebugLog()
 	return list
 }
 
-func (r *Record) signAndEncode(privkey *ecdsa.PrivateKey) error { log.DebugLog()
+func (r *Record) signAndEncode(privkey *ecdsa.PrivateKey) error {
+	log.DebugLog()
 	// Put record elements into a flat list. Leave room for the signature.
 	list := make([]interface{}, 1, len(r.pairs)*2+2)
 	list = r.appendPairs(list)
@@ -263,7 +276,8 @@ func (r *Record) signAndEncode(privkey *ecdsa.PrivateKey) error { log.DebugLog()
 	return nil
 }
 
-func (r *Record) verifySignature() error { log.DebugLog()
+func (r *Record) verifySignature() error {
+	log.DebugLog()
 	// Get identity scheme, public key, signature.
 	var id ID
 	var entry s256raw

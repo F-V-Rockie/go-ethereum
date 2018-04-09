@@ -32,6 +32,7 @@ import (
 	"time"
 
 	"github.com/docker/docker/pkg/reexec"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 func NewTestCmd(t *testing.T, data interface{}) *TestCmd { log.DebugLog()
@@ -84,7 +85,7 @@ func (tt *TestCmd) InputLine(s string) string { log.DebugLog()
 }
 
 func (tt *TestCmd) SetTemplateFunc(name string, fn interface{}) { log.DebugLog()
-	if tt.func == nil { log.DebugLog()
+	if tt.Func == nil { log.DebugLog()
 		tt.Func = make(map[string]interface{})
 	}
 	tt.Func[name] = fn

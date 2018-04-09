@@ -21,6 +21,8 @@ import (
 	"errors"
 	"io"
 	"math/big"
+
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // BUG(agl): this implementation is not constant time.

@@ -10,6 +10,8 @@ package bn256
 
 import (
 	"math/big"
+
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // gfP2 implements a field of size p² as a quadratic extension of the base

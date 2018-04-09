@@ -25,6 +25,7 @@ import (
 	"github.com/ethereum/go-ethereum/swarm/api"
 	httpapi "github.com/ethereum/go-ethereum/swarm/api/http"
 	"github.com/ethereum/go-ethereum/swarm/storage"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 func NewTestSwarmServer(t *testing.T) *TestSwarmServer { log.DebugLog()

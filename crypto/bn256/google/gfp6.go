@@ -10,6 +10,8 @@ package bn256
 
 import (
 	"math/big"
+
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // gfP6 implements the field of size p⁶ as a cubic extension of gfP2 where τ³=ξ

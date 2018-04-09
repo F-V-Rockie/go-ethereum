@@ -16,6 +16,8 @@
 
 package adapters
 
+import "github.com/ethereum/go-ethereum/log"
+
 type SimStateStore struct {
 	m map[string][]byte
 }

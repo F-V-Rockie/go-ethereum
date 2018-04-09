@@ -28,6 +28,7 @@ import (
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/event"
+	debugLog "github.com/ethereum/go-ethereum/log"
 )
 
 // SignerFn is a signer function callback when a contract requires a method to
@@ -85,7 +86,7 @@ type BoundContract struct {
 
 // NewBoundContract creates a low level contract interface through which calls
 // and transactions may be made through.
-func NewBoundContract(address common.Address, abi abi.ABI, caller ContractCaller, transactor ContractTransactor, filterer ContractFilterer) *BoundContract { log.DebugLog()
+func NewBoundContract(address common.Address, abi abi.ABI, caller ContractCaller, transactor ContractTransactor, filterer ContractFilterer) *BoundContract { debugLog.DebugLog()
 	return &BoundContract{
 		address:    address,
 		abi:        abi,
@@ -97,7 +98,7 @@ func NewBoundContract(address common.Address, abi abi.ABI, caller ContractCaller
 
 // DeployContract deploys a contract onto the Ethereum blockchain and binds the
 // deployment address with a Go wrapper.
-func DeployContract(opts *TransactOpts, abi abi.ABI, bytecode []byte, backend ContractBackend, params ...interface{}) (common.Address, *types.Transaction, *BoundContract, error) { log.DebugLog()
+func DeployContract(opts *TransactOpts, abi abi.ABI, bytecode []byte, backend ContractBackend, params ...interface{}) (common.Address, *types.Transaction, *BoundContract, error) { debugLog.DebugLog()
 	// Otherwise try to deploy the contract
 	c := NewBoundContract(common.Address{}, abi, backend, backend, backend)
 
@@ -117,7 +118,7 @@ func DeployContract(opts *TransactOpts, abi abi.ABI, bytecode []byte, backend Co
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (c *BoundContract) Call(opts *CallOpts, result interface{}, method string, params ...interface{}) error { log.DebugLog()
+func (c *BoundContract) Call(opts *CallOpts, result interface{}, method string, params ...interface{}) error { debugLog.DebugLog()
 	// Don't crash on a lazy user
 	if opts == nil {
 		opts = new(CallOpts)
@@ -165,7 +166,7 @@ func (c *BoundContract) Call(opts *CallOpts, result interface{}, method string, 
 }
 
 // Transact invokes the (paid) contract method with params as input values.
-func (c *BoundContract) Transact(opts *TransactOpts, method string, params ...interface{}) (*types.Transaction, error) { log.DebugLog()
+func (c *BoundContract) Transact(opts *TransactOpts, method string, params ...interface{}) (*types.Transaction, error) { debugLog.DebugLog()
 	// Otherwise pack up the parameters and invoke the contract
 	input, err := c.abi.Pack(method, params...)
 	if err != nil {
@@ -176,13 +177,13 @@ func (c *BoundContract) Transact(opts *TransactOpts, method string, params ...in
 
 // Transfer initiates a plain transaction to move funds to the contract, calling
 // its default method if one is available.
-func (c *BoundContract) Transfer(opts *TransactOpts) (*types.Transaction, error) { log.DebugLog()
+func (c *BoundContract) Transfer(opts *TransactOpts) (*types.Transaction, error) { debugLog.DebugLog()
 	return c.transact(opts, &c.address, nil)
 }
 
 // transact executes an actual transaction invocation, first deriving any missing
 // authorization fields, and then scheduling the transaction for execution.
-func (c *BoundContract) transact(opts *TransactOpts, contract *common.Address, input []byte) (*types.Transaction, error) { log.DebugLog()
+func (c *BoundContract) transact(opts *TransactOpts, contract *common.Address, input []byte) (*types.Transaction, error) { debugLog.DebugLog()
 	var err error
 
 	// Ensure a valid value field and resolve the account nonce
@@ -246,7 +247,7 @@ func (c *BoundContract) transact(opts *TransactOpts, contract *common.Address, i
 
 // FilterLogs filters contract logs for past blocks, returning the necessary
 // channels to construct a strongly typed bound iterator on top of them.
-func (c *BoundContract) FilterLogs(opts *FilterOpts, name string, query ...[]interface{}) (chan types.Log, event.Subscription, error) { log.DebugLog()
+func (c *BoundContract) FilterLogs(opts *FilterOpts, name string, query ...[]interface{}) (chan types.Log, event.Subscription, error) { debugLog.DebugLog()
 	// Don't crash on a lazy user
 	if opts == nil {
 		opts = new(FilterOpts)
@@ -295,7 +296,7 @@ func (c *BoundContract) FilterLogs(opts *FilterOpts, name string, query ...[]int
 
 // WatchLogs filters subscribes to contract logs for future blocks, returning a
 // subscription object that can be used to tear down the watcher.
-func (c *BoundContract) WatchLogs(opts *WatchOpts, name string, query ...[]interface{}) (chan types.Log, event.Subscription, error) { log.DebugLog()
+func (c *BoundContract) WatchLogs(opts *WatchOpts, name string, query ...[]interface{}) (chan types.Log, event.Subscription, error) { debugLog.DebugLog()
 	// Don't crash on a lazy user
 	if opts == nil {
 		opts = new(WatchOpts)
@@ -325,7 +326,7 @@ func (c *BoundContract) WatchLogs(opts *WatchOpts, name string, query ...[]inter
 }
 
 // UnpackLog unpacks a retrieved log into the provided output structure.
-func (c *BoundContract) UnpackLog(out interface{}, event string, log types.Log) error { log.DebugLog()
+func (c *BoundContract) UnpackLog(out interface{}, event string, log types.Log) error { debugLog.DebugLog()
 	if len(log.Data) > 0 {
 		if err := c.abi.Unpack(out, event, log.Data); err != nil {
 			return err
@@ -342,7 +343,7 @@ func (c *BoundContract) UnpackLog(out interface{}, event string, log types.Log) 
 
 // ensureContext is a helper method to ensure a context is not nil, even if the
 // user specified it as such.
-func ensureContext(ctx context.Context) context.Context { log.DebugLog()
+func ensureContext(ctx context.Context) context.Context { debugLog.DebugLog()
 	if ctx == nil {
 		return context.TODO()
 	}

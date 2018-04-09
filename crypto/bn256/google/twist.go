@@ -6,6 +6,8 @@ package bn256
 
 import (
 	"math/big"
+
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // twistPoint implements the elliptic curve y²=x³+3/ξ over GF(p²). Points are

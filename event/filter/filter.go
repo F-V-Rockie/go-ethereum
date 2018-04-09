@@ -18,6 +18,7 @@
 package filter
 
 import "reflect"
+import "github.com/ethereum/go-ethereum/log"
 
 type Filter interface {
 	Compare(Filter) bool

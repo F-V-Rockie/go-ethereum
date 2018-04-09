@@ -36,6 +36,7 @@ import (
 	"github.com/ethereum/go-ethereum/rpc"
 	"github.com/julienschmidt/httprouter"
 	"golang.org/x/net/websocket"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // DefaultClient is the default simulation API client which expects the API

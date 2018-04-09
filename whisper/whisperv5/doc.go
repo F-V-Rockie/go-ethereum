@@ -32,6 +32,8 @@ package whisperv5
 import (
 	"fmt"
 	"time"
+
+	"github.com/ethereum/go-ethereum/log"
 )
 
 const (

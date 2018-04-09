@@ -22,6 +22,8 @@ package geth
 import (
 	"context"
 	"time"
+
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // Context carries a deadline, a cancelation signal, and other values across API

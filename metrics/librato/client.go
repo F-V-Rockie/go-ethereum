@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+
+	"github.com/ethereum/go-ethereum/log"
 )
 
 const Operations = "operations"

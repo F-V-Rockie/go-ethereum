@@ -20,6 +20,7 @@ import (
 	"encoding/binary"
 
 	"github.com/ethereum/go-ethereum/metrics"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 //metrics variables

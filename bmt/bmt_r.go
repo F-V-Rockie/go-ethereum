@@ -25,6 +25,8 @@ package bmt
 
 import (
 	"hash"
+
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // RefHasher is the non-optimized easy to read reference implementation of BMT

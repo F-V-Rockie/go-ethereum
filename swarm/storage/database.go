@@ -26,6 +26,7 @@ import (
 	"github.com/syndtr/goleveldb/leveldb"
 	"github.com/syndtr/goleveldb/leveldb/iterator"
 	"github.com/syndtr/goleveldb/leveldb/opt"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 const openFileLimit = 128

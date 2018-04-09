@@ -19,6 +19,8 @@ package simulations
 import (
 	"fmt"
 	"time"
+
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // EventType is the type of event emitted by a simulation network

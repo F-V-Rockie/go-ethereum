@@ -17,6 +17,7 @@
 package api
 
 import "path"
+import "github.com/ethereum/go-ethereum/log"
 
 type Response struct {
 	MimeType string

@@ -26,6 +26,7 @@ import (
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // Signer is an interaface defining the callback when a contract requires a
@@ -38,7 +39,8 @@ type signer struct {
 	sign bind.SignerFn
 }
 
-func (s *signer) Sign(addr *Address, unsignedTx *Transaction) (signedTx *Transaction, _ error) { log.DebugLog()
+func (s *signer) Sign(addr *Address, unsignedTx *Transaction) (signedTx *Transaction, _ error) {
+	log.DebugLog()
 	sig, err := s.sign(types.HomesteadSigner{}, addr.address, unsignedTx.tx)
 	if err != nil {
 		return nil, err
@@ -52,20 +54,32 @@ type CallOpts struct {
 }
 
 // NewCallOpts creates a new option set for contract calls.
-func NewCallOpts() *CallOpts { log.DebugLog()
+func NewCallOpts() *CallOpts {
+	log.DebugLog()
 	return new(CallOpts)
 }
 
-func (opts *CallOpts) IsPending() bool    { log.DebugLog() return opts.opts.Pending }
-func (opts *CallOpts) GetGasLimit() int64 { log.DebugLog() return 0 /* TODO(karalabe) */ }
+func (opts *CallOpts) IsPending() bool {
+	log.DebugLog()
+	return opts.opts.Pending
+}
+func (opts *CallOpts) GetGasLimit() int64 {
+	log.DebugLog()
+	return 0 /* TODO(karalabe) */ }
 
 // GetContext cannot be reliably implemented without identity preservation (https://github.com/golang/go/issues/16876)
 // Even then it's awkward to unpack the subtleties of a Go context out to Java.
 // func (opts *CallOpts) GetContext() *Context { log.DebugLog() return &Context{opts.opts.Context} }
 
-func (opts *CallOpts) SetPending(pending bool)     { log.DebugLog() opts.opts.Pending = pending }
-func (opts *CallOpts) SetGasLimit(limit int64)     { log.DebugLog() /* TODO(karalabe) */ }
-func (opts *CallOpts) SetContext(context *Context) { log.DebugLog() opts.opts.Context = context.context }
+func (opts *CallOpts) SetPending(pending bool) {
+	log.DebugLog()
+	opts.opts.Pending = pending
+}
+func (opts *CallOpts) SetGasLimit(limit int64) { log.DebugLog() /* TODO(karalabe) */ }
+func (opts *CallOpts) SetContext(context *Context) {
+	log.DebugLog()
+	opts.opts.Context = context.context
+}
 
 // TransactOpts is the collection of authorization data required to create a
 // valid Ethereum transaction.
@@ -73,11 +87,26 @@ type TransactOpts struct {
 	opts bind.TransactOpts
 }
 
-func (opts *TransactOpts) GetFrom() *Address    { log.DebugLog() return &Address{opts.opts.From} }
-func (opts *TransactOpts) GetNonce() int64      { log.DebugLog() return opts.opts.Nonce.Int64() }
-func (opts *TransactOpts) GetValue() *BigInt    { log.DebugLog() return &BigInt{opts.opts.Value} }
-func (opts *TransactOpts) GetGasPrice() *BigInt { log.DebugLog() return &BigInt{opts.opts.GasPrice} }
-func (opts *TransactOpts) GetGasLimit() int64   { log.DebugLog() return int64(opts.opts.GasLimit) }
+func (opts *TransactOpts) GetFrom() *Address {
+	log.DebugLog()
+	return &Address{opts.opts.From}
+}
+func (opts *TransactOpts) GetNonce() int64 {
+	log.DebugLog()
+	return opts.opts.Nonce.Int64()
+}
+func (opts *TransactOpts) GetValue() *BigInt {
+	log.DebugLog()
+	return &BigInt{opts.opts.Value}
+}
+func (opts *TransactOpts) GetGasPrice() *BigInt {
+	log.DebugLog()
+	return &BigInt{opts.opts.GasPrice}
+}
+func (opts *TransactOpts) GetGasLimit() int64 {
+	log.DebugLog()
+	return int64(opts.opts.GasLimit)
+}
 
 // GetSigner cannot be reliably implemented without identity preservation (https://github.com/golang/go/issues/16876)
 // func (opts *TransactOpts) GetSigner() Signer { log.DebugLog() return &signer{opts.opts.Signer} }
@@ -86,9 +115,16 @@ func (opts *TransactOpts) GetGasLimit() int64   { log.DebugLog() return int64(op
 // Even then it's awkward to unpack the subtleties of a Go context out to Java.
 //func (opts *TransactOpts) GetContext() *Context { log.DebugLog() return &Context{opts.opts.Context} }
 
-func (opts *TransactOpts) SetFrom(from *Address) { log.DebugLog() opts.opts.From = from.address }
-func (opts *TransactOpts) SetNonce(nonce int64)  { log.DebugLog() opts.opts.Nonce = big.NewInt(nonce) }
-func (opts *TransactOpts) SetSigner(s Signer) { log.DebugLog()
+func (opts *TransactOpts) SetFrom(from *Address) {
+	log.DebugLog()
+	opts.opts.From = from.address
+}
+func (opts *TransactOpts) SetNonce(nonce int64) {
+	log.DebugLog()
+	opts.opts.Nonce = big.NewInt(nonce)
+}
+func (opts *TransactOpts) SetSigner(s Signer) {
+	log.DebugLog()
 	opts.opts.Signer = func(signer types.Signer, addr common.Address, tx *types.Transaction) (*types.Transaction, error) {
 		sig, err := s.Sign(&Address{addr}, &Transaction{tx})
 		if err != nil {
@@ -97,10 +133,22 @@ func (opts *TransactOpts) SetSigner(s Signer) { log.DebugLog()
 		return sig.tx, nil
 	}
 }
-func (opts *TransactOpts) SetValue(value *BigInt)      { log.DebugLog() opts.opts.Value = value.bigint }
-func (opts *TransactOpts) SetGasPrice(price *BigInt)   { log.DebugLog() opts.opts.GasPrice = price.bigint }
-func (opts *TransactOpts) SetGasLimit(limit int64)     { log.DebugLog() opts.opts.GasLimit = uint64(limit) }
-func (opts *TransactOpts) SetContext(context *Context) { log.DebugLog() opts.opts.Context = context.context }
+func (opts *TransactOpts) SetValue(value *BigInt) {
+	log.DebugLog()
+	opts.opts.Value = value.bigint
+}
+func (opts *TransactOpts) SetGasPrice(price *BigInt) {
+	log.DebugLog()
+	opts.opts.GasPrice = price.bigint
+}
+func (opts *TransactOpts) SetGasLimit(limit int64) {
+	log.DebugLog()
+	opts.opts.GasLimit = uint64(limit)
+}
+func (opts *TransactOpts) SetContext(context *Context) {
+	log.DebugLog()
+	opts.opts.Context = context.context
+}
 
 // BoundContract is the base wrapper object that reflects a contract on the
 // Ethereum network. It contains a collection of methods that are used by the
@@ -113,7 +161,8 @@ type BoundContract struct {
 
 // DeployContract deploys a contract onto the Ethereum blockchain and binds the
 // deployment address with a wrapper.
-func DeployContract(opts *TransactOpts, abiJSON string, bytecode []byte, client *EthereumClient, args *Interfaces) (contract *BoundContract, _ error) { log.DebugLog()
+func DeployContract(opts *TransactOpts, abiJSON string, bytecode []byte, client *EthereumClient, args *Interfaces) (contract *BoundContract, _ error) {
+	log.DebugLog()
 	// Deploy the contract to the network
 	parsed, err := abi.JSON(strings.NewReader(abiJSON))
 	if err != nil {
@@ -132,7 +181,8 @@ func DeployContract(opts *TransactOpts, abiJSON string, bytecode []byte, client 
 
 // BindContract creates a low level contract interface through which calls and
 // transactions may be made through.
-func BindContract(address *Address, abiJSON string, client *EthereumClient) (contract *BoundContract, _ error) { log.DebugLog()
+func BindContract(address *Address, abiJSON string, client *EthereumClient) (contract *BoundContract, _ error) {
+	log.DebugLog()
 	parsed, err := abi.JSON(strings.NewReader(abiJSON))
 	if err != nil {
 		return nil, err
@@ -143,8 +193,12 @@ func BindContract(address *Address, abiJSON string, client *EthereumClient) (con
 	}, nil
 }
 
-func (c *BoundContract) GetAddress() *Address { log.DebugLog() return &Address{c.address} }
-func (c *BoundContract) GetDeployer() *Transaction { log.DebugLog()
+func (c *BoundContract) GetAddress() *Address {
+	log.DebugLog()
+	return &Address{c.address}
+}
+func (c *BoundContract) GetDeployer() *Transaction {
+	log.DebugLog()
 	if c.deployer == nil {
 		return nil
 	}
@@ -153,7 +207,8 @@ func (c *BoundContract) GetDeployer() *Transaction { log.DebugLog()
 
 // Call invokes the (constant) contract method with params as input values and
 // sets the output to result.
-func (c *BoundContract) Call(opts *CallOpts, out *Interfaces, method string, args *Interfaces) error { log.DebugLog()
+func (c *BoundContract) Call(opts *CallOpts, out *Interfaces, method string, args *Interfaces) error {
+	log.DebugLog()
 	if len(out.objects) == 1 {
 		result := out.objects[0]
 		if err := c.contract.Call(&opts.opts, result, method, args.objects...); err != nil {
@@ -172,7 +227,8 @@ func (c *BoundContract) Call(opts *CallOpts, out *Interfaces, method string, arg
 }
 
 // Transact invokes the (paid) contract method with params as input values.
-func (c *BoundContract) Transact(opts *TransactOpts, method string, args *Interfaces) (tx *Transaction, _ error) { log.DebugLog()
+func (c *BoundContract) Transact(opts *TransactOpts, method string, args *Interfaces) (tx *Transaction, _ error) {
+	log.DebugLog()
 	rawTx, err := c.contract.Transact(&opts.opts, method, args.objects...)
 	if err != nil {
 		return nil, err
@@ -182,7 +238,8 @@ func (c *BoundContract) Transact(opts *TransactOpts, method string, args *Interf
 
 // Transfer initiates a plain transaction to move funds to the contract, calling
 // its default method if one is available.
-func (c *BoundContract) Transfer(opts *TransactOpts) (tx *Transaction, _ error) { log.DebugLog()
+func (c *BoundContract) Transfer(opts *TransactOpts) (tx *Transaction, _ error) {
+	log.DebugLog()
 	rawTx, err := c.contract.Transfer(&opts.opts)
 	if err != nil {
 		return nil, err

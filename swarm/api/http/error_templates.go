@@ -26,6 +26,8 @@ parsed by Go's html/template package
 */
 package http
 
+import "github.com/ethereum/go-ethereum/log"
+
 //This returns the HTML for generic errors
 func GetGenericErrorPage() string { log.DebugLog()
 	page := `

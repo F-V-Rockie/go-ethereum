@@ -21,6 +21,7 @@ import (
 	"fmt"
 
 	"github.com/ethereum/go-ethereum/core/asm"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 func Compile(fn string, src []byte, debug bool) (string, error) { log.DebugLog()

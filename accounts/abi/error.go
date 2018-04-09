@@ -20,6 +20,8 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
+
+	"github.com/ethereum/go-ethereum/log"
 )
 
 var (

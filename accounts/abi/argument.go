@@ -21,6 +21,8 @@ import (
 	"fmt"
 	"reflect"
 	"strings"
+
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // Argument holds the name of the argument and the corresponding type.

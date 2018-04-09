@@ -16,6 +16,8 @@
 
 package filter
 
+import "github.com/ethereum/go-ethereum/log"
+
 type Generic struct {
 	Str1, Str2, Str3 string
 	Data             map[string]struct{}

@@ -10,6 +10,8 @@ package bn256
 
 import (
 	"math/big"
+
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // gfP12 implements the field of size p¹² as a quadratic extension of gfP6

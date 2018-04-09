@@ -20,6 +20,8 @@ import (
 	"fmt"
 	"net/url"
 	"strings"
+
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // URI is a reference to content stored in swarm.

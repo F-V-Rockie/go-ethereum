@@ -22,6 +22,8 @@ import (
 	"io"
 	"sync"
 	"time"
+
+	"github.com/ethereum/go-ethereum/log"
 )
 
 /*

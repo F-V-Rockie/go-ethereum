@@ -24,6 +24,8 @@ import (
 	"strings"
 	"sync"
 	"sync/atomic"
+
+	"github.com/ethereum/go-ethereum/log"
 )
 
 /*

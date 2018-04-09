@@ -20,6 +20,8 @@ package fuse
 
 import (
 	"bazil.org/fuse/fs"
+
+	"github.com/ethereum/go-ethereum/log"
 )
 
 var (

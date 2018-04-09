@@ -19,6 +19,8 @@ package abi
 import (
 	"fmt"
 	"reflect"
+
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // indirect recursively dereferences the value until it either gets the value
